@@ -46,8 +46,7 @@ import (
 
 // these are the kernel methods  : Contains, Included, Member, At, Class_I, Meet
 
-// contains is set membership and it can be extended with new definitions of %
-// not that is % is not defined, we return false (not a set)
+// this is the membership function (x % t) defined for types only (made extensible in CLAIRE)
 func (t *ClaireType) Contains(x *ClaireAny) *ClaireBoolean {
 	if (ClEnv.Verbose > 10){
 		fmt.Printf("--- call good old contains on %s\n",t.Prt())
@@ -69,8 +68,17 @@ func (t *ClaireType) Contains(x *ClaireAny) *ClaireBoolean {
 		}
 	case C_set:
 		return ToSet(t.Id()).Contain_ask(x)
-	case C_tuple:
-		return ToSet(t.Id()).Contain_ask(x)
+	case C_list:                                       // since v3.2, list is accepted as type (although not advertised)
+		return ToList(t.Id()).Contain_ask(x)
+	case C_tuple:                                      // tuple as a type is not a list ! it is a template
+		if x.Isa == t.Isa {
+			if ToList(x).Length() == ToList(t.Id()).Length() {
+				for i,v := range(ToList(t.Id()).ValuesO()) {
+                   if ToType(v).Contains(ToList(x).ValuesO()[i]) == CFALSE {return CFALSE}
+				}
+                return CTRUE
+			} else {return CFALSE}
+		} else {return CFALSE}
 	case C_subtype:
 		if ToSubtype(t.Id()).Arg.Contains(x) == CFALSE {
 			return CFALSE
@@ -81,7 +89,8 @@ func (t *ClaireType) Contains(x *ClaireAny) *ClaireBoolean {
 		if x.Isa.IsIn(To_Param(t.Id()).Arg) == CTRUE {
 			l := To_Param(t.Id()).Args
 			for i, p := range To_Param(t.Id()).Params.ValuesO() {
-				if ToType(l.ValuesO()[i]).Contains(ToProperty(p).Of(ToObject(x))) == CFALSE {
+				if ToType(l.ValuesO()[i]).containsType(ToProperty(p).Of(ToObject(x))) == CFALSE {
+					// fmt.Printf("Param member failed because %s not in %s\n", ToProperty(p).Of(ToObject(x)).Prt(),l.ValuesO()[i].Prt())
 					return CFALSE
 				}
 			}
@@ -95,36 +104,35 @@ func (t *ClaireType) Contains(x *ClaireAny) *ClaireBoolean {
 		} else {
 			return To_Union(t.Id()).T2.Contains(x)
 		}
-	case C_Reference:
-		return CTRUE
-	default:
-		fmt.Printf("===================== Contains: VERY CHELOU ==================== \n")
+	// case C_Reference:
+	//	return CTRUE
+	default:           // this path exists since Types are extensible, but this method should not be called on such types
+	    fmt.Printf("===================== Contains: VERY CHELOU ==================== \n")
+	    fmt.Printf("===================== Contains:%s in %s ==================== \n",x.Prt(),t.Prt())
+		// if ClEnv.Verbose == -1 {panic("stop and see why")}
 		return CFALSE
 	}
 }
+
+// equivalent of %type that was defined in types.cl in CLAIRE 3.5 
+// special memberhip for t:set when y is a type (deep equality)
+func (t *ClaireType) containsType (x *ClaireAny) *ClaireBoolean {
+	if x.Isa.IsIn(C_type) == CTRUE && t.Isa == C_set {
+	   for _,z := range(ToSet(t.Id()).Values) {
+		   if z.Isa.IsIn(C_type) == CTRUE && ToType(z).Included(ToType(x)) == CTRUE && ToType(x).Included(ToType(z)) == CTRUE {
+			   return CTRUE  // deep type equality
+		   }}
+        return CFALSE
+	} else {return t.Contains(x)}
+} 
 
 // special optimization for EID arg
 func (t *ClaireType) CONTAINS(x EID) *ClaireBoolean {
 	switch t.Isa {
 	case C_class:
-		if x.PTR == C__INT {
-			if ToClass(t.Id()) == C_integer {
-				return CTRUE
-			} else {
-				return CFALSE
-			}
-		} else if x.PTR == C__FLOAT {
-			if ToClass(t.Id()) == C_float {
-				return CTRUE
-			} else {
-				return CFALSE
-			}
-		} else if x.PTR == C__CHAR {
-			if ToClass(t.Id()) == C_char {
-				return CTRUE
-			} else {
-				return CFALSE
-			}
+		if x.PTR == C__INT { return C_integer.isIn(ToClass(t.Id()))
+		} else if x.PTR == C__FLOAT { return C_float.isIn(ToClass(t.Id()))
+		} else if x.PTR == C__CHAR { return C_char.isIn(ToClass(t.Id()))
 		} else {
 			return x.PTR.Isa.IsIn(ToClass(t.Id()))
 		}
@@ -159,10 +167,12 @@ func (x *ClaireType) Included(y *ClaireType) *ClaireBoolean {
 		return To_Union(x.Id()).Included(y)
 	case C_set:
 		return ToSet(x.Id()).Included(y)
+	case C_list:
+		return ToList(x.Id()).listIncluded(y)    // beware of tuple vs list
 	case C_tuple:
-		return ToTuple(x.Id()).Included(y)
-	case C_Reference:
-		return CTRUE
+		return ToTuple(x.Id()).tupleIncluded(y)   // one underlying GO structure for 2 Claire classes => 2 methods
+//	case C_Reference:
+//		return CTRUE
 	default:
 		return CFALSE
 	}
@@ -177,7 +187,7 @@ func (x *ClaireClass) Included(y *ClaireType) *ClaireBoolean {
 		return CFALSE
 	case C_Union:
 		if x.Open == 0 { // abstract class x < y <=> xi < y
-			for _, z := range x.Subclass.ValuesO() {
+			for _, z := range x.Subclass.Values {
 				if ToClass(z).Included(y) == CFALSE {
 					return CFALSE
 				}
@@ -214,14 +224,34 @@ func (x *ClaireUnion) Included(y *ClaireType) *ClaireBoolean {
 	}
 }
 
-// Set
+// Set : there is a difference between constant sets (of = {}) and others (that may grow)
 func (x *ClaireSet) Included(y *ClaireType) *ClaireBoolean {
+	t := x.of
+	if t.Id() != CEMPTY.Id() {
+		return t.Included(y)
+	} else {
 	for _, z := range x.Values {
-		if y.Contains(z) == CFALSE {
+		if y.containsType(z) == CFALSE {
 			return CFALSE
 		}
 	}
 	return CTRUE
+   }
+}
+
+// Set : there is a difference between constant sets (of = {}) and others (that may grow)
+func (x *ClaireList) listIncluded(y *ClaireType) *ClaireBoolean {
+	t := x.of
+	if t.Id() != CEMPTY.Id() {return t.Included(y)
+	} else {
+	n := x.Length()
+	for i := 0; i < n ; i++  {
+		if y.containsType(x.At(i)) == CFALSE {
+			return CFALSE
+		}
+	}
+	return CTRUE
+   }
 }
 
 // Interval
@@ -286,7 +316,7 @@ func (x *ClaireParam) Included(y *ClaireType) *ClaireBoolean {
 }
 
 // tuple : the only subtlety is the de-normalization of U within a tuple type
-func (x *ClaireTuple) Included(y *ClaireType) *ClaireBoolean {
+func (x *ClaireTuple) tupleIncluded(y *ClaireType) *ClaireBoolean {
 	for i, t := range x.ValuesO() {
 		if t.Isa == C_Union { // denormalize => create two new tuples
 			x1 := x.Copy()
@@ -337,8 +367,8 @@ func (x *ClaireType) Included2(y *ClaireType) *ClaireBoolean {
 			}
 			return CTRUE
 		}
-	case C_Reference:
-		return CTRUE
+	// case C_Reference:
+	//	return CTRUE
 	case C_subtype:
 		if x.Included(ToType(ToSubtype(y.Id()).Arg.Id())) == CFALSE {
 			return CFALSE // and
@@ -393,7 +423,7 @@ func (x *ClaireType) Member() *ClaireType {
 // the method @ is used to extract the range information contained
 // in a type. This method returns a type and is crucial for compiling !
 func (x *ClaireType) At(p *ClaireProperty) *ClaireType {
-	if ClEnv.Verbose > 1 {
+	if ClEnv.Verbose > 10 {
 		fmt.Printf("Call Type At on t:%s and p:%s\n", x.Prt(), p.Prt())
 	}
 	switch x.Isa {
@@ -405,7 +435,7 @@ func (x *ClaireType) At(p *ClaireProperty) *ClaireType {
 			return r.Range
 		}
 	case C_Param:
-		i := To_Param(x.Id()).Params.Index(p.ToAny())
+		i := F_index_list(To_Param(x.Id()).Params,p.ToAny())
 		if i > 0 {
 			return ToType(To_Param(x.Id()).Args.ValuesO()[i-1])
 		} else {
@@ -424,6 +454,11 @@ func (x *ClaireType) At(p *ClaireProperty) *ClaireType {
 	default:
 		return x.Class_I().At(p)
 	}
+}
+
+// exported to claire
+func E__at_type(t EID, p EID) EID {
+	return EID{ToType(OBJ(t)).At(ToProperty(OBJ(p))).Id(), 0}
 }
 
 // last but not least : Union constructor
@@ -526,7 +561,7 @@ func (l *ClaireListObject) Uall() *ClaireType {
 }
 
 // the best class approximation
-func (x *ClaireType) Class_I() *ClaireClass {
+func (x *ClaireTypeExpression) Class_I() *ClaireClass {
 	switch x.Isa {
 	case C_class:
 		return ToClass(x.Id())
@@ -550,8 +585,8 @@ func (x *ClaireType) Class_I() *ClaireClass {
 		return C_integer
 	case C_subtype: // (if (x.arg = subtype) any else x.arg),
 		return ToSubtype(x.Id()).Arg
-	case C_Reference:
-		return C_any
+	// case C_Reference:
+	//	return C_any
 	case C_Param:
 		return To_Param(x.Id()).Arg
 	case C_tuple:
@@ -561,13 +596,17 @@ func (x *ClaireType) Class_I() *ClaireClass {
 	}
 }
 
+func E_class_I_type(x EID) EID {
+	return EID{ToTypeExpression(OBJ(x)).Class_I().Id(),0}
+}
+
 // extract a list of class (useful to get a signature)
 func listClass(ltype []*ClaireAny) *ClaireList {
 	o := makeEmptyObjectList(len(ltype))
 	o.of = ToType(C_class.Id()) // list<class>
 	for i, y := range ltype {
 		o.Values[i] = ToType(y).Class_I().Id()
-		// fmt.Printf("-- listClass adds %s \n", ToClass(y).Name.Key)
+		// fmt.Printf("-- listClass adds %s \n", ToClass(y).Name.key)
 	}
 	return ToList(o.Id())
 }
@@ -630,7 +669,8 @@ func PEID(x EID) string {
 	}
 }
 
-// this is a debug print function that returns a string
+// ========  this is a debug print function that returns a string  ==============================
+// keep this even if not in use + enrich it progressively, key for debugging generated code =====
 func (p *ClaireAny) Prt() string {
 	// fmt.Printf("call Prt() on %p with class %p \n", p, p.Isa)
 	if p.Isa.Isa != C_class {
@@ -644,16 +684,16 @@ func (p *ClaireAny) Prt() string {
 	} else if p.Isa == C_char {
 		return fmt.Sprintf("'%c'", ToChar(p).Value)
 	} else if p.Isa == C_class {
-		return ToClass(p).Name.Key
+		return ToClass(p).Name.key                         // debug + fmt.Sprintf(":%p", p)
 	} else if p.Isa == C_symbol {
-		return ToSymbol(p).Module_I.Name.Key + "/" + ToSymbol(p).Key
+		return ToSymbol(p).module_I.Name.key + "/" + ToSymbol(p).key
 	} else if p.Isa == C_unbound_symbol {
-		return "unbound@" + ToUnboundSymbol(p).Name.Key
+		return "unbound@" + ToUnboundSymbol(p).Name.key
 	} else if p.Isa.isIn(C_thing) == CTRUE {
-		if utf8.RuneCountInString(ToThing(p).Name.Key) > 1000 {
+		if utf8.RuneCountInString(ToThing(p).Name.key) > 1000 {
 			panic("garbled name")
 		}
-		return ToThing(p).Name.Key
+		return ToThing(p).Name.key
 	} else if p.Isa.isIn(C_list) == CTRUE {
 		if p == CNIL.Id() {
 			return "CNIL"
@@ -663,11 +703,13 @@ func (p *ClaireAny) Prt() string {
 	} else if p.Isa == C_set {
 		return ToSet(p).PrtSet()
 	} else if p.Isa == C_method {
-		return ToMethod(p).Selector.Prt() + "@" + ToMethod(p).Domain.Prt()
+		return ToMethod(p).Selector.Prt() + "@" + ToMethod(p).Domain.prtIn()
 	} else if p.Isa == C_slot {
 		return ToSlot(p).Selector.Prt() + "#" + ToSlot(p).Domain.At(0).Prt()
 	} else if p.Isa == C_subtype {
 		return ToSubtype(p).Arg.Prt() + "[" + ToSubtype(p).T1.Prt() + "]"
+	} else if p.Isa == C_Param {
+		return To_Param(p).Arg.Prt() + "<" + To_Param(p).Params.prtIn() + ":" + To_Param(p).Args.prtIn() + ">"
 	} else if p.Isa == C_string {
 		return "\"" + ToString(p).Value + "\""
 	} else if p == CTRUE.Id() {
@@ -677,13 +719,18 @@ func (p *ClaireAny) Prt() string {
 	} else if p == CNULL {
 		return "CNULL"
 	} else {
-		return "<" + p.Isa.Name.Key + ":" + fmt.Sprintf("%p", p) + ">"
+		return "<" + p.Isa.Name.key + ":" + fmt.Sprintf("%p", p) + ">"
 	}
 }
 
-// printList : native version
-func (l *ClaireList) PrtList() string {
-	res := "list("
+// printList : native version, with and without trimmings
+func (l *ClaireList) PrtList() string { 
+	if l.of == nil || l.of.Id() == CEMPTY.Id()  {return "list" + l.prtIn()
+	} else {return "list<" + l.of.Prt() + ">" + l.prtIn()}
+}
+
+func (l *ClaireList) prtIn() string {
+	res := "("
 	n := l.Length()
 	for i := 0; i < n; i++ {
 		if i > 0 {
@@ -694,8 +741,14 @@ func (l *ClaireList) PrtList() string {
 	return res + ")"
 }
 
+
 // Print Set
 func (s *ClaireSet) PrtSet() string {
+	if s.of == nil || s.of.Id() == CEMPTY.Id()  {return s.prtIn()
+	} else {return "set<" + s.of.Prt() + ">" + s.prtIn()}
+}
+
+func (s *ClaireSet) prtIn() string {
 	res := "{"
 	first := true
 	for _, v := range s.Values {
@@ -713,6 +766,26 @@ func (s *ClaireSet) PrtSet() string {
 func (x *ClaireAny) Test(s string) {
 	fmt.Printf("%s => %s.\n", s, x.Prt())
 }
+
+// Look() is like Prt() but uses a default "indepth" for objects C{s:v,*}
+// beware of circular structure
+func (p *ClaireAny) Look() string {
+	if p.Isa.IsIn(C_object) == CFALSE ||  p.Isa.IsIn(C_bag) == CTRUE || 
+	   p.Isa.IsIn(C_thing) == CTRUE ||  p.Isa.IsIn(C_class) == CTRUE  {return p.Prt()
+	} else {
+		c := p.Isa
+		n := c.Slots.Length()
+		var m int = n
+		var s string = c.Name.key + "{"
+		if n > 4 {m = 4}
+		for i := 1; i < n; i++ {
+			r := ToSlot(c.Slots.ValuesO()[i]).Srange
+			s = s + ToObject(p).Get(i+1,r).Look()
+			if i < (n - 1) {s = s +","
+		    } else if (n > m) {s = s +"..."}
+		}
+		return s + "}"
+	}}
 
 //   reads a string on the keyboad - used to manage breakpoints in inspect.cl [read module]
 func F_CommandLoopVoid() *ClaireString {
@@ -748,13 +821,21 @@ const (
 // i is meant to give a few options (TBD)
 func F_date_I_integer(i int) *ClaireString {
 	dt := time.Now()
-	return MakeString(dt.Format("Monday 01-02-2006 15:04:05"))
+	if i == 1 {
+		return MakeString(dt.Format("Monday 01-02-2006"))
+	} else if i == 2  {
+		return MakeString(dt.Format("15:04:05"))
+	} else {
+	return MakeString(dt.Format("Monday 01-02-2006 15:04:05"))}
 }
+
 func E_date_I_integer(i EID) EID { return EID{F_date_I_integer(INT(i)).Id(), 0} }
 
 // princ a  int / float
-func F_princ_integer(n int) { ClEnv.Cout.PutInteger(n) }
+func F_princ_integer(n int) { 
+	ClEnv.Cout.PutInteger(n) }
 func E_princ_integer(c EID) EID {
+	BadI(c,"princ_integer")
 	F_princ_integer(INT(c))
 	return EVOID
 }
@@ -814,14 +895,14 @@ func F__exp_integer(n int, m int) EID {
 func E__exp_integer(n EID, m EID) EID { return F__exp_integer(INT(n), INT(m)) }
 
 // return a power of 2
-func F_exp2_integer(n int) EID {
+func F__exp2_integer(n int) EID {
 	if (n >= 0) && (n <= 63) {
 		return EID{C__INT, IVAL(1 << n)}
 	} else {
 		return Cerror(19, MakeInteger(n).Id(), MakeInteger(0).Id())
 	}
 }
-func E_exp2_integer(n EID) EID { return F_exp2_integer(INT(n)) }
+func E__exp2_integer(n EID) EID { return F__exp2_integer(INT(n)) }
 
 // gives a safe multiplication
 func F_times_integer(n int, m int) EID {
@@ -836,6 +917,50 @@ func F_times_integer(n int, m int) EID {
 }
 
 func E_times_integer(n EID, m EID) EID { return F_times_integer(INT(n), INT(m)) }
+
+// the classical order comparisons for two ingteger
+/*func F__inf_integer(n int, m int) *ClaireBoolean {
+	if n < m {
+		return CTRUE
+	} else {
+		return CFALSE
+	}
+}
+func E__inf_integer(self EID, x EID) EID { return EID{F__inf_integer(INT(self), INT(x)).Id(), 0} }
+
+func F__inf_equal_integer(n int, m int) *ClaireBoolean {
+	if n <= m {
+		return CTRUE
+	} else {
+		return CFALSE
+	}
+}
+func E__inf_equal_integer(self EID, x EID) EID {
+	return EID{F__inf_equal_integer(INT(self), INT(x)).Id(), 0}
+}
+
+func F__sup_integer(n int, m int) *ClaireBoolean {
+	if n > m {
+		return CTRUE
+	} else {
+		return CFALSE
+	}
+}
+func E__sup_integer(self EID, x EID) EID { return EID{F__sup_integer(INT(self), INT(x)).Id(), 0} }
+*/
+
+func F__sup_equal_integer(n int, m int) *ClaireBoolean {
+	if n >= m {
+		return CTRUE
+	} else {
+		return CFALSE
+	}
+}
+
+func E__sup_equal_integer(self EID, x EID) EID {
+	return EID{F__sup_equal_integer(INT(self), INT(x)).Id(), 0}
+}
+
 
 // used by the compiler
 func BitVectorContains(s int, x int) *ClaireBoolean {
@@ -927,36 +1052,36 @@ func F_integer_I_float(n float64) EID {
 func E_integer_I_float(self EID) EID { return F_integer_I_float(FLOAT(self)) }
 
 // the classical order comparisons for two float
-func F_inf_float(n float64, m float64) *ClaireBoolean {
+func F__inf_float(n float64, m float64) *ClaireBoolean {
 	if n < m {
 		return CTRUE
 	} else {
 		return CFALSE
 	}
 }
-func E_inf_float(self EID, x EID) EID { return EID{F_inf_float(FLOAT(self), FLOAT(x)).Id(), 0} }
+func E__inf_float(self EID, x EID) EID { return EID{F__inf_float(FLOAT(self), FLOAT(x)).Id(), 0} }
 
-func F_inf_equal_float(n float64, m float64) *ClaireBoolean {
+func F__inf_equal_float(n float64, m float64) *ClaireBoolean {
 	if n <= m {
 		return CTRUE
 	} else {
 		return CFALSE
 	}
 }
-func E_inf_equal_float(self EID, x EID) EID {
-	return EID{F_inf_equal_float(FLOAT(self), FLOAT(x)).Id(), 0}
+func E__inf_equal_float(self EID, x EID) EID {
+	return EID{F__inf_equal_float(FLOAT(self), FLOAT(x)).Id(), 0}
 }
 
-func F_sup_float(n float64, m float64) *ClaireBoolean {
+func F__sup_float(n float64, m float64) *ClaireBoolean {
 	if n > m {
 		return CTRUE
 	} else {
 		return CFALSE
 	}
 }
-func E_sup_float(self EID, x EID) EID { return EID{F_sup_float(FLOAT(self), FLOAT(x)).Id(), 0} }
+func E__sup_float(self EID, x EID) EID { return EID{F__sup_float(FLOAT(self), FLOAT(x)).Id(), 0} }
 
-func F_sup_equal_float(n float64, m float64) *ClaireBoolean {
+func F__sup_equal_float(n float64, m float64) *ClaireBoolean {
 	if n >= m {
 		return CTRUE
 	} else {
@@ -964,6 +1089,6 @@ func F_sup_equal_float(n float64, m float64) *ClaireBoolean {
 	}
 }
 
-func E_sup_equal_float(self EID, x EID) EID {
-	return EID{F_sup_equal_float(FLOAT(self), FLOAT(x)).Id(), 0}
+func E__sup_equal_float(self EID, x EID) EID {
+	return EID{F__sup_equal_float(FLOAT(self), FLOAT(x)).Id(), 0}
 }

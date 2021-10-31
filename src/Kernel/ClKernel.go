@@ -95,6 +95,14 @@ func ANY(x EID) *ClaireAny {
 	}
 }
 
+//debug - to remove later - ensure that integer EID are not OID
+// key for native integer method to work properly
+func BAD(x EID) bool {
+ return (x.PTR != C__INT && x.PTR != C__FLOAT && x.PTR.Isa == C_integer) }
+func BadI(x EID, tag string) {
+		if BAD(x) {
+			panic("Bad Integer represented as OID in " + tag)} }
+	   
 func OWNER(x EID) *ClaireClass {
 	if x.PTR == C__INT {
 		return C_integer
@@ -163,6 +171,7 @@ func (x *ClaireAny) ToEID() EID {
 type ClairePrimitive struct {
 	ClaireAny
 }
+func ToPrimitive(x *ClaireAny) *ClairePrimitive { return (*ClairePrimitive)(unsafe.Pointer(x)) }
 
 // integers have both an object form and a native form (int)
 type ClaireInteger struct {
@@ -257,6 +266,7 @@ func ToGoPort(x *ClaireAny) *ClaireGoPort { return (*ClaireGoPort)(unsafe.Pointe
 type ClaireFunction struct {
 	ClairePrimitive
 	name string
+	arity int
 }
 
 func ToFunction(x *ClaireAny) *ClaireFunction { return (*ClaireFunction)(unsafe.Pointer(x)) }
@@ -273,6 +283,7 @@ func MakeFunction1(f eFunc1, name string) *ClaireFunction {
 	o.Isa = C_function
 	o.call = f
 	o.name = name
+	o.arity = 1
 	return (*ClaireFunction)(unsafe.Pointer(o))
 }
 
@@ -287,6 +298,7 @@ func MakeFunction2(f eFunc2, name string) *ClaireFunction {
 	o.Isa = C_function
 	o.call = f
 	o.name = name
+	o.arity = 2
 	return (*ClaireFunction)(unsafe.Pointer(o))
 }
 
@@ -302,6 +314,7 @@ func MakeFunction3(f eFunc3, name string) *ClaireFunction {
 	o.Isa = C_function
 	o.call = f
 	o.name = name
+	o.arity = 3
 	return (*ClaireFunction)(unsafe.Pointer(o))
 }
 
@@ -315,6 +328,7 @@ func MakeFunction4(f eFunc4, name string) *ClaireFunction {
 	o.Isa = C_function
 	o.call = f
 	o.name = name
+	o.arity = 4
 	return (*ClaireFunction)(unsafe.Pointer(o))
 }
 
@@ -328,6 +342,7 @@ func MakeFunction5(f eFunc5, name string) *ClaireFunction {
 	o.Isa = C_function
 	o.call = f
 	o.name = name
+	o.arity = 5
 	return (*ClaireFunction)(unsafe.Pointer(o))
 }
 
@@ -341,6 +356,7 @@ func MakeFunction6(f eFunc6, name string) *ClaireFunction {
 	o.Isa = C_function
 	o.call = f
 	o.name = name
+	o.arity = 6
 	return (*ClaireFunction)(unsafe.Pointer(o))
 }
 
@@ -354,6 +370,7 @@ func MakeFunction7(f eFunc7, name string) *ClaireFunction {
 	o.Isa = C_function
 	o.call = f
 	o.name = name
+	o.arity = 7
 	return (*ClaireFunction)(unsafe.Pointer(o))
 }
 
@@ -401,9 +418,9 @@ func To_Variable(x *ClaireAny) *ClaireVariable {
 // we keep in memory where the module was defined (NULL means private)
 type ClaireSymbol struct {
 	ClaireSystemObject
-	Module_I   *ClaireModule // module m that owns the symbol m/name
-	Key        string        // name that defines the symbol in the m namepace
-	Value      *ClaireAny
+	module_I   *ClaireModule // module m that owns the symbol m/name
+	key        string        // name that defines the symbol in the m namepace
+	value      *ClaireAny    // private -> accessed through Value()
 	definition *ClaireModule // private : where the symbol was defined
 }
 
@@ -414,8 +431,8 @@ func makeSymbol(s string) *ClaireSymbol { return MakeSymbol(s, C_claire) }
 func MakeSymbol(s string, m *ClaireModule) *ClaireSymbol {
 	var o *ClaireSymbol = new(ClaireSymbol)
 	o.Isa = C_symbol
-	o.Module_I = m
-	o.Key = s
+	o.module_I = m
+	o.key = s
 	o.definition = ClEnv.Module_I // where the symbol is defined
 	return o
 }
@@ -471,6 +488,9 @@ type ClaireThing struct {
 
 func ToThing(x *ClaireAny) *ClaireThing { return (*ClaireThing)(unsafe.Pointer(x)) }
 
+// conversion function for ClaireEnv (defined in clEnv)
+func ToEnvironment(x *ClaireAny) *ClaireEnvironment { return (*ClaireEnvironment)(unsafe.Pointer(x)) }
+
 // Boolean are things
 type ClaireBoolean struct {
 	ClaireThing
@@ -506,9 +526,19 @@ type ClaireCollection struct {
 
 func ToCollection(x *ClaireAny) *ClaireCollection { return (*ClaireCollection)(unsafe.Pointer(x)) }
 
+
+// in CLAIRE 4, a type_expression is a "pseudo type" -> can be used in method definition
+type ClaireTypeExpression struct {
+	ClaireCollection
+}
+
+func ToTypeExpression(x *ClaireAny) *ClaireTypeExpression {
+	return (*ClaireTypeExpression)(unsafe.Pointer(x))
+}
+
 // a root for all types : Class | Union | Interval | Finterval | ...
 type ClaireType struct {
-	ClaireCollection
+	ClaireTypeExpression
 }
 
 func ToType(x *ClaireAny) *ClaireType { return (*ClaireType)(unsafe.Pointer(x)) }
@@ -521,7 +551,7 @@ type ClaireClass struct {
 	Comment     *ClaireString  // comment that tells what the class is
 	Slots       *ClaireList    // list of slots (no prototype, use slots)
 	Superclass  *ClaireClass   // super class
-	Subclass    *ClaireList    // subclasses
+	Subclass    *ClaireSet    // subclasses
 	Ancestors   *ClaireList    // list of Ancestors
 	Descendents *ClaireSet     // descendants
 	Open        int            // open status for class
@@ -540,7 +570,11 @@ func EVAL_object(x *ClaireAny) EID { return EID{x, 0} }
 
 // a class is a thing and a type
 // heart of evaluator
-func EVAL(x *ClaireAny) EID { return x.Isa.evaluate(x) }
+func EVAL(x *ClaireAny) EID { 
+	/*y := x.Isa.evaluate(x)
+	if BAD(y) {fmt.Printf("=== eval(%s) produces a bad Int ==\n",x.Prt())}
+    return y} */
+	return x.Isa.evaluate(x) }
 
 // intermediate
 type ClaireSystemThing struct {
@@ -638,8 +672,10 @@ func ToMethod(x *ClaireAny) *ClaireMethod { return (*ClaireMethod)(unsafe.Pointe
 // ------------------------- Claire Lists ---------------------------------------------------
 
 // we recreate bags as a common root (bags are types so that set are types because of single inheritance)
+// CLAIRE combines read-only dynamically typed list/sets and mutable statically typed list/sets [of = {} <=> unmutable]
 type ClaireBag struct {
 	ClaireType
+	of     *ClaireType          // type that contains all list members if mutable
 }
 
 func ToBag(x *ClaireAny) *ClaireBag { return (*ClaireBag)(unsafe.Pointer(x)) }
@@ -648,7 +684,6 @@ func ToBag(x *ClaireAny) *ClaireBag { return (*ClaireBag)(unsafe.Pointer(x)) }
 // actual implementation is one of the three next types
 type ClaireList struct {
 	ClaireBag
-	of     *ClaireType  // type that contains all list members
 	Srange *ClaireClass // sort : object, float or integer
 }
 
@@ -691,19 +726,15 @@ type ClaireListargs ClaireList
 // only the instanciation changes. In the future, add a new type <type>[n] to capture the length
 func ToArray(x *ClaireAny) *ClaireList { return (*ClaireList)(unsafe.Pointer(x)) }
 
-// key decision : ClaireTuple is ClaireList
+// key decision : ClaireTuple is ClaireList (from go point of view)
+// the difference is that Isa contains C_tuple
 type ClaireTuple = ClaireList
 
-/* tuples are read-only lists (hence fixed size) => only use the Object form for the time being
-type ClaireTuple struct {
-	ClaireListObject
-} */
 func ToTuple(x *ClaireAny) *ClaireTuple { return (*ClaireList)(unsafe.Pointer(x)) }
 
 // sets are implemented with a map[string]any
 type ClaireSet struct {
 	ClaireBag
-	of     *ClaireType
 	Values map[string]*ClaireAny
 }
 
@@ -758,18 +789,20 @@ func ToMap(x *ClaireAny) *ClaireMap { return (*ClaireMap)(unsafe.Pointer(x)) }
 
 // new in CLAIRE 4: Types move to Kernel for functional closure (contains and includes) -----------------------------------------------------
 
-// root for type expressions (used to be Type -> type_expression)
-type ClaireTypeExpression struct {
+// root for type operator (used to be Type -> type_operatore )
+// this is the type lattice (not extensible), defined in Kernel  
+// extensions such as Patterns or References are type_expressions
+type ClaireTypeOperator struct {
 	ClaireType
 }
 
-func ToTypeExpression(x *ClaireAny) *ClaireTypeExpression {
-	return (*ClaireTypeExpression)(unsafe.Pointer(x))
+func ToTypeOperator(x *ClaireAny) *ClaireTypeOperator {
+	return (*ClaireTypeOperator)(unsafe.Pointer(x))
 }
 
 // Union of two types
 type ClaireUnion struct {
-	ClaireTypeExpression
+	ClaireTypeOperator
 	T1 *ClaireType
 	T2 *ClaireType
 }
@@ -778,7 +811,7 @@ func To_Union(x *ClaireAny) *ClaireUnion { return (*ClaireUnion)(unsafe.Pointer(
 
 // interval (only int because we want enumerability + this is useful for array/ list range inference for indices)
 type ClaireInterval struct {
-	ClaireTypeExpression
+	ClaireTypeOperator
 	Arg1 int
 	Arg2 int
 }
@@ -787,7 +820,7 @@ func To_Interval(x *ClaireAny) *ClaireInterval { return (*ClaireInterval)(unsafe
 
 // a paramerized subclass
 type ClaireParam struct {
-	ClaireTypeExpression
+	ClaireTypeOperator
 	Arg    *ClaireClass
 	Params *ClaireList
 	Args   *ClaireList
@@ -797,14 +830,14 @@ func To_Param(x *ClaireAny) *ClaireParam { return (*ClaireParam)(unsafe.Pointer(
 
 // a generic subtype C[B] : subtype of class C whose members belong to B, e.g., list[integer]
 type ClaireSubtype struct {
-	ClaireTypeExpression
+	ClaireTypeOperator
 	Arg *ClaireClass
 	T1  *ClaireType
 }
 
 func ToSubtype(x *ClaireAny) *ClaireSubtype { return (*ClaireSubtype)(unsafe.Pointer(x)) }
 
-// reference to a previous variable, not a type but a pattern -------
+// reference to a previous variable, not a type but a type_expression, like a pattern -------
 // index is the position of the stack of the referred type
 // args is a list representing the path (a sequence of properties (parameters))
 // a property is applied to the referred type
@@ -819,14 +852,10 @@ type ClaireReference struct {
 // arg:boolean = false)
 func To_Reference(x *ClaireAny) *ClaireReference { return (*ClaireReference)(unsafe.Pointer(x)) }
 
-/* Patterns are used by the compiler (a tool to specialize the code for f(g(x)))
-type ClairePattern
-	ClaireTypeExpression
-	Args  *ClaireList
-	Arg   *ClaireBoolean
-}	 */
 
 // some global variables
+var claireStdout *ClairePort
+var claireStdin *ClairePort
 var it *ClaireModule = nil
 var C_class *ClaireClass = nil
 var C_void *ClaireClass = nil
@@ -856,6 +885,8 @@ var C_boolean *ClaireClass = nil
 var CTRUE *ClaireBoolean = nil
 var CFALSE *ClaireBoolean = nil
 var CNULL *ClaireAny = nil  // unknown object
+var unknownName *ClaireSymbol = nil
+var PRIVATE *ClaireSymbol = nil
 var CEMPTY *ClaireSet = nil // empty set
 var CNIL *ClaireList = nil  // empty list
 var EVOID EID               // EID handler on void, CNULL
@@ -884,6 +915,7 @@ var C_Kernel *ClaireModule = nil
 var C_port *ClaireClass = nil
 var C_map *ClaireClass = nil
 var C_type_expression *ClaireClass = nil
+var C_type_operator *ClaireClass = nil
 var C_Union *ClaireClass = nil
 var C_Interval *ClaireClass = nil
 var C_Param *ClaireClass = nil
@@ -893,20 +925,17 @@ var C_Reference *ClaireClass = nil
 // property vars
 var C_copy *ClaireProperty
 var C_empty *ClaireProperty
-var C_delete *ClaireProperty
 var C_length *ClaireProperty
 var C_contain_ask *ClaireProperty
 var C__in *ClaireProperty          // % in claire is _in in go
 var C_included_ask *ClaireProperty // <= @ type : extensible through included?
 var C_of *ClaireProperty
-var C_add *ClaireProperty
-var C_add_I *ClaireProperty
 var C_isa *ClaireProperty
-var C_index *ClaireProperty
+var C_mClaire_index *ClaireProperty
 var C_value *ClaireProperty
 var C_arg *ClaireProperty
 var C_name *ClaireProperty
-var C_pname *ClaireProperty
+var C_mClaire_pname *ClaireProperty
 var C_comment *ClaireProperty
 var C_slots *ClaireProperty
 var C_superclass *ClaireProperty
@@ -916,6 +945,7 @@ var C_descendents *ClaireProperty
 var C_open *ClaireProperty
 var C_instances *ClaireProperty
 var C_params *ClaireProperty
+var C_mClaire_graph *ClaireProperty
 var C_if_write *ClaireProperty
 var C_dictionary *ClaireProperty
 var C_ident_ask *ClaireProperty
@@ -925,31 +955,32 @@ var C_store_ask *ClaireProperty
 var C_inverse *ClaireProperty
 var C_multivalued_ask *ClaireProperty
 var C_restrictions *ClaireProperty
-var C_definition *ClaireProperty
+var C_mClaire_definition *ClaireProperty
 var C_reified *ClaireProperty
 var C_module_I *ClaireProperty
 var C_trace_I *ClaireProperty
 var C_selector *ClaireProperty
-var C_srange *ClaireProperty
-var C_typing *ClaireProperty
+var C_mClaire_srange *ClaireProperty
+var C_Kernel_typing *ClaireProperty
 var C_default *ClaireProperty
 var C_functional *ClaireProperty
 var C_formula *ClaireProperty
 var C_vars *ClaireProperty
 var C_body *ClaireProperty
+var C_dimension *ClaireProperty
 var C_parts *ClaireProperty
 var C_part_of *ClaireProperty
 var C_uses *ClaireProperty
 var C_source *ClaireProperty
 var C_made_of *ClaireProperty
-var C_status *ClaireProperty
+var C_mClaire_status *ClaireProperty
 var C_external *ClaireProperty
 var C_get *ClaireProperty
+// var C_getenv *ClaireProperty   in Core
 var C_put *ClaireProperty
 var C_funcall *ClaireProperty
 var C_fastcall *ClaireProperty
 var C_nth *ClaireProperty
-var C_nth_set *ClaireProperty
 var C_nth_equal *ClaireProperty
 var C_nth_put *ClaireProperty
 var C_nth_plus *ClaireProperty
@@ -961,6 +992,8 @@ var C_close *ClaireProperty
 var C_ephemeral *ClaireProperty
 var C_final *ClaireProperty
 var C_abstract *ClaireProperty
+var C_jito_ask *ClaireProperty
+var C_n_line *ClaireProperty
 var C_gensym *ClaireProperty
 var C_store *ClaireProperty
 var C_commit *ClaireProperty
@@ -979,11 +1012,9 @@ var C_array_I *ClaireProperty
 var C_list_I *ClaireProperty
 var C_class_I *ClaireProperty
 var C_new *ClaireProperty
-var C_new_thing *ClaireProperty
+var C_mClaire_new_I *ClaireProperty
 var C_make_function *ClaireProperty
-var C_cons *ClaireProperty
 var C_cdr *ClaireProperty
-var C_add_star *ClaireProperty
 var C_skip *ClaireProperty
 var C_shrink *ClaireProperty
 var C_size *ClaireProperty
@@ -998,7 +1029,7 @@ var C_port_I *ClaireProperty
 var C_use_as_output *ClaireProperty
 var C_precedence *ClaireProperty
 var C_shell *ClaireProperty
-var C_getenv *ClaireProperty
+// var C_getenv *ClaireProperty
 var C_fclose *ClaireProperty
 var C_world_ask *ClaireProperty
 var C_world_id *ClaireProperty
@@ -1024,8 +1055,8 @@ var C_atan *ClaireProperty
 var C_sqrt *ClaireProperty
 var C__exp2 *ClaireProperty
 var C_stack_apply *ClaireProperty
-var C_t1 *ClaireProperty
-var C_t2 *ClaireProperty
+var C_mClaire_t1 *ClaireProperty
+var C_mClaire_t2 *ClaireProperty
 var C_arg1 *ClaireProperty
 var C_arg2 *ClaireProperty
 var C_args *ClaireProperty
@@ -1037,10 +1068,10 @@ var C_ctrace *ClaireProperty
 var C_cout *ClaireProperty
 var C_cin *ClaireProperty
 var C_base *ClaireProperty
-var C_restore_state *ClaireProperty
+var C_mClaire_restore_state *ClaireProperty
 var C_abort *ClaireProperty
 var C_debug_I *ClaireProperty
-var C_step_I *ClaireProperty
+// var C_step_I *ClaireProperty
 var C_last_debug *ClaireProperty
 var C_last_index *ClaireProperty
 var C_spy_I *ClaireProperty
@@ -1053,8 +1084,24 @@ var C_slot_get *ClaireProperty
 var C_putc *ClaireProperty
 var C_getc *ClaireProperty
 var C_namespace *ClaireProperty
-
+var C_date_I *ClaireProperty
+var C_sort_I *ClaireProperty
+var C_apply *ClaireProperty
+var C_count_call *ClaireProperty
+var C_count_level *ClaireProperty
+var C_count_trigger *ClaireProperty
+var C_add_slot *ClaireProperty
+var C_add_method *ClaireProperty
+var C_arity *ClaireProperty
+var C_set_arity *ClaireProperty
+var C_flush *ClaireProperty
+var C_imports *ClaireProperty      // new in CLAIRE 4: pragma for modules
+	
 // operations
+var C_add *ClaireOperation
+var C_add_I *ClaireOperation
+var C_add_star *ClaireOperation
+var C_delete *ClaireOperation
 var C__equal *ClaireOperation
 var C__dash *ClaireOperation
 var C__star *ClaireOperation
@@ -1070,6 +1117,7 @@ var C__dot_dot *ClaireOperation
 var C_min *ClaireOperation
 var C_max *ClaireOperation
 var C_mod *ClaireOperation
+var C_cons *ClaireOperation
 
 // +---------------------------------------------------------------------------+
 // |  Part 3: Dummy Classes for instanciation / get/ set                       |
@@ -1082,7 +1130,7 @@ var C_mod *ClaireOperation
 
 // consequence: Claire Object slots are either *Clany or direct 64bits values (float or int)
 
-// this is a dummy hierarchy to support object up to size 50
+// this is a dummy hierarchy to support object up to size 30
 type ClaireDummy1 struct {
 	ClaireAny
 	a2 *ClaireAny
@@ -1126,8 +1174,19 @@ type ClaireDummy5 struct {
 	a24 *ClaireAny
 }
 
-// constructors : generic "make object"
-// need to use the prototype to select
+// for the time being we stop at 30 slots.
+type ClaireDummy6 struct {
+	ClaireDummy5
+	a25 *ClaireAny
+	a26 *ClaireAny
+	a27 *ClaireAny
+	a28 *ClaireAny
+	a29 *ClaireAny
+}
+
+
+// constructors : generic "make object" using c.slots to know the size 
+// HENCE IT DOES NOT WORK WITH CLASSES or objects with hidden go slots
 func (c *ClaireClass) makeObject() *ClaireObject {
 	n := c.Slots.Length()
 	var o *ClaireObject
@@ -1141,6 +1200,8 @@ func (c *ClaireClass) makeObject() *ClaireObject {
 		o = (*ClaireObject)(unsafe.Pointer(new(ClaireDummy4)))
 	} else if n < 25 {
 		o = (*ClaireObject)(unsafe.Pointer(new(ClaireDummy5)))
+	} else if n < 30 {
+		o = (*ClaireObject)(unsafe.Pointer(new(ClaireDummy6)))
 	} else {
 		panic(fmt.Sprintf("object of size %d is too big for claire ", n))
 	}
@@ -1150,7 +1211,7 @@ func (c *ClaireClass) makeObject() *ClaireObject {
 // generic access to the n-th slot with the srange (s) info
 func (x *ClaireObject) Get(n int, s *ClaireClass) *ClaireAny {
 	if s == C_integer {
-		fmt.Printf("Get Int %d -> %d\n", n, x.GetInt(n))
+		// fmt.Printf("Get Int %d -> %d\n", n, x.GetInt(n))
 		return MakeInteger(x.GetInt(n)).Id()
 	} else if s == C_float {
 		return MakeFloat(x.GetFloat(n)).Id()
@@ -1210,8 +1271,18 @@ func (x *ClaireObject) GetObj(i int) *ClaireAny {
 		return ((*ClaireDummy5)(unsafe.Pointer(x))).a23
 	} else if i == 24 {
 		return ((*ClaireDummy5)(unsafe.Pointer(x))).a24
+	} else if i == 25 {
+		return ((*ClaireDummy6)(unsafe.Pointer(x))).a25
+	} else if i == 26 {
+		return ((*ClaireDummy6)(unsafe.Pointer(x))).a26
+	} else if i == 27 {
+		return ((*ClaireDummy6)(unsafe.Pointer(x))).a27
+	} else if i == 28 {
+		return ((*ClaireDummy6)(unsafe.Pointer(x))).a28
+	} else if i == 29 {
+		return ((*ClaireDummy6)(unsafe.Pointer(x))).a29
 	} else {
-		panic("Fatal error with getObj (i too big >= 25)")
+		panic("Fatal error with getObj (i too big >= 30)")
 		return C_class.any()
 	} // need a Cerror !
 }
@@ -1278,8 +1349,18 @@ func (x *ClaireObject) SetObj(i int, y *ClaireAny) {
 		((*ClaireDummy5)(unsafe.Pointer(x))).a23 = y
 	} else if i == 24 {
 		((*ClaireDummy5)(unsafe.Pointer(x))).a24 = y
+	} else if i == 25 {
+		((*ClaireDummy6)(unsafe.Pointer(x))).a25 = y
+	} else if i == 26 {
+		((*ClaireDummy6)(unsafe.Pointer(x))).a26 = y
+	} else if i == 26 {
+		((*ClaireDummy6)(unsafe.Pointer(x))).a27 = y
+	} else if i == 28 {
+		((*ClaireDummy6)(unsafe.Pointer(x))).a28 = y
+	} else if i == 29 {
+		((*ClaireDummy6)(unsafe.Pointer(x))).a29 = y
 	} else {
-		panic(fmt.Sprintf("Fatal error with setObj, attempt to use i=%d for class %s", i, x.Isa.Name.Key))
+		panic(fmt.Sprintf("Fatal error with setObj, attempt to use i=%d for class %s (>= 30)", i, x.Isa.Name.Key))
 	}
 }
 
@@ -1297,13 +1378,13 @@ func (x *ClaireObject) SetInt(i int, y int) {
 
 // special code for Float (64bits as well)
 func (x *ClaireObject) GetFloat(i int) float64 {
-	p := (uintptr)(unsafe.Pointer(x)) + (uintptr)(i*8)
+	p := (uintptr)(unsafe.Pointer(x)) + (uintptr)((i-1)*8)
 	return *((*float64)(unsafe.Pointer(p)))
 }
 
 // slot write
 func (x *ClaireObject) SetFloat(i int, y float64) {
-	p := (uintptr)(unsafe.Pointer(x)) + (uintptr)(i*8)
+	p := (uintptr)(unsafe.Pointer(x)) + (uintptr)((i-1)*8)
 	*((*float64)(unsafe.Pointer(p))) = y
 }
 
@@ -1348,6 +1429,8 @@ func (c *ClaireClass) isIn(c2 *ClaireClass) *ClaireBoolean {
 // set,list,string = deep equality
 // imported = same value  (integer, float, char, string, ....
 func Equal(x *ClaireAny, y *ClaireAny) *ClaireBoolean {
+	if ClEnv.Verbose == 122 {
+		 fmt.Printf("Equal with %s(%s) and %s(%s)\n",x.Prt(),x.Isa.Prt(),y.Prt(),y.Isa.Prt()) }
 	if x == y {
 		return CTRUE
 	} else if x.Isa.Ident_ask == CTRUE || y.Isa.Ident_ask == CTRUE {
@@ -1356,7 +1439,7 @@ func Equal(x *ClaireAny, y *ClaireAny) *ClaireBoolean {
 		return CFALSE
 	} else if x.Isa == C_list || x.Isa == C_tuple {
 		return ToList(x).equalList(ToList(y))
-		//   } else if x.Isa == Cset {return x.ToSet().equalSet(y.ToSet())
+    } else if x.Isa == C_set {return ToSet(x).equalSet(ToSet(y))
 	} else if x.Isa == C_string {
 		if ToString(x).Value == ToString(y).Value {
 			return CTRUE
@@ -1372,18 +1455,24 @@ func Equal(x *ClaireAny, y *ClaireAny) *ClaireBoolean {
 
 // optimize the EID version to remove integer allocation 
 func E_equal_any(x EID, y EID) EID {
+	// fmt.Printf("Equal on EID %s and %s \n",PEID(x),PEID(y))
 	if x.PTR == C__INT {
 		 if y.PTR == C__INT {return EID{MakeBoolean(x.VAL == y.VAL).Id(),0}
+		 } else if y.PTR.Isa == C_integer  {return EID{MakeBoolean(INT(x) == ToInteger(y.PTR).Value).Id(),0}
 		 } else {return EID{CFALSE.Id(), 0}}
 	} else if x.PTR == C__FLOAT {
 		if y.PTR == C__FLOAT {return EID{MakeBoolean(x.VAL == y.VAL).Id(),0}
-		} else {return EID{CFALSE.Id(), 0}}
+		} else if y.PTR.Isa == C_float {return EID{MakeBoolean(FLOAT(x) == ToFloat(y.PTR).Value).Id(),0}
+	    } else {return EID{CFALSE.Id(), 0}}
 	} else if x.PTR == C__CHAR {
 		if y.PTR == C__CHAR {return EID{MakeBoolean(x.VAL == y.VAL).Id(),0}
-		} else {return EID{CFALSE.Id(), 0}}
-	} else {
-		return EID{Equal(x.PTR, y.PTR).Id(), 0}
-	}}
+		} else if y.PTR.Isa == C_char {return EID{MakeBoolean(CHAR(x) == ToChar(y.PTR).Value).Id(),0}
+	    } else {return EID{CFALSE.Id(), 0}}
+	} else {   // need to check if y is non OBJ EID !
+		if (y.PTR == C__INT || y.PTR == C__FLOAT || y.PTR == C__CHAR)  {return EID{Equal(x.PTR, ANY(y)).Id(), 0}
+		} else {return EID{Equal(x.PTR, y.PTR).Id(), 0}}
+	    }
+	}
 
 // specialized version for slots that returns unknown if p has no slot
 func (p *ClaireProperty) Of(x *ClaireObject) *ClaireAny {
@@ -1409,12 +1498,12 @@ func (p *ClaireProperty) findRestriction(c *ClaireClass) *ClaireRestriction {
 	}
 	for i := 0; i < n; i++ {
 		m := ToRestriction(p.Restrictions.ValuesO()[i])
-		if ClEnv.Verbose > 1 {
+		if ClEnv.Verbose > 10 {
 			fmt.Printf("--- Look if restriction %s matches %s\n", m.Prt(), c.Prt())
 		}
 		if c.IsIn(ToClass(m.Domain.ValuesO()[0])) == CTRUE && 
 		     (m.Isa == C_slot ||  m.Domain.Length() == 1) {
-			if ClEnv.Verbose > 1 {
+			if ClEnv.Verbose > 10 {
 				fmt.Printf("findRestruction returns %s\n", m.Prt())
 			}
 			return m
@@ -1427,16 +1516,16 @@ func (p *ClaireProperty) findRestriction(c *ClaireClass) *ClaireRestriction {
 // deprecated
 func (p *ClaireProperty) FindSlot(c *ClaireClass) *ClaireSlot {
 	n := p.Restrictions.Length()
-	if ClEnv.Verbose > 1 {
+	if ClEnv.Verbose > 10 {
 		fmt.Printf("--- NEW FindSlot %s on %s with %d restriction\n", p.Prt(), c.Prt(), n)
 	}
 	for i := 0; i < n; i++ {
 		m := ToSlot(p.Restrictions.ValuesO()[i])
-		if ClEnv.Verbose > 1 {
+		if ClEnv.Verbose > 10 {
 			fmt.Printf("--- Look if restriction %s matches %s\n", m.Prt(), c.Prt())
 		}
 		if c.IsIn(ToClass(m.Domain.ValuesO()[0])) == CTRUE && m.Isa.IsIn(C_slot) == CTRUE {
-			if ClEnv.Verbose > 1 {
+			if ClEnv.Verbose > 10 {
 				fmt.Printf("findSlot returns %s\n", m.Prt())
 			}
 			return m
@@ -1459,6 +1548,7 @@ func ARGS(args ...EID) int {
 // applies a claire function (EID) to the content of the eval stack
 func F_stack_apply_function(f *ClaireFunction, i int, top int) EID {
 	var x EID
+	if ClEnv.Verbose == 13 {fmt.Printf(">>> stack apply will use f=%s\n",f.name)}
 	if top == i+1 {
 		x = toFunction1(f).call(ClEnv.EvalStack[i])
 	} else if top == i+2 {
@@ -1475,6 +1565,9 @@ func F_stack_apply_function(f *ClaireFunction, i int, top int) EID {
 		panic("CLAIRE does not handle so many parameters in stack apply")
 	}
 	ClEnv.Index = i
+	if ClEnv.Verbose > 12 {
+		fmt.Printf("stack_apply returns %s\n",PEID(x))
+	}
 	return x
 }
 
@@ -1489,23 +1582,35 @@ func F_apply_function(f *ClaireFunction, l *ClaireList) EID {
 		return toFunction1(f).call(l.At(0).ToEID())
 	} else if n == 2 {
 		return toFunction2(f).call(l.At(0).ToEID(), l.At(1).ToEID())
+	} else if n == 3 {
+		return toFunction3(f).call(l.At(0).ToEID(), l.At(1).ToEID(), l.At(1).ToEID())
 	} else {
 		return EID{CERROR.Id(), 1}
 	}
 }
 
+func E_apply_function(f EID,l EID) EID { 
+	return F_apply_function(ToFunction(OBJ(f)),ToList(OBJ(l))) }
+
 // function calls
 func F_funcall1(f *ClaireFunction, x *ClaireAny) EID {
 	return toFunction1(f).call(x.ToEID())
-}
+ }
+
+func E_funcall1(f EID, x EID) EID {return F_funcall1(ToFunction(OBJ(f)),ANY(x))}
 
 func F_funcall2(f *ClaireFunction, x *ClaireAny, y *ClaireAny) EID {
 	return toFunction2(f).call(x.ToEID(), y.ToEID())
 }
 
+func E_funcall2(f EID, x EID, y EID) EID {return F_funcall2(ToFunction(OBJ(f)),ANY(x),ANY(y))}
+
 func F_funcall3(f *ClaireFunction, x *ClaireAny, y *ClaireAny, z *ClaireAny) EID {
 	return toFunction3(f).call(x.ToEID(), y.ToEID(), y.ToEID())
 }
+
+func E_funcall3(f EID, x EID, y EID, z EID) EID {return F_funcall3(ToFunction(OBJ(f)),ANY(x),ANY(y),ANY(z))}
+
 // macros used by the compiler for Call_method1 and Call_method2
 func FASTCALL1(m *ClaireMethod, x EID) EID {
 	return toFunction1(m.Functional).call(x)
@@ -1521,10 +1626,28 @@ func FASTCALL3(m *ClaireMethod, x EID, y EID, z EID) EID {
 
 
 // string! : access to name
-func (f *ClaireFunction) String_I() *ClaireString {
+func  F_string_I_function (f *ClaireFunction) *ClaireString {
 	return MakeString(f.name)
 }
 
 func E_string_I_function(f EID) EID {
-	return EID{ToFunction(OBJ(f)).String_I().Id(), 0}
+	return EID{F_string_I_function(ToFunction(OBJ(f))).Id(), 0}
+}
+
+// arity : access to number of args
+func F_arity_function(f *ClaireFunction) int {
+	return f.arity
+}
+
+func E_arity_function(f EID) EID {
+	return EID{C__INT, IVAL(F_arity_function(ToFunction(OBJ(f))))}
+}
+
+func F_set_arity_function (f *ClaireFunction, n int)  {
+	f.arity = n
+}
+
+func E_set_arity_function(f EID, n EID) EID {
+	F_set_arity_function(ToFunction(OBJ(f)),INT(n))
+	return EVOID
 }

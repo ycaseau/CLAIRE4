@@ -52,7 +52,7 @@ type ClaireEnvironment struct {
 	Exception_I        *ClaireException // last
 	Module_I           *ClaireModule    // current module
 	Name               *ClaireString
-	Version            float64     // version number ! (4.0)
+	Version            float64     // version number ! (4.0 implicit)
 	Ctrace             *ClairePort //  current trace port
 	Cout               *ClairePort //  current out port
 	Cin                *ClairePort //  current in port
@@ -69,14 +69,17 @@ type ClaireEnvironment struct {
 	CountLevel   int           // level at which something happens ...
 	CountTrigger *ClaireAny    // what should happen
 	// system slots
-	Params *ClaireListObject // parameters passed from the shell
+	Params 		*ClaireList // parameters passed from the shell
 	// global constants: open status for classes,   properties and modules
 	Close     int // c: do not touch,   p:read only (-1)
 	ABSTRACT  int // c: no more instances           (0)
-	Ephemeral int // c: no more subclasses          (1)
-	DEFAULT   int //                                (2)
+	Final int // c: no more subclasses          (1)
+	Default   int //                                (2)
 	Open      int // p: open property (extensible)  (3)
-
+	Ephemeral int // c: no more subclasses          (1)
+	Jito_ask  *ClaireBoolean     // allows Just In Time Optimization
+	NLine   int                // numbers of lines read
+	
 	// --- stack management  -------------------------------------------------------
 	maxStack   int   // size of stack
 	EvalStack  []EID // value stack
@@ -98,16 +101,26 @@ type ClaireEnvironment struct {
 // one object
 var ClEnv *ClaireEnvironment = nil
 
+// open is a key slot - here we define the values
+// -2   forward       trick used in define.cl to note the forward definition
+// -1   closed        c: no more instance, no subclass (but with instances)
+// 0   abstract       c: no instances
+// 1   final          c: thing with no subclasses        p: compiled
+// 2   default        c: default = ephemeral             p: default
+// 3    open          c: keep instances                  p: extensible    
+
 // initialisation : ClEnv & ClRes
 // TODO : pass as parameters the MaxStack, MaxBuffer, MaxHist values (not constants !)
 func InitClEnv() {
 	ClEnv = new(ClaireEnvironment)
 	ClEnv.Close = -1
 	ClEnv.ABSTRACT = 0  // c: no more instances           (0)
-	ClEnv.Ephemeral = 1     // c: no more subclasses          (1)
-	ClEnv.DEFAULT = 2   //                                (2)
-	ClEnv.Open = 3      // p: open property (extensible)  (3)
-
+	ClEnv.Final = 1     // c: no more subclasses          (1)
+	ClEnv.Default = 2   //                                (2)
+	ClEnv.Open = 3      	// 				p: open property (extensible)  
+	ClEnv.Ephemeral = 4     // c: no more subclasses          (1)
+	ClEnv.Jito_ask = CTRUE
+	
 	ClEnv.maxBuffer = 10000 * CLAIRESIZE
 	ClEnv.Module_I = C_claire
 	ClEnv.buffer = make([]byte, ClEnv.maxBuffer) // a local buffer for string creation
@@ -122,12 +135,14 @@ func InitClEnv() {
 	ClEnv.tIndex = 0
 	ClEnv.Trace_I = 0
 	ClEnv.Debug_I = -1         // -1 means no debug
-	ClEnv.CountTrigger = CNULL // v3.1.16 !!
-
+	ClEnv.CountCall = 0        // count the numbers of call
+	
+	// two slots with CNULL values are set up later (in Bootcore)
 	// ClRes is our world set of stacks - see part 3
 	ClRes = new(ClaireResource)
-	ClRes.maxHist = 10000 * CLAIRESIZE
+	ClRes.maxHist = 1000000 * CLAIRESIZE
 	ClRes.init()
+	
 }
 
 // there is a two step process because the firt step is called very early
@@ -138,7 +153,24 @@ func finishClEnv() {
 	ClEnv.Exception_I = ToException(CNULL)
 	ClEnv.Spy_I = ToObject(CNULL)
 	ClEnv.moduleStack = makeEmptyObjectList(0)
+	ClEnv.Jito_ask = CTRUE
+	ClEnv.CountTrigger = CNULL 				// moved from ClEnvInit() because now CNULL exists
+	ClEnv.Params = ToType(C_string.Id()).EmptyList()
+	// get the args from the command line
+	for _,s := range(os.Args[1:]) {ClEnv.Params.AddFast(MakeString(s).Id())}	
 }
+
+// parse the args to see if it starts with -s n
+func MemoryFlags() {
+ if len(os.Args) > 2 && os.Args[1] == "-s" {
+		 size,err := strconv.Atoi(os.Args[2])
+         if err == nil {
+			 fmt.Printf("==> change size to %d ===\n",size)
+             CLAIRESIZE = size }}
+}
+    
+
+
 
 // stack managemement methods --------------------------------------------------
 
@@ -156,11 +188,21 @@ func (c *ClaireEnvironment) StepStack(base int) {
 
 // push: add to the stack
 func (c *ClaireEnvironment) Push(x EID) EID {
+	/* debug warning + debug check ---------------------
+	if c.Index > c.maxStack - 10  {
+		fmt.Printf("Push %s in stack at position %d\n",PEID(x),c.Index)
+		for i := -20; i < 0; i++ {
+			j := c.Index + i
+			fmt.Printf("stack[%d] = %s\n",j,PEID(c.EvalStack[j]))}
+		panic("stack overflow, maxStack too small")
+	}
+	BadI(x,"ClEnv.Push")       // do no push an integer OID
+	// -------- end of debug ----------------------------- */
 	c.EvalStack[c.Index] = x
 	// fmt.Printf("=== pushStack %s at [%d]\n", PEID(x), c.Index)
 	c.Index = c.Index + 1
-	if c.Index > c.maxStack {
-		panic("stack overflow, maxStack too small")
+	if c.Index > c.maxStack - 1 {
+		panic("stack overflow, maxStack too small or infinite loop")
 	}
 	return x
 }
@@ -171,6 +213,11 @@ func F_stack_add(x int) {
 	if ClEnv.Index >= ClEnv.maxStack {
 		panic("stack overflow, maxStack too small")
 	}
+}
+
+func E_stack_add(x EID) EID { 
+	F_stack_add(INT(x))
+	return EVOID
 }
 
 // pop: return to previous block in the stack (current + top)
@@ -214,7 +261,7 @@ func (p *ClaireProperty) StackMethod(narg int) *ClaireAny {
 // these are used directly by the compiler
 
 // The EVAL go function for: Kernel/Variable
-func EVAL_Kernel_Variable(x *ClaireAny) EID {
+func EVAL_Variable(x *ClaireAny) EID {
 	return ClEnv.EvalStack[(ClEnv.Base + To_Variable(x).Index)]
 }
 
@@ -409,7 +456,8 @@ func Cerror(n int, a *ClaireAny, b *ClaireAny) EID {
 	o.Index = n
 	o.Value = a
 	o.Arg = b
-	o.Close()    // very unclear that we need this 
+	if ClEnv.Verbose > 5 {panic("stop and see why")}
+   	o.Close()    // very unclear that we need this 
 	return EID{o.Id(), 1}
 }
 
@@ -418,10 +466,14 @@ func (e *ClaireException) Close() EID {
 	ClEnv.Exception_I = e
 	ClEnv.LastDebug = ClEnv.Debug_I
 	ClEnv.LastIndex = ClEnv.Index
-	// fmt.Printf("======== >  Close_exception %p => %x \n", e, EID{e.Id(), 1})
-	// panic("stop and see why") // debug line: convenient to see where the error occured
+	if ClEnv.Verbose > 4 {fmt.Printf("======== >  Close_exception %s \n", e.Prt())}
+	if ClEnv.Verbose > 5 { panic("stop and see why")}  // debug line: convenient to see where the error occured
 	return EID{e.Id(), 1}
 }
+
+// this is a callable method from the interpeter
+func E_close_exception (e EID) EID {return ToException(OBJ(e)).Close() }
+
 
 // check if an error occurred
 func ErrorCheck(x EID) {
@@ -532,122 +584,142 @@ func (c *ClaireResource) init() {
 }
 
 // defeasible update on a list  (not a method because there are many variations)
-func F_store_list(l *ClaireList, n int, y *ClaireAny, b *ClaireBoolean) *ClaireAny {
+func F_store_list(l *ClaireList,n int, y *ClaireAny, b *ClaireBoolean) *ClaireAny {
+	// fmt.Printf("store on list %s at n=%d with y=%s\n",l.Prt(),n,y.Prt())
 	if l.Srange == C_integer {
-		return MakeInteger(l.toInteger().store(n, ToInteger(y).Value, b)).Id()
+		l.toInteger().store(n, ToInteger(y).Value, b)
 	} else if l.Srange == C_float {
-		return MakeFloat(l.toFloat().store(n, ToFloat(y).Value, b)).Id()
+		l.toFloat().store(n, ToFloat(y).Value, b)
 	} else {
-		return l.toObject().store(n, y, b)
+		l.toObject().store(n, y, b)
 	}
+	return y
 }
 
-func E_store_list(l EID, n EID, y EID, b EID) EID {
-	return EID{F_store_list(ToList(OBJ(l)), INT(n), ANY(y), ToBoolean(OBJ(b))), 0}
+// this is optimized to avoid ANY(y) allocation
+func E_store_list(leid EID, n EID, y EID, b EID) EID {
+	l := ToList(OBJ(leid))
+    // fmt.Printf("EID store on list %s at n=%d with y=%s\n",l.Prt(),INT(n),PEID(y))
+	if l.Srange == C_integer {
+		l.toInteger().store(INT(n), INT(y), ToBoolean(OBJ(b)))
+	} else if l.Srange == C_float {
+		l.toFloat().store(INT(n), FLOAT(y), ToBoolean(OBJ(b)))
+	} else {
+		l.toObject().store(INT(n), OBJ(y), ToBoolean(OBJ(b)))
+	}
+	return y
 }
 
 // three versions that are sort dependent
-func (l *ClaireListObject) store(n int, y *ClaireAny, b *ClaireBoolean) *ClaireAny {
+func (l *ClaireListObject) store(n int, y *ClaireAny, b *ClaireBoolean)  {
 	if b == CTRUE {
 		ClRes.olIndex++
 		if ClRes.olIndex > ClRes.maxHist {
 			panic("History stack overflow")
 		}
 		ClRes.listObjRec[ClRes.olIndex] = l
-		ClRes.listObjIndex[ClRes.olIndex] = n
-		ClRes.listObjVal[ClRes.olIndex] = l.Values[n]
+		ClRes.listObjIndex[ClRes.olIndex] = n-1
+		ClRes.listObjVal[ClRes.olIndex] = l.Values[n-1]
 	}
-	l.Values[n] = y
-	return y
+	l.Values[n-1] = y
 }
 
-func (l *ClaireListInteger) store(n int, y int, b *ClaireBoolean) int {
+func (l *ClaireListInteger) store(n int, y int, b *ClaireBoolean) {
 	if b == CTRUE {
 		ClRes.ilIndex++
 		if ClRes.ilIndex > ClRes.maxHist {
 			panic("History stack overflow")
 		}
+		// fmt.Printf("store list Int [%d] %p at %d = %p\n",ClRes.ilIndex,l,n-1,l.Values[n-1])
 		ClRes.listIntRec[ClRes.ilIndex] = l
-		ClRes.listIntIndex[ClRes.ilIndex] = n
-		ClRes.listIntVal[ClRes.ilIndex] = l.Values[n]
+		ClRes.listIntIndex[ClRes.ilIndex] = n-1
+		ClRes.listIntVal[ClRes.ilIndex] = l.Values[n-1]
 	}
-	l.Values[n] = y
-	return y
+	l.Values[n-1] = y
 }
 
-func (l *ClaireListFloat) store(n int, y float64, b *ClaireBoolean) float64 {
+func (l *ClaireListFloat) store(n int, y float64, b *ClaireBoolean) {
 	if b == CTRUE {
 		ClRes.flIndex = ClRes.flIndex + 1
 		if ClRes.flIndex > ClRes.maxHist {
 			panic("History stack overflow")
 		}
 		ClRes.listFloatRec[ClRes.flIndex] = l
-		ClRes.listFloatIndex[ClRes.flIndex] = n
-		ClRes.listFloatVal[ClRes.flIndex] = l.Values[n]
+		ClRes.listFloatIndex[ClRes.flIndex] = n-1
+		ClRes.listFloatVal[ClRes.flIndex] = l.Values[n-1]
 	}
-	l.Values[n] = y
-	return y
+	l.Values[n-1] = y
 }
 
 // there are three variants, depending on the sort
 // notice that we use the proper update methods (to prevent GC problems) versus pointer handling
 // this is the generic version (equivalent of store_object in C++)
-func F_store_object(x *ClaireObject, n int, s *ClaireClass, y *ClaireAny, b *ClaireBoolean) *ClaireAny {
+func F_store_object (x *ClaireObject, n int, s *ClaireClass, y *ClaireAny, b *ClaireBoolean) *ClaireAny {
+	if (ClEnv.Verbose > 10) {fmt.Printf("compiled store on object %s at n=%d with y=%s\n",x.Prt(),n,y.Prt())}
 	if s == C_integer {
-		return MakeInteger(x.StoreInt(n, ToInteger(y).Value, b)).Id()
+		x.StoreInt(n, ToInteger(y).Value, b)
 	} else if s == C_float {
-		return MakeFloat(x.StoreFloat(n, ToFloat(y).Value, b)).Id()
+		x.StoreFloat(n, ToFloat(y).Value, b)
 	} else {
-		return x.StoreObj(n, y, b)
+		x.StoreObj(n, y, b)
 	}
-
-}
-
-func E_store_object(x EID, n EID, s EID, y EID, b EID) EID {
-	return EID{F_store_object(ToObject(OBJ(x)), INT(n), ToClass(OBJ(s)), ANY(y), ToBoolean(OBJ(b))), 0}
-}
-
-// same pattern: three specialized versions
-func (x *ClaireObject) StoreObj(n int, y *ClaireAny, b *ClaireBoolean) *ClaireAny {
-	if b == CTRUE {
-		ClRes.oIndex = ClRes.oIndex + 1
-		if ClRes.oIndex > ClRes.maxHist {
-			panic("History stack overflow")
-		}
-		ClRes.slotObjRec[ClRes.oIndex] = x
-		ClRes.slotObjIndex[ClRes.oIndex] = n
-		ClRes.slotObjVal[ClRes.oIndex] = y
-	}
-	x.SetObj(n, y)
 	return y
 }
 
-func (x *ClaireObject) StoreInt(n int, y int, b *ClaireBoolean) int {
+// this is optimized to avoid ANY(y)
+func E_store_object(xeid EID, n EID, seid EID, y EID, b EID) EID {
+	s := ToClass(OBJ(seid))
+	x := ToObject(OBJ(xeid))
+	// fmt.Printf("EID store on object %s at n=%d with y=%s\n",x.Prt(),INT(n),PEID(y))
+	if s == C_integer {
+		x.StoreInt(INT(n), INT(y), ToBoolean(OBJ(b)))
+	} else if s == C_float {
+		x.StoreFloat(INT(n), FLOAT(y), ToBoolean(OBJ(b)))
+	} else {
+		x.StoreObj(INT(n), OBJ(y), ToBoolean(OBJ(b)))
+	}
+	return y
+}
+
+// same pattern: three specialized versions
+func (x *ClaireObject) StoreObj(n int, y *ClaireAny, b *ClaireBoolean) {
+	if b == CTRUE {
+		ClRes.oIndex = ClRes.oIndex + 1
+		if ClRes.oIndex >= ClRes.maxHist {
+			panic("History stack overflow")
+		}
+		fmt.Printf("[%d] store slot%d(%s) = %s\n",ClRes.oIndex,n,x.Prt(),x.GetObj(n).Prt())
+		ClRes.slotObjRec[ClRes.oIndex] = x
+		ClRes.slotObjIndex[ClRes.oIndex] = n
+		ClRes.slotObjVal[ClRes.oIndex] = x.GetObj(n)
+	}
+	x.SetObj(n, y)
+}
+
+func (x *ClaireObject) StoreInt(n int, y int, b *ClaireBoolean) {
 	if b == CTRUE {
 		ClRes.iIndex = ClRes.iIndex + 1
-		if ClRes.iIndex > ClRes.maxHist {
+		if ClRes.iIndex >= ClRes.maxHist {
 			panic("History stack overflow")
 		}
 		ClRes.slotIntRec[ClRes.iIndex] = x
 		ClRes.slotIntIndex[ClRes.iIndex] = n
-		ClRes.slotIntVal[ClRes.iIndex] = y
+		ClRes.slotIntVal[ClRes.iIndex] = x.GetInt(n)
 	}
 	x.SetInt(n, y)
-	return y
 }
 
-func (x *ClaireObject) StoreFloat(n int, y float64, b *ClaireBoolean) float64 {
+func (x *ClaireObject) StoreFloat(n int, y float64, b *ClaireBoolean) {
 	if b == CTRUE {
 		ClRes.fIndex = ClRes.fIndex + 1
-		if ClRes.fIndex > ClRes.maxHist {
+		if ClRes.fIndex >= ClRes.maxHist {
 			panic("History stack overflow")
 		}
 		ClRes.slotFloatRec[ClRes.fIndex] = x
 		ClRes.slotFloatIndex[ClRes.fIndex] = n
-		ClRes.slotFloatVal[ClRes.fIndex] = y
+		ClRes.slotFloatVal[ClRes.fIndex] = x.GetFloat(n)
 	}
 	x.SetFloat(n, y)
-	return y
 }
 
 /* performs an addition to a list and store the relevant changes
@@ -659,6 +731,7 @@ func F_store_add(l *ClaireList,
 
 // add one new world : the top of each stacks become the new base,
 func F_world_push() {
+	fmt.Printf("------- world push @ %d -------------------------\n",ClRes.cWorld)
 	c := ClRes
 	if c.iIndex >= c.maxHist || c.oIndex >= c.maxHist || c.fIndex >= c.maxHist ||
 		c.olIndex >= c.maxHist || c.ilIndex >= c.maxHist || c.flIndex >= c.maxHist {
@@ -673,6 +746,7 @@ func F_world_push() {
 	c.slotObjIndex[c.oIndex] = c.oBase // we use the index stack to chain bases
 	c.slotIntIndex[c.iIndex] = c.iBase //
 	c.slotFloatIndex[c.fIndex] = c.fBase
+	if ClEnv.Verbose > 10 {fmt.Printf("obj slot stack base : %d -> %d = new index\n",c.oBase,c.oIndex)}
 	c.oBase = c.oIndex
 	c.iBase = c.iIndex
 	c.fBase = c.fIndex
@@ -685,7 +759,7 @@ func F_world_push() {
 	c.ilIndex++
 	c.flIndex++
 	c.listObjIndex[c.olIndex] = c.olBase
-	c.listIntIndex[c.iIndex] = c.ilBase
+	c.listIntIndex[c.ilIndex] = c.ilBase
 	c.listFloatIndex[c.flIndex] = c.flBase
 	c.olBase = c.olIndex
 	c.ilBase = c.ilIndex
@@ -699,6 +773,7 @@ func E_world_push(c EID) EID {
 
 // remove a world and perform all modifications stored in the stack
 func F_world_pop() {
+	fmt.Printf("------- world pop @ %d -------------------------\n",ClRes.cWorld)
 	c := ClRes
 	c.cWorldId++ // v3.2.04
 	c.cWorld--
@@ -710,13 +785,15 @@ func F_world_pop() {
 		for i := c.oIndex; i > j; i-- {
 			c.slotObjRec[i].SetObj(c.slotObjIndex[i], c.slotObjVal[i])
 		}
+		if ClEnv.Verbose > 10 {fmt.Printf("obj slot: index de %d a %d, new base is %d\n",c.oIndex,j + 1,c.slotObjIndex[j])}
 		c.oIndex = j - 1
-		c.oBase = c.slotObjIndex[j]
+		c.oBase = c.slotObjIndex[j]           // use base chaining
 		// integer slots
 		j = c.iBase
 		for i := c.iIndex; i > j; i-- {
 			c.slotIntRec[i].SetInt(c.slotIntIndex[i], c.slotIntVal[i])
 		}
+		// fmt.Printf("int slot: index de %d a %d, new base is %d\n",c.iIndex,j + 1,c.slotIntIndex[j])
 		c.iIndex = j - 1
 		c.iBase = c.slotIntIndex[j]
 		j = c.fBase
@@ -728,7 +805,7 @@ func F_world_pop() {
 		// dict updates
 		j = c.odBase
 		for i := c.odIndex; i > j; i-- {
-			c.dictObjRec[i].Put(c.dictObjIndex[i], c.dictObjVal[i])
+			c.dictObjRec[i].Value[c.dictObjIndex[i].Key()] = c.dictObjVal[i]
 		}
 		c.odIndex = j - 1
 		c.odBase = ToInteger(c.dictObjIndex[j]).Value
@@ -759,11 +836,18 @@ func E_world_pop(c EID) EID {
 	return EVOID
 }
 
-// commit: all updates are accepted and the defeaisible updates are lost
-// hence the top of the stack is the previous base
+// commit: all updates are accepted and the backtrack values are moves the previous world
+// this is a base manipulation : the previous base is the current top, and what was on top of previous base is now below
+// Notice that if the world is not empty, the "base line" that is used for based chaining is overwriten with a copy of upper line
+// this maintains the structure: stack of value lines on top of the "base lines" (chaining)
 func F_world_remove() {
+	fmt.Printf("------- world remove @ %d -------------------------\n",ClRes.cWorld)
 	c := ClRes
-	if c.cWorld == 0 { // yc: crude ... may be wrong
+	c.cWorldId++ // v3.2.04
+	c.cWorld--
+	if c.cWorld < 0 {
+		c.cWorld++ // cannot go further
+	} else if c.cWorld == 0 { // complete reset of base & index for 7 blocks
 		c.iBase = 0
 		c.iIndex = 0
 		c.oBase = 0
@@ -779,41 +863,75 @@ func F_world_remove() {
 		c.flBase = 0
 		c.flIndex = 0
 	} else {
-		c.cWorld--
-		// integer commit
-		j := c.iBase
-		c.iIndex = j - 1            // same as Pop without the rollback
-		c.iBase = c.slotIntIndex[j] // base is the previous base
-		// object commit
+		// integer slot commit - detailed explanation
+		j := c.iBase                                    // index does not change if the world is full
+		c.iBase = c.slotIntIndex[j]                     // base is the previous base
+		if (c.iIndex > j)   { // the world contains updates
+			c.slotIntRec[j] = c.slotIntRec[j + 1]        // duplication of world line to erase the base chaining
+			c.slotIntIndex[j] = c.slotIntIndex[j + 1]        // ensures that world-() will not cause an issue
+			c.slotIntVal[j] = c.slotIntVal[j + 1]        // although it is a waste of time
+		} else {c.iIndex = j - 1}                                               // if 
+		// object slot commit
 		j = c.oBase
-		c.oIndex = j - 1            //
+		// k := c.oIndex // debug
 		c.oBase = c.slotObjIndex[j] //
+		if (c.oIndex > j)   { // the world contains updates
+			c.slotObjRec[j] = c.slotObjRec[j + 1]        // duplication of world line to erase the base chaining
+			c.slotObjIndex[j] = c.slotObjIndex[j + 1]        // ensures that world-() will not cause an issue
+			c.slotObjVal[j] = c.slotObjVal[j + 1]        // although it is a waste of time
+		} else {fmt.Printf("empty slice for obj, set index to %d\n",j - 1)
+			    c.oIndex = j - 1} 
+		// fmt.Printf("remove : iBase %d to %d, iIndex %d to %d\n",j,c.oBase,k,c.oIndex)                                              // if 
+		// float slot commit
 		j = c.fBase
-		c.fIndex = j - 1              //
 		c.fBase = c.slotFloatIndex[j] //
+		if (c.fIndex > j)   { // the world contains updates
+			c.slotFloatRec[j] = c.slotFloatRec[j + 1]        // duplication of world line to erase the base chaining
+			c.slotFloatIndex[j] = c.slotFloatIndex[j + 1]        // ensures that world-() will not cause an issue
+			c.slotFloatVal[j] = c.slotFloatVal[j + 1]        // although it is a waste of time
+		} else {c.fIndex = j - 1}                                               // if 
 		// dictionary part
 		j = c.odBase
-		c.odIndex = j - 1                             //
-		c.odBase = ToInteger(c.dictObjIndex[j]).Value //
+		c.odBase = ToInteger(c.dictObjIndex[j]).Value 
+		if (c.odIndex > j)   { // the world contains updates
+			c.dictObjRec[j] = c.dictObjRec[j + 1]        // duplication of world line to erase the base chaining
+			c.dictObjIndex[j] = c.dictObjIndex[j + 1]        // ensures that world-() will not cause an issue
+			c.dictObjVal[j] = c.dictObjVal[j + 1]        // although it is a waste of time
+		} else {c.odIndex = j - 1}                                               // if 
 		// lists
 		j = c.ilBase
-		c.ilIndex = j - 1            // same as Pop without the rollback
 		c.ilBase = c.listIntIndex[j] // base is the previous base
+		if (c.ilIndex > j)   { // the world contains updates
+			c.listIntRec[j] = c.listIntRec[j + 1]        // duplication of world line to erase the base chaining
+			c.listIntIndex[j] = c.listIntIndex[j + 1]        // ensures that world-() will not cause an issue
+			c.listIntVal[j] = c.listIntVal[j + 1]        // although it is a waste of time
+		} else {c.ilIndex = j - 1}                                               // if 
+		// object lists
 		j = c.olBase
-		c.olIndex = j - 1            //
 		c.olBase = c.listObjIndex[j] //
+		if (c.olIndex > j)   { // the world contains updates
+			c.listObjRec[j] = c.listObjRec[j + 1]        // duplication of world line to erase the base chaining
+			c.listObjIndex[j] = c.listObjIndex[j + 1]        // ensures that world-() will not cause an issue
+			c.listObjVal[j] = c.listObjVal[j + 1]        // although it is a waste of time
+		} else {c.olIndex = j - 1}                                               // if 
+		// float lists
 		j = c.flBase
-		c.flIndex = j - 1              //
-		c.flBase = c.listFloatIndex[j] //
+		c.flBase = c.listFloatIndex[j] 
+		if (c.flIndex > j)   { // the world contains updates
+			c.listFloatRec[j] = c.listFloatRec[j + 1]        // duplication of world line to erase the base chaining
+			c.listFloatIndex[j] = c.listFloatIndex[j + 1]        // ensures that world-() will not cause an issue
+			c.listFloatVal[j] = c.listFloatVal[j + 1]        // although it is a waste of time
+		} else {c.flIndex = j - 1}                                               // if
 	}
 }
 
+// how to call world-() from the interpreter
 func E_world_remove(c EID) EID {
 	F_world_remove()
 	return EVOID
 }
 
-// note : we do not implement world_slaughted in claire 4 ? not in the doc ? //
+// Note : world slaughter does not exist in CLAIRE 4 any more
 
 // give the current world
 func F_world_number() int      { return ClRes.cWorld }
@@ -928,11 +1046,15 @@ func E_copy_map(d EID) EID {
 
 // table function ----------------------------------------------------------------
 
+// implement default copy (cf index_table in ClReflect.cpp)
 func (a *ClaireTable) GraphGet(x *ClaireAny) *ClaireAny {
 	d := ToMap(a.Graph)
 	y := d.Value[x.Key()]
 	if y == nil {
-		return a.Default
+		d := a.Default
+		if d.Isa == C_list { return ToList(d).Copy().Id()
+		} else if d.Isa == C_set { return ToSet(d).Copy().Id()
+		} else {return d}
 	} else {
 		return y
 	}
@@ -950,6 +1072,8 @@ func (a *ClaireTable) GraphPut(x *ClaireAny, y *ClaireAny) {
 		if ClRes.odIndex > ClRes.maxHist {
 			panic("History stack overflow")
 		}
+		y2 := d.Value[x.Key()]
+		fmt.Printf("[%d] graph put - %s(x = %s) was %p\n",ClRes.odIndex, d.Prt(),x.Prt(),y2)
 		ClRes.dictObjRec[ClRes.odIndex] = d
 		ClRes.dictObjIndex[ClRes.odIndex] = x
 		ClRes.dictObjVal[ClRes.odIndex] = d.Value[x.Key()]
@@ -1113,10 +1237,11 @@ func (p *ClairePort) ReadThing(app *ClaireModule, cur rune, def *ClaireModule) E
 	if cur == '/' && p.firstc == '*' { // C-style comments
 		for cur != '*' || p.firstc != '/' {
 			cur = p.firstc
+			if cur == '\n' {ClEnv.NLine = ClEnv.NLine + 1}
 			p.GetNext()
 		}
 		p.GetNext()
-		return EID{MakeString("").Id(), 0}
+		return EID{MakeString("").Id(), 0}        // old-style comments are ignored !  (hence nb_line is wrong)
 	}
 	ClEnv.bufferStart()
 	if cur == '/' && p.firstc == '/' { // C++ comment
@@ -1126,7 +1251,7 @@ func (p *ClairePort) ReadThing(app *ClaireModule, cur rune, def *ClaireModule) E
 			p.GetNext()
 			cur = p.firstc
 		}
-		return EID{MakeString(ClEnv.bufferCopy()).Id(), 0}
+		return EID{MakeString(ClEnv.bufferCopy()).Id(), 0}   // returned to CLAIRE as a string (used in generated code)
 	}
 	ClEnv.pushChar(cur)
 	if cur == ':' && p.firstc == ':' {
@@ -1149,22 +1274,23 @@ func (p *ClairePort) ReadThing(app *ClaireModule, cur rune, def *ClaireModule) E
 		cur = p.firstc
 	}
 	if cur == '/' { // read a qualified ident
-		s := F_get_symbol_module(app, MakeString(ClEnv.bufferPeek())) // symbol or CNULL (*CANY)
+		mname := MakeString(ClEnv.bufferPeek())
+		s := F_get_symbol_module(app,mname) // symbol or CNULL (*CANY)
 		p.GetNext()
 		cx := p.firstc
 		p.GetNext()
 		// CLAIRE 4 : check that s is a bound symbol !
-		// missing : see if we get private
-		if s == CNULL {
-			return Cerror(29, CNULL, CNULL)
+		if s.Id() == PRIVATE.Id() {
+			return p.ReadThing(app,cx, ToModule(CNULL))
+		} else if s == CNULL {return Cerror(29, mname.Id(), CNULL)
 		} else if m := ToSymbol(s).Get(); m.Isa != C_module {
-			return Cerror(29, s, CNULL)
+					return Cerror(29, s, CNULL)
 		} else {
 			return p.ReadThing(ToModule(m), cx, def)
 		}
 	} else {
 		s := app.createSymbol(ClEnv.bufferPeek()) // create the symbol
-		// fmt.Printf(">>>>>>>>>>>>>> read symbol: %s def:%x\n", s.Prt(), s.definition)
+		if (ClEnv.Verbose == 102) { fmt.Printf(">>>>>>>>>>>>>> read symbol: %s def:%x\n", s.Prt(), s.definition)}
 		if app == ClEnv.Module_I || s.definition != nil { // allowed to read
 			return EID{s.makeValue(), 0} // return ident value or unbound symbol
 		} else {

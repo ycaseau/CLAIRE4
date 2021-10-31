@@ -24,6 +24,33 @@ import (
 // |  Part 4: Arays (fixed size lists)                                         |
 // +---------------------------------------------------------------------------+
 
+/// bag is the common root - we could reintroduce common methods ... but the data stuctures are
+// completely different in go
+// NOTE: the fact that nil is allowed and transformed into void is strange and may be deprecated
+// we could fix this by ensuring that *.of is never nil  (CEMPTY is defined late in the boot)
+func (l *ClaireBag) Of() *ClaireType {
+	if l.of == nil {
+		fmt.Printf("=== conversion nil to EMPTY ==== \n")
+		return ToType(CEMPTY.Id())        // changed in claire 4
+	} else {
+		return l.of
+	}
+}
+
+func E_of_bag(l EID) EID { 
+	return EID{ToBag(OBJ(l)).Of().Id(), 0} }
+
+// this is the associated write method
+func (l *ClaireBag) Cast_I(x *ClaireType) *ClaireBag {
+	l.of = x
+	return l
+}
+func E_cast_I_bag(l EID, x EID) EID {
+	return EID{ToBag(OBJ(l)).Cast_I(ToType(OBJ(x))).Id(), 0}
+}
+
+
+
 // +---------------------------------------------------------------------------+
 // |  Part 1: List Objects  (3 kinds)                                          |
 // +---------------------------------------------------------------------------+
@@ -128,8 +155,15 @@ func MakeList(t *ClaireType, args ...*ClaireAny) *ClaireList {
 	for i := 0; i < n; i++ {
 		l.AddFast(args[i])
 	}
-	if ClEnv.Verbose > 10 {
-		fmt.Printf("MakeList (%d) -> of:%x\n", n, l.of)
+	return l
+}
+
+// create a non mutable list (of = EMPTY)
+func MakeConstantList(args ...*ClaireAny) *ClaireList {
+	n := len(args)
+	l := ToType(CEMPTY.Id()).EmptyList()
+	for i := 0; i < n; i++ {
+		l.AddFast(args[i])
 	}
 	return l
 }
@@ -250,7 +284,7 @@ func makeListFloat(l []float64) *ClaireListFloat {
 func (l1 *ClaireList) equalList(l2 *ClaireList) *ClaireBoolean {
 	if l1.Srange == C_object { // deep equality required
 		n := len(l1.ValuesO())
-		if l1.Srange != l2.Srange || n != len(l2.ValuesO()) {
+		if l1.Srange != l2.Srange || n != len(l2.ValuesO())  {
 			return CFALSE
 		} else {
 			for i := 0; i < n; i++ {
@@ -352,7 +386,7 @@ func (l *ClaireList) At(i int) *ClaireAny {
 func (l *ClaireList) NthGet(i int) *ClaireAny { return l.At(i - 1) }
 
 // EID function
-func E_nth_get_list(l EID, i EID) EID { return EID{ToList(OBJ(l)).NthGet(INT(i)), 0} }
+func E_nth_get_list(l EID, i EID) EID { return ToList(OBJ(l)).NthGet(INT(i)).ToEID() }
 
 // this is the proper method
 func (l *ClaireList) Nth(i int) *ClaireAny { return l.At(i - 1) }
@@ -369,7 +403,7 @@ func E_nth_list(x EID, i EID) EID {
 	} else if l.Srange == C_float {
 		return EID{C__FLOAT, FVAL(l.ValuesF()[j-1])}
 	} else {
-		return EID{l.ValuesO()[j-1], 0}
+		return l.ValuesO()[j-1].ToEID()
 	}
 }
 
@@ -412,7 +446,7 @@ func (l *ClaireList) NthPut(i int, y *ClaireAny) *ClaireAny {
 
 // EID function
 func E_nth_put_list(l EID, i EID, y EID) EID {
-	return EID{ToList(OBJ(l)).NthPut(INT(i), ANY(y)), 0}
+	return ToList(OBJ(l)).NthPut(INT(i), ANY(y)).ToEID()
 }
 
 // this is the version that performs check
@@ -436,36 +470,37 @@ func E_nth_equal_list(x EID, i EID, y EID) EID {
 }
 
 // new in CLAIRE 4 : put with a type check : gets an EID and performs the test with l.Of
+// Notice that the error (17) uses l.of and not l which may be ill-formed (being built)
 func (l *ClaireList) WriteEID(i int, y EID) EID {
 	if l.Srange == C_integer {
 		if y.PTR == C__INT {
 			if l.of.Id() == C_integer.Id() || l.of.Id() == CEMPTY.Id() || l.of.Contains(ANY(y)) == CTRUE {
 				l.ValuesI()[i-1] = INT(y)
 			} else {
-				return Cerror(17, ANY(y), l.Id())
+				return Cerror(17, ANY(y), l.of.Id())
 			}
 		} else if l.of.Id() == CEMPTY.Id() || l.of.Contains(ANY(y)) == CTRUE {
 			l.ValuesI()[i-1] = ToInteger(OBJ(y)).Value
 		} else {
-			return Cerror(17, ANY(y), l.Id())
+			return Cerror(17, ANY(y), l.of.Id())
 		}
 	} else if l.Srange == C_float {
 		if y.PTR == C__FLOAT {
 			if l.of.Id() == C_float.Id() || l.of.Id() == CEMPTY.Id() || l.of.Contains(ANY(y)) == CTRUE {
 				l.ValuesF()[i-1] = FLOAT(y)
 			} else {
-				return Cerror(17, ANY(y), l.Id())
+				return Cerror(17, ANY(y), l.of.Id())
 			}
 		} else if l.of.Id() == CEMPTY.Id() || l.of.Contains(ANY(y)) == CTRUE {
 			l.ValuesF()[i-1] = ToFloat(OBJ(y)).Value
 		} else {
-			return Cerror(17, ANY(y), l.Id())
+			return Cerror(17, ANY(y), l.of.Id())
 		}
 	} else {
 		if l.of.Id() == CEMPTY.Id() || l.of.Contains(ANY(y)) == CTRUE {
 			l.ValuesO()[i-1] = ANY(y)
 		} else {
-			return Cerror(17, ANY(y), l.Id())
+			return Cerror(17, ANY(y), l.of.Id())
 		}
 	}
 	return y
@@ -575,10 +610,10 @@ func E_contain_ask_list(l EID, val EID) EID {
 // this function may return an error
 // uses type member contain_ask_any
 func (l *ClaireList) Add(x *ClaireAny) EID {
-	if l.of == nil || l.of.Contains(x) == CFALSE {
-		return Cerror(17, x, l.any())
+	if  l.of.Contains(x) == CFALSE {            // removed the test l.of != nil
+		return Cerror(17, x, l.of.Id())
 	} else {
-		return EID{l.AddFast(x).Id(), 0}
+		return l.AddFast(x).Id().ToEID()         // Any EID
 	}
 }
 
@@ -593,30 +628,30 @@ func E_add_list(x EID, y EID) EID {
 			if l.of.Id() == C_integer.Id() || l.of.Id() == CEMPTY.Id() || l.of.Contains(ANY(y)) == CTRUE {
 				F_add_listInteger(l.toInteger(), INT(y))
 			} else {
-				return Cerror(17, l.Id(), ANY(y))
+				return Cerror(17, ANY(y), l.of.Id())
 			}
 		} else if l.of.Id() == CEMPTY.Id() || l.of.Contains(ANY(y)) == CTRUE {
 			F_add_listInteger(l.toInteger(), ToInteger(OBJ(y)).Value)
 		} else {
-			return Cerror(17, l.Id(), ANY(y))
+			return Cerror(17, ANY(y), l.of.Id())
 		}
 	} else if l.Srange == C_float {
 		if y.PTR == C__FLOAT {
 			if l.of.Id() == C_float.Id() || l.of.Id() == CEMPTY.Id() || l.of.Contains(ANY(y)) == CTRUE {
 				F_add_listFloat(l.toFloat(), FLOAT(y))
 			} else {
-				return Cerror(17, l.Id(), ANY(y))
+				return Cerror(17, ANY(y), l.of.Id())
 			}
 		} else if l.of.Id() == CEMPTY.Id() || l.of.Contains(ANY(y)) == CTRUE {
 			F_add_listFloat(l.toFloat(), ToFloat(OBJ(y)).Value)
 		} else {
-			return Cerror(17, l.Id(), ANY(y))
+			return Cerror(17, ANY(y), l.of.Id())
 		}
 	} else {
-		if l.of.Id() == CEMPTY.Id() || l.of.Contains(OBJ(y)) == CTRUE {
-			F_add_listObject(l.toObject(), OBJ(y))
+		if l.of.Id() == CEMPTY.Id() || l.of.Contains(ANY(y)) == CTRUE {
+			F_add_listObject(l.toObject(), ANY(y))
 		} else {
-			return Cerror(17, l.Id(), ANY(y))
+			return Cerror(17, ANY(y), l.of.Id())
 		}
 	}
 	return x
@@ -625,7 +660,7 @@ func E_add_list(x EID, y EID) EID {
 // this is the version without the check when we know that addition is type safe
 func (l *ClaireList) AddFast(x *ClaireAny) *ClaireList {
 	if l == CNIL {
-		panic("trying to fuck CNIL")
+		panic("trying to fuck CNIL")        // debug : to remove later !!!!
 	}
 	if l.Srange == C_integer {
 		F_add_listInteger(l.toInteger(), ToInteger(x).Value)
@@ -644,6 +679,16 @@ func F_add_listObject(l *ClaireListObject, x *ClaireAny) {
 
 func F_add_listInteger(l *ClaireListInteger, x int) { l.Values = append(l.Values, x) }
 func F_add_listFloat(l *ClaireListFloat, x float64) { l.Values = append(l.Values, x) }
+
+// -------- exported as add! @ list --------------------------
+// same without type check
+func (l *ClaireList) Add_I(x *ClaireAny) *ClaireList {
+	return l.AddFast(x)
+}
+
+// could be EID optimized to avoid ANY(val)
+func E_add_I_list(l EID, val EID) EID { return EID{ToList(OBJ(l)).AddFast(ANY(val)).Id(), 0} }
+
 
 // good old cons from lisp --------------------------------------------------
 // returns a list of any (untyped)
@@ -664,7 +709,7 @@ func F_cons_any(x *ClaireAny, l *ClaireList) *ClaireList {
 			ls[j+1] = v
 		}
 	}
-	return ToList(makeListObject(&C_any.ClaireType, ls).Id())
+	return ToList(makeListObject(ToType(CEMPTY.Id()), ls).Id())
 }
 
 // EID function
@@ -720,7 +765,7 @@ func E_make_list_integer(n EID, x EID) EID {
 }
 
 // position in a list
-func (l *ClaireList) Index(x *ClaireAny) int {
+func F_index_list (l *ClaireList, x *ClaireAny) int {
 	if l.Srange == C_integer {
 		for i, y := range l.ValuesI() {
 			if y == ToInteger(x).Value {
@@ -743,11 +788,13 @@ func (l *ClaireList) Index(x *ClaireAny) int {
 	return 0
 }
 
-func E_index_list(l EID, x EID) EID { return EID{C__INT, uint64(ToList(OBJ(l)).Index(ANY(x)))} }
+func E_index_list(l EID, x EID) EID { 
+	return EID{C__INT, uint64(F_index_list(ToList(OBJ(l)),ANY(x)))}
+}
 
 // nconc : destructive append
 // add*(l1,l2) adds members of l2 => may return an error (hence EID as range)
-func (l1 *ClaireList) AddStar(l2 *ClaireList) EID {
+func (l1 *ClaireList) Add_star(l2 *ClaireList) EID {
 	if l2.Srange == C_integer {
 		for _, x := range l2.ValuesI() {
 			if l1.Srange == C_integer {
@@ -763,16 +810,18 @@ func (l1 *ClaireList) AddStar(l2 *ClaireList) EID {
 		for _, x := range l2.ValuesF() {
 			if l1.Srange == C_float {
 				F_add_listFloat(l1.toFloat(), x)
-			}
-			y := l1.Add(AnyFloat(x))
-			if ErrorIn(y) {
-				return y
+			} else {
+				y := l1.Add(AnyFloat(x))
+				if ErrorIn(y) {
+					return y
+				}
 			}
 		}
 	} else {
 		for _, x := range l2.ValuesO() {
 			y := l1.Add(x)
 			if ErrorIn(y) {
+				fmt.Printf("adding %s to %s fails\n",x.Prt(),l1.Prt())
 				return y
 			}
 		}
@@ -780,14 +829,29 @@ func (l1 *ClaireList) AddStar(l2 *ClaireList) EID {
 	return EID{l1.Id(), 0}
 }
 
-func E_add_star_list(l1 EID, l2 EID) EID { return ToList(OBJ(l1)).AddStar(ToList(OBJ(l2))) }
+func E_add_star_list(l1 EID, l2 EID) EID { return ToList(OBJ(l1)).Add_star(ToList(OBJ(l2))) }
+
+// same code without the type checks
+func (l1 *ClaireList) AddStarFast(l2 *ClaireList) *ClaireList {
+	if l2.Srange == C_integer {
+		for _, x := range l2.ValuesI() {
+			if l1.Srange == C_integer {	F_add_listInteger(l1.toInteger(), x)
+			} else { l1.AddFast(AnyInteger(x))}}
+	} else if l2.Srange == C_float {
+		for _, x := range l2.ValuesF() {
+			if l1.Srange == C_float { F_add_listFloat(l1.toFloat(), x)
+			} else { l1.AddFast(AnyFloat(x))}}
+	} else {
+		for _, x := range l2.ValuesO() {l1.AddFast(x)}}
+	return l1
+}
 
 // non-destructive append : nconc to copy
 // create a copy with either the same type or any
 // does not produce an error
 func (l1 *ClaireList) Append(l2 *ClaireList) *ClaireList {
 	var l3 *ClaireList
-	if l1.Srange == l2.Srange {
+	if l1.Srange == l2.Srange && (l1.Srange == C_float || l1.Srange == C_integer || l1.of == l2.of) {
 		l3 = l1.Copy()
 	} else {
 		ls := make([]*ClaireAny, len(l1.ValuesO()))
@@ -806,8 +870,7 @@ func (l1 *ClaireList) Append(l2 *ClaireList) *ClaireList {
 			l3 = ToList(makeListObject(ToType(C_any.Id()), ls).Id())
 		}
 	}
-	r := l3.AddStar(l2)
-	return ToList(OBJ(r)) // no type error by construction
+	return l3.AddStarFast(l2)           // fast add* (nconc) no type error by construction
 }
 
 func E_append_list(l1 EID, l2 EID) EID {
@@ -820,7 +883,7 @@ func (l *ClaireList) Nth_plus(n int, val *ClaireAny) EID {
 	m := l.Length()
 	if l.of == nil || l.of.Contains(val) == CFALSE {
 		fmt.Printf("NTH+ fails with %s in %s\n", val.Prt(), l.Of().Prt())
-		return Cerror(17, val, l.any())
+		return Cerror(17, val, l.of.any())
 	}
 	if n <= 0 || n > m+1 {
 		return Cerror(5, AnyInteger(n), l.any())
@@ -883,7 +946,7 @@ func (l *ClaireList) Nth_dash(n int) EID {
 func E_nth_dash_list(l EID, n EID) EID { return ToList(OBJ(l)).Nth_dash(INT(n)) }
 
 // remove the n first elements of a list (skip_list)
-func F_skip_list(l *ClaireList, n int) *ClaireList {
+func (l *ClaireList) Skip(n int) *ClaireList {
 	m := l.Length()
 	if n <= 0 {
 		return l
@@ -897,7 +960,7 @@ func F_skip_list(l *ClaireList, n int) *ClaireList {
 	return l
 }
 
-func E_skip_list(l EID, n EID) EID { return EID{F_skip_list(ToList(OBJ(l)), INT(n)).Id(), 0} }
+func E_skip_list(l EID, n EID) EID { return EID{ToList(OBJ(l)).Skip(INT(n)).Id(), 0} }
 
 // shrinks to the n first element  -------------------------------------------------
 // golang: if n < 0, n = 0 (avoid errors)
@@ -914,11 +977,11 @@ func (l *ClaireList) Shrink(n int) *ClaireList {
 			l.toObject().Values = []*ClaireAny{}
 		}
 	} else if l.Srange == C_integer {
-		l.toInteger().Values = l.toInteger().Values[0 : n-1]
+		l.toInteger().Values = l.toInteger().Values[0 : n]
 	} else if l.Srange == C_float {
-		l.toFloat().Values = l.toFloat().Values[0 : n-1]
+		l.toFloat().Values = l.toFloat().Values[0 : n]
 	} else {
-		l.toObject().Values = l.toObject().Values[0 : n-1]
+		l.toObject().Values = l.toObject().Values[0 : n]
 	}
 	return l
 }
@@ -932,19 +995,6 @@ func (l *ClaireList) Cast_I(x *ClaireType) *ClaireList {
 	l.of = x
 	return l
 }
-
-// access to type
-func (l *ClaireList) Of() *ClaireType {
-	// fmt.Printf("call of(%s) \n", l.Prt())
-	// fmt.Printf("-> Srange=%s\n", l.Srange.Prt())
-	if l.of == nil {
-		return ToType(C_void.Id())
-	} else {
-		return l.of
-	}
-}
-
-func E_of_list(l EID) EID { return EID{ToList(OBJ(l)).Of().Id(), 0} }
 
 // +---------------------------------------------------------------------------+
 // |  Part 2: Sets (using go maps)                                             |
@@ -968,9 +1018,39 @@ func (x *ClaireAny) Key() string {
 		return fmt.Sprintf("#F%f", ToFloat(x).Value)
 	} else if x.Isa == C_string {
 		return "#S" + ToString(x).Value
+	} else if x.Isa == C_tuple {
+		return ToList(x).tupleKey()
+	} else if x.Isa == C_set {
+		return ToSet(x).setKey()
 	} else {
 		return fmt.Sprintf("#O%p", x)
 	}
+}
+
+// multiple hash for Tuple (works, but expensive for big tuples)
+func (x *ClaireList) tupleKey() string {
+	rep := "#T"
+	for _,v := range(x.ValuesO()) { rep = rep + "," + v.Key()}
+	return rep
+}
+
+// multiple hash for Sets (works, but really expensive for big tuples)
+// sort the keys with naive insert
+func (x *ClaireSet) setKey() string {
+	rep := "#S"
+	var l []string = make([]string, 0)
+	var n int = 0
+	for _,v := range(x.Values) {
+		s := v.Key()
+		var j int = 0
+		for j < n && l[j] < s { j++ }   // j is the first position such that s < l[j]
+		l = append(l, "0")   // Step 1 : increase capacity
+		copy(l[j+1:], l[j:]) // Step 2 : shift
+		l[j] = s        	 // Step 3 : put s at position j
+		n++
+	}
+	for i := 0; i < n; i++ { rep = rep + "," + l[i]}
+	return rep
 }
 
 // this is a special version for EID : avoids allocation
@@ -983,6 +1063,10 @@ func KEY(x EID) string {
 		return fmt.Sprintf("#C%c",CHAR(x))
 	} else if x.PTR.Isa == C_string {
 		return "#S" + ToString(x.PTR).Value
+	} else if x.PTR.Isa == C_tuple {
+		return ToList(x.PTR).tupleKey()
+	} else if x.PTR.Isa == C_set {
+		return ToSet(x.PTR).setKey()
 	} else {		
 		return fmt.Sprintf("#O%p",x.PTR)
 	}
@@ -1032,9 +1116,13 @@ func MakeSet(t *ClaireType, args ...*ClaireAny) *ClaireSet {
 // member methods ------------------------------------------------------
 
 // add a new element to a set (without checking the type)
+// tricky since it may return another set (as in the C++ implementation) to avoid changing empty
 func (s *ClaireSet) AddFast(x *ClaireAny) *ClaireSet {
-	s.Values[x.Key()] = x
-	return s
+	if ClEnv.Verbose == 15 {fmt.Printf("add %s to %s\n",x.Prt(),s.Prt())}
+	var s2 *ClaireSet = s
+	if s == CEMPTY { s2 = ToType(CEMPTY.Id()).EmptySet()}
+	s2.Values[x.Key()] = x
+	return s2
 }
 
 // set equality
@@ -1066,6 +1154,7 @@ func safe_equal(x *ClaireAny, y *ClaireAny) *ClaireBoolean {
 
 // generic contains function
 func (s *ClaireSet) Size() int { return len(s.Values) }
+func (s *ClaireSet) Length() int { return len(s.Values) }
 
 func E_size_set(s EID) EID { return EID{C__INT, uint64(ToSet(OBJ(s)).Size())} }
 
@@ -1093,8 +1182,8 @@ func E_contain_ask_set(s EID, val EID) EID {
 
 // adds a value into a set
 func (l *ClaireSet) Add(x *ClaireAny) EID {
-	if l.of == nil || l.of.Contains(x) == CFALSE {
-		return Cerror(17, x, l.any())
+	if l.of.Contains(x) == CFALSE {     // removed l.of == nil || 
+		return Cerror(17, x, l.of.any())
 	} else {
 		return EID{l.AddFast(x).Id(), 0}
 	}
@@ -1104,7 +1193,7 @@ func (l *ClaireSet) Add(x *ClaireAny) EID {
 func E_add_set(x EID, val EID) EID { 
 	l := ToSet(OBJ(x))
 	if l.of == nil || l.of.CONTAINS(val) == CFALSE {
-		return Cerror(17, ANY(x), l.Id())
+		return Cerror(17, ANY(val), l.of.Id())
 	} else {
 		l.Values[KEY(val)] = ANY(val)
 		return x
@@ -1154,7 +1243,8 @@ func E_delete_set(l EID, val EID) EID { return EID{ToSet(OBJ(l)).Delete(ANY(val)
 func (s1 *ClaireSet) _exp(s2 *ClaireSet) *ClaireSet {
 	s := ToType(CEMPTY.Id()).EmptySet()
 	for _, x := range s1.Values {
-		if Equal(s2.Values[x.Key()], x) == CTRUE {
+		y := s2.Values[x.Key()]
+		if y != nil && Equal(y, x) == CTRUE {
 			s.AddFast(x)
 		}
 	}
@@ -1202,7 +1292,7 @@ func E_set_I_list(l EID) EID { return EID{ToList(OBJ(l)).Set_I().Id(), 0} }
 
 // reciprocate : create a list from a set - function because Core method (vs Kernel)
 func (s *ClaireSet) List_I() *ClaireList {
-	l := s.of.EmptyList()
+		l := s.of.EmptyList()
 	for _, x := range s.Values {
 		l.AddFast(x)
 	}
@@ -1228,23 +1318,23 @@ func E_sequence_integer(n EID, m EID) EID {
 	return EID{F_sequence_integer(INT(n), INT(m)).Id(), 0}
 }
 
-func (l *ClaireSet) Cast_I(x *ClaireType) *ClaireSet {
-	l.of = x
-	return l
-}
-func E_cast_I_set(l EID, x EID) EID {
-	return EID{ToSet(OBJ(l)).Cast_I(ToType(OBJ(x))).Id(), 0}
-}
-
-func (l *ClaireSet) Of() *ClaireType {
-	if l.of == nil {
-		return ToType(C_void.Id())
+// returns a nice sequence of consecutive numbers
+func F_list_integer(n int, m int) *ClaireList {
+	if m < n {
+		return ToType(CEMPTY.Id()).EmptyList()
 	} else {
-		return l.of
+		s := ToType(C_integer.Id()).EmptyList()
+		for i := n; i <= m; i++ {
+			s.AddFast(AnyInteger(i))
+		}
+		return s
 	}
 }
 
-func E_of_set(l EID) EID { return EID{ToSet(OBJ(l)).Of().Id(), 0} }
+func E_list_integer(n EID, m EID) EID {
+	return EID{F_list_integer(INT(n), INT(m)).Id(), 0}
+}
+
 
 // +---------------------------------------------------------------------------+
 // |  Part 3: Tuples (constant list)                                           |
@@ -1310,7 +1400,7 @@ func (l *ClaireList) Tuple_I() *ClaireTuple {
 
 func E_tuple_I_list(l EID) EID { return EID{ToList(OBJ(l)).Tuple_I().Id(), 0} }
 
-// create a list<any> (updatabe) from a tuple
+// create a list<any> (updatable) from a tuple
 func (l *ClaireTuple) List_I() *ClaireList {
 	x := ToType(C_any.Id()).EmptyList()
 	for _, y := range l.ValuesO() {
@@ -1363,6 +1453,7 @@ func makeEmptyArray(n int, t *ClaireType) *ClaireList {
 		a = ToArray(o.Id())
 	}
 	a.Isa = C_array
+	a.of = t
 	return a
 }
 

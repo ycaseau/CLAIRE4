@@ -1,0 +1,21 @@
+claire 4.0 starts on September 6th, 2020
+
+Dir organization is similar to CLAIRE vX.Y but
+
+(1) the "trans" directory contains CLAIRE 3.5 code to compile CLAIRE 4.0 *.cl file
+(2) the bin & code (libs and .cpp) are gone, replaced with gofiles (*.go that requires moving to golang GOPATH)
+
+to set the GOPATH dir
+GOPATH=/Users/ycaseau/claire/v4.0/go
+
+There are multiple go* subdirectories:
+
+(1) go1 is where we create "claire1" : simple interpreter from CLAIRE3.5 + trans compiler
+(2) go2 is for claire2: complete interpreter/compiler from claire1 (interpreted compiler)
+(3) go3 is for claire3: claire system obtained from claire2 (compiled compiler)
+(3) go4 is for claire4: fixed point  compile_X(souce_X) = X
+
+
+ginit is a bash file to setup the git 
+
+

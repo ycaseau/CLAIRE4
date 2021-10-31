@@ -33,6 +33,7 @@ import (
 	"strconv"
 	"strings"
 	"unicode/utf8"
+	"math"
 )
 
 // +---------------------------------------------------------------------------+
@@ -189,9 +190,9 @@ func MakeString(s string) *ClaireString {
 // --- there are all API functions since string are imported char* -----
 
 // length of a string is actually slow and complex
-func (s *ClaireString) Length() int { return utf8.RuneCountInString(s.Value) }
+func F_length_string(s *ClaireString) int { return utf8.RuneCountInString(s.Value) }
 func E_length_string(s EID) EID {
-	return EID{C__INT, IVAL(ToString(OBJ(s)).Length())}
+	return EID{C__INT, IVAL(F_length_string(ToString(OBJ(s))))}
 }
 
 // make a local copy of a string
@@ -332,8 +333,8 @@ func F_included_string(s1 *ClaireString, s2 *ClaireString, p *ClaireBoolean) int
 		s1 = MakeString(strings.ToLower(s1.Value))
 		s2 = MakeString(strings.ToLower(s2.Value))
 	}
-	n := s1.Length()
-	m := s2.Length()
+	n := F_length_string(s1)
+	m := F_length_string(s2)
 	for i := 1; i+m <= n; i++ {
 		j := 0
 		for _, w := range s2.Value {
@@ -410,7 +411,7 @@ func F_nth_set_string(s *ClaireString, n int, c rune) EID {
 }
 
 func E_nth_set_string(s EID, n EID, c EID) EID {
-	return F_nth_set_string(ToString(OBJ(s)), INT(n), ToChar(OBJ(c)).Value)
+	return F_nth_set_string(ToString(OBJ(s)), INT(n), CHAR(c))
 }
 
 // shrink @ string is no longer supported  in CLAIRE 4
@@ -434,7 +435,7 @@ func F_make_string_integer(n int, c rune) *ClaireString {
 	return MakeString(ClEnv.bufferCopy())
 }
 func E_make_string_integer(n EID, c EID) EID {
-	return EID{F_make_string_integer(INT(n), ToChar(OBJ(c)).Value).Id(), 0}
+	return EID{F_make_string_integer(INT(n), CHAR(c)).Id(), 0}
 }
 
 // create a string from a list (v3.0.44) - necessary with CLAIRE 4 since list of chars
@@ -457,7 +458,7 @@ func E_make_string_list(l EID) EID { return ToList(OBJ(l)).MakeString() }
 // return the list of chars from a string
 // note : this must be compiled through a specialized iteration
 func F_list_I_string(s *ClaireString) *ClaireList {
-	n := s.Length()
+	n := F_length_string(s)
 	var ls []*ClaireAny = make([]*ClaireAny, n)
 	i := 0
 	for _, r := range s.Value {
@@ -491,27 +492,22 @@ func E_c_princ_string(s EID) EID {
 
 // -------------- member functions --------------------------------------------
 
-// create a symbol in a module // super elegant
-//
-func (m *ClaireModule) Symbol(name string) *ClaireSymbol {
-	o := new(ClaireSymbol)
-	o.Isa = C_symbol
-	o.Module_I = m
-	if ClEnv.Module_I != nil {
-		o.definition = ClEnv.Module_I
-	}
-	o.Key = name
+// generates a symbol in a module - this is the basic function that creates the object
+// the better function to use is createSymbol =>  includes a lookup
+func (m *ClaireModule) produceSymbol(name string) *ClaireSymbol {
+	o := MakeSymbol(name,m)
 	m.table[name] = o
 	return o
 }
 
+
 // read the value bound to a given symbol s. We create an unbound symbol object if necessary
 // warning : in CLAIRE 3.5, Symbol::getValue = make, get_symbol = read
 func (s *ClaireSymbol) makeValue() *ClaireAny {
-	if s.Value == CNULL || s.Value == nil {
+	if (s.value == CNULL && s != unknownName) || s.value == nil {
 		return MakeUnboundSymbol(s).Id()
 	} else {
-		return s.Value
+		return s.value
 	}
 }
 
@@ -519,35 +515,53 @@ func (s *ClaireSymbol) makeValue() *ClaireAny {
 
 // returns the string
 func (s *ClaireSymbol) String_I() *ClaireString {
-	return MakeString(s.Key)
+	return MakeString(s.key)
 }
 
 func E_string_I_symbol(s EID) EID {
 	return EID{ToSymbol(OBJ(s)).String_I().Id(), 0}
 }
 
+// returns the module
+func (s *ClaireSymbol) Module_I() *ClaireModule {
+	return s.module_I
+}
+
+func E_module_I_symbol(s EID) EID {
+	return EID{ToSymbol(OBJ(s)).module_I.Id(), 0}
+}
+
+// returns the value
+func (s *ClaireSymbol) Value() *ClaireAny {
+	return s.value
+}
+
+func E_value_symbol(s EID) EID {
+	return EID{ToSymbol(OBJ(s)).value, 0}
+}
+
 // create a symbol in the current module
 func F_symbol_I_string(s *ClaireString, m *ClaireModule) *ClaireSymbol {
-	return m.Symbol(s.Value)
+	return m.createSymbol(s.Value)
 }
 
 func E_symbol_I_string(s EID, m EID) EID {
-	return EID{ToModule(OBJ(m)).Symbol(ToString(OBJ(s)).Value).Id(), 0}
+	return EID{ToModule(OBJ(m)).createSymbol(ToString(OBJ(s)).Value).Id(), 0}
 }
 
 // writes the value of a symbol
 func (s *ClaireSymbol) Put(x *ClaireAny) *ClaireAny {
-	s.Value = x
+	s.value = x
 	return x
 }
 func E_put_symbol(s EID, x EID) EID { return EID{ToSymbol(OBJ(s)).Put(ANY(x)).Id(), 0} }
 
 // return the value : unknown if unknown ?  (used to be called get_symbol)
 func (s *ClaireSymbol) Get() *ClaireAny {
-	if s.Value == nil {
+	if s.value == nil {
 		return CNULL
 	} else {
-		return s.Value
+		return s.value
 	}
 }
 
@@ -555,30 +569,30 @@ func E_get_symbol(s EID) EID { return EID{ToSymbol(OBJ(s)).Get().Id(), 0} }
 
 // concatenate two symbols, or a symbol and a string or a symbol and an integer
 // the result is a symbol in the module of the first symbol
-func (s1 *ClaireSymbol) Append(s2 *ClaireAny) *ClaireSymbol {
+func F_append_symbol(s1 *ClaireSymbol,s2 *ClaireAny) *ClaireSymbol {
 	ClEnv.bufferStart()
-	ClEnv.pushString(s1.Key)
+	ClEnv.pushString(s1.key)
 	if s2.Isa == C_integer {
 		ClEnv.pushInteger(ToInteger(s2).Value)
 	} else if s2.Isa == C_symbol {
-		ClEnv.pushString(ToSymbol(s2).Key)
+		ClEnv.pushString(ToSymbol(s2).key)
 	} else if s2.Isa == C_string {
 		ClEnv.pushString(ToString(s2).Value)
 	}
-	return s1.Module_I.Symbol(ClEnv.bufferCopy())
+	return s1.module_I.createSymbol(ClEnv.bufferCopy())
 }
 
 func E_append_symbol(s1 EID, s2 EID) EID {
-	return EID{ToSymbol(OBJ(s1)).Append(OBJ(s2)).Id(), 0}
+	return EID{F_append_symbol(ToSymbol(OBJ(s1)),OBJ(s2)).Id(), 0}
 }
 
 // print a symbol with its application name
 func (s *ClaireSymbol) Princ() {
-	if s.Module_I != C_claire && s.Module_I != ClEnv.Module_I {
-		PRINC(s.Module_I.Name.Key)
+	if s.module_I != C_claire && s.module_I != ClEnv.Module_I {
+		PRINC(s.module_I.Name.key)
 		ClEnv.put('/')
 	}
-	PRINC(s.Key)
+	PRINC(s.key)
 }
 
 func E_princ_symbol(s EID) EID {
@@ -591,14 +605,10 @@ func (s *ClaireSymbol) Defined() *ClaireModule {
 	if s.definition != nil {
 		return s.definition
 	} else {
-		return s.Module_I
+		return s.module_I
 	}
 }
 func E_defined_symbol(s EID) EID { return EID{ToSymbol(OBJ(s)).Defined().Id(), 0} }
-
-// access to private slot => no longer necessay since Symbols are reifed (slot access)
-// func module_I_symbol (symbol *s) {return s->module_I;}
-// char *string_I_symbol(symbol *s) {return s->name;}
 
 // create a new name
 func F_gensym_string(s *ClaireString) *ClaireSymbol {
@@ -611,7 +621,7 @@ func F_gensym_string(s *ClaireString) *ClaireSymbol {
 	ClEnv.pushChar('0' + (rune)((ClEnv.gensym%100)/10))
 	ClEnv.pushChar('0' + (rune)(ClEnv.gensym%10))
 	ClEnv.gensym = ClEnv.gensym + 1
-	return C_claire.Symbol(ClEnv.bufferCopy())
+	return C_claire.createSymbol(ClEnv.bufferCopy())
 }
 
 func E_gensym_string(s EID) EID {
@@ -619,16 +629,16 @@ func E_gensym_string(s EID) EID {
 }
 
 // print a symbol (the name of an object) as a C identifier */
-func (s *ClaireSymbol) C_princ() {
-	if s.Module_I != C_claire {
-		s.Module_I.Name.C_princ()
+func (s *ClaireSymbol) CPrinc() {
+	if s.module_I != C_claire {
+		s.module_I.Name.CPrinc()
 		ClEnv.put('_')
 	}
-	F_c_princ_string(MakeString(s.Key))
+	F_c_princ_string(MakeString(s.key))
 }
 
 func E_c_princ_symbol(s EID) EID {
-	ToSymbol(OBJ(s)).C_princ()
+	ToSymbol(OBJ(s)).CPrinc()
 	return EVOID
 }
 
@@ -642,13 +652,25 @@ func E_c_princ_symbol(s EID) EID {
 // => returns nil if no symbol is found - does NOT create a new symbol
 // this method embodies the strategy for looking in upper modules (namespace inheritance)
 func (m *ClaireModule) Lookup(name string) *ClaireSymbol {
-	s := m.table[name]
-	// fmt.Printf("lookup(%s) in module %s -> %s\n", name, m.Name.Key, s.Prt())
+    s := m.table[name]
+	if ClEnv.Verbose > 10   {fmt.Printf("lookup(%s) in module %s -> %p\n", name, m.Name.key, s)}
 	if s != nil || m == C_claire {
 		return s
 	} else {
 		return m.PartOf.Lookup(name)
 	}
+}
+
+// hard debug for string - understand what a string that looks like s is not s
+func string_explode(name string) {
+	i := len(name)
+	s2 := make([]byte, i)
+	copy(s2, name)
+	fmt.Printf("%s:%d : [",name,i)
+	for k := 0; k < i ; k++ {
+		fmt.Printf("%d ",s2[k])
+	}
+	fmt.Printf("]\n")
 }
 
 // Get a symbol (even if none is there => create it) in the module with the given name,
@@ -657,18 +679,18 @@ func (m *ClaireModule) Lookup(name string) *ClaireSymbol {
 // warning : replace module::makeSymbol  (conflict name vs CLAIRE 3.5)
 func (m *ClaireModule) createSymbol(name string) *ClaireSymbol {
 	cur := m.Lookup(name)
-	if cur != nil &&
-		(cur.Value != CNULL || cur.Module_I == m) { //  || (cur == Kernel.unknownName))) WTF ?
+	if cur != nil && (cur.value != CNULL || cur.module_I == m || cur == unknownName) {
 		return cur
 	} else {
-		return m.Symbol(name)
+		if ClEnv.Verbose == 12 {fmt.Printf("--- Create a new symbol in %s for %s \n",m.Prt(),name)}
+		return m.produceSymbol(name)
 	}
 }
 
 // similar but also fills the key slots for the module (compiler method)
 // new status (0:default, 1:start, 2 compiled, 3:c+loaded, 4:c+l+trace, 5:c+delayed)
 // in C++ there was a difference between namespaces and module
-func InitModule(name string, father *ClaireModule, usage *ClaireList, dir string, files *ClaireList) {
+func InitModule(name string, father *ClaireModule, usage *ClaireList, dir string, files *ClaireList) *ClaireModule {
 	it := MakeModule(name, father)
 	it.Uses = usage             // other modules that are used
 	it.Source = MakeString(dir) // directory where the sources can be found
@@ -677,6 +699,7 @@ func InitModule(name string, father *ClaireModule, usage *ClaireList, dir string
 	it.Status = 3
 	C_module.Instances.AddFast(it.any())
 	father.Parts.AddFast(it.any())
+	return it
 }
 
 // --- API functions for modules ---------------------------------------------------
@@ -693,7 +716,7 @@ func E_namespace_module (m EID) EID {
 
 // open a module x with module identifier index
 func (x *ClaireModule) Begin() {
-	fmt.Printf(">> Begin module %s\n",x.Prt())
+	// fmt.Printf(">> Begin module %s\n",x.Prt())
 	ClEnv.moduleStack.AddFast(ClEnv.Module_I.ToAny())
 	ClEnv.Module_I = x
 }
@@ -705,7 +728,7 @@ func E_begin_module(m EID) EID {
 
 // close a module
 func (x *ClaireModule) End() {
-	fmt.Printf("<< End module %s\n",x.Prt())
+	// fmt.Printf("<< End module %s\n",x.Prt())
 	n := len(ClEnv.moduleStack.Values)
 	if n == 0 {
 		ClEnv.Module_I = C_claire
@@ -733,7 +756,7 @@ func F_value_module(m *ClaireModule, name *ClaireString) *ClaireAny {
 	if s == nil {
 		return CNULL
 	} else {
-		return s.Value
+		return s.value
 	}
 }
 
@@ -756,9 +779,16 @@ func E_get_symbol_module(m EID, s EID) EID {
 	return EID{F_get_symbol_module(ToModule(OBJ(m)), ToString(OBJ(s))), 0}
 }
 
-// for upward compatibility
-func F_getenv_string(s string) string { return os.Getenv(s) }
-func E_getenv_string(s EID) EID       { return EID{MakeString(ToString(OBJ(s)).Value).Id(), 0} }
+
+// access to environment variable
+func F_getenv_string (s *ClaireString) *ClaireString {
+	return MakeString(os.Getenv(s.Value))
+}
+
+func E_getenv_string (s EID) EID {
+	return EID{F_getenv_string(ToString(OBJ(s))).Id(),0}}
+
+
 
 // +---------------------------------------------------------------------------+
 // |  Part 5: Ports (i/o + string buffers)                                     |
@@ -829,6 +859,7 @@ func F_port_I_string(s *ClaireString) *ClairePort {
 	o.buffer = ([]byte)(s.Value)
 	o.nEof = len(s.Value)
 	o.nChar = 0
+	o.firstc = ' '
 	o.status = 3 // tells that this is an input port (read)
 	return o
 }
@@ -842,6 +873,7 @@ func F_port_I_void() *ClairePort {
 	o.buffer = make([]byte, BUFPORT)
 	o.nEof = BUFPORT
 	o.nChar = 0
+	o.firstc = ' '
 	o.status = 2 // status = 2 write port
 	// fmt.Printf(">>>> create a write buffered port\n")
 	return o
@@ -886,7 +918,9 @@ func E_use_as_output(p EID) EID { return EID{ToPort(OBJ(p)).UseAsOutput().Id(), 
 
 // close a file  : to write later
 func (p *ClairePort) Fclose() {
-	// {if (ClEnv.Cout == p) ClEnv->cout = ClAlloc->stdOut;
+	// if this port was actually in used by ClEnv, we revert to standartd
+	if ClEnv.Cout == p {ClEnv.Cout = claireStdout}
+	if ClEnv.Cin == p {ClEnv.Cin = claireStdin}        // new in CLAIRE 4
 	p.Close()
 }
 
@@ -899,7 +933,7 @@ func E_fclose_port(p EID) EID {
 // uses the size to make a right size Read !
 func (p *ClairePort) GetChar() rune {
 	if p.status == 3 {
-		return p.GetStringChar()
+	    return p.GetStringChar()
 	} else if p.status == 4 {
 		char, _, err := ToGoPort(p.Id()).reader.ReadRune()
 	    // fmt.Printf("[%d]", (int)(char))  // debug reader : show each char
@@ -1095,18 +1129,24 @@ func (p *ClairePort) PutString(s string) {
 // solution with Fprintf
 func (p *ClairePort) PutInteger(n int) { p.PutString(strconv.Itoa(n)) }
 
+// used by princ @ float
 func (p *ClairePort) PutFloat(x float64) {
-	// fmt.Printf("--- call put float ----- \n")
-	p.PutString(fmt.Sprintf("%f", x))
-}
-
-func (p *ClairePort) PrettyFloat(x float64) {
-	// fmt.Printf("--- call pretty float ----- \n")
 	p.PutString(strconv.FormatFloat(x, 'g', -1, 64))
 }
 
+// used by print @ float
+// pseudo-integers are printed with .0 to differentiate from int
+func (p *ClairePort) PrettyFloat(x float64) {
+	// fmt.Printf("--- call pretty float ----- \n")
+	if float64(int(math.Round(x))) == x {
+		p.PutString(fmt.Sprintf("%.1f", x))
+    } else {p.PutString(strconv.FormatFloat(x, 'g', -1, 64))}
+}
+
+// used when we ask for a specific number of digit
 func (p *ClairePort) PutFormat(x float64, i int) {
-	p.PutString(strconv.FormatFloat(x, 'g', i, 64))
+	format := "%." + fmt.Sprintf("%df", i)
+	p.PutString(fmt.Sprintf(format,x))
 }
 
 // flush (for write ports)
@@ -1133,6 +1173,7 @@ func (p *ClairePort) Close() {
 
 
 // create an input/output port à la UNIX ("r","w","a")
+// notice that "os.O_APPEND | os.O_CREATE | os.O_WRONLY" is absolutely necessary (stack overflow, don't see why)
 func F_fopen_string(name *ClaireString, mode *ClaireString) EID {
 	if mode.Value == "r" { // read file
 		f, err := os.Open(name.Value)
@@ -1144,8 +1185,9 @@ func F_fopen_string(name *ClaireString, mode *ClaireString) EID {
 		if err != nil {return Cerror(39,name.Id(),MakeInteger(0).Id())}
 		return EID{MakeOutPort(f).Id(),0}
 	} else if mode.Value == "a" {
-		f, err := os.OpenFile(name.Value, os.O_APPEND, 0644)
-		if err != nil {return Cerror(39,name.Id(),MakeInteger(0).Id())}
+		f, err := os.OpenFile(name.Value, os.O_APPEND | os.O_CREATE | os.O_WRONLY , 0600)
+		if err != nil { fmt.Printf("=== open file %s is rejected in append mode \n",name.Value)
+			            return Cerror(39,name.Id(),MakeInteger(0).Id())}
 		return EID{MakeOutPort(f).Id(),0}
 	} else {
 		panic("file open mode unknown: " + name.Value)
