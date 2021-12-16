@@ -211,7 +211,7 @@ range_is_wrong(self:slot,y:any) : void
     update(p,x,n,s,y) ]
 
 // update (method called by the compiler)     // v3.0.20: renamed from put !
-// update = put + put_inverse  (complex links)
+// update = put + put_inverse  (complex links) .. it does not trigger the rules (if_write)
 // update uses two satellite methods: update+ and update-
 // CLAIRE 4: inverse management only applies with set multivalued properties
 update(p:property,x:object,n:integer,s:class,y:any) : void
@@ -530,7 +530,7 @@ matching?(l:list,n:integer,m:integer) : boolean
 // this is an extension of <=t to   all type expressions
 tmatch?(l:list,l2:list) : boolean
  -> (let x := length(l2), z := length(l) in
-       (if (length(l) != x & (l2[x] != listargs | z < x - 1)) false           // v3.2.24
+       (if (z != x & (l2[x] != listargs | z < x - 1)) false           // v3.2.24
         else not((for i in (1 .. x)
                     (if (i = x & l2[i] = listargs) break(false)
                      else if not(tmatch?(l[i], l2[i], l)) break(true))))))
@@ -539,9 +539,12 @@ tmatch?(l:list,l2:list) : boolean
 // this is an extension of <=t for the pattern Reference
 [tmatch?(t:any,t2:any,l:list) : boolean
  -> case t2
-      (Reference (if t2.arg false
-                  else (// [5] question is ~S less than ~S ? // t,t2,
-                        (t as type) <=t @(t2, t2.args, l[t2.index + 1]))),  // how could we
+      (Reference (if t2.arg false            // this is very unclear ! t2.arg -> t2 was copied in odefine.cl
+                  else case t
+                    (Reference ((t.index = t2.index) & (t.args = t2.args)),
+                     type let tref := member(@(t2, t2.args, l[t2.index + 1])) in // member(X) because X is a container type (the value belongs to X)
+                         (//[5] tmatch?: is ~S less than ~S ? reference gives ~S // t,t2,tref,
+                          t <=t tref))),     // t is less than member(X), the "type contraint" extracted from the reference
        type (case t (type (t <=t t2),
                      any less?(t,t2))),      // extensibility with less?
        any less?(t,t2))]

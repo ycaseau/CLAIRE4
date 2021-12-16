@@ -224,10 +224,10 @@ sort(x:Variable) : class
 // a sort abstraction is the special union any U t, which is known to represent t by
 // the type system (used for variables only) but tells the compiler that the sort is any
 [sort_abstract!(x:type) : type
-  -> if ((sort!(x) != any & (sort!(x) != integer | compiler.overflow? )) |
-         x = float)
+  -> if (sort!(x) != any & sort!(x) != integer & sort!(x) != float)
         Union(Kernel/t1 = any, Kernel/t2 = x)        // sort! on float is special..
-     else x ]                                                                                          // v3.00.05
+     else x ]   
+                                                                                            // v3.00.05
 sort_abstract?(x:type) : boolean -> (case x (Union (x.Kernel/t1 = any), any false))
 
 // since we introduce some fuzziness with types (any U t), we need a way to get
@@ -259,14 +259,14 @@ pmember(x:type) : type -> member(ptype(x))
          put(range, self, y))
      else if (not(y <= self.range) & compiler.safety <= 1)
         (if not((y & self.range))
-            (warn(), trace(2, "range of variable in ~S is wrong [258]\n", self))),
+            (warn(), trace(2, "range of variable in ~S is wrong [258]\n", self)))]
         // v3.1.06: remove complains because it traps the compiler's own inferences
         // to reintroduce, we need to distinguish between user and compiler
         // types for iteration variables !
-     if (sort(self) != any & (sort(self) != integer | compiler.overflow?) &
-         not(ts <= array & y <= float))               // iteration of float array is a special case
-       (//[5] protect original sort with ~S // sort_abstract!(self.range),
-        put(range, self, sort_abstract!(self.range))) ]
+     // if (sort(self) != any & (sort(self) != integer | compiler.overflow?) &
+     //    not(ts <= array & y <= float))               // iteration of float array is a special case
+     //  (//[5] protect original sort with ~S // sort_abstract!(self.range),
+     //   put(range, self, sort_abstract!(self.range))) ]
 
 
 // variable range inference, how to guess a type from the value ...
@@ -275,35 +275,13 @@ pmember(x:type) : type -> member(ptype(x))
         (if (y % set) put(range, self, class!(y))
          else put(range, self, y)) ]
 
-// temporary range inference for case, which may use a special form:
-// {any U type} to represent the change of sort
-// {} U (c U t) to represent a change of psort
-[range_infer_case(self:any,y:type) : void
- -> case self
-      (Variable (if sort=(osort(self.range), osort(y))
-                   let c1 := psort(class!(self.range)) in
-                     (if (c1 != psort(class!(y)))
-                         put(range, self,
-                             Union(Kernel/t1 = {},
-                                   Kernel/t2 = Union(Kernel/t1 = c1, Kernel/t2 = y)))
-                      else put(range, self, y))
-                else if (osort(self.range) = any)
-                   put(range, self, sort_abstract!(y)))) ]
-
-/* create a protected assignment : DEPRECATED IN CLAIRE 4
-[c_check(x:any,y:any) : any
- -> let m := (check_in @ any) in
-       (if (compiler.safety > 3) x
-        else (legal?(m.module!, m),
-              Call_method2(arg = m, args = list(c_gc!(x), c_gc!(y))))) 
-              */
 
 // temporary range inference for case, which may use a special form:
 // {any U type} to represent the change of sort
 // {} U (c U t) to represent a change of psort
 [range_sets(self:any,y:type) : void
- -> case self
-      (Variable (if sort=(osort(self.range), osort(y))
+ -> case self (Variable put(range, self, y)) ]
+    /*   (Variable (if sort=(osort(self.range), osort(y))
                    let c1 := psort(class!(self.range)) in
                      (if (c1 != psort(class!(y)))
                          put(range, self,
@@ -311,7 +289,7 @@ pmember(x:type) : type -> member(ptype(x))
                                    Kernel/t2 =  Union(Kernel/t1 = c1, Kernel/t2 = y)))
                       else put(range, self, y))
                  else if (osort(self.range) = any)
-                   put(range, self, sort_abstract!(y)))) ]
+                   put(range, self, sort_abstract!(y)))) ] */
 
 // the srange of a method = class!(range)
 [c_srange(m:method) : class
@@ -362,10 +340,7 @@ c_code(self:(type_operator U Reference U Pattern),s:class) : any
  -> Call(..,list(self.arg1,self.arg2)) ]
 
 [self_code(self:Reference) : any
- -> Definition(arg = Reference,
-               args = list(Call(=,  list(args, self.args)),
-                           Call(=,  list(Kernel/index, self.Kernel/index)),
-                           Call(=,  list(arg, self.arg)))) ]
+ -> Call(Reference!,list(self.args, self.Kernel/index)) ]
 
 // compilation of a Pattern
 self_code(self:Pattern) : any
@@ -442,7 +417,7 @@ get_indexed(c:class) : list -> c.slots
 
 // simple C operations that can be duplicated at no cost {+, -, /, *}
 
-// tells if an expression is a C simply designated object
+// tells if an expression is a go simply designated object
 [designated?(self:any) : boolean
  ->  self % thing | self % Variable | self % integer | self % boolean |
      self = nil | self = {} | self = unknown | self % float |
@@ -452,6 +427,7 @@ get_indexed(c:class) : list -> c.slots
                  self.selector = mClaire/get_stack),
         Call_slot designated?(self.arg),
         Call_table designated?(self.arg),
+        Call_array designated?(self.arg),
         // to_protect (not(need_protect(self.arg)) & designated?(self.arg)),
         Call_method ((self.arg.selector % OPT.simple_operations |
                      (self.arg = (nth @ list))) &    // v3.2.34: added nth
@@ -473,7 +449,7 @@ get_indexed(c:class) : list -> c.slots
 
 // macro expansion of method self with argument list l
 [c_inline(self:method,l:list,s:class) : any
- -> //[0] macroexpansion of ~S with method ~S // l,self,
+ -> //[5] macroexpansion of ~S with method ~S // l,self,
     c_code(c_inline(self, l), s) ]
     
 // apply the body of a macro definition
@@ -486,7 +462,7 @@ get_indexed(c:class) : list -> c.slots
         pv0 := (if (self.selector % {iterate, Iterate}) f.vars[2].pname
                 else class.name) in
        (x := Language/instruction_copy(x),
-        //[0] c_inline(~S) on ~S: ~S is bound : ~S // self,l,lbv,x,
+        //[5] c_inline(~S) on ~S: ~S is bound : ~S // self,l,lbv,x,
         for v in lbv
           let v2 := Variable(pname = (if (v.pname = pv0) pv0
                                       else gensym()),     // v3.2.01, was (n :+ 1, v.pname /+ "_C_" /+ string!(n))),
@@ -494,7 +470,7 @@ get_indexed(c:class) : list -> c.slots
            (put(range,v2, get(range, v)),
             x := Language/substitution(x, v, v2)),
         OPT.max_vars :+ length(lbv),
-        //[0] substitute f.vars = ~S with l = ~S // f.vars, l,
+        //[5] substitute f.vars = ~S with l = ~S // f.vars, l,
         c_substitution(x, f.vars, l, false)) ]
 
 

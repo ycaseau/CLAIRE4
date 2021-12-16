@@ -42,9 +42,6 @@
 // this reintrant compiling (calling g_statement on a expanded Let) works because Let checks if g_expression can be used
 // the same pattern is used for call_slot/call_table
 
-// a clean expression is both a functional expression and one that does not throw an error
-[g_clean(x:any) : boolean 
- -> g_func(x) & not(g_throw(x)) ]
 
 // this function is used to unfold complex expressions that should be compiled as
 // expressions and not statements. It takes a list of arguments l and returns the
@@ -56,7 +53,7 @@
 unfold_args(l:list) : list
   ->  let lbad := list{i in (1 .. length(l)) | not(g_clean(l[i])) } in // list of indices
         (//[5] unfold -> ~S : ~S // list{l[x] | x in lbad}, list{stupid_t(l[x]) | x in lbad},
-         list{ Let(var = Variable!(gensym() /+ "UU", 0, static_type(l[i])),
+         list{ Let(var = build_Variable(genvar("arg_"), static_type(l[i])),
                    value = l[i]) | i in lbad}   )
 
 // uses the previous list to use the variable instead of the Fold.
@@ -92,15 +89,15 @@ unfold_use(ldef:list,x:any,s:class,v:string,err:boolean,loop:any) : void
 
 // this is the error catching pattern: evaluate(self) and check if error then place it in vglobal,
 // if no error we want the value in v with expected gotype e (a true gotype = class)
-// if v2 is an EID variable, do not create an extra variable (we use it temporarily)
+// if v is an EID variable, do not create an extra variable (we use it temporarily)
 // in a loop we generate a break to exit to loop
 // v is the variable that must receive self
 // note : g_try produces a pattern   <e = code>, if Err(e) {res =e} else { ...
 // that must be closed } with a close_try => and nothing after the close_try (nothing must if an error occured)
 [g_try(self:any,v:string,e:class,vglobal:string,loop:any) : void
-  -> let v2 := (if (e = EID) v else check_var(v /+ string!(gensym("_try")))) in 
+  -> let v2 := (if (e = EID) v else genvar("try_")) in 
         (if (e != EID) var_declaration(v2,EID,1),
-         // printf("/*g_try(~S:~A)@~A~I*/",self,v2,OPT.level,breakline()),
+         printf("/*g_try(v2:~S,loop:~S) */~I",v2,loop,breakline()),
          g_statement(self,EID,v2,true,loop),
          // AUDACIEUX: if self is a Do, and we have a loop, break statements cover the error case
          if (self % Do & loop) printf("{~I",breakline())
@@ -111,7 +108,7 @@ unfold_use(ldef:list,x:any,s:class,v:string,err:boolean,loop:any) : void
            else (printf("if ErrorIn(~I) {", c_princ(v2)),
                if (v != vglobal) printf("~I = ~I~I",c_princ(vglobal), c_princ(v2), breakline()),
                if (loop % tuple) 
-                  (printf("~I = ~I~I",c_princ(loop[1]),c_princ(v2),breakline()),
+                  (if (loop[1] !=  vglobal) printf("~I = ~I~I",c_princ(loop[1]),c_princ(v2),breakline()),
                    princ("break"), 
                    breakline()), 
                printf("} else {~I",breakline()))),
@@ -145,7 +142,7 @@ unfold_use(ldef:list,x:any,s:class,v:string,err:boolean,loop:any) : void
    -> if (case self (Assign (range(self.var) = EID)))    // pragma v:EID was used
         let %var := self.var, v1 := c_string(PRODUCER,%var) in
              g_try(self.arg,v1,EID,vglobal,loop)
-      else let v2 := check_var("void_try") in  
+      else let v2 := genvar("loop_") in  
         (// printf("/* try_void(~S) : throw = ~S */~I",self,g_throw(self), breakline()),
          var_declaration(v2,EID,1),       // this is the EID variable for error check (assign to vglobal only if error)
          printf("_ = ~A~I", v2,breakline()),     // sometimes this variable is not used
@@ -290,13 +287,12 @@ unfold_eid(ldef:list,self:any,s:class, v:any,err:boolean,loop:any) : void
       (if (ns[1] = 'C' & ns[2] = '%') self.var.mClaire/pname := gensym(),     // used in Iterate (C% variables are expanded): ocontrol.cl
        let v2 := c_string(PRODUCER,self.var),  x := self.value,
            f := g_clean(x), try? := g_throw(x), ev := class!(self.var.range) in
-              (new_block("Let"),
+              (let_block(),
                var_declaration(v2,ev,0), 
                if f printf(" = ~I", g_expression(x,ev)),
                breakline(),
-               printf("/* noccur = ~A */",Language/occurexact(self.arg, self.var)),
-               breakline(),
-               if (Language/occurexact(self.arg, self.var) = 0)          // avoid unused variable error
+               // printf("/* noccur = ~A */~I",Language/occurexact(self.arg, self.var),breakline()),   // occurexact should discard setup !
+               if (Language/occurexact(self.arg, self.var) <= 1)          // avoid unused variable error
                   (// THIS SHOULD BE A PROPER WARNING ==============
                    //[0] >>>>>>>>  variable ~S declared but unused  // v2,          
                    printf("_ = ~A~I", v2,breakline())),                    
@@ -420,12 +416,14 @@ unfold_eid(ldef:list,self:any,s:class, v:any,err:boolean,loop:any) : void
 [g_statement(self:Or,s:class,v:string,err:boolean,loop:any) : void
  -> let v2 := check_var("v_or"), count_try := 0 in
        (new_block("or"),
+        printf("/* Or stat: v=~S, loop=~S */~I",v,loop,breakline()),
         var_declaration(v2,boolean,1),
         breakline(),
         for x in self.args
               let try? := g_throw(x) in
-                (if try? 
-                     (g_try(x,v2,boolean,v,false), count_try :+ 1)
+                (printf("/* Or stat: try ~S with try:~S, v=~S, loop=~S */~I",x,try?,v,loop,breakline()),
+                 if try? 
+                     (g_try(x,v2,boolean,v,loop), count_try :+ 1)           // if loop ... it must be used !
                  else statement(x,boolean,v2,loop),
                  printf("if (~I == CTRUE) {~I~I} else ~I", c_princ(v2),
                          (if (s != void) printf("~I = ~ICTRUE~I", c_princ(v), 
@@ -459,18 +457,19 @@ unfold_eid(ldef:list,self:any,s:class, v:any,err:boolean,loop:any) : void
 // note that the tricky part is the store management
 [g_statement(self:Gassign,s:class,v:string,err:boolean,loop:any) : void
    ->  let %var := self.var, x := self.arg  in
-           (if (g_func(x) & s = void & not(self.var.Kernel/store?))    // simple case
-               printf("~I = ~I~I", globalVar(PRODUCER,self.var), g_expression(x,any), breakline())
-            else let v2 := check_var("v_gassign"), try? := g_throw(x) in
-              (if (not(try?) & (s = void | s = any)) v2 := v        // save intermediate the variable
+           (if (g_func(x) & s = void & not(%var.Kernel/store?))    // simple case
+               printf("~I = ~I~I", globalVar(PRODUCER,%var), g_expression(x,any), breakline())
+            else let v2 := genvar("v_gassign"), try? := g_throw(x) in
+              (if (not(try?) & (s = any)) v2 := v        // save intermediate the variable
                else var_declaration(v2,any,1),
                if try? g_try(x,v2,any,v,false)
                else statement(x,any,v2,loop),
-               if self.var.Kernel/store?  printf("~I.StoreObj(2,~I);", globalVar(PRODUCER,self.var), c_princ(v2))
-               else printf("~I = ~I~I", globalVar(PRODUCER,self.var), c_princ(v2),breakline()),
+               if self.var.Kernel/store?  
+                   printf("~I.StoreObj(3,~I,CTRUE)~I", thing_ident(%var), c_princ(v2),breakline())
+               else printf("~I = ~I~I", globalVar(PRODUCER,%var), c_princ(v2),breakline()),
                if (s != void & v != v2) 
                    printf("~I = ~I~I",c_princ(v),use_variable(v2,s,any),breakline()),
-               if try? close_block())) ]
+               if try? close_block()))]
 
 
 //**********************************************************************
@@ -493,40 +492,21 @@ unfold_eid(ldef:list,self:any,s:class, v:any,err:boolean,loop:any) : void
 [g_statement(self:For,s:class,v:string,err:boolean,loop:any) : void
 -> let v2 := c_string(PRODUCER,self.var), count_try := 0,
        v2_range := class!(self.var.range),                                 // what claire expects for v2
-       v4 := v2 /+ "_iter",                                                // any clone of v2
-       %set := self.set_arg, sbag := bag_class(%set) in                    // list or set
+       v3 := v2 /+ "_support",                                              // v3 : variable that holds the bag
+       v4 := v2 /+ "_iter",                                                 // *Any variable for iteration
+       %set := self.set_arg,                                                // set expression
+       sbag := bag_class(%set), smember := g_member(%set),                  // list or set + member_type
+       %direct := (v2_range = any | smember = integer | smember = float) in     // direct means v4 not necessary
       (new_block("For"),
-       var_declaration(v2,v2_range,2),                    // Special : _ = v needed
-       if (v2_range != any) var_declaration(v4,any,1)             
-       else v4 := v2,                                                      // do not use v4
+       // printf("/*%direct=~S smember=~S*/",%direct,smember),
+       var_declaration(v2,v2_range,2),                                        // 2:Special : _ = v needed
+       if not(%direct) var_declaration(v4,any,1) else v4 := v2,                // do not use v4 (v2 is filled directly)
        if (s != void) printf("~I= ~ICFALSE~I~I", c_princ(v), 
                               cast_prefix(boolean,s),
                               cast_post(boolean,s),
                               breakline()),  // v3.3.42 - Sylvain's optim 
-       if (g_clean(%set) & designated?(%set) & (g_member(%set) != any | sbag = set))
-          printf("for _,~I = range(~I~I)~I", c_princ(v4), 
-                   g_expression(%set, sbag), 
-                   list_cast_values(sbag, g_member(%set)),
-                   new_block("loop"))
-       else let v3 := v2 /+ "_support",                 // v3 : variable that holds the bag
-                try? := g_throw(%set) in
-            (var_declaration(v3,sbag,1),
-             if try? 
-                     (g_try(%set,v3,sbag,v,false), 
-                      count_try :+ 1)
-             else statement(%set, sbag, v3, false),
-             if (g_member(%set) != any | sbag = set)                   // use native pattern
-                printf("for _,~I = range(~I~I)~I", c_princ(v4), 
-                         c_princ(v3), 
-                         list_cast_values(sbag, g_member(%set)),
-                         new_block("loop2"))
-              else 
-               let v5 := v2 /+ "_len" in
-              (printf("~I := ~I.Length()~I", c_princ(v5),c_princ(v3),breakline()),
-               printf("for i_it := 0; i_it < ~I; i_it++ ~I~I",  c_princ(v5), 
-                     new_block(),
-                     printf("~I = ~I.At(i_it)~I", c_princ(v4), c_princ(v3),breakline())))),
-       if (v2_range != any) printf("~A = ~I~A~I~I",v2,cast_prefix(any,v2_range),v4,
+       count_try :+ iteration_statement(self,%set,sbag,smember,v,v3,v4),
+       if not(%direct) printf("~A = ~I~A~I~I",v2,cast_prefix(any,v2_range),v4,
                                    cast_post(any,v2_range),breakline()),
        if g_throw(self.arg)
           (// printf("/*protect ~S*/~I",self.arg,breakline()),
@@ -537,8 +517,40 @@ unfold_eid(ldef:list,self:any,s:class, v:any,err:boolean,loop:any) : void
        close_block("loop"),      // for loop content
        close_block("For")) ]    // for statement
 
+// iteration_statement produces the bulk of the iteration code
+// returns 1 if we use a try/pattern for error protection
+[iteration_statement(self:For,%set:any,sbag:class,smember:class,v:string,v3:string,v4:string) : integer
+ -> if (g_clean(%set) & designated?(%set) & (smember != any & sbag = list))         // simple forms for list (%set is used once)
+          (printf("for _,~I = range(~I~I)~I", c_princ(v4),                           // typed list iteration pattern
+                   g_expression(%set, sbag),                                        // notice that v4 occurs once
+                   cast_Values(sbag, smember),                                      // access through Values*()
+                   new_block("loop")),
+           0)
+    else let try? := g_throw(%set) in
+            (var_declaration(v3,sbag,1),                                            // v3 will contain the bag
+             if try? g_try(%set,v3,sbag,v,false)                                    // use g_try, will return 1 to balance the }
+             else statement(%set, sbag, v3, false),
+             if (sbag = set)                                                  // set iteration 
+                printf("for i_it := 0; i_it < ~I.Count; i_it++ ~I~I",  c_princ(v3), 
+                     new_block(),
+                     (if (smember = integer | smember = float)
+                        printf("~I = ~I~I[i_it]~I", c_princ(v4), c_princ(v3),cast_Values(sbag, smember),breakline())
+                      else printf("~I = ~I.At(i_it)~I", c_princ(v4), c_princ(v3),breakline())))
+             else if (g_member(%set) != any)                                 // use native pattern for list
+                printf("for _,~I = range(~I~I)~I", c_princ(v4), c_princ(v3), 
+                         cast_Values(sbag, smember),
+                         new_block("loop2"))
+            else let v5 := c_string(PRODUCER,self.var) /+ "_len" in       // length of bag, used forregular pattern for complex list expr
+              (printf("~I := ~I.Length()~I", c_princ(v5),c_princ(v3),breakline()),
+               printf("for i_it := 0; i_it < ~I; i_it++ ~I~I",  c_princ(v5), 
+                     new_block(),
+                     printf("~I = ~I.At(i_it)~I", c_princ(v4), c_princ(v3),breakline()))),
+            if try? 1 else 0) ]
+       
+
+
 // here the value is expected to be important, otherwise an error is raised.
-// THIS IS ONLY APPLIED TO COLLECT(f(x) | s in S) on lists or sets (bags) => Image is delt with
+// THIS IS ONLY APPLIED TO COLLECT(f(x) | s in S) on lists => Image is delt with
 // we currently do not use the native form => use At and Put to work on generic lists
 [g_statement(self:Iteration,s:class,v:string,err:boolean,loop:any) : void
 -> if (s = void) error("[203] you should have used a FOR ere:~S", self),         // we shall use v to place the new list !
@@ -551,7 +563,7 @@ unfold_eid(ldef:list,self:any,s:class, v:any,err:boolean,loop:any) : void
       (//[5] COOL : an Iteration for g_statement:~S // self,
        new_block("Iteration"),
        var_declaration(vlist,bag_type,1),         // the list that is being built
-       if (bag_type = list) var_declaration(v2,v2_range,1),        // variable associated to f(x)
+       var_declaration(v2,v2_range,1),        // variable associated to f(x)
        var_declaration(vlocal,any,1),         // need a *ClaireAny
        if g_throw(self.set_arg)
           (try_count :+ 1,
@@ -564,16 +576,11 @@ unfold_eid(ldef:list,self:any,s:class, v:any,err:boolean,loop:any) : void
               vlist,
               cast_post(list,s),             // we know we have a list, may cast to put in v
               breakline()),
-       if (bag_type = set) 
-          (printf("var CLcount = -1~I",breakline()),
-           printf("for _,~A := range(~A.Values) ~I",v2,vlist,new_block()),
-           printf("CLcount++~I",breakline()))
-       else
-       (printf("for CLcount := 0; CLcount < ~A.Length(); CLcount++~I", vlist, new_block()),
-        printf("~A = ~I~A.At(CLcount)~I~I", v2, cast_prefix(any,v2_range) ,
-                        vlist, 
+       printf("for CLcount := 0; CLcount < ~A.~A; CLcount++~I", vlist,       // works for sets and lists :)
+              (if (bag_type = set) "Count" else "Length()"), new_block()),
+       printf("~A = ~I~A.At(CLcount)~I~I", v2, cast_prefix(any,v2_range) ,vlist, 
                         cast_post(any,v2_range),
-                        breakline())),
+                        breakline()),
        if g_throw(self.arg)
           (try_count :+ 1,
            g_try(self.arg,vlocal,any,v,tuple(v,s)))
@@ -581,7 +588,8 @@ unfold_eid(ldef:list,self:any,s:class, v:any,err:boolean,loop:any) : void
        printf("~I~A~I.PutAt(CLcount,~A)~I", cast_prefix(s,list), v, cast_post(s,list),vlocal,breakline()),
        close_block(),
        close_try(try_count),
-       close_block("Iteration")) ]
+       close_block("Iteration")) ]       
+
 
 // --------------- WHILE   ------------------------------------------
 
@@ -590,7 +598,7 @@ unfold_eid(ldef:list,self:any,s:class, v:any,err:boolean,loop:any) : void
 // error is more tricky => we produce a chain with 3 more blocks
 [g_statement(self:While,s:class,v:string,err:boolean,loop:any) : void
  -> let f? := (g_clean(self.test) & not(self.other)),            // simple while pattern 
-        try? := (not(self.other) & g_throw(self.test)),          // error catch pattern for test
+        try? := g_throw(self.test),                              // error catch pattern for test
         try2? := g_throw(self.arg),                              // error catch pattern for arg
         v2 := check_var("v_while") in
        (if not(f?) var_declaration(v2,boolean,1),
@@ -598,7 +606,7 @@ unfold_eid(ldef:list,self:any,s:class, v:any,err:boolean,loop:any) : void
                                 cast_prefix(boolean,s),
                                 cast_post(boolean,s), 
                                 breakline()),
-        if f?  printf("for ~I ",bool_exp(self.iClaire/test, not(self.iClaire/other)))
+        if f?  printf("for ~I ",bool_exp(self.iClaire/test, true))      // while self.test = true ...
         else 
              (if try? g_try(self.iClaire/test,v2,boolean,v,false)
               else statement((if self.iClaire/other false else self.iClaire/test), boolean, v2,false),
@@ -606,8 +614,10 @@ unfold_eid(ldef:list,self:any,s:class, v:any,err:boolean,loop:any) : void
               printf("for ~A ~I CTRUE ", v2,
                       (if self.other princ("!=") else princ("==")))),      // v3.00.05
         new_block("while"),
+        printf("/* While stat, v:~S loop:~S */~I",v,loop,breakline()),
         if try2? g_try_void(self.arg,v,tuple(v,s))           //    Aspecial form of g_try (no need)
         else statement(self.arg,void,v,tuple(v,s)),               // notice the loop parameter is set
+        printf("/* try?:~S, v2:~S loop will be:~S */~I",try?,v2,tuple(v,s),breakline()),
         if try? g_try(self.iClaire/test,v2,boolean,v,tuple(v,s))  // will generate a break if an error
         else if not(f?) statement(self.iClaire/test,boolean,v2,false),
         close_block("while"),
@@ -621,7 +631,7 @@ unfold_eid(ldef:list,self:any,s:class, v:any,err:boolean,loop:any) : void
 [g_statement(self:Return,s:class,v:string,err:boolean,loop:any) : void
  -> case loop 
       (tuple let vreturn := loop[1] as string, sreturn := loop[2] as class in
-          ( printf(" /*v = ~A, s =~S*/\n",vreturn, sreturn),
+          ( if PRODUCER.debug? printf(" /*v = ~A, s =~S*/~I",vreturn, sreturn,breakline()),
             statement(self.arg, sreturn, vreturn, false))),      
     princ("break"),
     breakline() ]
@@ -652,7 +662,7 @@ unfold_eid(ldef:list,self:any,s:class, v:any,err:boolean,loop:any) : void
                  printf("~I = ~I~I",symbol_ident(a1),
                            declare(PRODUCER,value(a1)), 
                            breakline())
-              else  (printf("/* object!:~S ->~S*/",a1,defined(a1)),
+              else  (// printf("/* object!:~S ->~S*/",a1,defined(a1)),
                      printf("~I = ~Inew(~I).IsNamed(~I,MakeSymbol(~S,~I))~I~I",symbol_ident(a1),
                                   object_prefix(any,a2),
                                   go_class(a2),                  // v3.3.14
@@ -713,9 +723,10 @@ unfold_eid(ldef:list,self:any,s:class, v:any,err:boolean,loop:any) : void
 // we see if the catch applied (bool : e % S) 
 // in CLAIRE4, we know that self.test is a class
 [g_statement(self:Handle,s:class,v:string,err:boolean,loop:any) : void
- -> let v2 := (if (s = EID) v else check_var(v /+ "_try")) in 
-        (if (s != EID) var_declaration(v2,EID,1), 
-         printf("h_index := ClEnv.Index /* Handle */~I",breakline()),
+ -> let v2 := (if (s = EID) v else v /+ "_H") in 
+        (new_block("handle"),
+         if (s != EID) var_declaration(v2,EID,1), 
+         printf("h_index := ClEnv.Index~I",breakline()),
          printf("h_base := ClEnv.Base~I",breakline()),
          statement(self.arg,EID,v2,false),    // no exit from loop inside  the try part
          if (self.test = any)   // catch any errors
@@ -723,15 +734,15 @@ unfold_eid(ldef:list,self:any,s:class, v:any,err:boolean,loop:any) : void
           else printf("if ErrorIn(~A) && ~I.Contains(ANY(~A)) == CTRUE ",v2, 
                          g_expression(self.test,type),v2),
          new_block(),
-         printf("/* s=~S */",s),
+         if PRODUCER.debug? printf("/* s=~S */",s),
          printf("ClEnv.Index = h_index~I",breakline()),
          printf("ClEnv.Base = h_base~I",breakline()),
          statement(self.other,s,v,loop),    // here we may exit from the loop
- //        close_block()
          if (s = EID | s = void) close_block()   // we do not need v
          else printf("} else {~I~I = ~I~I~I", breakline(),
                               c_princ(v),from_eid(PRODUCER,v2,s),
-                              breakline(),close_block())) ]
+                              breakline(),close_block()),
+         close_block("handle"))]
      
 // to_CL and to_C are presently ignored in CLAIRE 4
 // [g_statement(self:Generate/to_CL,s:class,v:string,err:boolean,loop:any) : void
@@ -752,14 +763,19 @@ unfold_eid(ldef:list,self:any,s:class, v:any,err:boolean,loop:any) : void
 // we will follow a pattern similar to unfold => create the let then call g_statement on it
 
 // reads a slot.
+// there are two reasons for requiring a statement : complex arg or possible error when reading ! hence we check before using unfold ...
 [g_statement(self:Call_slot,s:class,v:string,err:boolean,loop:any) : void
-  -> let varg := build_Variable("v_slot", c_type(self.arg)),
+  -> if g_clean(self.arg) printf("~I = ~I~I", c_princ(v),  g_expression(self, s), breakline())
+     else let varg := build_Variable("v_slot", c_type(self.arg)),
          unfold := Let( var = varg, value = self.arg, arg = Call_slot(selector = self.selector,  arg = varg)) in
        g_statement(unfold,s,v,err,loop)]
 
+
 // reads an table.
+// there are two reasons for requiring a statement : complex arg or possible error when reading !
 [g_statement(self:Call_table,s:class,v:string,err:boolean,loop:any) : void
- -> let varg := build_Variable("v_table", c_type(self.arg)),
+ -> if g_clean(self.arg) printf("~I = ~I~I", c_princ(v),  g_expression(self, s), breakline())
+    else let varg := build_Variable("v_table", c_type(self.arg)),
         unfold := Let( var = varg, value = self.arg, arg = Call_table(selector = self.selector,  arg = varg)) in
        g_statement(unfold,s,v,err,loop)]
        
@@ -786,17 +802,21 @@ unfold_eid(ldef:list,self:any,s:class, v:any,err:boolean,loop:any) : void
                        any any U (if (self.arg = add) member(p.range) else p.range))) in
     (//[5] g_stat@Update X.selector = ~S => range = ~S // X.selector, sr,
      if (not(err) & g_func(self.var.arg) & g_func(self.value) & s = void)  
-       update_statement(self,class!(sr))
+         update_statement(self,class!(sr))
+     else if (g_clean(self.var.arg) & g_clean(self.value) & update_write?(self))
+        (printf("/* update_write ~S : ~S x ~S */~I",self,domain(self.selector),range(self.selector),breakline()),
+         printf("~A = ",v),
+         update_statement(self,class!(sr)))
      else let try_count := 0,
-       varg1 :=  build_Variable("va_arg1", (case X
+          varg1 :=  build_Variable("va_arg1", (case X
                      (Call_slot domain!(X.selector),
                       Call_array integer,
                       any any U p.domain))),              // Call_table,
-       varg2 :=  build_Variable("va_arg2", sr),
-       %call := (let xx := copy(X) in (put(arg, xx, varg1), xx)),          // simpler version of X
-       %unfold := Update(selector = self.selector,  value = varg2, arg = self.arg, var = %call) in
+           varg2 :=  build_Variable("va_arg2", sr),
+           %call := (let xx := copy(X) in (put(arg, xx, varg1), xx)),          // simpler version of X
+           %unfold := Update(selector = self.selector,  value = varg2, arg = self.arg, var = %call) in
     (new_block("update"),
-      var_declaration(c_string(PRODUCER,varg1),go_range(varg1),1),
+     var_declaration(c_string(PRODUCER,varg1),go_range(varg1),1),
      var_declaration(c_string(PRODUCER,varg2),go_range(varg2),1),
      if g_throw(X.arg)
           (try_count :+ 1,
@@ -806,9 +826,11 @@ unfold_eid(ldef:list,self:any,s:class, v:any,err:boolean,loop:any) : void
           (try_count :+ 1,
            g_try(self.value,"va_arg2",go_range(varg2),v,false))              // checks error, then ...
      else  statement(self.value,go_range(varg2),"va_arg2",loop),           // produces assignment of v1
-     printf("/* ---------- now we compile update ~S ------- */~I",%unfold,breakline()),
+     if PRODUCER.debug? printf("/* ---------- now we compile update ~S ------- */~I",%unfold,breakline()),
+     if update_write?(self) printf("~A = ",v),        // then s = EID
      update_statement(%unfold,class!(sr)),
-     if (s != void) printf("~A = ~I~A~I~I",v,
+     if (s != void & not(update_write?(self)))        // when we want the result
+        printf("~A = ~I~A~I~I",v,
           cast_prefix(go_range(varg2),s),
           "va_arg2",
           cast_post(go_range(varg2),s),
@@ -822,27 +844,55 @@ unfold_eid(ldef:list,self:any,s:class, v:any,err:boolean,loop:any) : void
 //    if_write demons (that perform the update)  p_write(x:any,y:any)
 //    defeasible updates   o.StoreX(n,v,CTRUE)
 // if we cannot find n (type too generic) => revert to a generic Update method
+// NOTE: Update is used for many things:
+//   Update(p:property, arg: ss | c_code(x,any),  var:call_slot, value:y) 
+//   Update(p:property, arg: add,  var:call_slot, value:y) multivalued
+//   Update(p:table, arg: put | c_code(x,any), var: call_table, value:y)   // only with a list-based table!
+//   Update(p:exp<array>, arg:put, var:call_array(p,x), value:y)
 [update_statement(self:Update,s:class) : void
  ->  let p:any := self.selector, a := self.arg,
-         v := self.value, x := self.var in
-       (if (case p (relation (known?(p.if_write) & a != put & a != put_store)))
-           printf("~I_write(~I,~I)",
+         v := self.value, x := self.var, s2 := class!(c_type(self.var)) in
+       (if update_write?(self)     // hopefully s = EID
+           (Compile/Tighten!(p),                                      // use the best value for r.domain & r.range
+            printf("F_~I_write(~I,~I)~I",
                   c_princ(string!(p.name)),
-                  g_expression(x.arg, any),
-                  g_expression(v,any))
-        else if (case p (relation (p.Kernel/store? | a = put_store)))
-           let s2 := class!(x.arg), n := (p @ s2).mClaire/index in
-            printf("~I.Store~A(~A,~I,CTRUE)",
-                     g_expression(),
-                     (if (s = integer) "Integer"
-                      else if (s = float) "Float"
-                      else "Object"),
+                  g_expression(x.arg, class!(domain(p))),     // here we use arg !
+                  g_expression(v,class!(range(p))),
+                  breakline()))
+        else if (case p (relation (p.Kernel/store? | a = put_store)))         // defeasible update : Call_table or Call_slot
+           (if (x % Call_table)
+              printf("F_store_list(ToList(~I.Graph),~I,~I,CTRUE)~I",g_expression(p, table),
+                      g_table_index(p as table,x.arg),                  
+                      g_expression(v, any),
+                      breakline())
+            else let s2 := class!(c_type((x as Call_slot).arg)), n := (p @ s2).mClaire/index in
+               printf("~I.Store~A(~A,~I,CTRUE)/*c:~S*/~I",
+                     g_expression(x.arg,object),
+                     (if (s = integer) "Int" else if (s = float) "Float" else "Obj"),
                      n,
-                     g_expression(v, s))
-   //     else if (p = mClaire/graph & need_shortcut(v))             // CLAIRE 4 use GraphInit() => t.graph is seen as Any
-   //         (printf("/* == IGNOBLE SHORT CUT : graph udate with v = ~S ===*/~I",v,breakline), // to remove later !
-   //          printf("~I.GraphInit()~I",g_expression(x.arg,table),breakline()))
-        else printf("~I = ~I~I", g_expression(x, s), g_expression(v, s),breakline())) ]
+                     g_expression(v, (if (s = integer | s = float) s else any)),
+                     s2,
+                     breakline()))
+        else if (case x (Call_array (sort!(member(c_type(p))) = any), any false))
+            (//[5] UNSORTED array p is ~S, index is ~S, type : ~S// p, arg(x), c_type(p),
+             printf("~I.PutAt(~I,~I)/*unsorted-x:~S,sm:~S*/~I", 
+               g_expression(c_code(p,array), list), 
+               g_expression(arg(x),integer),
+               g_expression(v, any),
+               owner(x),sort!(member(c_type(p))), breakline()))
+        else if (case x (Call_table (sort!(member(c_type(p))) % {integer,float}), any false))
+            (printf("~I.PutAt(~I,~I-1)~I", 
+               g_expression(p,table), 
+               g_table_index(p as table,x.arg),
+               g_expression(v, any),
+               breakline()))
+        // this assumes that x is an adressable expression: Call_slot, sorted Call_array, sorted Call_table
+        else (if (x % Call_array) 
+                 (s2 := sort!(member(c_type(p))),
+                  if (s2 = object) s2 := any)
+              else if (x % Call_slot) s2 := class!(range(rootSlot(x.selector))),    // what go expects
+              printf("~I = ~I~I/*~S->~S*/", g_expression(x, s2), g_expression(v, s2),breakline(),s,s2))) ]
+          
     
 // in the expansion of Defarray, we generate x.graph := make_list(29,unknonw) that we need to trap
 [need_shortcut(v:any) : boolean

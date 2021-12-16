@@ -313,7 +313,7 @@ self_eval(self:Lselect) : any
                (write_value(self.var, y), if (eval(self.arg) != false) res :add y)),
         if known?(of,self)
           (when x := some(x in res | not(x % self.of)) in   // v3.1.06
-               range_error(cause = self,arg = x,wrong = self.of),
+               range_error(mClaire/cause = self,arg = x,wrong = self.of),
            Kernel/cast!(res,self.of)),
         res))
 
@@ -398,6 +398,7 @@ self_print(self:While) : void
             printexp(self.test, false), lbreak(2), self.arg),
      pretty.index :- 2)
 
+// other = true => self means  repeat self.arg until self.test = true
 self_eval(self:While) : any
  -> (let a := self.other,
          b := a in
@@ -477,13 +478,21 @@ self_eval(self:List) : list
                l))
 
 // here we use the CLAIRE 3 style of post-typing with a cast! 
-self_eval(self:Set) : any
- -> let s := { eval(x) | x in self.args} in
+self_eval(self:Set) : set
+ -> let type? := known?(of,self), n := length(self.args) in
+        (if type? 
+           let l := empty_set(self.of)  in                          // compiler optimization
+               (for i in (1 .. n)  add(l, eval(self.args[i])),       // adds with a test
+               l)
+         else let l := empty_set({})  in              // compiler optimization
+               (for i in (1 .. n)  add!(l,eval(self.args[i])),              // adds without a test
+               l))
+/* -> let s := { eval(x) | x in self.args} in
       (if known?(of,self)
           (when x := some(x in s | not(x % self.of)) in   // v3.0.72
                range_error(cause = self,arg = x,wrong = self.of),
            Kernel/cast!(s,self.of))   // v0.01
-       else Kernel/cast!(s,{}))
+       else Kernel/cast!(s,{})) */
        
 self_eval(self:Tuple) : any
  -> tuple!(list{ eval(x) | x in self.args})

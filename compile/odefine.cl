@@ -93,10 +93,12 @@ c_code(self:Definition,s:class) : any
 
 // tells if a "total instantiation" is appropriate (for exceptions)
 // we actually check that the srange is OID or integer for all slots
+// CLAIRE4: chek that the order is respected !
 [total?(self:class,l:list) : any
  ->  let lp := get_indexed(self),
          n := length(lp) in
-       (if (not(compiler.diet?) & length(l) = n - 1 & 
+       (if (length(l) = n - 1 & 
+            forall(i in (2 .. n) | selector(lp[i]) = (l[i - 1] as Call).args[1]) &          // args are passed in the proper order !
             (self.open = default() | self Core/<=t exception) &
             n <= 4 & forall(i in (2 .. n) | srange(lp[i]) % {any,integer}))
          let %c:any := Call((if (length(l) = 0) mClaire/new! else anyObject!),
@@ -177,7 +179,7 @@ c_code(self:Defobj,s:class) : any
 
 // method definition
 // note (3.4): using the un-compiled code for c_status is weak, it would be much better to
-//
+// in CLAIRE4, we pass the method as an argument (needed by the code generator)
 c_type(self:Defmethod) : type -> any
 [c_code(self:Defmethod) : any
  -> let px := self.arg.selector,
@@ -194,11 +196,13 @@ c_type(self:Defmethod) : type -> any
         getm := (px @ ls[2]),
         m:method := (case getm (method getm,
                      any error("[internal] the method ~S @ ~S is not known",px,ls[2])))in
-     (lbody[2] := get(functional,m),
+     (//[0] --- c_code of ~S // m,
+      lbody[2] := get(functional,m),
       FileOrigin[m] := PRODUCER.current_file /+ ".cl:" /+ string!(n_line()),
       if (not(compiler.inline?) & (px = Iterate  | px = iterate)) nil
       else if (lrange[1] = void & sort_pattern?(lv,self.body)) sort_code(self,lv)                         // v3.3
-      else (if (lbody[3] != body)
+      else (//[0] ... start producing the lambda //,
+            if (lbody[3] != body)
              let na := function_name(px, ls[2], lbody[2]),
                  la := Language/lambda!(lv, lbody[3]),
                  news := (if (if OPT.recompute g_throw(lbody[2]) else can_throw?(m)) 1 else 0) in
@@ -284,16 +288,23 @@ c_type(self:Defmethod) : type -> any
 // new: we deal with floats --------------------------------------
 
 // create a restriction so that OPT is happy
-add_method(p:property,ls:list,rg:type,st:integer,f1:function,f2:function) : method
+// the last argument is the method that is passed to the code generator
+add_method(p:property,ls:list,rg:type,st:integer,f1:function,m:method) : method
   -> add_method(p,ls,rg,st,f1)
 
+*add_method2* :: add_method.restrictions[2]
+
 [add_method!(m:method,ls:list,rg:any,stat:any,fu:function) : any
-  -> let %c :=  Call_method(arg = (add_method @ property),
+  -> let %c :=  Call_method(arg = *add_method2*,
                             args =  list(c_code(m.selector,property),
                                          c_code(ls,list),
-                                         c_code(rg,type), stat, fu)) in
-       (if (m.range = float | float % m.domain | m.range % tuple)
-           %c.args :add make_function(string!(fu) /+ "_"),
+                                         c_code(rg,type), 
+                                         stat, 
+                                         fu,
+                                         m)) in
+       (// if (m.range = float | float % m.domain | m.range % tuple)
+        //   %c.args :add make_function(string!(fu) /+ "_"),
+        //[6] call add_method!(~S) -> ~A // m, length(%c.args),
         %c) ]
 
 
@@ -369,40 +380,36 @@ compile_lambda(self:string,l:lambda,m:any) : any
         %l2 := list<any>(Call(put, list(range, %v, %a.range)),
                          Call(put, list(params, %v, %a.params)),
                          Call(put, list(domain, %v, s))) in
-       (put(range, (a[2] as Variable),
-            Language/extract_type((a[2] as Variable).range)),
-        if (length(a) = 2)
+       (put(range, (a[2] as Variable), Language/extract_type((a[2] as Variable).range)),
+        if (length(a) = 2)               // one-dimensional  array
            (%l2 :add
-              (if (s % Interval) 
-              Call(put,
-                   list(Kernel/graph, %v, Call(make_copy_list, list(size(s), d))))
+              (if (s % Interval)  Call(put, list(Kernel/graph, %v, Call(typed_copy_list, list(%a.range,size(s), %a.default))))
               else Call(Kernel/graph_init,list(%v))),
             %l2 :add
               (case e
                 (lambda For(var = a[2], set_arg = s,
-                            arg = Call(nth=, list(%v, a[2], e.body))),
-                 any Call(selector = put, args = list(default, %v, d)))))
-        else let s2 := extract_type((a[3] as Variable).range) in
+                            arg = Call(nth=, list(%v, a[2], e.body))))))
+        else let s1 := extract_type((a[2] as Variable).range),                    // range of 
+                 s2 := extract_type((a[3] as Variable).range) in    // two dimensional array
                (put(range, (a[3] as Variable), s2),
+                //[6] compile a 2 dim array with s = ~S and s2 = ~S // s,s2,
                 %l2 :add
-                  Call(put,
-                       list(Kernel/graph, %v,
-                              Call(make_copy_list,
-                                   list(length(%a.Kernel/graph),
-                                          (if (%a.params = any) unknown
-                                           else %a.default))))),
+                   (if (s1 % Interval & s2 % Interval)         // cf. define.cl  -> two dimension integer array
+                       Call(put,
+                          list(Kernel/graph, %v,
+                              Call(typed_copy_list,list(%a.range,length(%a.Kernel/graph), %a.default))))
+                   else       // use a regular map
+                       Call(Kernel/graph_init,list(%v))),
                 %l2 :add
                   (case e
                     (lambda
-                       For(var = a[2], set_arg = s[1],
-                           arg =
-                             For(var = a[3], set_arg = s2,
-                                 arg = Call(nth=, list(%v, a[2], a[3], e.body)))),
-                     any Call(put, list(default, %v, d))))),
+                       For(var = a[2], set_arg = s1,
+                           arg = For(var = a[3], set_arg = s2,
+                                     arg = Call(nth=, list(%v, a[2], a[3], e.body))))))),
+        %l2 :add Call(put, list(default, %v, default(%a))),
         OPT.objects :add %a,
         c_register(%a),
-        c_code(Do( Call( object!, list(%a.name, table)) cons (%l1 add* %l2)),
-               any)) ]
+        c_code(Do( Call( object!, list(%a.name, table)) cons (%l1 add* %l2)), any)) ]
 
 
 // *********************************************************************
@@ -413,10 +420,10 @@ compile_lambda(self:string,l:lambda,m:any) : any
 // this method creates an if_write demon that takes care of the inverse
 Compile/compute_if_write_inverse(R:relation) : void
  -> let x := Variable(pname = symbol!("XX"), range = R.domain),
-         y := Variable(pname = symbol!("YY"), range = (if multi?(R) member(R.range) else R.range)),
+         y := Variable(pname = symbol!("YY"), range = (if R.multivalued? member(R.range) else R.range)),
          z := Variable(pname = symbol!("ZZ"), range = R.range),
          l1 := list<any>() in
-     (if multi?(R)
+     (if R.multivalued?
          (// generate an if_write demon that does the add!
           l1 := list<any>(Produce_put(R,x,y)),
           if known?(inverse,R)
@@ -516,19 +523,24 @@ Produce_remove(r:table,x:Variable,y:any)  : any
                     else unknown)))
 
 
+// computes the best range and domain then sets r.open to 1
 Tighten(r:relation) : void
   -> (case r (property
-                 let ad:type := set(), ar:type := set() in
+                 let ad:type := {}, ar:type := {} in
                    (for s in {x in r.restrictions | x % slot}
                       (ad :U domain!(s),
-                       ar :U (if multi?(r) member(s.range) else s.range)),
+                       ar :U (if r.multivalued? member(s.range) else s.range)),
                     r.open := 1,
-                    put(domain,r,class!(ad)),
-                    put(range,r,
+                    if (ad != {})
+                    (put(domain,r,class!(ad)),
+                     put(range,r,
                          (if (r.multivalued? = list) Core/param!(list,class!(ar))
                           else if (r.multivalued? = set) Core/param!(set,class!(ar))
-                          else ar)),
+                          else ar))),
                     trace(5,"~S -> ~S x ~S\n", r, r.domain,r.range))))
+
+Compile/Tighten!(r:relation) : void -> (if (r.open > 0) Tighten(r))
+
 
 
 // new: re-compute the numbering but without the side-effects of the interpreter version (v3.067)
@@ -561,48 +573,58 @@ c_code(self:Defrule,s:class) : any
            let dn := (r.name /+ "_write"),
                s := string!(dn),
                lb := r.if_write in
-             (compile_lambda(s, lb, void), 
-              l add Call(put,list(if_write,r,make_function(s))))),
+             (//[0] ################ the if-write is ~S // lb,
+              compile_lambda(s, lb, void), 
+              l add Call(put,list(if_write,r,demon_function(s))))),
         for r in Language/relations[ru]
           (if Language/eventMethod?(r)
               l :add compileEventMethod(r as property)),
         c_code(Do(l), s))
       
-// produce a beautiful if_write demon
-compile_if_write(R:relation) : void
- -> let l := demons[R],
+// produce a beautiful if_write demon from all the claire demons created by each rule that applies to R
+[compile_if_write(R:relation) : void
+ -> printf("compile_if_write(~S) l = ~S, lvar = ~S [multi:~S]\n",R,demons[R],(demons[R])[1].formula.vars,R.multivalued?),
+    let l := demons[R],
         lvar := l[1].formula.vars,  // list(x,y) from 1st demon
         l1 := list<any>(Produce_put(R,lvar[1],lvar[2])),
-        l2 := list<any>{ substitution(
-                         substitution(
-                         substitution( x.formula.body,x.formula.vars[3],lvar[3]),
-                         x.formula.vars[1], lvar[1]),
-                         x.formula.vars[2], lvar[2]) |  x in l} in
-     (put(range,lvar[1],domain(R)),
+        l2 := list<any>{ demon_substitution(x,lvar) |  x in l} in
+     (Tighten(R),
+      put(range,lvar[1],domain(R)),
       put(range,lvar[2],range(R)), 
+      printf(">>>>>>>>>> vars = ~S:~S and ~S:~S   <<<<<<<<<<<<<\n",lvar[1],domain(R),lvar[2],range(R)),
       for v in lvar put(range,v,class!(v.range)),
       if (l2[1] % If & not(Language/eventMethod?(R)))
          (if ((l2[1] as If).test % And)
              ((l2[1] as If).test := And(args = cdr((l2[1] as If).test.args)))
           else l2[1] := (l2[1] as If).arg),        // first test is useless :)
       if known?(inverse,R)
-         (if not(multi?(R)) l1 :add Produce_remove(R.inverse,lvar[3],lvar[1]),
+         (if not(R.multivalued?) l1 :add Produce_remove(R.inverse,lvar[3],lvar[1]),
           l1 :add Produce_put(R.inverse,lvar[2],lvar[1])),
        R.if_write := lambda!( list(lvar[1],lvar[2]),
          (if Language/eventMethod?(R) Do(l2)
-          else if multi?(R)
+          else if R.multivalued?
              If(test = Call(not,
                             list(Call(%,list(lvar[2],Language/readCall(R,lvar[1]))))),
                 arg = Do(l1 /+ l2))
           else Let(var = lvar[3],
                    value = Language/readCall(R,lvar[1]),
                    arg = If(test = Call(!=,list(lvar[2],lvar[3])),
-                            arg = Do(l1 /+ l2))))))
-               
+                            arg = Do(l1 /+ l2)))))) ]
+
+// substitute 2 or 3 variables depending on lvar (CLAIRE4 : fixed an old CLAIRE3 bug that did not show)
+[demon_substitution(x:Language/demon,lvar:list) : any
+  -> let y := (if (length(lvar) > 2)   substitution( x.formula.body,x.formula.vars[3],lvar[3]) else x.formula.body) in
+          substitution( substitution( y,  x.formula.vars[1], lvar[1]), x.formula.vars[2], lvar[2])]                
+
+
+// create an arity 2 function  for demons
+[demon_function(%name:string) : function
+  -> let %f := make_function(%name) in
+       (Kernel/set_arity(%f,2), %f) ]   
+
 // create a simple method that will trigger the event
 compileEventMethod(p:property) : any
  -> let m:method := p.restrictions[1],
         na := string!(p.name) /+ "_write" in
-      add_method!(m,list(p.domain,p.range),void,0,make_function(na))    
- 
+      add_method!(m,list(p.domain,p.range),void,0,demon_function(na))
 

@@ -12,14 +12,14 @@ package Kernel
 
 import (
 	"fmt"
-	"strconv"
+	// "strconv"
 	// "unsafe"
 )
 
 // +---------------------------------------------------------------------------+
 // |  Table of contents                                                        |
 // |  Part 1: List Objects  (3 kinds)                                          |
-// |  Part 2: Sets (using go maps)                                             |
+// |  Part 2: Sets (using sorted bags - 3 kinds)                               |
 // |  Part 3: Tuples (constant list)                                           |
 // |  Part 4: Arays (fixed size lists)                                         |
 // +---------------------------------------------------------------------------+
@@ -180,7 +180,7 @@ func coreList(t *ClaireType, args ...*ClaireAny) *ClaireList {
 }
 
 // full constructor for int list
-func MakeFastIntegerList(args ...int) *ClaireListInteger {
+func MakeListInteger(args ...int) *ClaireList {
 	n := len(args)
 	ls := make([]int, n)
 	for i := 0; i < n; i++ {
@@ -189,11 +189,27 @@ func MakeFastIntegerList(args ...int) *ClaireListInteger {
 	o := new(ClaireListInteger)
 	o.Isa = C_list
 	o.Srange = C_integer
+	o.of = ToType(C_integer.Id())
 	o.Values = ls
-	return o
+	return ToList(o.Id())
 }
 
-// create an object list, using *.any() pattern
+// full constructor for float list
+func MakeListFloat(args ...float64) *ClaireList {
+	n := len(args)
+	ls := make([]float64, n)
+	for i := 0; i < n; i++ {
+		ls[i] = args[i]
+	}
+	o := new(ClaireListFloat)
+	o.Isa = C_list
+	o.Srange = C_float
+	o.of = ToType(C_float.Id())
+	o.Values = ls
+	return ToList(o.Id())
+}
+
+// create an object list, using *.Id() pattern
 func objectSlice(args ...*ClaireAny) []*ClaireAny {
 	n := len(args)
 	l := make([]*ClaireAny, n)
@@ -210,7 +226,7 @@ func Signature(args ...*ClaireAny) []*ClaireAny {
 	n := len(args)
 	l := make([]*ClaireAny, n)
 	for i := 0; i < n; i++ {
-		l[i] = args[i].any()
+		l[i] = args[i].Id()
 	}
 	return l
 }
@@ -663,22 +679,26 @@ func (l *ClaireList) AddFast(x *ClaireAny) *ClaireList {
 		panic("trying to fuck CNIL")        // debug : to remove later !!!!
 	}
 	if l.Srange == C_integer {
-		F_add_listInteger(l.toInteger(), ToInteger(x).Value)
+		l.AddFastInteger(ToInteger(x).Value)
 	} else if l.Srange == C_float {
-		F_add_listFloat(l.toFloat(), ToFloat(x).Value)
+		l.AddFastFloat(ToFloat(x).Value)
 	} else {
-		F_add_listObject(l.toObject(), x)
+		l.AddFastObject(x)
 	}
 	return l
 }
 
-// note : we create the three faster versions if the compiler is able to use them
+// optimized forms used by the compiler
+func (l *ClaireList) AddFastObject(x *ClaireAny)  {	l.toObject().Values = append(l.toObject().Values,x)}
+func (l *ClaireList) AddFastInteger(x int)  {	l.toInteger().Values = append(l.toInteger().Values,x)}
+func (l *ClaireList) AddFastFloat(x float64)  {	l.toFloat().Values = append(l.toFloat().Values,x)}
+
+//deprecated
+func F_add_listInteger(l *ClaireListInteger, x int) { l.Values = append(l.Values, x) }
+func F_add_listFloat(l *ClaireListFloat, x float64) { l.Values = append(l.Values, x) }
 func F_add_listObject(l *ClaireListObject, x *ClaireAny) {
 	l.Values = append(l.Values, x)
 }
-
-func F_add_listInteger(l *ClaireListInteger, x int) { l.Values = append(l.Values, x) }
-func F_add_listFloat(l *ClaireListFloat, x float64) { l.Values = append(l.Values, x) }
 
 // -------- exported as add! @ list --------------------------
 // same without type check
@@ -719,7 +739,7 @@ func E_cons_any(x EID, l EID) EID { return EID{F_cons_any(ANY(x), ToList(OBJ(l))
 func (l *ClaireList) Cdr() EID {
 	n := len(l.ValuesO())
 	if n == 0 {
-		return Cerror(8, l.any(), AnyInteger(0))
+		return Cerror(8, l.Id(), AnyInteger(0))
 	} else if l.Srange == C_integer {
 		ls := make([]int, n-1)
 		copy(ls, l.ValuesI()[1:n])
@@ -883,20 +903,20 @@ func (l *ClaireList) Nth_plus(n int, val *ClaireAny) EID {
 	m := l.Length()
 	if l.of == nil || l.of.Contains(val) == CFALSE {
 		fmt.Printf("NTH+ fails with %s in %s\n", val.Prt(), l.Of().Prt())
-		return Cerror(17, val, l.of.any())
+		return Cerror(17, val, l.of.Id())
 	}
 	if n <= 0 || n > m+1 {
-		return Cerror(5, AnyInteger(n), l.any())
+		return Cerror(5, AnyInteger(n), l.Id())
 	}
 	if l.Srange == C_integer {
-		F_add_listInteger(l.toInteger(), l.ValuesI()[m-1])
+		l.AddFastInteger(l.ValuesI()[m-1])
 		ls := l.toInteger().Values
 		for i := m - 1; i >= n; i-- {
 			ls[i] = ls[i-1]
 		}
 		ls[n-1] = ToInteger(val).Value
 	} else if l.Srange == C_float {
-		F_add_listFloat(l.toFloat(), l.ValuesF()[m-1])
+		l.AddFastFloat(l.ValuesF()[m-1])
 		ls := l.toFloat().Values
 		for i := m - 1; i >= n; i-- {
 			ls[i] = ls[i-1]
@@ -919,7 +939,7 @@ func E_nth_plus_list(l EID, n EID, val EID) EID { return ToList(OBJ(l)).Nth_plus
 func (l *ClaireList) Nth_dash(n int) EID {
 	m := l.Length()
 	if n <= 0 || n > m+1 {
-		return Cerror(5, AnyInteger(n), l.any())
+		return Cerror(5, AnyInteger(n), l.Id())
 	}
 	if l.Srange == C_integer {
 		ls := l.ValuesI()
@@ -997,101 +1017,126 @@ func (l *ClaireList) Cast_I(x *ClaireType) *ClaireList {
 }
 
 // +---------------------------------------------------------------------------+
-// |  Part 2: Sets (using go maps)                                             |
+// |  Part 2: Sets (sorted bags)                                               |
 // +---------------------------------------------------------------------------+
 
-// we use maps, and strings as the hash  Key(*any) returns a unique string
-// the set is a map[string]any
-// x in S <=> key(x) -> x
-// we use delete to remove x
-// iteration is for _,x := range(S.Value) !
-
-// constructors --------------------------------------------------------
+// history note: we tried map[string]*any but is was slower (see the go bench results)
+// We implement sets with the CLAIRE3.5 pattern, using ordered lists
+// the key is the value for ints & floats, the adress for identified object and the class for others
 
 
-// this is our hash function
-// 
-func (x *ClaireAny) Key() string {
-	if x.Isa == C_integer {
-		return  strconv.Itoa(ToInteger(x).Value)          // golang primitive function => tried to rewrite with no benefits
-	} else if x.Isa == C_float {
-		return fmt.Sprintf("#F%f", ToFloat(x).Value)
-	} else if x.Isa == C_string {
-		return "#S" + ToString(x).Value
-	} else if x.Isa == C_tuple {
-		return ToList(x).tupleKey()
-	} else if x.Isa == C_set {
-		return ToSet(x).setKey()
-	} else {
-		return fmt.Sprintf("#O%p", x)
+// create a set - generic
+func MakeSet(t *ClaireType, args ...*ClaireAny) *ClaireSet {
+	n := len(args)
+	l := t.EmptySet()
+	for i := 0; i < n; i++ {
+		l.AddFast(args[i])
 	}
+	return l
 }
 
-// multiple hash for Tuple (works, but expensive for big tuples)
-func (x *ClaireList) tupleKey() string {
-	rep := "#T"
-	for _,v := range(x.ValuesO()) { rep = rep + "," + v.Key()}
-	return rep
-}
-
-// multiple hash for Sets (works, but really expensive for big tuples)
-// sort the keys with naive insert
-func (x *ClaireSet) setKey() string {
-	rep := "#S"
-	var l []string = make([]string, 0)
-	var n int = 0
-	for _,v := range(x.Values) {
-		s := v.Key()
-		var j int = 0
-		for j < n && l[j] < s { j++ }   // j is the first position such that s < l[j]
-		l = append(l, "0")   // Step 1 : increase capacity
-		copy(l[j+1:], l[j:]) // Step 2 : shift
-		l[j] = s        	 // Step 3 : put s at position j
-		n++
-	}
-	for i := 0; i < n; i++ { rep = rep + "," + l[i]}
-	return rep
-}
-
-// this is a special version for EID : avoids allocation
-func KEY(x EID) string {
-	if x.PTR == C__INT {
-		return strconv.Itoa(INT(x))
-	} else if x.PTR == C__FLOAT {
-		return fmt.Sprintf("#F%f",FLOAT(x))
-	} else if x.PTR == C__CHAR {
-		return fmt.Sprintf("#C%c",CHAR(x))
-	} else if x.PTR.Isa == C_string {
-		return "#S" + ToString(x.PTR).Value
-	} else if x.PTR.Isa == C_tuple {
-		return ToList(x.PTR).tupleKey()
-	} else if x.PTR.Isa == C_set {
-		return ToSet(x.PTR).setKey()
-	} else {		
-		return fmt.Sprintf("#O%p",x.PTR)
-	}
-}
-
-// create an typed empty set  => this should be called only once => unicity of empty set (CEMPTY)
-func makeNilSet() *ClaireSet {
-	o := new(ClaireSet)
+// specific version for integers 
+func MakeSetInteger(args ...int) *ClaireSet {
+	n := len(args)
+	ls := make([]int, 2 * n)
+	for i := 0; i < n; i++ {	ls[i] = args[i]}
+	o := new(ClaireSetInteger)
 	o.Isa = C_set
-	o.of = ToType(o.Id()) // o.of = empty <=> constant set
-	o.Values = make(map[string]*ClaireAny)
-	return o
+	o.Srange = C_integer	
+	o.of = ToType(C_integer.Id())
+	o.Values = ls
+	o.Count = n
+	return ToSet(o.Id())
 }
 
-// create a typed empty set
+// specific version for floats 
+func MakeSetFloat(args ...float64) *ClaireSet {
+	n := len(args)
+	ls := make([]float64, 2 * n)
+	for i := 0; i < n; i++ {	ls[i] = args[i]}
+	o := new(ClaireSetFloat)
+	o.Isa = C_set
+	o.Srange = C_float
+	o.of = ToType(C_float.Id())
+	o.Values = ls
+	o.Count = n
+	return ToSet(o.Id())
+}
+
+// create a typed empty list
 func (t *ClaireType) EmptySet() *ClaireSet {
-	o := new(ClaireSet)
-	o.Isa = C_set
-	o.of = t
-	o.Values = make(map[string]*ClaireAny)
-	return o
+	var l *ClaireSet
+	if t == ToType(C_integer.Id()) {
+		l = ToSet(makeEmptyIntegerSet(2).Id())
+	} else if t == ToType(C_float.Id()) {
+		l = ToSet(makeEmptyFloatSet(2).Id())
+	} else {
+		l = ToSet(makeEmptyObjectSet(2).Id())
+	}
+	l.of = t
+	return l
+}
+
+// create a typed empty object list (needed in bootcore)
+func (t *ClaireType) EmptySetObject() *ClaireSet {
+	var l *ClaireSet
+	l = ToSet(makeEmptyObjectSet(2).Id())
+	l.of = t
+	return l
 }
 
 // in claire 4.0 this is accessible through empty_list(t)
-func E_empty_set_type (t EID) EID { return EID{ToType(OBJ(t)).EmptySet().Id(),0} }
+func E_empty_set_type (t EID) EID { return EID{ToType(OBJ(t)).EmptySet().Id(),0}}
+
+// three constructors for the compiler - preallocate the memory zone but no initialization (hence private methods)  
+func makeEmptyIntegerSet(n int) *ClaireSetInteger {
+	o := new(ClaireSetInteger)
+	o.Isa = C_set
+	o.Srange = C_integer
+	o.Values = make([]int, 2 * n)
+	o.Count = 0
+	return o
+}
+
+func makeEmptyFloatSet(n int) *ClaireSetFloat {
+	o := new(ClaireSetFloat)
+	o.Isa = C_set
+	o.Srange = C_float
+	o.Values = make([]float64, 2* n)
+	o.Count = 0
+	return o
+}
+
+func makeEmptyObjectSet(n int) *ClaireSetObject {
+	o := new(ClaireSetObject)
+	o.Isa = C_set
+	o.Srange = C_object
+	o.Values = make([]*ClaireAny, 2 * n)
+	o.Count = 0
+	return o
+}
+
+// we import the At method from ClaireList (same code but different location)
+func (l *ClaireSet) At(i int) *ClaireAny {
+	if l.Srange == C_integer {
+		return MakeInteger(l.ValuesI()[i]).Id()
+	} else if l.Srange == C_float {
+		return MakeFloat(l.ValuesF()[i]).Id()
+	} else {
+		return l.ValuesO()[i]
+	}
+}
+
+
+// ----------- other constructors
+
+// create an typed empty set  => this should be called only once => unicity of empty set (CEMPTY)
+func makeNilSet() *ClaireSet {
+	o := ToSet(makeEmptyObjectSet(0).Id())
+	o.of = ToType(o.Id()) // o.of = empty <=> constant set
+	return o
+}
+
 
 // constructor (use the same pattern for all bags)
 func MakeConstantSet(args ...*ClaireAny) *ClaireSet {
@@ -1103,37 +1148,251 @@ func MakeConstantSet(args ...*ClaireAny) *ClaireSet {
 	return l
 }
 
-// constructor (use the same pattern for all bags)
-func MakeSet(t *ClaireType, args ...*ClaireAny) *ClaireSet {
-	n := len(args)
-	l := t.EmptySet()
-	for i := 0; i < n; i++ {
-		l.AddFast(args[i])
+
+// ----------------- Insertion : named AddFast  ---------
+
+// add a new element to a set (without checking the type)
+// tricky since it may return another set (as in the C++ implementation) to avoid changing empty
+// this could be improved ... probably
+func (s *ClaireSet) AddFast(x *ClaireAny) *ClaireSet {
+	if ClEnv.Verbose == 12 {fmt.Printf("--- %p to %p\n",x,s)}
+	if s.Srange == C_integer {return s.AddSetInteger(ToInteger(x).Value)
+	} else if s.Srange == C_float {return s.AddSetFloat(ToFloat(x).Value)
+	} else {
+		var s2 *ClaireSet = s
+		if s == CEMPTY { s2 = ToType(CEMPTY.Id()).EmptySet()}
+		return s2.AddSetObject(x)}
+ }
+
+
+// Integer version : easy  (we switch the name to avoid confusion with AddFastInteger from lists)
+// clone of CLAIRE 3.5 set insertion : dichotomic search of insertion point
+func (s *ClaireSet) AddSetInteger(val int) *ClaireSet {
+	var ls []int = ToSetInteger(s.Id()).Values
+	n := ToSetInteger(s.Id()).Count
+	// fmt.Printf(">>> add %d to set %s with size %d\n",val,s.Debug(),n)
+	var i int = 0
+	var j int = n - 1 
+	for ((i + 1) < j)  {    // dichotomic seach - 30 years old fragment :)
+		k := ((i + j) >> 1);       	// k is neither l or j
+	    v := ls[k]                  // cashing ls[k] helps
+		if v == val {return s
+		} else if v < val {i = k
+		} else {j = k}}
+	if n == 0 { i = -1
+	} else if ls[i] == val || ls[j] == val {return s
+	} else if ls[i] > val { i = i - 1
+	} else if ls[j] < val { i = j }
+	if len(ls) == n {      // full => we allocate a double size
+		ls2 := make([]int, 2 * n)
+		for k := 0; k < n; k++ {ls2[k] = ls[k]}  // copy(ls2[:],ls[:]) is slower :)
+		ToSetInteger(s.Id()).Values = ls2
+		ls = ls2
 	}
-	return l
+	for k := n; k > i+1; k-- {ls[k] = ls[k-1]}  // copy(ls[i+2:n+1],ls[i+1:n])
+	ls[i+1] = val 
+	ToSetInteger(s.Id()).Count = n + 1
+	return s 
+}
+
+// same for Floats
+func (s *ClaireSet) AddSetFloat(val float64) *ClaireSet {
+	var ls []float64 = ToSetFloat(s.Id()).Values
+	n := ToSetFloat(s.Id()).Count
+	var i int = 0
+	var j int = n - 1 
+	for ((i + 1) < j)  {    // dichotomic seach - 30 years old fragment :)
+		k := ((i + j) >> 1);       	// k is neither l or j
+	    v := ls[k]                  // cashing ls[k] helps
+		if v == val {return s
+		} else if v < val {i = k
+		} else {j = k}}
+	if n == 0 { i = -1
+	} else if ls[i] == val || ls[j] == val {return s
+	} else if ls[i] > val { i = i - 1
+	} else if ls[j] < val { i = j }
+	if len(ls) == n {      // full => we allocate a double size
+		ls2 := make([]float64, 2 * n)
+		for k := 0; k < n; k++ {ls2[k] = ls[k]}  // copy(ls2[:],ls[:]) is slower :)
+		ToSetFloat(s.Id()).Values = ls2
+		ls = ls2
+	}
+	for k := n; k > i+1; k-- {ls[k] = ls[k-1]}  // copy(ls[i+2:n+1],ls[i+1:n])
+	ls[i+1] = val 
+	ToSetFloat(s.Id()).Count = n + 1
+	return s 
+}
+
+// Object version  : more sophisticated
+// SKEY(x) = adress(x) if x is identified, adress(x.isa) otherwise
+// we look for the iso-KEY zone, make sure that x is not there using Equal
+// then do an insertion at the end of the zone
+func (s *ClaireSet) AddSetObject(val *ClaireAny) *ClaireSet {
+	var ls []*ClaireAny = ToSetObject(s.Id()).Values
+	n := ToSetObject(s.Id()).Count
+	kval := SKEY(val)
+	if ClEnv.Verbose == 13 { fmt.Printf("==> addSetObject %p into set:%d, key=%d\n",val,n,kval)}
+	var i int = 0
+	var j int = n - 1 
+	for ((i + 1) < j)  {    // dichotomic seach - 30 years old fragment :)
+		k := ((i + j) >> 1);       	// k is neither l or j
+	    v := SKEY(ls[k])                  // cashing ls[k] helps
+		if v == kval {               // we have found the key
+			// fmt.Printf("==> addSetObject has found key=%d at position %d and content %p\n",val,k,ls[k])
+			if val.Isa.Ident_ask == CTRUE {return s                  // hence we have found the object
+			} else {
+				var u int
+				for u = k; u >= i && SKEY(ls[u]) == kval; u-- {
+					if Equal(ls[u],val) == CTRUE {return s}}
+				for u = k + 1; u <= j && SKEY(ls[u]) == kval; u++ {
+					if Equal(ls[u],val) == CTRUE {return s}}
+			    // fmt.Printf("found %p at position %d => u = %d",val,k,u)
+				return s.AddInsertObject(val,u-1,n)    // j = upped bound of iso-zone + 1
+				}
+		} else if v < kval {i = k
+		} else {j = k}}
+	// the search stopped since i and j are adjacent
+	if n == 0 { i = -1          // empty set
+	} else if (val.Isa.Ident_ask == CTRUE && (ls[i] == val || ls[j] == val)) ||
+	          (val.Isa.Ident_ask == CFALSE && (Equal(ls[i],val) == CTRUE || Equal(ls[j],val) == CTRUE)) {
+	    // fmt.Printf("==> EQUAL MATCH with %p or %p versus val =%p\n",ls[i],ls[i],val)
+		return s
+	} else if SKEY(ls[i]) > kval { i = i - 1
+	} else if SKEY(ls[j]) < kval { i = j }
+	// fmt.Printf("==> addSet has not found the key and i = %d (size %d)\n",i,n)
+	return s.AddInsertObject(val,i,n)              // insert after position i
+}
+
+// insertion at position i+1
+// shift content from i+1 to n and update ls[i+1]
+func (s *ClaireSet) AddInsertObject(val *ClaireAny, i int, n int) *ClaireSet {
+	var ls []*ClaireAny = ToSetObject(s.Id()).Values
+	// fmt.Printf("--> insert into set:%d at position %d\n",n,i)
+	if len(ls) == n {                            // full => we allocate a double size
+		ls2 := make([]*ClaireAny, 2 * n)
+		for k := 0; k < n; k++ {ls2[k] = ls[k]}  // copy(ls2[:],ls[:]) is slower :)
+		ToSetObject(s.Id()).Values = ls2
+		ls = ls2
+	}
+	for k := n; k > i+1; k-- {ls[k] = ls[k-1]}  // copy(ls[i+2:n+1],ls[i+1:n])
+	ls[i+1] = val 
+	ToSetObject(s.Id()).Count = n + 1
+	return s 
+}
+
+// the sort KEY
+// Note : this could be made faster for string at the expense of other objects but hashing(adress) strings is tricky
+func SKEY(x *ClaireAny) uint64 {if x.Isa.Ident_ask == CTRUE {return x.ui64()} else {return x.Isa.ui64()}}
+
+// ----------------- Membership  ---------
+
+// the generic  contains function
+func (s *ClaireSet) Contain_ask(x *ClaireAny) *ClaireBoolean {
+     if s.Srange == C_integer {return s.ContainSetInteger(ToInteger(x).Value)
+	 } else if s.Srange == C_float {return s.ContainSetFloat(ToFloat(x).Value)
+	 } else {return s.ContainSetObject(x)}
+}
+
+// EID version uses EID switching to avoid int/float allocation
+func E_contain_ask_set(s EID, val EID) EID {
+	s2 := ToSet(OBJ(s))
+	if s2.Srange == C_integer { return EID{s2.ContainSetInteger(INT(val)).Id(),0}
+    } else if s2.Srange == C_float { return EID{s2.ContainSetFloat(FLOAT(val)).Id(),0}
+	} else {return EID{s2.ContainSetObject(ANY(val)).Id(),0}}
+}
+
+// use the specific getIndex* method that returns -1 if not here or i if at position i (needed for deletion)
+// simple dichotomic search
+func (l *ClaireSet) ContainSetInteger(x int) *ClaireBoolean { 
+	if l.getInteger(x) == -1 {return CFALSE
+	} else {return CTRUE}}
+func (l *ClaireSet) ContainSetFloat(x float64) *ClaireBoolean {
+	if l.getFloat(x) == -1 {return CFALSE
+		} else {return CTRUE}}	
+func (l *ClaireSet) ContainSetObject(x *ClaireAny) *ClaireBoolean {
+	if l.getObject(x) == -1 {return CFALSE
+		} else {return CTRUE}}
+	
+
+// simple dichotomic search
+func (l *ClaireSet) getInteger(x int) int {
+	s := ToSetInteger(l.Id())
+	if s.Count == 0 { return -1} 
+	var i int = 0
+	var j int = s.Count - 1
+	for ((i + 1) < j)  {    			// dichotomic seach - 30 years old fragment :)
+		k := ((i + j) >> 1)       		// k is neither l or j
+		if s.Values[k] == x {return k
+		} else if s.Values[k] < x {i = k
+		} else {j = k}}
+	if s.Values[i] == x {return i 
+	} else if s.Values[j] == x {return j
+	} else {return -1}
+}
+
+// simple dichotomic search : same for float !
+func (l *ClaireSet) getFloat(x float64) int {
+	s := ToSetFloat(l.Id())
+	if s.Count == 0 { return -1} 
+	var i int = 0
+	var j int = s.Count - 1
+	for ((i + 1) < j)  {    
+		k := ((i + j) >> 1)       	
+		if s.Values[k] == x {return k
+		} else if s.Values[k] < x {i = k
+		} else {j = k}}
+	if s.Values[i] == x {return i 
+	} else if s.Values[j] == x {return j
+	} else {return -1}
+}
+
+// This is more sophisticated since the KEY for object changes according to x.Isa.Identified
+// non identified => find the iso-Key zone and then do a linear search with Equal
+// this code is very similar to AddFast
+func (l *ClaireSet) getObject(val *ClaireAny) int {
+	s := ToSetObject(l.Id())
+	kval := SKEY(val)
+	if ClEnv.Verbose == 13 { fmt.Printf("==>  getObject %p into set:%d, key=%d\n",val,s.Count,kval)}
+	ls := s.Values
+	if s.Count == 0 { return -1} 
+	var i int = 0
+	var j int = s.Count - 1
+	for ((i + 1) < j)  {            
+		k := ((i + j) >> 1)       	
+		if SKEY(ls[k]) == kval {       // found the KEY !  -> sweep for the zone if not identified
+			if ClEnv.Verbose == 13 { fmt.Printf("==>  found the key at position %d\n",k)}
+			if val.Isa.Ident_ask == CTRUE {return k
+			} else {
+				for u := k; u >= i && SKEY(ls[u]) == kval; u-- {
+					if Equal(ls[u],val) == CTRUE {return u}}
+				for u := k + 1; u <= j && SKEY(ls[u]) == kval; u++ {
+						if Equal(ls[u],val) == CTRUE {return u}}
+				return -1 }			                 // not found in the iso-KEY zone		
+		} else if SKEY(ls[k]) < kval {i = k
+		} else {j = k}}
+		if ClEnv.Verbose == 13 { fmt.Printf("==>  look at two bounds %s, %s\n",ls[i].Prt(),ls[j].Prt())}
+	if Equal(ls[i],val) == CTRUE {return i
+	} else if  Equal(ls[j],val) == CTRUE {return j
+	} else {return -1}
+}
+
+// generic access to index
+func (s *ClaireSet) getIndex(x *ClaireAny) int {
+	if s.Srange == C_integer {return s.getInteger(ToInteger(x).Value)
+	} else if s.Srange == C_float {return s.getFloat(ToFloat(x).Value)
+	} else {return s.getObject(x)}
 }
 
 // member methods ------------------------------------------------------
 
-// add a new element to a set (without checking the type)
-// tricky since it may return another set (as in the C++ implementation) to avoid changing empty
-func (s *ClaireSet) AddFast(x *ClaireAny) *ClaireSet {
-	if ClEnv.Verbose == 15 {fmt.Printf("add %s to %s\n",x.Prt(),s.Prt())}
-	var s2 *ClaireSet = s
-	if s == CEMPTY { s2 = ToType(CEMPTY.Id()).EmptySet()}
-	s2.Values[x.Key()] = x
-	return s2
-}
 
-// set equality
-
-// equality on sets : same size + inclusion :)
+// set equality : same size + inclusion :)
 func (s1 *ClaireSet) equalSet(s2 *ClaireSet) *ClaireBoolean {
-	if len(s1.Values) != len(s2.Values) {
+	if ToSetObject(s1.Id()).Count != ToSetObject(s2.Id()).Count {
 		return CFALSE
 	} else {
-		for _, x := range s1.Values {
-			if safe_equal(s2.Values[x.Key()], x) == CFALSE {
+		for k := 0; k < ToSetObject(s1.Id()).Count; k++ {
+			if s2.Contain_ask(s1.At(k)) == CFALSE {
 				return CFALSE
 			}
 		}
@@ -1143,77 +1402,56 @@ func (s1 *ClaireSet) equalSet(s2 *ClaireSet) *ClaireBoolean {
 
 // API functions ----------------------------------------------------------------
 
-// deprecated
-func safe_equal(x *ClaireAny, y *ClaireAny) *ClaireBoolean {
-	if x == nil {
-		return CFALSE
-	} else {
-		return CTRUE // Equal(x, y)
-	}
-}
-
 // generic contains function
-func (s *ClaireSet) Size() int { return len(s.Values) }
-func (s *ClaireSet) Length() int { return len(s.Values) }
+func (s *ClaireSet) Size() int { return ToSetObject(s.Id()).Count}
+func (s *ClaireSet) Length() int { return ToSetObject(s.Id()).Count}
 
-func E_size_set(s EID) EID { return EID{C__INT, uint64(ToSet(OBJ(s)).Size())} }
+func E_size_set(s EID) EID { return EID{C__INT, IVAL(ToSet(OBJ(s)).Size())} }
 
-// generic contains function
-func (s *ClaireSet) Contain_ask(x *ClaireAny) *ClaireBoolean {
-	if ClEnv.Verbose > 100 {
-		fmt.Printf("contains for set %s\n", s.Prt())
-		fmt.Printf("x = %s\n", x.Prt())
-		fmt.Printf("Key = %s\n", x.Key())
-		fmt.Printf("@ Key = %s\n", s.Values[x.Key()])
 
-	}
-	if s.Values[x.Key()] == nil {
-		return CFALSE
-	} else {
-		return CTRUE
-	}
-}
-
-// EID version uses EID optimized function
-func E_contain_ask_set(s EID, val EID) EID {
-	if ToSet(OBJ(s)).Values[KEY(val)] == nil {return EID{CFALSE.Id(),0}
-	} else {return EID{CTRUE.Id(),0}}
-}
 
 // adds a value into a set
 func (l *ClaireSet) Add(x *ClaireAny) EID {
 	if l.of.Contains(x) == CFALSE {     // removed l.of == nil || 
-		return Cerror(17, x, l.of.any())
+		return Cerror(17, x, l.of.Id())
 	} else {
 		return EID{l.AddFast(x).Id(), 0}
 	}
 }
 
-// no EID optimization since we want the *ClaireAny object to add to the set
+// EID optimization added to avoid allocating floats or integers
 func E_add_set(x EID, val EID) EID { 
 	l := ToSet(OBJ(x))
-	if l.of == nil || l.of.CONTAINS(val) == CFALSE {
-		return Cerror(17, ANY(val), l.of.Id())
+	if l.Srange == C_integer { 
+		 if val.PTR != C__INT { return Cerror(17, ANY(val), l.of.Id())
+		 } else {return EID{ToSet(l.Id()).AddSetInteger(INT(val)).Id(), 0}}
+	} else if l.Srange == C_float { 
+		if val.PTR != C__FLOAT { return Cerror(17, ANY(val), l.of.Id())
+		} else {return EID{ToSet(l.Id()).AddSetFloat(FLOAT(val)).Id(), 0}}
 	} else {
-		l.Values[KEY(val)] = ANY(val)
-		return x
-		//return EID{l.AddFast(ANY(val)).Id(), 0}
-	}}
+		if l.of == nil || l.of.CONTAINS(val) == CFALSE {
+			return Cerror(17, ANY(val), l.of.Id())
+		} else {return EID{l.AddSetObject(ANY(val)).Id(), 0}}
+		}}
 
-// func E_add_set(l EID, val EID) EID { return ToSet(OBJ(l)).Add(ANY(val)) }
 
 // same without type check
 func (l *ClaireSet) Add_I(x *ClaireAny) *ClaireSet {
 	return l.AddFast(x)
 }
 
-func E_add_I_set(l EID, val EID) EID { return EID{ToSet(OBJ(l)).AddFast(ANY(val)).Id(), 0} }
+func E_add_I_set(x EID, val EID) EID { 
+	l := ToSet(OBJ(x))
+    if l.Srange == C_integer { return EID{ToSet(l.Id()).AddSetInteger(INT(val)).Id(), 0}
+	} else if l.Srange == C_float { return EID{ToSet(l.Id()).AddSetFloat(FLOAT(val)).Id(), 0}
+	} else { return EID{l.AddSetObject(ANY(val)).Id(), 0}}
+}
 
 // copy a bag - in v0.01, we cannot opy nil or {} we return a generic empty
 func (l *ClaireSet) Copy() *ClaireSet {
 	s := l.Empty()
-	for _, x := range l.Values {
-		s.AddFast(x)
+	for k := 0; k < l.Length(); k++ {
+		s.AddFast(l.At(k))
 	}
 	return s
 }
@@ -1231,36 +1469,66 @@ func (l *ClaireSet) Empty() *ClaireSet {
 
 func E_empty_set(s EID) EID { return EID{ToSet(OBJ(s)).Empty().Id(), 0} }
 
-// delete an object from a set
+// ----------------  delete an object from a set is another complex method ----------------------------------
+
+// two steps : find the index (similar to contains) + deleteAt
+
 func (s *ClaireSet) Delete(x *ClaireAny) *ClaireSet {
-	delete(s.Values, x.Key())
+	i := s.getIndex(x)
+	if i >= 0 {s.deleteAt(i)}
 	return s
 }
 
 func E_delete_set(l EID, val EID) EID { return EID{ToSet(OBJ(l)).Delete(ANY(val)).Id(), 0} }
 
-// intersection of two sets
-func (s1 *ClaireSet) _exp(s2 *ClaireSet) *ClaireSet {
+// deletition is the inverse property of addition / we need to split into three 
+func (s *ClaireSet) deleteAt(i int)  {
+     if s.Srange == C_integer {s.deleteAtInteger(i)
+	 } else if s.Srange == C_float {s.deleteAtFloat(i)
+	 } else {s.deleteAtObject(i)}
+}
+
+// deletion at position i : shift content from i+1 to n 
+func (s *ClaireSet) deleteAtInteger(i int)  {
+	ls := ToSetInteger(s.Id()).Values
+	n := ToSetInteger(s.Id()).Count
+	for k := i; k < n ; k++ {ls[k] = ls[k+1]}  // 
+	ToSetInteger(s.Id()).Count = n - 1
+}
+func (s *ClaireSet) deleteAtFloat(i int)  {
+	ls := ToSetFloat(s.Id()).Values
+	n := ToSetFloat(s.Id()).Count
+	for k := i; k < n ; k++ {ls[k] = ls[k+1]}  // 
+	ToSetFloat(s.Id()).Count = n - 1
+}
+func (s *ClaireSet) deleteAtObject(i int) {
+	ls := ToSetObject(s.Id()).Values
+	n := ToSetObject(s.Id()).Count
+	for k := i; k < n ; k++ {ls[k] = ls[k+1]}  // 
+	ToSetObject(s.Id()).Count = n - 1
+}
+
+
+// intersection of two sets --------------------------------------------------------------------------------
+func F__exp_set(s1 *ClaireSet, s2 *ClaireSet) *ClaireSet {
 	s := ToType(CEMPTY.Id()).EmptySet()
-	for _, x := range s1.Values {
-		y := s2.Values[x.Key()]
-		if y != nil && Equal(y, x) == CTRUE {
-			s.AddFast(x)
+	for k := 0; k < s1.Length(); k++ {
+		  x := s1.At(k)
+		  if s2.Contain_ask(x) == CTRUE {s.AddFast(x)}
 		}
-	}
 	return s
 }
 
-func E__exp_set(s1 EID, s2 EID) EID { return EID{ToSet(OBJ(s1))._exp(ToSet(OBJ(s2))).Id(), 0} }
+func E__exp_set(s1 EID, s2 EID) EID { return EID{F__exp_set(ToSet(OBJ(s1)),ToSet(OBJ(s2))).Id(), 0} }
 
 // union of two sets: merge of sorted lists (sort_of) */
 func F_append_set(s1 *ClaireSet, s2 *ClaireSet) *ClaireSet {
 	s := ToType(CEMPTY.Id()).EmptySet()
-	for _, x := range s1.Values {
-		s.AddFast(x)
+	for k := 0; k < s1.Length(); k++ {
+		s.AddFast(s1.At(k))
 	}
-	for _, x := range s2.Values {
-		s.AddFast(x)
+	for k := 0; k < s2.Length(); k++ {
+		s.AddFast(s2.At(k))
 	}
 	return s
 }
@@ -1271,18 +1539,21 @@ func E_append_set(s1 EID, s2 EID) EID {
 
 // create a set from a list => remove duplicates: very useful - function because Core method (vs Kernel)
 func (l *ClaireList) Set_I() *ClaireSet {
-	s := l.of.EmptySet()
+	var s *ClaireSet
 	if l.Srange == C_object {
+		s = l.of.EmptySet()
 		for _, v := range l.ValuesO() {
-			s.AddFast(v)
+			s.AddSetObject(v)
 		}
 	} else if l.Srange == C_integer {
+		s = ToType(C_integer.Id()).EmptySet()
 		for _, v := range l.ValuesI() {
-			s.AddFast(AnyInteger(v))
+			s.AddSetInteger(v)
 		}
 	} else {
+		s := ToType(C_float.Id()).EmptySet()
 		for _, v := range l.ValuesF() {
-			s.AddFast(AnyFloat(v))
+			s.AddSetFloat(v)
 		}
 	}
 	return s
@@ -1292,10 +1563,8 @@ func E_set_I_list(l EID) EID { return EID{ToList(OBJ(l)).Set_I().Id(), 0} }
 
 // reciprocate : create a list from a set - function because Core method (vs Kernel)
 func (s *ClaireSet) List_I() *ClaireList {
-		l := s.of.EmptyList()
-	for _, x := range s.Values {
-		l.AddFast(x)
-	}
+	l := s.of.EmptyList()
+	for k := 0; k < s.Length(); k++  { l.AddFast(s.At(k))}
 	return l
 }
 
@@ -1307,9 +1576,7 @@ func F_sequence_integer(n int, m int) *ClaireSet {
 		return ToType(CEMPTY.Id()).EmptySet()
 	} else {
 		s := ToType(C_integer.Id()).EmptySet()
-		for i := n; i <= m; i++ {
-			s.AddFast(AnyInteger(i))
-		}
+		for i := n; i <= m; i++ { s.AddSetInteger(i)}
 		return s
 	}
 }
@@ -1325,7 +1592,7 @@ func F_list_integer(n int, m int) *ClaireList {
 	} else {
 		s := ToType(C_integer.Id()).EmptyList()
 		for i := n; i <= m; i++ {
-			s.AddFast(AnyInteger(i))
+			s.AddFastInteger(i)
 		}
 		return s
 	}

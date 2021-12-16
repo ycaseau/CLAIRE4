@@ -52,6 +52,23 @@ ambiguous :: keyword()
              //[5] exit de restriction -> ~S // rep,
              rep) ]
 
+// we need a debug mode : shows the tmatch of all restrictions
+[claire/findr(p:property,l:list) : void
+   -> let lr := p.Kernel/definition in
+        (for r:restriction in lr
+          printf("tmatch(~S) with ~S -> ~S, intersection:~S\n",
+                 r,l, tmatch?(l, r.domain),(r.domain ^ l))) ]
+
+// TO REMOVE DEBUG tmatch
+[claire/dmatch?(l:list,l2:list) : boolean
+ -> (let x := length(l2), z := length(l) in
+       (if (z != x & (l2[x] != listargs | z < x - 1)) false           // v3.2.24
+        else not((for i in (1 .. x)
+                    (if (i = x & l2[i] = listargs) break(false)
+                     else if not(tmatch?(l[i], l2[i], l)) 
+                        (//[0] tmatch?(~S,~S) failed // l[i], l2[i],
+                         break(true))))))) ]                 
+
 // special version for Super, which only looks at methods with domains
 // bigger than c
 [restriction!(c:class,lr:list,l:list) : any
@@ -85,11 +102,12 @@ ambiguous :: keyword()
                         function apply(f, %l2),
                         any %t1)
                       catch any  (//[0] ~S's 2nd-order type failed on ~S // self,%l,
-                                  %t1)) as type) in
-            (if (sort=(osort(%t1), osort(%t2)) | self.selector = externC) %t2
-             else if sort=(any, osort(%t1))
-                Union(Kernel/t1 = any, Kernel/t2 = %t2)   // forces the sort and preserves the type
-             else %t1)) ]
+                                  %t1)) as type) in 
+               %t2) ]
+      //      (if (sort=(osort(%t1), osort(%t2)) | self.selector = externC) %t2
+      //       else if sort=(any, osort(%t1))
+      //          Union(Kernel/t1 = any, Kernel/t2 = %t2)   // forces the sort and preserves the type
+      //       else %t1)) ]
 
 
 
@@ -109,9 +127,9 @@ ambiguous :: keyword()
        (if (s = safe) %type[1]
         else if (s = externC & length(l) = 2 & l[2] % class) (l[2] as class)
         else if (s = new & l[1] % class) (l[1] as class)
-        else if (s = check_in & l[2] % type)   // v3.3.16
-          (if (length(l) = 2) sort_abstract!(l[2] as type)
-           else (l[2] as type))                 // set or list -> could do better
+        else if (s = check_in & l[2] % type)   (l[2] as type) // v4.0
+         // (if (length(l) = 2) sort_abstract!(l[2] as type)
+          // else (l[2] as type))                 // set or list -> could do better
         else if (s = nth & %type[1] <= array)   // a Call array will be generated
                 (if (member(%type[1]) <= float) float else member(%type[1]))       // v3.2.42
         else if (s = @ & l[1] % property)
@@ -137,8 +155,9 @@ ambiguous :: keyword()
                       else r.range),
                  method  use_range(r, %type),
                  any (if not(s.restrictions) selector_psort(self)
-                      else if (s.open = 3 | r != ambiguous) sort_abstract!(s.range)
-                      else sort_abstract!(restriction!(s, %type, false) as type)))) ]
+                      else if (s.open = 3 | r != ambiguous) class!(s.range) // sort_abstract!(s.range)
+                      else class!(restriction!(s, %type, false) as type)))) ]
+                      // sort_abstract!(restriction!(s, %type, false) as type)))) ]
 
 // this is the optimizer for messages : does not use the sort unless there is a macro
 c_code(self:Call) : any -> c_code_call(self,void)
@@ -257,13 +276,12 @@ c_type(self:Call_array) : type -> (self.test as type)
         y := self.args[3], yt := c_type(y),
         ss := self.selector,
         s := restriction!(p, list(c_type(x)), true) in
-       (//[5] c_code_write(~S) // self,
+       (//[5] c_code_write(~S) yt = ~S, s = ~S// self, yt,s,
         if (p % OPT.to_remove) nil
         else if (case s
                   (slot (yt <= s.range | compiler.safety >= 4)))
            (if (y != unknown & not(yt ^ srange(s)))
-               (//[5] ====> ~S ^ ~S = ~S // yt, srange(s), yt ^ srange(s),
-                warn(),trace(2,"sort error in ~S: ~S is a ~S [253]\n",self,y,yt)),
+               (warn(),trace(2,"sort error in ~S: ~S is a ~S [253]\n",self,y,yt)),
             if ((yt <= s.range | yt <= object | srange(s) != object | y = unknown) &   // v2.4.9 protect put
                 (ss != write | (Update?(p, x, y) & (p.multivalued? = false | unknown?(if_write,p)))))   // put or put_store  v3.3
                // MAJOR DECISION in v3.3.20 : allow fast update x.l := l2 for multivalued slots (no inverse  & no demons !)
@@ -274,7 +292,8 @@ c_type(self:Call_array) : type -> (self.test as type)
                         var = Call_slot(selector = s, arg = %x, test = false))
             else if (ss = put)
               c_code(Call(store, list(x,s.index,srange(s),y,p.Kernel/store?)))
-            else (if compiler.diet? (warn(), trace(2,"~S is not a diet call [254]",self)),
+            else (//[5] --> poor case because ~S is not in ~S // yt, s.range,
+                  if compiler.diet? (warn(), trace(2,"~S is not a diet call [254]",self)),
                   if (compiler.optimize? & p != instances)
                      (notice(), trace(3,"poorly typed update: ~S\n", self)),  // v3.3
                   c_code(Call(mClaire/update, list(p, x, s.index, srange(s), y)))))
@@ -413,6 +432,7 @@ c_code_not(x:Select) : any
         else c_warn(p, self.args, list{ c_type(x) | x in self.args})) ]
 
 // nth= optimization for tables
+// notice that we generate updates ONLY IF the table is implemented by a list (one or two dimensions)
 [c_code_table(self:Call) : any
  ->  let sp := self.selector,
          p := (self.args[1] as table),
@@ -422,7 +442,7 @@ c_code_not(x:Select) : any
         else if (sp = put |
                  ((c_type(x) <= p.domain | compiler.safety >= 5) &
                   (c_type(y) <= p.range | compiler.safety >= 4)))
-           (if (Update?(p, x, y) & (p.params % list | p.params % integer))
+           (if (Update?(p, x, y) & (p.params % list | p.params % integer))        // check that we know how to manage in gostat.cl
                let %x := c_code(x, any),
                    %y := c_code(y, any) in
                  Update(selector = p, value = %y,
@@ -437,18 +457,20 @@ c_code_not(x:Select) : any
                                list(table, any, any)))
         else c_code_method(nth= @ table, self.args, list(table, any, any))) ]
 
-// version for arrays
+// version for arrays (manage a nth= for array)
+// we can use an Update only if no gthrow is involved in the selector (CLAIRE4)
 [c_code_array(self:Call) : any
  ->  let sp := self.selector,
          p := self.args[1], tp := c_type(p), mt := member(tp),
          x := self.args[2], y := self.args[3],
-         typeok:boolean := (c_type(y) <= member(tp) | compiler.safety >= 4) in
-       (if ((sp = nth_put | typeok) & (mt <= float | (mt ^ float = {})))
+         typeok:boolean := (c_type(y) <= member(tp) | compiler.safety >= 4),
+         %sel := c_code(p,array) in
+       (if ((sp = nth_put | typeok) & (mt <= float | (mt ^ float = {})) & not(g_throw(%sel)))
            let %x := c_code(x, integer),
                %y := c_code(y, (if (mt <= float) float else any)) in  // v2.4.03
                  Update(selector = p, value = %y,
                         arg = put,
-                        var = Call_array(selector = c_code(p,array), arg = %x, test = mt))
+                        var = Call_array(selector = %sel, arg = %x, test = mt))
         else (if compiler.optimize? (notice(), trace(3,"poorly typed update: ~S\n", self)),  // v3.3
               c_code_method( ((if typeok nth_put else sp) @ array),
                             self.args, list(tp, any, any)))) ]
@@ -460,7 +482,7 @@ c_code_not(x:Select) : any
       ( unknown?(inverse, p) &              // MAJOR DECISION IN V3.0.42 : remove not(multi?(p))
         (case p (table p.params % integer, any true)) &
         (if (p.Kernel/store?)
-            (designated?(x) & designated?(y) & not(multi?(p)) &
+            (designated?(x) & designated?(y) & not(p.multivalued?) &
               (identifiable?(y) | c_type(y) <= float))          // v3.2.56: float is ok (STOREF macro)
          else true))) ]
 
@@ -470,6 +492,11 @@ c_code_not(x:Select) : any
 
 // Update returns the value .. <yc:0.01 -> needed in CLAIRE 2.4 !!!>
 c_type(self:Update) : type  -> void
+
+// in CLAIRE4 we isolate this case (call the if-write demon) because it may produce an error
+[Compile/update_write?(self:Update) : boolean 
+   ->  let p:any := self.selector, a := self.arg in 
+          (case p (relation (known?(p.if_write) & a != put & a != put_store), any false))  ]
 
 
 // ******************************************************************
@@ -484,8 +511,8 @@ c_code_method(self:method,l:list,%type:list,sx:class) : any
  -> (if (self.module! != claire | compiler.safety > 4 | known?(functional, self))
         let ld := self.domain,
             n := length(ld) in
-          (if (n != length(l))
-              l := list{ l[i] | i in (1 .. (n - 1))} add
+          (if (n != length(l))                             // listargs is used .. 
+              l := list{ l[i] | i in (1 .. (n - 1))} add   // we put everything after n-1 in a list
                    list{ l[i] | i in (n .. length(l))},
            if (self.inline? & c_inline?(self, l))
               c_inline(self, l, sx)
@@ -507,8 +534,11 @@ Call_method!(self:method,%code:list) : any
 c_type(self:Call_method) : type
  -> use_range(self.arg, list{ c_type(x) | x in self.args})
 
-// a call_method is already compiled
-c_code(self:Call_method) : any -> self
+// a call_method is already compiled, but in CLAIRE4 it may be obtained with JITO so we optimize the 
+c_code(self:Call_method) : any 
+   -> let m := self.arg, ld := m.domain, 
+          n := min(length(self.args), length(ld)) in              // temporary UGLY patch
+         Call_method!( m, list{ c_strict_code(self.args[i], psort(ld[i])) | i in (1 .. n)})
     
 // gets the associated function if it exists and create one otherwise
 Compile/functional! :: property(open = 3)

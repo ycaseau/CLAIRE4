@@ -82,7 +82,7 @@ verify(t:any,x:any,y:any) : any
 Serror(s:string,la:list) : {}
   -> (printf("---- Syntax Error[line: ~A]:\n", n_line()),
       flush(reader.fromp),
-      general_error(cause = s, arg = la))
+      general_error(mClaire/cause = s, arg = la))
 
 
 // the reader-------------------------------------------------------------

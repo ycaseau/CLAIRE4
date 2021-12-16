@@ -212,9 +212,8 @@ self_eval(self:Defmethod) : any
         error("[110] wrong signature definition ~S", self.arg),
      let p := make_a_property(self.arg.selector),
          l := self.arg.args,
-         lv := (if (length(l) = 1 & l[1] = system)
-             list(Variable(mClaire/pname = symbol!("XfakeParameter"), range = void))
-          else l),
+         lv := (if (length(l) = 1 & l[1] = system)   list(Variable(mClaire/pname = symbol!("XfakeParameter"), range = void))
+                else l),
          lp := extract_signature(lv),
          lrange := extract_range(self.set_arg, lv, LDEF),
          lbody := extract_status(self.body),
@@ -296,7 +295,7 @@ extract_pattern(x:any,path:list) : any
                    v := some(z in LDEF | z.mClaire/pname = s) in
                  (if known?(v) v.range
                   else if (case path (list length(path) > 1))
-                    let y := Reference(index = path[1],  args = cdr(path)),
+                    let y := Reference!(cdr(path), path[1]),
                         v := Variable(mClaire/pname = s, range = y) in
                       (//[0] create a reference for ~S args=~S // s,y.args,
                        LDEF :add v, void)
@@ -464,10 +463,10 @@ self_eval(self:Defarray) : any
                   else self.body)),
          d := (case e (lambda unknown, any eval(self.body))) in
        (write(range, ar, extract_pattern(self.set_arg, nil)),
-        if unknown?(range,ar) range_error(cause = table, arg = self.set_arg, wrong = type), // v3.3.18
+        if unknown?(range,ar) range_error(mClaire/cause = table, arg = self.set_arg, wrong = type), // v3.3.18
         if known?(d) 
            (if not(d % ar.range)                  // v3.1.06
-               range_error(cause = ar,arg = d, wrong = ar.range))
+               range_error(mClaire/cause = ar,arg = d, wrong = ar.range))
         else if (s <= integer) d := 0
         else if (s <= float) d := 0.0,                        // v4.0: unknown not allowed as a float or int
         put(range, v, s),
@@ -477,7 +476,7 @@ self_eval(self:Defarray) : any
            (write(domain, ar, s),
             case s
              (Interval (write(params, ar, s.Core/arg1 - 1),      // v3.1.06 -> make_copy_list
-                        write(Core/graph, ar, make_copy_list(size(s), d))),
+                        write(Core/graph, ar, typed_copy_list(ar.range,size(s), d))),
               any (write(params, ar, any),
                    graph_init(ar))),
             case e
@@ -493,7 +492,7 @@ self_eval(self:Defarray) : any
                                ((s.Core/arg1 * size(s2)) +
                                    s2.Core/arg1) -
                                  1)),
-                    write(Core/graph, ar, make_copy_list(size(s) * size(s2), d)))
+                    write(Core/graph, ar, typed_copy_list(ar.range, size(s) * size(s2), d)))
                 else (//[4] create map dictionary for table ~S // ar, 
                       write(params, ar, any),
                       graph_init(ar)),
@@ -559,7 +558,7 @@ self_eval(self:Defrule) : any
 // condition
 // a filter is R(x) := y | R(x) := (y <- z) | R(x) :add y | P(x,y)
 // R(x) is x.r or A[x]
-// the list of variable is of length 3 if R is mono-valued
+// the list of variable is of length 3 when R is mono-valued, whether we use a <- filter or a regular := 
 [make_filter(cond:any) : tuple(relation,list[Variable])
   -> let c := (case cond (And cond.args[1], any cond)) in
        (//[5] make_filter : ~S (~S) // c, c.isa,
@@ -580,7 +579,7 @@ self_eval(self:Defrule) : any
                x := Variable(extract_symbol(c.args[2]),R.domain),
                y := Variable(extract_symbol(c.args[3]),R.range) in
              tuple(R,list(x,y))
-        else if (case c (Call (length(c.args) = 2)))
+        else if (case c (Call (length(c.args) = 2)))      // last case P(x,y) pattern
            let R := (c as Call).selector, 
                x := Variable(extract_symbol(c.args[1]),R.domain),
                y := Variable(extract_symbol(c.args[2]),R.range) in
@@ -588,8 +587,8 @@ self_eval(self:Defrule) : any
         else error("[188] wrong event filter: ~S",c)) ]
        
   
-// create a demon
-// notice that a demon has 3 args if R is monovalued 
+// create a demon with lvar as list of variables
+// notice that a demon may have 3 args if R is monovalued 
 [make_demon(R:relation,n:symbol,lvar:list[Variable],cond:any,conc:any) : demon
    -> let x := lvar[1], y := lvar[2],
           %test:any := Call((if multivalued?(R) % else =), list(y, readCall(R,x))),
@@ -611,7 +610,7 @@ self_eval(self:Defrule) : any
          demon(mClaire/pname = n,
                formula = lambda!(lvar,%body))) ]
 
-// cute litle guy
+// cute litle guy : create the read instruction both for a table and a property
 [readCall(R:relation,x:any) : Call
   -> if (R % table) Call(get, list(R, x))                // v3.3.0
      else Call+(selector = R, args = list(x)) ]             
@@ -659,10 +658,12 @@ eval_if_write(R:relation) : void
               
 // create a restriction (method) that will trigger an event
 eventMethod(p:property) : void
- -> let m:method := add_method(p, list(p.domain, p.range),void,0,unknown) in
-       (put(formula, m, p.if_write),
+ -> let m:method := add_method(p, list(p.domain, p.range),void,0,unknown),
+        %f := make_function(string!(p.name) /+ "_write") in
+       (put(formula, m, p.if_write),              // how to execute a method ... 
         close(m),
-        put(functional, m, make_function(string!(p.name) /+ "_write")))
+        Kernel/set_arity(%f,2),
+        put(functional, m, %f))                   // when we compile -> directly call the demon 
 
 /* new in v3.1: the inter face pragma ******************************
 

@@ -100,6 +100,11 @@ TopDebug:integer := 0
   
 // simple main (to be enriched later)
 [simple_main() : void
+  -> top_level(reader),
+	   printf("[regular exit] Bye.\n") ]
+
+// unclear that we need this (simple_main is used with -cm)
+/*
   ->  let %init? := true, l := (copy(params()) as list<string>) in  // args list
     (try
       (while (l)
@@ -120,7 +125,7 @@ TopDebug:integer := 0
        catch any (mClaire/restore_state(reader),
                   Reader/debug_if_possible()),
      top_level(reader),
-	   printf("[regular exit] Bye.\n")) ]
+	   printf("[regular exit] Bye.\n")) ]  */
 
 
 // *********************************************************************

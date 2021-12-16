@@ -103,7 +103,7 @@ meta_compiler <: thing(external:string,             // name of the output
 // code producer are defined in Generate
 // but the stub is define in Optimize to have access to current_file
 Compile/producer <: thing(
-    Compile/current_file:string)           // name of the file being compiled
+    Compile/current_file:string = "")           // name of the file being compiled
 
 // we use a global variable to hide the indirection through the producer
 // this is kept in CLAIRE 4.0 so that the C++ compiler could be re-introduced
@@ -363,7 +363,16 @@ Compile/ForceNotThrow :: list<method>
 
 // NEW in claire 4, because error handling is mananaged by the compiler
 // tells if an expression can throw an exception, based on can_throw?(p or m)
+
+// debug loop
+claire/DSHOW:boolean := false
+
 [g_throw(self:any) : boolean
+  -> let v := g_throw1(self) in
+        (if DSHOW trace(0,"-> g_throw(~S)=~S\n",self,v),
+     v)]
+       
+[g_throw1(self:any) : boolean
  -> case self
       (bag exists(x in self | g_throw(x)),
        Construct exists(x in self.args | g_throw(x)),
@@ -374,11 +383,11 @@ Compile/ForceNotThrow :: list<method>
        Call  (self.selector != unsafe & (g_throw(self.args) | can_throw?(self.selector))),
        Call_method (self.arg != m_unsafe & notOpt(self) & self.arg.selector != externC &
                      (g_throw(self.args) | can_throw?(self.arg))),
-       Call_slot g_throw(get(arg, self)),
-       Call_table g_throw(get(arg, self)),
-       Call_array g_throw(get(arg, self)),
-       Super (g_throw(self.args) | can_throw?(self.selector)),                // selector can throw
-       Update (g_throw(get(value, self)) | g_throw(get(arg, self))),
+       Call_slot (g_throw(get(arg, self)) | (known?(test,self) & self.test)),
+       Call_table (g_throw(get(arg, self)) | (known?(test,self) & self.test)),
+       Call_array (g_throw(get(selector,self)) | g_throw(get(arg, self))),
+       Super (g_throw(self.args) | can_throw?(self.selector)),                                  // selector can throw
+       Update ((g_throw(get(value, self)) | g_throw(get(var, self))) | Compile/update_write?(self)),    // if_write may throw
        Cast g_throw(self.arg),
        C_cast g_throw(self.arg),
        // Generate/to_C g_throw(self.arg),
@@ -396,14 +405,18 @@ Compile/ForceNotThrow :: list<method>
        any false) ]
 
 // return true in regular case, false if the optimization means that no error will occur.
-//  this is ugly:  
+//  this is ugly, so use sparingly for truly critical code optimization:  
 //    - (x % y) can raise an error in the generic case (using F_belong) but not in the  optimized case
 //    - class!(...) can raise an error in interpreted mode nut not at compile time
+//    - division by non-zero integer constant is OK
+//    - etc (extensible)   ... hopefully go will support exceptions one day so I can get rid of this junk :)
 [notOpt(self:Call_method) : boolean 
     -> if (self.arg = m_member)  
              (let t2 := static_type(self.args[2]) in
                    not( t2 <= type | t2 <= list | t2 <= integer | t2 <= array))    // these are the 4 exceptions (optimized)
        else if (self.arg.selector = class!) not(self.args[1] % symbol)    // constant symbol => conflicts have been checked
+       else if (self.arg.selector = / | self.arg.selector = mod) (not(self.args[2] % integer) | self.args[2] = 0)
+       else if (self.args[1] % table & self.arg.selector = nth)  not(static_type(self.args[2]) <= domain(self.args[1])) & (compiler.safety < 2)
        else true ]        //regular case !
 
 
@@ -421,9 +434,13 @@ Compile/ForceNotThrow :: list<method>
      else if (m.status != -1 | unknown?(formula,m)) (m.status != 0)
      else can_throw!(m) ]
 
+// debug handle
+claire/DTHROW:any :: unknown
+
 // here we recursively call g_throw on the body => forced re-compute of status(m) (status!(m) in CLAIRE3)
 [can_throw!(m:method) : boolean
   -> m.status := 0,                                             // optimistic .. to avoid recursive problems
+     DTHROW := c_code(m.formula.body, class!(m.range)),
      if g_throw(c_code(m.formula.body, class!(m.range)))       // QUESTION: compile with c_code ?
         (m.status := 1, true)
      else false ]

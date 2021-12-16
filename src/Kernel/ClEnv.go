@@ -10,6 +10,7 @@ package Kernel
 
 import (
 	"fmt"
+//	"bytes"
 	"math"
 	"os"
 	"os/exec"
@@ -417,7 +418,14 @@ func E_time_show_void(void EID) EID {
 
 // shell
 func F_claire_shell(s *ClaireString) {
-	exec.Command(s.Value)
+	fmt.Printf("execute: %s\n",s.Value)
+	// var stdout bytes.Buffer        -> left if one day we want the result
+	cmd := exec.Command("bash","-c",s.Value)
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stdout
+	// cmd.Stdout = &stdout
+    cmd.Run()
+	// fmt.Printf("result : %s\n",stdout.String())
 }
 
 func E_claire_shell(s EID) EID {
@@ -456,7 +464,7 @@ func Cerror(n int, a *ClaireAny, b *ClaireAny) EID {
 	o.Index = n
 	o.Value = a
 	o.Arg = b
-	if ClEnv.Verbose > 5 {panic("stop and see why")}
+	if ClEnv.Verbose > 5 || n == 12 {panic("stop and see why")}
    	o.Close()    // very unclear that we need this 
 	return EID{o.Id(), 1}
 }
@@ -489,6 +497,14 @@ func ErrorCheck(x EID) {
 		panic("execution must stop")
 	}
 }
+
+// check that a value is not unknown
+func (val *ClaireAny) KNOWN (cause *ClaireAny) EID {
+	if (val == CNULL) {return Cerror(24,cause,val)
+	} else {return val.ToEID()}
+}
+
+
 
 // +---------------------------------------------------------------------------+
 // |  Part 3: Worlds                                                           |
@@ -584,6 +600,7 @@ func (c *ClaireResource) init() {
 }
 
 // defeasible update on a list  (not a method because there are many variations)
+// WARNING: this version does not look for size ...
 func F_store_list(l *ClaireList,n int, y *ClaireAny, b *ClaireBoolean) *ClaireAny {
 	// fmt.Printf("store on list %s at n=%d with y=%s\n",l.Prt(),n,y.Prt())
 	if l.Srange == C_integer {
@@ -688,7 +705,7 @@ func (x *ClaireObject) StoreObj(n int, y *ClaireAny, b *ClaireBoolean) {
 		if ClRes.oIndex >= ClRes.maxHist {
 			panic("History stack overflow")
 		}
-		fmt.Printf("[%d] store slot%d(%s) = %s\n",ClRes.oIndex,n,x.Prt(),x.GetObj(n).Prt())
+		// fmt.Printf("[%d] store slot%d(%s) = %s\n",ClRes.oIndex,n,x.Prt(),x.GetObj(n).Prt())
 		ClRes.slotObjRec[ClRes.oIndex] = x
 		ClRes.slotObjIndex[ClRes.oIndex] = n
 		ClRes.slotObjVal[ClRes.oIndex] = x.GetObj(n)
@@ -731,7 +748,7 @@ func F_store_add(l *ClaireList,
 
 // add one new world : the top of each stacks become the new base,
 func F_world_push() {
-	fmt.Printf("------- world push @ %d -------------------------\n",ClRes.cWorld)
+	// fmt.Printf("------- world push @ %d -------------------------\n",ClRes.cWorld)
 	c := ClRes
 	if c.iIndex >= c.maxHist || c.oIndex >= c.maxHist || c.fIndex >= c.maxHist ||
 		c.olIndex >= c.maxHist || c.ilIndex >= c.maxHist || c.flIndex >= c.maxHist {
@@ -773,7 +790,7 @@ func E_world_push(c EID) EID {
 
 // remove a world and perform all modifications stored in the stack
 func F_world_pop() {
-	fmt.Printf("------- world pop @ %d -------------------------\n",ClRes.cWorld)
+	// fmt.Printf("------- world pop @ %d -------------------------\n",ClRes.cWorld)
 	c := ClRes
 	c.cWorldId++ // v3.2.04
 	c.cWorld--
@@ -841,7 +858,7 @@ func E_world_pop(c EID) EID {
 // Notice that if the world is not empty, the "base line" that is used for based chaining is overwriten with a copy of upper line
 // this maintains the structure: stack of value lines on top of the "base lines" (chaining)
 func F_world_remove() {
-	fmt.Printf("------- world remove @ %d -------------------------\n",ClRes.cWorld)
+	// fmt.Printf("------- world remove @ %d -------------------------\n",ClRes.cWorld)
 	c := ClRes
 	c.cWorldId++ // v3.2.04
 	c.cWorld--
@@ -945,6 +962,73 @@ func E_world_get_id(c EID) EID { return EID{C__INT, IVAL(ClRes.cWorldId)} }
 // |  Part 4: Dictionary                                                       |
 // +---------------------------------------------------------------------------+
 
+// this is our hash function
+// 
+func (x *ClaireAny) Key() string {
+	if x.Isa == C_integer {
+		return  strconv.Itoa(ToInteger(x).Value)          // golang primitive function => tried to rewrite with no benefits
+	} else if x.Isa == C_float {
+		return fmt.Sprintf("#F%f", ToFloat(x).Value)
+	} else if x.Isa == C_string {
+		return "#S" + ToString(x).Value
+	} else if x.Isa == C_tuple {
+		return ToList(x).tupleKey()
+	} else if x.Isa == C_set {
+		return ToSet(x).setKey()
+	} else {
+		return fmt.Sprintf("#O%p", x)
+	}
+}
+
+// multiple hash for Tuple (works, but expensive for big tuples)
+func (x *ClaireList) tupleKey() string {
+	rep := "#T"
+	for _,v := range(x.ValuesO()) { rep = rep + "," + v.Key()}
+	return rep
+}
+
+// multiple hash for Sets (works, but really expensive for big tuples)
+// sort the keys with naive insert
+func (x *ClaireSet) setKey() string {
+	rep := "#S"
+	var l []string = make([]string, 0)
+	var n int = 0
+	for k := 0; k < x.Count; k++ {
+	    s := x.At(k).Key()
+		var j int = 0
+		for j < n && l[j] < s { j++ }   // j is the first position such that s < l[j]
+		l = append(l, "0")   // Step 1 : increase capacity
+		copy(l[j+1:], l[j:]) // Step 2 : shift
+		l[j] = s        	 // Step 3 : put s at position j
+		n++
+	}
+	for i := 0; i < n; i++ { rep = rep + "," + l[i]}
+	return rep
+}
+
+// this is a special version for EID : avoids allocation
+func KEY(x EID) string {
+	if x.PTR == C__INT {
+		return strconv.Itoa(INT(x))
+	} else if x.PTR == C__FLOAT {
+		return fmt.Sprintf("#F%f",FLOAT(x))
+	} else if x.PTR == C__CHAR {
+		return fmt.Sprintf("#C%c",CHAR(x))
+	} else if x.PTR.Isa == C_string {
+		return "#S" + ToString(x.PTR).Value
+	} else if x.PTR.Isa == C_tuple {
+		return ToList(x.PTR).tupleKey()
+	} else if x.PTR.Isa == C_set {
+		return ToSet(x.PTR).setKey()
+	} else {		
+		return fmt.Sprintf("#O%p",x.PTR)
+	}
+}
+
+
+
+
+
 // API functions ------------------------------------------------------------
 
 // create a dict  (CLAIRE 4 : [type:type])  -> map!(t,t)
@@ -979,10 +1063,10 @@ func E_get_map(d EID, x EID) EID {
 // Writes into a dict - TODO : add a specific Cerror
 func (d *ClaireMap) Put(x *ClaireAny, y *ClaireAny) EID {
 	if d.of.Contains(x) == CFALSE {
-		return Cerror(17, x, d.any())
+		return Cerror(17, x, d.Id())
 	}
 	if d.Range.Contains(y) == CFALSE {
-		return Cerror(17, y, d.any())
+		return Cerror(17, y, d.Id())
 	}
 	d.Value[x.Key()] = y
 	return EVOID

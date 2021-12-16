@@ -43,15 +43,19 @@ func BootCore() {
 	if ClEnv.Verbose > 10 {
 		print("--- Start Bootcore ------------- \n")
 	}
-	C_class = new(ClaireClass)
+	C_class = new(ClaireClass)   // C_class is needed for makeClass1
+	C_object = new(ClaireClass)   // C_object is needed for Srange (list or set)
+	C_list = new(ClaireClass)   // C_list is needed for MakeClass1
+	C_set = new(ClaireClass)   // C_set is needed for MakeClass1
 	C_class.Isa = C_class
-	C_void = makeClass1()
-	C_object = makeClass1()  // needed for c.Instances
-	C_symbol = makeClass1()  // needed for names
+	// create the boot classes
+	C_void = makeClass1(new(ClaireClass))
+	C_object = makeClass1(C_object)  // needed for c.Instances
+	C_symbol = makeClass1(new(ClaireClass))  // needed for names
 	C_claire = makeModule1() // needed to create
-	C_slot = makeClass1()    // need for slots list
-	C_list = makeClass1()    // needed to create proper core lists
-	C_set = makeClass1()     // descendent is a set
+	C_slot = makeClass1(new(ClaireClass))    // need for slots list
+	C_list = makeClass1(C_list)    // needed to create proper core lists
+	C_set = makeClass1(C_set)     // descendent is a set
 	// two special values : NIL and EMPTY
 	CEMPTY = makeNilSet()
 	CNIL = makeNilList()
@@ -61,21 +65,23 @@ func BootCore() {
 	C_void.Superclass = C_void
 	C_void.Ancestors = coreList(ToType(C_class.Id()), C_void.Id())
 	C_void.Name = makeSymbol("void")
-	C_class.Subclass = ToType(C_class.Id()).EmptySet()
+	C_class.Subclass = ToType(C_class.Id()).EmptySetObject()
 	C_class.Instances = coreList(ToType(C_class.Id()))
 	// void, being the root, will never gop through MakeClass2 hence we apply the fixes here
-	C_void.Subclass.Isa = C_list
+	C_void.Subclass.Isa = C_set
 	C_void.Instances.Isa = C_list
 	C_void.evaluate = EVAL_object // propagate default through inheritance
 	C_class.Instances.AddFast(C_void.Id())
 	// create empty sets
-	C_void.Descendents = ToType(C_class.Id()).EmptySet()    // empty descendent set
+	C_void.Descendents = ToType(C_class.Id()).EmptySetObject()    // empty descendent set
 	CNULL = new(ClaireAny).Is(C_void)                        // create the unknown object
 	C_void.IfWrite = CNULL
 	C_void.Dictionary = ToMap(CNULL)
 	EVOID = EID{CNULL.Id(), 0}
-	if ClEnv.Verbose > 10 {
-		fmt.Printf("--- End Bootcore ------------- VoidIfWrite:%p \n",C_void.IfWrite)
+	CTRUE = new(ClaireBoolean)
+	CFALSE = new(ClaireBoolean)
+	if ClEnv.Verbose > -1 {
+		fmt.Printf("--- End Bootcore ------------- \n")
 	}
 }
 
@@ -98,6 +104,7 @@ func Bootstrap() {
 	C_collection = MakeClass("collection", C_object, C_claire)
 	C_type_expression = MakeClass("type_expression", C_collection, C_claire)
 	C_type = MakeClass("type", C_type_expression, C_claire)
+
 	// second step
 	makeClass2("class", C_class, C_type, C_claire)
 	C_thing = MakeClass("thing", C_object, C_claire)
@@ -110,10 +117,12 @@ func Bootstrap() {
 	C_float = MakeClass("float", C_primitive, C_claire)
 	C_float.evaluate = EVAL_float
 	C_system_object = MakeClass("system_object", C_object, C_claire)
-	C_unbound_symbol = MakeClass("unbound_symbol", C_system_object, C_claire)
-	C_environment = MakeClass("environment", C_system_object, C_claire)
+    C_unbound_symbol = MakeClass("unbound_symbol", C_system_object, C_claire)
+	
+    C_environment = MakeClass("environment", C_system_object, C_claire)
 	C_Instruction = MakeClass("Instruction", C_system_object, C_claire)
 	C_Variable = MakeClass("Variable", C_Instruction, C_claire)
+	
 	// ClEnv.Isa = C_environment
 	// C_claire.register(makeSymbol("system"), ClEnv.Id()) // link symbol to object
 	makeClass2("symbol", C_symbol, C_system_object, C_claire)
@@ -131,10 +140,10 @@ func Bootstrap() {
 	C_method = MakeClass("method", C_restriction, C_claire)
 	makeClass2("slot", C_slot, C_restriction, C_claire)
 	C_void.Slots = ToType(C_slot.Id()).EmptyList()
-
+	
 	// special instances
-	CTRUE = ToBoolean(new(ClaireBoolean).IsNamed(C_boolean, MakeSymbol("true", C_claire)).Id())
-	CFALSE = ToBoolean(new(ClaireBoolean).IsNamed(C_boolean, MakeSymbol("false", C_claire)).Id())
+	ToBoolean(CTRUE.IsNamed(C_boolean, MakeSymbol("true", C_claire)).Id())
+	ToBoolean(CFALSE.IsNamed(C_boolean, MakeSymbol("false", C_claire)).Id())
 	CTRUE.Not = CFALSE // hack to make not(b) fast for ClaireBoolean
 	CFALSE.Not = CTRUE
 	CERROR = ToError(C_error.makeObject().Id())
@@ -162,6 +171,7 @@ func Bootstrap() {
 	ClEnv.Cout = claireStdout
 	ClEnv.Ctrace = claireStdout
 	ClEnv.Cin = claireStdin
+
 	// Types
 	C_type_operator = MakeClass("type_operator", C_type, C_claire)
 	C_Union = MakeClass("Union", C_type_operator, C_claire)
@@ -190,6 +200,7 @@ func Bootstrap() {
 		ToModule(m).Name.definition = C_Kernel
 	}
 	finishClEnv()
+
 	// these classes require equal
 	C_set.Ident_ask = CFALSE
 	C_list.Ident_ask = CFALSE
@@ -206,8 +217,8 @@ func Bootstrap() {
 	C_claire.register(unknownName, CNULL)          // it contains CNULL but the "value is known"
 	PRIVATE = makeSymbol("private")                // private is a special symbol ...
 	C_claire.register(PRIVATE,PRIVATE.Id())        // self-referenced
-	// elapsed := time.Since(start)
-	// fmt.Println("\n === end of bootstrap in ", elapsed, " ====")
+	fmt.Println("=== end of bootstrap ====")
+		
 }
 
 // +---------------------------------------------------------------------------+
@@ -261,6 +272,7 @@ func MakeProperty(name string, op int, m *ClaireModule) *ClaireProperty {
 	o.Open = op
 	o.Comment = MakeString(name)
 	o.Restrictions = MakeList(ToType(C_restriction.Id()))
+	if (o.Definition == nil) {panic("Instanciate failed on " + name)}
 	if ClEnv.Verbose > 10 {
 		fmt.Printf("MakeProprerty(%s) -> %s - definition.Of:%s\n", name, o.Prt(), o.Definition.Of().Prt())
 	}
@@ -268,6 +280,7 @@ func MakeProperty(name string, op int, m *ClaireModule) *ClaireProperty {
 }
 
 // creates an operation
+// todo : cleanup like MakeProperty
 func MakeOperation(name string, op int, m *ClaireModule, prec int) *ClaireOperation {
 	var o *ClaireOperation = new(ClaireOperation)
 	o.Isa = C_operation
@@ -310,7 +323,7 @@ func (p *ClaireProperty) makeMethod(ltype []*ClaireAny) *ClaireMethod {
 	if ClEnv.Verbose > 10 {
 		fmt.Printf("add method to restrictions: %s\n", p.Restrictions.Prt())
 	}
-	p.Restrictions.AddFast(o.any())
+	p.Restrictions.AddFast(o.Id())
 	C_method.Instances.AddFast(o.ToAny())
 	o.Domain = ToList(ldom.Id())
 	o.Range = r
@@ -388,8 +401,10 @@ func (c *ClaireClass) AddSlot(p *ClaireProperty, r *ClaireType, def *ClaireAny) 
 		s.Index = len(ls) + 1
 		s.Srange = c1
 	    // CLAIRE 4 : propagate slots down - used only during the bootstrap
-	    for _, c2 := range c.Descendents.Values {
-		       ToClass(c2).Slots.AddFast(s.ToAny())}
+	    s2 := c.Descendents
+		for k := 0; k < s2.Count; k++  {
+			   ToClass(s2.At(k)).Slots.AddFast(s.ToAny())
+			   }
 	}
 	s.Domain = MakeList(ToType(C_type.Id()), c.ToAny())
 	s.Selector = p
@@ -469,12 +484,11 @@ func (m *ClaireModule) register(s *ClaireSymbol, o *ClaireAny) {
 }
 
 // we need this special function to create class in two steps (break the recursion)
-// ListObject does not exist yet, class neither
-func makeClass1() *ClaireClass {
-	c := new(ClaireClass)
+// makeClass1 is incomplete because C_set and C_list do not necessarily exist
+func makeClass1(c *ClaireClass) *ClaireClass {
 	c.Isa = C_class
 	// these are incomplete list creation patterns (to be fixed in step2)
-	c.Subclass = ToType(C_class.Id()).EmptySet()
+	c.Subclass = ToType(C_class.Id()).EmptySetObject()
 	c.Instances = makeNilList()   // ToList(makeListObject(ToType(C_class.Id()), []*ClaireAny{}).Id())
 	c.Slots = makeNilList()
 	return c
@@ -482,13 +496,18 @@ func makeClass1() *ClaireClass {
 
 // second step - further defines c1 that inherits from c2
 func makeClass2(name string, c1 *ClaireClass, c2 *ClaireClass, m *ClaireModule) {
-	// fmt.Printf("---- MakeClass2(%s)\n", name)
+	//fmt.Printf("---- MakeClass2(%s)\n", name)
 	c1.Name = MakeSymbol(name, m)
-	// fix the fact that C_list did not exist when makeClass1 was called
-	c1.Subclass.Isa = C_set
-	c1.Instances.Isa = C_list
-	instantiateClass(name,c1,c2)
+	instantiateClass(name,c1,c2)  /// now we define c1 as a subclass of c2
 }
+
+// Debuf : print a set of classes
+func SCS(s *ClaireSet) string {
+	var res string = "{"
+	for k := 0; k < s.Count; k++ {res = res + ToClass(s.At(k)).Name.key + " "}
+	return res + "}"
+}
+
 
 // this is the bulk of class instantiation
 func instantiateClass(name string, c1 *ClaireClass, c2 *ClaireClass) {
@@ -499,12 +518,11 @@ func instantiateClass(name string, c1 *ClaireClass, c2 *ClaireClass) {
 	c1.Ancestors = ToList(makeListObject(ToType(C_class.Id()), append(copySlice(c2.Ancestors.ValuesO()),
 		c1.ToAny())).Id())
 	// c1.descendents = transitive closure of subclass / inverse of Ancestors
-	c1.Descendents = ToType(C_class.Id()).EmptySet() // emptylist
+	c1.Descendents = ToType(C_class.Id()).EmptySetObject() // emptylist
 	// fmt.Printf("makeclass(%s): ancestors: %d\n", name, c1.Ancestors.Length())
 	for _, y := range c1.Ancestors.ValuesO() {
-		// fmt.Printf("look at ancestor %s\n", ToClass(y).Name.key)
 		ToClass(y).Descendents.AddFast(c1.Id())
-	}
+    }
 	C_class.Instances.AddFast(c1.ToAny())
 	// if (c2->open == ClEnv->ephemeral) c->open = ClEnv->ephemeral;
 	if c2.Slots.Length() > 0 {
@@ -534,7 +552,7 @@ func MakeClass(name string, c *ClaireClass, m *ClaireModule) *ClaireClass {
 		fmt.Printf("--- make compiled class %s\n", name)
 		// fmt.Printf("--- super = %x\n", c)
 	}
-	o := makeClass1()
+	o := makeClass1(new(ClaireClass))
 	makeClass2(name, o, c, m)
 	m.register(o.Name, o.Id())
 	return o
@@ -619,6 +637,7 @@ func (o *ClaireThing) IsNamed(c *ClaireClass, s *ClaireSymbol) *ClaireAny {
 func (c *ClaireClass) instantiate(o *ClaireObject) {
 	if ClEnv.Verbose == -1 {
 		fmt.Printf("instantiate %s with %d slots\n", c.Name.key, c.Slots.Length())
+		if c.Slots.Length() > 0 {fmt.Printf("slots = %s\n",c.Slots.Prt())}
 	}
 	for i, s := range c.Slots.ValuesO() {
 		if i > 0 {
@@ -1088,7 +1107,7 @@ func BootMethod() {
 	C_stack_apply.AddMethod(Signature(C_function.Id(), C_integer.Id(), C_integer.Id(), C_any.Id()), 1, MakeFunction3(E_stack_apply_function, "stack_apply_function"))
 	C__equal.AddMethod(Signature(C_any.Id(), C_any.Id(), C_boolean.Id()), 0, MakeFunction2(E_equal_any, "equal_any"))
     C_string_I.AddMethod(Signature(C_function.Id(), C_string.Id()), 0, MakeFunction1(E_string_I_function, "string_I_function"))
-	C_arity.AddMethod(Signature(C_function.Id(), C_integer.Id()), 0, MakeFunction1(E_arity_function, "arity_function"))
+    C_arity.AddMethod(Signature(C_function.Id(), C_integer.Id()), 0, MakeFunction1(E_arity_function, "arity_function"))
 	C_set_arity.AddMethod(Signature(C_function.Id(), C_integer.Id(),C_void.Id()), 0, MakeFunction2(E_set_arity_function, "set_arity_function"))
 	C_funcall.AddMethod(Signature(C_function.Id(), C_any.Id(),C_any.Id()), 1, MakeFunction2(E_funcall1, "funcall1"))
 	C_funcall.AddMethod(Signature(C_function.Id(), C_any.Id(),C_any.Id(),C_any.Id()), 2, MakeFunction3(E_funcall2, "funcall2"))
@@ -1224,7 +1243,7 @@ func BootMethod() {
 	//C_time_read.AddMethod(Signature(C_void.Id(), C_void.Id()), 0, MakeFunction1(E_time_read_void, "time_read_void"))
 	//C_time_show.AddMethod(Signature(C_void.Id(), C_void.Id()), 0, MakeFunction1(E_time_show_void, "time_show_void"))
 	C_close.AddMethod(Signature(C_exception.Id(), CEMPTY.Id()), 1, MakeFunction1(E_close_exception, "close_exception"))
-	C_shell.AddMethod(Signature(C_void.Id(), C_string.Id()), 0, MakeFunction1(E_claire_shell, "claire_shell"))
+	C_shell.AddMethod(Signature(C_string.Id(), C_void.Id()), 0, MakeFunction1(E_claire_shell, "claire_shell"))
 	C_exit.AddMethod(Signature(C_integer.Id(), C_void.Id()), 0, MakeFunction1(E_CL_exit, "CL_exit"))
 	C_abort.AddMethod(Signature(C_environment.Id(), C_void.Id()), 0, MakeFunction1(E_abort_system, "abort_system"))
 	C_mClaire_restore_state.AddMethod(Signature(C_void.Id(), C_void.Id()), 0, MakeFunction1(E_restore_state_void, "restore_state_void"))
@@ -1319,9 +1338,8 @@ func (p *ClaireProperty) ReadEID(x EID) EID {
 		i := ToSlot(r.Id()).Index
 		z := ToObject(OBJ(x))
 		if s == C_integer { return EID{C__INT,IVAL(z.GetInt(i))}
-			} else if s == C_float { 
-				return EID{C__FLOAT,FVAL(z.GetFloat(i))}
-			} else { 
+		} else if s == C_float { return EID{C__FLOAT,FVAL(z.GetFloat(i))}
+		} else { 
 				y := z.GetObj(i) 
 				if y == CNULL && ToSlot(r.Id()).Range.Contains(y) == CFALSE {
 					return Cerror(1,p.Id(),ANY(x))

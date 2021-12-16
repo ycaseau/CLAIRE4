@@ -102,7 +102,8 @@ func BAD(x EID) bool {
 func BadI(x EID, tag string) {
 		if BAD(x) {
 			panic("Bad Integer represented as OID in " + tag)} }
-	   
+
+// owner class (x.Isa) for an EID			
 func OWNER(x EID) *ClaireClass {
 	if x.PTR == C__INT {
 		return C_integer
@@ -133,7 +134,7 @@ type eFunc func(*ClaireAny) EID
 // unsafe utilities
 // let see if this works
 func (p *ClaireAny) ui64() uint64    { return (uint64)(uintptr(unsafe.Pointer(p))) }
-func (p *ClaireAny) any() *ClaireAny { return p } // deprecated
+// func (p *ClaireAny) any() *ClaireAny { return p } // deprecated => Id()
 
 // usefull utility get the pointer as a uintptr
 // func (x *ClaireAny) Uip() uintptr { return uintptr(unsafe.Pointer(x)) }
@@ -732,13 +733,39 @@ type ClaireTuple = ClaireList
 
 func ToTuple(x *ClaireAny) *ClaireTuple { return (*ClaireList)(unsafe.Pointer(x)) }
 
-// sets are implemented with a map[string]any
+// sets are implemented with sorted maps - hence they are clone from lists
 type ClaireSet struct {
-	ClaireBag
-	Values map[string]*ClaireAny
+		ClaireBag
+		Srange *ClaireClass // sort : object, float or integer
+		Count int
 }
 
 func ToSet(x *ClaireAny) *ClaireSet { return (*ClaireSet)(unsafe.Pointer(x)) }
+
+// we actually need 3 subclasses from ClaireListNative ....
+// count is accessed with Size()
+type ClaireSetObject struct {
+	ClaireSet
+	Values []*ClaireAny
+}
+func ToSetObject(x *ClaireAny) *ClaireSetObject { return (*ClaireSetObject)(unsafe.Pointer(x)) }
+
+type ClaireSetInteger struct {
+	ClaireSet
+	Values []int
+}
+func ToSetInteger(x *ClaireAny) *ClaireSetInteger { return (*ClaireSetInteger)(unsafe.Pointer(x)) }
+
+type ClaireSetFloat struct {
+	ClaireSet
+	Values []float64
+}
+func ToSetFloat(x *ClaireAny) *ClaireSetFloat { return (*ClaireSetFloat)(unsafe.Pointer(x)) }
+
+// how to access directy the values field
+func (x *ClaireSet) ValuesO() []*ClaireAny { return ((*ClaireSetObject)(unsafe.Pointer(x))).Values }
+func (x *ClaireSet) ValuesI() []int        { return ((*ClaireSetInteger)(unsafe.Pointer(x))).Values }
+func (x *ClaireSet) ValuesF() []float64    { return ((*ClaireSetFloat)(unsafe.Pointer(x))).Values }
 
 // lambda
 type ClaireLambda struct {
@@ -844,9 +871,9 @@ func ToSubtype(x *ClaireAny) *ClaireSubtype { return (*ClaireSubtype)(unsafe.Poi
 // if arg = true, the reference is the singleton containing the ref. value
 type ClaireReference struct {
 	ClaireTypeExpression
-	Args  *ClaireList
+	Args  *ClaireList              // 
 	Index int
-	Arg   *ClaireBoolean
+	Arg   *ClaireBoolean           // usually false
 }
 
 // arg:boolean = false)
@@ -1283,7 +1310,7 @@ func (x *ClaireObject) GetObj(i int) *ClaireAny {
 		return ((*ClaireDummy6)(unsafe.Pointer(x))).a29
 	} else {
 		panic("Fatal error with getObj (i too big >= 30)")
-		return C_class.any()
+		return C_class.Id()
 	} // need a Cerror !
 }
 

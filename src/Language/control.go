@@ -1,5 +1,5 @@
 /***** CLAIRE Compilation of file /Users/ycaseau/Dropbox/src/clairev4.0/src/meta/control.cl 
-         [version 4.0.02 / safety 5] Saturday 10-30-2021 *****/
+         [version 4.0.02 / safety 5] Monday 12-13-2021 *****/
 
 package Language
 import (_ "fmt"
@@ -8,7 +8,7 @@ import (_ "fmt"
 )
 
 //-------- dumb function to prevent import errors --------
-func import_g0201() { 
+func import_g0122() { 
     _ = Core.It
     } 
   
@@ -29,28 +29,31 @@ func import_g0201() {
 // *     Part 1: If, Do, Let                                           *
 // *********************************************************************
 //--------------- the IF --------------------------------------------
-/* {1} OPT.The go function for: self_print(self:If) [] */
+/* {1} The go function for: self_print(self:If) [status=1] */
 func (self *If ) SelfPrint () EID { 
     var Result EID 
     PRINC("(")
     Core.C_pretty.Index = (Core.C_pretty.Index+1)
+    /*integer->integer*//*g_try(v2:"Result",loop:true) */
     Result = self.Printstat()
     /* ERROR PROTECTION INSERTED (Result-Result) */
     if !ErrorIn(Result) {
     Core.C_pretty.Index = (Core.C_pretty.Index-1)
-    PRINC(")")
+    /*integer->integer*/PRINC(")")
     Result = EVOID
     }
     return Result} 
   
 // The EID go function for: self_print @ If (throw: true) 
 func E_self_print_If_Language (self EID) EID { 
-    return /*(sm for self_print @ If= EID)*/ To_If(OBJ(self)).SelfPrint( )} 
+    return To_If(OBJ(self)).SelfPrint( )} 
   
-/* {1} OPT.The go function for: printstat(self:If) [] */
+/* {1} The go function for: printstat(self:If) [status=1] */
 func (self *If ) Printstat () EID { 
     var Result EID 
     PRINC("if ")
+    /*g_try(v2:"Result",loop:true) */
+    /*g_try(v2:"Result",loop:true) */
     Result = F_printexp_any(self.Test,CFALSE)
     /* ERROR PROTECTION INSERTED (Result-Result) */
     if !ErrorIn(Result) {
@@ -58,10 +61,12 @@ func (self *If ) Printstat () EID {
     }
     {
     PRINC(" ")
+    /*g_try(v2:"Result",loop:true) */
     Result = F_printif_any(self.Arg)
     /* ERROR PROTECTION INSERTED (Result-Result) */
     if !ErrorIn(Result) {
     Core.C_pretty.Index = (Core.C_pretty.Index-3)
+    /*integer->integer*//*g_try(v2:"Result",loop:true) */
     Result = self.Printelse()
     /* ERROR PROTECTION INSERTED (Result-Result) */
     if !ErrorIn(Result) {
@@ -72,94 +77,98 @@ func (self *If ) Printstat () EID {
   
 // The EID go function for: printstat @ If (throw: true) 
 func E_printstat_If (self EID) EID { 
-    return /*(sm for printstat @ If= EID)*/ To_If(OBJ(self)).Printstat( )} 
+    return To_If(OBJ(self)).Printstat( )} 
   
-/* {1} OPT.The go function for: printif(self:any) [] */
+/* {1} The go function for: printif(self:any) [status=1] */
 func F_printif_any (self *ClaireAny ) EID { 
     var Result EID 
     Core.C_pretty.Index = (Core.C_pretty.Index+3)
-    if (Core.C_pretty.Pbreak == CTRUE) /* If:2 */{ 
-      /* Let:3 */{ 
-        var b_index int  = Core.F_buffer_length_void()
-        /* noccur = 1 */
-        /* Let:4 */{ 
-          var _Zl int  = Core.C_pretty.Index
-          /* noccur = 1 */
+    /*integer->integer*/if (Core.C_pretty.Pbreak == CTRUE) { 
+      { var b_index int  = Core.F_buffer_length_void()
+        _ = b_index
+        { var _Zl int  = Core.C_pretty.Index
+          _ = _Zl
           Core.C_pretty.Pbreak = CFALSE
-          h_index := ClEnv.Index /* Handle */
-          h_base := ClEnv.Base
-          Result = Core.F_CALL(C_print,ARGS(self.ToEID()))
-          if ErrorIn(Result) && ToType(Core.C_much_too_far.Id()).Contains(ANY(Result)) == CTRUE { 
-            /* s=EID */ClEnv.Index = h_index
-            ClEnv.Base = h_base
-            Result = EID{CEMPTY.Id(),0}
+          /*boolean->boolean*//*g_try(v2:"Result",loop:true) */
+          { 
+            h_index := ClEnv.Index
+            h_base := ClEnv.Base
+            Result = Core.F_CALL(C_print,ARGS(self.ToEID()))
+            if ErrorIn(Result) && ToType(Core.C_much_too_far.Id()).Contains(ANY(Result)) == CTRUE { 
+              ClEnv.Index = h_index
+              ClEnv.Base = h_base
+              Result = EID{CEMPTY.Id(),0}
+              } 
             } 
           /* ERROR PROTECTION INSERTED (Result-Result) */
           if !ErrorIn(Result) {
           Core.C_pretty.Pbreak = CTRUE
-          if (Core.F_short_enough_integer(Core.F_buffer_length_void()) == CTRUE) /* If:5 */{ 
+          /*boolean->boolean*/if (Core.F_short_enough_integer(Core.F_buffer_length_void()) == CTRUE) { 
             Result = EID{CEMPTY.Id(),0}
             } else {
             Core.F_buffer_set_length_integer(b_index)
             Core.C_pretty.Index = _Zl
+            /*integer->integer*//*g_try(v2:"Result",loop:true) */
             Result = F_lbreak_void()
             /* ERROR PROTECTION INSERTED (Result-Result) */
             if !ErrorIn(Result) {
             Result = Core.F_CALL(C_print,ARGS(self.ToEID()))
             }
-            /* If-5 */} 
+            } 
           }
-          /* Let-4 */} 
-        /* Let-3 */} 
+          } 
+        } 
       } else {
       Result = Core.F_CALL(C_print,ARGS(self.ToEID()))
-      /* If-2 */} 
+      } 
     return Result} 
   
 // The EID go function for: printif @ any (throw: true) 
 func E_printif_any (self EID) EID { 
-    return /*(sm for printif @ any= EID)*/ F_printif_any(ANY(self) )} 
+    return F_printif_any(ANY(self) )} 
   
-/* {1} OPT.The go function for: printelse(self:If) [] */
+/* {1} The go function for: printelse(self:If) [status=1] */
 func (self *If ) Printelse () EID { 
     var Result EID 
-    /* Let:2 */{ 
-      var e *ClaireAny   = self.Other
-      /* noccur = 4 */
-      if (e.Isa.IsIn(C_If) == CTRUE) /* If:3 */{ 
-        /* Let:4 */{ 
-          var g0207 *If   = To_If(e)
-          /* noccur = 3 */
+    { var e *ClaireAny   = self.Other
+      if (e.Isa.IsIn(C_If) == CTRUE) { 
+        { var g0128 *If   = To_If(e)
           PRINC(" ")
+          /*g_try(v2:"Result",loop:true) */
           Result = F_lbreak_void()
           /* ERROR PROTECTION INSERTED (Result-Result) */
           if !ErrorIn(Result) {
           PRINC("else if ")
-          Result = F_printexp_any(g0207.Test,CFALSE)
+          /*g_try(v2:"Result",loop:true) */
+          Result = F_printexp_any(g0128.Test,CFALSE)
           /* ERROR PROTECTION INSERTED (Result-Result) */
           if !ErrorIn(Result) {
           PRINC(" ")
-          Result = F_printif_any(g0207.Arg)
+          /*g_try(v2:"Result",loop:true) */
+          Result = F_printif_any(g0128.Arg)
           /* ERROR PROTECTION INSERTED (Result-Result) */
           if !ErrorIn(Result) {
           Core.C_pretty.Index = (Core.C_pretty.Index-3)
-          Result = g0207.Printelse()
+          /*integer->integer*//*g_try(v2:"Result",loop:true) */
+          Result = g0128.Printelse()
           /* ERROR PROTECTION INSERTED (Result-Result) */
           if !ErrorIn(Result) {
           PRINC("")
           Result = EVOID
           }}}}
-          /* Let-4 */} 
-        /* If!3 */}  else if (Equal(e,CNIL.Id()) != CTRUE) /* If:3 */{ 
-        /* Let:4 */{ 
-          var _Zl int  = Core.C_pretty.Index
-          /* noccur = 1 */
+          } 
+        }  else if (Equal(e,CNIL.Id()) != CTRUE) { 
+        { var _Zl int  = Core.C_pretty.Index
+          _ = _Zl
+          /*g_try(v2:"Result",loop:true) */
           PRINC(" ")
+          /*g_try(v2:"Result",loop:true) */
           Result = F_lbreak_void()
           /* ERROR PROTECTION INSERTED (Result-Result) */
           if !ErrorIn(Result) {
           PRINC("else ")
           F_set_level_integer(1)
+          /*g_try(v2:"Result",loop:true) */
           Result = Core.F_CALL(C_print,ARGS(e.ToEID()))
           /* ERROR PROTECTION INSERTED (Result-Result) */
           if !ErrorIn(Result) {
@@ -167,99 +176,95 @@ func (self *If ) Printelse () EID {
           Result = EVOID
           }}
           {
-          /* update:5 */{ 
+          { 
             var va_arg1 *Core.PrettyPrinter  
             var va_arg2 int 
             va_arg1 = Core.C_pretty
             va_arg2 = _Zl
-            /* ---------- now we compile update mClaire/index(va_arg1) := va_arg2 ------- */
             va_arg1.Index = va_arg2
-            Result = EID{C__INT,IVAL(va_arg2)}
-            /* update-5 */} 
+            /*integer->integer*/Result = EID{C__INT,IVAL(va_arg2)}
+            } 
           }
-          /* Let-4 */} 
+          } 
         } else {
         Result = EID{CFALSE.Id(),0}
-        /* If-3 */} 
-      /* Let-2 */} 
+        } 
+      } 
     return Result} 
   
 // The EID go function for: printelse @ If (throw: true) 
 func E_printelse_If (self EID) EID { 
-    return /*(sm for printelse @ If= EID)*/ To_If(OBJ(self)).Printelse( )} 
+    return To_If(OBJ(self)).Printelse( )} 
   
 // notice that the eval(test) is not a boolean thus the compiler will add
 // something
 // TODO: check that is is not too slow (may use a constant for _oid_(true))
-/* {1} OPT.The go function for: self_eval(self:If) [] */
+/* {1} The go function for: self_eval(self:If) [status=1] */
 func (self *If ) SelfEval () EID { 
     var Result EID 
-    /* Let:2 */{ 
-      var x *ClaireAny  
-      /* noccur = 3 */
-      var x_try02093 EID 
-      x_try02093 = EVAL(self.Test)
+    { var x *ClaireAny  
+      var try_1 EID 
+      /*g_try(v2:"try_1",loop:false) */
+      try_1 = EVAL(self.Test)
       /* ERROR PROTECTION INSERTED (x-Result) */
-      if ErrorIn(x_try02093) {Result = x_try02093
+      if ErrorIn(try_1) {Result = try_1
       } else {
-      x = ANY(x_try02093)
-      if (x == CTRUE.Id()) /* If:3 */{ 
+      x = ANY(try_1)
+      if (x == CTRUE.Id()) { 
         Result = EVAL(self.Arg)
-        /* If!3 */}  else if (x == CFALSE.Id()) /* If:3 */{ 
+        }  else if (x == CFALSE.Id()) { 
         Result = EVAL(self.Other)
-        /* If!3 */}  else if (F_boolean_I_any(x) == CTRUE) /* If:3 */{ 
+        }  else if (F_boolean_I_any(x) == CTRUE) { 
         Result = EVAL(self.Arg)
         } else {
         Result = EVAL(self.Other)
-        /* If-3 */} 
+        } 
       }
-      /* Let-2 */} 
+      } 
     return Result} 
   
 // The EID go function for: self_eval @ If (throw: true) 
 func E_self_eval_If (self EID) EID { 
-    return /*(sm for self_eval @ If= EID)*/ To_If(OBJ(self)).SelfEval( )} 
+    return To_If(OBJ(self)).SelfEval( )} 
   
 // The EVAL go function for: If 
 func EVAL_If (x *ClaireAny) EID { 
      return To_If(x).SelfEval()} 
   
 //--------------------- block structure------------------------------
-/* {1} OPT.The go function for: self_print(self:Do) [] */
+/* {1} The go function for: self_print(self:Do) [status=1] */
 func (self *Do ) SelfPrint () EID { 
     var Result EID 
-    /* Let:2 */{ 
-      var _Zl int  = Core.C_pretty.Index
-      /* noccur = 1 */
+    { var _Zl int  = Core.C_pretty.Index
+      _ = _Zl
       PRINC("(")
       F_set_level_integer(1)
+      /*g_try(v2:"Result",loop:true) */
       Result = F_printdo_list(self.Args,CTRUE)
       /* ERROR PROTECTION INSERTED (Result-Result) */
       if !ErrorIn(Result) {
-      /* update:3 */{ 
+      { 
         var va_arg1 *Core.PrettyPrinter  
         var va_arg2 int 
         va_arg1 = Core.C_pretty
         va_arg2 = _Zl
-        /* ---------- now we compile update mClaire/index(va_arg1) := va_arg2 ------- */
         va_arg1.Index = va_arg2
-        Result = EID{C__INT,IVAL(va_arg2)}
-        /* update-3 */} 
+        /*integer->integer*/Result = EID{C__INT,IVAL(va_arg2)}
+        } 
       }
-      /* Let-2 */} 
+      } 
     return Result} 
   
 // The EID go function for: self_print @ Do (throw: true) 
 func E_self_print_Do_Language (self EID) EID { 
-    return /*(sm for self_print @ Do= EID)*/ To_Do(OBJ(self)).SelfPrint( )} 
+    return To_Do(OBJ(self)).SelfPrint( )} 
   
-/* {1} OPT.The go function for: printdo(l:list,clo:boolean) [] */
+/* {1} The go function for: printdo(l:list,clo:boolean) [status=1] */
 func F_printdo_list (l *ClaireList ,clo *ClaireBoolean ) EID { 
     var Result EID 
-    /* Let:2 */{ 
-      var n int  = l.Length()
-      /* noccur = 3 */
-      /* For:3 */{ 
+    { var n int  = l.Length()
+      _ = n
+      { 
         var x *ClaireAny  
         _ = x
         Result= EID{CFALSE.Id(),0}
@@ -268,86 +273,86 @@ func F_printdo_list (l *ClaireList ,clo *ClaireBoolean ) EID {
         x_len := x_support.Length()
         for i_it := 0; i_it < x_len; i_it++ { 
           x = x_support.At(i_it)
-          var void_try5 EID 
-          _ = void_try5
+          var loop_1 EID 
+          _ = loop_1
           { 
-          if (x.Isa.IsIn(C_If) == CTRUE) /* If:5 */{ 
-            /* Let:6 */{ 
-              var g0210 *If   = To_If(x)
-              /* noccur = 1 */
-              void_try5 = g0210.Printstat()
-              /* Let-6 */} 
+          /*g_try(v2:"loop_1",loop:tuple("Result", EID)) */
+          if (x.Isa.IsIn(C_If) == CTRUE) { 
+            { var g0130 *If   = To_If(x)
+              _ = g0130
+              loop_1 = g0130.Printstat()
+              } 
             } else {
-            void_try5 = Core.F_CALL(C_print,ARGS(x.ToEID()))
-            /* If-5 */} 
-          /* ERROR PROTECTION INSERTED (void_try5-void_try5) */
-          if ErrorIn(void_try5) {Result = void_try5
+            loop_1 = Core.F_CALL(C_print,ARGS(x.ToEID()))
+            } 
+          /* ERROR PROTECTION INSERTED (loop_1-loop_1) */
+          if ErrorIn(loop_1) {Result = loop_1
           break
           } else {
           n = (n-1)
-          if (n == 0) /* If:5 */{ 
-            if (clo == CTRUE) /* If:6 */{ 
+          /*g_try(v2:"loop_1",loop:tuple("Result", EID)) */
+          if (n == 0) { 
+            if (clo == CTRUE) { 
               PRINC(")")
-              void_try5 = EVOID
+              loop_1 = EVOID
               } else {
-              void_try5 = EID{CFALSE.Id(),0}
-              /* If-6 */} 
+              loop_1 = EID{CFALSE.Id(),0}
+              } 
             } else {
             PRINC(", ")
-            void_try5 = F_lbreak_void()
-            /* ERROR PROTECTION INSERTED (void_try5-void_try5) */
-            if ErrorIn(void_try5) {Result = void_try5
+            /*g_try(v2:"loop_1",loop:tuple("Result", EID)) */
+            loop_1 = F_lbreak_void()
+            /* ERROR PROTECTION INSERTED (loop_1-loop_1) */
+            if ErrorIn(loop_1) {Result = loop_1
             break
             } else {
             }
-            /* If-5 */} 
-          /* ERROR PROTECTION INSERTED (void_try5-void_try5) */
-          if ErrorIn(void_try5) {Result = void_try5
+            } 
+          /* ERROR PROTECTION INSERTED (loop_1-loop_1) */
+          if ErrorIn(loop_1) {Result = loop_1
           break
           } else {
           }}
           }
-          /* loop-4 */} 
-        /* For-3 */} 
-      /* Let-2 */} 
+          } 
+        } 
+      } 
     return Result} 
   
 // The EID go function for: printdo @ list (throw: true) 
 func E_printdo_list (l EID,clo EID) EID { 
-    return /*(sm for printdo @ list= EID)*/ F_printdo_list(ToList(OBJ(l)),ToBoolean(OBJ(clo)) )} 
+    return F_printdo_list(ToList(OBJ(l)),ToBoolean(OBJ(clo)) )} 
   
-/* {1} OPT.The go function for: printblock(x:any) [] */
+/* {1} The go function for: printblock(x:any) [status=1] */
 func F_printblock_any (x *ClaireAny ) EID { 
     var Result EID 
-    if (x.Isa.IsIn(C_Do) == CTRUE) /* If:2 */{ 
-      /* Let:3 */{ 
-        var g0212 *Do   = To_Do(x)
-        /* noccur = 1 */
-        Result = F_printdo_list(g0212.Args,CFALSE)
-        /* Let-3 */} 
-      /* If!2 */}  else if (x.Isa.IsIn(C_If) == CTRUE) /* If:2 */{ 
-      /* Let:3 */{ 
-        var g0213 *If   = To_If(x)
-        /* noccur = 1 */
-        Result = g0213.Printstat()
-        /* Let-3 */} 
+    if (x.Isa.IsIn(C_Do) == CTRUE) { 
+      { var g0132 *Do   = To_Do(x)
+        _ = g0132
+        Result = F_printdo_list(g0132.Args,CFALSE)
+        } 
+      }  else if (x.Isa.IsIn(C_If) == CTRUE) { 
+      { var g0133 *If   = To_If(x)
+        _ = g0133
+        Result = g0133.Printstat()
+        } 
       } else {
       Result = Core.F_CALL(C_print,ARGS(x.ToEID()))
-      /* If-2 */} 
+      } 
     return Result} 
   
 // The EID go function for: printblock @ any (throw: true) 
 func E_printblock_any (x EID) EID { 
-    return /*(sm for printblock @ any= EID)*/ F_printblock_any(ANY(x) )} 
+    return F_printblock_any(ANY(x) )} 
   
 // use res:EID pragma when compiled with CLAIRE4, res:any for CLAIRE3
-/* {1} OPT.The go function for: self_eval(self:Do) [] */
+/* {1} The go function for: self_eval(self:Do) [status=1] */
 func (self *Do ) SelfEval () EID { 
     var Result EID 
-    /* Let:2 */{ 
-      var res *ClaireAny   = CEMPTY.Id()
-      /* noccur = 2 */
-      /* For:3 */{ 
+    { var res *ClaireAny   = CEMPTY.Id()
+      _ = res
+      /*g_try(v2:"Result",loop:true) */
+      { 
         var _Zx *ClaireAny  
         _ = _Zx
         Result= EID{CFALSE.Id(),0}
@@ -356,51 +361,54 @@ func (self *Do ) SelfEval () EID {
         _Zx_len := _Zx_support.Length()
         for i_it := 0; i_it < _Zx_len; i_it++ { 
           _Zx = _Zx_support.At(i_it)
-          var void_try5 EID 
-          _ = void_try5
-          var res_try02155 EID 
-          res_try02155 = EVAL(_Zx)
+          var loop_1 EID 
+          _ = loop_1
+          var try_2 EID 
+          /*g_try(v2:"try_2",loop:tuple("Result", EID)) */
+          try_2 = EVAL(_Zx)
           /* ERROR PROTECTION INSERTED (res-Result) */
-          if ErrorIn(res_try02155) {Result = res_try02155
-          Result = res_try02155
+          if ErrorIn(try_2) {Result = try_2
           break
           } else {
-          res = ANY(res_try02155)
-          void_try5 = res.ToEID()
+          res = ANY(try_2)
+          loop_1 = res.ToEID()
           }
-          /* loop-4 */} 
-        /* For-3 */} 
+          } 
+        } 
       /* ERROR PROTECTION INSERTED (Result-Result) */
       if !ErrorIn(Result) {
       Result = res.ToEID()
       }
-      /* Let-2 */} 
+      } 
     return Result} 
   
 // The EID go function for: self_eval @ Do (throw: true) 
 func E_self_eval_Do (self EID) EID { 
-    return /*(sm for self_eval @ Do= EID)*/ To_Do(OBJ(self)).SelfEval( )} 
+    return To_Do(OBJ(self)).SelfEval( )} 
   
 // The EVAL go function for: Do 
 func EVAL_Do (x *ClaireAny) EID { 
      return To_Do(x).SelfEval()} 
   
 // ----------------- lexical variable definition -----------------------
-/* {1} OPT.The go function for: self_print(self:Let) [] */
+/* {1} The go function for: self_print(self:Let) [status=1] */
 func (self *Let ) SelfPrint () EID { 
     var Result EID 
-    /* Let:2 */{ 
-      var _Zl int  = Core.C_pretty.Index
-      /* noccur = 1 */
+    { var _Zl int  = Core.C_pretty.Index
+      _ = _Zl
       F_set_level_integer(1)
+      /*g_try(v2:"Result",loop:true) */
       PRINC("let ")
+      /*g_try(v2:"Result",loop:true) */
       Result = F_ppvariable_Variable(self.ClaireVar)
       /* ERROR PROTECTION INSERTED (Result-Result) */
       if !ErrorIn(Result) {
       PRINC(" := ")
+      /*g_try(v2:"Result",loop:true) */
       Result = F_printexp_any(self.Value,CFALSE)
       /* ERROR PROTECTION INSERTED (Result-Result) */
       if !ErrorIn(Result) {
+      /*g_try(v2:"Result",loop:true) */
       Result = self.Printbody()
       /* ERROR PROTECTION INSERTED (Result-Result) */
       if !ErrorIn(Result) {
@@ -408,95 +416,97 @@ func (self *Let ) SelfPrint () EID {
       Result = EVOID
       }}}
       {
-      /* update:3 */{ 
+      { 
         var va_arg1 *Core.PrettyPrinter  
         var va_arg2 int 
         va_arg1 = Core.C_pretty
         va_arg2 = _Zl
-        /* ---------- now we compile update mClaire/index(va_arg1) := va_arg2 ------- */
         va_arg1.Index = va_arg2
-        Result = EID{C__INT,IVAL(va_arg2)}
-        /* update-3 */} 
+        /*integer->integer*/Result = EID{C__INT,IVAL(va_arg2)}
+        } 
       }
-      /* Let-2 */} 
+      } 
     return Result} 
   
 // The EID go function for: self_print @ Let (throw: true) 
 func E_self_print_Let_Language (self EID) EID { 
-    return /*(sm for self_print @ Let= EID)*/ To_Let(OBJ(self)).SelfPrint( )} 
+    return To_Let(OBJ(self)).SelfPrint( )} 
   
-/* {1} OPT.The go function for: printbody(self:Let) [] */
+/* {1} The go function for: printbody(self:Let) [status=1] */
 func (self *Let ) Printbody () EID { 
     var Result EID 
-    /* Let:2 */{ 
-      var a *ClaireAny   = self.Arg
-      /* noccur = 3 */
-      if (a.Isa.IsIn(C_Let) == CTRUE) /* If:3 */{ 
-        /* Let:4 */{ 
-          var g0217 *Let   = To_Let(a)
-          /* noccur = 3 */
+    { var a *ClaireAny   = self.Arg
+      if (a.Isa.IsIn(C_Let) == CTRUE) { 
+        { var g0136 *Let   = To_Let(a)
           PRINC(",")
+          /*g_try(v2:"Result",loop:true) */
           Result = F_lbreak_integer(4)
           /* ERROR PROTECTION INSERTED (Result-Result) */
           if !ErrorIn(Result) {
-          Result = F_ppvariable_Variable(g0217.ClaireVar)
+          /*g_try(v2:"Result",loop:true) */
+          Result = F_ppvariable_Variable(g0136.ClaireVar)
           /* ERROR PROTECTION INSERTED (Result-Result) */
           if !ErrorIn(Result) {
           PRINC(" := ")
-          Result = F_printexp_any(g0217.Value,CFALSE)
+          /*g_try(v2:"Result",loop:true) */
+          Result = F_printexp_any(g0136.Value,CFALSE)
           /* ERROR PROTECTION INSERTED (Result-Result) */
           if !ErrorIn(Result) {
           Core.C_pretty.Index = (Core.C_pretty.Index-4)
-          Result = g0217.Printbody()
+          /*integer->integer*//*g_try(v2:"Result",loop:true) */
+          Result = g0136.Printbody()
           /* ERROR PROTECTION INSERTED (Result-Result) */
           if !ErrorIn(Result) {
           PRINC("")
           Result = EVOID
           }}}}
-          /* Let-4 */} 
+          } 
         } else {
         PRINC(" in ")
+        /*g_try(v2:"Result",loop:true) */
         Result = F_lbreak_integer(2)
         /* ERROR PROTECTION INSERTED (Result-Result) */
         if !ErrorIn(Result) {
+        /*g_try(v2:"Result",loop:true) */
         Result = Core.F_CALL(C_print,ARGS(a.ToEID()))
         /* ERROR PROTECTION INSERTED (Result-Result) */
         if !ErrorIn(Result) {
         PRINC("")
         Result = EVOID
         }}
-        /* If-3 */} 
-      /* Let-2 */} 
+        } 
+      } 
     return Result} 
   
 // The EID go function for: printbody @ Let (throw: true) 
 func E_printbody_Let (self EID) EID { 
-    return /*(sm for printbody @ Let= EID)*/ To_Let(OBJ(self)).Printbody( )} 
+    return To_Let(OBJ(self)).Printbody( )} 
   
-/* {1} OPT.The go function for: self_eval(self:Let) [] */
+/* {1} The go function for: self_eval(self:Let) [status=1] */
 func (self *Let ) SelfEval () EID { 
     var Result EID 
-    /* Let:2 */{ 
-      var val *ClaireAny  
-      /* noccur = 1 */
-      var val_try02193 EID 
-      val_try02193 = EVAL(self.Value)
+    { var val *ClaireAny  
+      _ = val
+      var try_1 EID 
+      /*g_try(v2:"try_1",loop:false) */
+      try_1 = EVAL(self.Value)
       /* ERROR PROTECTION INSERTED (val-Result) */
-      if ErrorIn(val_try02193) {Result = val_try02193
+      if ErrorIn(try_1) {Result = try_1
       } else {
-      val = ANY(val_try02193)
+      val = ANY(try_1)
+      /*g_try(v2:"Result",loop:true) */
       Result = F_write_value_Variable(self.ClaireVar,val)
       /* ERROR PROTECTION INSERTED (Result-Result) */
       if !ErrorIn(Result) {
       Result = EVAL(self.Arg)
       }
       }
-      /* Let-2 */} 
+      } 
     return Result} 
   
 // The EID go function for: self_eval @ Let (throw: true) 
 func E_self_eval_Let (self EID) EID { 
-    return /*(sm for self_eval @ Let= EID)*/ To_Let(OBJ(self)).SelfEval( )} 
+    return To_Let(OBJ(self)).SelfEval( )} 
   
 // The EVAL go function for: Let 
 func EVAL_Let (x *ClaireAny) EID { 
@@ -504,25 +514,29 @@ func EVAL_Let (x *ClaireAny) EID {
   
 // a when is a special Let that filters out the unknown value !
 //
-/* {1} OPT.The go function for: self_print(self:When) [] */
+/* {1} The go function for: self_print(self:When) [status=1] */
 func (self *When ) SelfPrint () EID { 
     var Result EID 
-    /* Let:2 */{ 
-      var _Zl int  = Core.C_pretty.Index
-      /* noccur = 1 */
+    { var _Zl int  = Core.C_pretty.Index
+      _ = _Zl
       F_set_level_integer(1)
+      /*g_try(v2:"Result",loop:true) */
       PRINC("when ")
+      /*g_try(v2:"Result",loop:true) */
       Result = F_ppvariable_Variable(self.ClaireVar)
       /* ERROR PROTECTION INSERTED (Result-Result) */
       if !ErrorIn(Result) {
       PRINC(" := ")
+      /*g_try(v2:"Result",loop:true) */
       Result = F_printexp_any(self.Value,CFALSE)
       /* ERROR PROTECTION INSERTED (Result-Result) */
       if !ErrorIn(Result) {
       PRINC(" in ")
+      /*g_try(v2:"Result",loop:true) */
       Result = F_lbreak_integer(2)
       /* ERROR PROTECTION INSERTED (Result-Result) */
       if !ErrorIn(Result) {
+      /*g_try(v2:"Result",loop:true) */
       Result = Core.F_CALL(C_print,ARGS(self.Arg.ToEID()))
       /* ERROR PROTECTION INSERTED (Result-Result) */
       if !ErrorIn(Result) {
@@ -530,13 +544,16 @@ func (self *When ) SelfPrint () EID {
       Result = EVOID
       }}}}
       {
-      if (self.Other != CNULL) /* If:3 */{ 
+      /*g_try(v2:"Result",loop:true) */
+      if (self.Other != CNULL) { 
         PRINC(" ")
+        /*g_try(v2:"Result",loop:true) */
         Result = F_lbreak_void()
         /* ERROR PROTECTION INSERTED (Result-Result) */
         if !ErrorIn(Result) {
         PRINC("else ")
         F_set_level_integer(1)
+        /*g_try(v2:"Result",loop:true) */
         Result = Core.F_CALL(C_print,ARGS(self.Other.ToEID()))
         /* ERROR PROTECTION INSERTED (Result-Result) */
         if !ErrorIn(Result) {
@@ -545,43 +562,40 @@ func (self *When ) SelfPrint () EID {
         }}
         } else {
         Result = EID{CFALSE.Id(),0}
-        /* If-3 */} 
+        } 
       /* ERROR PROTECTION INSERTED (Result-Result) */
       if !ErrorIn(Result) {
-      /* update:3 */{ 
+      { 
         var va_arg1 *Core.PrettyPrinter  
         var va_arg2 int 
         va_arg1 = Core.C_pretty
         va_arg2 = _Zl
-        /* ---------- now we compile update mClaire/index(va_arg1) := va_arg2 ------- */
         va_arg1.Index = va_arg2
-        Result = EID{C__INT,IVAL(va_arg2)}
-        /* update-3 */} 
+        /*integer->integer*/Result = EID{C__INT,IVAL(va_arg2)}
+        } 
       }}
-      /* Let-2 */} 
+      } 
     return Result} 
   
 // The EID go function for: self_print @ When (throw: true) 
 func E_self_print_When_Language (self EID) EID { 
-    return /*(sm for self_print @ When= EID)*/ To_When(OBJ(self)).SelfPrint( )} 
+    return To_When(OBJ(self)).SelfPrint( )} 
   
-/* {1} OPT.The go function for: self_eval(self:When) [] */
+/* {1} The go function for: self_eval(self:When) [status=1] */
 func (self *When ) SelfEval () EID { 
     var Result EID 
-    /* Let:2 */{ 
-      var val *ClaireAny  
-      /* noccur = 2 */
-      var val_try02203 EID 
-      val_try02203 = EVAL(self.Value)
+    { var val *ClaireAny  
+      var try_1 EID 
+      /*g_try(v2:"try_1",loop:false) */
+      try_1 = EVAL(self.Value)
       /* ERROR PROTECTION INSERTED (val-Result) */
-      if ErrorIn(val_try02203) {Result = val_try02203
+      if ErrorIn(try_1) {Result = try_1
       } else {
-      val = ANY(val_try02203)
-      /* Let:3 */{ 
-        var n int  = ClEnv.Trace_I
-        /* noccur = 0 */
+      val = ANY(try_1)
+      { var n int  = ClEnv.Trace_I
         _ = n
-        if (val != CNULL) /* If:4 */{ 
+        if (val != CNULL) { 
+          /*g_try(v2:"Result",loop:true) */
           Result = F_write_value_Variable(self.ClaireVar,val)
           /* ERROR PROTECTION INSERTED (Result-Result) */
           if !ErrorIn(Result) {
@@ -589,15 +603,15 @@ func (self *When ) SelfEval () EID {
           }
           } else {
           Result = EVAL(self.Other)
-          /* If-4 */} 
-        /* Let-3 */} 
+          } 
+        } 
       }
-      /* Let-2 */} 
+      } 
     return Result} 
   
 // The EID go function for: self_eval @ When (throw: true) 
 func E_self_eval_When (self EID) EID { 
-    return /*(sm for self_eval @ When= EID)*/ To_When(OBJ(self)).SelfEval( )} 
+    return To_When(OBJ(self)).SelfEval( )} 
   
 // The EVAL go function for: When 
 func EVAL_When (x *ClaireAny) EID { 
@@ -610,28 +624,30 @@ func EVAL_When (x *ClaireAny) EID {
 //note: the Let* is also used for multi-assignments
 // Let*(v,f(),(v1 := v[1], v2 := v[2], ...))   <=>  (v1,v2,...vn) := f()
 //
-/* {1} OPT.The go function for: self_print(self:Let+) [] */
+/* {1} The go function for: self_print(self:Let+) [status=1] */
 func (self *Let_plus ) SelfPrint () EID { 
     var Result EID 
-    /* Let:2 */{ 
-      var _Zl int  = Core.C_pretty.Index
-      /* noccur = 1 */
-      /* Let:3 */{ 
-        var l *ClaireList   = To_Do(self.Arg).Args
-        /* noccur = 2 */
+    { var _Zl int  = Core.C_pretty.Index
+      _ = _Zl
+      { var l *ClaireList   = To_Do(self.Arg).Args
         F_set_level_integer(1)
+        /*g_try(v2:"Result",loop:true) */
         PRINC("let ")
+        /*g_try(v2:"Result",loop:true) */
         Result = F_printexp_any(self.Value,CFALSE)
         /* ERROR PROTECTION INSERTED (Result-Result) */
         if !ErrorIn(Result) {
         PRINC(" := ")
+        /*g_try(v2:"Result",loop:true) */
         Result = F_printexp_any(ToList(OBJ(Core.F_CALL(C_args,ARGS(l.At(1-1).ToEID())))).At(3-1),CFALSE)
         /* ERROR PROTECTION INSERTED (Result-Result) */
         if !ErrorIn(Result) {
         PRINC(" in ")
+        /*g_try(v2:"Result",loop:true) */
         Result = F_lbreak_integer(2)
         /* ERROR PROTECTION INSERTED (Result-Result) */
         if !ErrorIn(Result) {
+        /*g_try(v2:"Result",loop:true) */
         Result = Core.F_CALL(C_print,ARGS(To_Let(l.At(2-1)).Value.ToEID()))
         /* ERROR PROTECTION INSERTED (Result-Result) */
         if !ErrorIn(Result) {
@@ -639,77 +655,75 @@ func (self *Let_plus ) SelfPrint () EID {
         Result = EVOID
         }}}}
         {
-        /* update:4 */{ 
+        { 
           var va_arg1 *Core.PrettyPrinter  
           var va_arg2 int 
           va_arg1 = Core.C_pretty
           va_arg2 = _Zl
-          /* ---------- now we compile update mClaire/index(va_arg1) := va_arg2 ------- */
           va_arg1.Index = va_arg2
-          Result = EID{C__INT,IVAL(va_arg2)}
-          /* update-4 */} 
+          /*integer->integer*/Result = EID{C__INT,IVAL(va_arg2)}
+          } 
         }
-        /* Let-3 */} 
-      /* Let-2 */} 
+        } 
+      } 
     return Result} 
   
 // The EID go function for: self_print @ Let+ (throw: true) 
 func E_self_print_Let_plus_Language (self EID) EID { 
-    return /*(sm for self_print @ Let+= EID)*/ To_Let_plus(OBJ(self)).SelfPrint( )} 
+    return To_Let_plus(OBJ(self)).SelfPrint( )} 
   
-/* {1} OPT.The go function for: self_print(self:Let*) [] */
+/* {1} The go function for: self_print(self:Let*) [status=1] */
 func (self *Let_star ) SelfPrint () EID { 
     var Result EID 
-    /* Let:2 */{ 
-      var _Zl int  = Core.C_pretty.Index
-      /* noccur = 1 */
-      /* Let:3 */{ 
-        var l *ClaireAny   = self.Arg
-        /* noccur = 6 */
+    { var _Zl int  = Core.C_pretty.Index
+      _ = _Zl
+      { var l *ClaireAny   = self.Arg
         F_set_level_integer(1)
-        if (l.Isa.IsIn(C_Let) == CTRUE) /* If:4 */{ 
+        /*g_try(v2:"Result",loop:true) */
+        if (l.Isa.IsIn(C_Let) == CTRUE) { 
           PRINC("let (")
+          /*g_try(v2:"Result",loop:true) */
           Result= EID{CFALSE.Id(),0}
-          for (CTRUE == CTRUE) /* while:5 */{ 
-            var void_try6 EID 
-            _ = void_try6
+          for (CTRUE == CTRUE) { 
+            /* While stat, v:"Result" loop:true */
+            var loop_1 EID 
+            _ = loop_1
             { 
-            void_try6 = Core.F_CALL(C_Language_ppvariable,ARGS(Core.F_CALL(C_var,ARGS(l.ToEID()))))
-            /* ERROR PROTECTION INSERTED (void_try6-void_try6) */
-            if ErrorIn(void_try6) {Result = void_try6
+            /*g_try(v2:"loop_1",loop:tuple("Result", EID)) */
+            loop_1 = Core.F_CALL(C_Language_ppvariable,ARGS(Core.F_CALL(C_var,ARGS(l.ToEID()))))
+            /* ERROR PROTECTION INSERTED (loop_1-loop_1) */
+            if ErrorIn(loop_1) {Result = loop_1
             break
             } else {
-            /* Let:6 */{ 
-              var lnext *ClaireAny   = ANY(Core.F_CALL(C_arg,ARGS(l.ToEID())))
-              /* noccur = 3 */
-              var g0222I *ClaireBoolean  
-              if (lnext.Isa.IsIn(C_Let) == CTRUE) /* If:7 */{ 
-                /* Let:8 */{ 
-                  var g0221 *Let   = To_Let(lnext)
-                  /* noccur = 2 */
-                  g0222I = MakeBoolean((g0221.Value.Isa.IsIn(C_Call) == CTRUE) && (ToList(OBJ(Core.F_CALL(C_args,ARGS(g0221.Value.ToEID())))).At(1-1) == self.ClaireVar.Id()))
-                  /* Let-8 */} 
+            { var lnext *ClaireAny   = ANY(Core.F_CALL(C_arg,ARGS(l.ToEID())))
+              var g0139I *ClaireBoolean  
+              if (lnext.Isa.IsIn(C_Let) == CTRUE) { 
+                { var g0138 *Let   = To_Let(lnext)
+                  g0139I = MakeBoolean((g0138.Value.Isa.IsIn(C_Call) == CTRUE) && (ToList(OBJ(Core.F_CALL(C_args,ARGS(g0138.Value.ToEID())))).At(1-1) == self.ClaireVar.Id()))
+                  } 
                 } else {
-                g0222I = CFALSE
-                /* If-7 */} 
-              if (g0222I == CTRUE) /* If:7 */{ 
+                g0139I = CFALSE
+                } 
+              if (g0139I == CTRUE) { 
                 PRINC(",")
                 l = lnext
                 } else {
-                 /*v = Result, s =EID*/
-Result = EID{CTRUE.Id(),0}
+                Result = EID{CTRUE.Id(),0}
                 break
-                /* If-7 */} 
-              /* Let-6 */} 
+                } 
+              } 
             }
-            /* while-5 */} 
+            /* try?:false, v2:"v_while5" loop will be:tuple("Result", EID) */
+            } 
           }
           /* ERROR PROTECTION INSERTED (Result-Result) */
           if !ErrorIn(Result) {
           PRINC(") := ")
+          /*g_try(v2:"Result",loop:true) */
           Result = F_printexp_any(self.Value,CFALSE)
           /* ERROR PROTECTION INSERTED (Result-Result) */
           if !ErrorIn(Result) {
+          /*g_try(v2:"Result",loop:true) */
           Result = To_Let(l).Printbody()
           /* ERROR PROTECTION INSERTED (Result-Result) */
           if !ErrorIn(Result) {
@@ -718,10 +732,10 @@ Result = EID{CTRUE.Id(),0}
           }}}
           } else {
           PRINC("(")
-          /* Let:5 */{ 
-            var _Zf *ClaireBoolean   = CTRUE
-            /* noccur = 2 */
-            /* For:6 */{ 
+          /*g_try(v2:"Result",loop:true) */
+          { var _Zf *ClaireBoolean   = CTRUE
+            _ = _Zf
+            { 
               var _Za *ClaireAny  
               _ = _Za
               Result= EID{CFALSE.Id(),0}
@@ -730,104 +744,108 @@ Result = EID{CTRUE.Id(),0}
               _Za_len := _Za_support.Length()
               for i_it := 0; i_it < _Za_len; i_it++ { 
                 _Za = _Za_support.At(i_it)
-                var void_try8 EID 
-                _ = void_try8
+                var loop_2 EID 
+                _ = loop_2
                 { 
-                if (_Zf == CTRUE) /* If:8 */{ 
+                if (_Zf == CTRUE) { 
                   _Zf = CFALSE
                   } else {
                   PRINC(",")
-                  /* If-8 */} 
-                void_try8 = Core.F_CALL(C_Language_ppvariable,ARGS(Core.F_CALL(C_var,ARGS(_Za.ToEID()))))
-                /* ERROR PROTECTION INSERTED (void_try8-void_try8) */
-                if ErrorIn(void_try8) {Result = void_try8
+                  } 
+                /*g_try(v2:"loop_2",loop:tuple("Result", EID)) */
+                loop_2 = Core.F_CALL(C_Language_ppvariable,ARGS(Core.F_CALL(C_var,ARGS(_Za.ToEID()))))
+                /* ERROR PROTECTION INSERTED (loop_2-loop_2) */
+                if ErrorIn(loop_2) {Result = loop_2
                 break
                 } else {
                 }
                 }
-                /* loop-7 */} 
-              /* For-6 */} 
-            /* Let-5 */} 
+                } 
+              } 
+            } 
           /* ERROR PROTECTION INSERTED (Result-Result) */
           if !ErrorIn(Result) {
           PRINC(") := ")
+          /*g_try(v2:"Result",loop:true) */
           Result = F_printexp_any(self.Value,CFALSE)
           /* ERROR PROTECTION INSERTED (Result-Result) */
           if !ErrorIn(Result) {
           PRINC("")
           Result = EVOID
           }}
-          /* If-4 */} 
+          } 
         /* ERROR PROTECTION INSERTED (Result-Result) */
         if !ErrorIn(Result) {
-        /* update:4 */{ 
+        { 
           var va_arg1 *Core.PrettyPrinter  
           var va_arg2 int 
           va_arg1 = Core.C_pretty
           va_arg2 = _Zl
-          /* ---------- now we compile update mClaire/index(va_arg1) := va_arg2 ------- */
           va_arg1.Index = va_arg2
-          Result = EID{C__INT,IVAL(va_arg2)}
-          /* update-4 */} 
+          /*integer->integer*/Result = EID{C__INT,IVAL(va_arg2)}
+          } 
         }
-        /* Let-3 */} 
-      /* Let-2 */} 
+        } 
+      } 
     return Result} 
   
 // The EID go function for: self_print @ Let* (throw: true) 
 func E_self_print_Let_star_Language (self EID) EID { 
-    return /*(sm for self_print @ Let*= EID)*/ To_Let_star(OBJ(self)).SelfPrint( )} 
+    return To_Let_star(OBJ(self)).SelfPrint( )} 
   
 // *********************************************************************
 // *     Part 2: set control structures                                *
 // *********************************************************************
 // for is the simplest evaluation loop
 //
-/* {1} OPT.The go function for: self_print(self:For) [] */
+/* {1} The go function for: self_print(self:For) [status=1] */
 func (self *For ) SelfPrint () EID { 
     var Result EID 
     PRINC("for ")
+    /*g_try(v2:"Result",loop:true) */
     Result = F_ppvariable_Variable(self.ClaireVar)
     /* ERROR PROTECTION INSERTED (Result-Result) */
     if !ErrorIn(Result) {
     PRINC(" in ")
-    /* Let:2 */{ 
-      var _Zl int  = Core.C_pretty.Index
-      /* noccur = 1 */
+    /*g_try(v2:"Result",loop:true) */
+    { var _Zl int  = Core.C_pretty.Index
+      _ = _Zl
       F_set_level_void()
+      /*g_try(v2:"Result",loop:true) */
       Result = F_printexp_any(self.SetArg,CFALSE)
       /* ERROR PROTECTION INSERTED (Result-Result) */
       if !ErrorIn(Result) {
-      /* update:3 */{ 
+      { 
         var va_arg1 *Core.PrettyPrinter  
         var va_arg2 int 
         va_arg1 = Core.C_pretty
         va_arg2 = _Zl
-        /* ---------- now we compile update mClaire/index(va_arg1) := va_arg2 ------- */
         va_arg1.Index = va_arg2
-        Result = EID{C__INT,IVAL(va_arg2)}
-        /* update-3 */} 
+        /*integer->integer*/Result = EID{C__INT,IVAL(va_arg2)}
+        } 
       }
-      /* Let-2 */} 
+      } 
     /* ERROR PROTECTION INSERTED (Result-Result) */
     if !ErrorIn(Result) {
     PRINC(" ")
+    /*g_try(v2:"Result",loop:true) */
     Core.C_pretty.Index = (Core.C_pretty.Index+2)
+    /*integer->integer*//*g_try(v2:"Result",loop:true) */
     Result = F_lbreak_void()
     /* ERROR PROTECTION INSERTED (Result-Result) */
     if !ErrorIn(Result) {
+    /*g_try(v2:"Result",loop:true) */
     Result = Core.F_CALL(C_print,ARGS(self.Arg.ToEID()))
     /* ERROR PROTECTION INSERTED (Result-Result) */
     if !ErrorIn(Result) {
-    /* update:2 */{ 
+    { 
       var va_arg1 *Core.PrettyPrinter  
       var va_arg2 int 
       va_arg1 = Core.C_pretty
       va_arg2 = (Core.C_pretty.Index-2)
-      /* ---------- now we compile update mClaire/index(va_arg1) := va_arg2 ------- */
       va_arg1.Index = va_arg2
-      Result = EID{C__INT,IVAL(va_arg2)}
-      /* update-2 */} 
+      /*integer->integer*/Result = EID{C__INT,IVAL(va_arg2)}
+      } 
     }}
     {
     PRINC("")
@@ -837,229 +855,237 @@ func (self *For ) SelfPrint () EID {
   
 // The EID go function for: self_print @ For (throw: true) 
 func E_self_print_For_Language (self EID) EID { 
-    return /*(sm for self_print @ For= EID)*/ To_For(OBJ(self)).SelfPrint( )} 
+    return To_For(OBJ(self)).SelfPrint( )} 
   
-/* {1} OPT.The go function for: self_eval(self:For) [] */
+/* {1} The go function for: self_eval(self:For) [status=1] */
 func (self *For ) SelfEval () EID { 
     var Result EID 
-    /* Let:2 */{ 
-      var x *ClaireAny  
-      /* noccur = 11 */
-      var x_try02343 EID 
-      x_try02343 = EVAL(self.SetArg)
+    { var x *ClaireAny  
+      var try_1 EID 
+      /*g_try(v2:"try_1",loop:false) */
+      try_1 = EVAL(self.SetArg)
       /* ERROR PROTECTION INSERTED (x-Result) */
-      if ErrorIn(x_try02343) {Result = x_try02343
+      if ErrorIn(try_1) {Result = try_1
       } else {
-      x = ANY(x_try02343)
-      h_index := ClEnv.Index /* Handle */
-      h_base := ClEnv.Base
-      if (C_class.Id() == x.Isa.Id()) /* If:3 */{ 
-        /* Let:4 */{ 
-          var g0225 *ClaireClass   = ToClass(x)
-          /* noccur = 1 */
-          /* For:5 */{ 
-            var y *ClaireAny  
-            _ = y
-            Result= EID{CFALSE.Id(),0}
-            for _,y = range(g0225.Descendents.Values)/* loop:6 */{ 
-              var void_try7 EID 
-              _ = void_try7
-              /* For:7 */{ 
-                var z *ClaireAny  
-                _ = z
-                void_try7= EID{CFALSE.Id(),0}
-                var z_support *ClaireList  
-                z_support = ToClass(y).Instances
-                z_len := z_support.Length()
-                for i_it := 0; i_it < z_len; i_it++ { 
-                  z = z_support.At(i_it)
-                  var void_try9 EID 
-                  _ = void_try9
-                  { 
-                  void_try9 = F_write_value_Variable(self.ClaireVar,z)
-                  /* ERROR PROTECTION INSERTED (void_try9-void_try9) */
-                  if ErrorIn(void_try9) {void_try7 = void_try9
-                  break
-                  } else {
-                  void_try9 = EVAL(self.Arg)
-                  /* ERROR PROTECTION INSERTED (void_try9-void_try9) */
-                  if ErrorIn(void_try9) {void_try7 = void_try9
-                  break
-                  } else {
-                  }}
-                  }
-                  /* loop-8 */} 
-                /* For-7 */} 
-              /* ERROR PROTECTION INSERTED (void_try7-Result) */
-              if ErrorIn(void_try7) {Result = void_try7
-              Result = void_try7
-              break
-              } else {
-              }
-              /* loop-6 */} 
-            /* For-5 */} 
-          /* Let-4 */} 
-        /* If!3 */}  else if (x.Isa.IsIn(C_list) == CTRUE) /* If:3 */{ 
-        /* Let:4 */{ 
-          var g0226 *ClaireList   = ToList(x)
-          /* noccur = 1 */
-          /* For:5 */{ 
-            var z *ClaireAny  
-            _ = z
-            Result= EID{CFALSE.Id(),0}
-            var z_support *ClaireList  
-            z_support = g0226
-            z_len := z_support.Length()
-            for i_it := 0; i_it < z_len; i_it++ { 
-              z = z_support.At(i_it)
-              var void_try7 EID 
-              _ = void_try7
-              { 
-              void_try7 = F_write_value_Variable(self.ClaireVar,z)
-              /* ERROR PROTECTION INSERTED (void_try7-void_try7) */
-              if ErrorIn(void_try7) {Result = void_try7
-              break
-              } else {
-              void_try7 = EVAL(self.Arg)
-              /* ERROR PROTECTION INSERTED (void_try7-void_try7) */
-              if ErrorIn(void_try7) {Result = void_try7
-              break
-              } else {
-              }}
-              }
-              /* loop-6 */} 
-            /* For-5 */} 
-          /* Let-4 */} 
-        /* If!3 */}  else if (x.Isa.IsIn(C_array) == CTRUE) /* If:3 */{ 
-        /* Let:4 */{ 
-          var g0227 *ClaireList   = ToArray(x)
-          /* noccur = 2 */
-          /* Let:5 */{ 
-            var n int  = g0227.Length()
-            /* noccur = 1 */
-            /* Let:6 */{ 
-              var g0228 int  = 1
-              /* noccur = 4 */
-              /* Let:7 */{ 
-                var g0229 int  = n
-                /* noccur = 1 */
-                Result= EID{CFALSE.Id(),0}
-                for (g0228 <= g0229) /* while:8 */{ 
-                  var void_try9 EID 
-                  _ = void_try9
-                  { 
-                  /* Let:9 */{ 
-                    var z *ClaireAny   = ToList(g0227.Id()).At(g0228-1)
-                    /* noccur = 1 */
-                    void_try9 = F_write_value_Variable(self.ClaireVar,z)
-                    /* ERROR PROTECTION INSERTED (void_try9-void_try9) */
-                    if ErrorIn(void_try9) {Result = void_try9
+      x = ANY(try_1)
+      { 
+        h_index := ClEnv.Index
+        h_base := ClEnv.Base
+        if (C_class.Id() == x.Isa.Id()) { 
+          { var g0142 *ClaireClass   = ToClass(x)
+            _ = g0142
+            { 
+              var y *ClaireClass  
+              _ = y
+              var y_iter *ClaireAny  
+              Result= EID{CFALSE.Id(),0}
+              var y_support *ClaireSet  
+              y_support = g0142.Descendents
+              for i_it := 0; i_it < y_support.Count; i_it++ { 
+                y_iter = y_support.At(i_it)
+                y = ToClass(y_iter)
+                var loop_2 EID 
+                _ = loop_2
+                /*g_try(v2:"loop_2",loop:tuple("Result", EID)) */
+                { 
+                  var z *ClaireAny  
+                  _ = z
+                  loop_2= EID{CFALSE.Id(),0}
+                  var z_support *ClaireList  
+                  z_support = y.Instances
+                  z_len := z_support.Length()
+                  for i_it := 0; i_it < z_len; i_it++ { 
+                    z = z_support.At(i_it)
+                    var loop_3 EID 
+                    _ = loop_3
+                    { 
+                    /*g_try(v2:"loop_3",loop:tuple("loop_2", EID)) */
+                    loop_3 = F_write_value_Variable(self.ClaireVar,z)
+                    /* ERROR PROTECTION INSERTED (loop_3-loop_3) */
+                    if ErrorIn(loop_3) {loop_2 = loop_3
                     break
                     } else {
-                    void_try9 = EVAL(self.Arg)
-                    /* ERROR PROTECTION INSERTED (void_try9-void_try9) */
-                    if ErrorIn(void_try9) {Result = void_try9
+                    /*g_try(v2:"loop_3",loop:tuple("loop_2", EID)) */
+                    loop_3 = EVAL(self.Arg)
+                    /* ERROR PROTECTION INSERTED (loop_3-loop_3) */
+                    if ErrorIn(loop_3) {loop_2 = loop_3
                     break
                     } else {
                     }}
-                    /* Let-9 */} 
-                  /* ERROR PROTECTION INSERTED (void_try9-void_try9) */
-                  if ErrorIn(void_try9) {Result = void_try9
-                  break
-                  } else {
-                  g0228 = (g0228+1)
-                  }
-                  /* while-8 */} 
-                }
-                /* Let-7 */} 
-              /* Let-6 */} 
-            /* Let-5 */} 
-          /* Let-4 */} 
-        /* If!3 */}  else if (x.Isa.IsIn(C_Interval) == CTRUE) /* If:3 */{ 
-        /* Let:4 */{ 
-          var g0230 *ClaireInterval   = To_Interval(x)
-          /* noccur = 2 */
-          /* Let:5 */{ 
-            var y int  = g0230.Arg1
-            /* noccur = 4 */
-            /* Let:6 */{ 
-              var g0231 int  = g0230.Arg2
-              /* noccur = 1 */
-              Result= EID{CFALSE.Id(),0}
-              for (y <= g0231) /* while:7 */{ 
-                var void_try8 EID 
-                _ = void_try8
-                { 
-                void_try8 = self.ClaireVar.WriteEID(EID{C__INT,IVAL(y)})
-                /* ERROR PROTECTION INSERTED (void_try8-void_try8) */
-                if ErrorIn(void_try8) {Result = void_try8
+                    }
+                    } 
+                  } 
+                /* ERROR PROTECTION INSERTED (loop_2-Result) */
+                if ErrorIn(loop_2) {Result = loop_2
                 break
                 } else {
-                void_try8 = EVAL(self.Arg)
-                /* ERROR PROTECTION INSERTED (void_try8-void_try8) */
-                if ErrorIn(void_try8) {Result = void_try8
+                }
+                } 
+              } 
+            } 
+          }  else if (x.Isa.IsIn(C_list) == CTRUE) { 
+          { var g0143 *ClaireList   = ToList(x)
+            _ = g0143
+            { 
+              var z *ClaireAny  
+              _ = z
+              Result= EID{CFALSE.Id(),0}
+              var z_support *ClaireList  
+              z_support = g0143
+              z_len := z_support.Length()
+              for i_it := 0; i_it < z_len; i_it++ { 
+                z = z_support.At(i_it)
+                var loop_4 EID 
+                _ = loop_4
+                { 
+                /*g_try(v2:"loop_4",loop:tuple("Result", EID)) */
+                loop_4 = F_write_value_Variable(self.ClaireVar,z)
+                /* ERROR PROTECTION INSERTED (loop_4-loop_4) */
+                if ErrorIn(loop_4) {Result = loop_4
+                break
+                } else {
+                /*g_try(v2:"loop_4",loop:tuple("Result", EID)) */
+                loop_4 = EVAL(self.Arg)
+                /* ERROR PROTECTION INSERTED (loop_4-loop_4) */
+                if ErrorIn(loop_4) {Result = loop_4
                 break
                 } else {
                 }}
-                {
-                y = (y+1)
                 }
-                /* while-7 */} 
-              }
-              /* Let-6 */} 
-            /* Let-5 */} 
-          /* Let-4 */} 
-        /* If!3 */}  else if (x.Isa.IsIn(C_collection) == CTRUE) /* If:3 */{ 
-        /* Let:4 */{ 
-          var g0232 *ClaireCollection   = ToCollection(x)
-          /* noccur = 1 */
-          /* For:5 */{ 
-            var y *ClaireAny  
-            _ = y
-            Result= EID{CFALSE.Id(),0}
-            var y_support *ClaireList  
-            var y_support_try02356 EID 
-            y_support_try02356 = Core.F_enumerate_any(g0232.Id())
-            /* ERROR PROTECTION INSERTED (y_support-Result) */
-            if ErrorIn(y_support_try02356) {Result = y_support_try02356
-            } else {
-            y_support = ToList(OBJ(y_support_try02356))
-            y_len := y_support.Length()
-            for i_it := 0; i_it < y_len; i_it++ { 
-              y = y_support.At(i_it)
-              var void_try7 EID 
-              _ = void_try7
-              { 
-              void_try7 = F_write_value_Variable(self.ClaireVar,y)
-              /* ERROR PROTECTION INSERTED (void_try7-void_try7) */
-              if ErrorIn(void_try7) {Result = void_try7
-              break
+                } 
+              } 
+            } 
+          }  else if (x.Isa.IsIn(C_array) == CTRUE) { 
+          { var g0144 *ClaireList   = ToArray(x)
+            { var n int  = g0144.Length()
+              _ = n
+              { var g0145 int  = 1
+                { var g0146 int  = n
+                  _ = g0146
+                  Result= EID{CFALSE.Id(),0}
+                  for (g0145 <= g0146) { 
+                    /* While stat, v:"Result" loop:false */
+                    var loop_5 EID 
+                    _ = loop_5
+                    { 
+                    /*g_try(v2:"loop_5",loop:tuple("Result", EID)) */
+                    { var z *ClaireAny   = ToList(g0144.Id()).At(g0145-1)
+                      _ = z
+                      /*g_try(v2:"loop_5",loop:tuple("Result", EID)) */
+                      loop_5 = F_write_value_Variable(self.ClaireVar,z)
+                      /* ERROR PROTECTION INSERTED (loop_5-loop_5) */
+                      if ErrorIn(loop_5) {Result = loop_5
+                      break
+                      } else {
+                      /*g_try(v2:"loop_5",loop:tuple("Result", EID)) */
+                      loop_5 = EVAL(self.Arg)
+                      /* ERROR PROTECTION INSERTED (loop_5-loop_5) */
+                      if ErrorIn(loop_5) {Result = loop_5
+                      break
+                      } else {
+                      }}
+                      } 
+                    /* ERROR PROTECTION INSERTED (loop_5-loop_5) */
+                    if ErrorIn(loop_5) {Result = loop_5
+                    break
+                    } else {
+                    g0145 = (g0145+1)
+                    }
+                    /* try?:false, v2:"v_while9" loop will be:tuple("Result", EID) */
+                    } 
+                  }
+                  } 
+                } 
+              } 
+            } 
+          }  else if (x.Isa.IsIn(C_Interval) == CTRUE) { 
+          { var g0147 *ClaireInterval   = To_Interval(x)
+            { var y int  = g0147.Arg1
+              { var g0148 int  = g0147.Arg2
+                _ = g0148
+                Result= EID{CFALSE.Id(),0}
+                for (y <= g0148) { 
+                  /* While stat, v:"Result" loop:false */
+                  var loop_6 EID 
+                  _ = loop_6
+                  { 
+                  /*g_try(v2:"loop_6",loop:tuple("Result", EID)) */
+                  /*g_try(v2:"loop_6",loop:tuple("Result", EID)) */
+                  loop_6 = self.ClaireVar.WriteEID(EID{C__INT,IVAL(y)})
+                  /* ERROR PROTECTION INSERTED (loop_6-loop_6) */
+                  if ErrorIn(loop_6) {Result = loop_6
+                  break
+                  } else {
+                  /*g_try(v2:"loop_6",loop:tuple("Result", EID)) */
+                  loop_6 = EVAL(self.Arg)
+                  /* ERROR PROTECTION INSERTED (loop_6-loop_6) */
+                  if ErrorIn(loop_6) {Result = loop_6
+                  break
+                  } else {
+                  }}
+                  {
+                  y = (y+1)
+                  }
+                  /* try?:false, v2:"v_while8" loop will be:tuple("Result", EID) */
+                  } 
+                }
+                } 
+              } 
+            } 
+          }  else if (x.Isa.IsIn(C_collection) == CTRUE) { 
+          { var g0149 *ClaireCollection   = ToCollection(x)
+            _ = g0149
+            { 
+              var y *ClaireAny  
+              _ = y
+              Result= EID{CFALSE.Id(),0}
+              var y_support *ClaireList  
+              var try_7 EID 
+              /*g_try(v2:"try_7",loop:false) */
+              try_7 = Core.F_enumerate_any(g0149.Id())
+              /* ERROR PROTECTION INSERTED (y_support-Result) */
+              if ErrorIn(try_7) {Result = try_7
               } else {
-              void_try7 = EVAL(self.Arg)
-              /* ERROR PROTECTION INSERTED (void_try7-void_try7) */
-              if ErrorIn(void_try7) {Result = void_try7
-              break
-              } else {
-              }}
-              }}
-              /* loop-6 */} 
-            /* For-5 */} 
-          /* Let-4 */} 
-        } else {
-        Result = ToException(Core.C_general_error.Make(MakeString("[136] ~S is not a collection !").Id(),MakeConstantList(x).Id())).Close()
-        /* If-3 */} 
-      if ErrorIn(Result) && ToType(Core.C_return_error.Id()).Contains(ANY(Result)) == CTRUE { 
-        /* s=EID */ClEnv.Index = h_index
-        ClEnv.Base = h_base
-        Result = Core.F_CALL(C_arg,ARGS(EID{ClEnv.Exception_I.Id(),0}))
+              y_support = ToList(OBJ(try_7))
+              y_len := y_support.Length()
+              for i_it := 0; i_it < y_len; i_it++ { 
+                y = y_support.At(i_it)
+                var loop_8 EID 
+                _ = loop_8
+                { 
+                /*g_try(v2:"loop_8",loop:tuple("Result", EID)) */
+                loop_8 = F_write_value_Variable(self.ClaireVar,y)
+                /* ERROR PROTECTION INSERTED (loop_8-loop_8) */
+                if ErrorIn(loop_8) {Result = loop_8
+                break
+                } else {
+                /*g_try(v2:"loop_8",loop:tuple("Result", EID)) */
+                loop_8 = EVAL(self.Arg)
+                /* ERROR PROTECTION INSERTED (loop_8-loop_8) */
+                if ErrorIn(loop_8) {Result = loop_8
+                break
+                } else {
+                }}
+                }}
+                } 
+              } 
+            } 
+          } else {
+          Result = ToException(Core.C_general_error.Make(MakeString("[136] ~S is not a collection !").Id(),MakeConstantList(x).Id())).Close()
+          } 
+        if ErrorIn(Result) && ToType(Core.C_return_error.Id()).Contains(ANY(Result)) == CTRUE { 
+          ClEnv.Index = h_index
+          ClEnv.Base = h_base
+          Result = Core.F_CALL(C_arg,ARGS(EID{ClEnv.Exception_I.Id(),0}))
+          } 
         } 
       }
-      /* Let-2 */} 
+      } 
     return Result} 
   
 // The EID go function for: self_eval @ For (throw: true) 
 func E_self_eval_For (self EID) EID { 
-    return /*(sm for self_eval @ For= EID)*/ To_For(OBJ(self)).SelfEval( )} 
+    return To_For(OBJ(self)).SelfEval( )} 
   
 // The EVAL go function for: For 
 func EVAL_For (x *ClaireAny) EID { 
@@ -1067,39 +1093,42 @@ func EVAL_For (x *ClaireAny) EID {
   
 // [collect VAR in SET_EXPR, ...] is the same as a "for", but returns the list of values
 //
-/* {1} OPT.The go function for: self_print(self:Collect) [] */
+/* {1} The go function for: self_print(self:Collect) [status=1] */
 func (self *Collect ) SelfPrint () EID { 
     var Result EID 
     PRINC("list{ ")
+    /*g_try(v2:"Result",loop:true) */
     Core.C_pretty.Index = (Core.C_pretty.Index+2)
-    Result = F_printexp_any(self.Arg,CFALSE)
+    /*integer->integer*/Result = F_printexp_any(self.Arg,CFALSE)
     {
     PRINC(" | ")
+    /*g_try(v2:"Result",loop:true) */
     Result = F_lbreak_void()
     /* ERROR PROTECTION INSERTED (Result-Result) */
     if !ErrorIn(Result) {
+    /*g_try(v2:"Result",loop:true) */
     Result = F_ppvariable_Variable(self.ClaireVar)
     /* ERROR PROTECTION INSERTED (Result-Result) */
     if !ErrorIn(Result) {
     PRINC(" in ")
-    /* Let:2 */{ 
-      var _Zl int  = Core.C_pretty.Index
-      /* noccur = 1 */
+    /*g_try(v2:"Result",loop:true) */
+    { var _Zl int  = Core.C_pretty.Index
+      _ = _Zl
       F_set_level_void()
+      /*g_try(v2:"Result",loop:true) */
       Result = F_printexp_any(self.SetArg,CFALSE)
       /* ERROR PROTECTION INSERTED (Result-Result) */
       if !ErrorIn(Result) {
-      /* update:3 */{ 
+      { 
         var va_arg1 *Core.PrettyPrinter  
         var va_arg2 int 
         va_arg1 = Core.C_pretty
         va_arg2 = (_Zl-2)
-        /* ---------- now we compile update mClaire/index(va_arg1) := va_arg2 ------- */
         va_arg1.Index = va_arg2
-        Result = EID{C__INT,IVAL(va_arg2)}
-        /* update-3 */} 
+        /*integer->integer*/Result = EID{C__INT,IVAL(va_arg2)}
+        } 
       }
-      /* Let-2 */} 
+      } 
     /* ERROR PROTECTION INSERTED (Result-Result) */
     if !ErrorIn(Result) {
     PRINC("}")
@@ -1109,250 +1138,258 @@ func (self *Collect ) SelfPrint () EID {
   
 // The EID go function for: self_print @ Collect (throw: true) 
 func E_self_print_Collect_Language (self EID) EID { 
-    return /*(sm for self_print @ Collect= EID)*/ To_Collect(OBJ(self)).SelfPrint( )} 
+    return To_Collect(OBJ(self)).SelfPrint( )} 
   
 // list image : preserve the order for lists and intervals (v4)
-/* {1} OPT.The go function for: self_eval(self:Collect) [] */
+/* {1} The go function for: self_eval(self:Collect) [status=1] */
 func (self *Collect ) SelfEval () EID { 
     var Result EID 
-    /* Let:2 */{ 
-      var x *ClaireAny  
-      /* noccur = 7 */
-      var x_try02423 EID 
-      x_try02423 = EVAL(self.SetArg)
+    { var x *ClaireAny  
+      var try_1 EID 
+      /*g_try(v2:"try_1",loop:false) */
+      try_1 = EVAL(self.SetArg)
       /* ERROR PROTECTION INSERTED (x-Result) */
-      if ErrorIn(x_try02423) {Result = x_try02423
+      if ErrorIn(try_1) {Result = try_1
       } else {
-      x = ANY(x_try02423)
-      /* Let:3 */{ 
-        var res *ClaireList  
-        /* noccur = 9 */
-        /* Let:4 */{ 
-          var g0243UU *ClaireType  
-          /* noccur = 1 */
-          if (self.Of.Id() != CNULL) /* If:5 */{ 
-            g0243UU = self.Of
+      x = ANY(try_1)
+      { var res *ClaireList  
+        _ = res
+        { var arg_2 *ClaireType  
+          _ = arg_2
+          if (self.Of.Id() != CNULL) { 
+            arg_2 = self.Of
             } else {
-            g0243UU = ToType(CEMPTY.Id())
-            /* If-5 */} 
-          res = g0243UU.EmptyList()
-          /* Let-4 */} 
-        if (C_class.Id() == x.Isa.Id()) /* If:4 */{ 
-          /* Let:5 */{ 
-            var g0237 *ClaireClass   = ToClass(x)
-            /* noccur = 1 */
-            /* For:6 */{ 
-              var y *ClaireAny  
+            arg_2 = ToType(CEMPTY.Id())
+            } 
+          res = arg_2.EmptyList()
+          } 
+        /*g_try(v2:"Result",loop:true) */
+        if (C_class.Id() == x.Isa.Id()) { 
+          { var g0152 *ClaireClass   = ToClass(x)
+            _ = g0152
+            { 
+              var y *ClaireClass  
               _ = y
+              var y_iter *ClaireAny  
               Result= EID{CFALSE.Id(),0}
-              for _,y = range(g0237.Descendents.Values)/* loop:7 */{ 
-                var void_try8 EID 
-                _ = void_try8
-                /* For:8 */{ 
+              var y_support *ClaireSet  
+              y_support = g0152.Descendents
+              for i_it := 0; i_it < y_support.Count; i_it++ { 
+                y_iter = y_support.At(i_it)
+                y = ToClass(y_iter)
+                var loop_3 EID 
+                _ = loop_3
+                /*g_try(v2:"loop_3",loop:tuple("Result", EID)) */
+                { 
                   var z *ClaireAny  
                   _ = z
-                  void_try8= EID{CFALSE.Id(),0}
+                  loop_3= EID{CFALSE.Id(),0}
                   var z_support *ClaireList  
-                  z_support = ToClass(y).Instances
+                  z_support = y.Instances
                   z_len := z_support.Length()
                   for i_it := 0; i_it < z_len; i_it++ { 
                     z = z_support.At(i_it)
-                    var void_try10 EID 
-                    _ = void_try10
+                    var loop_4 EID 
+                    _ = loop_4
                     { 
-                    void_try10 = F_write_value_Variable(self.ClaireVar,z)
-                    /* ERROR PROTECTION INSERTED (void_try10-void_try10) */
-                    if ErrorIn(void_try10) {void_try8 = void_try10
+                    /*g_try(v2:"loop_4",loop:tuple("loop_3", EID)) */
+                    loop_4 = F_write_value_Variable(self.ClaireVar,z)
+                    /* ERROR PROTECTION INSERTED (loop_4-loop_4) */
+                    if ErrorIn(loop_4) {loop_3 = loop_4
                     break
                     } else {
-                    var res_try024410 EID 
-                    /* Let:10 */{ 
-                      var g0245UU *ClaireAny  
-                      /* noccur = 1 */
-                      var g0245UU_try024611 EID 
-                      g0245UU_try024611 = EVAL(self.Arg)
-                      /* ERROR PROTECTION INSERTED (g0245UU-res_try024410) */
-                      if ErrorIn(g0245UU_try024611) {res_try024410 = g0245UU_try024611
+                    var try_5 EID 
+                    /*g_try(v2:"try_5",loop:tuple("loop_3", EID)) */
+                    { var arg_6 *ClaireAny  
+                      _ = arg_6
+                      var try_7 EID 
+                      /*g_try(v2:"try_7",loop:false) */
+                      try_7 = EVAL(self.Arg)
+                      /* ERROR PROTECTION INSERTED (arg_6-try_5) */
+                      if ErrorIn(try_7) {try_5 = try_7
                       } else {
-                      g0245UU = ANY(g0245UU_try024611)
-                      res_try024410 = EID{res.AddFast(g0245UU).Id(),0}
+                      arg_6 = ANY(try_7)
+                      try_5 = EID{res.AddFast(arg_6).Id(),0}/*t=any,s=EID*/
                       }
-                      /* Let-10 */} 
-                    /* ERROR PROTECTION INSERTED (res-void_try10) */
-                    if ErrorIn(res_try024410) {void_try10 = res_try024410
-                    void_try8 = res_try024410
+                      } 
+                    /* ERROR PROTECTION INSERTED (res-loop_4) */
+                    if ErrorIn(try_5) {loop_4 = try_5
+                    loop_3 = try_5
                     break
                     } else {
-                    res = ToList(OBJ(res_try024410))
-                    void_try10 = EID{res.Id(),0}
+                    res = ToList(OBJ(try_5))
+                    loop_4 = EID{res.Id(),0}
                     }}
                     }
-                    /* loop-9 */} 
-                  /* For-8 */} 
-                /* ERROR PROTECTION INSERTED (void_try8-Result) */
-                if ErrorIn(void_try8) {Result = void_try8
-                Result = void_try8
+                    } 
+                  } 
+                /* ERROR PROTECTION INSERTED (loop_3-Result) */
+                if ErrorIn(loop_3) {Result = loop_3
                 break
                 } else {
                 }
-                /* loop-7 */} 
-              /* For-6 */} 
-            /* Let-5 */} 
-          /* If!4 */}  else if (x.Isa.IsIn(C_list) == CTRUE) /* If:4 */{ 
-          /* Let:5 */{ 
-            var g0238 *ClaireList   = ToList(x)
-            /* noccur = 1 */
-            /* For:6 */{ 
+                } 
+              } 
+            } 
+          }  else if (x.Isa.IsIn(C_list) == CTRUE) { 
+          { var g0153 *ClaireList   = ToList(x)
+            _ = g0153
+            { 
               var y *ClaireAny  
               _ = y
               Result= EID{CFALSE.Id(),0}
               var y_support *ClaireList  
-              y_support = g0238
+              y_support = g0153
               y_len := y_support.Length()
               for i_it := 0; i_it < y_len; i_it++ { 
                 y = y_support.At(i_it)
-                var void_try8 EID 
-                _ = void_try8
+                var loop_8 EID 
+                _ = loop_8
                 { 
-                void_try8 = F_write_value_Variable(self.ClaireVar,y)
-                /* ERROR PROTECTION INSERTED (void_try8-void_try8) */
-                if ErrorIn(void_try8) {Result = void_try8
+                /*g_try(v2:"loop_8",loop:tuple("Result", EID)) */
+                loop_8 = F_write_value_Variable(self.ClaireVar,y)
+                /* ERROR PROTECTION INSERTED (loop_8-loop_8) */
+                if ErrorIn(loop_8) {Result = loop_8
                 break
                 } else {
-                var res_try02478 EID 
-                /* Let:8 */{ 
-                  var g0248UU *ClaireAny  
-                  /* noccur = 1 */
-                  var g0248UU_try02499 EID 
-                  g0248UU_try02499 = EVAL(self.Arg)
-                  /* ERROR PROTECTION INSERTED (g0248UU-res_try02478) */
-                  if ErrorIn(g0248UU_try02499) {res_try02478 = g0248UU_try02499
+                var try_9 EID 
+                /*g_try(v2:"try_9",loop:tuple("Result", EID)) */
+                { var arg_10 *ClaireAny  
+                  _ = arg_10
+                  var try_11 EID 
+                  /*g_try(v2:"try_11",loop:false) */
+                  try_11 = EVAL(self.Arg)
+                  /* ERROR PROTECTION INSERTED (arg_10-try_9) */
+                  if ErrorIn(try_11) {try_9 = try_11
                   } else {
-                  g0248UU = ANY(g0248UU_try02499)
-                  res_try02478 = EID{res.AddFast(g0248UU).Id(),0}
+                  arg_10 = ANY(try_11)
+                  try_9 = EID{res.AddFast(arg_10).Id(),0}/*t=any,s=EID*/
                   }
-                  /* Let-8 */} 
-                /* ERROR PROTECTION INSERTED (res-void_try8) */
-                if ErrorIn(res_try02478) {void_try8 = res_try02478
-                Result = res_try02478
+                  } 
+                /* ERROR PROTECTION INSERTED (res-loop_8) */
+                if ErrorIn(try_9) {loop_8 = try_9
+                Result = try_9
                 break
                 } else {
-                res = ToList(OBJ(res_try02478))
-                void_try8 = EID{res.Id(),0}
+                res = ToList(OBJ(try_9))
+                loop_8 = EID{res.Id(),0}
                 }}
                 }
-                /* loop-7 */} 
-              /* For-6 */} 
-            /* Let-5 */} 
-          /* If!4 */}  else if (x.Isa.IsIn(C_Interval) == CTRUE) /* If:4 */{ 
-          /* Let:5 */{ 
-            var g0239 *ClaireInterval   = To_Interval(x)
-            /* noccur = 2 */
-            /* Let:6 */{ 
-              var y int  = g0239.Arg1
-              /* noccur = 4 */
-              /* Let:7 */{ 
-                var g0240 int  = g0239.Arg2
-                /* noccur = 1 */
+                } 
+              } 
+            } 
+          }  else if (x.Isa.IsIn(C_Interval) == CTRUE) { 
+          { var g0154 *ClaireInterval   = To_Interval(x)
+            { var y int  = g0154.Arg1
+              { var g0155 int  = g0154.Arg2
+                _ = g0155
                 Result= EID{CFALSE.Id(),0}
-                for (y <= g0240) /* while:8 */{ 
-                  var void_try9 EID 
-                  _ = void_try9
+                for (y <= g0155) { 
+                  /* While stat, v:"Result" loop:true */
+                  var loop_12 EID 
+                  _ = loop_12
                   { 
-                  void_try9 = self.ClaireVar.WriteEID(EID{C__INT,IVAL(y)})
-                  /* ERROR PROTECTION INSERTED (void_try9-void_try9) */
-                  if ErrorIn(void_try9) {Result = void_try9
+                  /*g_try(v2:"loop_12",loop:tuple("Result", EID)) */
+                  /*g_try(v2:"loop_12",loop:tuple("Result", EID)) */
+                  loop_12 = self.ClaireVar.WriteEID(EID{C__INT,IVAL(y)})
+                  /* ERROR PROTECTION INSERTED (loop_12-loop_12) */
+                  if ErrorIn(loop_12) {Result = loop_12
                   break
                   } else {
-                  var res_try02509 EID 
-                  /* Let:9 */{ 
-                    var g0251UU *ClaireAny  
-                    /* noccur = 1 */
-                    var g0251UU_try025210 EID 
-                    g0251UU_try025210 = EVAL(self.Arg)
-                    /* ERROR PROTECTION INSERTED (g0251UU-res_try02509) */
-                    if ErrorIn(g0251UU_try025210) {res_try02509 = g0251UU_try025210
+                  var try_13 EID 
+                  /*g_try(v2:"try_13",loop:tuple("Result", EID)) */
+                  { var arg_14 *ClaireAny  
+                    _ = arg_14
+                    var try_15 EID 
+                    /*g_try(v2:"try_15",loop:false) */
+                    try_15 = EVAL(self.Arg)
+                    /* ERROR PROTECTION INSERTED (arg_14-try_13) */
+                    if ErrorIn(try_15) {try_13 = try_15
                     } else {
-                    g0251UU = ANY(g0251UU_try025210)
-                    res_try02509 = EID{res.AddFast(g0251UU).Id(),0}
+                    arg_14 = ANY(try_15)
+                    try_13 = EID{res.AddFast(arg_14).Id(),0}/*t=any,s=EID*/
                     }
-                    /* Let-9 */} 
-                  /* ERROR PROTECTION INSERTED (res-void_try9) */
-                  if ErrorIn(res_try02509) {void_try9 = res_try02509
-                  Result = res_try02509
+                    } 
+                  /* ERROR PROTECTION INSERTED (res-loop_12) */
+                  if ErrorIn(try_13) {loop_12 = try_13
+                  Result = try_13
                   break
                   } else {
-                  res = ToList(OBJ(res_try02509))
-                  void_try9 = EID{res.Id(),0}
+                  res = ToList(OBJ(try_13))
+                  loop_12 = EID{res.Id(),0}
                   }}
                   {
                   y = (y+1)
                   }
-                  /* while-8 */} 
+                  /* try?:false, v2:"v_while8" loop will be:tuple("Result", EID) */
+                  } 
                 }
-                /* Let-7 */} 
-              /* Let-6 */} 
-            /* Let-5 */} 
+                } 
+              } 
+            } 
           } else {
-          /* For:5 */{ 
+          { 
             var y *ClaireAny  
             _ = y
             Result= EID{CFALSE.Id(),0}
             var y_support *ClaireList  
-            var y_support_try02536 EID 
-            y_support_try02536 = Core.F_enumerate_any(x)
+            var try_16 EID 
+            /*g_try(v2:"try_16",loop:false) */
+            try_16 = Core.F_enumerate_any(x)
             /* ERROR PROTECTION INSERTED (y_support-Result) */
-            if ErrorIn(y_support_try02536) {Result = y_support_try02536
+            if ErrorIn(try_16) {Result = try_16
             } else {
-            y_support = ToList(OBJ(y_support_try02536))
+            y_support = ToList(OBJ(try_16))
             y_len := y_support.Length()
             for i_it := 0; i_it < y_len; i_it++ { 
               y = y_support.At(i_it)
-              var void_try7 EID 
-              _ = void_try7
+              var loop_17 EID 
+              _ = loop_17
               { 
-              void_try7 = F_write_value_Variable(self.ClaireVar,y)
-              /* ERROR PROTECTION INSERTED (void_try7-void_try7) */
-              if ErrorIn(void_try7) {Result = void_try7
+              /*g_try(v2:"loop_17",loop:tuple("Result", EID)) */
+              loop_17 = F_write_value_Variable(self.ClaireVar,y)
+              /* ERROR PROTECTION INSERTED (loop_17-loop_17) */
+              if ErrorIn(loop_17) {Result = loop_17
               break
               } else {
-              var res_try02547 EID 
-              /* Let:7 */{ 
-                var g0255UU *ClaireAny  
-                /* noccur = 1 */
-                var g0255UU_try02568 EID 
-                g0255UU_try02568 = EVAL(self.Arg)
-                /* ERROR PROTECTION INSERTED (g0255UU-res_try02547) */
-                if ErrorIn(g0255UU_try02568) {res_try02547 = g0255UU_try02568
+              var try_18 EID 
+              /*g_try(v2:"try_18",loop:tuple("Result", EID)) */
+              { var arg_19 *ClaireAny  
+                _ = arg_19
+                var try_20 EID 
+                /*g_try(v2:"try_20",loop:false) */
+                try_20 = EVAL(self.Arg)
+                /* ERROR PROTECTION INSERTED (arg_19-try_18) */
+                if ErrorIn(try_20) {try_18 = try_20
                 } else {
-                g0255UU = ANY(g0255UU_try02568)
-                res_try02547 = EID{res.AddFast(g0255UU).Id(),0}
+                arg_19 = ANY(try_20)
+                try_18 = EID{res.AddFast(arg_19).Id(),0}/*t=any,s=EID*/
                 }
-                /* Let-7 */} 
-              /* ERROR PROTECTION INSERTED (res-void_try7) */
-              if ErrorIn(res_try02547) {void_try7 = res_try02547
-              Result = res_try02547
+                } 
+              /* ERROR PROTECTION INSERTED (res-loop_17) */
+              if ErrorIn(try_18) {loop_17 = try_18
+              Result = try_18
               break
               } else {
-              res = ToList(OBJ(res_try02547))
-              void_try7 = EID{res.Id(),0}
+              res = ToList(OBJ(try_18))
+              loop_17 = EID{res.Id(),0}
               }}
               }}
-              /* loop-6 */} 
-            /* For-5 */} 
-          /* If-4 */} 
+              } 
+            } 
+          } 
         /* ERROR PROTECTION INSERTED (Result-Result) */
         if !ErrorIn(Result) {
         Result = EID{res.Id(),0}
         }
-        /* Let-3 */} 
+        } 
       }
-      /* Let-2 */} 
+      } 
     return Result} 
   
 // The EID go function for: self_eval @ Collect (throw: true) 
 func E_self_eval_Collect (self EID) EID { 
-    return /*(sm for self_eval @ Collect= EID)*/ To_Collect(OBJ(self)).SelfEval( )} 
+    return To_Collect(OBJ(self)).SelfEval( )} 
   
 // The EVAL go function for: Collect 
 func EVAL_Collect (x *ClaireAny) EID { 
@@ -1360,39 +1397,42 @@ func EVAL_Collect (x *ClaireAny) EID {
   
 // this is a set image version, that produces a set
 //
-/* {1} OPT.The go function for: self_print(self:Image) [] */
+/* {1} The go function for: self_print(self:Image) [status=1] */
 func (self *Image ) SelfPrint () EID { 
     var Result EID 
     PRINC("{ ")
+    /*g_try(v2:"Result",loop:true) */
     Core.C_pretty.Index = (Core.C_pretty.Index+2)
-    Result = F_printexp_any(self.Arg,CFALSE)
+    /*integer->integer*/Result = F_printexp_any(self.Arg,CFALSE)
     {
     PRINC(" | ")
+    /*g_try(v2:"Result",loop:true) */
     Result = F_lbreak_void()
     /* ERROR PROTECTION INSERTED (Result-Result) */
     if !ErrorIn(Result) {
+    /*g_try(v2:"Result",loop:true) */
     Result = F_ppvariable_Variable(self.ClaireVar)
     /* ERROR PROTECTION INSERTED (Result-Result) */
     if !ErrorIn(Result) {
     PRINC(" in ")
-    /* Let:2 */{ 
-      var _Zl int  = Core.C_pretty.Index
-      /* noccur = 1 */
+    /*g_try(v2:"Result",loop:true) */
+    { var _Zl int  = Core.C_pretty.Index
+      _ = _Zl
       F_set_level_void()
+      /*g_try(v2:"Result",loop:true) */
       Result = F_printexp_any(self.SetArg,CFALSE)
       /* ERROR PROTECTION INSERTED (Result-Result) */
       if !ErrorIn(Result) {
-      /* update:3 */{ 
+      { 
         var va_arg1 *Core.PrettyPrinter  
         var va_arg2 int 
         va_arg1 = Core.C_pretty
         va_arg2 = (_Zl-2)
-        /* ---------- now we compile update mClaire/index(va_arg1) := va_arg2 ------- */
         va_arg1.Index = va_arg2
-        Result = EID{C__INT,IVAL(va_arg2)}
-        /* update-3 */} 
+        /*integer->integer*/Result = EID{C__INT,IVAL(va_arg2)}
+        } 
       }
-      /* Let-2 */} 
+      } 
     /* ERROR PROTECTION INSERTED (Result-Result) */
     if !ErrorIn(Result) {
     PRINC("}")
@@ -1402,91 +1442,93 @@ func (self *Image ) SelfPrint () EID {
   
 // The EID go function for: self_print @ Image (throw: true) 
 func E_self_print_Image_Language (self EID) EID { 
-    return /*(sm for self_print @ Image= EID)*/ To_Image(OBJ(self)).SelfPrint( )} 
+    return To_Image(OBJ(self)).SelfPrint( )} 
   
-/* {1} OPT.The go function for: self_eval(self:Image) [] */
+/* {1} The go function for: self_eval(self:Image) [status=1] */
 func (self *Image ) SelfEval () EID { 
     var Result EID 
-    /* Let:2 */{ 
-      var x *ClaireAny  
-      /* noccur = 1 */
-      var x_try02583 EID 
-      x_try02583 = EVAL(self.SetArg)
+    { var x *ClaireAny  
+      _ = x
+      var try_1 EID 
+      /*g_try(v2:"try_1",loop:false) */
+      try_1 = EVAL(self.SetArg)
       /* ERROR PROTECTION INSERTED (x-Result) */
-      if ErrorIn(x_try02583) {Result = x_try02583
+      if ErrorIn(try_1) {Result = try_1
       } else {
-      x = ANY(x_try02583)
-      /* Let:3 */{ 
-        var res *ClaireSet  
-        /* noccur = 3 */
-        /* Let:4 */{ 
-          var g0259UU *ClaireType  
-          /* noccur = 1 */
-          if (self.Of.Id() != CNULL) /* If:5 */{ 
-            g0259UU = self.Of
+      x = ANY(try_1)
+      { var res *ClaireSet  
+        _ = res
+        { var arg_2 *ClaireType  
+          _ = arg_2
+          if (self.Of.Id() != CNULL) { 
+            arg_2 = self.Of
             } else {
-            g0259UU = ToType(CEMPTY.Id())
-            /* If-5 */} 
-          res = g0259UU.EmptySet()
-          /* Let-4 */} 
-        /* For:4 */{ 
+            arg_2 = ToType(CEMPTY.Id())
+            } 
+          res = arg_2.EmptySet()
+          } 
+        /*g_try(v2:"Result",loop:true) */
+        { 
           var y *ClaireAny  
           _ = y
           Result= EID{CFALSE.Id(),0}
           var y_support *ClaireList  
-          var y_support_try02605 EID 
-          y_support_try02605 = Core.F_enumerate_any(x)
+          var try_3 EID 
+          /*g_try(v2:"try_3",loop:false) */
+          try_3 = Core.F_enumerate_any(x)
           /* ERROR PROTECTION INSERTED (y_support-Result) */
-          if ErrorIn(y_support_try02605) {Result = y_support_try02605
+          if ErrorIn(try_3) {Result = try_3
           } else {
-          y_support = ToList(OBJ(y_support_try02605))
+          y_support = ToList(OBJ(try_3))
           y_len := y_support.Length()
           for i_it := 0; i_it < y_len; i_it++ { 
             y = y_support.At(i_it)
-            var void_try6 EID 
-            _ = void_try6
+            var loop_4 EID 
+            _ = loop_4
             { 
-            void_try6 = F_write_value_Variable(self.ClaireVar,y)
-            /* ERROR PROTECTION INSERTED (void_try6-void_try6) */
-            if ErrorIn(void_try6) {Result = void_try6
+            /*g_try(v2:"loop_4",loop:tuple("Result", EID)) */
+            loop_4 = F_write_value_Variable(self.ClaireVar,y)
+            /* ERROR PROTECTION INSERTED (loop_4-loop_4) */
+            if ErrorIn(loop_4) {Result = loop_4
             break
             } else {
-            var res_try02616 EID 
-            /* Let:6 */{ 
-              var g0262UU *ClaireAny  
-              /* noccur = 1 */
-              var g0262UU_try02637 EID 
-              g0262UU_try02637 = EVAL(self.Arg)
-              /* ERROR PROTECTION INSERTED (g0262UU-res_try02616) */
-              if ErrorIn(g0262UU_try02637) {res_try02616 = g0262UU_try02637
+            var try_5 EID 
+            /*g_try(v2:"try_5",loop:tuple("Result", EID)) */
+            { var arg_6 *ClaireAny  
+              _ = arg_6
+              var try_7 EID 
+              /*g_try(v2:"try_7",loop:false) */
+              try_7 = EVAL(self.Arg)
+              /* ERROR PROTECTION INSERTED (arg_6-try_5) */
+              if ErrorIn(try_7) {try_5 = try_7
               } else {
-              g0262UU = ANY(g0262UU_try02637)
-              res_try02616 = EID{res.AddFast(g0262UU).Id(),0}
+              arg_6 = ANY(try_7)
+              try_5 = EID{res.AddFast(arg_6).Id(),0}/*t=any,s=EID*/
               }
-              /* Let-6 */} 
-            /* ERROR PROTECTION INSERTED (res-void_try6) */
-            if ErrorIn(res_try02616) {void_try6 = res_try02616
-            Result = res_try02616
+              } 
+            /* ERROR PROTECTION INSERTED (res-loop_4) */
+            if ErrorIn(try_5) {loop_4 = try_5
+            Result = try_5
             break
             } else {
-            res = ToSet(OBJ(res_try02616))
-            void_try6 = EID{res.Id(),0}
+            res = ToSet(OBJ(try_5))
+            loop_4 = EID{res.Id(),0}
             }}
             }}
-            /* loop-5 */} 
-          /* For-4 */} 
+            } 
+          } 
         /* ERROR PROTECTION INSERTED (Result-Result) */
         if !ErrorIn(Result) {
         Result = EID{res.Id(),0}
         }
-        /* Let-3 */} 
+        } 
       }
-      /* Let-2 */} 
+      } 
     return Result} 
   
 // The EID go function for: self_eval @ Image (throw: true) 
 func E_self_eval_Image (self EID) EID { 
-    return /*(sm for self_eval @ Image= EID)*/ To_Image(OBJ(self)).SelfEval( )} 
+    return To_Image(OBJ(self)).SelfEval( )} 
   
 // The EVAL go function for: Image 
 func EVAL_Image (x *ClaireAny) EID { 
@@ -1495,50 +1537,53 @@ func EVAL_Image (x *ClaireAny) EID {
 // [select VAR in SET_EXPR, ...] is the same as a "for" but returns the subset of
 //  members that produce a true value
 //
-/* {1} OPT.The go function for: self_print(self:Select) [] */
+/* {1} The go function for: self_print(self:Select) [status=1] */
 func (self *Select ) SelfPrint () EID { 
     var Result EID 
     PRINC("{ ")
+    /*g_try(v2:"Result",loop:true) */
     Result = F_ppvariable_Variable(self.ClaireVar)
     /* ERROR PROTECTION INSERTED (Result-Result) */
     if !ErrorIn(Result) {
     PRINC(" in ")
-    /* Let:2 */{ 
-      var _Zl int  = Core.C_pretty.Index
-      /* noccur = 1 */
+    /*g_try(v2:"Result",loop:true) */
+    { var _Zl int  = Core.C_pretty.Index
+      _ = _Zl
       F_set_level_void()
+      /*g_try(v2:"Result",loop:true) */
       Result = F_printexp_any(self.SetArg,CFALSE)
       /* ERROR PROTECTION INSERTED (Result-Result) */
       if !ErrorIn(Result) {
-      /* update:3 */{ 
+      { 
         var va_arg1 *Core.PrettyPrinter  
         var va_arg2 int 
         va_arg1 = Core.C_pretty
         va_arg2 = _Zl
-        /* ---------- now we compile update mClaire/index(va_arg1) := va_arg2 ------- */
         va_arg1.Index = va_arg2
-        Result = EID{C__INT,IVAL(va_arg2)}
-        /* update-3 */} 
+        /*integer->integer*/Result = EID{C__INT,IVAL(va_arg2)}
+        } 
       }
-      /* Let-2 */} 
+      } 
     /* ERROR PROTECTION INSERTED (Result-Result) */
     if !ErrorIn(Result) {
     PRINC(" | ")
+    /*g_try(v2:"Result",loop:true) */
+    /*g_try(v2:"Result",loop:true) */
     Result = F_lbreak_integer(2)
     /* ERROR PROTECTION INSERTED (Result-Result) */
     if !ErrorIn(Result) {
+    /*g_try(v2:"Result",loop:true) */
     Result = Core.F_CALL(C_print,ARGS(self.Arg.ToEID()))
     /* ERROR PROTECTION INSERTED (Result-Result) */
     if !ErrorIn(Result) {
-    /* update:2 */{ 
+    { 
       var va_arg1 *Core.PrettyPrinter  
       var va_arg2 int 
       va_arg1 = Core.C_pretty
       va_arg2 = (Core.C_pretty.Index-2)
-      /* ---------- now we compile update mClaire/index(va_arg1) := va_arg2 ------- */
       va_arg1.Index = va_arg2
-      Result = EID{C__INT,IVAL(va_arg2)}
-      /* update-2 */} 
+      /*integer->integer*/Result = EID{C__INT,IVAL(va_arg2)}
+      } 
     }}
     {
     PRINC("}")
@@ -1548,230 +1593,240 @@ func (self *Select ) SelfPrint () EID {
   
 // The EID go function for: self_print @ Select (throw: true) 
 func E_self_print_Select_Language (self EID) EID { 
-    return /*(sm for self_print @ Select= EID)*/ To_Select(OBJ(self)).SelfPrint( )} 
+    return To_Select(OBJ(self)).SelfPrint( )} 
   
-/* {1} OPT.The go function for: self_eval(self:Select) [] */
+/* {1} The go function for: self_eval(self:Select) [status=1] */
 func (self *Select ) SelfEval () EID { 
     var Result EID 
-    /* Let:2 */{ 
-      var x *ClaireAny  
-      /* noccur = 5 */
-      var x_try02693 EID 
-      x_try02693 = EVAL(self.SetArg)
+    { var x *ClaireAny  
+      var try_1 EID 
+      /*g_try(v2:"try_1",loop:false) */
+      try_1 = EVAL(self.SetArg)
       /* ERROR PROTECTION INSERTED (x-Result) */
-      if ErrorIn(x_try02693) {Result = x_try02693
+      if ErrorIn(try_1) {Result = try_1
       } else {
-      x = ANY(x_try02693)
-      /* Let:3 */{ 
-        var res *ClaireSet  
-        /* noccur = 7 */
-        /* Let:4 */{ 
-          var g0270UU *ClaireType  
-          /* noccur = 1 */
-          if (self.Of.Id() != CNULL) /* If:5 */{ 
-            g0270UU = self.Of
+      x = ANY(try_1)
+      { var res *ClaireSet  
+        _ = res
+        { var arg_2 *ClaireType  
+          _ = arg_2
+          if (self.Of.Id() != CNULL) { 
+            arg_2 = self.Of
             } else {
-            g0270UU = ToType(CEMPTY.Id())
-            /* If-5 */} 
-          res = g0270UU.EmptySet()
-          /* Let-4 */} 
-        if (C_class.Id() == x.Isa.Id()) /* If:4 */{ 
-          /* Let:5 */{ 
-            var g0265 *ClaireClass   = ToClass(x)
-            /* noccur = 1 */
-            /* For:6 */{ 
-              var y *ClaireAny  
+            arg_2 = ToType(CEMPTY.Id())
+            } 
+          res = arg_2.EmptySet()
+          } 
+        /*g_try(v2:"Result",loop:true) */
+        if (C_class.Id() == x.Isa.Id()) { 
+          { var g0159 *ClaireClass   = ToClass(x)
+            _ = g0159
+            { 
+              var y *ClaireClass  
               _ = y
+              var y_iter *ClaireAny  
               Result= EID{CFALSE.Id(),0}
-              for _,y = range(g0265.Descendents.Values)/* loop:7 */{ 
-                var void_try8 EID 
-                _ = void_try8
-                /* For:8 */{ 
+              var y_support *ClaireSet  
+              y_support = g0159.Descendents
+              for i_it := 0; i_it < y_support.Count; i_it++ { 
+                y_iter = y_support.At(i_it)
+                y = ToClass(y_iter)
+                var loop_3 EID 
+                _ = loop_3
+                /*g_try(v2:"loop_3",loop:tuple("Result", EID)) */
+                { 
                   var z *ClaireAny  
                   _ = z
-                  void_try8= EID{CFALSE.Id(),0}
+                  loop_3= EID{CFALSE.Id(),0}
                   var z_support *ClaireList  
-                  z_support = ToClass(y).Instances
+                  z_support = y.Instances
                   z_len := z_support.Length()
                   for i_it := 0; i_it < z_len; i_it++ { 
                     z = z_support.At(i_it)
-                    var void_try10 EID 
-                    _ = void_try10
+                    var loop_4 EID 
+                    _ = loop_4
                     { 
-                    void_try10 = F_write_value_Variable(self.ClaireVar,z)
-                    /* ERROR PROTECTION INSERTED (void_try10-void_try10) */
-                    if ErrorIn(void_try10) {void_try8 = void_try10
+                    /*g_try(v2:"loop_4",loop:tuple("loop_3", EID)) */
+                    loop_4 = F_write_value_Variable(self.ClaireVar,z)
+                    /* ERROR PROTECTION INSERTED (loop_4-loop_4) */
+                    if ErrorIn(loop_4) {loop_3 = loop_4
                     break
                     } else {
-                    var g0271I *ClaireBoolean  
-                    var g0271I_try027210 EID 
-                    /* Let:10 */{ 
-                      var g0273UU *ClaireAny  
-                      /* noccur = 1 */
-                      var g0273UU_try027411 EID 
-                      g0273UU_try027411 = EVAL(self.Arg)
-                      /* ERROR PROTECTION INSERTED (g0273UU-g0271I_try027210) */
-                      if ErrorIn(g0273UU_try027411) {g0271I_try027210 = g0273UU_try027411
+                    /*g_try(v2:"loop_4",loop:tuple("loop_3", EID)) */
+                    var g0163I *ClaireBoolean  
+                    var try_5 EID 
+                    /*g_try(v2:"try_5",loop:false) */
+                    { var arg_6 *ClaireAny  
+                      _ = arg_6
+                      var try_7 EID 
+                      /*g_try(v2:"try_7",loop:false) */
+                      try_7 = EVAL(self.Arg)
+                      /* ERROR PROTECTION INSERTED (arg_6-try_5) */
+                      if ErrorIn(try_7) {try_5 = try_7
                       } else {
-                      g0273UU = ANY(g0273UU_try027411)
-                      g0271I_try027210 = EID{Core.F__I_equal_any(g0273UU,CFALSE.Id()).Id(),0}
+                      arg_6 = ANY(try_7)
+                      try_5 = EID{Core.F__I_equal_any(arg_6,CFALSE.Id()).Id(),0}
                       }
-                      /* Let-10 */} 
-                    /* ERROR PROTECTION INSERTED (g0271I-void_try10) */
-                    if ErrorIn(g0271I_try027210) {void_try10 = g0271I_try027210
+                      } 
+                    /* ERROR PROTECTION INSERTED (g0163I-loop_4) */
+                    if ErrorIn(try_5) {loop_4 = try_5
                     } else {
-                    g0271I = ToBoolean(OBJ(g0271I_try027210))
-                    if (g0271I == CTRUE) /* If:10 */{ 
-                      res = res.AddFast(z)
-                      void_try10 = EID{res.Id(),0}
+                    g0163I = ToBoolean(OBJ(try_5))
+                    if (g0163I == CTRUE) { 
+                      res = res.AddFast(z)/*t=any,s=set*/
+                      loop_4 = EID{res.Id(),0}
                       } else {
-                      void_try10 = EID{CFALSE.Id(),0}
-                      /* If-10 */} 
+                      loop_4 = EID{CFALSE.Id(),0}
+                      } 
                     }
-                    /* ERROR PROTECTION INSERTED (void_try10-void_try10) */
-                    if ErrorIn(void_try10) {void_try8 = void_try10
+                    /* ERROR PROTECTION INSERTED (loop_4-loop_4) */
+                    if ErrorIn(loop_4) {loop_3 = loop_4
                     break
                     } else {
                     }}
                     }
-                    /* loop-9 */} 
-                  /* For-8 */} 
-                /* ERROR PROTECTION INSERTED (void_try8-Result) */
-                if ErrorIn(void_try8) {Result = void_try8
-                Result = void_try8
+                    } 
+                  } 
+                /* ERROR PROTECTION INSERTED (loop_3-Result) */
+                if ErrorIn(loop_3) {Result = loop_3
                 break
                 } else {
                 }
-                /* loop-7 */} 
-              /* For-6 */} 
-            /* Let-5 */} 
-          /* If!4 */}  else if (x.Isa.IsIn(C_Interval) == CTRUE) /* If:4 */{ 
-          /* Let:5 */{ 
-            var g0266 *ClaireInterval   = To_Interval(x)
-            /* noccur = 2 */
-            /* Let:6 */{ 
-              var y int  = g0266.Arg1
-              /* noccur = 5 */
-              /* Let:7 */{ 
-                var g0267 int  = g0266.Arg2
-                /* noccur = 1 */
+                } 
+              } 
+            } 
+          }  else if (x.Isa.IsIn(C_Interval) == CTRUE) { 
+          { var g0160 *ClaireInterval   = To_Interval(x)
+            { var y int  = g0160.Arg1
+              { var g0161 int  = g0160.Arg2
+                _ = g0161
                 Result= EID{CFALSE.Id(),0}
-                for (y <= g0267) /* while:8 */{ 
-                  var void_try9 EID 
-                  _ = void_try9
+                for (y <= g0161) { 
+                  /* While stat, v:"Result" loop:true */
+                  var loop_8 EID 
+                  _ = loop_8
                   { 
-                  void_try9 = self.ClaireVar.WriteEID(EID{C__INT,IVAL(y)})
-                  /* ERROR PROTECTION INSERTED (void_try9-void_try9) */
-                  if ErrorIn(void_try9) {Result = void_try9
+                  /*g_try(v2:"loop_8",loop:tuple("Result", EID)) */
+                  /*g_try(v2:"loop_8",loop:tuple("Result", EID)) */
+                  loop_8 = self.ClaireVar.WriteEID(EID{C__INT,IVAL(y)})
+                  /* ERROR PROTECTION INSERTED (loop_8-loop_8) */
+                  if ErrorIn(loop_8) {Result = loop_8
                   break
                   } else {
-                  var g0275I *ClaireBoolean  
-                  var g0275I_try02769 EID 
-                  /* Let:9 */{ 
-                    var g0277UU *ClaireAny  
-                    /* noccur = 1 */
-                    var g0277UU_try027810 EID 
-                    g0277UU_try027810 = EVAL(self.Arg)
-                    /* ERROR PROTECTION INSERTED (g0277UU-g0275I_try02769) */
-                    if ErrorIn(g0277UU_try027810) {g0275I_try02769 = g0277UU_try027810
+                  /*g_try(v2:"loop_8",loop:tuple("Result", EID)) */
+                  var g0164I *ClaireBoolean  
+                  var try_9 EID 
+                  /*g_try(v2:"try_9",loop:false) */
+                  { var arg_10 *ClaireAny  
+                    _ = arg_10
+                    var try_11 EID 
+                    /*g_try(v2:"try_11",loop:false) */
+                    try_11 = EVAL(self.Arg)
+                    /* ERROR PROTECTION INSERTED (arg_10-try_9) */
+                    if ErrorIn(try_11) {try_9 = try_11
                     } else {
-                    g0277UU = ANY(g0277UU_try027810)
-                    g0275I_try02769 = EID{Core.F__I_equal_any(g0277UU,CFALSE.Id()).Id(),0}
+                    arg_10 = ANY(try_11)
+                    try_9 = EID{Core.F__I_equal_any(arg_10,CFALSE.Id()).Id(),0}
                     }
-                    /* Let-9 */} 
-                  /* ERROR PROTECTION INSERTED (g0275I-void_try9) */
-                  if ErrorIn(g0275I_try02769) {void_try9 = g0275I_try02769
+                    } 
+                  /* ERROR PROTECTION INSERTED (g0164I-loop_8) */
+                  if ErrorIn(try_9) {loop_8 = try_9
                   } else {
-                  g0275I = ToBoolean(OBJ(g0275I_try02769))
-                  if (g0275I == CTRUE) /* If:9 */{ 
-                    res = res.AddFast(MakeInteger(y).Id())
-                    void_try9 = EID{res.Id(),0}
+                  g0164I = ToBoolean(OBJ(try_9))
+                  if (g0164I == CTRUE) { 
+                    res = res.AddFast(MakeInteger(y).Id())/*t=any,s=set*/
+                    loop_8 = EID{res.Id(),0}
                     } else {
-                    void_try9 = EID{CFALSE.Id(),0}
-                    /* If-9 */} 
+                    loop_8 = EID{CFALSE.Id(),0}
+                    } 
                   }
-                  /* ERROR PROTECTION INSERTED (void_try9-void_try9) */
-                  if ErrorIn(void_try9) {Result = void_try9
+                  /* ERROR PROTECTION INSERTED (loop_8-loop_8) */
+                  if ErrorIn(loop_8) {Result = loop_8
                   break
                   } else {
                   }}
                   {
                   y = (y+1)
                   }
-                  /* while-8 */} 
+                  /* try?:false, v2:"v_while8" loop will be:tuple("Result", EID) */
+                  } 
                 }
-                /* Let-7 */} 
-              /* Let-6 */} 
-            /* Let-5 */} 
+                } 
+              } 
+            } 
           } else {
-          /* For:5 */{ 
+          { 
             var y *ClaireAny  
             _ = y
             Result= EID{CFALSE.Id(),0}
             var y_support *ClaireList  
-            var y_support_try02796 EID 
-            y_support_try02796 = Core.F_enumerate_any(x)
+            var try_12 EID 
+            /*g_try(v2:"try_12",loop:false) */
+            try_12 = Core.F_enumerate_any(x)
             /* ERROR PROTECTION INSERTED (y_support-Result) */
-            if ErrorIn(y_support_try02796) {Result = y_support_try02796
+            if ErrorIn(try_12) {Result = try_12
             } else {
-            y_support = ToList(OBJ(y_support_try02796))
+            y_support = ToList(OBJ(try_12))
             y_len := y_support.Length()
             for i_it := 0; i_it < y_len; i_it++ { 
               y = y_support.At(i_it)
-              var void_try7 EID 
-              _ = void_try7
+              var loop_13 EID 
+              _ = loop_13
               { 
-              void_try7 = F_write_value_Variable(self.ClaireVar,y)
-              /* ERROR PROTECTION INSERTED (void_try7-void_try7) */
-              if ErrorIn(void_try7) {Result = void_try7
+              /*g_try(v2:"loop_13",loop:tuple("Result", EID)) */
+              loop_13 = F_write_value_Variable(self.ClaireVar,y)
+              /* ERROR PROTECTION INSERTED (loop_13-loop_13) */
+              if ErrorIn(loop_13) {Result = loop_13
               break
               } else {
-              var g0280I *ClaireBoolean  
-              var g0280I_try02817 EID 
-              /* Let:7 */{ 
-                var g0282UU *ClaireAny  
-                /* noccur = 1 */
-                var g0282UU_try02838 EID 
-                g0282UU_try02838 = EVAL(self.Arg)
-                /* ERROR PROTECTION INSERTED (g0282UU-g0280I_try02817) */
-                if ErrorIn(g0282UU_try02838) {g0280I_try02817 = g0282UU_try02838
+              /*g_try(v2:"loop_13",loop:tuple("Result", EID)) */
+              var g0165I *ClaireBoolean  
+              var try_14 EID 
+              /*g_try(v2:"try_14",loop:false) */
+              { var arg_15 *ClaireAny  
+                _ = arg_15
+                var try_16 EID 
+                /*g_try(v2:"try_16",loop:false) */
+                try_16 = EVAL(self.Arg)
+                /* ERROR PROTECTION INSERTED (arg_15-try_14) */
+                if ErrorIn(try_16) {try_14 = try_16
                 } else {
-                g0282UU = ANY(g0282UU_try02838)
-                g0280I_try02817 = EID{Core.F__I_equal_any(g0282UU,CFALSE.Id()).Id(),0}
+                arg_15 = ANY(try_16)
+                try_14 = EID{Core.F__I_equal_any(arg_15,CFALSE.Id()).Id(),0}
                 }
-                /* Let-7 */} 
-              /* ERROR PROTECTION INSERTED (g0280I-void_try7) */
-              if ErrorIn(g0280I_try02817) {void_try7 = g0280I_try02817
+                } 
+              /* ERROR PROTECTION INSERTED (g0165I-loop_13) */
+              if ErrorIn(try_14) {loop_13 = try_14
               } else {
-              g0280I = ToBoolean(OBJ(g0280I_try02817))
-              if (g0280I == CTRUE) /* If:7 */{ 
-                res = res.AddFast(y)
-                void_try7 = EID{res.Id(),0}
+              g0165I = ToBoolean(OBJ(try_14))
+              if (g0165I == CTRUE) { 
+                res = res.AddFast(y)/*t=any,s=set*/
+                loop_13 = EID{res.Id(),0}
                 } else {
-                void_try7 = EID{CFALSE.Id(),0}
-                /* If-7 */} 
+                loop_13 = EID{CFALSE.Id(),0}
+                } 
               }
-              /* ERROR PROTECTION INSERTED (void_try7-void_try7) */
-              if ErrorIn(void_try7) {Result = void_try7
+              /* ERROR PROTECTION INSERTED (loop_13-loop_13) */
+              if ErrorIn(loop_13) {Result = loop_13
               break
               } else {
               }}
               }}
-              /* loop-6 */} 
-            /* For-5 */} 
-          /* If-4 */} 
+              } 
+            } 
+          } 
         /* ERROR PROTECTION INSERTED (Result-Result) */
         if !ErrorIn(Result) {
         Result = EID{res.Id(),0}
         }
-        /* Let-3 */} 
+        } 
       }
-      /* Let-2 */} 
+      } 
     return Result} 
   
 // The EID go function for: self_eval @ Select (throw: true) 
 func E_self_eval_Select (self EID) EID { 
-    return /*(sm for self_eval @ Select= EID)*/ To_Select(OBJ(self)).SelfEval( )} 
+    return To_Select(OBJ(self)).SelfEval( )} 
   
 // The EVAL go function for: Select 
 func EVAL_Select (x *ClaireAny) EID { 
@@ -1780,50 +1835,53 @@ func EVAL_Select (x *ClaireAny) EID {
 // [select VAR in SET_EXPR, ...] is the same as a "for" but returns the subset of
 //  members that produce a true value
 //
-/* {1} OPT.The go function for: self_print(self:Lselect) [] */
+/* {1} The go function for: self_print(self:Lselect) [status=1] */
 func (self *Lselect ) SelfPrint () EID { 
     var Result EID 
     PRINC("list{ ")
+    /*g_try(v2:"Result",loop:true) */
     Result = F_ppvariable_Variable(self.ClaireVar)
     /* ERROR PROTECTION INSERTED (Result-Result) */
     if !ErrorIn(Result) {
     PRINC(" in ")
-    /* Let:2 */{ 
-      var _Zl int  = Core.C_pretty.Index
-      /* noccur = 1 */
+    /*g_try(v2:"Result",loop:true) */
+    { var _Zl int  = Core.C_pretty.Index
+      _ = _Zl
       F_set_level_void()
+      /*g_try(v2:"Result",loop:true) */
       Result = F_printexp_any(self.SetArg,CFALSE)
       /* ERROR PROTECTION INSERTED (Result-Result) */
       if !ErrorIn(Result) {
-      /* update:3 */{ 
+      { 
         var va_arg1 *Core.PrettyPrinter  
         var va_arg2 int 
         va_arg1 = Core.C_pretty
         va_arg2 = _Zl
-        /* ---------- now we compile update mClaire/index(va_arg1) := va_arg2 ------- */
         va_arg1.Index = va_arg2
-        Result = EID{C__INT,IVAL(va_arg2)}
-        /* update-3 */} 
+        /*integer->integer*/Result = EID{C__INT,IVAL(va_arg2)}
+        } 
       }
-      /* Let-2 */} 
+      } 
     /* ERROR PROTECTION INSERTED (Result-Result) */
     if !ErrorIn(Result) {
     PRINC(" | ")
+    /*g_try(v2:"Result",loop:true) */
+    /*g_try(v2:"Result",loop:true) */
     Result = F_lbreak_integer(2)
     /* ERROR PROTECTION INSERTED (Result-Result) */
     if !ErrorIn(Result) {
+    /*g_try(v2:"Result",loop:true) */
     Result = Core.F_CALL(C_print,ARGS(self.Arg.ToEID()))
     /* ERROR PROTECTION INSERTED (Result-Result) */
     if !ErrorIn(Result) {
-    /* update:2 */{ 
+    { 
       var va_arg1 *Core.PrettyPrinter  
       var va_arg2 int 
       va_arg1 = Core.C_pretty
       va_arg2 = (Core.C_pretty.Index-2)
-      /* ---------- now we compile update mClaire/index(va_arg1) := va_arg2 ------- */
       va_arg1.Index = va_arg2
-      Result = EID{C__INT,IVAL(va_arg2)}
-      /* update-2 */} 
+      /*integer->integer*/Result = EID{C__INT,IVAL(va_arg2)}
+      } 
     }}
     {
     PRINC("}")
@@ -1833,169 +1891,176 @@ func (self *Lselect ) SelfPrint () EID {
   
 // The EID go function for: self_print @ Lselect (throw: true) 
 func E_self_print_Lselect_Language (self EID) EID { 
-    return /*(sm for self_print @ Lselect= EID)*/ To_Lselect(OBJ(self)).SelfPrint( )} 
+    return To_Lselect(OBJ(self)).SelfPrint( )} 
   
-/* {1} OPT.The go function for: self_eval(self:Lselect) [] */
+/* {1} The go function for: self_eval(self:Lselect) [status=1] */
 func (self *Lselect ) SelfEval () EID { 
     var Result EID 
-    /* Let:2 */{ 
-      var x *ClaireAny  
-      /* noccur = 5 */
-      var x_try02893 EID 
-      x_try02893 = EVAL(self.SetArg)
+    { var x *ClaireAny  
+      var try_1 EID 
+      /*g_try(v2:"try_1",loop:false) */
+      try_1 = EVAL(self.SetArg)
       /* ERROR PROTECTION INSERTED (x-Result) */
-      if ErrorIn(x_try02893) {Result = x_try02893
+      if ErrorIn(try_1) {Result = try_1
       } else {
-      x = ANY(x_try02893)
-      /* Let:3 */{ 
-        var res *ClaireList  
-        /* noccur = 7 */
-        if (x.Isa.IsIn(C_list) == CTRUE) /* If:4 */{ 
-          /* Let:5 */{ 
-            var g0285 *ClaireList   = ToList(x)
-            /* noccur = 1 */
-            res = g0285.Empty()
-            /* Let-5 */} 
+      x = ANY(try_1)
+      { var res *ClaireList  
+        if (x.Isa.IsIn(C_list) == CTRUE) { 
+          { var g0167 *ClaireList   = ToList(x)
+            _ = g0167
+            res = g0167.Empty()
+            } 
           } else {
           res = ToType(CEMPTY.Id()).EmptyList()
-          /* If-4 */} 
-        if (C_class.Id() == x.Isa.Id()) /* If:4 */{ 
-          /* Let:5 */{ 
-            var g0287 *ClaireClass   = ToClass(x)
-            /* noccur = 1 */
-            /* For:6 */{ 
-              var y *ClaireAny  
+          } 
+        /*g_try(v2:"Result",loop:true) */
+        if (C_class.Id() == x.Isa.Id()) { 
+          { var g0169 *ClaireClass   = ToClass(x)
+            _ = g0169
+            { 
+              var y *ClaireClass  
               _ = y
+              var y_iter *ClaireAny  
               Result= EID{CFALSE.Id(),0}
-              for _,y = range(g0287.Descendents.Values)/* loop:7 */{ 
-                var void_try8 EID 
-                _ = void_try8
-                /* For:8 */{ 
+              var y_support *ClaireSet  
+              y_support = g0169.Descendents
+              for i_it := 0; i_it < y_support.Count; i_it++ { 
+                y_iter = y_support.At(i_it)
+                y = ToClass(y_iter)
+                var loop_2 EID 
+                _ = loop_2
+                /*g_try(v2:"loop_2",loop:tuple("Result", EID)) */
+                { 
                   var z *ClaireAny  
                   _ = z
-                  void_try8= EID{CFALSE.Id(),0}
+                  loop_2= EID{CFALSE.Id(),0}
                   var z_support *ClaireList  
-                  z_support = ToClass(y).Instances
+                  z_support = y.Instances
                   z_len := z_support.Length()
                   for i_it := 0; i_it < z_len; i_it++ { 
                     z = z_support.At(i_it)
-                    var void_try10 EID 
-                    _ = void_try10
+                    var loop_3 EID 
+                    _ = loop_3
                     { 
-                    void_try10 = F_write_value_Variable(self.ClaireVar,z)
-                    /* ERROR PROTECTION INSERTED (void_try10-void_try10) */
-                    if ErrorIn(void_try10) {void_try8 = void_try10
+                    /*g_try(v2:"loop_3",loop:tuple("loop_2", EID)) */
+                    loop_3 = F_write_value_Variable(self.ClaireVar,z)
+                    /* ERROR PROTECTION INSERTED (loop_3-loop_3) */
+                    if ErrorIn(loop_3) {loop_2 = loop_3
                     break
                     } else {
-                    var g0290I *ClaireBoolean  
-                    var g0290I_try029110 EID 
-                    /* Let:10 */{ 
-                      var g0292UU *ClaireAny  
-                      /* noccur = 1 */
-                      var g0292UU_try029311 EID 
-                      g0292UU_try029311 = EVAL(self.Arg)
-                      /* ERROR PROTECTION INSERTED (g0292UU-g0290I_try029110) */
-                      if ErrorIn(g0292UU_try029311) {g0290I_try029110 = g0292UU_try029311
+                    /*g_try(v2:"loop_3",loop:tuple("loop_2", EID)) */
+                    var g0171I *ClaireBoolean  
+                    var try_4 EID 
+                    /*g_try(v2:"try_4",loop:false) */
+                    { var arg_5 *ClaireAny  
+                      _ = arg_5
+                      var try_6 EID 
+                      /*g_try(v2:"try_6",loop:false) */
+                      try_6 = EVAL(self.Arg)
+                      /* ERROR PROTECTION INSERTED (arg_5-try_4) */
+                      if ErrorIn(try_6) {try_4 = try_6
                       } else {
-                      g0292UU = ANY(g0292UU_try029311)
-                      g0290I_try029110 = EID{Core.F__I_equal_any(g0292UU,CFALSE.Id()).Id(),0}
+                      arg_5 = ANY(try_6)
+                      try_4 = EID{Core.F__I_equal_any(arg_5,CFALSE.Id()).Id(),0}
                       }
-                      /* Let-10 */} 
-                    /* ERROR PROTECTION INSERTED (g0290I-void_try10) */
-                    if ErrorIn(g0290I_try029110) {void_try10 = g0290I_try029110
+                      } 
+                    /* ERROR PROTECTION INSERTED (g0171I-loop_3) */
+                    if ErrorIn(try_4) {loop_3 = try_4
                     } else {
-                    g0290I = ToBoolean(OBJ(g0290I_try029110))
-                    if (g0290I == CTRUE) /* If:10 */{ 
-                      res = res.AddFast(z)
-                      void_try10 = EID{res.Id(),0}
+                    g0171I = ToBoolean(OBJ(try_4))
+                    if (g0171I == CTRUE) { 
+                      res = res.AddFast(z)/*t=any,s=list*/
+                      loop_3 = EID{res.Id(),0}
                       } else {
-                      void_try10 = EID{CFALSE.Id(),0}
-                      /* If-10 */} 
+                      loop_3 = EID{CFALSE.Id(),0}
+                      } 
                     }
-                    /* ERROR PROTECTION INSERTED (void_try10-void_try10) */
-                    if ErrorIn(void_try10) {void_try8 = void_try10
+                    /* ERROR PROTECTION INSERTED (loop_3-loop_3) */
+                    if ErrorIn(loop_3) {loop_2 = loop_3
                     break
                     } else {
                     }}
                     }
-                    /* loop-9 */} 
-                  /* For-8 */} 
-                /* ERROR PROTECTION INSERTED (void_try8-Result) */
-                if ErrorIn(void_try8) {Result = void_try8
-                Result = void_try8
+                    } 
+                  } 
+                /* ERROR PROTECTION INSERTED (loop_2-Result) */
+                if ErrorIn(loop_2) {Result = loop_2
                 break
                 } else {
                 }
-                /* loop-7 */} 
-              /* For-6 */} 
-            /* Let-5 */} 
+                } 
+              } 
+            } 
           } else {
-          /* For:5 */{ 
+          { 
             var y *ClaireAny  
             _ = y
             Result= EID{CFALSE.Id(),0}
             var y_support *ClaireList  
-            var y_support_try02946 EID 
-            y_support_try02946 = Core.F_enumerate_any(x)
+            var try_7 EID 
+            /*g_try(v2:"try_7",loop:false) */
+            try_7 = Core.F_enumerate_any(x)
             /* ERROR PROTECTION INSERTED (y_support-Result) */
-            if ErrorIn(y_support_try02946) {Result = y_support_try02946
+            if ErrorIn(try_7) {Result = try_7
             } else {
-            y_support = ToList(OBJ(y_support_try02946))
+            y_support = ToList(OBJ(try_7))
             y_len := y_support.Length()
             for i_it := 0; i_it < y_len; i_it++ { 
               y = y_support.At(i_it)
-              var void_try7 EID 
-              _ = void_try7
+              var loop_8 EID 
+              _ = loop_8
               { 
-              void_try7 = F_write_value_Variable(self.ClaireVar,y)
-              /* ERROR PROTECTION INSERTED (void_try7-void_try7) */
-              if ErrorIn(void_try7) {Result = void_try7
+              /*g_try(v2:"loop_8",loop:tuple("Result", EID)) */
+              loop_8 = F_write_value_Variable(self.ClaireVar,y)
+              /* ERROR PROTECTION INSERTED (loop_8-loop_8) */
+              if ErrorIn(loop_8) {Result = loop_8
               break
               } else {
-              var g0295I *ClaireBoolean  
-              var g0295I_try02967 EID 
-              /* Let:7 */{ 
-                var g0297UU *ClaireAny  
-                /* noccur = 1 */
-                var g0297UU_try02988 EID 
-                g0297UU_try02988 = EVAL(self.Arg)
-                /* ERROR PROTECTION INSERTED (g0297UU-g0295I_try02967) */
-                if ErrorIn(g0297UU_try02988) {g0295I_try02967 = g0297UU_try02988
+              /*g_try(v2:"loop_8",loop:tuple("Result", EID)) */
+              var g0172I *ClaireBoolean  
+              var try_9 EID 
+              /*g_try(v2:"try_9",loop:false) */
+              { var arg_10 *ClaireAny  
+                _ = arg_10
+                var try_11 EID 
+                /*g_try(v2:"try_11",loop:false) */
+                try_11 = EVAL(self.Arg)
+                /* ERROR PROTECTION INSERTED (arg_10-try_9) */
+                if ErrorIn(try_11) {try_9 = try_11
                 } else {
-                g0297UU = ANY(g0297UU_try02988)
-                g0295I_try02967 = EID{Core.F__I_equal_any(g0297UU,CFALSE.Id()).Id(),0}
+                arg_10 = ANY(try_11)
+                try_9 = EID{Core.F__I_equal_any(arg_10,CFALSE.Id()).Id(),0}
                 }
-                /* Let-7 */} 
-              /* ERROR PROTECTION INSERTED (g0295I-void_try7) */
-              if ErrorIn(g0295I_try02967) {void_try7 = g0295I_try02967
+                } 
+              /* ERROR PROTECTION INSERTED (g0172I-loop_8) */
+              if ErrorIn(try_9) {loop_8 = try_9
               } else {
-              g0295I = ToBoolean(OBJ(g0295I_try02967))
-              if (g0295I == CTRUE) /* If:7 */{ 
-                res = res.AddFast(y)
-                void_try7 = EID{res.Id(),0}
+              g0172I = ToBoolean(OBJ(try_9))
+              if (g0172I == CTRUE) { 
+                res = res.AddFast(y)/*t=any,s=list*/
+                loop_8 = EID{res.Id(),0}
                 } else {
-                void_try7 = EID{CFALSE.Id(),0}
-                /* If-7 */} 
+                loop_8 = EID{CFALSE.Id(),0}
+                } 
               }
-              /* ERROR PROTECTION INSERTED (void_try7-void_try7) */
-              if ErrorIn(void_try7) {Result = void_try7
+              /* ERROR PROTECTION INSERTED (loop_8-loop_8) */
+              if ErrorIn(loop_8) {Result = loop_8
               break
               } else {
               }}
               }}
-              /* loop-6 */} 
-            /* For-5 */} 
-          /* If-4 */} 
+              } 
+            } 
+          } 
         /* ERROR PROTECTION INSERTED (Result-Result) */
         if !ErrorIn(Result) {
-        if (self.Of.Id() != CNULL) /* If:4 */{ 
-          /* Let:5 */{ 
-            var x *ClaireAny  
-            /* noccur = 2 */
-            /* Let:6 */{ 
-              var x_some *ClaireAny   = CNULL
-              /* noccur = 2 */
-              /* For:7 */{ 
+        /*g_try(v2:"Result",loop:true) */
+        if (self.Of.Id() != CNULL) { 
+          /*g_try(v2:"Result",loop:true) */
+          { var x *ClaireAny  
+            { var x_some *ClaireAny   = CNULL
+              _ = x_some
+              { 
                 var x *ClaireAny  
                 _ = x
                 var x_support *ClaireList  
@@ -2003,40 +2068,48 @@ func (self *Lselect ) SelfEval () EID {
                 x_len := x_support.Length()
                 for i_it := 0; i_it < x_len; i_it++ { 
                   x = x_support.At(i_it)
-                  if (self.Of.Contains(x) != CTRUE) /* If:9 */{ 
-                     /*v = x, s =void*/
-x_some = x
+                  if (self.Of.Contains(x) != CTRUE) { 
+                    x_some = x
                     break
-                    /* If-9 */} 
-                  /* loop-8 */} 
-                /* For-7 */} 
+                    } 
+                  } 
+                } 
               x = x_some
-              /* Let-6 */} 
-            if (x != CNULL) /* If:6 */{ 
-              Result = ToException(Core.C_range_error.Make(self.Id(),x,self.Of.Id())).Close()
+              } 
+            if (x != CNULL) { 
+              { var _CL_obj *Core.RangeError   = Core.ToRangeError(new(Core.RangeError).Is(Core.C_range_error))
+                _CL_obj.Cause = self.Id()
+                /*any->any*/_CL_obj.Arg = x
+                /*any->any*//*g_try(v2:"Result",loop:true) */
+                Result = Core.F_write_property(C_Language_wrong,ToObject(_CL_obj.Id()),self.Of.Id())
+                /* ERROR PROTECTION INSERTED (Result-Result) */
+                if !ErrorIn(Result) {
+                Result = _CL_obj.Close()
+                }
+                } 
               } else {
               Result = EID{CNULL,0}
-              /* If-6 */} 
-            /* Let-5 */} 
+              } 
+            } 
           /* ERROR PROTECTION INSERTED (Result-Result) */
           if !ErrorIn(Result) {
           Result = EID{res.Cast_I(self.Of).Id(),0}
           }
           } else {
           Result = EID{CFALSE.Id(),0}
-          /* If-4 */} 
+          } 
         /* ERROR PROTECTION INSERTED (Result-Result) */
         if !ErrorIn(Result) {
         Result = EID{res.Id(),0}
         }}
-        /* Let-3 */} 
+        } 
       }
-      /* Let-2 */} 
+      } 
     return Result} 
   
 // The EID go function for: self_eval @ Lselect (throw: true) 
 func E_self_eval_Lselect (self EID) EID { 
-    return /*(sm for self_eval @ Lselect= EID)*/ To_Lselect(OBJ(self)).SelfEval( )} 
+    return To_Lselect(OBJ(self)).SelfEval( )} 
   
 // The EVAL go function for: Lselect 
 func EVAL_Lselect (x *ClaireAny) EID { 
@@ -2044,22 +2117,24 @@ func EVAL_Lselect (x *ClaireAny) EID {
   
 // Exists is an iteration that checks a condition
 // other = true => forall,  other = false => exists, other = unknown => some
-/* {1} OPT.The go function for: self_print(self:Exists) [] */
+/* {1} The go function for: self_print(self:Exists) [status=1] */
 func (self *Exists ) SelfPrint () EID { 
     var Result EID 
-    if (self.Other == CTRUE.Id()) /* If:2 */{ 
+    if (self.Other == CTRUE.Id()) { 
       PRINC("forall")
-      /* If!2 */}  else if (self.Other == CFALSE.Id()) /* If:2 */{ 
+      }  else if (self.Other == CFALSE.Id()) { 
       PRINC("exists")
       } else {
       PRINC("some")
-      /* If-2 */} 
-    if (self.SetArg == C_any.Id()) /* If:2 */{ 
+      } 
+    if (self.SetArg == C_any.Id()) { 
       PRINC("(")
+      /*g_try(v2:"Result",loop:true) */
       Result = F_ppvariable_Variable(self.ClaireVar)
       /* ERROR PROTECTION INSERTED (Result-Result) */
       if !ErrorIn(Result) {
       PRINC(",")
+      /*g_try(v2:"Result",loop:true) */
       Result = Core.F_CALL(C_print,ARGS(self.Arg.ToEID()))
       /* ERROR PROTECTION INSERTED (Result-Result) */
       if !ErrorIn(Result) {
@@ -2068,242 +2143,249 @@ func (self *Exists ) SelfPrint () EID {
       }}
       } else {
       PRINC("(")
+      /*g_try(v2:"Result",loop:true) */
       Result = F_ppvariable_Variable(self.ClaireVar)
       /* ERROR PROTECTION INSERTED (Result-Result) */
       if !ErrorIn(Result) {
       PRINC(" in ")
-      /* Let:3 */{ 
-        var _Zl int  = Core.C_pretty.Index
-        /* noccur = 1 */
+      /*g_try(v2:"Result",loop:true) */
+      { var _Zl int  = Core.C_pretty.Index
+        _ = _Zl
         F_set_level_void()
+        /*g_try(v2:"Result",loop:true) */
         Result = F_printexp_any(self.SetArg,CFALSE)
         /* ERROR PROTECTION INSERTED (Result-Result) */
         if !ErrorIn(Result) {
-        /* update:4 */{ 
+        { 
           var va_arg1 *Core.PrettyPrinter  
           var va_arg2 int 
           va_arg1 = Core.C_pretty
           va_arg2 = _Zl
-          /* ---------- now we compile update mClaire/index(va_arg1) := va_arg2 ------- */
           va_arg1.Index = va_arg2
-          Result = EID{C__INT,IVAL(va_arg2)}
-          /* update-4 */} 
+          /*integer->integer*/Result = EID{C__INT,IVAL(va_arg2)}
+          } 
         }
-        /* Let-3 */} 
+        } 
       /* ERROR PROTECTION INSERTED (Result-Result) */
       if !ErrorIn(Result) {
       PRINC(" | ")
+      /*g_try(v2:"Result",loop:true) */
+      /*g_try(v2:"Result",loop:true) */
       Result = F_lbreak_integer(2)
       /* ERROR PROTECTION INSERTED (Result-Result) */
       if !ErrorIn(Result) {
+      /*g_try(v2:"Result",loop:true) */
       Result = Core.F_CALL(C_print,ARGS(self.Arg.ToEID()))
       /* ERROR PROTECTION INSERTED (Result-Result) */
       if !ErrorIn(Result) {
-      /* update:3 */{ 
+      { 
         var va_arg1 *Core.PrettyPrinter  
         var va_arg2 int 
         va_arg1 = Core.C_pretty
         va_arg2 = (Core.C_pretty.Index-2)
-        /* ---------- now we compile update mClaire/index(va_arg1) := va_arg2 ------- */
         va_arg1.Index = va_arg2
-        Result = EID{C__INT,IVAL(va_arg2)}
-        /* update-3 */} 
+        /*integer->integer*/Result = EID{C__INT,IVAL(va_arg2)}
+        } 
       }}
       {
       PRINC(")")
       Result = EVOID
       }}}
-      /* If-2 */} 
+      } 
     return Result} 
   
 // The EID go function for: self_print @ Exists (throw: true) 
 func E_self_print_Exists_Language (self EID) EID { 
-    return /*(sm for self_print @ Exists= EID)*/ To_Exists(OBJ(self)).SelfPrint( )} 
+    return To_Exists(OBJ(self)).SelfPrint( )} 
   
-/* {1} OPT.The go function for: self_eval(self:Exists) [] */
+/* {1} The go function for: self_eval(self:Exists) [status=1] */
 func (self *Exists ) SelfEval () EID { 
     var Result EID 
-    /* Let:2 */{ 
-      var x *ClaireAny  
-      /* noccur = 3 */
-      var x_try03023 EID 
-      x_try03023 = EVAL(self.SetArg)
+    { var x *ClaireAny  
+      var try_1 EID 
+      /*g_try(v2:"try_1",loop:false) */
+      try_1 = EVAL(self.SetArg)
       /* ERROR PROTECTION INSERTED (x-Result) */
-      if ErrorIn(x_try03023) {Result = x_try03023
+      if ErrorIn(try_1) {Result = try_1
       } else {
-      x = ANY(x_try03023)
-      /* Let:3 */{ 
-        var b *ClaireAny   = self.Other
-        /* noccur = 7 */
-        /* Let:4 */{ 
-          var res *ClaireAny   = b
-          /* noccur = 5 */
-          if (C_class.Id() == x.Isa.Id()) /* If:5 */{ 
-            /* Let:6 */{ 
-              var g0300 *ClaireClass   = ToClass(x)
-              /* noccur = 1 */
-              /* For:7 */{ 
-                var y *ClaireAny  
+      x = ANY(try_1)
+      { var b *ClaireAny   = self.Other
+        { var res *ClaireAny   = b
+          _ = res
+          /*g_try(v2:"Result",loop:true) */
+          if (C_class.Id() == x.Isa.Id()) { 
+            { var g0174 *ClaireClass   = ToClass(x)
+              _ = g0174
+              { 
+                var y *ClaireClass  
                 _ = y
+                var y_iter *ClaireAny  
                 Result= EID{CFALSE.Id(),0}
-                for _,y = range(g0300.Descendents.Values)/* loop:8 */{ 
-                  var void_try9 EID 
-                  _ = void_try9
-                  /* For:9 */{ 
+                var y_support *ClaireSet  
+                y_support = g0174.Descendents
+                for i_it := 0; i_it < y_support.Count; i_it++ { 
+                  y_iter = y_support.At(i_it)
+                  y = ToClass(y_iter)
+                  var loop_2 EID 
+                  _ = loop_2
+                  /*g_try(v2:"loop_2",loop:tuple("Result", EID)) */
+                  { 
                     var z *ClaireAny  
                     _ = z
-                    void_try9= EID{CFALSE.Id(),0}
+                    loop_2= EID{CFALSE.Id(),0}
                     var z_support *ClaireList  
-                    z_support = ToClass(y).Instances
+                    z_support = y.Instances
                     z_len := z_support.Length()
                     for i_it := 0; i_it < z_len; i_it++ { 
                       z = z_support.At(i_it)
-                      var void_try11 EID 
-                      _ = void_try11
+                      var loop_3 EID 
+                      _ = loop_3
                       { 
-                      void_try11 = F_write_value_Variable(self.ClaireVar,z)
-                      /* ERROR PROTECTION INSERTED (void_try11-void_try11) */
-                      if ErrorIn(void_try11) {void_try9 = void_try11
+                      /*g_try(v2:"loop_3",loop:tuple("loop_2", EID)) */
+                      loop_3 = F_write_value_Variable(self.ClaireVar,z)
+                      /* ERROR PROTECTION INSERTED (loop_3-loop_3) */
+                      if ErrorIn(loop_3) {loop_2 = loop_3
                       break
                       } else {
-                      var g0303I *ClaireBoolean  
-                      var g0303I_try030411 EID 
-                      /* Let:11 */{ 
-                        var g0305UU *ClaireAny  
-                        /* noccur = 1 */
-                        var g0305UU_try030612 EID 
-                        g0305UU_try030612 = EVAL(self.Arg)
-                        /* ERROR PROTECTION INSERTED (g0305UU-g0303I_try030411) */
-                        if ErrorIn(g0305UU_try030612) {g0303I_try030411 = g0305UU_try030612
+                      /*g_try(v2:"loop_3",loop:tuple("loop_2", EID)) */
+                      var g0176I *ClaireBoolean  
+                      var try_4 EID 
+                      /*g_try(v2:"try_4",loop:false) */
+                      { var arg_5 *ClaireAny  
+                        _ = arg_5
+                        var try_6 EID 
+                        /*g_try(v2:"try_6",loop:false) */
+                        try_6 = EVAL(self.Arg)
+                        /* ERROR PROTECTION INSERTED (arg_5-try_4) */
+                        if ErrorIn(try_6) {try_4 = try_6
                         } else {
-                        g0305UU = ANY(g0305UU_try030612)
-                        g0303I_try030411 = EID{Core.F__I_equal_any(g0305UU,CFALSE.Id()).Id(),0}
+                        arg_5 = ANY(try_6)
+                        try_4 = EID{Core.F__I_equal_any(arg_5,CFALSE.Id()).Id(),0}
                         }
-                        /* Let-11 */} 
-                      /* ERROR PROTECTION INSERTED (g0303I-void_try11) */
-                      if ErrorIn(g0303I_try030411) {void_try11 = g0303I_try030411
+                        } 
+                      /* ERROR PROTECTION INSERTED (g0176I-loop_3) */
+                      if ErrorIn(try_4) {loop_3 = try_4
                       } else {
-                      g0303I = ToBoolean(OBJ(g0303I_try030411))
-                      if (g0303I == CTRUE) /* If:11 */{ 
-                        if (b != CTRUE.Id()) /* If:12 */{ 
-                           /*v = void_try9, s =EID*/
-res = IfThenElse((F_boolean_I_any(b) == CTRUE),
+                      g0176I = ToBoolean(OBJ(try_4))
+                      if (g0176I == CTRUE) { 
+                        if (b != CTRUE.Id()) { 
+                          res = IfThenElse((F_boolean_I_any(b) == CTRUE),
                             z,
                             CTRUE.Id())
-                          void_try9 = res.ToEID()
+                          loop_2 = res.ToEID()
                           break
                           } else {
-                          void_try11 = EID{CFALSE.Id(),0}
-                          /* If-12 */} 
-                        /* If!11 */}  else if (b == CTRUE.Id()) /* If:11 */{ 
-                         /*v = void_try9, s =EID*/
-res = CFALSE.Id()
-                        void_try9 = res.ToEID()
+                          loop_3 = EID{CFALSE.Id(),0}
+                          } 
+                        }  else if (b == CTRUE.Id()) { 
+                        res = CFALSE.Id()
+                        loop_2 = res.ToEID()
                         break
                         } else {
-                        void_try11 = EID{CFALSE.Id(),0}
-                        /* If-11 */} 
+                        loop_3 = EID{CFALSE.Id(),0}
+                        } 
                       }
-                      /* ERROR PROTECTION INSERTED (void_try11-void_try11) */
-                      if ErrorIn(void_try11) {void_try9 = void_try11
+                      /* ERROR PROTECTION INSERTED (loop_3-loop_3) */
+                      if ErrorIn(loop_3) {loop_2 = loop_3
                       break
                       } else {
                       }}
                       }
-                      /* loop-10 */} 
-                    /* For-9 */} 
-                  /* ERROR PROTECTION INSERTED (void_try9-Result) */
-                  if ErrorIn(void_try9) {Result = void_try9
-                  Result = void_try9
+                      } 
+                    } 
+                  /* ERROR PROTECTION INSERTED (loop_2-Result) */
+                  if ErrorIn(loop_2) {Result = loop_2
                   break
                   } else {
                   }
-                  /* loop-8 */} 
-                /* For-7 */} 
-              /* Let-6 */} 
+                  } 
+                } 
+              } 
             } else {
-            /* For:6 */{ 
+            { 
               var y *ClaireAny  
               _ = y
               Result= EID{CFALSE.Id(),0}
               var y_support *ClaireList  
-              var y_support_try03077 EID 
-              y_support_try03077 = Core.F_enumerate_any(x)
+              var try_7 EID 
+              /*g_try(v2:"try_7",loop:false) */
+              try_7 = Core.F_enumerate_any(x)
               /* ERROR PROTECTION INSERTED (y_support-Result) */
-              if ErrorIn(y_support_try03077) {Result = y_support_try03077
+              if ErrorIn(try_7) {Result = try_7
               } else {
-              y_support = ToList(OBJ(y_support_try03077))
+              y_support = ToList(OBJ(try_7))
               y_len := y_support.Length()
               for i_it := 0; i_it < y_len; i_it++ { 
                 y = y_support.At(i_it)
-                var void_try8 EID 
-                _ = void_try8
+                var loop_8 EID 
+                _ = loop_8
                 { 
-                void_try8 = F_write_value_Variable(self.ClaireVar,y)
-                /* ERROR PROTECTION INSERTED (void_try8-void_try8) */
-                if ErrorIn(void_try8) {Result = void_try8
+                /*g_try(v2:"loop_8",loop:tuple("Result", EID)) */
+                loop_8 = F_write_value_Variable(self.ClaireVar,y)
+                /* ERROR PROTECTION INSERTED (loop_8-loop_8) */
+                if ErrorIn(loop_8) {Result = loop_8
                 break
                 } else {
-                var g0308I *ClaireBoolean  
-                var g0308I_try03098 EID 
-                /* Let:8 */{ 
-                  var g0310UU *ClaireAny  
-                  /* noccur = 1 */
-                  var g0310UU_try03119 EID 
-                  g0310UU_try03119 = EVAL(self.Arg)
-                  /* ERROR PROTECTION INSERTED (g0310UU-g0308I_try03098) */
-                  if ErrorIn(g0310UU_try03119) {g0308I_try03098 = g0310UU_try03119
+                /*g_try(v2:"loop_8",loop:tuple("Result", EID)) */
+                var g0177I *ClaireBoolean  
+                var try_9 EID 
+                /*g_try(v2:"try_9",loop:false) */
+                { var arg_10 *ClaireAny  
+                  _ = arg_10
+                  var try_11 EID 
+                  /*g_try(v2:"try_11",loop:false) */
+                  try_11 = EVAL(self.Arg)
+                  /* ERROR PROTECTION INSERTED (arg_10-try_9) */
+                  if ErrorIn(try_11) {try_9 = try_11
                   } else {
-                  g0310UU = ANY(g0310UU_try03119)
-                  g0308I_try03098 = EID{Core.F__I_equal_any(g0310UU,CFALSE.Id()).Id(),0}
+                  arg_10 = ANY(try_11)
+                  try_9 = EID{Core.F__I_equal_any(arg_10,CFALSE.Id()).Id(),0}
                   }
-                  /* Let-8 */} 
-                /* ERROR PROTECTION INSERTED (g0308I-void_try8) */
-                if ErrorIn(g0308I_try03098) {void_try8 = g0308I_try03098
+                  } 
+                /* ERROR PROTECTION INSERTED (g0177I-loop_8) */
+                if ErrorIn(try_9) {loop_8 = try_9
                 } else {
-                g0308I = ToBoolean(OBJ(g0308I_try03098))
-                if (g0308I == CTRUE) /* If:8 */{ 
-                  if (b != CTRUE.Id()) /* If:9 */{ 
-                     /*v = Result, s =EID*/
-res = IfThenElse((F_boolean_I_any(b) == CTRUE),
+                g0177I = ToBoolean(OBJ(try_9))
+                if (g0177I == CTRUE) { 
+                  if (b != CTRUE.Id()) { 
+                    res = IfThenElse((F_boolean_I_any(b) == CTRUE),
                       y,
                       CTRUE.Id())
                     Result = res.ToEID()
                     break
                     } else {
-                    void_try8 = EID{CFALSE.Id(),0}
-                    /* If-9 */} 
-                  /* If!8 */}  else if (b == CTRUE.Id()) /* If:8 */{ 
-                   /*v = Result, s =EID*/
-res = CFALSE.Id()
+                    loop_8 = EID{CFALSE.Id(),0}
+                    } 
+                  }  else if (b == CTRUE.Id()) { 
+                  res = CFALSE.Id()
                   Result = res.ToEID()
                   break
                   } else {
-                  void_try8 = EID{CFALSE.Id(),0}
-                  /* If-8 */} 
+                  loop_8 = EID{CFALSE.Id(),0}
+                  } 
                 }
-                /* ERROR PROTECTION INSERTED (void_try8-void_try8) */
-                if ErrorIn(void_try8) {Result = void_try8
+                /* ERROR PROTECTION INSERTED (loop_8-loop_8) */
+                if ErrorIn(loop_8) {Result = loop_8
                 break
                 } else {
                 }}
                 }}
-                /* loop-7 */} 
-              /* For-6 */} 
-            /* If-5 */} 
+                } 
+              } 
+            } 
           /* ERROR PROTECTION INSERTED (Result-Result) */
           if !ErrorIn(Result) {
           Result = res.ToEID()
           }
-          /* Let-4 */} 
-        /* Let-3 */} 
+          } 
+        } 
       }
-      /* Let-2 */} 
+      } 
     return Result} 
   
 // The EID go function for: self_eval @ Exists (throw: true) 
 func E_self_eval_Exists (self EID) EID { 
-    return /*(sm for self_eval @ Exists= EID)*/ To_Exists(OBJ(self)).SelfEval( )} 
+    return To_Exists(OBJ(self)).SelfEval( )} 
   
 // The EVAL go function for: Exists 
 func EVAL_Exists (x *ClaireAny) EID { 
@@ -2313,14 +2395,17 @@ func EVAL_Exists (x *ClaireAny) EID {
 // *     Part 3: other control structures                              *
 // *********************************************************************
 // ----------------- case  --------------------------------------
-/* {1} OPT.The go function for: self_print(self:Case) [] */
+/* {1} The go function for: self_print(self:Case) [status=1] */
 func (self *Case ) SelfPrint () EID { 
     var Result EID 
+    /*g_try(v2:"Result",loop:true) */
     PRINC("case ")
+    /*g_try(v2:"Result",loop:true) */
     Result = Core.F_CALL(C_print,ARGS(self.ClaireVar.ToEID()))
     /* ERROR PROTECTION INSERTED (Result-Result) */
     if !ErrorIn(Result) {
     PRINC(" ")
+    /*g_try(v2:"Result",loop:true) */
     Result = F_lbreak_integer(1)
     /* ERROR PROTECTION INSERTED (Result-Result) */
     if !ErrorIn(Result) {
@@ -2328,198 +2413,203 @@ func (self *Case ) SelfPrint () EID {
     Result = EVOID
     }}
     {
-    /* Let:2 */{ 
-      var n int  = 1
-      /* noccur = 6 */
-      /* Let:3 */{ 
-        var m int  = self.Args.Length()
-        /* noccur = 2 */
+    { var n int  = 1
+      { var m int  = self.Args.Length()
         Core.C_pretty.Index = (Core.C_pretty.Index+1)
+        /*integer->integer*//*g_try(v2:"Result",loop:true) */
         Result= EID{CFALSE.Id(),0}
-        for (n <= m) /* while:4 */{ 
-          var void_try5 EID 
-          _ = void_try5
-          /* Let:5 */{ 
-            var _Zl int  = Core.C_pretty.Index
-            /* noccur = 1 */
-            void_try5 = F_printexp_any(self.Args.At(n-1),CFALSE)
-            /* ERROR PROTECTION INSERTED (void_try5-void_try5) */
-            if ErrorIn(void_try5) {Result = void_try5
+        for (n <= m) { 
+          /* While stat, v:"Result" loop:true */
+          var loop_1 EID 
+          _ = loop_1
+          /*g_try(v2:"loop_1",loop:tuple("Result", EID)) */
+          { var _Zl int  = Core.C_pretty.Index
+            _ = _Zl
+            /*g_try(v2:"loop_1",loop:tuple("Result", EID)) */
+            /*g_try(v2:"loop_1",loop:tuple("Result", EID)) */
+            loop_1 = F_printexp_any(self.Args.At(n-1),CFALSE)
+            /* ERROR PROTECTION INSERTED (loop_1-loop_1) */
+            if ErrorIn(loop_1) {Result = loop_1
             break
             } else {
             PRINC(" ")
-            if (Core.F_buffer_length_void() > (Core.C_pretty.Width-50)) /* If:6 */{ 
-              void_try5 = F_lbreak_integer(2)
+            /*g_try(v2:"loop_1",loop:tuple("Result", EID)) */
+            /*g_try(v2:"loop_1",loop:tuple("Result", EID)) */
+            if (Core.F_buffer_length_void() > (Core.C_pretty.Width-50)) { 
+              loop_1 = F_lbreak_integer(2)
               } else {
               F_set_level_void()
-              void_try5 = EVOID
-              /* If-6 */} 
-            /* ERROR PROTECTION INSERTED (void_try5-void_try5) */
-            if ErrorIn(void_try5) {Result = void_try5
+              loop_1 = EVOID
+              } 
+            /* ERROR PROTECTION INSERTED (loop_1-loop_1) */
+            if ErrorIn(loop_1) {Result = loop_1
             break
             } else {
-            void_try5 = Core.F_CALL(C_print,ARGS(self.Args.At((n+1)-1).ToEID()))
-            /* ERROR PROTECTION INSERTED (void_try5-void_try5) */
-            if ErrorIn(void_try5) {Result = void_try5
+            /*g_try(v2:"loop_1",loop:tuple("Result", EID)) */
+            loop_1 = Core.F_CALL(C_print,ARGS(self.Args.At((n+1)-1).ToEID()))
+            /* ERROR PROTECTION INSERTED (loop_1-loop_1) */
+            if ErrorIn(loop_1) {Result = loop_1
             break
             } else {
             }}
             {
+            /*g_try(v2:"loop_1",loop:tuple("Result", EID)) */
             Core.C_pretty.Index = _Zl
-            if ((n+1) != m) /* If:6 */{ 
+            /*integer->integer*//*g_try(v2:"loop_1",loop:tuple("Result", EID)) */
+            if ((n+1) != m) { 
               PRINC(", ")
-              void_try5 = F_lbreak_void()
-              /* ERROR PROTECTION INSERTED (void_try5-void_try5) */
-              if ErrorIn(void_try5) {Result = void_try5
+              /*g_try(v2:"loop_1",loop:tuple("Result", EID)) */
+              loop_1 = F_lbreak_void()
+              /* ERROR PROTECTION INSERTED (loop_1-loop_1) */
+              if ErrorIn(loop_1) {Result = loop_1
               break
               } else {
               PRINC("")
-              void_try5 = EVOID
+              loop_1 = EVOID
               }
               } else {
-              void_try5 = EID{CFALSE.Id(),0}
-              /* If-6 */} 
-            /* ERROR PROTECTION INSERTED (void_try5-void_try5) */
-            if ErrorIn(void_try5) {Result = void_try5
+              loop_1 = EID{CFALSE.Id(),0}
+              } 
+            /* ERROR PROTECTION INSERTED (loop_1-loop_1) */
+            if ErrorIn(loop_1) {Result = loop_1
             break
             } else {
             }
             {
             PRINC("")
-            void_try5 = EVOID
+            loop_1 = EVOID
             }}}
             {
             n = (n+2)
-            void_try5 = EID{C__INT,IVAL(n)}
+            loop_1 = EID{C__INT,IVAL(n)}
             }
-            /* Let-5 */} 
-          /* ERROR PROTECTION INSERTED (void_try5-Result) */
-          if ErrorIn(void_try5) {Result = void_try5
-          Result = void_try5
+            } 
+          /* ERROR PROTECTION INSERTED (loop_1-Result) */
+          if ErrorIn(loop_1) {Result = loop_1
           break
           } else {
-          /* while-4 */} 
+          /* try?:false, v2:"v_while4" loop will be:tuple("Result", EID) */
+          } 
         }
         /* ERROR PROTECTION INSERTED (Result-Result) */
         if !ErrorIn(Result) {
         PRINC(")")
-        /* update:4 */{ 
+        { 
           var va_arg1 *Core.PrettyPrinter  
           var va_arg2 int 
           va_arg1 = Core.C_pretty
           va_arg2 = (Core.C_pretty.Index-2)
-          /* ---------- now we compile update mClaire/index(va_arg1) := va_arg2 ------- */
           va_arg1.Index = va_arg2
-          Result = EID{C__INT,IVAL(va_arg2)}
-          /* update-4 */} 
+          /*integer->integer*/Result = EID{C__INT,IVAL(va_arg2)}
+          } 
         }
-        /* Let-3 */} 
-      /* Let-2 */} 
+        } 
+      } 
     }
     return Result} 
   
 // The EID go function for: self_print @ Case (throw: true) 
 func E_self_print_Case_Language (self EID) EID { 
-    return /*(sm for self_print @ Case= EID)*/ To_Case(OBJ(self)).SelfPrint( )} 
+    return To_Case(OBJ(self)).SelfPrint( )} 
   
-/* {1} OPT.The go function for: self_eval(self:Case) [] */
+/* {1} The go function for: self_eval(self:Case) [status=1] */
 func (self *Case ) SelfEval () EID { 
     var Result EID 
-    /* Let:2 */{ 
-      var truc *ClaireAny  
-      /* noccur = 1 */
-      var truc_try03143 EID 
-      truc_try03143 = EVAL(self.ClaireVar)
+    { var truc *ClaireAny  
+      _ = truc
+      var try_1 EID 
+      /*g_try(v2:"try_1",loop:false) */
+      try_1 = EVAL(self.ClaireVar)
       /* ERROR PROTECTION INSERTED (truc-Result) */
-      if ErrorIn(truc_try03143) {Result = truc_try03143
+      if ErrorIn(try_1) {Result = try_1
       } else {
-      truc = ANY(truc_try03143)
-      /* Let:3 */{ 
-        var flip *ClaireBoolean   = CTRUE
-        /* noccur = 3 */
-        /* Let:4 */{ 
-          var previous *ClaireAny   = CFALSE.Id()
-          /* noccur = 4 */
-          var g0315I *ClaireBoolean  
-          var g0315I_try03165 EID 
-          /* For:5 */{ 
+      truc = ANY(try_1)
+      { var flip *ClaireBoolean   = CTRUE
+        _ = flip
+        { var previous *ClaireAny   = CFALSE.Id()
+          var g0180I *ClaireBoolean  
+          var try_2 EID 
+          /*g_try(v2:"try_2",loop:false) */
+          { 
             var x *ClaireAny  
             _ = x
-            g0315I_try03165= EID{CFALSE.Id(),0}
+            try_2= EID{CFALSE.Id(),0}
             var x_support *ClaireList  
             x_support = self.Args
             x_len := x_support.Length()
             for i_it := 0; i_it < x_len; i_it++ { 
               x = x_support.At(i_it)
-              var void_try7 EID 
-              _ = void_try7
-              if (flip == CTRUE) /* If:7 */{ 
+              var loop_3 EID 
+              _ = loop_3
+              /*g_try(v2:"loop_3",loop:tuple("try_2", EID)) */
+              if (flip == CTRUE) { 
                 flip = CFALSE
-                var previous_try03178 EID 
-                previous_try03178 = EVAL(x)
-                /* ERROR PROTECTION INSERTED (previous-void_try7) */
-                if ErrorIn(previous_try03178) {void_try7 = previous_try03178
-                g0315I_try03165 = previous_try03178
+                var try_4 EID 
+                /*g_try(v2:"try_4",loop:tuple("try_2", EID)) */
+                try_4 = EVAL(x)
+                /* ERROR PROTECTION INSERTED (previous-loop_3) */
+                if ErrorIn(try_4) {loop_3 = try_4
+                try_2 = try_4
                 break
                 } else {
-                previous = ANY(previous_try03178)
-                void_try7 = previous.ToEID()
+                previous = ANY(try_4)
+                loop_3 = previous.ToEID()
                 }
                 } else {
-                var g0318I *ClaireBoolean  
-                var g0318I_try03198 EID 
-                g0318I_try03198 = Core.F_BELONG(truc,previous)
-                /* ERROR PROTECTION INSERTED (g0318I-void_try7) */
-                if ErrorIn(g0318I_try03198) {void_try7 = g0318I_try03198
+                var g0181I *ClaireBoolean  
+                var try_5 EID 
+                /*g_try(v2:"try_5",loop:false) */
+                try_5 = Core.F_BELONG(truc,previous)
+                /* ERROR PROTECTION INSERTED (g0181I-loop_3) */
+                if ErrorIn(try_5) {loop_3 = try_5
                 } else {
-                g0318I = ToBoolean(OBJ(g0318I_try03198))
-                if (g0318I == CTRUE) /* If:8 */{ 
-                  var previous_try03209 EID 
-                  previous_try03209 = EVAL(x)
-                  /* ERROR PROTECTION INSERTED (previous-void_try7) */
-                  if ErrorIn(previous_try03209) {void_try7 = previous_try03209
-                  g0315I_try03165 = previous_try03209
+                g0181I = ToBoolean(OBJ(try_5))
+                if (g0181I == CTRUE) { 
+                  var try_6 EID 
+                  /*g_try(v2:"try_6",loop:tuple("try_2", EID)) */
+                  try_6 = EVAL(x)
+                  /* ERROR PROTECTION INSERTED (previous-loop_3) */
+                  if ErrorIn(try_6) {loop_3 = try_6
+                  try_2 = try_6
                   break
                   } else {
-                  previous = ANY(previous_try03209)
-                  void_try7 = previous.ToEID()
-                   /*v = g0315I_try03165, s =EID*/
-g0315I_try03165 = EID{CTRUE.Id(),0}
+                  previous = ANY(try_6)
+                  loop_3 = previous.ToEID()
+                  try_2 = EID{CTRUE.Id(),0}
                   break
                   }
                   } else {
                   flip = CTRUE
-                  void_try7 = EID{flip.Id(),0}
-                  /* If-8 */} 
+                  loop_3 = EID{flip.Id(),0}
+                  } 
                 }
-                /* If-7 */} 
-              /* ERROR PROTECTION INSERTED (void_try7-g0315I_try03165) */
-              if ErrorIn(void_try7) {g0315I_try03165 = void_try7
-              g0315I_try03165 = void_try7
+                } 
+              /* ERROR PROTECTION INSERTED (loop_3-try_2) */
+              if ErrorIn(loop_3) {try_2 = loop_3
               break
               } else {
               }
-              /* loop-6 */} 
-            /* For-5 */} 
-          /* ERROR PROTECTION INSERTED (g0315I-Result) */
-          if ErrorIn(g0315I_try03165) {Result = g0315I_try03165
+              } 
+            } 
+          /* ERROR PROTECTION INSERTED (g0180I-Result) */
+          if ErrorIn(try_2) {Result = try_2
           } else {
-          g0315I = ToBoolean(OBJ(g0315I_try03165))
-          if (g0315I == CTRUE) /* If:5 */{ 
+          g0180I = ToBoolean(OBJ(try_2))
+          if (g0180I == CTRUE) { 
             Result = previous.ToEID()
             } else {
             Result = EID{CFALSE.Id(),0}
-            /* If-5 */} 
+            } 
           }
-          /* Let-4 */} 
-        /* Let-3 */} 
+          } 
+        } 
       }
-      /* Let-2 */} 
+      } 
     return Result} 
   
 // The EID go function for: self_eval @ Case (throw: true) 
 func E_self_eval_Case (self EID) EID { 
-    return /*(sm for self_eval @ Case= EID)*/ To_Case(OBJ(self)).SelfEval( )} 
+    return To_Case(OBJ(self)).SelfEval( )} 
   
 // The EVAL go function for: Case 
 func EVAL_Case (x *ClaireAny) EID { 
@@ -2527,20 +2617,24 @@ func EVAL_Case (x *ClaireAny) EID {
   
 // ------------------ WHILE  and UNTIL  -----------------------------
 // the "other" while is until, where the first test is skipped
-/* {1} OPT.The go function for: self_print(self:While) [] */
+/* {1} The go function for: self_print(self:While) [status=1] */
 func (self *While ) SelfPrint () EID { 
     var Result EID 
+    /*g_try(v2:"Result",loop:true) */
     F_princ_string(ToString(IfThenElse((self.Other == CTRUE),
       MakeString("until").Id(),
       MakeString("while").Id())))
     PRINC(" ")
+    /*g_try(v2:"Result",loop:true) */
     Result = F_printexp_any(self.Test,CFALSE)
     /* ERROR PROTECTION INSERTED (Result-Result) */
     if !ErrorIn(Result) {
     PRINC(" ")
+    /*g_try(v2:"Result",loop:true) */
     Result = F_lbreak_integer(2)
     /* ERROR PROTECTION INSERTED (Result-Result) */
     if !ErrorIn(Result) {
+    /*g_try(v2:"Result",loop:true) */
     Result = Core.F_CALL(C_print,ARGS(self.Arg.ToEID()))
     /* ERROR PROTECTION INSERTED (Result-Result) */
     if !ErrorIn(Result) {
@@ -2548,154 +2642,167 @@ func (self *While ) SelfPrint () EID {
     Result = EVOID
     }}}
     {
-    /* update:2 */{ 
+    { 
       var va_arg1 *Core.PrettyPrinter  
       var va_arg2 int 
       va_arg1 = Core.C_pretty
       va_arg2 = (Core.C_pretty.Index-2)
-      /* ---------- now we compile update mClaire/index(va_arg1) := va_arg2 ------- */
       va_arg1.Index = va_arg2
-      Result = EID{C__INT,IVAL(va_arg2)}
-      /* update-2 */} 
+      /*integer->integer*/Result = EID{C__INT,IVAL(va_arg2)}
+      } 
     }
     return Result} 
   
 // The EID go function for: self_print @ While (throw: true) 
 func E_self_print_While_Language (self EID) EID { 
-    return /*(sm for self_print @ While= EID)*/ To_While(OBJ(self)).SelfPrint( )} 
+    return To_While(OBJ(self)).SelfPrint( )} 
   
-/* {1} OPT.The go function for: self_eval(self:While) [] */
+// other = true => self means  repeat self.arg until self.test = true
+/* {1} The go function for: self_eval(self:While) [status=1] */
 func (self *While ) SelfEval () EID { 
     var Result EID 
-    /* Let:2 */{ 
-      var a *ClaireBoolean   = self.Other
-      /* noccur = 2 */
-      /* Let:3 */{ 
-        var b *ClaireBoolean   = a
-        /* noccur = 2 */
-        h_index := ClEnv.Index /* Handle */
-        h_base := ClEnv.Base
-        var v_while4 *ClaireBoolean  
-        Result= EID{CFALSE.Id(),0}
-        var v_while4_try03224 EID 
-        /* or:4 */{ 
-          var v_or4 *ClaireBoolean  
-          
-          v_or4 = b
-          if (v_or4 == CTRUE) {v_while4_try03224 = EID{CTRUE.Id(),0}
-          } else /* or:5 */{ 
-            var v_or4_try03236 EID 
-            /* Let:6 */{ 
-              var g0324UU *ClaireBoolean  
-              /* noccur = 1 */
-              var g0324UU_try03257 EID 
-              /* Let:7 */{ 
-                var g0326UU *ClaireAny  
-                /* noccur = 1 */
-                var g0326UU_try03278 EID 
-                g0326UU_try03278 = EVAL(self.Test)
-                /* ERROR PROTECTION INSERTED (g0326UU-g0324UU_try03257) */
-                if ErrorIn(g0326UU_try03278) {g0324UU_try03257 = g0326UU_try03278
-                } else {
-                g0326UU = ANY(g0326UU_try03278)
-                g0324UU_try03257 = EID{Core.F_not_any(g0326UU).Id(),0}
-                }
-                /* Let-7 */} 
-              /* ERROR PROTECTION INSERTED (g0324UU-v_or4_try03236) */
-              if ErrorIn(g0324UU_try03257) {v_or4_try03236 = g0324UU_try03257
-              } else {
-              g0324UU = ToBoolean(OBJ(g0324UU_try03257))
-              v_or4_try03236 = EID{Equal(g0324UU.Id(),a.Id()).Id(),0}
-              }
-              /* Let-6 */} 
-            /* ERROR PROTECTION INSERTED (v_or4-v_while4_try03224) */
-            if ErrorIn(v_or4_try03236) {v_while4_try03224 = v_or4_try03236
-            } else {
-            v_or4 = ToBoolean(OBJ(v_or4_try03236))
-            if (v_or4 == CTRUE) {v_while4_try03224 = EID{CTRUE.Id(),0}
-            } else /* or:6 */{ 
-              v_while4_try03224 = EID{CFALSE.Id(),0}/* org-6 */} 
-            /* org-5 */} 
-          }
-          /* or-4 */} 
-        /* ERROR PROTECTION INSERTED (v_while4-Result) */
-        if ErrorIn(v_while4_try03224) {Result = v_while4_try03224
-        } else {
-        v_while4 = ToBoolean(OBJ(v_while4_try03224))
-        
-        for v_while4 == CTRUE /* while:4 */{ 
-          var void_try5 EID 
-          _ = void_try5
+    { var a *ClaireBoolean   = self.Other
+      { var b *ClaireBoolean   = a
+        _ = b
+        { 
+          h_index := ClEnv.Index
+          h_base := ClEnv.Base
+          var v_while5 *ClaireBoolean  
+          Result= EID{CFALSE.Id(),0}
+          var try_1 EID 
+          /*g_try(v2:"try_1",loop:false) */
           { 
-          b = CFALSE
-          void_try5 = EVAL(self.Arg)
-          /* ERROR PROTECTION INSERTED (void_try5-void_try5) */
-          if ErrorIn(void_try5) {Result = void_try5
-          break
-          } else {
-          }
-          var v_while4_try03285 EID 
-          /* or:5 */{ 
+            /* Or stat: v="try_1", loop=false */
             var v_or5 *ClaireBoolean  
             
+            /* Or stat: try b with try:false, v="try_1", loop=false */
             v_or5 = b
-            if (v_or5 == CTRUE) {v_while4_try03285 = EID{CTRUE.Id(),0}
-            } else /* or:6 */{ 
-              var v_or5_try03297 EID 
-              /* Let:7 */{ 
-                var g0330UU *ClaireBoolean  
-                /* noccur = 1 */
-                var g0330UU_try03318 EID 
-                /* Let:8 */{ 
-                  var g0332UU *ClaireAny  
-                  /* noccur = 1 */
-                  var g0332UU_try03339 EID 
-                  g0332UU_try03339 = EVAL(self.Test)
-                  /* ERROR PROTECTION INSERTED (g0332UU-g0330UU_try03318) */
-                  if ErrorIn(g0332UU_try03339) {g0330UU_try03318 = g0332UU_try03339
+            if (v_or5 == CTRUE) {try_1 = EID{CTRUE.Id(),0}
+            } else { 
+              /* Or stat: try = @ any(not @ any(eval @ list<type_expression>(any)(iClaire/test @ While(self))),a) with try:true, v="try_1", loop=false */
+              var try_2 EID 
+              /*g_try(v2:"try_2",loop:false) */
+              { var arg_3 *ClaireBoolean  
+                _ = arg_3
+                var try_4 EID 
+                /*g_try(v2:"try_4",loop:false) */
+                { var arg_5 *ClaireAny  
+                  _ = arg_5
+                  var try_6 EID 
+                  /*g_try(v2:"try_6",loop:false) */
+                  try_6 = EVAL(self.Test)
+                  /* ERROR PROTECTION INSERTED (arg_5-try_4) */
+                  if ErrorIn(try_6) {try_4 = try_6
                   } else {
-                  g0332UU = ANY(g0332UU_try03339)
-                  g0330UU_try03318 = EID{Core.F_not_any(g0332UU).Id(),0}
+                  arg_5 = ANY(try_6)
+                  try_4 = EID{Core.F_not_any(arg_5).Id(),0}
                   }
-                  /* Let-8 */} 
-                /* ERROR PROTECTION INSERTED (g0330UU-v_or5_try03297) */
-                if ErrorIn(g0330UU_try03318) {v_or5_try03297 = g0330UU_try03318
+                  } 
+                /* ERROR PROTECTION INSERTED (arg_3-try_2) */
+                if ErrorIn(try_4) {try_2 = try_4
                 } else {
-                g0330UU = ToBoolean(OBJ(g0330UU_try03318))
-                v_or5_try03297 = EID{Equal(g0330UU.Id(),a.Id()).Id(),0}
+                arg_3 = ToBoolean(OBJ(try_4))
+                try_2 = EID{Equal(arg_3.Id(),a.Id()).Id(),0}
                 }
-                /* Let-7 */} 
-              /* ERROR PROTECTION INSERTED (v_or5-v_while4_try03285) */
-              if ErrorIn(v_or5_try03297) {v_while4_try03285 = v_or5_try03297
+                } 
+              /* ERROR PROTECTION INSERTED (v_or5-try_1) */
+              if ErrorIn(try_2) {try_1 = try_2
               } else {
-              v_or5 = ToBoolean(OBJ(v_or5_try03297))
-              if (v_or5 == CTRUE) {v_while4_try03285 = EID{CTRUE.Id(),0}
-              } else /* or:7 */{ 
-                v_while4_try03285 = EID{CFALSE.Id(),0}/* org-7 */} 
-              /* org-6 */} 
+              v_or5 = ToBoolean(OBJ(try_2))
+              if (v_or5 == CTRUE) {try_1 = EID{CTRUE.Id(),0}
+              } else { 
+                try_1 = EID{CFALSE.Id(),0}} 
+              } 
             }
-            /* or-5 */} 
-          /* ERROR PROTECTION INSERTED (v_while4-Result) */
-          if ErrorIn(v_while4_try03285) {Result = v_while4_try03285
-          Result = v_while4_try03285
-          break
+            } 
+          /* ERROR PROTECTION INSERTED (v_while5-Result) */
+          if ErrorIn(try_1) {Result = try_1
           } else {
-          v_while4 = ToBoolean(OBJ(v_while4_try03285))
-          /* while-4 */} 
-        }}
-        }
-        if ErrorIn(Result) && ToType(Core.C_return_error.Id()).Contains(ANY(Result)) == CTRUE { 
-          /* s=EID */ClEnv.Index = h_index
-          ClEnv.Base = h_base
-          Result = Core.F_CALL(C_arg,ARGS(EID{ClEnv.Exception_I.Id(),0}))
+          v_while5 = ToBoolean(OBJ(try_1))
+          
+          for v_while5 == CTRUE { 
+            /* While stat, v:"Result" loop:false */
+            var loop_7 EID 
+            _ = loop_7
+            { 
+            b = CFALSE
+            /*g_try(v2:"loop_7",loop:tuple("Result", EID)) */
+            loop_7 = EVAL(self.Arg)
+            /* ERROR PROTECTION INSERTED (loop_7-loop_7) */
+            if ErrorIn(loop_7) {Result = loop_7
+            break
+            } else {
+            }
+            /* try?:true, v2:"v_while5" loop will be:tuple("Result", EID) */
+            var try_8 EID 
+            /*g_try(v2:"try_8",loop:tuple("Result", EID)) */
+            { 
+              /* Or stat: v="try_8", loop=tuple("Result", EID) */
+              var v_or6 *ClaireBoolean  
+              
+              /* Or stat: try b with try:false, v="try_8", loop=tuple("Result", EID) */
+              v_or6 = b
+              if (v_or6 == CTRUE) {try_8 = EID{CTRUE.Id(),0}
+              } else { 
+                /* Or stat: try = @ any(not @ any(eval @ list<type_expression>(any)(iClaire/test @ While(self))),a) with try:true, v="try_8", loop=tuple("Result", EID) */
+                var try_9 EID 
+                /*g_try(v2:"try_9",loop:tuple("Result", EID)) */
+                { var arg_10 *ClaireBoolean  
+                  _ = arg_10
+                  var try_11 EID 
+                  /*g_try(v2:"try_11",loop:false) */
+                  { var arg_12 *ClaireAny  
+                    _ = arg_12
+                    var try_13 EID 
+                    /*g_try(v2:"try_13",loop:false) */
+                    try_13 = EVAL(self.Test)
+                    /* ERROR PROTECTION INSERTED (arg_12-try_11) */
+                    if ErrorIn(try_13) {try_11 = try_13
+                    } else {
+                    arg_12 = ANY(try_13)
+                    try_11 = EID{Core.F_not_any(arg_12).Id(),0}
+                    }
+                    } 
+                  /* ERROR PROTECTION INSERTED (arg_10-try_9) */
+                  if ErrorIn(try_11) {try_9 = try_11
+                  } else {
+                  arg_10 = ToBoolean(OBJ(try_11))
+                  try_9 = EID{Equal(arg_10.Id(),a.Id()).Id(),0}
+                  }
+                  } 
+                /* ERROR PROTECTION INSERTED (v_or6-try_8) */
+                if ErrorIn(try_9) {try_8 = try_9
+                Result = try_9
+                break
+                } else {
+                v_or6 = ToBoolean(OBJ(try_9))
+                if (v_or6 == CTRUE) {try_8 = EID{CTRUE.Id(),0}
+                } else { 
+                  try_8 = EID{CFALSE.Id(),0}} 
+                } 
+              }
+              } 
+            /* ERROR PROTECTION INSERTED (v_while5-Result) */
+            if ErrorIn(try_8) {Result = try_8
+            break
+            } else {
+            v_while5 = ToBoolean(OBJ(try_8))
+            } 
+          }}
+          }
+          if ErrorIn(Result) && ToType(Core.C_return_error.Id()).Contains(ANY(Result)) == CTRUE { 
+            ClEnv.Index = h_index
+            ClEnv.Base = h_base
+            Result = Core.F_CALL(C_arg,ARGS(EID{ClEnv.Exception_I.Id(),0}))
+            } 
           } 
-        /* Let-3 */} 
-      /* Let-2 */} 
+        } 
+      } 
     return Result} 
   
 // The EID go function for: self_eval @ While (throw: true) 
 func E_self_eval_While (self EID) EID { 
-    return /*(sm for self_eval @ While= EID)*/ To_While(OBJ(self)).SelfEval( )} 
+    return To_While(OBJ(self)).SelfEval( )} 
   
 // The EVAL go function for: While 
 func EVAL_While (x *ClaireAny) EID { 
@@ -2705,22 +2812,27 @@ func EVAL_While (x *ClaireAny) EID {
 // This is the control structure associated with these errors. Its real
 // semantics is defined in the C compiler file
 //
-/* {1} OPT.The go function for: self_print(self:Handle) [] */
+/* {1} The go function for: self_print(self:Handle) [status=1] */
 func (self *ClaireHandle ) SelfPrint () EID { 
     var Result EID 
+    /*g_try(v2:"Result",loop:true) */
     PRINC("try ")
+    /*g_try(v2:"Result",loop:true) */
     Result = Core.F_CALL(C_print,ARGS(self.Arg.ToEID()))
     /* ERROR PROTECTION INSERTED (Result-Result) */
     if !ErrorIn(Result) {
     PRINC(" ")
+    /*g_try(v2:"Result",loop:true) */
     Result = F_lbreak_integer(0)
     /* ERROR PROTECTION INSERTED (Result-Result) */
     if !ErrorIn(Result) {
     PRINC("catch ")
+    /*g_try(v2:"Result",loop:true) */
     Result = Core.F_CALL(C_print,ARGS(self.Test.ToEID()))
     /* ERROR PROTECTION INSERTED (Result-Result) */
     if !ErrorIn(Result) {
     PRINC(" ")
+    /*g_try(v2:"Result",loop:true) */
     Result = Core.F_CALL(C_print,ARGS(self.Other.ToEID()))
     /* ERROR PROTECTION INSERTED (Result-Result) */
     if !ErrorIn(Result) {
@@ -2728,21 +2840,20 @@ func (self *ClaireHandle ) SelfPrint () EID {
     Result = EVOID
     }}}}
     {
-    /* update:2 */{ 
+    { 
       var va_arg1 *Core.PrettyPrinter  
       var va_arg2 int 
       va_arg1 = Core.C_pretty
       va_arg2 = (Core.C_pretty.Index-2)
-      /* ---------- now we compile update mClaire/index(va_arg1) := va_arg2 ------- */
       va_arg1.Index = va_arg2
-      Result = EID{C__INT,IVAL(va_arg2)}
-      /* update-2 */} 
+      /*integer->integer*/Result = EID{C__INT,IVAL(va_arg2)}
+      } 
     }
     return Result} 
   
 // The EID go function for: self_print @ Handle (throw: true) 
 func E_self_print_Handle_Language (self EID) EID { 
-    return /*(sm for self_print @ Handle= EID)*/ To_ClaireHandle(OBJ(self)).SelfPrint( )} 
+    return To_ClaireHandle(OBJ(self)).SelfPrint( )} 
   
 // original code
 // self_eval(self:Handle) : any
@@ -2753,35 +2864,34 @@ func E_self_print_Handle_Language (self EID) EID {
 // CLAIRE 4 VERSION, because catch x => x is a constant class
 // notice that return_error should be called return_exception since they travel through intepreted
 // not a problem at compile time since return_exceptions are handled with break(x)
-/* {1} OPT.The go function for: self_eval(self:Handle) [] */
+/* {1} The go function for: self_eval(self:Handle) [status=1] */
 func (self *ClaireHandle ) SelfEval () EID { 
     var Result EID 
-    h_index := ClEnv.Index /* Handle */
-    h_base := ClEnv.Base
-    Result = EVAL(self.Arg)
-    if ErrorIn(Result){ 
-      /* s=EID */ClEnv.Index = h_index
-      ClEnv.Base = h_base
-      /* Let:3 */{ 
-        var e *ClaireException   = ClEnv.Exception_I
-        /* noccur = 3 */
-        /* Let:4 */{ 
-          var x *ClaireClass   = ToClass(self.Test)
-          /* noccur = 1 */
-          if ((e.Isa.IsIn(Core.C_return_error) == CTRUE) || 
-              (Core.F__Z_any1(e.Id(),x) != CTRUE)) /* If:5 */{ 
-            Result = e.Close()
-            } else {
-            Result = EVAL(self.Other)
-            /* If-5 */} 
-          /* Let-4 */} 
-        /* Let-3 */} 
+    { 
+      h_index := ClEnv.Index
+      h_base := ClEnv.Base
+      Result = EVAL(self.Arg)
+      if ErrorIn(Result){ 
+        ClEnv.Index = h_index
+        ClEnv.Base = h_base
+        { var e *ClaireException   = ClEnv.Exception_I
+          { var x *ClaireClass   = ToClass(self.Test)
+            _ = x
+            if ((e.Isa.IsIn(Core.C_return_error) == CTRUE) || 
+                (Core.F__Z_any1(e.Id(),x) != CTRUE)) { 
+              Result = e.Close()
+              } else {
+              Result = EVAL(self.Other)
+              } 
+            } 
+          } 
+        } 
       } 
     return Result} 
   
 // The EID go function for: self_eval @ Handle (throw: true) 
 func E_self_eval_Handle (self EID) EID { 
-    return /*(sm for self_eval @ Handle= EID)*/ To_ClaireHandle(OBJ(self)).SelfEval( )} 
+    return To_ClaireHandle(OBJ(self)).SelfEval( )} 
   
 // The EVAL go function for: Handle 
 func EVAL_Handle (x *ClaireAny) EID { 
@@ -2792,47 +2902,45 @@ func EVAL_Handle (x *ClaireAny) EID {
 // *     Part 4: the constructs                                         *
 // *********************************************************************
 // v3.2.16   constructor for arrays
-/* {1} OPT.The go function for: self_print(self:Construct) [] */
+/* {1} The go function for: self_print(self:Construct) [status=1] */
 func (self *Construct ) SelfPrint () EID { 
     var Result EID 
-    /* Let:2 */{ 
-      var _Zl int  = Core.C_pretty.Index
-      /* noccur = 1 */
-      /* Let:3 */{ 
-        var g0345UU *ClaireString  
-        /* noccur = 1 */
-        if (self.Isa.IsIn(C_List) == CTRUE) /* If:4 */{ 
-          g0345UU = MakeString("list")
-          /* If!4 */}  else if (self.Isa.IsIn(C_Set) == CTRUE) /* If:4 */{ 
-          g0345UU = MakeString("set")
-          /* If!4 */}  else if (self.Isa.IsIn(C_Tuple) == CTRUE) /* If:4 */{ 
-          g0345UU = MakeString("tuple")
-          /* If!4 */}  else if (self.Isa.IsIn(C_Printf) == CTRUE) /* If:4 */{ 
-          g0345UU = MakeString("printf")
-          /* If!4 */}  else if (self.Isa.IsIn(C_Error) == CTRUE) /* If:4 */{ 
-          g0345UU = MakeString("error")
-          /* If!4 */}  else if (self.Isa.IsIn(C_Trace) == CTRUE) /* If:4 */{ 
-          g0345UU = MakeString("trace")
-          /* If!4 */}  else if (self.Isa.IsIn(C_Assert) == CTRUE) /* If:4 */{ 
-          g0345UU = MakeString("assert")
-          /* If!4 */}  else if (self.Isa.IsIn(C_Branch) == CTRUE) /* If:4 */{ 
-          g0345UU = MakeString("branch")
+    { var _Zl int  = Core.C_pretty.Index
+      _ = _Zl
+      /*g_try(v2:"Result",loop:true) */
+      { var arg_1 *ClaireString  
+        _ = arg_1
+        if (self.Isa.IsIn(C_List) == CTRUE) { 
+          arg_1 = MakeString("list")
+          }  else if (self.Isa.IsIn(C_Set) == CTRUE) { 
+          arg_1 = MakeString("set")
+          }  else if (self.Isa.IsIn(C_Tuple) == CTRUE) { 
+          arg_1 = MakeString("tuple")
+          }  else if (self.Isa.IsIn(C_Printf) == CTRUE) { 
+          arg_1 = MakeString("printf")
+          }  else if (self.Isa.IsIn(C_Error) == CTRUE) { 
+          arg_1 = MakeString("error")
+          }  else if (self.Isa.IsIn(C_Trace) == CTRUE) { 
+          arg_1 = MakeString("trace")
+          }  else if (self.Isa.IsIn(C_Assert) == CTRUE) { 
+          arg_1 = MakeString("assert")
+          }  else if (self.Isa.IsIn(C_Branch) == CTRUE) { 
+          arg_1 = MakeString("branch")
           } else {
-          g0345UU = self.Isa.Name.String_I()
-          /* If-4 */} 
-        F_princ_string(g0345UU)
-        /* Let-3 */} 
+          arg_1 = self.Isa.Name.String_I()
+          } 
+        F_princ_string(arg_1)
+        } 
+      /*g_try(v2:"Result",loop:true) */
       if ((self.Isa.IsIn(C_List) == CTRUE) || 
-          (self.Isa.IsIn(C_Set) == CTRUE)) /* If:3 */{ 
-        /* Let:4 */{ 
-          var g0344 *Construct   = self
-          /* noccur = 1 */
-          /* Let:5 */{ 
-            var _Zt *ClaireAny   = Core.F_get_property(C_of,ToObject(g0344.Id()))
-            /* noccur = 3 */
-            if (_Zt != CNULL) /* If:6 */{ 
-              if (Equal(_Zt,CEMPTY.Id()) != CTRUE) /* If:7 */{ 
+          (self.Isa.IsIn(C_Set) == CTRUE)) { 
+        { var g0193 *Construct   = self
+          _ = g0193
+          { var _Zt *ClaireAny   = Core.F_get_property(C_of,ToObject(g0193.Id()))
+            if (_Zt != CNULL) { 
+              if (Equal(_Zt,CEMPTY.Id()) != CTRUE) { 
                 PRINC("<")
+                /*g_try(v2:"Result",loop:true) */
                 Result = Core.F_CALL(C_print,ARGS(_Zt.ToEID()))
                 /* ERROR PROTECTION INSERTED (Result-Result) */
                 if !ErrorIn(Result) {
@@ -2841,19 +2949,20 @@ func (self *Construct ) SelfPrint () EID {
                 }
                 } else {
                 Result = EID{CFALSE.Id(),0}
-                /* If-7 */} 
+                } 
               } else {
               Result = EID{CNULL,0}
-              /* If-6 */} 
-            /* Let-5 */} 
-          /* Let-4 */} 
+              } 
+            } 
+          } 
         } else {
         Result = EID{CFALSE.Id(),0}
-        /* If-3 */} 
+        } 
       /* ERROR PROTECTION INSERTED (Result-Result) */
       if !ErrorIn(Result) {
       PRINC("(")
       F_set_level_void()
+      /*g_try(v2:"Result",loop:true) */
       Result = F_Language_printbox_list2(self.Args)
       /* ERROR PROTECTION INSERTED (Result-Result) */
       if !ErrorIn(Result) {
@@ -2861,366 +2970,364 @@ func (self *Construct ) SelfPrint () EID {
       Result = EVOID
       }}
       {
-      /* update:3 */{ 
+      { 
         var va_arg1 *Core.PrettyPrinter  
         var va_arg2 int 
         va_arg1 = Core.C_pretty
         va_arg2 = _Zl
-        /* ---------- now we compile update mClaire/index(va_arg1) := va_arg2 ------- */
         va_arg1.Index = va_arg2
-        Result = EID{C__INT,IVAL(va_arg2)}
-        /* update-3 */} 
+        /*integer->integer*/Result = EID{C__INT,IVAL(va_arg2)}
+        } 
       }
-      /* Let-2 */} 
+      } 
     return Result} 
   
 // The EID go function for: self_print @ Construct (throw: true) 
 func E_self_print_Construct_Language (self EID) EID { 
-    return /*(sm for self_print @ Construct= EID)*/ To_Construct(OBJ(self)).SelfPrint( )} 
+    return To_Construct(OBJ(self)).SelfPrint( )} 
   
 // constructors: how to create a list, a set, a tuple or an array
 // note that the constructor is typed
 // CLAIRE4: must build the list with the proper type from the begining, so that Srange is correct
-/* {1} OPT.The go function for: self_eval(self:List) [] */
+/* {1} The go function for: self_eval(self:List) [status=1] */
 func (self *List ) SelfEval () EID { 
     var Result EID 
-    /* Let:2 */{ 
-      var type_ask *ClaireBoolean   = MakeBoolean((self.Of.Id() == CNULL)).Not
-      /* noccur = 1 */
-      /* Let:3 */{ 
-        var n int  = self.Args.Length()
-        /* noccur = 4 */
-        if (type_ask == CTRUE) /* If:4 */{ 
-          /* Let:5 */{ 
-            var l *ClaireList   = CreateList(self.Of,n)
-            /* noccur = 2 */
-            /* Let:6 */{ 
-              var i int  = 1
-              /* noccur = 5 */
-              /* Let:7 */{ 
-                var g0346 int  = n
-                /* noccur = 1 */
+    { var type_ask *ClaireBoolean   = MakeBoolean((self.Of.Id() == CNULL)).Not
+      _ = type_ask
+      { var n int  = self.Args.Length()
+        if (type_ask == CTRUE) { 
+          { var l *ClaireList   = CreateList(self.Of,n)
+            /*g_try(v2:"Result",loop:true) */
+            { var i int  = 1
+              { var g0194 int  = n
+                _ = g0194
                 Result= EID{CFALSE.Id(),0}
-                for (i <= g0346) /* while:8 */{ 
-                  var void_try9 EID 
-                  _ = void_try9
+                for (i <= g0194) { 
+                  /* While stat, v:"Result" loop:true */
+                  var loop_1 EID 
+                  _ = loop_1
                   { 
-                  /* LetEID:9 */{ 
-                    var g0348UU EID 
-                    g0348UU = EVAL(self.Args.At(i-1))
-                    /* ERROR PROTECTION INSERTED (g0348UU-void_try9) */
-                    if ErrorIn(g0348UU) {void_try9 = g0348UU
+                  /*g_try(v2:"loop_1",loop:tuple("Result", EID)) */
+                  { 
+                    var arg_2 EID 
+                    /*g_try(v2:"arg_2",loop:false) */
+                    arg_2 = EVAL(self.Args.At(i-1))
+                    /* ERROR PROTECTION INSERTED (arg_2-loop_1) */
+                    if ErrorIn(arg_2) {loop_1 = arg_2
                     } else {
-                    void_try9 = l.WriteEID(i,g0348UU)}
-                    /* LetEID-9 */} 
-                  /* ERROR PROTECTION INSERTED (void_try9-void_try9) */
-                  if ErrorIn(void_try9) {Result = void_try9
+                    loop_1 = l.WriteEID(i,arg_2)}
+                    } 
+                  /* ERROR PROTECTION INSERTED (loop_1-loop_1) */
+                  if ErrorIn(loop_1) {Result = loop_1
                   break
                   } else {
                   i = (i+1)
                   }
-                  /* while-8 */} 
+                  /* try?:false, v2:"v_while8" loop will be:tuple("Result", EID) */
+                  } 
                 }
-                /* Let-7 */} 
-              /* Let-6 */} 
+                } 
+              } 
             /* ERROR PROTECTION INSERTED (Result-Result) */
             if !ErrorIn(Result) {
             Result = EID{l.Id(),0}
             }
-            /* Let-5 */} 
+            } 
           } else {
-          /* Let:5 */{ 
-            var l *ClaireList   = CreateList(ToType(CEMPTY.Id()),n)
-            /* noccur = 2 */
-            /* Let:6 */{ 
-              var i int  = 1
-              /* noccur = 5 */
-              /* Let:7 */{ 
-                var g0347 int  = n
-                /* noccur = 1 */
+          { var l *ClaireList   = CreateList(ToType(CEMPTY.Id()),n)
+            /*g_try(v2:"Result",loop:true) */
+            { var i int  = 1
+              { var g0195 int  = n
+                _ = g0195
                 Result= EID{CFALSE.Id(),0}
-                for (i <= g0347) /* while:8 */{ 
-                  var void_try9 EID 
-                  _ = void_try9
+                for (i <= g0195) { 
+                  /* While stat, v:"Result" loop:true */
+                  var loop_3 EID 
+                  _ = loop_3
                   { 
-                  /* Let:9 */{ 
-                    var g0349UU *ClaireAny  
-                    /* noccur = 1 */
-                    var g0349UU_try035010 EID 
-                    g0349UU_try035010 = EVAL(self.Args.At(i-1))
-                    /* ERROR PROTECTION INSERTED (g0349UU-void_try9) */
-                    if ErrorIn(g0349UU_try035010) {void_try9 = g0349UU_try035010
+                  /*g_try(v2:"loop_3",loop:tuple("Result", EID)) */
+                  { var arg_4 *ClaireAny  
+                    _ = arg_4
+                    var try_5 EID 
+                    /*g_try(v2:"try_5",loop:false) */
+                    try_5 = EVAL(self.Args.At(i-1))
+                    /* ERROR PROTECTION INSERTED (arg_4-loop_3) */
+                    if ErrorIn(try_5) {loop_3 = try_5
                     } else {
-                    g0349UU = ANY(g0349UU_try035010)
-                    void_try9 = ToArray(l.Id()).NthPut(i,g0349UU).ToEID()
+                    arg_4 = ANY(try_5)
+                    loop_3 = ToArray(l.Id()).NthPut(i,arg_4).ToEID()
                     }
-                    /* Let-9 */} 
-                  /* ERROR PROTECTION INSERTED (void_try9-void_try9) */
-                  if ErrorIn(void_try9) {Result = void_try9
+                    } 
+                  /* ERROR PROTECTION INSERTED (loop_3-loop_3) */
+                  if ErrorIn(loop_3) {Result = loop_3
                   break
                   } else {
                   i = (i+1)
                   }
-                  /* while-8 */} 
+                  /* try?:false, v2:"v_while8" loop will be:tuple("Result", EID) */
+                  } 
                 }
-                /* Let-7 */} 
-              /* Let-6 */} 
+                } 
+              } 
             /* ERROR PROTECTION INSERTED (Result-Result) */
             if !ErrorIn(Result) {
             Result = EID{l.Id(),0}
             }
-            /* Let-5 */} 
-          /* If-4 */} 
-        /* Let-3 */} 
-      /* Let-2 */} 
+            } 
+          } 
+        } 
+      } 
     return Result} 
   
 // The EID go function for: self_eval @ List (throw: true) 
 func E_self_eval_List (self EID) EID { 
-    return /*(sm for self_eval @ List= EID)*/ To_List(OBJ(self)).SelfEval( )} 
+    return To_List(OBJ(self)).SelfEval( )} 
   
 // The EVAL go function for: List 
 func EVAL_List (x *ClaireAny) EID { 
      return To_List(x).SelfEval()} 
   
 // here we use the CLAIRE 3 style of post-typing with a cast! 
-/* {1} OPT.The go function for: self_eval(self:Set) [] */
+/* {1} The go function for: self_eval(self:Set) [status=1] */
 func (self *Set ) SelfEval () EID { 
     var Result EID 
-    /* Let:2 */{ 
-      var s *ClaireSet  
-      /* noccur = 3 */
-      var s_try03513 EID 
-      /* Let:3 */{ 
-        var x_bag *ClaireSet   = ToType(CEMPTY.Id()).EmptySet()
-        /* noccur = 2 */
-        /* For:4 */{ 
-          var x *ClaireAny  
-          _ = x
-          s_try03513= EID{CFALSE.Id(),0}
-          var x_support *ClaireList  
-          x_support = self.Args
-          x_len := x_support.Length()
-          for i_it := 0; i_it < x_len; i_it++ { 
-            x = x_support.At(i_it)
-            var void_try6 EID 
-            _ = void_try6
-            /* Let:6 */{ 
-              var g0352UU *ClaireAny  
-              /* noccur = 1 */
-              var g0352UU_try03537 EID 
-              g0352UU_try03537 = EVAL(x)
-              /* ERROR PROTECTION INSERTED (g0352UU-void_try6) */
-              if ErrorIn(g0352UU_try03537) {void_try6 = g0352UU_try03537
-              } else {
-              g0352UU = ANY(g0352UU_try03537)
-              void_try6 = EID{x_bag.AddFast(g0352UU).Id(),0}
-              }
-              /* Let-6 */} 
-            /* ERROR PROTECTION INSERTED (void_try6-s_try03513) */
-            if ErrorIn(void_try6) {s_try03513 = void_try6
-            s_try03513 = void_try6
-            break
-            } else {
-            }
-            /* loop-5 */} 
-          /* For-4 */} 
-        /* ERROR PROTECTION INSERTED (s_try03513-s_try03513) */
-        if !ErrorIn(s_try03513) {
-        s_try03513 = EID{x_bag.Id(),0}
-        }
-        /* Let-3 */} 
-      /* ERROR PROTECTION INSERTED (s-Result) */
-      if ErrorIn(s_try03513) {Result = s_try03513
-      } else {
-      s = ToSet(OBJ(s_try03513))
-      if (self.Of.Id() != CNULL) /* If:3 */{ 
-        /* Let:4 */{ 
-          var x *ClaireAny  
-          /* noccur = 2 */
-          /* Let:5 */{ 
-            var x_some *ClaireAny   = CNULL
-            /* noccur = 2 */
-            /* For:6 */{ 
-              var x *ClaireAny  
-              _ = x
-              for _,x = range(s.Values)/* loop:7 */{ 
-                if (self.Of.Contains(x) != CTRUE) /* If:8 */{ 
-                   /*v = x, s =void*/
-x_some = x
+    { var type_ask *ClaireBoolean   = MakeBoolean((self.Of.Id() == CNULL)).Not
+      _ = type_ask
+      { var n int  = self.Args.Length()
+        if (type_ask == CTRUE) { 
+          { var l *ClaireSet   = self.Of.EmptySet()
+            /*g_try(v2:"Result",loop:true) */
+            { var i int  = 1
+              { var g0196 int  = n
+                _ = g0196
+                Result= EID{CFALSE.Id(),0}
+                for (i <= g0196) { 
+                  /* While stat, v:"Result" loop:true */
+                  var loop_1 EID 
+                  _ = loop_1
+                  { 
+                  /*g_try(v2:"loop_1",loop:tuple("Result", EID)) */
+                  { var arg_2 *ClaireAny  
+                    _ = arg_2
+                    var try_3 EID 
+                    /*g_try(v2:"try_3",loop:false) */
+                    try_3 = EVAL(self.Args.At(i-1))
+                    /* ERROR PROTECTION INSERTED (arg_2-loop_1) */
+                    if ErrorIn(try_3) {loop_1 = try_3
+                    } else {
+                    arg_2 = ANY(try_3)
+                    loop_1 = EID{l.AddFast(arg_2).Id(),0}/*t=any,s=EID*/
+                    }
+                    } 
+                  /* ERROR PROTECTION INSERTED (loop_1-loop_1) */
+                  if ErrorIn(loop_1) {Result = loop_1
                   break
-                  /* If-8 */} 
-                /* loop-7 */} 
-              /* For-6 */} 
-            x = x_some
-            /* Let-5 */} 
-          if (x != CNULL) /* If:5 */{ 
-            Result = ToException(Core.C_range_error.Make(self.Id(),x,self.Of.Id())).Close()
-            } else {
-            Result = EID{CNULL,0}
-            /* If-5 */} 
-          /* Let-4 */} 
-        /* ERROR PROTECTION INSERTED (Result-Result) */
-        if !ErrorIn(Result) {
-        Result = EID{s.Cast_I(self.Of).Id(),0}
-        }
-        } else {
-        Result = EID{s.Cast_I(ToType(CEMPTY.Id())).Id(),0}
-        /* If-3 */} 
-      }
-      /* Let-2 */} 
+                  } else {
+                  i = (i+1)
+                  }
+                  /* try?:false, v2:"v_while8" loop will be:tuple("Result", EID) */
+                  } 
+                }
+                } 
+              } 
+            /* ERROR PROTECTION INSERTED (Result-Result) */
+            if !ErrorIn(Result) {
+            Result = EID{l.Id(),0}
+            }
+            } 
+          } else {
+          { var l *ClaireSet   = CEMPTY.EmptySet()
+            /*g_try(v2:"Result",loop:true) */
+            { var i int  = 1
+              { var g0197 int  = n
+                _ = g0197
+                Result= EID{CFALSE.Id(),0}
+                for (i <= g0197) { 
+                  /* While stat, v:"Result" loop:true */
+                  var loop_4 EID 
+                  _ = loop_4
+                  { 
+                  /*g_try(v2:"loop_4",loop:tuple("Result", EID)) */
+                  { var arg_5 *ClaireAny  
+                    _ = arg_5
+                    var try_6 EID 
+                    /*g_try(v2:"try_6",loop:false) */
+                    try_6 = EVAL(self.Args.At(i-1))
+                    /* ERROR PROTECTION INSERTED (arg_5-loop_4) */
+                    if ErrorIn(try_6) {loop_4 = try_6
+                    } else {
+                    arg_5 = ANY(try_6)
+                    loop_4 = EID{l.AddFast(arg_5).Id(),0}/*t=any,s=EID*/
+                    }
+                    } 
+                  /* ERROR PROTECTION INSERTED (loop_4-loop_4) */
+                  if ErrorIn(loop_4) {Result = loop_4
+                  break
+                  } else {
+                  i = (i+1)
+                  }
+                  /* try?:false, v2:"v_while8" loop will be:tuple("Result", EID) */
+                  } 
+                }
+                } 
+              } 
+            /* ERROR PROTECTION INSERTED (Result-Result) */
+            if !ErrorIn(Result) {
+            Result = EID{l.Id(),0}
+            }
+            } 
+          } 
+        } 
+      } 
     return Result} 
   
 // The EID go function for: self_eval @ Set (throw: true) 
 func E_self_eval_Set (self EID) EID { 
-    return /*(sm for self_eval @ Set= EID)*/ To_Set(OBJ(self)).SelfEval( )} 
+    return To_Set(OBJ(self)).SelfEval( )} 
   
 // The EVAL go function for: Set 
 func EVAL_Set (x *ClaireAny) EID { 
      return To_Set(x).SelfEval()} 
   
-/* {1} OPT.The go function for: self_eval(self:Tuple) [] */
+//
+/* {1} The go function for: self_eval(self:Tuple) [status=1] */
 func (self *Tuple ) SelfEval () EID { 
     var Result EID 
-    /* Let:2 */{ 
-      var g0354UU *ClaireList  
-      /* noccur = 1 */
-      var g0354UU_try03553 EID 
-      /* Iteration:3 */{ 
+    { var arg_1 *ClaireList  
+      _ = arg_1
+      var try_2 EID 
+      /*g_try(v2:"try_2",loop:false) */
+      { 
         var v_list3 *ClaireList  
         var x *ClaireAny  
         var v_local3 *ClaireAny  
         v_list3 = self.Args
-        g0354UU_try03553 = EID{CreateList(ToType(CEMPTY.Id()),v_list3.Length()).Id(),0}
+        try_2 = EID{CreateList(ToType(CEMPTY.Id()),v_list3.Length()).Id(),0}
         for CLcount := 0; CLcount < v_list3.Length(); CLcount++{ 
           x = v_list3.At(CLcount)
-          var v_local3_try03565 EID 
-          v_local3_try03565 = EVAL(x)
-          /* ERROR PROTECTION INSERTED (v_local3-g0354UU_try03553) */
-          if ErrorIn(v_local3_try03565) {g0354UU_try03553 = v_local3_try03565
-          g0354UU_try03553 = v_local3_try03565
+          var try_3 EID 
+          /*g_try(v2:"try_3",loop:tuple("try_2", EID)) */
+          try_3 = EVAL(x)
+          /* ERROR PROTECTION INSERTED (v_local3-try_2) */
+          if ErrorIn(try_3) {try_2 = try_3
           break
           } else {
-          v_local3 = ANY(v_local3_try03565)
-          ToList(OBJ(g0354UU_try03553)).PutAt(CLcount,v_local3)
+          v_local3 = ANY(try_3)
+          ToList(OBJ(try_2)).PutAt(CLcount,v_local3)
           } 
         }
-        /* Iteration-3 */} 
-      /* ERROR PROTECTION INSERTED (g0354UU-Result) */
-      if ErrorIn(g0354UU_try03553) {Result = g0354UU_try03553
+        } 
+      /* ERROR PROTECTION INSERTED (arg_1-Result) */
+      if ErrorIn(try_2) {Result = try_2
       } else {
-      g0354UU = ToList(OBJ(g0354UU_try03553))
-      Result = EID{g0354UU.Tuple_I().Id(),0}
+      arg_1 = ToList(OBJ(try_2))
+      Result = EID{arg_1.Tuple_I().Id(),0}
       }
-      /* Let-2 */} 
+      } 
     return Result} 
   
 // The EID go function for: self_eval @ Tuple (throw: true) 
 func E_self_eval_Tuple (self EID) EID { 
-    return /*(sm for self_eval @ Tuple= EID)*/ To_Tuple(OBJ(self)).SelfEval( )} 
+    return To_Tuple(OBJ(self)).SelfEval( )} 
   
 // The EVAL go function for: Tuple 
 func EVAL_Tuple (x *ClaireAny) EID { 
      return To_Tuple(x).SelfEval()} 
   
 // same as creating a list (same constraints since same underlying structure)
-/* {1} OPT.The go function for: self_eval(self:Array) [] */
+/* {1} The go function for: self_eval(self:Array) [status=1] */
 func (self *Array ) SelfEval () EID { 
     var Result EID 
-    /* Let:2 */{ 
-      var type_ask *ClaireBoolean   = MakeBoolean((self.Of.Id() == CNULL)).Not
-      /* noccur = 1 */
-      /* Let:3 */{ 
-        var n int  = self.Args.Length()
-        /* noccur = 4 */
-        if (type_ask == CTRUE) /* If:4 */{ 
-          /* Let:5 */{ 
-            var l *ClaireList   = CreateList(self.Of,n)
-            /* noccur = 2 */
-            /* Let:6 */{ 
-              var i int  = 1
-              /* noccur = 5 */
-              /* Let:7 */{ 
-                var g0357 int  = n
-                /* noccur = 1 */
+    { var type_ask *ClaireBoolean   = MakeBoolean((self.Of.Id() == CNULL)).Not
+      _ = type_ask
+      { var n int  = self.Args.Length()
+        if (type_ask == CTRUE) { 
+          { var l *ClaireList   = CreateList(self.Of,n)
+            /*g_try(v2:"Result",loop:true) */
+            { var i int  = 1
+              { var g0198 int  = n
+                _ = g0198
                 Result= EID{CFALSE.Id(),0}
-                for (i <= g0357) /* while:8 */{ 
-                  var void_try9 EID 
-                  _ = void_try9
+                for (i <= g0198) { 
+                  /* While stat, v:"Result" loop:true */
+                  var loop_1 EID 
+                  _ = loop_1
                   { 
-                  /* LetEID:9 */{ 
-                    var g0359UU EID 
-                    g0359UU = EVAL(self.Args.At(i-1))
-                    /* ERROR PROTECTION INSERTED (g0359UU-void_try9) */
-                    if ErrorIn(g0359UU) {void_try9 = g0359UU
+                  /*g_try(v2:"loop_1",loop:tuple("Result", EID)) */
+                  { 
+                    var arg_2 EID 
+                    /*g_try(v2:"arg_2",loop:false) */
+                    arg_2 = EVAL(self.Args.At(i-1))
+                    /* ERROR PROTECTION INSERTED (arg_2-loop_1) */
+                    if ErrorIn(arg_2) {loop_1 = arg_2
                     } else {
-                    void_try9 = l.WriteEID(i,g0359UU)}
-                    /* LetEID-9 */} 
-                  /* ERROR PROTECTION INSERTED (void_try9-void_try9) */
-                  if ErrorIn(void_try9) {Result = void_try9
+                    loop_1 = l.WriteEID(i,arg_2)}
+                    } 
+                  /* ERROR PROTECTION INSERTED (loop_1-loop_1) */
+                  if ErrorIn(loop_1) {Result = loop_1
                   break
                   } else {
                   i = (i+1)
                   }
-                  /* while-8 */} 
+                  /* try?:false, v2:"v_while8" loop will be:tuple("Result", EID) */
+                  } 
                 }
-                /* Let-7 */} 
-              /* Let-6 */} 
+                } 
+              } 
             /* ERROR PROTECTION INSERTED (Result-Result) */
             if !ErrorIn(Result) {
             Result = EID{l.Array_I().Id(),0}
             }
-            /* Let-5 */} 
+            } 
           } else {
-          /* Let:5 */{ 
-            var l *ClaireList   = CreateList(ToType(CEMPTY.Id()),n)
-            /* noccur = 2 */
-            /* Let:6 */{ 
-              var i int  = 1
-              /* noccur = 5 */
-              /* Let:7 */{ 
-                var g0358 int  = n
-                /* noccur = 1 */
+          { var l *ClaireList   = CreateList(ToType(CEMPTY.Id()),n)
+            /*g_try(v2:"Result",loop:true) */
+            { var i int  = 1
+              { var g0199 int  = n
+                _ = g0199
                 Result= EID{CFALSE.Id(),0}
-                for (i <= g0358) /* while:8 */{ 
-                  var void_try9 EID 
-                  _ = void_try9
+                for (i <= g0199) { 
+                  /* While stat, v:"Result" loop:true */
+                  var loop_3 EID 
+                  _ = loop_3
                   { 
-                  /* Let:9 */{ 
-                    var g0360UU *ClaireAny  
-                    /* noccur = 1 */
-                    var g0360UU_try036110 EID 
-                    g0360UU_try036110 = EVAL(self.Args.At(i-1))
-                    /* ERROR PROTECTION INSERTED (g0360UU-void_try9) */
-                    if ErrorIn(g0360UU_try036110) {void_try9 = g0360UU_try036110
+                  /*g_try(v2:"loop_3",loop:tuple("Result", EID)) */
+                  { var arg_4 *ClaireAny  
+                    _ = arg_4
+                    var try_5 EID 
+                    /*g_try(v2:"try_5",loop:false) */
+                    try_5 = EVAL(self.Args.At(i-1))
+                    /* ERROR PROTECTION INSERTED (arg_4-loop_3) */
+                    if ErrorIn(try_5) {loop_3 = try_5
                     } else {
-                    g0360UU = ANY(g0360UU_try036110)
-                    void_try9 = ToArray(l.Id()).NthPut(i,g0360UU).ToEID()
+                    arg_4 = ANY(try_5)
+                    loop_3 = ToArray(l.Id()).NthPut(i,arg_4).ToEID()
                     }
-                    /* Let-9 */} 
-                  /* ERROR PROTECTION INSERTED (void_try9-void_try9) */
-                  if ErrorIn(void_try9) {Result = void_try9
+                    } 
+                  /* ERROR PROTECTION INSERTED (loop_3-loop_3) */
+                  if ErrorIn(loop_3) {Result = loop_3
                   break
                   } else {
                   i = (i+1)
                   }
-                  /* while-8 */} 
+                  /* try?:false, v2:"v_while8" loop will be:tuple("Result", EID) */
+                  } 
                 }
-                /* Let-7 */} 
-              /* Let-6 */} 
+                } 
+              } 
             /* ERROR PROTECTION INSERTED (Result-Result) */
             if !ErrorIn(Result) {
             Result = EID{l.Array_I().Id(),0}
             }
-            /* Let-5 */} 
-          /* If-4 */} 
-        /* Let-3 */} 
-      /* Let-2 */} 
+            } 
+          } 
+        } 
+      } 
     return Result} 
   
 // The EID go function for: self_eval @ Array (throw: true) 
 func E_self_eval_Array2 (self EID) EID { 
-    return /*(sm for self_eval @ Array= EID)*/ To_Array(OBJ(self)).SelfEval( )} 
+    return To_Array(OBJ(self)).SelfEval( )} 
   
 // The EVAL go function for: Array 
 func EVAL_Array (x *ClaireAny) EID { 
@@ -3230,113 +3337,115 @@ func EVAL_Array (x *ClaireAny) EID {
 // it is an advanced feature for those who want to expand the language. This
 // makes CLAIRE a nice framework for DSL
 //
-/* {1} OPT.The go function for: self_eval(self:Macro) [] */
+/* {1} The go function for: self_eval(self:Macro) [status=1] */
 func (self *Macro ) SelfEval () EID { 
     var Result EID 
-    /* Let:2 */{ 
-      var g0362UU *ClaireAny  
-      /* noccur = 1 */
-      var g0362UU_try03633 EID 
-      g0362UU_try03633 = Core.F_CALL(C_macroexpand,ARGS(EID{self.Id(),0}))
-      /* ERROR PROTECTION INSERTED (g0362UU-Result) */
-      if ErrorIn(g0362UU_try03633) {Result = g0362UU_try03633
+    { var arg_1 *ClaireAny  
+      _ = arg_1
+      var try_2 EID 
+      /*g_try(v2:"try_2",loop:false) */
+      try_2 = Core.F_CALL(C_macroexpand,ARGS(EID{self.Id(),0}))
+      /* ERROR PROTECTION INSERTED (arg_1-Result) */
+      if ErrorIn(try_2) {Result = try_2
       } else {
-      g0362UU = ANY(g0362UU_try03633)
-      Result = EVAL(g0362UU)
+      arg_1 = ANY(try_2)
+      Result = EVAL(arg_1)
       }
-      /* Let-2 */} 
+      } 
     return Result} 
   
 // The EID go function for: self_eval @ Macro (throw: true) 
 func E_self_eval_Macro2 (self EID) EID { 
-    return /*(sm for self_eval @ Macro= EID)*/ To_Macro(OBJ(self)).SelfEval( )} 
+    return To_Macro(OBJ(self)).SelfEval( )} 
   
 // The EVAL go function for: Macro 
 func EVAL_Macro (x *ClaireAny) EID { 
      return To_Macro(x).SelfEval()} 
   
 // error produces an exception of type general_error
-/* {1} OPT.The go function for: self_eval(self:Error) [] */
+/* {1} The go function for: self_eval(self:Error) [status=1] */
 func (self *Error ) SelfEval () EID { 
     var Result EID 
+    /*g_try(v2:"Result",loop:true) */
     if ((F_boolean_I_any(self.Args.Id()).Id() != CTRUE.Id()) || 
-        (C_string.Id() != self.Args.At(1-1).Isa.Id())) /* If:2 */{ 
+        (C_string.Id() != self.Args.At(1-1).Isa.Id())) { 
       Result = ToException(Core.C_general_error.Make(MakeString("Syntax error: ~S").Id(),MakeConstantList(self.Id()).Id())).Close()
       } else {
       Result = EID{CFALSE.Id(),0}
-      /* If-2 */} 
+      } 
     /* ERROR PROTECTION INSERTED (Result-Result) */
     if !ErrorIn(Result) {
-    /* Let:2 */{ 
-      var x *Core.GeneralError   = Core.ToGeneralError(new(Core.GeneralError).Is(Core.C_general_error))
-      /* noccur = 5 */
-      /* update:3 */{ 
+    { var x *Core.GeneralError   = Core.ToGeneralError(new(Core.GeneralError).Is(Core.C_general_error))
+      /*g_try(v2:"Result",loop:true) */
+      { 
         var va_arg1 *Core.GeneralError  
         var va_arg2 *ClaireAny  
         va_arg1 = x
-        var va_arg2_try03644 EID 
-        va_arg2_try03644 = Core.F_car_list(self.Args)
+        var try_1 EID 
+        /*g_try(v2:"try_1",loop:false) */
+        try_1 = Core.F_car_list(self.Args)
         /* ERROR PROTECTION INSERTED (va_arg2-Result) */
-        if ErrorIn(va_arg2_try03644) {Result = va_arg2_try03644
+        if ErrorIn(try_1) {Result = try_1
         } else {
-        va_arg2 = ANY(va_arg2_try03644)
-        /* ---------- now we compile update mClaire/cause(va_arg1) := va_arg2 ------- */
+        va_arg2 = ANY(try_1)
         va_arg1.Cause = va_arg2
-        Result = va_arg2.ToEID()
+        /*any->any*/Result = va_arg2.ToEID()
         }
-        /* update-3 */} 
+        } 
       /* ERROR PROTECTION INSERTED (Result-Result) */
       if !ErrorIn(Result) {
-      /* update:3 */{ 
+      /*g_try(v2:"Result",loop:true) */
+      { 
         var va_arg1 *Core.GeneralError  
         var va_arg2 *ClaireAny  
         va_arg1 = x
-        var va_arg2_try03654 EID 
-        /* Iteration:4 */{ 
+        var try_2 EID 
+        /*g_try(v2:"try_2",loop:false) */
+        { 
           var v_list4 *ClaireList  
           var x *ClaireAny  
           var v_local4 *ClaireAny  
-          var v_list4_try03665 EID 
-          v_list4_try03665 = self.Args.Cdr()
-          /* ERROR PROTECTION INSERTED (v_list4-va_arg2_try03654) */
-          if ErrorIn(v_list4_try03665) {va_arg2_try03654 = v_list4_try03665
+          var try_3 EID 
+          /*g_try(v2:"try_3",loop:false) */
+          try_3 = self.Args.Cdr()
+          /* ERROR PROTECTION INSERTED (v_list4-try_2) */
+          if ErrorIn(try_3) {try_2 = try_3
           } else {
-          v_list4 = ToList(OBJ(v_list4_try03665))
-          va_arg2_try03654 = EID{CreateList(ToType(CEMPTY.Id()),v_list4.Length()).Id(),0}
+          v_list4 = ToList(OBJ(try_3))
+          try_2 = EID{CreateList(ToType(CEMPTY.Id()),v_list4.Length()).Id(),0}
           for CLcount := 0; CLcount < v_list4.Length(); CLcount++{ 
             x = v_list4.At(CLcount)
-            var v_local4_try03676 EID 
-            v_local4_try03676 = EVAL(x)
-            /* ERROR PROTECTION INSERTED (v_local4-va_arg2_try03654) */
-            if ErrorIn(v_local4_try03676) {va_arg2_try03654 = v_local4_try03676
-            va_arg2_try03654 = v_local4_try03676
+            var try_4 EID 
+            /*g_try(v2:"try_4",loop:tuple("try_2", EID)) */
+            try_4 = EVAL(x)
+            /* ERROR PROTECTION INSERTED (v_local4-try_2) */
+            if ErrorIn(try_4) {try_2 = try_4
             break
             } else {
-            v_local4 = ANY(v_local4_try03676)
-            ToList(OBJ(va_arg2_try03654)).PutAt(CLcount,v_local4)
+            v_local4 = ANY(try_4)
+            ToList(OBJ(try_2)).PutAt(CLcount,v_local4)
             } 
           }}
-          /* Iteration-4 */} 
+          } 
         /* ERROR PROTECTION INSERTED (va_arg2-Result) */
-        if ErrorIn(va_arg2_try03654) {Result = va_arg2_try03654
+        if ErrorIn(try_2) {Result = try_2
         } else {
-        va_arg2 = ANY(va_arg2_try03654)
-        /* ---------- now we compile update arg(va_arg1) := va_arg2 ------- */
+        va_arg2 = ANY(try_2)
         va_arg1.Arg = va_arg2
-        Result = va_arg2.ToEID()
+        /*any->any*/Result = va_arg2.ToEID()
         }
-        /* update-3 */} 
+        } 
       /* ERROR PROTECTION INSERTED (Result-Result) */
       if !ErrorIn(Result) {
       Result = x.Close()
       }}
-      /* Let-2 */} 
+      } 
     }
-    return RangeCheck(ToType(C_error.Id()),Result)} 
+    return Result} 
   
 // The EID go function for: self_eval @ Error (throw: true) 
 func E_self_eval_Error (self EID) EID { 
-    return /*(sm for self_eval @ Error= EID)*/ To_Error(OBJ(self)).SelfEval( )} 
+    return To_Error(OBJ(self)).SelfEval( )} 
   
 // The EVAL go function for: Error 
 func EVAL_Error (x *ClaireAny) EID { 
@@ -3345,269 +3454,270 @@ func EVAL_Error (x *ClaireAny) EID {
 // this is the basic tool for printing in CLAIRE. A complex statement
 // is macroexpanded into basic printing instructions
 //
-/* {1} OPT.The go function for: self_eval(self:Printf) [] */
+/* {1} The go function for: self_eval(self:Printf) [status=1] */
 func (self *Printf ) SelfEval () EID { 
     var Result EID 
-    /* Let:2 */{ 
-      var l *ClaireList   = self.Args
-      /* noccur = 6 */
-      /* Let:3 */{ 
-        var s *ClaireAny   = l.At(1-1)
-        /* noccur = 12 */
-        if (C_string.Id() != s.Isa.Id()) /* If:4 */{ 
+    { var l *ClaireList   = self.Args
+      { var s *ClaireAny   = l.At(1-1)
+        /*g_try(v2:"Result",loop:true) */
+        if (C_string.Id() != s.Isa.Id()) { 
           Result = ToException(Core.C_general_error.Make(MakeString("[102] the first argument in ~S must be a string").Id(),MakeConstantList(self.Id()).Id())).Close()
           } else {
-          /* Let:5 */{ 
-            var i int  = 2
-            /* noccur = 7 */
-            /* Let:6 */{ 
-              var n int  = F_get_string(ToString(s),'~')
-              /* noccur = 14 */
+          { var i int  = 2
+            { var n int  = F_get_string(ToString(s),'~')
+              /*g_try(v2:"Result",loop:true) */
               Result= EID{CFALSE.Id(),0}
-              for (n != 0) /* while:7 */{ 
-                var void_try8 EID 
-                _ = void_try8
-                /* Let:8 */{ 
-                  var m *ClaireAny  
-                  /* noccur = 4 */
-                  var m_try03689 EID 
-                  m_try03689 = Core.F_CALL(C_nth,ARGS(s.ToEID(),EID{C__INT,IVAL((n+1))}))
-                  /* ERROR PROTECTION INSERTED (m-void_try8) */
-                  if ErrorIn(m_try03689) {void_try8 = m_try03689
+              for (n != 0) { 
+                /* While stat, v:"Result" loop:true */
+                var loop_1 EID 
+                _ = loop_1
+                /*g_try(v2:"loop_1",loop:tuple("Result", EID)) */
+                { var m *ClaireAny  
+                  var try_2 EID 
+                  /*g_try(v2:"try_2",loop:false) */
+                  try_2 = Core.F_CALL(C_nth,ARGS(s.ToEID(),EID{C__INT,IVAL((n+1))}))
+                  /* ERROR PROTECTION INSERTED (m-loop_1) */
+                  if ErrorIn(try_2) {loop_1 = try_2
                   } else {
-                  m = ANY(m_try03689)
-                  if (i > l.Length()) /* If:9 */{ 
-                    void_try8 = ToException(Core.C_general_error.Make(MakeString("[103] not enough arguments in ~S").Id(),MakeConstantList(self.Id()).Id())).Close()
+                  m = ANY(try_2)
+                  /*g_try(v2:"loop_1",loop:tuple("Result", EID)) */
+                  if (i > l.Length()) { 
+                    loop_1 = ToException(Core.C_general_error.Make(MakeString("[103] not enough arguments in ~S").Id(),MakeConstantList(self.Id()).Id())).Close()
                     } else {
-                    void_try8 = EID{CFALSE.Id(),0}
-                    /* If-9 */} 
-                  /* ERROR PROTECTION INSERTED (void_try8-void_try8) */
-                  if ErrorIn(void_try8) {Result = void_try8
+                    loop_1 = EID{CFALSE.Id(),0}
+                    } 
+                  /* ERROR PROTECTION INSERTED (loop_1-loop_1) */
+                  if ErrorIn(loop_1) {Result = loop_1
                   break
                   } else {
-                  if (n > 1) /* If:9 */{ 
+                  if (n > 1) { 
                     F_princ_string(F_substring_string(ToString(s),1,(n-1)))
-                    /* If-9 */} 
-                  if ('A' == ToChar(m).Value) /* If:9 */{ 
-                    /* Let:10 */{ 
-                      var g0369UU *ClaireAny  
-                      /* noccur = 1 */
-                      var g0369UU_try037011 EID 
-                      g0369UU_try037011 = EVAL(l.At(i-1))
-                      /* ERROR PROTECTION INSERTED (g0369UU-void_try8) */
-                      if ErrorIn(g0369UU_try037011) {void_try8 = g0369UU_try037011
+                    } 
+                  /*g_try(v2:"loop_1",loop:tuple("Result", EID)) */
+                  if ('A' == ToChar(m).Value) { 
+                    { var arg_3 *ClaireAny  
+                      _ = arg_3
+                      var try_4 EID 
+                      /*g_try(v2:"try_4",loop:false) */
+                      try_4 = EVAL(l.At(i-1))
+                      /* ERROR PROTECTION INSERTED (arg_3-loop_1) */
+                      if ErrorIn(try_4) {loop_1 = try_4
                       } else {
-                      g0369UU = ANY(g0369UU_try037011)
-                      void_try8 = Core.F_CALL(C_princ,ARGS(g0369UU.ToEID()))
+                      arg_3 = ANY(try_4)
+                      loop_1 = Core.F_CALL(C_princ,ARGS(arg_3.ToEID()))
                       }
-                      /* Let-10 */} 
-                    /* If!9 */}  else if ('S' == ToChar(m).Value) /* If:9 */{ 
-                    /* Let:10 */{ 
-                      var g0371UU *ClaireAny  
-                      /* noccur = 1 */
-                      var g0371UU_try037211 EID 
-                      g0371UU_try037211 = EVAL(l.At(i-1))
-                      /* ERROR PROTECTION INSERTED (g0371UU-void_try8) */
-                      if ErrorIn(g0371UU_try037211) {void_try8 = g0371UU_try037211
+                      } 
+                    }  else if ('S' == ToChar(m).Value) { 
+                    { var arg_5 *ClaireAny  
+                      _ = arg_5
+                      var try_6 EID 
+                      /*g_try(v2:"try_6",loop:false) */
+                      try_6 = EVAL(l.At(i-1))
+                      /* ERROR PROTECTION INSERTED (arg_5-loop_1) */
+                      if ErrorIn(try_6) {loop_1 = try_6
                       } else {
-                      g0371UU = ANY(g0371UU_try037211)
-                      void_try8 = Core.F_CALL(C_print,ARGS(g0371UU.ToEID()))
+                      arg_5 = ANY(try_6)
+                      loop_1 = Core.F_CALL(C_print,ARGS(arg_5.ToEID()))
                       }
-                      /* Let-10 */} 
-                    /* If!9 */}  else if ('F' == ToChar(m).Value) /* If:9 */{ 
-                    /* Let:10 */{ 
-                      var fv *ClaireAny  
-                      /* noccur = 5 */
-                      var fv_try037311 EID 
-                      fv_try037311 = EVAL(l.At(i-1))
-                      /* ERROR PROTECTION INSERTED (fv-void_try8) */
-                      if ErrorIn(fv_try037311) {void_try8 = fv_try037311
+                      } 
+                    }  else if ('F' == ToChar(m).Value) { 
+                    { var fv *ClaireAny  
+                      _ = fv
+                      var try_7 EID 
+                      /*g_try(v2:"try_7",loop:false) */
+                      try_7 = EVAL(l.At(i-1))
+                      /* ERROR PROTECTION INSERTED (fv-loop_1) */
+                      if ErrorIn(try_7) {loop_1 = try_7
                       } else {
-                      fv = ANY(fv_try037311)
-                      /* Let:11 */{ 
-                        var p_Z *ClaireBoolean   = CFALSE
-                        /* noccur = 4 */
-                        /* Let:12 */{ 
-                          var j int 
-                          /* noccur = 4 */
-                          var j_try037413 EID 
-                          /* Let:13 */{ 
-                            var g0375UU int 
-                            /* noccur = 1 */
-                            var g0375UU_try037614 EID 
-                            /* Let:14 */{ 
-                              var g0377UU rune 
-                              /* noccur = 1 */
-                              var g0377UU_try037815 EID 
-                              g0377UU_try037815 = Core.F_nth_get_string(ToString(s),(n+2),(n+2))
-                              /* ERROR PROTECTION INSERTED (g0377UU-g0375UU_try037614) */
-                              if ErrorIn(g0377UU_try037815) {g0375UU_try037614 = g0377UU_try037815
+                      fv = ANY(try_7)
+                      { var p_Z *ClaireBoolean   = CFALSE
+                        { var j int 
+                          var try_8 EID 
+                          /*g_try(v2:"try_8",loop:false) */
+                          { var arg_9 int 
+                            _ = arg_9
+                            var try_10 EID 
+                            /*g_try(v2:"try_10",loop:false) */
+                            { var arg_11 rune 
+                              _ = arg_11
+                              var try_12 EID 
+                              /*g_try(v2:"try_12",loop:false) */
+                              try_12 = Core.F_nth_get_string(ToString(s),(n+2),(n+2))
+                              /* ERROR PROTECTION INSERTED (arg_11-try_10) */
+                              if ErrorIn(try_12) {try_10 = try_12
                               } else {
-                              g0377UU = CHAR(g0377UU_try037815)
-                              g0375UU_try037614 = EID{C__INT,IVAL(int(g0377UU))}
+                              arg_11 = CHAR(try_12)
+                              try_10 = EID{C__INT,IVAL(int(arg_11))}
                               }
-                              /* Let-14 */} 
-                            /* ERROR PROTECTION INSERTED (g0375UU-j_try037413) */
-                            if ErrorIn(g0375UU_try037614) {j_try037413 = g0375UU_try037614
+                              } 
+                            /* ERROR PROTECTION INSERTED (arg_9-try_8) */
+                            if ErrorIn(try_10) {try_8 = try_10
                             } else {
-                            g0375UU = INT(g0375UU_try037614)
-                            j_try037413 = EID{C__INT,IVAL((g0375UU-48))}
+                            arg_9 = INT(try_10)
+                            try_8 = EID{C__INT,IVAL((arg_9-48))}
                             }
-                            /* Let-13 */} 
-                          /* ERROR PROTECTION INSERTED (j-void_try8) */
-                          if ErrorIn(j_try037413) {void_try8 = j_try037413
+                            } 
+                          /* ERROR PROTECTION INSERTED (j-loop_1) */
+                          if ErrorIn(try_8) {loop_1 = try_8
                           } else {
-                          j = INT(j_try037413)
-                          var g0379I *ClaireBoolean  
-                          var g0379I_try038013 EID 
-                          /* Let:13 */{ 
-                            var g0381UU *ClaireAny  
-                            /* noccur = 1 */
-                            var g0381UU_try038214 EID 
-                            g0381UU_try038214 = Core.F_CALL(C_nth,ARGS(s.ToEID(),EID{C__INT,IVAL((n+2))}))
-                            /* ERROR PROTECTION INSERTED (g0381UU-g0379I_try038013) */
-                            if ErrorIn(g0381UU_try038214) {g0379I_try038013 = g0381UU_try038214
+                          j = INT(try_8)
+                          /*g_try(v2:"loop_1",loop:tuple("Result", EID)) */
+                          var g0200I *ClaireBoolean  
+                          var try_13 EID 
+                          /*g_try(v2:"try_13",loop:false) */
+                          { var arg_14 *ClaireAny  
+                            _ = arg_14
+                            var try_15 EID 
+                            /*g_try(v2:"try_15",loop:false) */
+                            try_15 = Core.F_CALL(C_nth,ARGS(s.ToEID(),EID{C__INT,IVAL((n+2))}))
+                            /* ERROR PROTECTION INSERTED (arg_14-try_13) */
+                            if ErrorIn(try_15) {try_13 = try_15
                             } else {
-                            g0381UU = ANY(g0381UU_try038214)
-                            g0379I_try038013 = EID{Equal(MakeChar('%').Id(),g0381UU).Id(),0}
+                            arg_14 = ANY(try_15)
+                            try_13 = EID{Equal(MakeChar('%').Id(),arg_14).Id(),0}
                             }
-                            /* Let-13 */} 
-                          /* ERROR PROTECTION INSERTED (g0379I-void_try8) */
-                          if ErrorIn(g0379I_try038013) {void_try8 = g0379I_try038013
+                            } 
+                          /* ERROR PROTECTION INSERTED (g0200I-loop_1) */
+                          if ErrorIn(try_13) {loop_1 = try_13
                           } else {
-                          g0379I = ToBoolean(OBJ(g0379I_try038013))
-                          if (g0379I == CTRUE) /* If:13 */{ 
+                          g0200I = ToBoolean(OBJ(try_13))
+                          if (g0200I == CTRUE) { 
                             p_Z = CTRUE
                             j = 1
                             fv = ANY(Core.F_CALL(ToProperty(C__star.Id()),ARGS(fv.ToEID(),EID{C__FLOAT,FVAL(100)})))
-                            void_try8 = fv.ToEID()
-                            /* If!13 */}  else if ((j < 0) || 
-                              (j > 9)) /* If:13 */{ 
-                            void_try8 = ToException(Core.C_general_error.Make(MakeString("[189] F requires a single digit integer in ~S").Id(),MakeConstantList(self.Id()).Id())).Close()
+                            loop_1 = fv.ToEID()
+                            }  else if ((j < 0) || 
+                              (j > 9)) { 
+                            loop_1 = ToException(Core.C_general_error.Make(MakeString("[189] F requires a single digit integer in ~S").Id(),MakeConstantList(self.Id()).Id())).Close()
                             } else {
-                            void_try8 = EID{CFALSE.Id(),0}
-                            /* If-13 */} 
+                            loop_1 = EID{CFALSE.Id(),0}
+                            } 
                           }
-                          /* ERROR PROTECTION INSERTED (void_try8-void_try8) */
-                          if ErrorIn(void_try8) {Result = void_try8
+                          /* ERROR PROTECTION INSERTED (loop_1-loop_1) */
+                          if ErrorIn(loop_1) {Result = loop_1
                           break
                           } else {
-                          var g0383I *ClaireBoolean  
-                          var g0383I_try038413 EID 
-                          /* and:13 */{ 
+                          /*g_try(v2:"loop_1",loop:tuple("Result", EID)) */
+                          var g0201I *ClaireBoolean  
+                          var try_16 EID 
+                          /*g_try(v2:"try_16",loop:false) */
+                          { 
                             var v_and13 *ClaireBoolean  
                             
                             v_and13 = p_Z.Not
-                            if (v_and13 == CFALSE) {g0383I_try038413 = EID{CFALSE.Id(),0}
-                            } else /* arg:14 */{ 
-                              var v_and13_try038515 EID 
-                              /* Let:15 */{ 
-                                var g0386UU *ClaireAny  
-                                /* noccur = 1 */
-                                var g0386UU_try038716 EID 
-                                g0386UU_try038716 = Core.F_CALL(C_nth,ARGS(s.ToEID(),EID{C__INT,IVAL((n+3))}))
-                                /* ERROR PROTECTION INSERTED (g0386UU-v_and13_try038515) */
-                                if ErrorIn(g0386UU_try038716) {v_and13_try038515 = g0386UU_try038716
+                            if (v_and13 == CFALSE) {try_16 = EID{CFALSE.Id(),0}
+                            } else { 
+                              var try_17 EID 
+                              /*g_try(v2:"try_17",loop:false) */
+                              { var arg_18 *ClaireAny  
+                                _ = arg_18
+                                var try_19 EID 
+                                /*g_try(v2:"try_19",loop:false) */
+                                try_19 = Core.F_CALL(C_nth,ARGS(s.ToEID(),EID{C__INT,IVAL((n+3))}))
+                                /* ERROR PROTECTION INSERTED (arg_18-try_17) */
+                                if ErrorIn(try_19) {try_17 = try_19
                                 } else {
-                                g0386UU = ANY(g0386UU_try038716)
-                                v_and13_try038515 = EID{Equal(MakeChar('%').Id(),g0386UU).Id(),0}
+                                arg_18 = ANY(try_19)
+                                try_17 = EID{Equal(MakeChar('%').Id(),arg_18).Id(),0}
                                 }
-                                /* Let-15 */} 
-                              /* ERROR PROTECTION INSERTED (v_and13-g0383I_try038413) */
-                              if ErrorIn(v_and13_try038515) {g0383I_try038413 = v_and13_try038515
+                                } 
+                              /* ERROR PROTECTION INSERTED (v_and13-try_16) */
+                              if ErrorIn(try_17) {try_16 = try_17
                               } else {
-                              v_and13 = ToBoolean(OBJ(v_and13_try038515))
-                              if (v_and13 == CFALSE) {g0383I_try038413 = EID{CFALSE.Id(),0}
-                              } else /* arg:15 */{ 
-                                g0383I_try038413 = EID{CTRUE.Id(),0}/* arg-15 */} 
-                              /* arg-14 */} 
+                              v_and13 = ToBoolean(OBJ(try_17))
+                              if (v_and13 == CFALSE) {try_16 = EID{CFALSE.Id(),0}
+                              } else { 
+                                try_16 = EID{CTRUE.Id(),0}} 
+                              } 
                             }
-                            /* and-13 */} 
-                          /* ERROR PROTECTION INSERTED (g0383I-void_try8) */
-                          if ErrorIn(g0383I_try038413) {void_try8 = g0383I_try038413
+                            } 
+                          /* ERROR PROTECTION INSERTED (g0201I-loop_1) */
+                          if ErrorIn(try_16) {loop_1 = try_16
                           } else {
-                          g0383I = ToBoolean(OBJ(g0383I_try038413))
-                          if (g0383I == CTRUE) /* If:13 */{ 
+                          g0201I = ToBoolean(OBJ(try_16))
+                          if (g0201I == CTRUE) { 
                             p_Z = CTRUE
                             fv = ANY(Core.F_CALL(ToProperty(C__star.Id()),ARGS(fv.ToEID(),EID{C__FLOAT,FVAL(100)})))
                             n = (n+1)
-                            void_try8 = EID{C__INT,IVAL(n)}
+                            loop_1 = EID{C__INT,IVAL(n)}
                             } else {
-                            void_try8 = EID{CFALSE.Id(),0}
-                            /* If-13 */} 
+                            loop_1 = EID{CFALSE.Id(),0}
+                            } 
                           }
-                          /* ERROR PROTECTION INSERTED (void_try8-void_try8) */
-                          if ErrorIn(void_try8) {Result = void_try8
+                          /* ERROR PROTECTION INSERTED (loop_1-loop_1) */
+                          if ErrorIn(loop_1) {Result = loop_1
                           break
                           } else {
-                          void_try8 = Core.F_CALL(Core.C_mClaire_printFDigit,ARGS(fv.ToEID(),EID{C__INT,IVAL(j)}))
-                          /* ERROR PROTECTION INSERTED (void_try8-void_try8) */
-                          if ErrorIn(void_try8) {Result = void_try8
+                          /*g_try(v2:"loop_1",loop:tuple("Result", EID)) */
+                          loop_1 = Core.F_CALL(Core.C_mClaire_printFDigit,ARGS(fv.ToEID(),EID{C__INT,IVAL(j)}))
+                          /* ERROR PROTECTION INSERTED (loop_1-loop_1) */
+                          if ErrorIn(loop_1) {Result = loop_1
                           break
                           } else {
-                          if (p_Z == CTRUE) /* If:13 */{ 
+                          if (p_Z == CTRUE) { 
                             PRINC("%")
-                            /* If-13 */} 
+                            } 
                           n = (n+1)
-                          void_try8 = EID{C__INT,IVAL(n)}
+                          loop_1 = EID{C__INT,IVAL(n)}
                           }}}
                           }
-                          /* Let-12 */} 
-                        /* Let-11 */} 
+                          } 
+                        } 
                       }
-                      /* Let-10 */} 
-                    /* If!9 */}  else if ('I' == ToChar(m).Value) /* If:9 */{ 
-                    void_try8 = EVAL(l.At(i-1))
+                      } 
+                    }  else if ('I' == ToChar(m).Value) { 
+                    loop_1 = EVAL(l.At(i-1))
                     } else {
-                    void_try8 = EID{CFALSE.Id(),0}
-                    /* If-9 */} 
-                  /* ERROR PROTECTION INSERTED (void_try8-void_try8) */
-                  if ErrorIn(void_try8) {Result = void_try8
+                    loop_1 = EID{CFALSE.Id(),0}
+                    } 
+                  /* ERROR PROTECTION INSERTED (loop_1-loop_1) */
+                  if ErrorIn(loop_1) {Result = loop_1
                   break
                   } else {
                   i = (i+1)
                   s = (F_substring_string(ToString(s),(n+2),1000)).Id()
-                  var n_try03889 EID 
-                  n_try03889 = Core.F_CALL(C_get,ARGS(s.ToEID(),EID{C__CHAR,CVAL('~')}))
-                  /* ERROR PROTECTION INSERTED (n-void_try8) */
-                  if ErrorIn(n_try03889) {void_try8 = n_try03889
-                  Result = n_try03889
+                  var try_20 EID 
+                  /*g_try(v2:"try_20",loop:tuple("Result", EID)) */
+                  try_20 = Core.F_CALL(C_get,ARGS(s.ToEID(),EID{C__CHAR,CVAL('~')}))
+                  /* ERROR PROTECTION INSERTED (n-loop_1) */
+                  if ErrorIn(try_20) {loop_1 = try_20
+                  Result = try_20
                   break
                   } else {
-                  n = INT(n_try03889)
-                  void_try8 = EID{C__INT,IVAL(n)}
+                  n = INT(try_20)
+                  loop_1 = EID{C__INT,IVAL(n)}
                   }}}
                   }
-                  /* Let-8 */} 
-                /* ERROR PROTECTION INSERTED (void_try8-Result) */
-                if ErrorIn(void_try8) {Result = void_try8
-                Result = void_try8
+                  } 
+                /* ERROR PROTECTION INSERTED (loop_1-Result) */
+                if ErrorIn(loop_1) {Result = loop_1
                 break
                 } else {
-                /* while-7 */} 
+                /* try?:false, v2:"v_while7" loop will be:tuple("Result", EID) */
+                } 
               }
               /* ERROR PROTECTION INSERTED (Result-Result) */
               if !ErrorIn(Result) {
-              if (F_boolean_I_any(s) == CTRUE) /* If:7 */{ 
+              if (F_boolean_I_any(s) == CTRUE) { 
                 Result = Core.F_CALL(C_princ,ARGS(s.ToEID()))
                 } else {
                 Result = EID{CFALSE.Id(),0}
-                /* If-7 */} 
+                } 
               }
-              /* Let-6 */} 
-            /* Let-5 */} 
-          /* If-4 */} 
+              } 
+            } 
+          } 
         /* ERROR PROTECTION INSERTED (Result-Result) */
         if !ErrorIn(Result) {
         Result = EID{CNULL,0}
         }
-        /* Let-3 */} 
-      /* Let-2 */} 
+        } 
+      } 
     return Result} 
   
 // The EID go function for: self_eval @ Printf (throw: true) 
 func E_self_eval_Printf (self EID) EID { 
-    return /*(sm for self_eval @ Printf= EID)*/ To_Printf(OBJ(self)).SelfEval( )} 
+    return To_Printf(OBJ(self)).SelfEval( )} 
   
 // The EVAL go function for: Printf 
 func EVAL_Printf (x *ClaireAny) EID { 
@@ -3617,127 +3727,116 @@ func EVAL_Printf (x *ClaireAny) EID {
 // If trace_output() is known, use it, else use current output.
 // defined in inspect.cl
 // CLAIRE4: self_eval is defined once for all, hence exteneded
-/* {1} OPT.The go function for: self_eval(self:Trace) [] */
+/* {1} The go function for: self_eval(self:Trace) [status=1] */
 func (self *Trace ) SelfEval () EID { 
     var Result EID 
-    /* Let:2 */{ 
-      var a *ClaireList   = self.Args
-      /* noccur = 5 */
-      /* Let:3 */{ 
-        var l *ClaireList  
-        /* noccur = 2 */
-        var l_try03904 EID 
-        /* Iteration:4 */{ 
+    { var a *ClaireList   = self.Args
+      { var l *ClaireList  
+        var try_1 EID 
+        /*g_try(v2:"try_1",loop:false) */
+        { 
           var v_list4 *ClaireList  
           var x *ClaireAny  
           var v_local4 *ClaireAny  
           v_list4 = a
-          l_try03904 = EID{CreateList(ToType(CEMPTY.Id()),v_list4.Length()).Id(),0}
+          try_1 = EID{CreateList(ToType(CEMPTY.Id()),v_list4.Length()).Id(),0}
           for CLcount := 0; CLcount < v_list4.Length(); CLcount++{ 
             x = v_list4.At(CLcount)
-            var v_local4_try03916 EID 
-            v_local4_try03916 = EVAL(x)
-            /* ERROR PROTECTION INSERTED (v_local4-l_try03904) */
-            if ErrorIn(v_local4_try03916) {l_try03904 = v_local4_try03916
-            l_try03904 = v_local4_try03916
+            var try_2 EID 
+            /*g_try(v2:"try_2",loop:tuple("try_1", EID)) */
+            try_2 = EVAL(x)
+            /* ERROR PROTECTION INSERTED (v_local4-try_1) */
+            if ErrorIn(try_2) {try_1 = try_2
             break
             } else {
-            v_local4 = ANY(v_local4_try03916)
-            ToList(OBJ(l_try03904)).PutAt(CLcount,v_local4)
+            v_local4 = ANY(try_2)
+            ToList(OBJ(try_1)).PutAt(CLcount,v_local4)
             } 
           }
-          /* Iteration-4 */} 
+          } 
         /* ERROR PROTECTION INSERTED (l-Result) */
-        if ErrorIn(l_try03904) {Result = l_try03904
+        if ErrorIn(try_1) {Result = try_1
         } else {
-        l = ToList(OBJ(l_try03904))
-        /* Let:4 */{ 
-          var i *ClaireAny   = l.At(1-1)
-          /* noccur = 2 */
-          /* Let:5 */{ 
-            var a2 *ClaireAny  
-            /* noccur = 2 */
-            if (a.Length() > 1) /* If:6 */{ 
+        l = ToList(OBJ(try_1))
+        { var i *ClaireAny   = l.At(1-1)
+          { var a2 *ClaireAny  
+            if (a.Length() > 1) { 
               a2 = a.At(2-1)
               } else {
               a2 = CFALSE.Id()
-              /* If-6 */} 
-            if (a.Length() == 1) /* If:6 */{ 
-              /* Let:7 */{ 
-                var a1 *ClaireAny  
-                /* noccur = 1 */
-                var a1_try03928 EID 
-                a1_try03928 = EVAL(a.At(1-1))
+              } 
+            if (a.Length() == 1) { 
+              { var a1 *ClaireAny  
+                _ = a1
+                var try_3 EID 
+                /*g_try(v2:"try_3",loop:false) */
+                try_3 = EVAL(a.At(1-1))
                 /* ERROR PROTECTION INSERTED (a1-Result) */
-                if ErrorIn(a1_try03928) {Result = a1_try03928
+                if ErrorIn(try_3) {Result = try_3
                 } else {
-                a1 = ANY(a1_try03928)
-                /* Let:8 */{ 
-                  var p *ClaireProperty   = C_iClaire_trace_on
-                  /* noccur = 2 */
-                  if (p.Restrictions.Length() != 0) /* If:9 */{ 
-                    if (ClEnv.Trace_I == 0) /* If:10 */{ 
+                a1 = ANY(try_3)
+                { var p *ClaireProperty   = C_iClaire_trace_on
+                  if (p.Restrictions.Length() != 0) { 
+                    if (ClEnv.Trace_I == 0) { 
                       ClEnv.Trace_I = 1
-                      /* If-10 */} 
+                      /*integer->integer*/} 
                     Result = Core.F_CALL(Core.C_call,ARGS(EID{p.Id(),0},a1.ToEID()))
                     } else {
                     Result = EID{CFALSE.Id(),0}
-                    /* If-9 */} 
-                  /* Let-8 */} 
+                    } 
+                  } 
                 }
-                /* Let-7 */} 
+                } 
               } else {
-              var g0393I *ClaireBoolean  
-              /* and:7 */{ 
+              var g0203I *ClaireBoolean  
+              { 
                 var v_and7 *ClaireBoolean  
                 
                 v_and7 = Equal(C_string.Id(),a2.Isa.Id())
-                if (v_and7 == CFALSE) {g0393I = CFALSE
-                } else /* arg:8 */{ 
-                  if (C_integer.Id() == i.Isa.Id()) /* If:9 */{ 
-                    /* Let:10 */{ 
-                      var g0389 int  = ToInteger(i).Value
-                      /* noccur = 1 */
-                      v_and7 = Core.F__inf_equal_integer(g0389,ClEnv.Verbose)
-                      /* Let-10 */} 
+                if (v_and7 == CFALSE) {g0203I = CFALSE
+                } else { 
+                  if (C_integer.Id() == i.Isa.Id()) { 
+                    { var g0202 int  = ToInteger(i).Value
+                      _ = g0202
+                      v_and7 = Core.F__inf_equal_integer(g0202,ClEnv.Verbose)
+                      } 
                     } else {
                     v_and7 = CFALSE
-                    /* If-9 */} 
-                  if (v_and7 == CFALSE) {g0393I = CFALSE
-                  } else /* arg:9 */{ 
-                    g0393I = CTRUE/* arg-9 */} 
-                  /* arg-8 */} 
-                /* and-7 */} 
-              if (g0393I == CTRUE) /* If:7 */{ 
-                /* Let:8 */{ 
-                  var p *ClaireAny   = Core.F_get_property(C_ctrace,ToObject(ClEnv.Id()))
-                  /* noccur = 5 */
-                  if (p != CNULL) /* If:9 */{ 
+                    } 
+                  if (v_and7 == CFALSE) {g0203I = CFALSE
+                  } else { 
+                    g0203I = CTRUE} 
+                  } 
+                } 
+              if (g0203I == CTRUE) { 
+                { var p *ClaireAny   = Core.F_get_property(C_ctrace,ToObject(ClEnv.Id()))
+                  if (p != CNULL) { 
                     p = ToPort(p).UseAsOutput().Id()
-                    /* If-9 */} 
+                    } 
+                  /*g_try(v2:"Result",loop:true) */
                   Result = Core.F_format_string(ToString(a2),l.Skip(2))
                   /* ERROR PROTECTION INSERTED (Result-Result) */
                   if !ErrorIn(Result) {
-                  if (p != CNULL) /* If:9 */{ 
+                  if (p != CNULL) { 
                     ToPort(p).UseAsOutput()
-                    /* If-9 */} 
+                    } 
                   Result = EID{CEMPTY.Id(),0}
                   }
-                  /* Let-8 */} 
+                  } 
                 } else {
                 Result = EID{CFALSE.Id(),0}
-                /* If-7 */} 
-              /* If-6 */} 
-            /* Let-5 */} 
-          /* Let-4 */} 
+                } 
+              } 
+            } 
+          } 
         }
-        /* Let-3 */} 
-      /* Let-2 */} 
+        } 
+      } 
     return Result} 
   
 // The EID go function for: self_eval @ Trace (throw: true) 
 func E_self_eval_Trace (self EID) EID { 
-    return /*(sm for self_eval @ Trace= EID)*/ To_Trace(OBJ(self)).SelfEval( )} 
+    return To_Trace(OBJ(self)).SelfEval( )} 
   
 // The EVAL go function for: Trace 
 func EVAL_Trace (x *ClaireAny) EID { 
@@ -3745,72 +3844,74 @@ func EVAL_Trace (x *ClaireAny) EID {
   
 // assert is refined in trace.la
 //
-/* {1} OPT.The go function for: self_eval(self:Assert) [] */
+/* {1} The go function for: self_eval(self:Assert) [status=1] */
 func (self *Assert ) SelfEval () EID { 
     var Result EID 
-    /* Let:2 */{ 
-      var a *ClaireList   = self.Args
-      /* noccur = 3 */
-      var g0394I *ClaireBoolean  
-      var g0394I_try03953 EID 
-      /* and:3 */{ 
+    { var a *ClaireList   = self.Args
+      var g0204I *ClaireBoolean  
+      var try_1 EID 
+      /*g_try(v2:"try_1",loop:false) */
+      { 
         var v_and3 *ClaireBoolean  
         
         v_and3 = Core.F__sup_integer(a.Length(),0)
-        if (v_and3 == CFALSE) {g0394I_try03953 = EID{CFALSE.Id(),0}
-        } else /* arg:4 */{ 
+        if (v_and3 == CFALSE) {try_1 = EID{CFALSE.Id(),0}
+        } else { 
           v_and3 = Core.F_known_ask_any(Core.F_get_property(C_ctrace,ToObject(ClEnv.Id())))
-          if (v_and3 == CFALSE) {g0394I_try03953 = EID{CFALSE.Id(),0}
-          } else /* arg:5 */{ 
-            var v_and3_try03966 EID 
-            /* Let:6 */{ 
-              var g0397UU *ClaireBoolean  
-              /* noccur = 1 */
-              var g0397UU_try03987 EID 
-              /* Let:7 */{ 
-                var g0399UU *ClaireAny  
-                /* noccur = 1 */
-                var g0399UU_try04008 EID 
-                g0399UU_try04008 = EVAL(a.At(1-1))
-                /* ERROR PROTECTION INSERTED (g0399UU-g0397UU_try03987) */
-                if ErrorIn(g0399UU_try04008) {g0397UU_try03987 = g0399UU_try04008
+          if (v_and3 == CFALSE) {try_1 = EID{CFALSE.Id(),0}
+          } else { 
+            var try_2 EID 
+            /*g_try(v2:"try_2",loop:false) */
+            { var arg_3 *ClaireBoolean  
+              _ = arg_3
+              var try_4 EID 
+              /*g_try(v2:"try_4",loop:false) */
+              { var arg_5 *ClaireAny  
+                _ = arg_5
+                var try_6 EID 
+                /*g_try(v2:"try_6",loop:false) */
+                try_6 = EVAL(a.At(1-1))
+                /* ERROR PROTECTION INSERTED (arg_5-try_4) */
+                if ErrorIn(try_6) {try_4 = try_6
                 } else {
-                g0399UU = ANY(g0399UU_try04008)
-                g0397UU_try03987 = EID{F_boolean_I_any(g0399UU).Id(),0}
+                arg_5 = ANY(try_6)
+                try_4 = EID{F_boolean_I_any(arg_5).Id(),0}
                 }
-                /* Let-7 */} 
-              /* ERROR PROTECTION INSERTED (g0397UU-v_and3_try03966) */
-              if ErrorIn(g0397UU_try03987) {v_and3_try03966 = g0397UU_try03987
+                } 
+              /* ERROR PROTECTION INSERTED (arg_3-try_2) */
+              if ErrorIn(try_4) {try_2 = try_4
               } else {
-              g0397UU = ToBoolean(OBJ(g0397UU_try03987))
-              v_and3_try03966 = EID{Core.F__I_equal_any(g0397UU.Id(),CTRUE.Id()).Id(),0}
+              arg_3 = ToBoolean(OBJ(try_4))
+              try_2 = EID{Core.F__I_equal_any(arg_3.Id(),CTRUE.Id()).Id(),0}
               }
-              /* Let-6 */} 
-            /* ERROR PROTECTION INSERTED (v_and3-g0394I_try03953) */
-            if ErrorIn(v_and3_try03966) {g0394I_try03953 = v_and3_try03966
+              } 
+            /* ERROR PROTECTION INSERTED (v_and3-try_1) */
+            if ErrorIn(try_2) {try_1 = try_2
             } else {
-            v_and3 = ToBoolean(OBJ(v_and3_try03966))
-            if (v_and3 == CFALSE) {g0394I_try03953 = EID{CFALSE.Id(),0}
-            } else /* arg:6 */{ 
-              g0394I_try03953 = EID{CTRUE.Id(),0}/* arg-6 */} 
-            /* arg-5 */} 
-          /* arg-4 */} 
+            v_and3 = ToBoolean(OBJ(try_2))
+            if (v_and3 == CFALSE) {try_1 = EID{CFALSE.Id(),0}
+            } else { 
+              try_1 = EID{CTRUE.Id(),0}} 
+            } 
+          } 
         }
-        /* and-3 */} 
-      /* ERROR PROTECTION INSERTED (g0394I-Result) */
-      if ErrorIn(g0394I_try03953) {Result = g0394I_try03953
+        } 
+      /* ERROR PROTECTION INSERTED (g0204I-Result) */
+      if ErrorIn(try_1) {Result = try_1
       } else {
-      g0394I = ToBoolean(OBJ(g0394I_try03953))
-      if (g0394I == CTRUE) /* If:3 */{ 
-        /* Let:4 */{ 
-          var p *ClairePort   = ClEnv.Ctrace.UseAsOutput()
-          /* noccur = 1 */
+      g0204I = ToBoolean(OBJ(try_1))
+      if (g0204I == CTRUE) { 
+        { var p *ClairePort   = ClEnv.Ctrace.UseAsOutput()
+          _ = p
+          /*g_try(v2:"Result",loop:true) */
+          /*g_try(v2:"Result",loop:true) */
           Result = Core.F_print_any((self.External).Id())
           /* ERROR PROTECTION INSERTED (Result-Result) */
           if !ErrorIn(Result) {
           PRINC(",line=")
           F_princ_integer(self.Index)
           PRINC(": (ASSERT) ")
+          /*g_try(v2:"Result",loop:true) */
           Result = Core.F_CALL(C_print,ARGS(a.At(1-1).ToEID()))
           /* ERROR PROTECTION INSERTED (Result-Result) */
           if !ErrorIn(Result) {
@@ -3819,81 +3920,86 @@ func (self *Assert ) SelfEval () EID {
           }}
           {
           p.UseAsOutput()
-          if (ClEnv.Debug_I >= 0) /* If:5 */{ 
+          /*g_try(v2:"Result",loop:true) */
+          if (ClEnv.Debug_I >= 0) { 
             Result = ToException(Core.C_general_error.Make(MakeString("Assertion Violation").Id(),CNIL.Id())).Close()
             } else {
             Result = EID{CFALSE.Id(),0}
-            /* If-5 */} 
+            } 
           /* ERROR PROTECTION INSERTED (Result-Result) */
           if !ErrorIn(Result) {
           Result = EID{CEMPTY.Id(),0}
           }}
-          /* Let-4 */} 
+          } 
         } else {
         Result = EID{CFALSE.Id(),0}
-        /* If-3 */} 
+        } 
       }
-      /* Let-2 */} 
+      } 
     return Result} 
   
 // The EID go function for: self_eval @ Assert (throw: true) 
 func E_self_eval_Assert (self EID) EID { 
-    return /*(sm for self_eval @ Assert= EID)*/ To_Assert(OBJ(self)).SelfEval( )} 
+    return To_Assert(OBJ(self)).SelfEval( )} 
   
 // The EVAL go function for: Assert 
 func EVAL_Assert (x *ClaireAny) EID { 
      return To_Assert(x).SelfEval()} 
   
-/* {1} OPT.The go function for: self_eval(self:Branch) [] */
+/* {1} The go function for: self_eval(self:Branch) [status=1] */
 func (self *Branch ) SelfEval () EID { 
     var Result EID 
-    if (self.Args.Length() != 1) /* If:2 */{ 
+    /*g_try(v2:"Result",loop:true) */
+    if (self.Args.Length() != 1) { 
       Result = ToException(Core.C_general_error.Make(MakeString("[104] Syntax error with ~S (one arg. expected)").Id(),MakeConstantList(self.Id()).Id())).Close()
       } else {
       Result = EID{CFALSE.Id(),0}
-      /* If-2 */} 
+      } 
     /* ERROR PROTECTION INSERTED (Result-Result) */
     if !ErrorIn(Result) {
-    h_index := ClEnv.Index /* Handle */
-    h_base := ClEnv.Base
-    F_world_push()
-    var g0401I *ClaireBoolean  
-    var g0401I_try04022 EID 
-    /* Let:2 */{ 
-      var g0403UU *ClaireAny  
-      /* noccur = 1 */
-      var g0403UU_try04043 EID 
-      g0403UU_try04043 = EVAL(self.Args.At(1-1))
-      /* ERROR PROTECTION INSERTED (g0403UU-g0401I_try04022) */
-      if ErrorIn(g0403UU_try04043) {g0401I_try04022 = g0403UU_try04043
+    { 
+      h_index := ClEnv.Index
+      h_base := ClEnv.Base
+      F_world_push()
+      var g0205I *ClaireBoolean  
+      var try_1 EID 
+      /*g_try(v2:"try_1",loop:false) */
+      { var arg_2 *ClaireAny  
+        _ = arg_2
+        var try_3 EID 
+        /*g_try(v2:"try_3",loop:false) */
+        try_3 = EVAL(self.Args.At(1-1))
+        /* ERROR PROTECTION INSERTED (arg_2-try_1) */
+        if ErrorIn(try_3) {try_1 = try_3
+        } else {
+        arg_2 = ANY(try_3)
+        try_1 = EID{Core.F__I_equal_any(arg_2,CFALSE.Id()).Id(),0}
+        }
+        } 
+      /* ERROR PROTECTION INSERTED (g0205I-Result) */
+      if ErrorIn(try_1) {Result = try_1
       } else {
-      g0403UU = ANY(g0403UU_try04043)
-      g0401I_try04022 = EID{Core.F__I_equal_any(g0403UU,CFALSE.Id()).Id(),0}
+      g0205I = ToBoolean(OBJ(try_1))
+      if (g0205I == CTRUE) { 
+        Result = EID{CTRUE.Id(),0}
+        } else {
+        F_world_pop()
+        Result = EID{CFALSE.Id(),0}
+        } 
       }
-      /* Let-2 */} 
-    /* ERROR PROTECTION INSERTED (g0401I-Result) */
-    if ErrorIn(g0401I_try04022) {Result = g0401I_try04022
-    } else {
-    g0401I = ToBoolean(OBJ(g0401I_try04022))
-    if (g0401I == CTRUE) /* If:2 */{ 
-      Result = EID{CTRUE.Id(),0}
-      } else {
-      F_world_pop()
-      Result = EID{CFALSE.Id(),0}
-      /* If-2 */} 
-    }
-    if ErrorIn(Result) && ToType(Core.C_contradiction.Id()).Contains(ANY(Result)) == CTRUE { 
-      /* s=EID */ClEnv.Index = h_index
-      ClEnv.Base = h_base
-      F_world_pop()
-      Result = EID{CFALSE.Id(),0}
+      if ErrorIn(Result) && ToType(Core.C_contradiction.Id()).Contains(ANY(Result)) == CTRUE { 
+        ClEnv.Index = h_index
+        ClEnv.Base = h_base
+        F_world_pop()
+        Result = EID{CFALSE.Id(),0}
+        } 
       } 
     }
     return Result} 
   
 // The EID go function for: self_eval @ Branch (throw: true) 
 func E_self_eval_Branch (self EID) EID { 
-    return /*(sm for self_eval @ Branch= EID)*/ To_Branch(OBJ(self)).SelfEval( )} 
+    return To_Branch(OBJ(self)).SelfEval( )} 
   
 // The EVAL go function for: Branch 
 func EVAL_Branch (x *ClaireAny) EID { 

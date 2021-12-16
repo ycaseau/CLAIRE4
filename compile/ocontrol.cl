@@ -173,11 +173,11 @@ c_type(self:Trace) : type -> any
 c_type(self:Branch) : type -> boolean
 
 [c_code(self:Branch) : any
- -> c_code(Handle(arg = Do(list(Call(choice, list(system)),
+ -> c_code(Handle(test = contradiction,
+                  arg = Do(list(Call(choice, list(system)),
                                 If(test = self.args[1], arg = true,
                                    other = Do(list(Call(backtrack, list(system)),
                                               false))))),
-                  test = contradiction,
                   other = Do(list(Call(backtrack, list(system)), false))),any) ]
 
 [c_code(self:Macro,s:class) : any -> c_code(call(macroexpand,self),s)]

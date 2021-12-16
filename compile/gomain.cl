@@ -114,23 +114,27 @@
    if %init? load("init"), 
    system.verbose := vlevel,
    if (%cx != "")                             // we want a system file
-      (compiler.active? := true,
-       load(get_value("Compile")),
+      (load(get_value("Compile")),
+       compiler.active? := true,
        claire/system_file(string2module(%cx),%out),
        exit(0))
    else if (%cm != "")                        // we have asked to compile a module
       let m := string2module(%cm) in
-        (compiler.active? := true,
-         if (m.uses = list(claire_modules[2]))
+        (if (m.uses = list(claire_modules[2]))
             (claire_modules := shrink(claire_modules,2),
              trace(0,"=== Light Module ~S:~S -> use ~S=== ", m, m.uses,claire_modules)),
          claire_modules :add m,
          load(get_value("Compile")),     // load the compiler
-	     if (%out != "") external(m) := %out,
-	     load(m),                        // load the module
+         compiler.active? := true,
+	       if (%out != "") external(m) := %out,
+	       load(m),                        // load the module
          if (dblevel < 1) (compiler.safety :min 4, compiler.debug? :add m),
+         compile_dir(m),
          compile(m),
-         if (%exe) claire/system_file(m,%out),   // v3.2.12: level = 0 => do nothing ....
+         if (%exe) 
+            (//[0] ==== create the systel file for module ~S // %out,
+             claire/system_file(m,%out),   // v3.2.12: level = 0 => do nothing ....
+             compile_exe(%out)),
          exit(0))
     else Reader/top_level(reader)
     )                                                                
@@ -191,7 +195,7 @@
     printf("//module definitions ~I", breakline()),
     for x in (l_necessary)
       (if not(x % {claire,mClaire,Kernel})
-       printf("~I = InitModule(~S,~I,~I,~I\t~S,\n\t~I);~I", 
+       printf("~I = InitModule(~S,~I,~I,~I\t~S,\n\t~I)~I", 
               g_expression(x,module),
               string!(x.name),
               g_expression(x.part_of,module),
@@ -202,7 +206,7 @@
               breakline())),
     printf("~I// module load ~I", breakline(), breakline()),
     for x in list{m in l_necessary | m.made_of & m.status != 5}
-       printf("~I.MetaLoad();~I",ident(x.name),breakline()),
+       printf("~I.MetaLoad()~I",ident(x.name),breakline()),
     for x in list{m in l_necessary | m.status = 5}
       ( printf("~I.it->evaluate = ~I~I",ident(x.name),
                expression(make_function("load_" /+ string!(x.name)), false),
@@ -228,8 +232,9 @@
     printf("fmt.Printf(\"=== CLAIRE4 interpreter version 1.0    ===\\n\")~I",breakline()),
     printf("Bootstrap()~I",breakline()),
     printf("Load()~I",breakline()),
-    printf("ClEnv.Module_I = C_claire~I",breakline()),
-	printf("Reader.C_reader.Fromp = ClEnv.Cin~I",breakline()),
+    if (value("Generate") % l_used)
+        printf("ClEnv.Module_I = C_claire~I",breakline()),
+	  printf("Reader.C_reader.Fromp = ClEnv.Cin~I",breakline()),
     if (value("Generate") % l_used) printf("Generate.F_Generate_complex_main_void()")
     else printf("Reader.F_Reader_simple_main_void()"),
     breakline(),
@@ -238,6 +243,20 @@
 // *******************************************************************
 // *       Part 3: module compiling : execute a command line         *
 // *******************************************************************
+
+
+// create a directory for the module (if it does not exist)
+[compile_dir(m:module): void
+ -> let s := "mkdir -p src" / capitalize(string!(m.name)) in 
+     (//[0] ask shell : ~S // s,
+      shell(s))]
+
+// create the go
+[compile_exe(%out:string): void
+ -> let s := "go build src" / %out /+ ".go" in 
+     (//[0] ask shell : ~S // s,
+      shell(s))]
+
 
 
 // *******************************************************************

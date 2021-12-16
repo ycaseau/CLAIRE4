@@ -79,6 +79,7 @@ claire/-- :: operation(precedence = precedence(..))
        list x % y,       // open coded
        set x %t y,       // kernel definition (includes the =type? iteration)
        array x % y,
+       tuple (x % tuple & length(x) = length(y) & forall(i in (1 .. length(x)) | x[i] % y[i])),     // tuple as a type !
        type_operator x %t y,      // kernel (closed) definition (contains)
        integer (case x (integer (x % y), any false)),
        any let start := index!() in         // this is the extensibility part for collections
@@ -186,12 +187,16 @@ finite?(self:tuple) : boolean -> forall(x in self | finite?(x as type))
 // args is a list representing the path (a sequence of properties (parameters))
 // a property is applied to the referred type
 // if arg = true, the reference is the singleton containing the ref. value
-// TODO check that arg is still used !
+// arg is set to true when we copy a reference in define.cl (unclear why)
 self_print(self:Reference) : void -> printf("<ref:~S(ltype[~A])>",self.args,self.index)
 get(self:Reference,y:any) : any
  -> (let l := self.args in
        (for i in (1 .. length(l)) y := (unsafe(funcall(l[i] as property, y))),
         y))
+
+// we need a constructor
+claire/Reference!(l:list,n:integer) : Reference
+  -> Reference(args = l, index = n)       
 
 // apply a reference to a type (l is args(self), passed for disambiguation)
 @(self:Reference,l:list,y:any) : any

@@ -56,7 +56,8 @@
 *not_equal* :: (!= @ any)
 *equal* :: (= @ any)
 *belong* :: (Core/belong @ any)         // special method in types => dispatch to any
-*contain* :: (contain? @ list)
+*contain_list* :: (contain? @ list)
+*contain_set* :: (contain? @ set)
 // Compile/*min_integer* :: (min @ integer)
 // Compile/*max_integer* :: (max @ integer)
 *length_array* :: (length @ array)
@@ -91,6 +92,7 @@
 code_producer <: producer(
    open_comparators:list[operation],      // list of comparison ops that are inlined (the order matters!!)
    open_operators:list[operation],        // list of arithmetic operators that are inlined
+   div_operators:list[operation],         // list of division operators that are inlined
    body:any = 0,                          // used to store the body of the current method
    extension:string,                      // extension for generated files
    comment:string,                        // a string that designates the target language
@@ -104,7 +106,9 @@ go_producer <: code_producer(
     bad_names:list[symbol],        // avoid generating !
     good_names:list[symbol],       // replacements (same order)
     kernel_methods:list,               // dictionary for go "sugar" (nice methods in Kernel versus functions)
-    source:string)                 // where to place the go code
+    source:string,                 // where to place the go code
+    debug?:boolean = false,        // if debug, add /* explanation */ into code
+    varsym:integer = 0)            // desambiguate variables by adding a number
 
 
 // TODO: define a status = 3 for the PRODUCER class that tells that is it extensible
@@ -126,6 +130,10 @@ breakline() : any -> (princ("\n"), indent_c())
 // adds a new C block with the condensed option
 [new_block() : void
  -> OPT.level :+ 1, princ("{ "), breakline()]
+
+ // adds a new block without the breaklines for Let
+ [let_block() : void
+ -> OPT.level :+ 1, princ("{ ")]
 
 // closes the current C block
 [close_block() : void 
@@ -255,7 +263,9 @@ claire/BadMethods:list<method> :: unknown
             substring(date!(1),1,24)),
      namespace!(p,m),
      printf("import (_ \"fmt\"\n"),
-     if module? printf("\t\"unsafe\"\n"),            // import go.unsafe (support pointer cast)
+     if module? 
+        (if exists(c in OPT.objects | c % class)
+            printf("\t\"unsafe\"\n")),            // import go.unsafe (support pointer cast)
      import_declaration(m),
      printf(")\n"),                                  // end of import 
      dumb_import(m),
@@ -318,14 +328,25 @@ claire/BadMethods:list<method> :: unknown
         gen_cast_function(p,c),
         if construct_class?(c) gen_construct(p,c))] 
 
+// beware of covariant slot redefinition : go only knows the rootSlot
+[rootSlot(s:slot) : slot
+  -> let p := s.selector, c := domain!(s), s2 := s, i := s.Kernel/index in
+       (while (c != any)
+          (c := c.superclass,
+           if (length(c.slots) < i) break()
+           else let s3 := c.slots[i] in
+              (if (s3.selector = p) s2 := s3)),
+        s2)]
+
  // how to generate a struct associated to a class
+ // notice that we only add the slots that are defined for c, not those inherited from a super class (even with covariant redefinition)
 [gen_class_def(p:go_producer,c:class) : void
  -> printf("type ~I struct ~I ~I~I ~I~I",
                go_class(c),
                new_block(),
                go_class(c.superclass),
                breakline(),
-               for y:slot in list{s in get_indexed(c) | domain!(s) = c}
+               for y:slot in list{s in get_indexed(c) | domain!(rootSlot(s)) = c}
                   (printf("~I ~I", cap_short(y.selector.name),interface!(class!(y.range))),
                    breakline()),
                close_block())]
@@ -350,7 +371,7 @@ claire/BadMethods:list<method> :: unknown
   -> let first := true in 
       (printf("\n// automatic constructor function\n"),
        printf("func Make~I~I(~I) *~I ~I",
-            addUnderscore(c),
+            add_underscore(c.name),                              // distinguish between aClass and AClass
             go_class(c),
             for y:slot in cdr(get_indexed(c))
                (if first (first := false) else princ(","),
@@ -360,7 +381,11 @@ claire/BadMethods:list<method> :: unknown
       printf("var o *~I = new(~I)~I",go_class(c),go_class(c),breakline()),
       printf("o.Isa = ~I~I",class_ident(c),breakline()),
       for y:slot in cdr(get_indexed(c))
-         printf("o.~I = ~I~I",cap_short(y.selector.name),ident(y.selector.name),breakline()),
+         printf("o.~I = ~I~I~I~I",cap_short(y.selector.name),
+              cast_prefix(class!(range(y)),class!(range(rootSlot(y)))),    // possible conversion for co-variant slots
+              ident(y.selector.name),
+              cast_post(class!(range(y)),class!(range(rootSlot(y)))),
+              breakline()),
       printf("return o ~I~I",breakline(),close_block("make"))) ]
 
 
@@ -378,7 +403,7 @@ claire/BadMethods:list<method> :: unknown
     for x in {p in OPT.properties | not(p % OPT.objects) }  
        (when p2 := some(p2 in (OPT.properties but x) |            // v0.01
                         string!(p2.name) = string!(x.name)) in
-         error("[217] ~S and ~S cannot be defined in the same module",p2,x),
+          error("[217] ~S and ~S cannot be defined in the same module",p2,x),
         printf("~Ivar ~I ~I // ~S",breakline(),
                 thing_ident(x),
                 interface!(Compile/psort(owner(x))),
@@ -409,15 +434,20 @@ claire/BadMethods:list<method> :: unknown
      let j:any := unknown in 
        for i in OPT.instructions 
          (breakline(),
-          if (i % string)  printf("~I// ~A", (if not(j % string) breakline()), i)
+          if (i % string)     // comment
+              printf("~I// ~A", (if not(j % string) breakline()), i)
           else if g_throw(i)                   // need to protect from an error in compiled code
              (new_block(),
-              printf("/*PROTECT ~S */~I",i,breakline()),
+              if p.debug? printf("/*PROTECT ~S */~I",i,breakline()),
               var_declaration("expr",EID,1),
               g_statement(i,EID,"expr",true,false),
               printf("ErrorCheck(expr)"),
               close_block())
-          else  statement(i, void, "Niet", false),          // Niet is a junk EID variable
+          else if simple_func?(i)
+              printf("_ = ~I~I",g_expression(i,class!(c_type(i))),breakline())
+          else  
+                (// printf("/* default case with ~S:~S*/~I",i,g_func(i),breakline()),
+                 statement(i, void, "Niet", false)),          // Niet is a junk EID variable
           j := i) ]
 
 // generate the module definition - only the module structure (the decoration is found in the system file)
@@ -527,16 +557,18 @@ parents(self:list) : list
 
 // create an EID lambda  
 [make_lambda_function(p:go_producer,self:lambda,%nom:string) : void
-  -> //[0] ===== generate an EID function from a lambda for ~A // %nom,
-     use_as_output(OPT.outfile),
-     generate_function_start(PRODUCER, self, EID, nil, %nom),        // defined in gogen
-     new_block(),
-     printf("/* eid body: ~S */~I",self.body,breakline()),
-     eid_body(self.body,true,EID),
-     close_block(),
-     breakline(),
-     generate_eid_dual(self,%nom),                          // generate E_C(nom)
-     use_as_output(stdout) ]
+  -> let %body := c_code(self.body,any) in
+        (//[0] ===== generate an EID function from a lambda for ~A // %nom,
+         printf("Optimization:\nlambda = ~S\n optimized = ~S\n",self,%body),
+         use_as_output(OPT.outfile),
+         generate_function_start(PRODUCER, self, EID, nil, %nom),        // defined in gogen
+         new_block(),
+         if p.debug? printf("/* eid body: ~S */~I",self.body,breakline()),
+         eid_body(%body,true,EID),
+         close_block(),
+         breakline(),
+         generate_eid_dual(self,%nom),                          // generate E_C(nom)
+         use_as_output(stdout)) ]
 
  // how to declare a function in the interface file and its header in the
 // output file
@@ -547,11 +579,9 @@ parents(self:list) : list
                 else self.vars) in
       (OPT.functions :add list(%f, lv, s),        // register the function in the API list
        if (compiler.naming != 2)           // TODO: shoud we keep the naming option - 2 (generate code that is hard to reverse engineer)
-       printf("\n/* {~A} OPT.The go function for: ~I */\n", OPT.Compile/level,
+       printf("\n/* {~A} The go function for: ~I */\n", OPT.Compile/level,
                (case m
-                 (method printf("~S(~I) [~I]", m.selector,
-                                Language/ppvariable(self.vars),
-                               (if (compiler.naming = 1) bitvectorSum(status!(m)))),
+                 (method printf("~S(~I) [status=~A]", m.selector, Language/ppvariable(self.vars), m.status),
                   any princ(string!(%f))))),
        if goMethod?(m)
           printf("func (~I) ~I (~I) ~I ",goVariable(p,self.vars[1]), goMethod(m as method), 
@@ -572,27 +602,31 @@ parents(self:list) : list
          %body := c_strict_code(self.body,s),
          throw? := g_throw(%body) in
       (//[0] ---- ~S: make_go(~S) => simple=~S // m, %body, simple_body?(%body),
-       if (m.status != -1 & throw? != can_throw?(m))        // avoids generating go code that will break
+       p.varsym := 0,                                            // resets the ID for distinct vars
+       if (m.status = -1) (m.status := (if throw? 1 else 0))     // nice case we have not seen m yet.
+       else if (throw? != can_throw?(m))                         // avoids generating go code that will break
           (//[0] ======================== WARNING ======================================== //,
            //[0] >>>>> ~S body produces an error (g_throw = true) while status is 0 <<<<<<< // m,
            if (m.status = 0) BadMethods :add m
+           else throw? := true                         // avoid generating wrong code (rest of world assumes EID since m.status was 1)
            // error("==== cross-compiling error with ~S: the new error status means that it must be in ~S",
            //      m, (if throw? "ForceThrow" else "ForceNotThrow"))
           ),
        use_as_output(OPT.outfile),
        if ((typeOK | compiler.safety > 3) & not(throw?) & (m.selector != self_eval))  // happy with the type inference => native function
           (//[5] --- Procedure generation (can throw = ~S) // throw?,
+           if p.debug? printf("// DEBUG: g_throw=~S from body=~S ~I",throw?,%body, breakline()),
            generate_function_start(PRODUCER, self, s, m, %nom),        
            new_block(),
            if (need_debug?(m) |  OPT.profile? | not(simple_body?(%body)) | s = void) 
               procedure_body(m,self,%body,s)
-           else (princ("// use function body compiling \n"),
+           else (if p.debug? princ("// use function body compiling ~I",breakline()),
                  function_body(%body,s)))
        else (//[0] --- EID function generation (can throw = ~S) // throw?,
              throw? := true,                                       // this is the EID pathd
              generate_function_start(PRODUCER, self, EID, m, %nom),        
              new_block(),
-             // printf("/*G_throw = ~S for ~S, s:~S*/~I",throw?,%body,s,breakline()),
+             // printf("/*G_throw = ~S for ~S, s:~S*/~I",throw?,%body,s,breakline()),  => does not work when "*/" exist in the code
              eid_body(%body,typeOK,s)),
        close_block(),
        generate_eid_function(self,m,throw?),
@@ -612,7 +646,9 @@ parents(self:list) : list
 // simpler case that we apply for Do, Ifs and functional expressions
 [function_body(self:any,s:class) : void
   -> let %ret := (if (s != void) "return " else "") in
-      printf("~A ~I~I", %ret, g_expression(self,s),breakline()) ]
+       (if (s = boolean)
+         printf("if ~I {return CTRUE~I} else {return CFALSE}",bool_exp(self,true),breakline())
+        else printf("~A ~I~I", %ret, g_expression(self,s),breakline())) ]
 
 // generate nice code for If function (inspired from g_statement@If)
 [function_body(self:If, s:class) : void
@@ -642,7 +678,7 @@ parents(self:list) : list
 [procedure_body(m:method, %l:lambda, %body:any,s:class) : void
   ->  if OPT.profile? generate_profile(PRODUCER,m),
       if need_debug?(m) debug_intro(PRODUCER,m),
-      printf("// procedure body with s = ~s \n",s),
+      printf("// procedure body with s = ~S \n",s),
       if (s != void) 
          (var_declaration("Result",s,1),
           statement(%body,s,"Result",false))
@@ -655,7 +691,7 @@ parents(self:list) : list
  -> // printf("/* eid_body s = ~S */\n",s),
     var_declaration("Result",EID,1),
     statement(%body,EID,"Result",g_throw(%body)),
-    if typeOK printf("return Result")
+    if (typeOK | safety(compiler) > 3) printf("return Result")
     else printf("return RangeCheck(~I,Result)",g_expression(s,type))]
 
 // generate the EID function associated to each method (used by the interpreter - EID mode)
@@ -690,7 +726,7 @@ parents(self:list) : list
       if (throw? | m % EIDSET | m.selector = self_eval) 
           sm := EID,     // the function returns an EID !
       cast_prefix(sm,EID),
-      printf("/*(sm for ~S= ~S)*/ ",m,sm),
+      if PRODUCER.debug? printf("/*(sm for ~S= ~S)*/ ",m,sm),
       if goMethod?(m)
         (external_EID_arg(l[1],%sig[1],1,nl?),
          printf(".~I(",goMethod(m)),

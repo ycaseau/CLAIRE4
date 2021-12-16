@@ -403,7 +403,7 @@ func F_nth_set_string(s *ClaireString, n int, c rune) EID {
 	}
 	s2 := ClEnv.bufferCopy()
 	if n >= i {
-		return Cerror(11, AnyInteger(n), s.any())
+		return Cerror(11, AnyInteger(n), s.Id())
 	} else {
 		s.Value = s2
 		return EID{s.Id(), 0}
@@ -443,7 +443,7 @@ func E_make_string_integer(n EID, c EID) EID {
 // TODO : find the best way to write a rune at a position in a byte[]
 func (l *ClaireList) MakeString() EID {
 	if l.of != ToType(C_char.Id()) {
-		return Cerror(22, l.any(), C_char.Id())
+		return Cerror(22, l.Id(), C_char.Id())
 	} else {
 		ClEnv.bufferStart()
 		for _, r := range l.ValuesO() {
@@ -697,8 +697,8 @@ func InitModule(name string, father *ClaireModule, usage *ClaireList, dir string
 	it.MadeOf = files
 	it.Comment = MakeString(name)
 	it.Status = 3
-	C_module.Instances.AddFast(it.any())
-	father.Parts.AddFast(it.any())
+	C_module.Instances.AddFast(it.Id())
+	father.Parts.AddFast(it.Id())
 	return it
 }
 

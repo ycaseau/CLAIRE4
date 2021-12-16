@@ -236,8 +236,8 @@ put(a:table,x:any,y:any) : void
  -> let p := a.params, z := get(a,x)  in
        (if (z != y)
            (case p
-             (integer store(a.graph, x - p, y, a.store?),
-              list store(a.graph,
+             (integer store(a.graph as list, (x as integer) - (p as integer), y, a.store?),
+              list store(a.graph as list,
                          get_index(a, (x as list)[1], (x as list)[2]), y,
                          a.store?),
               any graph_put(a,x,y))))   // takes care of the defeasible part :)
@@ -469,7 +469,7 @@ self_print(self:system_error) : void
                 else if (n = 9) "String buffer is full: ~S"
                 else if (n = 10) "Cannot create an imported entity from NULL reference"
                 else if (n = 11) "nth_string[~S]: string too short~S"
-                else if (n = 12) "Symbol Table table full"
+                else if (n = 12) "Range check failed: ~S not in ~S"         // new in CLAIRE4
                 else if (n = 13) "Cannot create a subclass for ~S [~A]"
                 else if (n = 16) "Temporary output string buffer too small"
                 else if (n = 17) "Bag Type Error: ~S does not belong to type ~S"
@@ -479,7 +479,7 @@ self_print(self:system_error) : void
                 else if (n = 21) "Integer to character: ~S is a wrong value"
                 else if (n = 22) "Cannote create a string with negative length ~S"
                 else if (n = 23) "Not enough memory to instal claire"
-                else if (n = 24) "execution stack is full [~A]"
+                else if (n = 24) "read unknown value with ~S"
                 else if (n = 26) "Wrong usage of time counter [~A]"
                 else if (n = 27) "internal garbage protection stack overflow"
                 else if (n = 28) "the multivalued status of ~S is not compatible with ~S"

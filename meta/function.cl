@@ -361,8 +361,14 @@ time_show() : void -> function!(time_show)
 gensym(self:void) : symbol -> gensym("g")
 
 // world management
-store(l:list,n:integer,y:any) : any -> store(l,n,y,true)
-store(l:array,n:integer,y:any) : any -> store(l,n,y,true)
+store(l:list,n:integer,y:any) : any
+ -> (if (n < 1 | n > length(l)) error("store @ list: ~S out of bounds for ~S",n,l)
+     else store(l,n,y,true))
+
+store(l:array,n:integer,y:any) : any 
+ -> (if (n < 1 | n > length(l)) error("store @ array: ~S out of bounds for ~S",n,l)
+     else store(l,n,y,true))
+
 commit(n:integer) : void -> (while (n < world?()) commit())
 backtrack(n:integer) : void -> (while (n < world?()) backtrack())
 claire/world+ :: choice
@@ -393,7 +399,7 @@ nth_get(s:string,n:integer,max:integer) : char
 nth_put(s:string,n:integer,c:char,max:integer) : void
   -> (if (n <= max) s[n] := c  else error("Buffer string access"))
 
-shell(self:string) : void -> function!(claire_shell)
+// shell(self:string) : void -> function!(claire_shell)
 claire/getenv(self:string) : string -> function!(getenv_string)
 claire/get_value(self:string) : any -> function!(value_string)
 claire/get_value(self:module,s:string) : any -> function!(value_module)  //  v3.2.14
@@ -447,10 +453,16 @@ pair_2(x:list) : type[member(x)] -> x[2]
 
 //------------------------ FLOAT ---------------------------------------------
 self_print(self:float) : void -> function!(print_float)
-+(self:float,x:float) : float -> (let y:float := (self + x) in y)
--(self:float,x:float) : float -> (let y:float := (self - x) in y)
-*(self:float,x:float) : float -> (let y:float := (self * x) in y)
-/(self:float,x:float) : float -> (let y:float := (self / x) in y)
++(self:float,x:float) : float ->  (self + x)  
+-(self:float,x:float) : float -> (self - x) 
+*(self:float,x:float) : float -> (self * x) 
+/(self:float,x:float) : float -> (self / x) 
+// old junk
+// +(self:float,x:float) : float -> (let y:float := (self + x) in y)
+// -(self:float,x:float) : float -> (let y:float := (self - x) in y)
+// *(self:float,x:float) : float -> (let y:float := (self * x) in y)
+// /(self:float,x:float) : float -> (let y:float := (self / x) in y)
+
 -(self:float) : float -> (-1.0 * self)
 
 string!(self:float) : string -> (print_in_string(), princ(self), end_of_string())
@@ -573,11 +585,19 @@ build_powerset(self:list) : set
 // skip 
 <<(x:list,y:integer) : list -> function!(skip_list)
 
-// new and useful (v3.1.06) - create a list with n replication of the default value
+// new and useful (v3.1.06) - create a list with n replication of the default value - deprecated
 claire/make_copy_list(n:integer,d:any) : list
   -> let l := make_list(n,d) in
        (case d (list  for i in (1 .. n) l[i] := copy(d)),
         l)
+
+// new version : create a typed list for integer or floats
+claire/typed_copy_list(t:type,n:integer,d:any) : list
+  -> (if (t <= integer) make_list(n,integer,d as integer)
+     else if (t <= float) make_list(n,float,d as float)
+     else let l := make_list(n,d) in
+       (case d (bag for i in (1 .. n) l[i] := copy(d)),
+        l))
 
 //----------------------  SET  ---------------------------------------------
 difference(self:set,x:set) : set -> { y in self | not(contain?(x, y))}

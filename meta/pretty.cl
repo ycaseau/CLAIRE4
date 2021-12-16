@@ -64,7 +64,7 @@ self_eval(self:Variable) : any -> mClaire/get_stack(mClaire/base!() + self.index
 write_value(self:Variable,val:any) : any
  -> (if (unknown?(range, self) | val % self.range)
         (mClaire/put_stack(mClaire/base!() + self.index, val), val)
-     else range_error(arg = self, cause = val, wrong = self.range))
+     else range_error(arg = self, mClaire/cause = val, wrong = self.range))
 
 // this is the definition of a typed variable / Vardef is a syntactic marker
 // in CLAIRE 4, Vardef are transformed in Var at run time
@@ -88,7 +88,7 @@ Control_structure <: Complex_instruction()
 write_value(self:global_variable,val:any) : any
  -> (if (val % self.range)
         (put_store(value,self,val,self.store?), val)
-     else range_error(cause = self, arg = val, wrong = self.range)) // v0.01
+     else range_error(mClaire/cause = self, arg = val, wrong = self.range)) // v0.01
 
 
 // same as C  (used externC("((int) EOF",integer))
@@ -390,7 +390,7 @@ pretty_print(self:any) : void
               (if (p = nth) static_type_nth(self.args[1]) else class!(self.arg.range)),
        Call let p := self.selector in            // this is extreme :) we catch l<X>[i]
               (if (p = nth) static_type_nth(self.args[1]) else class!(p.range)),
-       Assign s_type(self.arg),
+       Assign static_type(self.arg),
        Let static_type(self.arg),
        Do static_type(last(self.args)),
        If static_type(self.arg) meet static_type(self.other),

@@ -370,10 +370,10 @@ compile with claire3 (compiled compiler) !
 - compile(Core)
   ARGL => bug with g_stat(self:Handle)   
 
-11/23/2021 : claire3 files compiled !
+10/23/2021 : claire3 files compiled !
 - odefine.cl  : default is no longer unknown (look at define.cl)
 
-11/28/2021 : restart
+10/28/2021 : restart
 - claire1 from Makefile works :) + tests OK
 - claire3 -> compile(Optimize) gets an endless loop in gen_meta_load
    => edit go2/ *.go code
@@ -381,24 +381,152 @@ compile with claire3 (compiled compiler) !
       set it to 0 in gen_meta_load
       trace the various version of g_stat
 
-TODO:
+10/29-30 :  solved the github issues ! => now the code is on git
+11/1/2021:  move to compiling the tests files (perfs and bugs)
 
-(1) - produce claire 4 with make file 
-          (claire3 -cc <module> + claire3 -cx Generate -o claire4)
-    Note: claire3 -cc Optimize fails badly ... 
-          I guess that 
-(2) save code to gitHub !  
-   copy everything to the root (claire/v4.0/src)  
+11/5/2021 : restart 
+(1) mFib compile with -cm => done & good values (iso-go)!
+(2) move to mList => fixed the make_go_function bug (must set status)
+    - added MakeListInteger/float
+    - optimize AddFast for ints
+(3) mObj -> attention - si on remet les exemples inutiles => erreurs de compilation !
+    - bon sur lecture/ecriture
+    - x4 sur instanciation (effet des strings)
+(4) mSet -> tres mauvais
+    à faire à Bonnieux : ClaireSet2 façon bag
+(5) mDict -> OK mais trop de test d'erreur dans tls !
+    on doit pouvoir faire mieux
+    -> code obthenu pour nth_table n est pas bon (error protection ?): 
+(6) mSend -> 77ms not bad (much better than CLAIRE 3.5) but 
+    - useless MakeInteger in solOK !!   -> 40ms when fixed.
+    - boolean_I_any should not be here
+    - NthPut for array should avoid errors ?
+
+11/11/2021 : reinvent ClaireSet
+  -> use same pattern as Claire3  ... not as fast for allocation (go vs claire own alloc) but OK
+  -> need to implement ClaireSet (ListInteger/ListFloat/List/Any)
+
+11/12 => write new ClBag + ClReflect
+
+11/13 => recreate claire1 
+  - done on 11/14 :)
+  - add heterogeneous set tests in bu12 - OK 
+  - fixed self_eval@Set in control.cl to generatr proper set<integer>
+  with JITO, we get 337ms / 2000s which is thrice & twice faster than before
+
+11/19-20: rebuild claire2, claire3 !
+  -> ready to optimize the code for mDict :)
+   (a)  / or mod with y = constant != 0  -> avoid the error protection
+  -> ready to optimize mSend
+  -> tune compiler to generate AddSetInteger (for mSet)
+  -> re-run mObj and comment bad stuff out ....
+
+11/22 : compile bu* 
+- bu1 OK (but float equality is tricky ... )
+- bu2 : lots of bugs !
+     -> nth=(matrix,...) is macroexpanded (poor test with nth=)
+     -> go does not allow evaluation without use // cf do(1,2,print(...)) removes 2
+     -> 
+   WE NEED TO UNDERSTAND WHAT WE DO WITH Update(...) too many strange patterns
+   I need to test a multivalued add without trimmings, see if 
+   => add in bu8 : multi_valued slots range object, integer, float !
+
+- bu3 to bu7 fail badly ...
+- bu8 & bu9 OK !
+
+11/27 restart on claire3 compining
+-> key for CLAIRE4 : JITO => we need to re-optimize call_methods
+
+11/28 bu2, bu3, bu4 OK
+ -> lots of bug in table compiling fixed !
+ -> still todo : bu2 with safety = 5 but not 3 ! M2[1,2] := 3 -> macroexpansion M2.V produces an EID that is not seen
+
+11/30
+  A HUGE QUESTION IS : do we still need sort_abstract!(x) = any U x
+  we decide do get rid of it ...
+  seems to work -> bu6 OK
+
+12/1 : work on bu7 
+(a) see where c_code bugs ... 
+    c_code(quote([fob(x:Store[of = X],y:X) : void -> x.value := y ]))
+    method fob @ list<any>(Store[of:(any)], <ref:list(of)(ltype[0])>) is not known
+    => a problem with a reference  -> solved in method.cl (@)
+(b) get rid of the ugly retreive_method => m is passed as the 6th args by c_code(odefine.cl)
+    will need to cleanup
+(c) make reference a true expression (avoid ugly let ... expansion)
+
+12/2 : 
+- fix bu7 (run code)
+- bu8 : g_test(quote(tata(x = 2).z = 33))
+    check that update.arg est bien g_func pour generer le code rapide
+12/3 : OK from bu1 to bu10 !
+  MAJOR DECISION : slot-covariance is allowed BUT we use rootSlot(s:slot) to retreive the original slot since this is the only one 
+  known in go
+     - this is the one used for class definition (gosystem)
+     - we factor is the conversion in class constructors
+     - Call_slot : g_exp and Update use rootSlot(s) to use the proper go type
+
+12/4 bu11 (rules) ... started, to be completed (cf. notebook)
+WE LEFT UOPDATE in gostat.cl UNCOMPLETED !!!!!!!!!!!!!!!!!!!!!!!!!!!!
+  (1) learn to produce code for "column[1] := 2"
+  (2) create a 2-dim defeasible array
+  (3) check that bug3 still works (2-dim array)  => it does without store !!!!
+
+12/10 : resume
+12/11:
+ - total? in odefine.cl fixed to ensure that the order is OK  (idea: create a warning or re-sort)
+ - add arity 2 to demon functions in odefine.cl
+
+12/13
+ - added an underscore for complex class names: m/aClass -> MAClass and m/AClass -> M_AClass  : bu13 ok
+ - bu14 and bu 15 OK
+ - sudoku.cl (bu16) asks many questions
+     (a) still a compilation bug !   Kernel.F_store_list does not produce an error/EID
+     (b) compilation bug: instantiation C(x= 1,y= 2) triggers rules on x ..  (cf: the interpreter -> use update and not write)
+     (c) I had to rename value into volue -> not nice
+     (d) see if adding a filter would work : r1(x:Cell,y:integer)
+
+First correction: store(l,i,x) should look for i in (1 .. length) and thus 
+may produce an error   => need to retrofit to claire1 !  (function.cl)
+
+to tests
+ (a) all bu* (seems bu9, bu11 broken) -> 
+ 
+ (b) this seems to work & bu16 works :)
+    -> g_test(quote(store(C.line.counts,1,0)))   : check for errors
+    -> g_test(quote(store(C.line.counts,1,0,true)))  : no errors
+
+Second correction: instantiation should generate update(...) if if_write is present
+
+then restore volue -> value in sudoku.cl
+
+
+
+TODO: optimize claire3 compiler (performance, safety, and code elegance)
+========================================================================
+(1) compile bu* : detect compiler bugs  -> we have bu11 to bu14 to go ...  + add the compiler bugs
+    THEN (fun) fix the compiler
+        - verbosity levels
+        - stats about code (#loc, #warnings)
+(1a) corriger le load init pour qu'une erreur soit bien imprimée
+(1b) add something for methods with no errors but poor range ...
+     simplest is when we test can_throw / check that c_type <= range.
+(1c) Introduce CheckRange(type,Result,"cause")
+(1d) name the system file m-s.go (to avoid the confusion with m.go qui est le main)
+
+(2) add new test with muti-valued slots
 (3) look at the doc and remove the doublon value@string = get_value@string !
-
 (4) [old bug with claire1 compiling] if verbose() = 1, trace(...) produces false => trap g_statement
+    also, see if we can get rid of  === conversion nil to EMPTY ==== 
 
 (5) add the few new code features
 - dual definition of global constant should complain 
 (6) re-run tests
-(7) tune performance of compiler
+(7) run rule tests
 (8) debug debugger : when the function has many args, seems to be an error
     use Reader/Show(n)
+(9) make the compiler silent (verbose options : 3 = silent, verbose, debug) with additional stats
+ 
  
 // =================== to do backlog ==========================================
 
@@ -417,10 +545,18 @@ TODO:
 - fix the compilation of self_print @ string (self_print is open) => in gexp
   optimize print(integer) ?
 - why do we set compiler.inline? to false, it should be true !
+- when we detect a discrepency between actual throw and can_throw => 
+    a. we should get rid of "good/bad lists" (unless we keep it as a debug back door)
+    b. we should generate the code that is expected by the status
+    c. a proper warning should be issued
+- do a test with set of objects and set of string and see if changing KEY(s:string) = address is a good idea
 
-- better pretty printing of generate go code 
-  ==========================================
-     -> variable names
+KNOWN STUPID BUG TO BE FIXED
+============================
+(1) fopen("fuck","r") should produce a nice error
+(2) trace()  -> core dump
+
+
 
 
 // THEN

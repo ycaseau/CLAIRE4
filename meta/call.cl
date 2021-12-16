@@ -244,13 +244,14 @@ self_eval(self:Call_table) : any ->
   (if self.test self.selector[eval(self.arg)]
    else get(self.selector, eval(self.arg)))
 
-// an instruction to write a slot
+// Update = [R(x) := y] where R(x) is a Call_slot, a call_array or a call_table 
+// the actual "meta" property that represents := is stored in self.arg
 // the structure is complex: see ocall.cl
-//
-Update <: Optimized_instruction(selector:any,
-                                arg:any,
-                                value:any,
-                                var:any)
+// self.var is the writable container (call_slot, call_array, call_table)
+Update <: Optimized_instruction(selector:any,     // a property or a call+
+                                arg:any,          // if write, arg is x/any, else nth_put
+                                value:any,        // value y 
+                                var:any)          // R(x)
 self_print(self:Update) : void
  -> printf("~S(~S) := ~S", self.selector, self.var.arg, self.value)
 self_eval(self:Update) : any
@@ -356,6 +357,7 @@ self_eval(self:Return) : error -> return_error(arg = eval(self.arg))
        any false) ]
 
 // a variant in CLAIRE 4 that assumes that variable have reveived their lexical bind (index)
+// it also does not count the variable itself in an assign
 [occurexact(self:any,x:Variable) : integer
  -> case self
       (Variable (if (self.mClaire/pname = x.mClaire/pname & 
@@ -363,6 +365,7 @@ self_eval(self:Return) : error -> return_error(arg = eval(self.arg))
        list let n := 0 in
              (for i in (1 .. length(self)) n :+ occurexact(self[i], x), n),
        unbound_symbol 0,
+       Assign occurexact(self.value,x),
        Instruction let n := 0 in
                      (for s in owner(self).slots
                         n :+ occurexact(get(s, self), x),

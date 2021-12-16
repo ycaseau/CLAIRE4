@@ -65,12 +65,12 @@
        // Generate/to_CL g_func(self.arg),
        any (self % thing | self % integer | self % string | self % char |
             self % float | self % Variable | self % global_variable |
-            self % function | self % symbol | self = unknown |
+            self % function | self % symbol | self = unknown | self % method |
             self % boolean | self % class | self % environment)) ]
 
 // manages unknown + catch-all 
 [g_expression(self:any,s:class) : void
-  -> if (self != unknown) error("/!\ design error: g_expression(~S: ~S) unknown",self,owner(self))
+  -> if (self != unknown) error("/!\\ design error: g_expression(~S: ~S) unknown",self,owner(self))
      else if (s = EID) to_eid(PRODUCER,self,object)
      else if (s = any) princ("CNULL")
      else printf("~ICNULL~I",object_prefix(any,s), object_post(any,s)) ]
@@ -92,9 +92,9 @@
                    else if (self = Kernel) princ("C_Kernel")
                    else if (self.made_of = nil) 
                     let m := get_made(self) in
-                       (if (m != Kernel & m != PRODUCER.current) (cap_short(m.name),princ(".")),
+                       (if (m != Kernel & m != PRODUCER.current) (ident(m.name),princ(".")),
                         go_var(self.name))
-                   else (cap_ident(self.name), princ(".It"))),
+                   else (ident(self.name), princ(".It"))),
                   object_post(owner(self),s)) ]
 
 // A class is similar to a thing
@@ -384,14 +384,24 @@ g_expression(self:Call_method,s:class) : void -> inline_exp(PRODUCER,self,s)
                   string!(a1),                         // name  
                   g_expression(a2,class),              // superclass
                   g_expression(module!(a1),module))    // <yc>  7/98  safer (was current_module)
-        else if (p % c.Generate/open_operators &
-                 (m.domain[1] = m.domain[2]) &               // v3.1.08
-                 (s1 = integer | s1 = float))
+        else if ( (m.domain[1] = m.domain[2]) &  (s1 = integer | s1 = float) & 
+                  (p % c.open_operators |
+                   (p % c.div_operators & (case a2 (integer a2 != 0, float a2 != 0.0, any false)))))
            printf("~I(~I~A~I)~I", cast_prefix(s1,s),
-                     bounded_expression(a1,s1), string!(p.name), bounded_expression(a2, s1), cast_post(s1,s))
-        else if (m = *contain* & Compile/identifiable?(a2))
+                     bounded_expression(a1,s1), 
+                     (if (p = mod) "%" else string!(p.name)), 
+                     bounded_expression(a2, s1), cast_post(s1,s))
+        else if (m = *contain_list* & Compile/identifiable?(a2))
            printf("~I~I.Memq(~I)~I", object_prefix(boolean,s),g_expression(a1, list), 
                     g_expression(a2, any),object_post(boolean,s))
+        else if (m = *contain_set*)
+           let sm := g_member(a1) in
+           printf("~I~I.Contain~I(~I)~I", 
+                    object_prefix(boolean,s),
+                    g_expression(a1, set), 
+                    (if (sm = integer) princ("SetInteger") else if (sm = float) princ("SetFloat") else princ("_ask")),
+                    g_expression(a2, (if (sm = integer) integer else if (sm = float) float else any)), 
+                    object_post(boolean,s))
         else if (m.selector = externC) princ(a1)
         else if (m = m_member) belong_exp(a1, a2,s)
         else if (m = *write_value* & eid_provide?(a2))   // returns EID hence should not be converted (error possible)
@@ -427,13 +437,21 @@ g_expression(self:Call_method,s:class) : void -> inline_exp(PRODUCER,self,s)
                      g_expression(a2, integer), 
                      cast_post(any,s))
         else if (p = add! & domain!(m) <= bag)
-           let sbag := (if (domain!(m) = set) set else list) in
-           printf("~I~I.AddFast(~I)~I", cast_prefix(sbag,s),
-                  g_expression(a1,domain!(m)), g_expression(a2,any),
-                  cast_post(sbag,s))
+           let sbag := (if (domain!(m) = set) set else list), %type := g_member(a1) in
+           (if (sbag = list & %type = integer & s = void)
+               printf("~I.AddFastInteger(~I)",  g_expression(a1,list), g_expression(a2,integer))
+            else if (sbag = set & %type = integer)
+               printf("~I~I.AddSetInteger(~I)~I", cast_prefix(sbag,s), g_expression(a1,set), g_expression(a2,integer),cast_post(sbag,s))
+            else printf("~I~I.AddFast(~I)~I/*t=~S,s=~S*/", cast_prefix(sbag,s),
+                        g_expression(a1,domain!(m)), g_expression(a2,any),
+                        cast_post(sbag,s),%type,s))
         else if (m = *nth_1_string* | (m = *nth_string* & compiler.safety >= 2))
            printf("~I~I.At(~I)~I", char_prefix(s),g_expression(a1, string), 
                    g_expression(a2, integer),native_post(s))
+        else if (a1 % table & p = nth & (c_type(a2) <= domain(a1 as table) | compiler.safety >= 2))
+           printf("~I~IF_get_table(~I,~I)~I", cast_prefix(any,s), preCore?(),
+                   g_expression(a1, table), 
+                   g_expression(a2, any),cast_post(any,s))
         else if (m.selector = identical?)
            printf("~IMakeBoolean(~I)~I", cast_prefix(boolean,s), bool_exp(self, true), cast_post(boolean,s))
         else if (p = inlineok? & a2 % string)                        // define a macro method through an expression
@@ -464,12 +482,12 @@ g_expression(self:Call_method,s:class) : void -> inline_exp(PRODUCER,self,s)
          else if (m = *make_list* & a3  = void)               // WATCH OUT to_CL should go away
              printf("~ICreateList(~I,~I)~I", cast_prefix(list,s), g_expression(a2,type),
                      g_expression(a1, integer), cast_post(list,s))
-        else if (m.selector = store & (c_type(a1) <= list | c_type(a1) <= array) &
+        /* else if (m.selector = store & (c_type(a1) <= list | c_type(a1) <= array) &
                  ((length(self.args) = 4 & self.args[4] = true) | length(self.args) = 3))
            printf("F_store_list(~I,~I,~I,CTRUE)",
                    g_expression(a1, list),
                    g_expression(a2, integer),
-                   g_expression(a3, any))
+                   g_expression(a3, any)) */
         else if (m.selector = add_slot & getC(a1) % class)
           // let s := (getC(a2) @  getC(a1)), r := getC(a3),        // code is ugly to be robust
           //    v := (case s (slot s.default,                       // we have found the slot
@@ -482,7 +500,7 @@ g_expression(self:Call_method,s:class) : void -> inline_exp(PRODUCER,self,s)
                         g_expression(self.args[4],any))                 // default value
         else if (m.selector = add_method)           // form produced by compiler args = p,ls,range
           (if (a1 % property)
-         let m := retreive_method(a1,a2) in         // finds m (to perform stuff that should be done by OPT later)
+           let m := self.args[6] in         // nicely provided by the optimizer
            printf("~IF_attach_method(~I.~A(~I,~A,~I~I),MakeString(~S))",preCore?(),
                     g_expression(a1,owner(a1)),
                     (if (a1 = self_eval) "AddEvalMethod" else "AddMethod"),
@@ -493,7 +511,7 @@ g_expression(self:Call_method,s:class) : void -> inline_exp(PRODUCER,self,s)
                     FileOrigin[m])
           else printf("F_add_method_property(~I,~I,~I,~I,~I)", g_expression(a1,property),
                         g_expression(a2,list), g_expression(a3,type),
-                         g_expression(self.args[4],integer), g_expression(self.args[5],function)))
+                        g_expression(self.args[4],integer), g_expression(self.args[5],function)))
         else print_external_call(c,self, s)) ]
 
 // THIS IS ONE OF THE KEY PATTERNS: calls a method through its compiled function
@@ -601,48 +619,64 @@ g_expression(self:Call_method,s:class) : void -> inline_exp(PRODUCER,self,s)
 // C_cast(x) produces a cast for go  => unclear if it is still needed
 g_expression(self:Generate/C_cast,s:class) : void
  -> g_expression(self.arg,s)    
-                     
+
+
+               
 // reads a slot : more complex that it looks
-// when the test is on, we produce Known(p,x->p).To 
+// when the test is on, we produce x.p.KNOWN(p) To transform CNULL into an error 
 // because slots can be native, we need the generic pre/post to convert to the proper slot
 [g_expression(self:Call_slot,s:class) : void
- -> let sc := class!(range(self.selector)),      // what we get from the slot
-        dc := static_type(self.arg),                 // type of argument ... should be in domain
-        s2 := (if (dc <= domain!(self.selector)) dc else class!(domain!(self.selector))) in
-     (// printf("/* c_slot ~S ~S*/",sc,s),
-      cast_prefix(sc,s),
-      if (known?(test,self) & self.test)   // was self.test
-        printf("~I(KNOWN(~I,", cast_class(class!(range(self.selector))),
-               g_expression(self.selector.selector, object)),
+ -> let sc := class!(range(rootSlot(self.selector))),      // what we get from the GO (root) slot -> beware of covariant slots
+        dc := static_type(self.arg),             // type of argument ... should be in domain
+        s2 := (if (dc <= domain!(self.selector)) dc else class!(domain!(self.selector))),
+        kt? := (known?(test,self) & self.test) in
+     (if not(kt?) cast_prefix(sc,s)
+       else printf("/*call_slot known ? s:~S*/",s),
       c_member(PRODUCER, self.arg, s2,self.selector.selector),
-      if (known?(test,self) & self.test)  printf("))"),
-      cast_post(sc,s)) ]
+      if kt? printf(".KNOWN(~I)", g_expression(self.selector.selector, any))
+      else cast_post(sc,s)) ]
 
 // reads an (integer) table  = WARNING - this will change in the future when tables are implemented with dictionaries
+// here we  assume that the table uses a list ....
 [g_expression(self:Call_table,s:class) : void
   -> let a := self.selector,
          p := a.params,
          l := self.arg in
-       (object_prefix(any,s),
-        if self.test printf("KNOWN(~I,", g_expression(a, object)),
-        printf("~I.Graph[~I]", g_expression(a, object),           //!
-               (case p
-                 (integer
-                    printf("~I - ~A", g_expression(l, integer), p),
-                  list printf("~I * ~A + ~I - ~A",                    //<yc> l is a List
+       (if (a.range <= integer) 
+           (cast_prefix(integer,s),
+            printf("ToList(~I.Graph).ValuesI()[~I-1]",g_expression(a, table),g_table_index(a,l)),
+            cast_post(integer,s))
+        else if (a.range = float)
+           (cast_prefix(float,s),
+            printf("ToList(~I.Graph).ValuesF()[~I-1]",g_expression(a, table),g_table_index(a,l)),
+            cast_post(float,s))
+        else 
+         (object_prefix(any,s),
+          printf("ToList(~I.Graph).At(~I-1)", g_expression(a, table),  g_table_index(a,l)),
+          if self.test printf(".KNOWN(~I)", g_expression(a, any))               // assumes s is EID
+          else object_post(any,s))) ]
+
+
+// printf the code to access the index 
+[g_table_index(a:table,l:any)
+  ->  let p := a.params in 
+        (case p
+          (integer printf("~I - ~A", g_expression(l, integer), p),
+           list (if not(l % List) error("shit with call_table ~S[~S]",a,l),
+                printf("~I * ~A + ~I - ~A",                     // <yc> l is a List
                               g_expression(l.args[1], integer), p[1],
-                              g_expression(l.args[2], integer), p[2])))),
-        if self.test princ(")"),
-        object_post(any,s)) ]
+                              g_expression(l.args[2], integer), p[2])))) ]
+
 
 // reads an array - remember that in CLAIRE 4, arrays are nothing but fixed size lists (with 3 sorts)
 [g_expression(self:Call_array,s:class) : void
   -> let sa := type_sort(member(c_type(self.selector))),
          sm := g_member(self.selector) in
        (cast_prefix(sa,s),
-        ( if (sm != any)
+        printf("/*sm:~S*/",sm),
+        if (sm != any)
             printf("~I.~I[~I - 1]",g_expression(self.selector, list), valuesSlot(sm), g_expression(self.arg, integer))
-          else printf("~I.At(~I - 1)",g_expression(self.selector, list), g_expression(self.arg, integer))),
+        else printf("~I.At(~I - 1)",g_expression(self.selector, list), g_expression(self.arg, integer)),
         cast_post(sa,s)) ]
 
 
@@ -751,6 +785,7 @@ sign_or(self:boolean) : void -> (if self princ("||") else princ("&&"))
         else bool_exp@any(self, pos?)) ]
 
 // same thing for two arguments functions
+// equal_exp is in gogen.cl
 [bool_exp(self:Call_method2,pos?:boolean) : void
  -> let m := self.arg, p := m.selector, lop := PRODUCER.Generate/open_comparators,
         a1 := self.args[1], a2 := self.args[2] in

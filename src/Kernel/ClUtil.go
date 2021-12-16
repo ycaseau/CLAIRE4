@@ -118,8 +118,9 @@ func (t *ClaireType) Contains(x *ClaireAny) *ClaireBoolean {
 // special memberhip for t:set when y is a type (deep equality)
 func (t *ClaireType) containsType (x *ClaireAny) *ClaireBoolean {
 	if x.Isa.IsIn(C_type) == CTRUE && t.Isa == C_set {
-	   for _,z := range(ToSet(t.Id()).Values) {
-		   if z.Isa.IsIn(C_type) == CTRUE && ToType(z).Included(ToType(x)) == CTRUE && ToType(x).Included(ToType(z)) == CTRUE {
+		for k := 0; k < ToSet(t.Id()).Count; k++ {
+	   		z := ToSet(t.Id()).At(k)
+		   	if z.Isa.IsIn(C_type) == CTRUE && ToType(z).Included(ToType(x)) == CTRUE && ToType(x).Included(ToType(z)) == CTRUE {
 			   return CTRUE  // deep type equality
 		   }}
         return CFALSE
@@ -143,11 +144,12 @@ func (t *ClaireType) CONTAINS(x EID) *ClaireBoolean {
 
 // range check : verify that x (EID) belongs to t (Type)
 func RangeCheck(t *ClaireType, x EID) EID {
-	if t.Contains(ANY(x)) == CTRUE {
+	if ErrorIn(x) {return x
+	} else if t.Contains(ANY(x)) == CTRUE {
 		return x
 	} else {
-		return EVOID
-	} // TODO : should create a range error (cause:"compiled function")
+		return Cerror(12,ANY(x),t.Id())
+	} 
 }
 
 // Included is subtyping based on set inclusion
@@ -187,8 +189,8 @@ func (x *ClaireClass) Included(y *ClaireType) *ClaireBoolean {
 		return CFALSE
 	case C_Union:
 		if x.Open == 0 { // abstract class x < y <=> xi < y
-			for _, z := range x.Subclass.Values {
-				if ToClass(z).Included(y) == CFALSE {
+			for k := 0; k <= x.Subclass.Count; k++ {
+				if ToClass(x.Subclass.At(k)).Included(y) == CFALSE {
 					return CFALSE
 				}
 				return CTRUE
@@ -199,7 +201,7 @@ func (x *ClaireClass) Included(y *ClaireType) *ClaireBoolean {
 			return x.Included(To_Union(y.Id()).T2)
 		}
 	case C_set:
-		if x.Open == 0 && x.Subclass.Length() == 0 { // enumerate: forall(u in x | u % y)
+		if x.Open == 0 && x.Subclass.Count == 0 { // enumerate: forall(u in x | u % y)
 			for _, u := range x.Instances.ValuesO() {
 				if ToSet(y.Id()).Contain_ask(u) == CFALSE {
 					return CFALSE
@@ -230,7 +232,8 @@ func (x *ClaireSet) Included(y *ClaireType) *ClaireBoolean {
 	if t.Id() != CEMPTY.Id() {
 		return t.Included(y)
 	} else {
-	for _, z := range x.Values {
+	for k := 0; k < x.Count; k++ {
+		z := x.At(k)
 		if y.containsType(z) == CFALSE {
 			return CFALSE
 		}
@@ -408,7 +411,8 @@ func (x *ClaireType) Member() *ClaireType {
 	case C_set:
 		{
 			var rep *ClaireType = ToType(CEMPTY.Id())
-			for _, y := range ToSet(x.Id()).Values {
+			for k := 0; k < ToSet(x.Id()).Count; k++ {
+				y := ToSet(x.Id()).At(k)
 				if C_type.Contains(y) == CTRUE {
 					rep = ToType(rep.Id()).Union(ToType(y.Id()))
 				}
@@ -446,7 +450,8 @@ func (x *ClaireType) At(p *ClaireProperty) *ClaireType {
 	case C_set:
 		{
 			var l *ClaireListObject = ToType(C_type.Id()).EmptyList().toObject()
-			for _, y := range ToSet(x.Id()).Values {
+			for k := 0; k < ToSet(x.Id()).Count; k++ {
+				y := ToSet(x.Id()).At(k)
 				l.AddFast(p.Of(ToObject(y)))
 			}
 			return l.Uall()
@@ -521,7 +526,8 @@ func (x *ClaireType) Union(y *ClaireType) *ClaireType {
 // make a union with a set / DU hypothesis implies that we remove duplicate values
 func MakeDUnion(x *ClaireType, y *ClaireSet) *ClaireType {
 	var y2 *ClaireSet = ToType(CEMPTY.Id()).EmptySet()
-	for _, z := range y.Values {
+	for k := 0; k < y.Count; k ++ {
+		z := y.At(k)
 		if x.Contains(z) == CFALSE {
 			y2.AddFast(z)
 		}
@@ -566,11 +572,12 @@ func (x *ClaireTypeExpression) Class_I() *ClaireClass {
 	case C_class:
 		return ToClass(x.Id())
 	case C_set:
-		if ToSet(x.Id()).Size() == 0 {
+		if ToSet(x.Id()).Count == 0 {
 			return C_void
 		} else {
 			var rep *ClaireClass = nil
-			for _, y := range ToSet(x.Id()).Values {
+			for k := 0; k < ToSet(x.Id()).Count; k++ {
+				y := ToSet(x.Id()).At(k)
 				if rep == nil {
 					rep = y.Isa
 				} else {
@@ -637,7 +644,7 @@ func F_boolean_I_any(x *ClaireAny) *ClaireBoolean {
 			return CTRUE
 		}
 	} else if x.Isa == C_set {
-		if ToSet(x).Size() == 0 {
+		if ToSet(x).Count == 0 {
 			return CFALSE
 		} else {
 			return CTRUE
@@ -751,13 +758,13 @@ func (s *ClaireSet) PrtSet() string {
 func (s *ClaireSet) prtIn() string {
 	res := "{"
 	first := true
-	for _, v := range s.Values {
+	for k := 0; k < s.Count; k++ {
 		if first {
 			first = false
 		} else {
 			res = res + ","
 		}
-		res = res + v.Prt()
+		res = res + s.At(k).Prt()
 	}
 	return res + "}"
 }
@@ -816,6 +823,9 @@ const (
 	CLMAXFLOAT = 2.30583e+18
 	CLMINFLOAT = -2.30583e+18
 )
+
+// test integer equality without MakeInteger allocation (compiler sweetener)
+func (x *ClaireAny) IsInt(i int) bool {	return x.Isa == C_integer && ToInteger(x).Value == i}
 
 // new: return the current date
 // i is meant to give a few options (TBD)

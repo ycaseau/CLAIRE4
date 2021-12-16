@@ -21,17 +21,21 @@
 
 // debug
 [new_block(tag:string) 
-  -> printf("/* ~A:~A */",tag,OPT.level),
+  -> if PRODUCER.debug? printf("/* ~A:~A */",tag,OPT.level),
      new_block()]
 
 [close_block(tag:string)
-  -> printf("/* ~A-~A */",tag,OPT.level - 1 ),
+  -> if PRODUCER.debug? printf("/* ~A-~A */",tag,OPT.level - 1 ),
      close_block()]
 
 [finish_block(tag:string)
-  -> printf("/* ~A!~A */",tag,OPT.level - 1),
+  -> if PRODUCER.debug? printf("/* ~A!~A */",tag,OPT.level - 1),
      finish_block()]
 
+// adds a distinct ID to a variable name that may be reused
+[genvar(v:string) : string
+  -> PRODUCER.varsym :+ 1,
+    v /+ string!(PRODUCER.varsym)]
 
 // *******************************************************************
 // *       Part 1: definition of the code producer               *
@@ -43,6 +47,7 @@
 GO_PRODUCER :: go_producer(
   Generate/open_comparators = list(<, >, >=, <=),     // do not change -> goexp uses the specific order !
   Generate/open_operators = list(+,-,*,/,>>),
+  Generate/div_operators = list(/,mod),
   Generate/extension = ".go",
   comment = "Go",
   bad_names = list(
@@ -72,7 +77,7 @@ GO_PRODUCER :: go_producer(
  kernel_methods = list<any>(// empty @ set, class! @ type, copy @ set, length @ bag,
                              @ @ type,"At", array! @ list, // size @ set, empty @ bag, 
                              list! @ set, set! @ list, tuple! @ list,    // defined in Core (2nd order type)
-                             /+ @ list,"Append", << @ list, "Skip")
+                             list! @ tuple, /+ @ list,"Append", << @ list, "Skip")
 )
 
 // use this producer
@@ -113,7 +118,9 @@ c_string(c:go_producer, self:symbol) : string
 [capitalized_ident(s:symbol, m:module) : void
   -> let n := get(PRODUCER.bad_names, s) in
        (if (n = 0) 
-          (if (m != claire) c_princ(capitalize(string!(m.name))),
+          (if (m != claire) 
+              (c_princ(capitalize(string!(m.name))),      // for objects that are not exposed to claire we add the module name
+               add_underscore(s)),                        // to disambiguate between aClass and AClass in m
            c_princ(capitalize(string!(s))))
         else c_princ@symbol(PRODUCER.good_names[n])) ]     
 
@@ -138,7 +145,7 @@ c_string(c:go_producer, self:symbol) : string
         (if (m != Kernel & m != PRODUCER.current)
             (cap_ident(m.name),princ(".")),
          princ("To"),
-         addUnderscore(self),
+         add_underscore(self.name),
          if (self = listargs) princ("List")
          else cap_ident(self.name)) ]
 
@@ -167,8 +174,8 @@ c_string(c:go_producer, self:symbol) : string
 
 
 // when we capitalize the name of class, we may create a conflict (list vs List)
-[addUnderscore(c:class) : void 
-  -> let s := string!(c.name) in
+[add_underscore(name:symbol) : void 
+  -> let s := string!(name) in
        (if (integer!(s[1]) % (65 .. 90)) princ("_")) ]    
 
 // the Go code producer uses Capitalization as a strategy for name generation
@@ -254,13 +261,15 @@ c_string(c:go_producer, self:symbol) : string
      else case m (method  
              let firstc := string!(m.selector.name)[1],
                 %sig := go_signature(m), c := %sig[1] in 
-                 ((firstc >= 'A' & firstc <= 'z') &
+                 ((firstc >= 'A' & firstc <= 'z' & firstc != '^') &
                   (c <= object | c = port | c = environment) &
                   m.module! = defined(c.name) &        // was definition in claire 3.5
+                  unknown?(if_write,m.selector) &      // in claire4 : EventMethod require f-compiling
                   //  not(c <= type_expression) &    // in claire4 all type expressions are defined in Kernel
                   (unknown?(functional,m) | not(imported_function?(m.functional))) &
                   forall(m2 in m.selector.restrictions | 
-                          (case m2 (method (if (m2.module! = m.module! & c ^ m2.domain[1] != {})
+                          (case m2 (method (if not(m2.domain[1] % class) false
+                                            else if (m2.module! = m.module! & c ^ m2.domain[1] != {})
                                                arg_match(go_signature(m2), %sig)
                                             else true), 
                                     any true)))),
@@ -273,7 +282,7 @@ c_string(c:go_producer, self:symbol) : string
 [claire/dMethod?(m:any) 
  -> let firstc := string!(m.selector.name)[1],
        %sig := go_signature(m), c := %sig[1] in 
-       (printf("char -> ~S\n", (firstc >= 'A' & firstc <= 'z')),
+       (printf("char -> ~S\n", (firstc >= 'A' & firstc <= 'z' & firstc != '^')),
         printf("hierarchy -> ~S\n", (c <= object | c = port | c = environment)),
         printf("module [~S] -> ~S\n",  m.module!, m.module! = defined(c.name)),
         printf("all m -> ~S\n", forall(m2 in m.selector.restrictions | 
@@ -389,9 +398,12 @@ c_string(c:go_producer, self:symbol) : string
 [retreive_list(x:any) : any 
   -> case x
        (type x,
+        integer x,
         property x,
         // Generate/to_CL retreive_list(x.arg),
         // Generate/to_protect retreive_list(x.arg),
+        global_variable (if (x.range = {}) retreive_list(x.value)
+                         else error("we cannot retreive a type from a variable ~S",x)),
         List list{ retreive_list(y) | y in x.args},
         Tuple tuple!(list{ retreive_list(y) | y in x.args}),
         Call_method (if (x.arg.selector = nth &  length(x.args) = 2)
@@ -402,6 +414,8 @@ c_string(c:go_producer, self:symbol) : string
                         Core/param!(retreive_list(x.args[1]), retreive_list(x.args[2]))
                      else if (x.arg.selector = U &  length(x.args) = 2)
                         retreive_list(x.args[1]) U retreive_list(x.args[2])
+                     else if (x.arg.selector = .. &  length(x.args) = 2)
+                        retreive_list(x.args[1]) .. retreive_list(x.args[2])
                      else  error("we need to extend retreive_list to handle a type call: ~S",x)),
         any error("we need to extend retreive_list to handle ~S",x)) ]
     
@@ -578,6 +592,8 @@ c_string(c:go_producer, self:symbol) : string
             (warn(), trace(2,"~S = ~S will fail ! [263]",a1,a2)),
          printf("(~I ~I ~I)", g_expression(a1, g_sort(a1)), sign_equal(pos?), 
                  g_expression(a2, g_sort(a1))))
+    else if (stupid_t(a2) = integer)
+       printf("~I~I.IsInt(~I)", (if not(pos?) princ("!")), g_expression(a1,any), g_expression(a2,integer))
     else printf("(Equal(~I,~I) ~I CTRUE)", g_expression(a1,any), g_expression(a2,any), sign_equal(pos?)) ]
 
 // new: special code for char
@@ -601,7 +617,9 @@ c_string(c:go_producer, self:symbol) : string
      else if (t = {} | t = void)              // constant set or tuple (constant list)
         printf("Make~A(~I)", 
                  (if (cl = set) "ConstantSet"  else if (cl = list) "ConstantList" else "Tuple"), args_list(l, any))
-     else printf("Make~I(~I,~I)", cap_short(cl.name),g_expression(c_code(t,object),type),  args_list(l, any)) ]
+     else if (cl = list & t = integer)
+        printf("MakeListInteger(~I)",args_list(l, integer))
+     else  printf("Make~I(~I,~I)", cap_short(cl.name),g_expression(c_code(t,object),type),  args_list(l, any)) ]
 
 
 
@@ -642,18 +660,16 @@ c_string(c:go_producer, self:symbol) : string
 
 // this is a specialized form for list expressions => see if Go should know if a ListObject, ListInt, ListFloat will be used versus generic List
 [g_member(x:any) : class
-  -> if (x % Call_method | x % Construct | x % Variable | x % Call_slot | x % Cast) 
+  -> if (x % Call_method | x % Construct | x % Variable | x % Call_slot | x % Cast | x % global_variable) 
         // g_sort(member(c_type(x))) //  is too  strong
         let t1 := (c_type(x) @ of) in
           (if unique?(t1) the(t1) else any)
     else any ]
 
-// associated prefix & post (for list only-> because Values is not defined at ClaireList level)
-[list_cast_values(sbag:class,gmem:class) : void 
-   -> if (sbag = list) 
-        let short := (if (gmem = integer) "I" else if (gmem = float) "F" else "O") in
-          printf(".Values~A()",short)
-      else princ(".Values") ]          // regular for sets
+// this is a way to access the low-level native slices (for list and sets)
+[cast_Values(sbag:class,gmem:class) : void 
+   ->  let short := (if (gmem = integer) "I" else if (gmem = float) "F" else "O") in
+          printf(".Values~A()",short) ]
 
 /* this is a critical set of two methods used for compiled calls, slots and variable updates
 // needs to be called after g_expression(self, ...)
@@ -680,5 +696,12 @@ build_Variable(s:string,t:any) : Variable
   -> cast_prefix(inferred,expected),
      c_princ(v),
      cast_post(inferred,expected)]
-        
 
+// a clean expression is both a functional expression and one that does not throw an error
+[g_clean(x:any) : boolean 
+ -> g_func(x) & not(g_throw(x)) ]
+        
+// a simple func expression that should not be left in go code
+[simple_func?(x:any) : boolean 
+  -> if (g_clean(x) & c_type(x) != void) true
+     else false ]
