@@ -76,11 +76,11 @@ func BootCore() {
 	C_void.Descendents = ToType(C_class.Id()).EmptySetObject()    // empty descendent set
 	CNULL = new(ClaireAny).Is(C_void)                        // create the unknown object
 	C_void.IfWrite = CNULL
-	C_void.Dictionary = ToMap(CNULL)
+	C_void.Dictionary = ToMapSet(CNULL)
 	EVOID = EID{CNULL.Id(), 0}
 	CTRUE = new(ClaireBoolean)
 	CFALSE = new(ClaireBoolean)
-	if ClEnv.Verbose > -1 {
+	if ClEnv.Verbose > 10 {
 		fmt.Printf("--- End Bootcore ------------- \n")
 	}
 }
@@ -160,7 +160,7 @@ func Bootstrap() {
 	// a tuple is physically a list, but different semantics {example: set!(tuple(X,Y))}
 	C_tuple = MakeClass("tuple", C_bag, C_claire)
 	makeClass2("set", C_set, C_bag, C_claire)
-	C_map = MakeClass("map", C_collection, C_claire)
+	C_map_set = MakeClass("map_set", C_collection, C_claire)
 	C_module = MakeClass("module", C_system_thing, C_claire)
 	C_port = MakeClass("port", C_primitive, C_claire)
 	C_function = MakeClass("function", C_primitive, C_claire)
@@ -188,6 +188,9 @@ func Bootstrap() {
 	it = C_Kernel                              // check if useful
 	ClEnv.Module_I = C_Kernel                  // this is where we are
 	C_lambda = MakeClass("lambda", C_object, C_claire)
+	C_pair = MakeClass("pair", C_object, C_claire)
+
+
 	// fixes a few pieces that are missing
 	for _, c := range C_class.Instances.ValuesO() {
 		ToClass(c).Comment = MakeString(ToClass(c).Name.key) // because C_string does not exist first
@@ -217,7 +220,7 @@ func Bootstrap() {
 	C_claire.register(unknownName, CNULL)          // it contains CNULL but the "value is known"
 	PRIVATE = makeSymbol("private")                // private is a special symbol ...
 	C_claire.register(PRIVATE,PRIVATE.Id())        // self-referenced
-	fmt.Println("=== end of bootstrap ====")
+	// fmt.Println("=== end of bootstrap ====")
 		
 }
 
@@ -537,7 +540,7 @@ func instantiateClass(name string, c1 *ClaireClass, c2 *ClaireClass) {
 	c1.evaluate = EVAL_object
 	// fmt.Printf("c1:%s, c2:%s, c2.dic = %x\n", c1.Prt(), c2.Prt(), (uintptr)(unsafe.Pointer(c2.Dictionary)))
 	if c2.Dictionary.Id() == CNULL {
-		c1.Dictionary = ToMap(CNULL)
+		c1.Dictionary = ToMapSet(CNULL)
 	} else {
 		// fmt.Printf("copy dictionary from %s\n", c2.Name.key)
 		c1.Dictionary = c2.Dictionary.Copy()
@@ -856,6 +859,8 @@ func BootSlot() {
 	C_jito_ask = makeProperty("jito?")	
 	C_n_line = makeProperty("n_line")
 	C_imports = makeProperty("imports")
+	C_first = makeProperty("first")
+	C_second = makeProperty("second")
 
 	// slots (same order as Kernel)
 	C_any.AddSlot(C_isa, ToType(C_class.Id()), CNULL)
@@ -874,7 +879,7 @@ func BootSlot() {
 	C_class.AddSlot(C_open, ToType(C_integer.Id()), AnyInteger(1))
 	C_class.AddSlot(C_instances, ToType(C_list.Id()), CNULL)
 	C_class.AddSlot(C_params, ToType(C_list.Id()), CNULL)
-	C_class.AddSlot(C_dictionary, ToType(C_map.Id()), CNULL)
+	C_class.AddSlot(C_dictionary, ToType(C_map_set.Id()), CNULL)
 	C_class.AddSlot(C_ident_ask, ToType(C_boolean.Id()), CTRUE.ToAny())
 	C_class.AddSlot(C_if_write, ToType(C_any.Id()), CNULL)
 	// properties, restrictions, methods, slots
@@ -913,6 +918,8 @@ func BootSlot() {
 	C_lambda.AddSlot(C_body, ToType(C_any.Id()), CNULL)
 	C_lambda.AddSlot(C_dimension, ToType(C_integer.Id()), AnyInteger(0))
 	C_unbound_symbol.AddSlot(C_name, ToType(C_symbol.Id()), CNULL)
+	C_pair.AddSlot(C_first, ToType(C_any.Id()), CNULL)
+	C_pair.AddSlot(C_second, ToType(C_any.Id()), CNULL)
 	
 	// modules
 	C_module.AddSlot(C_comment, ToType(C_string.Id()), CNULL)
@@ -923,7 +930,7 @@ func BootSlot() {
 	C_module.AddSlot(C_made_of, ToType(C_list.Id()), ToType(C_string.Id()).EmptyList().Id()) // CNIL.Id())
 	C_module.AddSlot(C_mClaire_status, ToType(C_integer.Id()), AnyInteger(0))
 	C_module.AddSlot(C_external, ToType(C_string.Id()), CNULL)
-	C_module.AddSlot(C_imports, ToType(C_map.Id()), CNULL)
+	C_module.AddSlot(C_imports, ToType(C_map_set.Id()), CNULL)
 	// Types
 	C_Union.AddSlot(C_mClaire_t1, ToType(C_type.Id()), CNULL)
 	C_Union.AddSlot(C_mClaire_t2, ToType(C_type.Id()), CNULL)
@@ -1076,6 +1083,7 @@ func BootMethod() {
 	C_add_method = makeProperty("add_method")
 	C_arity = makeKernelProperty("arity")
 	C_set_arity = makeKernelProperty("set_arity")
+	C_slice = makeProperty("slice")
 	// C_getenv = makeProperty("getenv")
 
 	// operation
@@ -1159,6 +1167,7 @@ func BootMethod() {
 	C_nth_equal.AddMethod(Signature(C_list.Id(), C_integer.Id(), C_any.Id(),C_any.Id()), 1, MakeFunction3(E_nth_equal_list, "nth_equal_list"))
 	C_skip.AddMethod(Signature(C_list.Id(), C_integer.Id(), C_list.Id()), 0, MakeFunction2(E_skip_list, "skip_list"))
 	C_shrink.AddMethod(Signature(C_list.Id(), C_integer.Id(), C_list.Id()), 0, MakeFunction2(E_shrink_list, "shrink_list"))
+	C_slice.AddMethod(Signature(C_list.Id(), C_integer.Id(), C_integer.Id(), C_list.Id()), 0, MakeFunction3(E_slice_list, "slice_list"))
 	C_size.AddMethod(Signature(C_set.Id(), C_integer.Id()), 0, MakeFunction1(E_size_set, "size_set"))
 	C_contain_ask.AddMethod(Signature(C_set.Id(), C_any.Id(), C_boolean.Id()), 0, MakeFunction2(E_contain_ask_set, "contain_ask_set"))
 	C_add_I.AddMethod(Signature(C_set.Id(), C_any.Id(), C_set.Id()), 0, MakeFunction2(E_add_I_set, "add_I_set"))
@@ -1191,6 +1200,7 @@ func BootMethod() {
 	C_self_print.AddMethod(Signature(C_string.Id(), C_void.Id()), 0, MakeFunction1(E_self_print_string, "self_print_string"))
 	C__7_plus.AddMethod(Signature(C_string.Id(), C_string.Id(), C_string.Id()), 0, MakeFunction2(E_append_string, "append_string"))
 	C_integer_I.AddMethod(Signature(C_string.Id(), C_integer.Id()), 0, MakeFunction1(E_integer_I_string, "integer_I_string"))
+	C_slice.AddMethod(Signature(C_string.Id(), C_integer.Id(), C_integer.Id(), C_string.Id()), 0, MakeFunction3(E_slice_string, "slice_string"))
 	C_substring.AddMethod(Signature(C_string.Id(), C_integer.Id(), C_integer.Id(), C_string.Id()), 0, MakeFunction3(E_substring_string, "substring_string"))
 	C_substring.AddMethod(Signature(C_string.Id(), C_string.Id(), C_boolean.Id(), C_integer.Id()), 0, MakeFunction3(E_included_string, "included_string"))
 	C_get.AddMethod(Signature(C_string.Id(), C_char.Id(), C_integer.Id()), 0, MakeFunction2(E_get_string, "get_string"))
@@ -1219,7 +1229,7 @@ func BootMethod() {
 	C_begin.AddMethod(Signature(C_module.Id(), C_void.Id()), 0, MakeFunction1(E_begin_module, "begin_module"))
 	C_end.AddMethod(Signature(C_module.Id(), C_void.Id()), 0, MakeFunction1(E_end_module, "end_module"))
 	C_namespace.AddMethod(Signature(C_module.Id(), C_void.Id()), 0, MakeFunction1(E_namespace_module, "namespace"))
-	C_value.AddMethod(Signature(C_string.Id(), C_any.Id()), 0, MakeFunction1(E_value_string, "value_string"))
+	// <deprecated> C_value.AddMethod(Signature(C_string.Id(), C_any.Id()), 0, MakeFunction1(E_value_string, "value_string"))
 	// C_value.AddMethod(Signature(C_module.Id(), C_string.Id(), C_any.Id()), 0, MakeFunction2(E_value_module, "value_module"))
 	C_get.AddMethod(Signature(C_module.Id(), C_string.Id(), C_any.Id()), 0, MakeFunction2(E_get_symbol_module, "get_symbol_module"))
 	// C_getenv.AddMethod(Signature(C_string.Id(), C_string.Id()), 0, MakeFunction1(E_getenv_string, "getenv_string"))
@@ -1255,9 +1265,9 @@ func BootMethod() {
 	C_commit.AddMethod(Signature(C_void.Id(), C_void.Id()), 0, MakeFunction1(E_world_remove, "world_remove"))
 	C_world_ask.AddMethod(Signature(C_void.Id(), C_integer.Id()), 0, MakeFunction1(E_world_number, "world_number"))
 	C_world_id.AddMethod(Signature(C_void.Id(), C_integer.Id()), 0, MakeFunction1(E_world_get_id, "world_get_id"))
-	C_map_I.AddMethod(Signature(C_type.Id(), C_type.Id(), C_map.Id()), 0, MakeFunction2(E_map_I_type, "map_I_type"))
-	C_get.AddMethod(Signature(C_map.Id(), C_any.Id(), C_any.Id()), 0, MakeFunction2(E_get_map, "get_map"))
-	C_put.AddMethod(Signature(C_map.Id(), C_any.Id(), C_any.Id(), C_any.Id()), 0, MakeFunction3(E_put_map, "put_map"))
+	C_map_I.AddMethod(Signature(C_type.Id(), C_type.Id(), C_map_set.Id()), 0, MakeFunction2(E_map_I_type, "map_I_type"))
+	C_get.AddMethod(Signature(C_map_set.Id(), C_any.Id(), C_any.Id()), 0, MakeFunction2(E_get_map, "get_map"))
+	C_put.AddMethod(Signature(C_map_set.Id(), C_any.Id(), C_any.Id(), C_any.Id()), 1, MakeFunction3(E_put_map, "put_map"))
 	C_dict_get.AddMethod(Signature(C_any.Id(), C_any.Id(), C_any.Id()), 0, MakeFunction2(E_dict_get_any, "dict_get_any"))
 	C_dict_put.AddMethod(Signature(C_any.Id(), C_any.Id(), C_any.Id(), C_void.Id()), 0, MakeFunction3(E_dict_put_any, "dict_put_any"))
 	C_graph_get.AddMethod(Signature(C_table.Id(), C_any.Id(), C_any.Id()), 0, MakeFunction2(E_graph_get_table, "graph_get_table"))
@@ -1267,7 +1277,10 @@ func BootMethod() {
 	C_read_ident.AddMethod(Signature(C_port.Id(), C_any.Id()), 1, MakeFunction1(E_read_ident_port, "read_ident_port"))
 	C_read_number.AddMethod(Signature(C_port.Id(), C_any.Id()), 0, MakeFunction1(E_read_number_port, "read_number_port"))
 	C_read_thing.AddMethod(Signature(C_port.Id(), C_module.Id(), C_char.Id(), C_module.Id(), C_any.Id()), 1, MakeFunction4(E_read_thing_port, "read_thing_port"))
-
+    C_set_I.AddMethod(Signature(C_map_set.Id(), C_set.Id()), 0, MakeFunction1(E_set_I_map_set, "set_I_map_set"))
+	C_domain.AddMethod(Signature(C_map_set.Id(), C_type.Id()), 0, MakeFunction1(E_domain_map_set, "domain_map_set"))
+	C_range.AddMethod(Signature(C_map_set.Id(), C_type.Id()), 0, MakeFunction1(E_range_map_set, "range_map_set"))
+	
 	// ClUtil
 	C_class_I.AddMethod(Signature(C_type_expression.Id(), C_class.Id()), 0, MakeFunction1(E_class_I_type, "class_I_type"))
 	C_boolean_I.AddMethod(Signature(C_any.Id(), C_boolean.Id()), 0, MakeFunction1(E_boolean_I_any, "boolean_I_any"))

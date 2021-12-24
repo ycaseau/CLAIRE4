@@ -500,36 +500,50 @@ Second correction: instantiation should generate update(...) if if_write is pres
 
 then restore volue -> value in sudoku.cl
 
-
-
-TODO: optimize claire3 compiler (performance, safety, and code elegance)
-========================================================================
-(1) compile bu* : detect compiler bugs  -> we have bu11 to bu14 to go ...  + add the compiler bugs
-    THEN (fun) fix the compiler
-        - verbosity levels
-        - stats about code (#loc, #warnings)
-(1a) corriger le load init pour qu'une erreur soit bien imprimée
-(1b) add something for methods with no errors but poor range ...
-     simplest is when we test can_throw / check that c_type <= range.
-(1c) Introduce CheckRange(type,Result,"cause")
-(1d) name the system file m-s.go (to avoid the confusion with m.go qui est le main)
-
-(2) add new test with muti-valued slots
-(3) look at the doc and remove the doublon value@string = get_value@string !
-(4) [old bug with claire1 compiling] if verbose() = 1, trace(...) produces false => trap g_statement
-    also, see if we can get rid of  === conversion nil to EMPTY ==== 
-
-(5) add the few new code features
-- dual definition of global constant should complain 
-(6) re-run tests
-(7) run rule tests
-(8) debug debugger : when the function has many args, seems to be an error
-    use Reader/Show(n)
-(9) make the compiler silent (verbose options : 3 = silent, verbose, debug) with additional stats
+12/18-19 small improvements + compiler verbosity + compiler safety
  
+12/20 : start compililing claire4 !
+- from code in v4/meta
+- improve the code to reduce the number of warnings
+- add the four features
+    1. Pair in Kernel + reader
+       need to remove pair in function.cl
+       : is already a special char
+       create pair(x,y) in read.cl -> more patterns than Vardef
+       - create map(lambda,l), Map (Construct)
+       - map<t1,t2>(Pair*)   ... le type est obligatoire
+       eval(map)
+    
+    2. (lvar)->(e) in reader : 
+       Attention à durcir la condition ")->" pour ne pas réagir sur f(..) ->
+    
+    3. difference between x.s and s(x) -> is it Call+ ? 
+       we want x.s to return an error if unknown ...
+       note that under full optimization (O2) they are the same ...
+       Call+ is OK, call(..) with a slot must use get vs read.
+    
+    4. slice for strings and lists + l[Pair] shortcut
+        -> remove substring & sublist
+        -> must recognize Vardef ! 
+
+
+todo demain
+- change map into map_set
+- add enumerate -> returns the list of pairs 
+- change map_ into map
  
 // =================== to do backlog ==========================================
 
+- trace()  -> core dump  !! 
+- dual definition of global constant should complain ? 
+- add something for methods with no errors but poor range ...
+     simplest is when we test can_throw / check that c_type <= range.
+
+- add a few map test and a few lambda tests into bu*
+
+- doublon entre get@symbol et value@symbol -> get rid of get@symbol   
+
+- Introduce CheckRange(type,Result,"cause")
 - add the "close world assumption" for a Call in g_throw => restiction! is not empty
 - it would be nice if comment(m) was the file name (and maybe the line)
    generate :   CLOSE(.... addMethod stuff, "file") versus F_close(....)  
@@ -540,7 +554,6 @@ TODO: optimize claire3 compiler (performance, safety, and code elegance)
       try g_test(for i in (1 .. (2 + 3)) print(i))
 - option -d : puts the debugger / turns the jito off
 - option -s : safe => compiler safetuy to 1 + jito 
-- create the script to save files to git in the Makefile
 - check the documentation
 - fix the compilation of self_print @ string (self_print is open) => in gexp
   optimize print(integer) ?
@@ -549,12 +562,12 @@ TODO: optimize claire3 compiler (performance, safety, and code elegance)
     a. we should get rid of "good/bad lists" (unless we keep it as a debug back door)
     b. we should generate the code that is expected by the status
     c. a proper warning should be issued
-- do a test with set of objects and set of string and see if changing KEY(s:string) = address is a good idea
+
 
 KNOWN STUPID BUG TO BE FIXED
 ============================
-(1) fopen("fuck","r") should produce a nice error
-(2) trace()  -> core dump
+
+
 
 
 

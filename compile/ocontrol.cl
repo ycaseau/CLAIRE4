@@ -95,12 +95,11 @@ c_code(self:Return) : any
  -> let y := self.set_arg, ftype := Compile/psort(y) in
       (if (case y (Param ((y.arg = list | y.arg = set) & y.args[1] % set)))
         let utype := the((y as Param).args[1] as set) in
-            (if (c_type(self.arg) @ of = utype | compiler.safety > 4) c_code(self.arg, ftype)
-             else  c_code( Call(Core/check_in,
-                                list(self.arg,(y as Param).arg, utype)),
+            (if (c_type(self.arg) @ of = utype | compiler.safety >= 2) c_code(self.arg, ftype)
+             else  c_code( Call(Core/check_in,list(self.arg,(y as Param).arg, utype)),
                            ftype))
        else if (c_type(self.arg) <= y) c_code(self.arg, ftype)   // no check but a Cast is necessary
-       else if (compiler.safety > 1) Compile/C_cast(arg =  c_code(self.arg, ftype), Compile/set_arg = y)
+       else if (compiler.safety >= 2) Compile/C_cast(arg =  c_code(self.arg, ftype), Compile/set_arg = y)
        else c_code(Call(Core/check_in,               // v3.3.16 - type check for as 
                               list(self.arg,y)),ftype)) ]
 
@@ -154,12 +153,13 @@ c_code(self:Call_function2) : any
                any) 
       else nil ]        // ignore assertion
 
+// CLAIRE4 : we keep traces up to levels 2
 [c_code(self:Trace) : any
  -> let a := self.args in
        (if (length(a) = 1 & c_type(a[1]) <= integer)
           c_code(Call(write,list(verbose,system,a[1])))
         else if (length(a) > 1 & a[2] % string &
-                 (compiler.debug? | (try eval(a[1]) <= system.verbose catch any true)))
+                 (compiler.debug? | (try eval(a[1]) <= max(2,system.verbose) catch any true)))
            let %c := Call(Core/tformat,
                           list(a[2], a[1], List(args = (copy(a) << 2)))) in
              c_code((if not(a[1] % integer)
@@ -261,7 +261,7 @@ claire/PENIBLE:boolean :: false
  -> let %r := extendedTest?(self) in
        (if extended?(%r) range_sets(self.test.args[1], sort_abstract!(%r.Kernel/t1)),
         if (not(ptype(c_type(self.test)) <= boolean) & (PENIBLE = true))
-          (warn(), trace(2,"CLAIRE 3.3 SYNTAX - Test in ~S should be a boolean [260]\n",self)),               // v3.3
+          (warn(), trace(1,"CLAIRE 3.3 SYNTAX - Test in ~S should be a boolean [260]\n",self)),               // v3.3
         let result := If(test = c_boolean(self.test),
                          arg = c_code(get(arg, self), s),
                          other = c_code(get(other, self), s)) in
@@ -296,8 +296,9 @@ claire/PENIBLE:boolean :: false
 
 // utility : create a branch with substituted variable
 // notice the use of occurence: create a let only if necessary :)
+// ugly fix : use -1 in inded to indicate no type inference complain ....
 [case_branch(x:any,%var:any,%type:type) : any
-  -> case %var (Variable let vsub :=  Compile/Variable!(gensym(), 0, %type) in
+  -> case %var (Variable let vsub :=  Compile/Variable!(gensym(), -1, %type) in
                      (if (%type != range(%var) & %type != any & Language/occurrence(x, %var) > 0)
                          Let( var = vsub, value = %var, arg = case_substitution(x,%var,vsub)) 
                       else x),    
@@ -368,6 +369,7 @@ c_code(self:Let,s:class) : any
  -> (let %v := get(value, self),
          %type:type := ptype(c_type(%v)) in
        (range_infers(self.var, %type),
+        // index = -1 is a maker of a dynamically generated variable in a Case ()
         if not(%type <= self.var.range) %v := c_warn(self.var, %v, %type),
         let x := Let(var = self.var,
                      value = c_strict_code(%v, psort(self.var.range)),
@@ -403,7 +405,7 @@ c_code(self:When,s:class) : any
                     arg = c_code(self.other, s),
                     other = c_code(self.arg, s)))
         else if (c_sort(v) = any & %type <= v.range &      // make sure direct let is sort-safe
-                 compiler.safety >= 3)                   // v3.0.52
+                 compiler.safety >= 2)                   // v3.0.52
              c_code(Let(var = v, value = %v,
                         arg = If(test =  Call(!=, list(v, unknown)),
                                  arg = self.arg, other = self.other)),
@@ -426,7 +428,7 @@ c_type(self:For) : type -> infers_from(return_type(self.arg),self)
 
 infers_from(t:type,self:any) : type
  -> (if (t = {})     sort_abstract!(boolean)    // will return false
-     else if (compiler.safety > 3)
+     else if (compiler.safety >= 2 )
          (//[2] ... c_type(~S) -> ~S - ~S // self,t,sort_abstract!(t),
           sort_abstract!(t))
      else any)        // false or the return value
@@ -445,11 +447,11 @@ infers_from(t:type,self:any) : type
             (if not(sx.range)
                 (// the set is a constant ! we replace it by its value to benefit from Iterate optim
                  put(set_arg, self, sx.value), sx := sx.value)),
-          Select let %t := c_type(sx) in                   // iteration of a selection ...
+          /* Select let %t := c_type(sx) in                   // iteration of a selection ...
                    (if (not(%t <= list) | %t <= set)       // strange code
                        (//[0] STRANGE : transform ~S into a select ... // self,
                         self := copy(self), 
-                        put(isa, self, Select))),
+                        put(isa, self, Select))), */
           class (if (sx.open <= 1 & not(sx.subclass))
                    put(set_arg, self, Call(selector = instances, args = list(sx))))),
         let %t := c_type(self.set_arg),
@@ -525,10 +527,10 @@ c_code(self:Iteration) : any
                             arg = c_code(self.arg, any)) in
              (if (ty = void) Cerror("[205] use of void expression ~S in ~S",self.arg,self),
               if known?(of,self)
-               (if (compiler.safety > 4 | ty <= self.of)     // v3.2.12
+               (if (compiler.safety >= 2 | ty <= self.of)     // v3.2.12
                    (x.of := self.of, x)    // type safe !
                 else (warn(),
-                      trace(2,"unsafe typed collect (~S): ~S not in ~S [261]\n",
+                      trace(1,"unsafe typed collect (~S): ~S not in ~S [261]\n",
                               self, c_type(self.arg), self.of),
                       c_code( Call(Core/check_in,list(x,list,self.of)), list)))
              else x))
@@ -540,9 +542,9 @@ c_code(self:Iteration) : any
                //[5] (~S:~S) v = ~S range = ~S (arg:~S)// self, self.isa, self.var, self.var.range,self.arg,
                if known?(of,self)
                  let %typeIn := c_type(self.arg) in
-                  (if (not(ptype(%typeIn) <= self.of) & compiler.safety <= 4)
+                  (if (not(ptype(%typeIn) <= self.of) & compiler.safety <= 2)
                       (warn(),
-                       trace(2,"unsafe bag construction (~S) : a ~S is not a ~S [262]\n",
+                       trace(1,"unsafe bag construction (~S) : a ~S is not a ~S [262]\n",
                                self.var, %typeIn, self.of)),
                    cast!(val,of(self)),                       // v3.1.06
                    put(range,v, Core/param!(v.range,self.of)))
@@ -570,9 +572,9 @@ c_code(self:Iteration) : any
         v2 := Compile/Variable!(self.var.mClaire/pname /+ "_out", (OPT.Compile/max_vars :+ 1, 0), x) in
     (if known?(of,self)
        let  %typeIn := Optimize/pmember(%t) in
-          (if (not(Optimize/ptype(%typeIn) <= self.of) & compiler.safety <= 4)
+          (if (not(Optimize/ptype(%typeIn) <= self.of) & compiler.safety <= 1)
              (warn(),
-              trace(2,"unsafe bag construction (~S) : a ~S is not a ~S [262]\n",
+              trace(1,"unsafe bag construction (~S) : a ~S is not a ~S [262]\n",
                     self.var, %typeIn, self.of)),
            cast!(val,self.of),                       // v3.1.06
            put(range,v2, Core/param!(x,self.of)),

@@ -558,7 +558,7 @@ type ClaireClass struct {
 	Open        int            // open status for class
 	Instances   *ClaireList    // instance list is only kept when open
 	Params      *ClaireList    // for parameterized classes (subset of slots)
-	Dictionary  *ClaireMap     // map of functions (when p.dictionary is true => faster than using the list)
+	Dictionary  *ClaireMapSet     // map of functions (when p.dictionary is true => faster than using the list)
 	Ident_ask   *ClaireBoolean // equal = eq (identified objects)
 	IfWrite     *ClaireAny
 	evaluate    eFunc // evaluate function (private)
@@ -805,14 +805,14 @@ type ClaireModule struct {
 func ToModule(x *ClaireAny) *ClaireModule { return (*ClaireModule)(unsafe.Pointer(x)) }
 
 // dictionaries are called map in reference to go
-type ClaireMap struct {
+type ClaireMapSet struct {
 	ClaireCollection
-	of    *ClaireType           // range for entry
-	Range *ClaireType           // range for content
+	domain    *ClaireType           // range for entry
+	mrange    *ClaireType           // range for content
 	Value map[string]*ClaireAny // leverage go maps + same Key functions as sets
 }
 
-func ToMap(x *ClaireAny) *ClaireMap { return (*ClaireMap)(unsafe.Pointer(x)) }
+func ToMapSet(x *ClaireAny) *ClaireMapSet { return (*ClaireMapSet)(unsafe.Pointer(x)) }
 
 // new in CLAIRE 4: Types move to Kernel for functional closure (contains and includes) -----------------------------------------------------
 
@@ -879,6 +879,15 @@ type ClaireReference struct {
 // arg:boolean = false)
 func To_Reference(x *ClaireAny) *ClaireReference { return (*ClaireReference)(unsafe.Pointer(x)) }
 
+// new in CLAIRE 4: a Pair x:y is a useful construct
+type ClairePair struct {
+	ClaireObject
+	First *ClaireAny
+	Second *ClaireAny
+}
+
+func ToPair(x *ClaireAny) *ClairePair { return (*ClairePair)(unsafe.Pointer(x)) }
+
 
 // some global variables
 var claireStdout *ClairePort
@@ -940,7 +949,7 @@ var C_claire *ClaireModule = nil
 var C_mClaire *ClaireModule = nil
 var C_Kernel *ClaireModule = nil
 var C_port *ClaireClass = nil
-var C_map *ClaireClass = nil
+var C_map_set *ClaireClass = nil
 var C_type_expression *ClaireClass = nil
 var C_type_operator *ClaireClass = nil
 var C_Union *ClaireClass = nil
@@ -948,6 +957,7 @@ var C_Interval *ClaireClass = nil
 var C_Param *ClaireClass = nil
 var C_subtype *ClaireClass = nil
 var C_Reference *ClaireClass = nil
+var C_pair *ClaireClass = nil
 
 // property vars
 var C_copy *ClaireProperty
@@ -1123,6 +1133,9 @@ var C_arity *ClaireProperty
 var C_set_arity *ClaireProperty
 var C_flush *ClaireProperty
 var C_imports *ClaireProperty      // new in CLAIRE 4: pragma for modules
+var C_first *ClaireProperty
+var C_second *ClaireProperty
+var C_slice *ClaireProperty
 	
 // operations
 var C_add *ClaireOperation

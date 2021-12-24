@@ -83,11 +83,10 @@ GO_PRODUCER :: go_producer(
 // use this producer
 (PRODUCER := GO_PRODUCER)
 
-// makes an ident (string) from a variable's name - we keep the ofuscated option (.naming = 2 )
+// makes an ident (string) from a variable's name - in CLAIRE4 we got rid of .naming option
 c_string(c:go_producer, self:Variable) : string
  -> (//[5]  WARNING : unsafe call to c_string(Var) for ~S, should be ident // self,
-     if (compiler.naming = 2) ("v" /+ string!(integer!(self.mClaire/pname)))
-     else (Core/print_in_string(), ident(c,self.mClaire/pname), Core/end_of_string()))
+     Core/print_in_string(), ident(c,self.mClaire/pname), Core/end_of_string())
 
 c_string(c:go_producer, self:symbol) : string
  -> (Core/print_in_string(), ident(c,self), Core/end_of_string())
@@ -96,8 +95,7 @@ c_string(c:go_producer, self:symbol) : string
 // two issues : replace with a dictionary some day (CLAIRE4) + why does c_string exist ?
 // notice that ident should only exist for <strings> that will exist directly in Go code 
 [ident(c:go_producer,v:Variable) : void
- ->  if (compiler.naming = 2) princ("v" /+ string!(integer!(v.mClaire/pname)))
-     else let s := v.mClaire/pname, n := get(c.bad_names, s) in
+ ->  let s := v.mClaire/pname, n := get(c.bad_names, s) in
        (if (n = 0) c_princ(string!(s))
         else c_princ@symbol(c.good_names[n])) ]
 

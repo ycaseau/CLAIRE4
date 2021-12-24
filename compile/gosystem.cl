@@ -163,7 +163,7 @@ breakline() : any -> (princ("\n"), indent_c())
         printf("opt[~S] -> ~S \n", owner(u), u),
         if gt printf( "----------------------- Error is possible => EID (func:~S)  ----------------\n",f),
         if f printf("exp  -> ~I\n", g_expression(u, class!(t)))
-        else printf("stat -> ~I\n", statement(u, (if gt EID else class!(t)), "result", void))) ]
+        else printf("stat -> ~I\n", statement(u, (if gt EID else class!(t)), "result", false))) ]
 
 // even more fun 
 [gtop() : void 
@@ -197,19 +197,26 @@ claire/BadMethods:list<method> :: unknown
 // declared
 [claire/compile(m:module) -> compile(PRODUCER,m)]   //  shortcut that already exists
 [compile(p:go_producer, m:module) : void
- ->   //[0] --------- start compile ------------------- //,
-      OPT.need_modules := {},
+ ->   OPT.need_modules := {},
       BadMethods := list<method>(),
       compiler.inline? := true, 
+      compiler.n_loc := 0,                // number of lines of code
+      compiler.n_warnings := 0,           // number of warnings
+      compiler.n_notes := 0,              // number of notes
+      compiler.n_dynamic := 0,            // number of dyn calls
+      compiler.n_metheids := 0,          // methods that may return an error
       let l1:bag := parents(Reader/add_modules(list(m))) in
-      (//[0] ==========  START GO COMPILING (~S) with ~S ================ // m, l1,
+      (//[3] ==========  START GO COMPILING (~S) with ~S ================ // m, l1,
        OPT.legal_modules := set!(l1),
-       p.current := m,                                 // v4: we need to know in which module we are
-       p.source := compiler.source / string!(m.name),
+       p.current := m,                                              // v4: we need to know in which module we are
+       p.source := compiler.source / string!(m.name),               // produce code in the <src>/<module> directory
        gen_files(p,m),                // files to files
        gen_mod_file(p,m),
        l1 := difference(set!(OPT.need_modules), OPT.legal_modules),
-       if l1 trace(2, "---- WARNING: ~S should be declared for ~S \n", l1, m)) ]
+       if l1 (warn(),trace(1, "~S should be declared for ~S \n", l1, m)),
+       trace(1, "~S: ~A lines of code compiled. ~A warnings, ~A notes. ~A dynamic calls, ~A% exception-ready methods\n",
+              m, compiler.n_loc, compiler.n_warnings, compiler.n_notes, compiler.n_dynamic, 
+              (if (compiler.n_methods = 0) 0 else (100 * compiler.n_metheids) / compiler.n_methods))) ]
 
 // the first part is to generate the go files in the FileToFile mode
 [gen_files(p:go_producer,m:module) : void
@@ -221,7 +228,7 @@ claire/BadMethods:list<method> :: unknown
      OPT.need_to_close := set<any>(),
      begin(m),
      for x in m.made_of
-       (//[2] ++++ Compiling the file ~A.cl [v. 3.~A - safety:~A] // x, compiler.version, compiler.safety,
+       (//[1] ++++ Compiling the file ~A.cl [v. 4.~A - safety:~A] // x, compiler.version, compiler.safety,
         if (x = string!(m.name))
            Cerror("[211]  ~S cannot be used both as a file and module name",x),
         OPT.level := 1, // debug - to remove
@@ -230,15 +237,16 @@ claire/BadMethods:list<method> :: unknown
      end(m) ]
 
 
-// This makes the initial loading function by compilinf all the claire
+// Creates the "meta" file for the module m.
+// This makes the initial loading function by compiling all the claire
 // expression placed in the list oself. *new_objects* holds all the new
 // objects defined in this file.
 // The name of the function is built from the file name (s argument)
 //
 [gen_mod_file(p:go_producer, m:module) : void
- -> let prt := fopen(((PRODUCER.source /+ *fs*) /+ string!(m.name)) /+ PRODUCER.Generate/extension, "w"),
+ -> let prt := fopen(((PRODUCER.source /+ *fs*) /+ string!(m.name) /+ "-meta") /+ PRODUCER.Generate/extension, "w"),
         s := string!(m.name) in
-      (//[0] ==== generate file for module ~S ==== // m,
+      (//[2] ==== generate file for module ~S ==== // m,
        OPT.outfile := prt,
        verbose() := 3,
        start_file(p,s,m,true),            // true tells this is the module file
@@ -249,7 +257,7 @@ claire/BadMethods:list<method> :: unknown
        breakline(),
        close_block(),
        breakline(),                       // v3.0.3
-       //[0] ===== ~A BAD METHODS : ~S // length(BadMethods), BadMethods,
+       //[2] ===== ~A BAD METHODS : ~S // length(BadMethods), BadMethods,
        fclose(OPT.outfile)) ]
 
 // start the produced go file
@@ -461,6 +469,11 @@ claire/BadMethods:list<method> :: unknown
             string!(m.name),
             g_expression(m.part_of,module),              // now we can use m.part_of (gen_module reccursion)
             breakline()),
+     let s := (if (known?(comment,m) & not(length(m.comment) > 8 & substring(m.comment,1,8) = "Compiled")) m.comment
+               else "Compiled on " /+ date!(0) /+ "(v4." /+ string!(version()) /+
+                    "), lines:" /+ string!(compiler.n_loc) /+ ", warnings:" /+
+                    string!(compiler.n_warnings) /+ ",safety:" /+ string!(compiler.safety)) in
+        printf("It.Comment = MakeString(~S)~I",s,breakline()),
      printf("ClEnv.Module_I = It~I",breakline())]        // implicit begin(m)
 
 // reciprocate : finds the concrete module where a package module must be defined.
@@ -514,19 +527,13 @@ parents(self:list) : list
         start_file(p,f1,module!(),false),               // CLAIRE 4 : always add a header
         let %instruction := Reader/readblock(p1) in
           while not(%instruction = Reader/eof)
-            (if (system.verbose > -1 & not(%instruction % string))
-             printf("[~S/~A:~A] ~S (~S)\n", module!(), fileName(f1), n_line(), owner(%instruction), OPT.need_modules),  
-             case %instruction (Defobj 
-                let %s := %instruction.iClaire/ident in
-                   printf("[defobj ident is ~S->~S]\n",%s,defined(%s))),
-             if (%instruction % string)            // we have found a comment
-              (printf("// ~A\n", substring(%instruction,1,length(%instruction) - 1)),
-               if (compiler.Optimize/naming < 2)   // which is put back in the files
-                let pp := use_as_output(OPT.outfile) in
+            (if (%instruction % string)            // we have found a comment
+               let pp := use_as_output(OPT.outfile) in
                  (printf("\n//~A", %instruction),
-                  use_as_output(pp)))
+                  use_as_output(pp))
              else OPT.instructions :add c_code(%instruction, void),
              %instruction := Reader/readblock(p1)),
+       compiler.n_loc :+ n_line(),
        fclose(p1),
        compiler.loading? := false,
        // restore reading context
@@ -558,8 +565,8 @@ parents(self:list) : list
 // create an EID lambda  
 [make_lambda_function(p:go_producer,self:lambda,%nom:string) : void
   -> let %body := c_code(self.body,any) in
-        (//[0] ===== generate an EID function from a lambda for ~A // %nom,
-         printf("Optimization:\nlambda = ~S\n optimized = ~S\n",self,%body),
+        (//[3] ===== generate an EID function from a lambda for ~A // %nom,
+         // printf("Optimization:\nlambda = ~S\n optimized = ~S\n",self,%body),
          use_as_output(OPT.outfile),
          generate_function_start(PRODUCER, self, EID, nil, %nom),        // defined in gogen
          new_block(),
@@ -578,7 +585,6 @@ parents(self:list) : list
          lv := (if (length(self.vars) = 1 & %dom % {void, environment})  nil       // v3.0.05 was : & not(s = float)
                 else self.vars) in
       (OPT.functions :add list(%f, lv, s),        // register the function in the API list
-       if (compiler.naming != 2)           // TODO: shoud we keep the naming option - 2 (generate code that is hard to reverse engineer)
        printf("\n/* {~A} The go function for: ~I */\n", OPT.Compile/level,
                (case m
                  (method printf("~S(~I) [status=~A]", m.selector, Language/ppvariable(self.vars), m.status),
@@ -601,19 +607,18 @@ parents(self:list) : list
          s := class!(m.range),
          %body := c_strict_code(self.body,s),
          throw? := g_throw(%body) in
-      (//[0] ---- ~S: make_go(~S) => simple=~S // m, %body, simple_body?(%body),
+      (//[2] [~A] ~S: => simple=~S, throw=~S // n_line(), m, simple_body?(%body),throw?,
+       compiler.n_methods :+ 1,
        p.varsym := 0,                                            // resets the ID for distinct vars
        if (m.status = -1) (m.status := (if throw? 1 else 0))     // nice case we have not seen m yet.
        else if (throw? != can_throw?(m))                         // avoids generating go code that will break
-          (//[0] ======================== WARNING ======================================== //,
-           //[0] >>>>> ~S body produces an error (g_throw = true) while status is 0 <<<<<<< // m,
+          (warn(),
+           //[1] >>>>> ~S body produces an error (g_throw = true) while status is 0 <<<<<<< // m,
            if (m.status = 0) BadMethods :add m
            else throw? := true                         // avoid generating wrong code (rest of world assumes EID since m.status was 1)
-           // error("==== cross-compiling error with ~S: the new error status means that it must be in ~S",
-           //      m, (if throw? "ForceThrow" else "ForceNotThrow"))
           ),
        use_as_output(OPT.outfile),
-       if ((typeOK | compiler.safety > 3) & not(throw?) & (m.selector != self_eval))  // happy with the type inference => native function
+       if ((typeOK | compiler.safety >= 2) & not(throw?) & (m.selector != self_eval))  // happy with the type inference => native function
           (//[5] --- Procedure generation (can throw = ~S) // throw?,
            if p.debug? printf("// DEBUG: g_throw=~S from body=~S ~I",throw?,%body, breakline()),
            generate_function_start(PRODUCER, self, s, m, %nom),        
@@ -622,8 +627,9 @@ parents(self:list) : list
               procedure_body(m,self,%body,s)
            else (if p.debug? princ("// use function body compiling ~I",breakline()),
                  function_body(%body,s)))
-       else (//[0] --- EID function generation (can throw = ~S) // throw?,
-             throw? := true,                                       // this is the EID pathd
+       else (//[3] --- EID function generation (can throw = ~S) // throw?,
+             throw? := true,  
+             compiler.n_metheids :+ 1,                                     // this is the EID pathd
              generate_function_start(PRODUCER, self, EID, m, %nom),        
              new_block(),
              // printf("/*G_throw = ~S for ~S, s:~S*/~I",throw?,%body,s,breakline()),  => does not work when "*/" exist in the code
@@ -671,7 +677,7 @@ parents(self:list) : list
         ( for x in l
             (m :+ 1,
              if (m = %length) function_body(x,s)
-             else statement(x, void, "Unused", void)))
+             else statement(x, void, "Unused", false)))
   ]
 
 // default complex case : create a variable "Result"
@@ -691,7 +697,7 @@ parents(self:list) : list
  -> // printf("/* eid_body s = ~S */\n",s),
     var_declaration("Result",EID,1),
     statement(%body,EID,"Result",g_throw(%body)),
-    if (typeOK | safety(compiler) > 3) printf("return Result")
+    if (typeOK | safety(compiler) >= 2) printf("return Result")
     else printf("return RangeCheck(~I,Result)",g_expression(s,type))]
 
 // generate the EID function associated to each method (used by the interpreter - EID mode)
@@ -757,16 +763,19 @@ parents(self:list) : list
          (if prems prems := false else printf(","),
           printf("~I EID", ident(p,v))) ]
 
+claire/ABODY:any :: unknown
 // check the range & sort of the method through type inference. 
 // returns true if OK and false otherwise (can produce an error at run-time)
 // notice that %body is the lambda body before compilation => use c_type
 [check_range(self:method,%body:any) : any
  -> let s1 := class!(self.range),                // declared
         s2 := class!(c_type(%body)) in           // inferred
-      (//[0] ---- info: ~S's range was found to be ~S (vs. ~S) // self, s2, s1,
-       if (s1 = void | s2 <= s1) true       // method is statically type-safe  
+      (if (s1 = void | s2 <= s1) true       // method is statically type-safe  
        else 
-         (//[0] ---- note: ~S's range was found to be ~S (vs. ~S) // self, s2, s1,
+         (notice(),
+          ABODY := %body,
+          //[2] ~S's range was found to be ~S (vs. ~S) // self, s2, s1,
+          //[2] BODY is ~S -> type=~S // %body,c_type(%body),
           if ((s1 != void & s2 = void & s1 != error) | (s1 ^ s2) = {})
                   Cerror("[218] Sort error: Cannot compile ~S (~S cannot be ~S).",self,s1,s2)
           else false)) ]

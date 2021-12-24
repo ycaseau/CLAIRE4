@@ -293,6 +293,10 @@ func E_substring_string(s EID, n EID, m EID) EID {
 	return EID{F_substring_string(ToString(OBJ(s)), INT(n), INT(m)).Id(), 0}
 }
 
+func E_slice_string(s EID, n EID, m EID) EID {
+	return EID{F_substring_string(ToString(OBJ(s)), INT(n), INT(m)).Id(), 0}
+}
+
 // look for th eposition of the CHAR c in s
 func F_get_string(s *ClaireString, c rune) int {
 	i := 1
@@ -533,7 +537,11 @@ func E_module_I_symbol(s EID) EID {
 
 // returns the value
 func (s *ClaireSymbol) Value() *ClaireAny {
-	return s.value
+	if s.value == nil {
+		return CNULL
+	} else {
+		return s.value
+	}
 }
 
 func E_value_symbol(s EID) EID {
@@ -743,7 +751,7 @@ func E_end_module(m EID) EID {
 	return EVOID
 }
 
-// the old internal function
+// the old internal function used for get_value @ string
 func F_value_string(s *ClaireString) *ClaireAny {
 	return F_value_module(ClEnv.Module_I, s)
 }
@@ -1177,12 +1185,12 @@ func (p *ClairePort) Close() {
 func F_fopen_string(name *ClaireString, mode *ClaireString) EID {
 	if mode.Value == "r" { // read file
 		f, err := os.Open(name.Value)
-		if err != nil {return Cerror(39,name.Id(),MakeInteger(0).Id())}
+		if err != nil {return Cerror(36,name.Id(),MakeInteger(0).Id())}
 		return EID{MakeInPort(f).Id(),0}
 	} else if mode.Value == "w" {
 		f, err := os.Create(name.Value)
 		// os.OpenFile(name,os.O_CREATE, 0644)
-		if err != nil {return Cerror(39,name.Id(),MakeInteger(0).Id())}
+		if err != nil {return Cerror(36,name.Id(),MakeInteger(0).Id())}
 		return EID{MakeOutPort(f).Id(),0}
 	} else if mode.Value == "a" {
 		f, err := os.OpenFile(name.Value, os.O_APPEND | os.O_CREATE | os.O_WRONLY , 0600)

@@ -401,7 +401,7 @@ nth_put(s:string,n:integer,c:char,max:integer) : void
 
 // shell(self:string) : void -> function!(claire_shell)
 claire/getenv(self:string) : string -> function!(getenv_string)
-claire/get_value(self:string) : any -> function!(value_string)
+claire/get_value(self:string) : any -> function!(value_string)           // value @ string no longer supported in CLAIRE 4
 claire/get_value(self:module,s:string) : any -> function!(value_module)  //  v3.2.14
 
 // we keep the externC method name even if it now support go code
@@ -446,10 +446,6 @@ claire/random(a:integer,b:integer) : integer -> (a + random(b + 1 - a))
 factor?(x:integer,y:integer) : boolean -> ((x mod y) = 0)
 divide?(x:integer,y:integer) : boolean -> ((y mod x) = 0)
 Id(x:any) : type[x] -> x
-pair :: operation()
-pair(x:any,y:any) : list -> list(x, y)
-pair_1(x:list) : type[member(x)] -> x[1]
-pair_2(x:list) : type[member(x)] -> x[2]
 
 //------------------------ FLOAT ---------------------------------------------
 self_print(self:float) : void -> function!(print_float)

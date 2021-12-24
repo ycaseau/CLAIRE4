@@ -414,7 +414,7 @@ uniform(p:property) : boolean
             (if tmatch?(x.domain, l2)
                 (if tmatch?(l2, x.domain)
                     (l[i] := x, l1 := l, break(true))
-                 else (l1 := unsafe(nth+(l, i, x)), break(true)))
+                 else (l1 := unsafe(nth+(l, i, x)) as list, break(true)))
              else if (not(tmatch?(l2, x.domain)) & x.domain join l2)
                 unsafe(trace(2, ("~S and ~S are conflicting"), l[1], x))), // keep the trace
         if (length(l1) != 0) l1

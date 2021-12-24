@@ -30,7 +30,8 @@ import (
 // we could fix this by ensuring that *.of is never nil  (CEMPTY is defined late in the boot)
 func (l *ClaireBag) Of() *ClaireType {
 	if l.of == nil {
-		fmt.Printf("=== conversion nil to EMPTY ==== \n")
+		// fmt.Printf("=== conversion nil to EMPTY ==== \n")
+		// only remove this once we have made sure that the test is not needed
 		return ToType(CEMPTY.Id())        // changed in claire 4
 	} else {
 		return l.of
@@ -1008,7 +1009,30 @@ func (l *ClaireList) Shrink(n int) *ClaireList {
 
 func E_shrink_list(l EID, n EID) EID { return EID{ToList(OBJ(l)).Shrink(INT(n)).Id(), 0} }
 
-// todo : add a slice method in the honor of golang
+// a slice method in the honor of golang without errors ()
+func (l *ClaireList) Slice(i int,j int) *ClaireList {
+	m := l.Length()
+    if i <= 0 {i = 1}
+	if j >= m {j = m}
+    if j < i {        // empty slice
+		if l.Srange == C_integer {
+			l.toInteger().Values = []int{}
+		} else if l.Srange == C_float {
+			l.toFloat().Values = []float64{}
+		} else {
+			l.toObject().Values = []*ClaireAny{}
+		}
+	} else if l.Srange == C_integer {
+		l.toInteger().Values = l.toInteger().Values[i - 1 : j]
+	} else if l.Srange == C_float {
+		l.toFloat().Values = l.toFloat().Values[i - 1 : j]
+	} else {
+		l.toObject().Values = l.toObject().Values[i - 1 : j]
+	}
+	return l
+}
+
+func E_slice_list(l EID, i EID, j EID) EID { return EID{ToList(OBJ(l)).Slice(INT(i),INT(j)).Id(), 0} }
 
 // used by the reader to change this information
 func (l *ClaireList) Cast_I(x *ClaireType) *ClaireList {

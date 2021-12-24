@@ -318,7 +318,6 @@ eload(self:string) : any
          x := unknown in
       (reader.toplevel := true,
        reader.fromp := port!(self),
-       if (verbose() = 2) printf("-- start read in string with nextunit ---\n"),
        try (x := nextunit(reader),
             reader.fromp := p)
        catch any (reader.fromp := p,

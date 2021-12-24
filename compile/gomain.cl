@@ -75,6 +75,8 @@
    while (l)
    (case l[1]
     ({"?", "-help"} printHelp(),
+     {"-q"} (verbose() := 0, l :<< 1),
+     {"-v"} (verbose() := 2, l :<< 1),
      {"-s"}  (if (length(l) >= 2)  l :<< 2 else error("option: -s <s1> <s2>")),
      {"-f"}  (if (length(l) >= 2)  (load(l[2]), l :<< 2)
               else error("option: -f <filename>")),
@@ -95,10 +97,6 @@
              else error("option: -o <name>")),
      {"-p"} (OPT.Compile/profile? := true, dblevel :max 1, l :<< 1),
      {"-D"} (dblevel := 0, l :<< 1),
-     {"-safe"} (safety(compiler) := (if (dblevel = 0) 0 else 1),
-                claire_lib := compiler.libraries_dir[2],
-                claire_options := compiler.options[2],
-                l :<< 1),
      {"-O"} (compiler.optimize? := true, dblevel := 2, l :<< 1),
      {"-cc"} (if (length(l) >= 2)  (%cm := l[2], l :<< 2)
                else error("option: -cc <module>")),
@@ -139,7 +137,9 @@
     else Reader/top_level(reader)
     )                                                                
    catch any (mClaire/restore_state(reader),
-              Reader/debug_if_possible(),
+              printf("\nCLAIRE error during init [line ~I]:\n",princ(n_line())),
+              Reader/debug_if_possible(), // print_exception(),
+              princ("\n"),
               Reader/top_level(reader))) ]
 
 
@@ -232,10 +232,10 @@
     printf("fmt.Printf(\"=== CLAIRE4 interpreter version 1.0    ===\\n\")~I",breakline()),
     printf("Bootstrap()~I",breakline()),
     printf("Load()~I",breakline()),
-    if (value("Generate") % l_used)
+    if (get_value("Generate") % l_used)
         printf("ClEnv.Module_I = C_claire~I",breakline()),
 	  printf("Reader.C_reader.Fromp = ClEnv.Cin~I",breakline()),
-    if (value("Generate") % l_used) printf("Generate.F_Generate_complex_main_void()")
+    if (get_value("Generate") % l_used) printf("Generate.F_Generate_complex_main_void()")
     else printf("Reader.F_Reader_simple_main_void()"),
     breakline(),
     close_block() ]

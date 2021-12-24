@@ -297,7 +297,7 @@ extract_pattern(x:any,path:list) : any
                   else if (case path (list length(path) > 1))
                     let y := Reference!(cdr(path), path[1]),
                         v := Variable(mClaire/pname = s, range = y) in
-                      (//[0] create a reference for ~S args=~S // s,y.args,
+                      (//[5] create a reference for ~S args=~S // s,y.args,
                        LDEF :add v, void)
                   else unknown),
        any unknown))
@@ -386,7 +386,7 @@ extract_item(x:any,y:any) : any
 [extract_range(x:any,lvar:list,ldef:list) : list
  -> if not((case x (Call (x.selector = nth & x.args[1] = type))))
         list(extract_type(x), {})
-     else (//[0] extract the range from ~S with lval = ~S and ldedf = ~S // x,lvar,ldef,
+     else (//[5] extract the range from ~S with lval = ~S and ldedf = ~S // x,lvar,ldef,
            for v in ldef                           // transforms the reference in x into type expressions (using the paths)
              let r := v.range as Reference,
                  path := r.args,
@@ -400,7 +400,7 @@ extract_item(x:any,y:any) : any
                   (lv2 :add v2, x := substitution(x, v, v2)),
               let lb := lambda!(lv2, x.args[2]),
                   ur := unknown in
-                (//[0] extract range applies type lambda ~S to arg list ~S // lb, list{ v.range | v in lvar},
+                (//[5] extract range applies type lambda ~S to arg list ~S // lb, list{ v.range | v in lvar},
                  try ur := apply(lb, list{ v.range | v in lvar})
                  catch any (printf("The type expression ~S is not valid ... \n", x),
                             printf("context: lambda = ~S, lvars = ~S\n",lb,list{v.range | v in lvar}),
@@ -724,7 +724,7 @@ claire/interface(c:class,l:listargs) : void
                       o? := ((case s (Call s.selector = ..)) & unknown?(range,v)) in
                      (trace(3,"-- Iteration jito: ~S (~S)\n",self,static_type(self.iClaire/set_arg)),
                       if o? (put(range,v,integer), trace(3,"-- jito:put range ~S as integer\n",v)),
-                      ofto(s),
+                      jito(s),
                       jito(self.arg),
                       if o? put(range,v,unknown)),
        Construct (trace(3,"-- Construct jito: ~S\n",self),
@@ -733,7 +733,7 @@ claire/interface(c:class,l:listargs) : void
        Handle (if not(self.test % class) error("syntax: [try %S] must use a class",self.test), 
                jito(self.arg),
                jito(self.other)),
-       Definition (if fast_definition(self.arg) put(isa,self,DefFast)),        
+       Definition (if fast_definition?(self.arg) put(isa,self,DefFast)),        
        any false) ]
 
  claire/VARIANT:boolean := true         // debug to remove, replace by jito?()
@@ -773,7 +773,7 @@ claire/interface(c:class,l:listargs) : void
             (trace(3,"-- call jito: ~S : ~S\n",self,lt),
              for x in p.mClaire/definition
                 (if makeCallMatch(x,lt) (m := x, break()))),  
-        if (case m (method known?(functional,m), any false))
+        if (case m (method known?(functional,m), any false))   // KEY: we only JITO compiled methods
             (put(isa,self, (if (n = 1) Call_method1 
                             else if (n = 2) Call_method2 
                             else if (n = 3) Call_method3 
@@ -782,9 +782,10 @@ claire/interface(c:class,l:listargs) : void
 
 
 // tells if the restriction matches the type list lt : we know that the domain is made of classes
+// only use for a compiled method, to help with debug
 makeCallMatch(x:restriction,lt:list) : boolean
   ->  let n := length(lt), ld := x.domain in 
-         (length(ld) = n &
+         (length(ld) = n & 
           forall(i in (1 .. n) | (lt[i] as class) <= (ld[i] as class)))   
 
 

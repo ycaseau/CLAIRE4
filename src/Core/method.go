@@ -1,5 +1,5 @@
-/***** CLAIRE Compilation of file /Users/ycaseau/Dropbox/src/clairev4.0/src/meta/method.cl 
-         [version 4.0.02 / safety 5] Monday 12-13-2021 *****/
+/***** CLAIRE Compilation of file /Users/ycaseau/claire/v4.0/meta/method.cl 
+         [version 4.0.02 / safety 5] Friday 12-24-2021 *****/
 
 package Core
 import (_ "fmt"
@@ -101,15 +101,6 @@ func F_eval_message_property (self *ClaireProperty ,r *ClaireObject ,start int,i
       }  else if ((r.Id().Isa.Id() == C_slot.Id()) && 
         (ClEnv.Index == (start+1))) { 
       { var val *ClaireAny   = F_get_slot(ToSlot(r.Id()),ToObject(OBJ(ClEnv.EvalStack[start])))
-        /*g_try(v2:"Result",loop:true) */
-        if ((val == CNULL) && 
-            (ToRestriction(r.Id()).Range.Contains(val) != CTRUE)) { 
-          Result = ToException(C_read_slot_error.Make(ANY(ClEnv.EvalStack[start]),self.Id())).Close()
-          } else {
-          Result = EID{CFALSE.Id(),0}
-          } 
-        /* ERROR PROTECTION INSERTED (Result-Result) */
-        if !ErrorIn(Result) {
         ClEnv.Index= start
         /*g_try(v2:"Result",loop:true) */
         { var n int  = ClEnv.Trace_I
@@ -135,7 +126,8 @@ func F_eval_message_property (self *ClaireProperty ,r *ClaireObject ,start int,i
             PRINC("\n")
             Result = EVOID
             }}}
-            {
+            /* ERROR PROTECTION INSERTED (Result-Result) */
+            if !ErrorIn(Result) {
             { 
               var va_arg1 *ClaireEnvironment  
               var va_arg2 int 
@@ -152,7 +144,7 @@ func F_eval_message_property (self *ClaireProperty ,r *ClaireObject ,start int,i
         /* ERROR PROTECTION INSERTED (Result-Result) */
         if !ErrorIn(Result) {
         Result = val.ToEID()
-        }}
+        }
         } 
       } else {
       Result = F_noeval_message_property2(self,start)
@@ -166,6 +158,7 @@ func E_eval_message_property (self EID,r EID,start EID,int_ask EID) EID {
       INT(start),
       ToBoolean(OBJ(int_ask)) )} 
   
+// CLAIRE4 note: we test the unknown value in a Call+ (x.s) but not in s(x)
 /* {1} The go function for: noeval_message(self:property,start:integer) [status=1] */
 func F_noeval_message_property2 (self *ClaireProperty ,start int) EID { 
     var Result EID 
@@ -391,8 +384,8 @@ func F_get_property (self *ClaireProperty ,x *ClaireObject ) *ClaireAny  {
 var Result *ClaireAny  
     { var s *ClaireObject   = F__at_property1(self,x.Id().Isa)
       if (C_slot.Id() == s.Isa.Id()) { 
-        { var g0000 *ClaireSlot   = ToSlot(s.Id())
-          Result = x.SlotGet(g0000.Index,g0000.Srange)
+        { var g0001 *ClaireSlot   = ToSlot(s.Id())
+          Result = x.SlotGet(g0001.Index,g0001.Srange)
           } 
         } else {
         Result = CNULL
@@ -410,13 +403,13 @@ func F_funcall_property (self *ClaireProperty ,x *ClaireAny ) EID {
     var Result EID 
     { var s *ClaireObject   = F__at_property1(self,x.Isa)
       if (C_slot.Id() == s.Isa.Id()) { 
-        { var g0002 *ClaireSlot   = ToSlot(s.Id())
-          Result = ToObject(x).SlotGet(g0002.Index,g0002.Srange).ToEID()
+        { var g0003 *ClaireSlot   = ToSlot(s.Id())
+          Result = ToObject(x).SlotGet(g0003.Index,g0003.Srange).ToEID()
           } 
         }  else if (C_method.Id() == s.Isa.Id()) { 
-        { var g0003 *ClaireMethod   = ToMethod(s.Id())
-          _ = g0003
-          Result = F_funcall_method1(g0003,x)
+        { var g0004 *ClaireMethod   = ToMethod(s.Id())
+          _ = g0004
+          Result = F_funcall_method1(g0004,x)
           } 
         } else {
         Result = EID{CNULL,0}
@@ -435,12 +428,12 @@ func F_hold_ask_property (self *ClaireProperty ,x *ClaireObject ,y *ClaireAny ) 
 var Result *ClaireBoolean  
     { var s *ClaireObject   = F__at_property1(self,x.Id().Isa)
       if (C_slot.Id() == s.Isa.Id()) { 
-        { var g0005 *ClaireSlot   = ToSlot(s.Id())
-          { var z *ClaireAny   = x.SlotGet(g0005.Index,g0005.Srange)
+        { var g0006 *ClaireSlot   = ToSlot(s.Id())
+          { var z *ClaireAny   = x.SlotGet(g0006.Index,g0006.Srange)
             if (C_set.Id() == z.Isa.Id()) { 
-              { var g0006 *ClaireSet   = ToSet(z)
-                _ = g0006
-                Result = g0006.Contain_ask(y)
+              { var g0007 *ClaireSet   = ToSet(z)
+                _ = g0007
+                Result = g0007.Contain_ask(y)
                 } 
               } else {
               Result = Equal(y,z)
@@ -468,11 +461,11 @@ func F_write_property (self *ClaireProperty ,x *ClaireObject ,y *ClaireAny ) EID
     /*g_try(v2:"Result",loop:true) */
     { var s *ClaireObject   = F__at_property1(self,x.Id().Isa)
       if (C_slot.Id() == s.Isa.Id()) { 
-        { var g0009 *ClaireSlot   = ToSlot(s.Id())
-          if (g0009.Range.Contains(y) != CTRUE) { 
-            Result = F_range_is_wrong_slot(g0009,y)
+        { var g0010 *ClaireSlot   = ToSlot(s.Id())
+          if (g0010.Range.Contains(y) != CTRUE) { 
+            Result = F_range_is_wrong_slot(g0010,y)
             }  else if ((self.Open < 1) && 
-              (x.SlotGet(g0009.Index,g0009.Srange) != CNULL)) { 
+              (x.SlotGet(g0010.Index,g0010.Srange) != CNULL)) { 
             Result = ToException(C_general_error.Make(MakeString("[132] Cannot change ~S(~S)").Id(),MakeConstantList(self.Id(),x.Id()).Id())).Close()
             }  else if ((self.IfWrite != CNULL) && 
               (self.Multivalued_ask != CTRUE)) { 
@@ -480,8 +473,8 @@ func F_write_property (self *ClaireProperty ,x *ClaireObject ,y *ClaireAny ) EID
             } else {
             Result = F_update_property(self,
               x,
-              g0009.Index,
-              g0009.Srange,
+              g0010.Index,
+              g0010.Srange,
               y)
             } 
           } 
@@ -632,24 +625,24 @@ func F_update_plus_relation (self *ClaireRelation ,x *ClaireAny ,y *ClaireAny ) 
           ((r.Id() != self.Id()) || 
               (Equal(x,y) != CTRUE))) { 
         if (r.Isa.IsIn(C_property) == CTRUE) { 
-          { var g0011 *ClaireProperty   = ToProperty(r.Id())
-            { var s *ClaireObject   = F__at_property1(g0011,y.Isa)
+          { var g0012 *ClaireProperty   = ToProperty(r.Id())
+            { var s *ClaireObject   = F__at_property1(g0012,y.Isa)
               if (C_slot.Id() == s.Isa.Id()) { 
-                { var g0012 *ClaireSlot   = ToSlot(s.Id())
-                  { var old_y *ClaireAny   = F_get_slot(g0012,ToObject(y))
+                { var g0013 *ClaireSlot   = ToSlot(s.Id())
+                  { var old_y *ClaireAny   = F_get_slot(g0013,ToObject(y))
                     _ = old_y
-                    if (g0011.Multivalued_ask.Id() != CFALSE.Id()) { 
-                      Result = EID{F_Core_add_value_I_property(g0011,
+                    if (g0012.Multivalued_ask.Id() != CFALSE.Id()) { 
+                      Result = EID{F_Core_add_value_I_property(g0012,
                         ToObject(y),
-                        g0012.Index,
+                        g0013.Index,
                         ToSet(old_y),
                         x).Id(),0}
                       } else {
                       Result = F_store_object(ToObject(y),
-                        g0012.Index,
-                        g0012.Srange,
+                        g0013.Index,
+                        g0013.Srange,
                         x,
-                        g0011.Store_ask).ToEID()
+                        g0012.Store_ask).ToEID()
                       } 
                     } 
                   } 
@@ -659,15 +652,15 @@ func F_update_plus_relation (self *ClaireRelation ,x *ClaireAny ,y *ClaireAny ) 
               } 
             } 
           }  else if (C_table.Id() == r.Isa.Id()) { 
-          { var g0014 *ClaireTable   = ToTable(r.Id())
-            { var old_v *ClaireAny   = F_get_table(g0014,y)
-              if (g0014.Multivalued_ask.Id() != CFALSE.Id()) { 
-                Result = EID{F_Core_add_value_I_table(g0014,y,ToSet(old_v),x).Id(),0}
+          { var g0015 *ClaireTable   = ToTable(r.Id())
+            { var old_v *ClaireAny   = F_get_table(g0015,y)
+              if (g0015.Multivalued_ask.Id() != CFALSE.Id()) { 
+                Result = EID{F_Core_add_value_I_table(g0015,y,ToSet(old_v),x).Id(),0}
                 } else {
                 if (old_v != CNULL) { 
                   F_update_dash_relation(self,old_v,y)
                   } 
-                F_put_table(g0014,y,x)
+                F_put_table(g0015,y,x)
                 Result = EVOID
                 } 
               } 
@@ -690,21 +683,21 @@ func E_update_plus_relation (self EID,x EID,y EID) EID {
 func F_update_dash_relation (r *ClaireRelation ,x *ClaireAny ,y *ClaireAny )  { 
     // procedure body with s = void 
 if (r.Isa.IsIn(C_property) == CTRUE) { 
-      { var g0015 *ClaireProperty   = ToProperty(r.Id())
-        { var s *ClaireObject   = F__at_property1(g0015,x.Isa)
+      { var g0016 *ClaireProperty   = ToProperty(r.Id())
+        { var s *ClaireObject   = F__at_property1(g0016,x.Isa)
           if (C_slot.Id() == s.Isa.Id()) { 
-            { var g0016 *ClaireSlot   = ToSlot(s.Id())
-              { var l *ClaireAny   = F_get_slot(g0016,ToObject(x))
+            { var g0017 *ClaireSlot   = ToSlot(s.Id())
+              { var l *ClaireAny   = F_get_slot(g0017,ToObject(x))
                 { var v *ClaireAny  
                   _ = v
                   if (C_set.Id() == l.Isa.Id()) { 
-                    { var g0017 *ClaireSet   = ToSet(l)
+                    { var g0018 *ClaireSet   = ToSet(l)
                       { var arg_1 *ClaireSet  
                         _ = arg_1
-                        if (g0015.Store_ask == CTRUE) { 
-                          arg_1 = g0017.Copy()
+                        if (g0016.Store_ask == CTRUE) { 
+                          arg_1 = g0018.Copy()
                           } else {
-                          arg_1 = g0017
+                          arg_1 = g0018
                           } 
                         v = arg_1.Delete(y).Id()
                         } 
@@ -712,7 +705,7 @@ if (r.Isa.IsIn(C_property) == CTRUE) {
                     } else {
                     v = CNULL
                     } 
-                  F_put_slot(g0016,ToObject(x),v)
+                  F_put_slot(g0017,ToObject(x),v)
                   } 
                 } 
               } 
@@ -720,18 +713,18 @@ if (r.Isa.IsIn(C_property) == CTRUE) {
           } 
         } 
       }  else if (C_table.Id() == r.Isa.Id()) { 
-      { var g0019 *ClaireTable   = ToTable(r.Id())
-        { var l *ClaireAny   = F_get_table(g0019,x)
+      { var g0020 *ClaireTable   = ToTable(r.Id())
+        { var l *ClaireAny   = F_get_table(g0020,x)
           { var v *ClaireAny  
             _ = v
             if (C_set.Id() == l.Isa.Id()) { 
-              { var g0020 *ClaireSet   = ToSet(l)
+              { var g0021 *ClaireSet   = ToSet(l)
                 { var arg_2 *ClaireSet  
                   _ = arg_2
-                  if (g0019.Store_ask == CTRUE) { 
-                    arg_2 = g0020.Copy()
+                  if (g0020.Store_ask == CTRUE) { 
+                    arg_2 = g0021.Copy()
                     } else {
-                    arg_2 = g0020
+                    arg_2 = g0021
                     } 
                   v = arg_2.Delete(y).Id()
                   } 
@@ -739,7 +732,7 @@ if (r.Isa.IsIn(C_property) == CTRUE) {
               } else {
               v = CNULL
               } 
-            F_put_table(g0019,x,v)
+            F_put_table(g0020,x,v)
             } 
           } 
         } 
@@ -857,8 +850,8 @@ func F_known_ask_property (self *ClaireProperty ,x *ClaireObject ) *ClaireBoolea
 var Result *ClaireBoolean  
     { var s *ClaireObject   = F__at_property1(self,x.Id().Isa)
       if (C_slot.Id() == s.Isa.Id()) { 
-        { var g0022 *ClaireSlot   = ToSlot(s.Id())
-          Result = F__I_equal_any(x.SlotGet(g0022.Index,g0022.Srange),CNULL)
+        { var g0023 *ClaireSlot   = ToSlot(s.Id())
+          Result = F__I_equal_any(x.SlotGet(g0023.Index,g0023.Srange),CNULL)
           } 
         } else {
         Result = CFALSE
@@ -876,8 +869,8 @@ func F_unknown_ask_property (self *ClaireProperty ,x *ClaireObject ) *ClaireBool
 var Result *ClaireBoolean  
     { var s *ClaireObject   = F__at_property1(self,x.Id().Isa)
       if (C_slot.Id() == s.Isa.Id()) { 
-        { var g0024 *ClaireSlot   = ToSlot(s.Id())
-          Result = Equal(x.SlotGet(g0024.Index,g0024.Srange),CNULL)
+        { var g0025 *ClaireSlot   = ToSlot(s.Id())
+          Result = Equal(x.SlotGet(g0025.Index,g0025.Srange),CNULL)
           } 
         } else {
         Result = CTRUE
@@ -1015,13 +1008,13 @@ func F_put_store_property2 (self *ClaireProperty ,x *ClaireObject ,y *ClaireAny 
     var Result EID 
     { var s *ClaireObject   = F__at_property1(self,x.Id().Isa)
       if (C_slot.Id() == s.Isa.Id()) { 
-        { var g0026 *ClaireSlot   = ToSlot(s.Id())
-          { var z *ClaireAny   = x.SlotGet(g0026.Index,g0026.Srange)
+        { var g0027 *ClaireSlot   = ToSlot(s.Id())
+          { var z *ClaireAny   = x.SlotGet(g0027.Index,g0027.Srange)
             _ = z
             if (Equal(z,y) != CTRUE) { 
               Result = F_store_object(x,
-                g0026.Index,
-                g0026.Srange,
+                g0027.Index,
+                g0027.Srange,
                 y,
                 b).ToEID()
               } else {
@@ -1134,7 +1127,7 @@ var Result *ClaireBoolean
             arg_1= CFALSE.Id()
             for _,r_iter = range(x.Selector.Restrictions.ValuesO()){ 
               r = ToRestriction(r_iter)
-              var g0029I *ClaireBoolean  
+              var g0030I *ClaireBoolean  
               { var arg_2 *ClaireBoolean  
                 _ = arg_2
                 { var l2 *ClaireList   = r.Domain
@@ -1153,10 +1146,10 @@ var Result *ClaireBoolean
                           { var arg_3 *ClaireAny  
                             _ = arg_3
                             { var i int  = 2
-                              { var g0028 int  = n
-                                _ = g0028
+                              { var g0029 int  = n
+                                _ = g0029
                                 arg_3= CFALSE.Id()
-                                for (i <= g0028) { 
+                                for (i <= g0029) { 
                                   /* While stat, v:"arg_3" loop:tuple("arg_1", any) */
                                   if ((Equal(l.ValuesO()[i-1],l2.ValuesO()[i-1]) != CTRUE) && 
                                       ((l.ValuesO()[i-1].Isa.Id() == C_class.Id()) || 
@@ -1180,9 +1173,9 @@ var Result *ClaireBoolean
                       } 
                     } 
                   } 
-                g0029I = arg_2.Not
+                g0030I = arg_2.Not
                 } 
-              if (g0029I == CTRUE) { 
+              if (g0030I == CTRUE) { 
                 arg_1 = CTRUE.Id()
                 break
                 } 
@@ -1245,9 +1238,9 @@ func F_initialize_restriction2 (x *ClaireRestriction ,l *ClaireList ) *ClaireLis
 var Result *ClaireList  
     { var l1 *ClaireList   = CNIL
       { var i int  = 1
-        { var g0030 int  = l.Length()
-          _ = g0030
-          for (i <= g0030) { 
+        { var g0031 int  = l.Length()
+          _ = g0031
+          for (i <= g0031) { 
             /* While stat, v:"Result" loop:false */
             { var l2 *ClaireList   = ToRestriction(l.At(i-1)).Domain
               if (F_tmatch_ask_list(x.Domain,l2) == CTRUE) { 
@@ -1316,7 +1309,7 @@ func E_hashinsert_restriction (m EID) EID {
 func F_hashinsert_class (c *ClaireClass ,m *ClaireMethod ) *ClaireAny  { 
     if (c.Dictionary.Id() == CNULL) { 
       c.Dictionary = ToType(C_property.Id()).Map_I(ToType(C_method.Id()))
-      /*map->map*/} 
+      /*map_set->map_set*/} 
     { var m1 *ClaireAny   = F_dict_get_any(c.Dictionary.Id(),m.Selector.Id())
       if ((m1 == CNULL) || 
           (F_domain_I_restriction(ToRestriction(m.Id())).IsIn(F_domain_I_restriction(ToRestriction(m1))) == CTRUE)) { 
@@ -1357,10 +1350,10 @@ var Result *ClaireBoolean
           { var arg_1 *ClaireAny  
             _ = arg_1
             { var i int  = 1
-              { var g0031 int  = n
-                _ = g0031
+              { var g0032 int  = n
+                _ = g0032
                 arg_1= CFALSE.Id()
-                for (i <= g0031) { 
+                for (i <= g0032) { 
                   /* While stat, v:"arg_1" loop:false */
                   if (F_boolean_I_any(F_join_class(ToTypeExpression(x.At(i-1)).Class_I(),ToTypeExpression(y.At(i-1)).Class_I()).Id()).Id() != CTRUE.Id()) { 
                     arg_1 = CTRUE.Id()
@@ -1378,10 +1371,10 @@ var Result *ClaireBoolean
             { var arg_2 *ClaireAny  
               _ = arg_2
               { var i int  = 1
-                { var g0032 int  = n
-                  _ = g0032
+                { var g0033 int  = n
+                  _ = g0033
                   arg_2= CFALSE.Id()
-                  for (i <= g0032) { 
+                  for (i <= g0033) { 
                     /* While stat, v:"arg_2" loop:false */
                     if (F_boolean_I_any(ANY(F_CALL(ToProperty(C_glb.Id()),ARGS(x.At(i-1).ToEID(),y.At(i-1).ToEID())))).Id() != CTRUE.Id()) { 
                       arg_2 = CTRUE.Id()
@@ -1525,20 +1518,20 @@ var Result *ClaireBoolean
           { var arg_1 *ClaireAny  
             _ = arg_1
             { var i int  = 1
-              { var g0033 int  = x
-                _ = g0033
+              { var g0034 int  = x
+                _ = g0034
                 arg_1= CFALSE.Id()
-                for (i <= g0033) { 
+                for (i <= g0034) { 
                   /* While stat, v:"arg_1" loop:false */
                   { var y int  = ((n-1)+i)
                     { var u *ClaireAny   = l.ValuesO()[i-1].Id()
-                      var g0035I *ClaireBoolean  
+                      var g0036I *ClaireBoolean  
                       if (u.Isa.Id() == C_class.Id()) { 
-                        g0035I = OWNER(ClEnv.EvalStack[y]).IsIn(ToClass(u)).Not
+                        g0036I = OWNER(ClEnv.EvalStack[y]).IsIn(ToClass(u)).Not
                         } else {
-                        g0035I = F_vmatch_ask_any(u,ANY(ClEnv.EvalStack[y]),n).Not
+                        g0036I = F_vmatch_ask_any(u,ANY(ClEnv.EvalStack[y]),n).Not
                         } 
-                      if (g0035I == CTRUE) { 
+                      if (g0036I == CTRUE) { 
                         arg_1 = CTRUE.Id()
                         break
                         } 
@@ -1556,10 +1549,10 @@ var Result *ClaireBoolean
           { var arg_2 *ClaireAny  
             _ = arg_2
             { var i int  = 1
-              { var g0034 int  = z
-                _ = g0034
+              { var g0035 int  = z
+                _ = g0035
                 arg_2= CFALSE.Id()
-                for (i <= g0034) { 
+                for (i <= g0035) { 
                   /* While stat, v:"arg_2" loop:false */
                   { var y int  = ((n-1)+i)
                     if (l.At(i-1) == C_listargs.Id()) { 
@@ -1598,28 +1591,28 @@ func F_vmatch_ask_any (t *ClaireAny ,x *ClaireAny ,n int) *ClaireBoolean  {
     // procedure body with s = boolean 
 var Result *ClaireBoolean  
     if (C_class.Id() == t.Isa.Id()) { 
-      { var g0036 *ClaireClass   = ToClass(t)
-        _ = g0036
-        Result = x.Isa.IsIn(g0036)
+      { var g0037 *ClaireClass   = ToClass(t)
+        _ = g0037
+        Result = x.Isa.IsIn(g0037)
         } 
       }  else if (C_set.Id() == t.Isa.Id()) { 
-      { var g0037 *ClaireSet   = ToSet(t)
-        _ = g0037
-        Result = g0037.Contain_ask(x)
+      { var g0038 *ClaireSet   = ToSet(t)
+        _ = g0038
+        Result = g0038.Contain_ask(x)
         } 
       }  else if (t.Isa.IsIn(C_subtype) == CTRUE) { 
-      { var g0038 *ClaireSubtype   = ToSubtype(t)
+      { var g0039 *ClaireSubtype   = ToSubtype(t)
         { 
           var v_and4 *ClaireBoolean  
           
-          if (g0038.Arg.Id() == C_subtype.Id()) { 
+          if (g0039.Arg.Id() == C_subtype.Id()) { 
             v_and4 = x.Isa.IsIn(C_type)
             } else {
-            v_and4 = F__Z_any1(x,g0038.Arg)
+            v_and4 = F__Z_any1(x,g0039.Arg)
             } 
           if (v_and4 == CFALSE) {Result = CFALSE
           } else { 
-            v_and4 = ToType(x).Included(g0038.T1)
+            v_and4 = ToType(x).Included(g0039.T1)
             if (v_and4 == CFALSE) {Result = CFALSE
             } else { 
               Result = CTRUE} 
@@ -1627,26 +1620,26 @@ var Result *ClaireBoolean
           } 
         } 
       }  else if (t.Isa.IsIn(C_Param) == CTRUE) { 
-      { var g0039 *ClaireParam   = To_Param(t)
+      { var g0040 *ClaireParam   = To_Param(t)
         { 
           var v_and4 *ClaireBoolean  
           
-          v_and4 = F_vmatch_ask_any(g0039.Arg.Id(),x,n)
+          v_and4 = F_vmatch_ask_any(g0040.Arg.Id(),x,n)
           if (v_and4 == CFALSE) {Result = CFALSE
           } else { 
             { var arg_1 *ClaireAny  
               _ = arg_1
               { var i int  = 1
-                { var g0040 int  = g0039.Params.Length()
-                  _ = g0040
+                { var g0041 int  = g0040.Params.Length()
+                  _ = g0041
                   arg_1= CFALSE.Id()
-                  for (i <= g0040) { 
+                  for (i <= g0041) { 
                     /* While stat, v:"arg_1" loop:false */
-                    var g0047I *ClaireBoolean  
+                    var g0048I *ClaireBoolean  
                     { var arg_2 *ClaireBoolean  
                       _ = arg_2
-                      { var _Zt *ClaireAny   = g0039.Args.At(i-1)
-                        { var _Zv *ClaireAny   = ANY(F_funcall_property(ToProperty(g0039.Params.At(i-1)),x))
+                      { var _Zt *ClaireAny   = g0040.Args.At(i-1)
+                        { var _Zv *ClaireAny   = ANY(F_funcall_property(ToProperty(g0040.Params.At(i-1)),x))
                           if ((C_set.Id() == _Zt.Isa.Id()) && 
                               (_Zv.Isa.IsIn(C_type) == CTRUE)) { 
                             { var arg_3 *ClaireAny  
@@ -1672,9 +1665,9 @@ var Result *ClaireBoolean
                             } 
                           } 
                         } 
-                      g0047I = arg_2.Not
+                      g0048I = arg_2.Not
                       } 
-                    if (g0047I == CTRUE) { 
+                    if (g0048I == CTRUE) { 
                       arg_1 = CTRUE.Id()
                       break
                       } 
@@ -1692,9 +1685,9 @@ var Result *ClaireBoolean
           } 
         } 
       }  else if (t.Isa.IsIn(C_Reference) == CTRUE) { 
-      { var g0041 *ClaireReference   = To_Reference(t)
-        { var v *ClaireAny   = F_get_Reference(g0041,ANY(ClEnv.EvalStack[(n+g0041.Index)]))
-          if (g0041.Arg == CTRUE) { 
+      { var g0042 *ClaireReference   = To_Reference(t)
+        { var v *ClaireAny   = F_get_Reference(g0042,ANY(ClEnv.EvalStack[(n+g0042.Index)]))
+          if (g0042.Arg == CTRUE) { 
             Result = Equal(x,v)
             } else {
             Result = ToType(v).Contains(x)
@@ -1702,24 +1695,24 @@ var Result *ClaireBoolean
           } 
         } 
       }  else if (C_tuple.Id() == t.Isa.Id()) { 
-      { var g0042 *ClaireTuple   = ToTuple(t)
+      { var g0043 *ClaireTuple   = ToTuple(t)
         if (C_tuple.Id() == x.Isa.Id()) { 
-          { var g0043 *ClaireTuple   = ToTuple(x)
+          { var g0044 *ClaireTuple   = ToTuple(x)
             { 
               var v_and6 *ClaireBoolean  
               
-              v_and6 = Equal(MakeInteger(g0042.Length()).Id(),MakeInteger(g0043.Length()).Id())
+              v_and6 = Equal(MakeInteger(g0043.Length()).Id(),MakeInteger(g0044.Length()).Id())
               if (v_and6 == CFALSE) {Result = CFALSE
               } else { 
                 { var arg_4 *ClaireAny  
                   _ = arg_4
                   { var i int  = 1
-                    { var g0044 int  = g0043.Length()
-                      _ = g0044
+                    { var g0045 int  = g0044.Length()
+                      _ = g0045
                       arg_4= CFALSE.Id()
-                      for (i <= g0044) { 
+                      for (i <= g0045) { 
                         /* While stat, v:"arg_4" loop:false */
-                        if (F_vmatch_ask_any(ToList(g0042.Id()).At(i-1),ToList(g0043.Id()).At(i-1),n) != CTRUE) { 
+                        if (F_vmatch_ask_any(ToList(g0043.Id()).At(i-1),ToList(g0044.Id()).At(i-1),n) != CTRUE) { 
                           arg_4 = CTRUE.Id()
                           break
                           } 
@@ -1766,10 +1759,10 @@ var Result *ClaireBoolean
           { var arg_1 *ClaireAny  
             _ = arg_1
             { var i int  = 1
-              { var g0048 int  = x
-                _ = g0048
+              { var g0049 int  = x
+                _ = g0049
                 arg_1= CFALSE.Id()
-                for (i <= g0048) { 
+                for (i <= g0049) { 
                   /* While stat, v:"arg_1" loop:false */
                   if ((i == x) && 
                       (l2.At(i-1) == C_listargs.Id())) { 
@@ -1802,20 +1795,20 @@ func F_tmatch_ask_any (t *ClaireAny ,t2 *ClaireAny ,l *ClaireList ) *ClaireBoole
     // procedure body with s = boolean 
 var Result *ClaireBoolean  
     if (t2.Isa.IsIn(C_Reference) == CTRUE) { 
-      { var g0049 *ClaireReference   = To_Reference(t2)
-        if (g0049.Arg == CTRUE) { 
+      { var g0050 *ClaireReference   = To_Reference(t2)
+        if (g0050.Arg == CTRUE) { 
           Result = CFALSE
           }  else if (t.Isa.IsIn(C_Reference) == CTRUE) { 
-          { var g0050 *ClaireReference   = To_Reference(t)
-            Result = MakeBoolean((g0050.Index == g0049.Index) && (Equal(g0050.Args.Id(),g0049.Args.Id()) == CTRUE))
+          { var g0051 *ClaireReference   = To_Reference(t)
+            Result = MakeBoolean((g0051.Index == g0050.Index) && (Equal(g0051.Args.Id(),g0050.Args.Id()) == CTRUE))
             } 
           }  else if (t.Isa.IsIn(C_type) == CTRUE) { 
-          { var g0051 *ClaireType   = ToType(t)
-            _ = g0051
-            { var tref *ClaireType   = F_member_type(ToType(F__at_Reference(g0049,g0049.Args,l.At((g0049.Index+1)-1))))
+          { var g0052 *ClaireType   = ToType(t)
+            _ = g0052
+            { var tref *ClaireType   = F_member_type(ToType(F__at_Reference(g0050,g0050.Args,l.At((g0050.Index+1)-1))))
               _ = tref
               
-              Result = g0051.Included(tref)
+              Result = g0052.Included(tref)
               } 
             } 
           } else {
@@ -1823,14 +1816,14 @@ var Result *ClaireBoolean
           } 
         } 
       }  else if (t2.Isa.IsIn(C_type) == CTRUE) { 
-      { var g0052 *ClaireType   = ToType(t2)
+      { var g0053 *ClaireType   = ToType(t2)
         if (t.Isa.IsIn(C_type) == CTRUE) { 
-          { var g0053 *ClaireType   = ToType(t)
-            _ = g0053
-            Result = g0053.Included(g0052)
+          { var g0054 *ClaireType   = ToType(t)
+            _ = g0054
+            Result = g0054.Included(g0053)
             } 
           } else {
-          Result = ToBoolean(OBJ(F_CALL(ToProperty(C_less_ask.Id()),ARGS(t.ToEID(),EID{g0052.Id(),0}))))
+          Result = ToBoolean(OBJ(F_CALL(ToProperty(C_less_ask.Id()),ARGS(t.ToEID(),EID{g0053.Id(),0}))))
           } 
         } 
       } else {

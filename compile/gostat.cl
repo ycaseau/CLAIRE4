@@ -100,7 +100,7 @@ unfold_use(ldef:list,x:any,s:class,v:string,err:boolean,loop:any) : void
          printf("/*g_try(v2:~S,loop:~S) */~I",v2,loop,breakline()),
          g_statement(self,EID,v2,true,loop),
          // AUDACIEUX: if self is a Do, and we have a loop, break statements cover the error case
-         if (self % Do & loop) printf("{~I",breakline())
+         if (self % Do & loop % Tuple) printf("/*A*/{~I",breakline())
          else
            (printf("/* ERROR PROTECTION INSERTED (~A-~A) */~I",v,vglobal,breakline()),   // for debug
             if (v = vglobal & e = EID & not(loop % tuple))   // simpler since the value is already in vglobal !
@@ -272,10 +272,10 @@ unfold_eid(ldef:list,self:any,s:class, v:any,err:boolean,loop:any) : void
                  (if g_throw(x)                  // an error may occur => trap it in a loop
                     (if (n < m | loop % tuple)
                        (count_if :+ 1,                      // balance parenthesis later
-                        g_try(x,v,EID,v,loop))        // ok to use v + trap 
+                        g_try(x,v,EID,v,loop))              // ok to use v + trap 
                      else g_statement(x, EID, v, true, loop))     // v needed but no trap
                   else statement(x,(if (n = m & %need) e else void),v,loop)),
-            close_try(count_if)) ]
+            close_try(count_if)) ]  // balance 
 
    
 // a Let is a local variable declaration 
@@ -294,7 +294,7 @@ unfold_eid(ldef:list,self:any,s:class, v:any,err:boolean,loop:any) : void
                // printf("/* noccur = ~A */~I",Language/occurexact(self.arg, self.var),breakline()),   // occurexact should discard setup !
                if (Language/occurexact(self.arg, self.var) <= 1)          // avoid unused variable error
                   (// THIS SHOULD BE A PROPER WARNING ==============
-                   //[0] >>>>>>>>  variable ~S declared but unused  // v2,          
+                   //[5] >>>>>>>>  variable ~S declared but unused  // v2,          
                    printf("_ = ~A~I", v2,breakline())),                    
                if  try? g_try(x,v2,ev,v,false)                           // if the value may be an error => start if chain
                else if not(f) statement(x, ev, v2,loop),

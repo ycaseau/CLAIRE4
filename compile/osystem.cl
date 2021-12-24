@@ -60,7 +60,6 @@ meta_OPT <: thing(
         Compile/legal_modules:set,        // modules that are allowed
         Compile/ignore:set,               // do not print
         Compile/to_remove:set,            // do not compile
-        // Compile/cinterface:port,          // port for the .h output
         Compile/outfile:port,             // port for the .Cpp output
         Compile/max_vars:integer = 0,          // max number of local variables
         Compile/loop_index:integer = 0,        // max index of var in loop
@@ -82,24 +81,24 @@ meta_OPT <: thing(
 // The meta_compiler contains the definition of the compiler flags and slots
 // that are important for the user. Other stuff is hidden in OPT
 meta_compiler <: thing(external:string,             // name of the output
-                       claire/headers:list<string>, // headers
                        source:string,               // where to put the produced code
                        claire/debug?:list<module>,  // generate instrumented code for modules
                        version:any,
                        claire/active?:boolean = false,     // active = (loading | compiling)
-                       claire/safety:integer = 1,   // cf .. later
+                       claire/safety:integer = 1,           // cf .. later
                        claire/env:string,                   // OS info
-                       claire/naming:integer = 0,          // naming mode (0: normal, 1: self-compile, 2: protected)
                        claire/libraries:list<string>,      // libs to be included
                        claire/inline?:boolean = false,     // do we want to use inlining (should be TRUE)
                        claire/loading?:boolean = false,    // mode (read the file vs compile)
-                       claire/libraries_dir:list,          // regular/debug
-                       // claire/headers_dir:string,          // include directory
-                       claire/options:list,                // list of options
                        claire/overflow?:boolean = false,   // safe arithmetic
-                       claire/diet?:boolean = false,       // flag non-diet fragments
-                       claire/optimize?:boolean = false)   // v3.2.56: record -O option
-                       
+                       claire/optimize?:boolean = false,   // v3.2.56: record -O option
+                       claire/n_loc:integer,                // number of lines of code
+                       claire/n_warnings:integer,           // number of warnings
+                       claire/n_notes:integer,              // number of notes
+                       claire/n_dynamic:integer,            // number of dynamic calls
+                       claire/n_methods:integer,           // number of methods compiled 
+                       claire/n_metheids:integer)           // number of methods compiled with EID (error handling)
+
 // code producer are defined in Generate
 // but the stub is define in Optimize to have access to current_file
 Compile/producer <: thing(
@@ -113,25 +112,19 @@ claire/PRODUCER:producer :: unknown
 Compile/FileOrigin[m:method] : string := ""
 
 // the three variables that are used in the main files
-claire/claire_options:string :: "/w0 /zq"
-claire/claire_lib:string :: ""
-claire/claire_modules:list :: list{value(x) | x in list("Kernel","Core","Language","Reader")}
+claire/claire_modules:list :: list{get_value(x) | x in list("Kernel","Core","Language","Reader")}
 
 // safety:
-//       0  -> super-safe (check returns & gc safe)
-//       1  -> safe
-//       2  -> we trust explicit types & super
+//       0  -> super-safe (keep assertion)
+//       1  -> safe (regular)
+//       2  -> we trus typing
 //       3  -> no overflow checking (integer & arrays)
-//       4  -> no selector errors, no range error
-//       5  -> cross-compiling (i.e. no errors)
-//       6  -> unsafe (no GC)
 claire/compiler :: meta_compiler(
    external = "go", // Id(compiler.external),
    env = "MacOS",   // Id(compiler.env),
    version = Id(version()),
    source = "",
-   libraries = list<string>("Kernel"),
-   options = list())   // Id(compiler.options))
+   libraries = list<string>("Kernel"))
 
 // re-definable items for bootstrap modifications
 claire/c_type :: property(open = 3, range = type)
@@ -427,8 +420,9 @@ claire/DSHOW:boolean := false
 
 // access to status ... -1 means that it was never computed 
 // Force*Throw is used to adjust for cross-compiling with a status change
+// the reference to safety is here to ensure cross-compilation mode
 [can_throw?(m:method) : boolean
-  -> if ((safety(compiler) > 2 & (m % NoErrorOptimize | (m.selector % NoErrorOptimize))) | 
+  -> if ((safety(compiler) >= 2 & (m % NoErrorOptimize | (m.selector % NoErrorOptimize))) | 
          m % ForceNotThrow) false
      else if (m % ForceThrow) true
      else if (m.status != -1 | unknown?(formula,m)) (m.status != 0)
@@ -469,7 +463,7 @@ claire/DTHROW:any :: unknown
  -> if (x = object! | x = anyObject!) true
     else if (OPT.legal_modules)
        (if (not(self % OPT.legal_modules)  &
-            (case x (method (x.inline? = false | not(compiler.inline?)))))
+            (case x (method (x.selector != add_method & (x.inline? = false | not(compiler.inline?))))))
         (trace(0, "legal_modules = ~S\n", OPT.legal_modules),
          trace(0, "---- ERROR: ~S implies using ~S !\n\n", x, self),
          false)
@@ -518,7 +512,6 @@ legal?(self:environment,x:any) : any -> true
 [known!(l:listargs) : any
  -> (to_remove(OPT) :add known!,
      for r in l (case r (property OPT.knowns :add r))) ]
-
 
 
 

@@ -77,7 +77,7 @@ TopDebug:integer := 0
                  (system.mClaire/index := TopIndex,
                   system.mClaire/base := TopBase,
                   system.trace! := 1,
-                  printf("--------- quit debug base:~A index:~A debug:~A\n",TopBase,TopIndex,TopDebug),
+                  // printf("--------- quit debug base:~A index:~A debug:~A\n",TopBase,TopIndex,TopDebug),
                   system.mClaire/debug! := TopDebug),
               res := unknown,
               TopLevelMode := 1))) ]

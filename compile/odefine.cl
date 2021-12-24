@@ -196,12 +196,11 @@ c_type(self:Defmethod) : type -> any
         getm := (px @ ls[2]),
         m:method := (case getm (method getm,
                      any error("[internal] the method ~S @ ~S is not known",px,ls[2])))in
-     (//[0] --- c_code of ~S // m,
-      lbody[2] := get(functional,m),
+     (lbody[2] := get(functional,m),
       FileOrigin[m] := PRODUCER.current_file /+ ".cl:" /+ string!(n_line()),
       if (not(compiler.inline?) & (px = Iterate  | px = iterate)) nil
       else if (lrange[1] = void & sort_pattern?(lv,self.body)) sort_code(self,lv)                         // v3.3
-      else (//[0] ... start producing the lambda //,
+      else (//[5] ... start producing the lambda //,
             if (lbody[3] != body)
              let na := function_name(px, ls[2], lbody[2]),
                  la := Language/lambda!(lv, lbody[3]),
@@ -212,11 +211,9 @@ c_type(self:Defmethod) : type -> any
             if (self.set_arg % global_variable) lrange[1] := self.set_arg
             else if (m.range % class & not(lrange[1] % class)) lrange[1] := m.range,
             let %m := add_method!(m, ls[1], lrange[1], lbody[1], lbody[2]) in
-                (//[0] c_code@defmethod produces ~S with lrange = ~S // %m,lrange,
-                 if (px = nth) //[0] *********************** LOOK ********************* //,
-                 c_code((if (self.inline? & compiler.inline? & not(compiler.diet?))
+                (c_code((if (self.inline? & compiler.inline?)
                            Call(inlineok?, list(%m, sdef))
-                        else if (lrange[2] & not(compiler.diet?))
+                        else if lrange[2] 
                            let na := type_extension(function_name(px, ls[2], lbody[2])),
                                %f :=  make_function(na) in
                              (compile_lambda(na, lrange[2], type),
@@ -338,8 +335,8 @@ add_method(p:property,ls:list,rg:type,st:integer,f1:function,m:method) : method
               md := module!(name(p)),
               c := class!(l[1]),
               r:string := ((string!(p.name) /+ "_") /+ string!(c.name)) in
-            (if (compiler.naming = 0 & p != main)     // v3.1.04
-               r := (string!(md.name) /+ "_") /+ r,
+            (if (p != main)     // v3.1.04
+                r := (string!(md.name) /+ "_") /+ r,
              for r in p.restrictions
                (if (c = domain!(r)) n :+ 1, if (l =sig? r.domain) m := n),
              r := (if (n <= 1) r else r /+ string!(m)),

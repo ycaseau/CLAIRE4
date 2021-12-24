@@ -262,7 +262,7 @@ g_expression(self:Call_method,s:class) : void -> inline_exp(PRODUCER,self,s)
         else if (p = mClaire/push! & n = 1)
           printf("ClEnv.Push(~I)", g_expression(a1, EID))
         else if (p = mClaire/put_stack)      // we should produce an error if s /= void
-          (if (s != void) trace(0,"WARNING: use ~S in non void context\n",self),
+          (if (s != void) (warn(), trace(1,"use ~S in non void context\n",self)),
            printf("ClEnv.EvalStack[~I]=~I", g_expression(a1, integer),
                                            g_expression(self.args[2], EID)))
         else if (p = mClaire/set_base & s = void)
@@ -420,7 +420,7 @@ g_expression(self:Call_method,s:class) : void -> inline_exp(PRODUCER,self,s)
         else if (p = Core/<=t | m = *included*)                                     // v4. <= is inline coded for types
            printf("~I~I.Included(~I)~I", object_prefix(boolean,s),g_expression(a1, type), 
                     g_expression(a2, type),object_post(boolean,s))
-        else if (((((m = *nth_list* | m = *nth_tuple*) & compiler.safety >= 2) |
+        else if (((((m = *nth_list* | m = *nth_tuple*) & compiler.safety >= 3) |
                  m = *nth_1_list* | m = *nth_1_tuple* | m = *nth_1_array* ) & 
                  g_member(a1) != any) |                // will not apply if support is unknown
                  (m.selector = mClaire/nth_object))    // special case where we know the support (s1) of list a1
@@ -445,7 +445,7 @@ g_expression(self:Call_method,s:class) : void -> inline_exp(PRODUCER,self,s)
             else printf("~I~I.AddFast(~I)~I/*t=~S,s=~S*/", cast_prefix(sbag,s),
                         g_expression(a1,domain!(m)), g_expression(a2,any),
                         cast_post(sbag,s),%type,s))
-        else if (m = *nth_1_string* | (m = *nth_string* & compiler.safety >= 2))
+        else if (m = *nth_1_string* | (m = *nth_string* & compiler.safety >= 3))
            printf("~I~I.At(~I)~I", char_prefix(s),g_expression(a1, string), 
                    g_expression(a2, integer),native_post(s))
         else if (a1 % table & p = nth & (c_type(a2) <= domain(a1 as table) | compiler.safety >= 2))
@@ -470,11 +470,11 @@ g_expression(self:Call_method,s:class) : void -> inline_exp(PRODUCER,self,s)
 // === functions with three arguments or more
 [inline_exp(c:go_producer,self:Call_method,s:class) : void
  -> let m := self.arg, a1 := self.args[1], a2 := self.args[2], a3 := self.args[3] in
-       (if (m = *nth=_list* & compiler.safety >= 2 & g_member(a1) != any & s = void)
+       (if (m = *nth=_list* & compiler.safety >= 3 & g_member(a1) != any & s = void)
            printf("~I.~I[~I-1]=~I", g_expression(a1,list),
                   valuesSlot(g_member(a1)),
                   g_expression(a2, integer), g_expression(a3, g_member(a1)),g_member(a1))
-        else if (m = *nth_put_list* | m = *nth_put_array* | (compiler.safety >= 2 & m = *nth=_list*))
+        else if (m = *nth_put_list* | m = *nth_put_array* | (compiler.safety >= 3 & m = *nth=_list*))
          printf("~I~I.NthPut(~I,~I)~I", cast_prefix(any,s), g_expression(a1,array),
                   g_expression(a2, integer), 
                   g_expression(a3, any), 
@@ -571,8 +571,7 @@ g_expression(self:Call_method,s:class) : void -> inline_exp(PRODUCER,self,s)
 
 // if can be represented by an expression if the two arguments are constants (evaluation does not cost)
 [g_expression(self:If,s:class) : void
- -> (//[0] g_exp @ IF, s = ~S // s,
-     object_prefix(any,s),
+ -> (object_prefix(any,s),
      printf("IfThenElse(~I,", bool_exp(self.test, true)),
      OPT.level :+ 1,
      breakline(),

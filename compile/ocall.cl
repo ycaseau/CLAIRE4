@@ -46,7 +46,7 @@ ambiguous :: keyword()
                    (if not(mode)
                        (//[5] ~S add ~S // r, r.range,
                         rep :U r.range)
-                    else if (compiler.safety <= 3 | rep != {} | open_required)
+                    else if (compiler.safety <= 1 | rep != {} | open_required)
                        (rep := ambiguous, break(true))
                     else rep := r)),
              //[5] exit de restriction -> ~S // rep,
@@ -72,7 +72,7 @@ ambiguous :: keyword()
 // special version for Super, which only looks at methods with domains
 // bigger than c
 [restriction!(c:class,lr:list,l:list) : any
- ->  if (compiler.safety > 3) l[1] := c ^ l[1],
+ ->  if (compiler.safety >= 2) l[1] := c ^ l[1],
           for r:restriction in lr
              (if (c Core/<=t r.domain[1])         // <yc> 7:98 thanks to <fl> !!!
                  (if tmatch?(l, r.domain) break(r)
@@ -101,7 +101,9 @@ ambiguous :: keyword()
                         property   apply(f,%l2),
                         function apply(f, %l2),
                         any %t1)
-                      catch any  (//[0] ~S's 2nd-order type failed on ~S // self,%l,
+                      catch any  (warn(),
+                                  trace(1," ~S's 2nd-order type failed on ~S\n", self,%l),
+                                  Reader/print_exception(),
                                   %t1)) as type) in 
                %t2) ]
       //      (if (sort=(osort(%t1), osort(%t2)) | self.selector = externC) %t2
@@ -141,7 +143,7 @@ ambiguous :: keyword()
              case r
               (property let xs := (r @ class!(%type[2])) in
                           case xs
-                           (slot (if (xs.range <= set & compiler.safety < 3)
+                           (slot (if (xs.range <= set & compiler.safety < 2)
                                      class!(l[2].range)
                                   else if (xs.default % xs.range) xs.range
                                   else extends(xs.range)),
@@ -212,7 +214,7 @@ c_code(self:Call) : any -> c_code_call(self,void)
                  z := restriction!(s, %type, true) in
                (case z
                 (slot let %unknown :=  (not(get(default, z) % z.range) &
-                                        not(s % OPT.knowns) & compiler.safety < 5) in
+                                        not(s % OPT.knowns) & compiler.safety < 2) in
                         (if (not(%unknown) | designated?(l[1])) // v3.1.04
                             Call_slot(selector = z,
                                       arg = c_code(l[1], psort(domain!(z))),
@@ -238,8 +240,7 @@ c_code(self:Call) : any -> c_code_call(self,void)
      let %arg := list{ (if (c_type(x) != void) c_code(x, any)
                         else Cerror("[206] use of void ~S in ~S~S", x, self, l)) |
                        x in l} in
-       (if (compiler.diet? & exists(x in l | x % class | x % property))
-           (warn(), trace(2,"Non diet call ~S(~A) [254]\n",self,l)),
+       (compiler.n_dynamic :+ 1,
         Call(self, %arg)) ]
 
 
@@ -279,9 +280,9 @@ c_type(self:Call_array) : type -> (self.test as type)
        (//[5] c_code_write(~S) yt = ~S, s = ~S// self, yt,s,
         if (p % OPT.to_remove) nil
         else if (case s
-                  (slot (yt <= s.range | compiler.safety >= 4)))
+                  (slot (yt <= s.range | compiler.safety >= 2)))
            (if (y != unknown & not(yt ^ srange(s)))
-               (warn(),trace(2,"sort error in ~S: ~S is a ~S [253]\n",self,y,yt)),
+               (warn(),trace(1,"sort error in ~S: ~S is a ~S [253]\n",self,y,yt)),
             if ((yt <= s.range | yt <= object | srange(s) != object | y = unknown) &   // v2.4.9 protect put
                 (ss != write | (Update?(p, x, y) & (p.multivalued? = false | unknown?(if_write,p)))))   // put or put_store  v3.3
                // MAJOR DECISION in v3.3.20 : allow fast update x.l := l2 for multivalued slots (no inverse  & no demons !)
@@ -293,9 +294,8 @@ c_type(self:Call_array) : type -> (self.test as type)
             else if (ss = put)
               c_code(Call(store, list(x,s.index,srange(s),y,p.Kernel/store?)))
             else (//[5] --> poor case because ~S is not in ~S // yt, s.range,
-                  if compiler.diet? (warn(), trace(2,"~S is not a diet call [254]",self)),
                   if (compiler.optimize? & p != instances)
-                     (notice(), trace(3,"poorly typed update: ~S\n", self)),  // v3.3
+                     (notice(), trace(2,"poorly typed update: ~S\n", self)),  // v3.3
                   c_code(Call(mClaire/update, list(p, x, s.index, srange(s), y)))))
         else let %type := list{ c_type(x) | x in self.args},
                  z := restriction!(ss, %type, true) in
@@ -327,7 +327,7 @@ c_code_add(self:Call) : any
           y := self.args[3],
           s := (p @ class!(ptype(c_type(x)))) in   // WARNING: new in v2.0.60 ! use ptype
        (if (case s
-             (slot (c_type(y) <= member(s.range) | compiler.safety >= 4)))
+             (slot (c_type(y) <= member(s.range) | compiler.safety >= 2)))
            (if Update?(p,self.selector)       // open for using Update if necessary
                let x2 := c_code(x, psort(domain!(s))) in
                  Update(selector = p,
@@ -352,13 +352,13 @@ c_code_add(self:Call) : any
 c_code_add_bag(self:Call) : any
  -> let %t1 := c_type(self.args[1]),  // known to be a subset of bag
         %t2 := ptype(c_type(self.args[2])),  // length is more than 2   v3.3: use ptype !
-        %p :=  (if ((%t1 % Param & %t2 <= member(%t1)) | compiler.safety >= 4) add!
+        %p :=  (if ((%t1 % Param & %t2 <= member(%t1)) | compiler.safety >= 2) add!
                 else self.selector),
         %ltype := list(%t1,%t2),
         z := restriction!(%p, %ltype, true) in
      (//[5] ~S: ~S -> ~S // self, %ltype, z,
       if (not(%t2 <= member(%t1)) & self.selector = add)
-         (warn(),trace(2,"the bag addition ~S is poorly typed (~S) [251] \n",self,member(%t1))),  // v3.3
+         (warn(),trace(1,"the bag addition ~S is poorly typed (~S) [251] \n",self,member(%t1))),  // v3.3
       case z
        (method c_code_method(z, self.args, %ltype),
         any c_warn(self, %ltype)))
@@ -371,7 +371,7 @@ c_code_delete(self:Call) : any
          y := self.args[3],
          s := (p @ class!(c_type(x))) in
        (if (unknown?(inverse, p) & designated?(x) &
-            (case s (slot (c_type(y) <= member(s.range) | compiler.safety >= 4))))
+            (case s (slot (c_type(y) <= member(s.range) | compiler.safety >= 2))))
           let x2 := c_code(x, psort(domain!(s))) in
                c_code(Call(delete,
                           list(Call_slot(selector = s, arg = x2,
@@ -411,17 +411,17 @@ c_code_not(x:Select) : any
        (if (x % OPT.to_remove) nil
         else if ((case x (table x.params % integer)) &
                  (c_type(l[2]) <= x.domain |
-                    (p = nth & compiler.safety > 2)))
+                    (p = nth & compiler.safety >= 2)))
            Call_table(selector = x, arg = c_code(l[2], integer),
                       test = not((x.default % x.range | x.default = 0 | p = get)))
         else if ((case x (table x.params % list)) & length(l) = 3 &
                  (tuple!(list(c_type(l[2]), c_type(l[3]))) <= x.domain |
-                  compiler.safety > 2))
+                  compiler.safety >= 2))
            Call_table(selector = x,
                       arg = List(args =
                         list(c_code(l[2], integer), c_code(l[3], integer))),
                       test = not((x.default % x.range | x.default = 0 | p = get)))
-        else if (t <= array & (p = nth_get | compiler.safety > 2) &
+        else if (t <= array & (p = nth_get | compiler.safety >= 2) &
                  (mt <= float | (mt ^ float = {})))
            Call_array(selector = c_code(x,array), arg = c_code(l[2], integer),
                       test = mt)
@@ -440,8 +440,8 @@ c_code_not(x:Select) : any
          y := self.args[3] in
        (if (p % OPT.to_remove) nil
         else if (sp = put |
-                 ((c_type(x) <= p.domain | compiler.safety >= 5) &
-                  (c_type(y) <= p.range | compiler.safety >= 4)))
+                 ((c_type(x) <= p.domain | compiler.safety >= 2) &
+                  (c_type(y) <= p.range | compiler.safety >= 2)))
            (if (Update?(p, x, y) & (p.params % list | p.params % integer))        // check that we know how to manage in gostat.cl
                let %x := c_code(x, any),
                    %y := c_code(y, any) in
@@ -463,7 +463,7 @@ c_code_not(x:Select) : any
  ->  let sp := self.selector,
          p := self.args[1], tp := c_type(p), mt := member(tp),
          x := self.args[2], y := self.args[3],
-         typeok:boolean := (c_type(y) <= member(tp) | compiler.safety >= 4),
+         typeok:boolean := (c_type(y) <= member(tp) | compiler.safety >= 2),
          %sel := c_code(p,array) in
        (if ((sp = nth_put | typeok) & (mt <= float | (mt ^ float = {})) & not(g_throw(%sel)))
            let %x := c_code(x, integer),
@@ -508,7 +508,7 @@ c_code_method(self:method,l:list,%type:list) : any
  -> c_code_method(self,l,%type,c_srange(self))
 
 c_code_method(self:method,l:list,%type:list,sx:class) : any
- -> (if (self.module! != claire | compiler.safety > 4 | known?(functional, self))
+ -> (if (self.module! != claire | compiler.safety >= 2 | known?(functional, self))
         let ld := self.domain,
             n := length(ld) in
           (if (n != length(l))                             // listargs is used .. 
@@ -551,7 +551,7 @@ Compile/functional! :: property(open = 3)
 // second-order types for better safety or optimization -------------------------------
 [nth_type_check(tl:type,ti:type,tx:type) : any
   =>  if not(tx <= member(tl))
-         (warn(), trace(2,"unsafe update on bag: type ~S into ~S [252]\n", tx,tl)),
+         (warn(), trace(1,"unsafe update on bag: type ~S into ~S [252]\n", tx,tl)),
       tx ]
 (write(typing, nth= @ list, nth_type_check))
 

@@ -549,7 +549,7 @@ type ClaireResource struct {
 	listFloatVal   []float64            // value
 	odBase         int                  // start of current world in stack
 	odIndex        int                  // top of stack
-	dictObjRec     []*ClaireMap         // receiver of the defeasible update for dict
+	dictObjRec     []*ClaireMapSet         // receiver of the defeasible update for dict
 	dictObjIndex   []*ClaireAny         // index is x in d[x]=y
 	dictObjVal     []*ClaireAny         // value
 
@@ -593,7 +593,7 @@ func (c *ClaireResource) init() {
 	c.listFloatVal = make([]float64, c.maxHist)
 	c.odBase = 0
 	c.odIndex = 0
-	c.dictObjRec = make([]*ClaireMap, c.maxHist)
+	c.dictObjRec = make([]*ClaireMapSet, c.maxHist)
 	c.dictObjIndex = make([]*ClaireAny, c.maxHist)
 	c.dictObjVal = make([]*ClaireAny, c.maxHist)
 
@@ -1027,16 +1027,14 @@ func KEY(x EID) string {
 
 
 
-
-
 // API functions ------------------------------------------------------------
 
 // create a dict  (CLAIRE 4 : [type:type])  -> map!(t,t)
-func (in *ClaireType) Map_I(out *ClaireType) *ClaireMap {
-	d := new(ClaireMap)
-	d.Isa = C_map
-	d.of = in
-	d.Range = out
+func (in *ClaireType) Map_I(out *ClaireType) *ClaireMapSet {
+	d := new(ClaireMapSet)
+	d.Isa = C_map_set
+	d.domain = in
+	d.mrange = out
 	d.Value = make(map[string]*ClaireAny)
 	// fmt.Printf("create a map %x\n", d.Uip())
 	return d
@@ -1047,7 +1045,7 @@ func E_map_I_type(in EID, out EID) EID {
 }
 
 // read from a dictionary - reuse the Key function defined for Sets
-func (d *ClaireMap) Get(x *ClaireAny) *ClaireAny {
+func (d *ClaireMapSet) Get(x *ClaireAny) *ClaireAny {
 	y := d.Value[x.Key()]
 	if y == nil {
 		return CNULL
@@ -1057,38 +1055,33 @@ func (d *ClaireMap) Get(x *ClaireAny) *ClaireAny {
 }
 
 func E_get_map(d EID, x EID) EID {
-	return EID{ToMap(OBJ(d)).Get(ANY(x)), 0}
+	return EID{ToMapSet(OBJ(d)).Get(ANY(x)), 0}
 }
 
 // Writes into a dict - TODO : add a specific Cerror
-func (d *ClaireMap) Put(x *ClaireAny, y *ClaireAny) EID {
-	if d.of.Contains(x) == CFALSE {
+func (d *ClaireMapSet) Put(x *ClaireAny, y *ClaireAny) EID {
+	if d.domain.Contains(x) == CFALSE {
 		return Cerror(17, x, d.Id())
 	}
-	if d.Range.Contains(y) == CFALSE {
+	if d.mrange.Contains(y) == CFALSE {
 		return Cerror(17, y, d.Id())
 	}
 	d.Value[x.Key()] = y
 	return EVOID
 }
 
-func E_put_map(d EID, x EID, y EID) EID { return ToMap(OBJ(d)).Put(ANY(x), ANY(y)) }
+func E_put_map(d EID, x EID, y EID) EID { return ToMapSet(OBJ(d)).Put(ANY(x), ANY(y)) }
 
 // Fast version for compiler
-func (d *ClaireMap) AddFast(x *ClaireAny, y *ClaireAny) {
+func (d *ClaireMapSet) AddFast(x *ClaireAny, y *ClaireAny) {
 	// fmt.Printf("add to a map %x\n", d.Uip())
 	d.Value[x.Key()] = y
 }
 
-/*func E_addFast_dictionary(d EID, x EID, y EID) EID {
-	ToMap(OBJ(d)).AddFast(OBJ(x), OBJ(y))
-	return EVOID
-}*/
-
 // these are temporaty functions : get & put on anything => the last one should
 func F_dict_get_any(d *ClaireAny, x *ClaireAny) *ClaireAny {
 	// fmt.Printf(">>>>>  Dict_get with x=%s \n", x.Prt())
-	return ToMap(d).Get(x)
+	return ToMapSet(d).Get(x)
 }
 
 func E_dict_get_any(d EID, x EID) EID {
@@ -1098,7 +1091,7 @@ func E_dict_get_any(d EID, x EID) EID {
 // write in a dict
 func F_dict_put_any(d *ClaireAny, x *ClaireAny, y *ClaireAny) {
 	// fmt.Printf(">>>>>  Dict_put x=%s and y=%s\n", x.Prt(), y.Prt())
-	ToMap(d).AddFast(x, y)
+	ToMapSet(d).AddFast(x, y)
 }
 
 func E_dict_put_any(d EID, x EID, y EID) EID {
@@ -1107,11 +1100,11 @@ func E_dict_put_any(d EID, x EID, y EID) EID {
 }
 
 // copy a map (thanks to stack Overflow)
-func (d *ClaireMap) Copy() *ClaireMap {
-	d2 := new(ClaireMap)
-	d2.Isa = C_map
-	d2.of = d.of
-	d2.Range = d.Range
+func (d *ClaireMapSet) Copy() *ClaireMapSet {
+	d2 := new(ClaireMapSet)
+	d2.Isa = C_map_set
+	d2.domain = d.domain
+	d2.mrange = d.mrange
 	d2.Value = make(map[string]*ClaireAny)
 	// Copy from the original map to the target map
 	for key, value := range d.Value {
@@ -1121,18 +1114,33 @@ func (d *ClaireMap) Copy() *ClaireMap {
 }
 
 func E_copy_map(d EID) EID {
-	return EID{ToMap(OBJ(d)).Copy().Id(), 0}
+	return EID{ToMapSet(OBJ(d)).Copy().Id(), 0}
 }
 
-// todo : add two methods Keys() + Values()
-// func (d *ClaireMap) Keys () *ClaireList {
-// func (d *ClaireMap) Values () *ClaireList {
+// access to range and domain
+func (d *ClaireMapSet) Domain() *ClaireType { return d.domain}
+func (d *ClaireMapSet) Range() *ClaireType { return d.mrange}
+
+func E_domain_map_set (d EID) EID { return EID{ToMapSet(OBJ(d)).Domain().Id(),0}}
+func E_range_map_set (d EID) EID { return EID{ToMapSet(OBJ(d)).Range().Id(),0}}
+
+
+// set extension of a map = list of values	
+func (d *ClaireMapSet) SetI() *ClaireSet {
+	s := ToType(C_any.Id()).EmptySet()
+	for _, value := range d.Value {
+		s.AddFast(value)
+	}
+	return s
+}	
+
+func E_set_I_map_set(d EID) EID {return EID{ToMapSet(OBJ(d)).SetI().Id(),0}}
 
 // table function ----------------------------------------------------------------
 
 // implement default copy (cf index_table in ClReflect.cpp)
 func (a *ClaireTable) GraphGet(x *ClaireAny) *ClaireAny {
-	d := ToMap(a.Graph)
+	d := ToMapSet(a.Graph)
 	y := d.Value[x.Key()]
 	if y == nil {
 		d := a.Default
@@ -1150,7 +1158,7 @@ func E_graph_get_table(a EID, x EID) EID {
 
 // write into a table using a defeasible update if needed
 func (a *ClaireTable) GraphPut(x *ClaireAny, y *ClaireAny) {
-	d := ToMap(a.Graph)
+	d := ToMapSet(a.Graph)
 	if a.Store_ask == CTRUE {
 		ClRes.odIndex++
 		if ClRes.odIndex > ClRes.maxHist {

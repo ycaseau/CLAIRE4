@@ -1,7 +1,7 @@
 //+-------------------------------------------------------------+
 //| CLAIRE                                                      |
 //| otool.cl                                                    |
-//| Copyright (C) 1994 - 2013 Yves Caseau. All Rights Reserved  |
+//| Copyright (C) 1994 - 2021 Yves Caseau. All Rights Reserved  |
 //| cf. copyright info in file object.cl: about()               |
 //+-------------------------------------------------------------+
 
@@ -103,8 +103,9 @@ nth(p:property,x:tuple) : Pattern -> Pattern(selector = p, arg = list!(x))
 
 // unified warning
 Compile/warn()  : void
- -> (if known?(OPT.in_method) trace(2,"---- WARNING[in ~S]: ",OPT.in_method)
-     else trace(2,"---- WARNING: "))
+ -> (compiler.n_warnings :+ 1,
+     if known?(OPT.in_method) trace(1,"---- WARNING[in ~S, line ~A]: ",OPT.in_method,n_line())
+     else trace(1,"---- WARNING[lien ~A]: ",n_line()))
 
 Compile/Cerror(s:string,l:listargs) : {}
   -> (printf("---- Compiler Error[in ~S]:\n", OPT.in_method),
@@ -113,18 +114,19 @@ Compile/Cerror(s:string,l:listargs) : {}
 
 // a note
 Compile/notice() : void
- -> (if known?(OPT.in_method) trace(3,"---- note[in ~S]: ",OPT.in_method)
-     else trace(3,"---- note: "))
+ -> (compiler.n_notes :+ 1,
+     if known?(OPT.in_method) trace(2,"---- note[in ~S]: ",OPT.in_method)
+     else trace(2,"---- note: "))
 
 // Warning : compiling is impossible, wrong selector
 [c_warn(self:Call,%type:any) : any
  -> let s := self.selector in
        (if (%type = void)  Cerror("[205] message ~S sent to void object", self)
         else if (not(s.restrictions) & not(s % OPT.ignore))
-           (warn(),trace(2,"the property ~S is undefined [255]\n", s))
+           (warn(),trace(1,"the property ~S is undefined [255]\n", s))
         else if (not(s % OPT.ignore) & (s.open <= 1 | s.open = 4) &
                  (case %type (list class!(%type[1]).open != 3)))
-            (warn(), trace(2,"wrongly typed message ~S (~S) [256]\n", self, %type))
+            (warn(), trace(1,"wrongly typed message ~S (~S) [256]\n", self, %type))
         else if compiler.optimize?
             (notice(), trace(3,"poorly typed message ~S [~S]\n", self, %type)),   // v3.3 poor opt. notice
         open_message(self.selector, self.args)) ]
@@ -133,7 +135,7 @@ Compile/notice() : void
  -> let s := self.selector in
        (if (%type = void)  Cerror("[205] message ~S sent to void object", self)
         else if not(s.restrictions)
-           (warn(),trace(2, "the property ~S is undefined [255]\n", s))
+           (warn(),trace(1, "the property ~S is undefined [255]\n", s))
         else if (not(s % OPT.ignore) & s.open <= 1)
            trace(3,"---- note: wrongly typed message ~S [~S]\n", self, %type),
         let m := open_message(self.selector, self.args) in
@@ -142,7 +144,7 @@ Compile/notice() : void
 // a message cannot be compiled into efficient code
 // here the property does not allow the compilation and we want to see it
 [c_warn(self:property,l:list,%type:list) : any
- -> if (self.open <= 1 & not(self % OPT.ignore) &  compiler.safety > 1)
+ -> if (self.open <= 1 & not(self % OPT.ignore) &  compiler.safety >= 2)
         trace(4, "---- note: poor type matching with ~S(~S) [~S]\n", self, l, %type),
     open_message(self, l) ]
 
@@ -150,17 +152,17 @@ Compile/notice() : void
 // simply dangerous. The result is the value to be used (either x or
 // ckeck_in(x,range(oself))
 [c_warn(self:Variable,x:any,y:type) : any
- -> if not(y ^ self.range)
-        (if (compiler.safety > 4)
-            (warn(), trace(2,"~S of type ~S is put in the variable ~S:~S [257]\n",
+ ->  if (self.index = -1) x   // self is a special variable created in a case expansion
+     else if not(y ^ self.range)
+        (if (compiler.safety >= 2)
+            (warn(), trace(1,"~S of type ~S is put in the variable ~S:~S [257a]\n",
                             x, y, self, self.range))
          else Cerror("[212] the value ~S of type ~S cannot be placed in the variable ~S:~S",
                     x, y, self, self.range))
-     else if (compiler.safety <= 1 |
-              not(sort=(osort(self.range), osort(y))))
-        (warn(),trace(2,"~S of type ~S is put in the variable ~S:~S [257]\n",
-                      x, y, self, self.range)),
-     if (compiler.safety <= 1 & not(y <= self.range)) c_code(x, any)
+     else if (compiler.safety <= 1 | not(sort=(osort(self.range), osort(y))))
+        (warn(),trace(1,"~S of type ~S is put in the variable ~S:~S (~A) [257b]\n",
+                      x, y, self, self.range, self.index)),
+     if (compiler.safety <= 1 & not(y <= self.range)) c_code(x, any) // forces a check in 
      else x ]
 
 
@@ -259,7 +261,7 @@ pmember(x:type) : type -> member(ptype(x))
          put(range, self, y))
      else if (not(y <= self.range) & compiler.safety <= 1)
         (if not((y & self.range))
-            (warn(), trace(2, "range of variable in ~S is wrong [258]\n", self)))]
+            (warn(), trace(1, "range of variable in ~S is wrong [258]\n", self)))]
         // v3.1.06: remove complains because it traps the compiler's own inferences
         // to reintroduce, we need to distinguish between user and compiler
         // types for iteration variables !
@@ -430,6 +432,7 @@ get_indexed(c:class) : list -> c.slots
         Call_array designated?(self.arg),
         // to_protect (not(need_protect(self.arg)) & designated?(self.arg)),
         Call_method ((self.arg.selector % OPT.simple_operations |
+                     (self.arg = (unsafe @ any)) |   // v4 unsafe(..) is a just a marker
                      (self.arg = (nth @ list))) &    // v3.2.34: added nth
                     forall( y in self.args | designated?(y))),
         // to_CL designated?(self.arg),
@@ -506,7 +509,7 @@ get_indexed(c:class) : list -> c.slots
                            y in self.args})
                catch any
                  (//[0] a strange problem happens ~A // verbose(),
-                  warn(),trace(2,"failed substitution: ~S",system.exception!),
+                  warn(),trace(1,"failed substitution: ~S",system.exception!),
                   c_substitution(self.args, lx, val, false), self)
           else (c_substitution(self.args, lx, val, false), self)),
        Instruction (for s in owner(self).slots
