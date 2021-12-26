@@ -262,8 +262,9 @@ dereference(x:any) : any
 // reads a sequence of exp. Must end with a e = ) | ] | }
 //
 nextseq(r:meta_reader, e:integer) : any
- -> (if (firstc(r) = e) (next(r), list())  // <yc:v0.01>
-    else let x := nexts(r, none) in
+ -> (//[5] enter nextseq(~S) first=~S // e, firstc(r),
+    if (firstc(r) = e) (next(r), list())  // <yc:v0.01>
+    else let x := nexts(r, (if (e = #/>) None else none)) in
            (if (firstc(r) = 10 & r.toplevel) skipc(r),         // v3.2.22
             if (firstc(r) = e) (next(r), list(x))
             else if (firstc(r) = #/,) x cons nextseq(cnext(r), e)
@@ -288,6 +289,26 @@ readblock(r:meta_reader, x:any, e:integer) : any
           (case y (Call* put(isa,y,Call)),    // this is how () are implemented -> forbids combining
            readblock(r, y, e)))
            
+// variant in CLAIRE4 when e = ), which can also read a lambda
+readList(r:meta_reader, x:any) : any
+  -> let y := readblock(r,x,#/)) in
+       (//[5] readList gets block ~S char=~A // y, firstc(r),
+        if (firstc(r) = #/{) readlambda(r,y) else y)    
+
+// create the lambda
+readlambda(r:meta_reader,l:any) : any 
+-> let lbody := nextseq(cnext(r),#/}), lvar := list() in
+        (//[5] read a lambda ~S with body ~S // l, lbody,
+         case l
+           (Vardef lvar :add l,
+            Do (for y in l.args
+                  (case y (Vardef lvar :add y,
+                           any lvar :add Variable(mClaire/pname = extract_symbol(y), range = any)))),
+            list (for y in l
+                    (case y (Vardef lvar :add y,
+                             any lvar :add Variable(mClaire/pname = extract_symbol(y), range = any)))),
+            any lvar :add Variable(mClaire/pname = extract_symbol(l), range = any)),
+         lambda!(lvar,(if (length(lbody) = 1) lbody[1] else Do(lbody))))                
 
 Do!(x:any, y:any) : any
  -> (case y

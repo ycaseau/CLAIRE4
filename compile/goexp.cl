@@ -63,7 +63,7 @@
        Generate/C_cast g_func(self.arg),
        // Generate/to_C g_func(self.arg),
        // Generate/to_CL g_func(self.arg),
-       any (self % thing | self % integer | self % string | self % char |
+       any (self % thing | self % integer | self % string | self % char | self % lambda |
             self % float | self % Variable | self % global_variable |
             self % function | self % symbol | self = unknown | self % method |
             self % boolean | self % class | self % environment)) ]
@@ -221,7 +221,14 @@ g_expression(self:list,s:class) : void
             bag_expression(PRODUCER,list,self,of(self)),
             cast_post(list,s)))
 
-
+// new in CLAIRE 4 !! compilation of lambda is OK but requires the reader (similar to macros)
+g_expression(self:lambda,s:class) : void
+ -> (legal?(Reader,self),
+     printf("~ICore.F_read_lambda(MakeString(\"lambda[(~I),~S]\"))~I",
+          cast_prefix(lambda,s),
+          Language/ppvariable(self.vars), 
+          self.body,
+          cast_post(lambda,s)))
 
 //**********************************************************************
 //*          Part 2: expression for messages                         *
@@ -431,7 +438,8 @@ g_expression(self:Call_method,s:class) : void -> inline_exp(PRODUCER,self,s)
                      valuesSlot(g_member(a1)),
                      g_expression(a2, integer), 
                      cast_post(s1,s))
-        else if (m = *nth_list* | m = *nth_tuple* | m = *nth_1_list* |  m = *nth_1_tuple* |m = *nth_1_array*)     // use the .At method
+        else if (((m = *nth_list* | m = *nth_tuple*) & compiler.safety >= 3) | 
+                 (m = *nth_1_list* |  m = *nth_1_tuple* | m = *nth_1_array* ))     // use the .At method
              printf("~I~I.At(~I-1)~I", cast_prefix(any,s),
                      g_expression(a1,list), 
                      g_expression(a2, integer), 

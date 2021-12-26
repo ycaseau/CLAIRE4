@@ -117,6 +117,9 @@ short_enough :: property()
 [self_print(self:function) : void 
   -> printf("#'~A", string!(self)) ]
 
+
+
+
 // prints the name of a restriction. If we have a close property and if a
 // short-cut is possible, we use it.
 self_print(self:restriction) : void

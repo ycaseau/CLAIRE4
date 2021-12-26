@@ -65,9 +65,11 @@
 // a simpler version exists in inspect.cl (simple_main())
 // -s is ignored because it is trapped earlier (see the file generator)
 [complex_main() : void
-  -> let %cm := "", %cx := "", %out := "",         // names of files/modules
-         dblevel := 1, vlevel := 2,         // defaults that can be overiden
-         %init? := true, %exe := false,     // do we want to load init.cl ? an executable ?
+  -> let %cm := "", %sf := "", %out := "",        // names of files/modules
+         dblevel := 1, vlevel := 2,               // defaults that can be overiden
+         %init? := true, %exe := false,           // do we want to load init.cl ? an executable ?
+         %safety := unknown,                      // safety level for compiler
+         %main := false,                           // do we cant to call main() ?
          l := (copy(params()) as list<string>) in  // args list
  (try
   (*fs* := Id(*fs*),                         // file separator, OS dependent
@@ -75,8 +77,8 @@
    while (l)
    (case l[1]
     ({"?", "-help"} printHelp(),
-     {"-q"} (verbose() := 0, l :<< 1),
-     {"-v"} (verbose() := 2, l :<< 1),
+     {"-q"} (vlevel := 0, l :<< 1),
+     {"-v"} (vlevel := 2, l :<< 1),
      {"-s"}  (if (length(l) >= 2)  l :<< 2 else error("option: -s <s1> <s2>")),
      {"-f"}  (if (length(l) >= 2)  (load(l[2]), l :<< 2)
               else error("option: -f <filename>")),
@@ -84,6 +86,11 @@
                (if %init? (load("init"), %init? := false),
                 let m := string2module(l[2]) in
                   (load(m), begin(m), l :<< 2 , claire_modules :add m))
+              else error("option: -m <module>")),
+     {"-mx"}  (if (length(l) >= 2)
+               (if %init? (load("init"), %init? := false),
+                let m := string2module(l[2]) in
+                  (load(m), call(main,list()), l :<< 2 , claire_modules :add m))
               else error("option: -m <module>")),
      {"-v"} (if (length(l) >= 2) (vlevel :+ integer!(l[2]), l :<< 2)
              else error("option: -v <integer>")),
@@ -97,24 +104,30 @@
              else error("option: -o <name>")),
      {"-p"} (OPT.Compile/profile? := true, dblevel :max 1, l :<< 1),
      {"-D"} (dblevel := 0, l :<< 1),
-     {"-O"} (compiler.optimize? := true, dblevel := 2, l :<< 1),
+     {"-O"} (compiler.optimize? := true, %safety := 2, dblevel := 2, l :<< 1),
+     {"-O2"} (compiler.optimize? := true, %safety := 3, dblevel := 2, l :<< 1),
      {"-cc"} (if (length(l) >= 2)  (%cm := l[2], l :<< 2)
                else error("option: -cc <module>")),
      {"-cm"}  (if (length(l) >= 2)   (%exe := true, %cm := l[2], l :<< 2)
                else error("option: -cm <module>")),
-     {"-cx"} (if (length(l) >= 2)   (%cx := l[2], l :<< 2)
-               else error("option: -cx <filename>")),
+     {"-cx"}  (if (length(l) >= 2)   (%exe := true, %cm := l[2], %main := true, l :<< 2)
+               else error("option: -cm <module>")),
+     {"-sf"} (if (length(l) >= 2)   (%sf := l[2], l :<< 2)
+               else error("option: -sf <filename>")),
+     {"-sx"} (if (length(l) >= 2)   (%sf := l[2], %main := true, l :<< 2)
+               else error("option: -sx <filename>")),
      {"-n"} (%init? := false, l :<< 1),
      any (if (l[1][1] = '-') (printf("~S is an unvalid option\n",l[1]),
                               printHelp()),
            l := list<string>() ) )),
-   if (%out = "") (if (%cm != "") %out := %cm else if (%cx != "") %out := %cx),
+   if (%out = "") (if (%cm != "") %out := %cm else if (%sf != "") %out := %sf),
    if %init? load("init"), 
    system.verbose := vlevel,
-   if (%cx != "")                             // we want a system file
+   if known?(%safety) compiler.safety := %safety,     // if changed through -O*
+   if (%sf != "")                                // we want a system file
       (load(get_value("Compile")),
        compiler.active? := true,
-       claire/system_file(string2module(%cx),%out),
+       claire/system_file(string2module(%sf),%out,%main),
        exit(0))
    else if (%cm != "")                        // we have asked to compile a module
       let m := string2module(%cm) in
@@ -131,7 +144,7 @@
          compile(m),
          if (%exe) 
             (//[0] ==== create the systel file for module ~S // %out,
-             claire/system_file(m,%out),   // v3.2.12: level = 0 => do nothing ....
+             claire/system_file(m,%out,%main),   // v3.2.12: level = 0 => do nothing ....
              compile_exe(%out)),
          exit(0))
     else Reader/top_level(reader)
@@ -147,13 +160,12 @@
 // *       Part 2: System compiling methods                          *
 // *******************************************************************
 
-
 // generate a system file with
 //   - the import
 //   - the module definition
 //   - calling the load() methods for the meta-descriptions
 //   - the main function
-[claire/system_file(m:module,%out:string) : void
+[claire/system_file(m:module,%out:string,%main:boolean) : void
  -> let p := fopen((compiler.source / %out) /+ PRODUCER.extension, "w"),
         l_used:list := Reader/add_modules(list(m)),
         l_necessary:list := parents(l_used) in
@@ -170,7 +182,7 @@
         printf("package main\n"),
         system_imports(m),
         load_function(m,l_necessary),
-        main_function(l_used),
+        main_function(l_used,%main),
         fclose(p)) ]
 
 // create the import declaration for this system file
@@ -224,7 +236,8 @@
 
 
 // create the main function
-[main_function(l_used:list[module]) : void
+// %main = true means call main()
+[main_function(l_used:list[module],%main:boolean) : void
  -> // stuff that is useful to parse
     printf("\n// the main function \n"),
     printf("func main() ~I",new_block()),
@@ -235,7 +248,8 @@
     if (get_value("Generate") % l_used)
         printf("ClEnv.Module_I = C_claire~I",breakline()),
 	  printf("Reader.C_reader.Fromp = ClEnv.Cin~I",breakline()),
-    if (get_value("Generate") % l_used) printf("Generate.F_Generate_complex_main_void()")
+    if %main printf("Core.F_CALL(Core.C_main,ARGS(EID{ClEnv.Id(),0}))")
+    else if (get_value("Generate") % l_used) printf("Generate.F_Generate_complex_main_void()")
     else printf("Reader.F_Reader_simple_main_void()"),
     breakline(),
     close_block() ]

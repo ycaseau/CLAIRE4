@@ -405,24 +405,24 @@ func (l *ClaireList) NthGet(i int) *ClaireAny { return l.At(i - 1) }
 // EID function
 func E_nth_get_list(l EID, i EID) EID { return ToList(OBJ(l)).NthGet(INT(i)).ToEID() }
 
-// this is the proper method
-func (l *ClaireList) Nth(i int) *ClaireAny { return l.At(i - 1) }
-
-// EID function
-func E_nth_list(x EID, i EID) EID {
-	l := ToList(OBJ(x))
-	j := INT(i)
-	if j <= 0 || j > l.Length() {
-		return Cerror(41, MakeInteger(j).Id(), l.Id())
+// this is the proper method with bound checks
+func (l *ClaireList) Nth(i int) EID { 
+	if i <= 0 || i > l.Length() {
+		return Cerror(41, MakeInteger(i).Id(), l.Id())
 	}
 	if l.Srange == C_integer {
-		return EID{C__INT, IVAL(l.ValuesI()[j-1])}
+		return EID{C__INT, IVAL(l.ValuesI()[i-1])}
 	} else if l.Srange == C_float {
-		return EID{C__FLOAT, FVAL(l.ValuesF()[j-1])}
+		return EID{C__FLOAT, FVAL(l.ValuesF()[i-1])}
 	} else {
-		return l.ValuesO()[j-1].ToEID()
+		return l.ValuesO()[i-1].ToEID()
 	}
 }
+
+
+// EID function
+func E_nth_list(x EID, i EID) EID { return ToList(OBJ(x)).Nth(INT(i)) }
+	
 
 // write onto l[i] --------------------------------------------------------------
 // needed by the compiler : reawrites ds an object value at position i, independently of the type representation

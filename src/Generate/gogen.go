@@ -1,5 +1,5 @@
-/***** CLAIRE Compilation of file /Users/ycaseau/Dropbox/src/clairev4.0/src/compile/gogen.cl 
-         [version 4.0.02 / safety 5] Friday 12-24-2021 *****/
+/***** CLAIRE Compilation of file /Users/ycaseau/Dropbox/src/clairev4.03/src/compile/gogen.cl 
+         [version 4.0.04 / safety 5] Sunday 12-26-2021 17:16:12 *****/
 
 package Generate
 import (_ "fmt"
@@ -11,7 +11,7 @@ import (_ "fmt"
 )
 
 //-------- dumb function to prevent import errors --------
-func import_g0042() { 
+func import_g0041() { 
     _ = Core.It
     _ = Language.It
     _ = Reader.It
@@ -552,9 +552,9 @@ func F_imported_function_ask_any (f *ClaireAny ) *ClaireBoolean  {
     // procedure body with s = boolean 
 var Result *ClaireBoolean  
     if (C_function.Id() == f.Isa.Id()) { 
-      { var g0044 *ClaireFunction   = ToFunction(f)
-        _ = g0044
-        Result = Equal(MakeChar(F_string_I_function(g0044).At(1)).Id(),MakeChar('#').Id())
+      { var g0043 *ClaireFunction   = ToFunction(f)
+        _ = g0043
+        Result = Equal(MakeChar(F_string_I_function(g0043).At(1)).Id(),MakeChar('#').Id())
         } 
       } else {
       Result = CFALSE
@@ -578,9 +578,9 @@ var Result *ClaireBoolean
     if (ToBoolean(ToGenerateGoProducer(Optimize.C_PRODUCER.Value).KernelMethods.Contain_ask(m).Id()) == CTRUE) { 
       Result = CTRUE
       }  else if (C_method.Id() == m.Isa.Id()) { 
-      { var g0046 *ClaireMethod   = ToMethod(m)
-        { var firstc rune  = g0046.Selector.Name.String_I().At(1)
-          { var _Zsig *ClaireList   = F_Generate_go_signature_method(g0046)
+      { var g0045 *ClaireMethod   = ToMethod(m)
+        { var firstc rune  = g0045.Selector.Name.String_I().At(1)
+          { var _Zsig *ClaireList   = F_Generate_go_signature_method(g0045)
             { var c *ClaireClass   = ToClass(_Zsig.ValuesO()[1-1])
               { 
                 var v_and7 *ClaireBoolean  
@@ -597,13 +597,13 @@ var Result *ClaireBoolean
                       v_and7 = MakeBoolean((ToType(c.Id()).Included(ToType(C_object.Id())) == CTRUE) || (c.Id() == C_port.Id()) || (c.Id() == C_environment.Id()))
                       if (v_and7 == CFALSE) {Result = CFALSE
                       } else { 
-                        v_and7 = Equal(g0046.Module_I.Id(),c.Name.Defined().Id())
+                        v_and7 = Equal(g0045.Module_I.Id(),c.Name.Defined().Id())
                         if (v_and7 == CFALSE) {Result = CFALSE
                         } else { 
-                          v_and7 = MakeBoolean((g0046.Selector.IfWrite == CNULL))
+                          v_and7 = MakeBoolean((g0045.Selector.IfWrite == CNULL))
                           if (v_and7 == CFALSE) {Result = CFALSE
                           } else { 
-                            v_and7 = MakeBoolean((g0046.Functional.Id() == CNULL) || (F_imported_function_ask_any(g0046.Functional.Id()) != CTRUE))
+                            v_and7 = MakeBoolean((g0045.Functional.Id() == CNULL) || (F_imported_function_ask_any(g0045.Functional.Id()) != CTRUE))
                             if (v_and7 == CFALSE) {Result = CFALSE
                             } else { 
                               { var arg_1 *ClaireAny  
@@ -613,18 +613,18 @@ var Result *ClaireBoolean
                                   _ = m2
                                   var m2_iter *ClaireAny  
                                   arg_1= CFALSE.Id()
-                                  for _,m2_iter = range(g0046.Selector.Restrictions.ValuesO()){ 
+                                  for _,m2_iter = range(g0045.Selector.Restrictions.ValuesO()){ 
                                     m2 = ToRestriction(m2_iter)
-                                    var g0050I *ClaireBoolean  
+                                    var g0049I *ClaireBoolean  
                                     { var arg_2 *ClaireBoolean  
                                       _ = arg_2
                                       if (C_method.Id() == m2.Isa.Id()) { 
-                                        { var g0047 *ClaireMethod   = ToMethod(m2.Id())
-                                          if (C_class.Id() != g0047.Domain.ValuesO()[1-1].Isa.Id()) { 
+                                        { var g0046 *ClaireMethod   = ToMethod(m2.Id())
+                                          if (C_class.Id() != g0046.Domain.ValuesO()[1-1].Isa.Id()) { 
                                             arg_2 = CFALSE
-                                            }  else if ((g0047.Module_I.Id() == g0046.Module_I.Id()) && 
-                                              (Equal(Core.F__exp_type(ToType(c.Id()),ToType(g0047.Domain.ValuesO()[1-1])).Id(),CEMPTY.Id()) != CTRUE)) { 
-                                            arg_2 = F_Generate_arg_match_list(F_Generate_go_signature_method(g0047),_Zsig)
+                                            }  else if ((g0046.Module_I.Id() == g0045.Module_I.Id()) && 
+                                              (Equal(Core.F__exp_type(ToType(c.Id()),ToType(g0046.Domain.ValuesO()[1-1])).Id(),CEMPTY.Id()) != CTRUE)) { 
+                                            arg_2 = F_Generate_arg_match_list(F_Generate_go_signature_method(g0046),_Zsig)
                                             } else {
                                             arg_2 = CTRUE
                                             } 
@@ -632,9 +632,9 @@ var Result *ClaireBoolean
                                         } else {
                                         arg_2 = CTRUE
                                         } 
-                                      g0050I = arg_2.Not
+                                      g0049I = arg_2.Not
                                       } 
-                                    if (g0050I == CTRUE) { 
+                                    if (g0049I == CTRUE) { 
                                       arg_1 = CTRUE.Id()
                                       break
                                       } 
@@ -752,7 +752,7 @@ func F_dMethod_ask_any (m *ClaireAny ) EID {
                   var loop_8 EID 
                   _ = loop_8
                   /*g_try(v2:"loop_8",loop:tuple("try_7", EID)) */
-                  var g0053I *ClaireBoolean  
+                  var g0052I *ClaireBoolean  
                   var try_9 EID 
                   /*g_try(v2:"try_9",loop:false) */
                   { var arg_10 *ClaireBoolean  
@@ -776,10 +776,10 @@ func F_dMethod_ask_any (m *ClaireAny ) EID {
                     /* ERROR PROTECTION INSERTED (try_11-try_11) */
                     if !ErrorIn(try_11) {
                     if (C_method.Id() == m2.Isa.Id()) { 
-                      { var g0051 *ClaireMethod   = ToMethod(m2.Id())
-                        if ((g0051.Module_I.Id() == ANY(Core.F_CALL(C_module_I,ARGS(m.ToEID())))) && 
-                            (Equal(Core.F__exp_type(ToType(c.Id()),ToType(g0051.Domain.ValuesO()[1-1])).Id(),CEMPTY.Id()) != CTRUE)) { 
-                          try_11 = EID{F_Generate_arg_match_list(F_Generate_go_signature_method(g0051),_Zsig).Id(),0}
+                      { var g0050 *ClaireMethod   = ToMethod(m2.Id())
+                        if ((g0050.Module_I.Id() == ANY(Core.F_CALL(C_module_I,ARGS(m.ToEID())))) && 
+                            (Equal(Core.F__exp_type(ToType(c.Id()),ToType(g0050.Domain.ValuesO()[1-1])).Id(),CEMPTY.Id()) != CTRUE)) { 
+                          try_11 = EID{F_Generate_arg_match_list(F_Generate_go_signature_method(g0050),_Zsig).Id(),0}
                           } else {
                           try_11 = EID{CTRUE.Id(),0}
                           } 
@@ -795,11 +795,11 @@ func F_dMethod_ask_any (m *ClaireAny ) EID {
                     try_9 = EID{arg_10.Not.Id(),0}
                     }
                     } 
-                  /* ERROR PROTECTION INSERTED (g0053I-loop_8) */
+                  /* ERROR PROTECTION INSERTED (g0052I-loop_8) */
                   if ErrorIn(try_9) {loop_8 = try_9
                   } else {
-                  g0053I = ToBoolean(OBJ(try_9))
-                  if (g0053I == CTRUE) { 
+                  g0052I = ToBoolean(OBJ(try_9))
+                  if (g0052I == CTRUE) { 
                     try_7 = EID{CTRUE.Id(),0}
                     break
                     } else {
@@ -858,10 +858,10 @@ var Result *ClaireBoolean
           { var arg_1 *ClaireAny  
             _ = arg_1
             { var i int  = 2
-              { var g0054 int  = (n-1)
-                _ = g0054
+              { var g0053 int  = (n-1)
+                _ = g0053
                 arg_1= CFALSE.Id()
-                for (i <= g0054) { 
+                for (i <= g0053) { 
                   /* While stat, v:"arg_1" loop:false */
                   if (l1.ValuesO()[i-1] != l2.ValuesO()[i-1]) { 
                     arg_1 = CTRUE.Id()
@@ -1176,7 +1176,7 @@ func E_Generate_getFunctionName_method (m EID) EID {
 func F_Generate_retreive_method_any (p *ClaireAny ,lf *ClaireAny ) EID { 
     var Result EID 
     if (p.Isa.IsIn(C_property) == CTRUE) { 
-      { var g0055 *ClaireProperty   = ToProperty(p)
+      { var g0054 *ClaireProperty   = ToProperty(p)
         { var m *ClaireObject  
           var try_1 EID 
           /*g_try(v2:"try_1",loop:false) */
@@ -1189,7 +1189,7 @@ func F_Generate_retreive_method_any (p *ClaireAny ,lf *ClaireAny ) EID {
             if ErrorIn(try_3) {try_1 = try_3
             } else {
             arg_2 = ANY(try_3)
-            try_1 = Core.F_CALL(ToProperty(Core.C__at.Id()),ARGS(EID{g0055.Id(),0},arg_2.ToEID()))
+            try_1 = Core.F_CALL(ToProperty(Core.C__at.Id()),ARGS(EID{g0054.Id(),0},arg_2.ToEID()))
             }
             } 
           /* ERROR PROTECTION INSERTED (m-Result) */
@@ -1197,12 +1197,12 @@ func F_Generate_retreive_method_any (p *ClaireAny ,lf *ClaireAny ) EID {
           } else {
           m = ToObject(OBJ(try_1))
           if (C_method.Id() == m.Isa.Id()) { 
-            { var g0056 *ClaireMethod   = ToMethod(m.Id())
-              _ = g0056
-              Result = EID{g0056.Id(),0}
+            { var g0055 *ClaireMethod   = ToMethod(m.Id())
+              _ = g0055
+              Result = EID{g0055.Id(),0}
               } 
             } else {
-            Result = ToException(Core.C_general_error.Make(MakeString("there is no method ~S @ ~S").Id(),MakeConstantList(g0055.Id(),lf).Id())).Close()
+            Result = ToException(Core.C_general_error.Make(MakeString("there is no method ~S @ ~S").Id(),MakeConstantList(g0054.Id(),lf).Id())).Close()
             } 
           }
           } 
@@ -1221,36 +1221,36 @@ func E_Generate_retreive_method_any (p EID,lf EID) EID {
 func F_Generate_retreive_list_any (x *ClaireAny ) EID { 
     var Result EID 
     if (x.Isa.IsIn(C_type) == CTRUE) { 
-      { var g0059 *ClaireType   = ToType(x)
-        _ = g0059
-        Result = EID{g0059.Id(),0}
+      { var g0058 *ClaireType   = ToType(x)
+        _ = g0058
+        Result = EID{g0058.Id(),0}
         } 
       }  else if (C_integer.Id() == x.Isa.Id()) { 
-      { var g0060 int  = ToInteger(x).Value
-        _ = g0060
-        Result = EID{C__INT,IVAL(g0060)}
+      { var g0059 int  = ToInteger(x).Value
+        _ = g0059
+        Result = EID{C__INT,IVAL(g0059)}
         } 
       }  else if (x.Isa.IsIn(C_property) == CTRUE) { 
-      { var g0061 *ClaireProperty   = ToProperty(x)
-        _ = g0061
-        Result = EID{g0061.Id(),0}
+      { var g0060 *ClaireProperty   = ToProperty(x)
+        _ = g0060
+        Result = EID{g0060.Id(),0}
         } 
       }  else if (x.Isa.IsIn(Core.C_global_variable) == CTRUE) { 
-      { var g0062 *Core.GlobalVariable   = Core.ToGlobalVariable(x)
-        if (Equal(g0062.Range.Id(),CEMPTY.Id()) == CTRUE) { 
-          Result = F_Generate_retreive_list_any(g0062.Value)
+      { var g0061 *Core.GlobalVariable   = Core.ToGlobalVariable(x)
+        if (Equal(g0061.Range.Id(),CEMPTY.Id()) == CTRUE) { 
+          Result = F_Generate_retreive_list_any(g0061.Value)
           } else {
-          Result = ToException(Core.C_general_error.Make(MakeString("we cannot retreive a type from a variable ~S").Id(),MakeConstantList(g0062.Id()).Id())).Close()
+          Result = ToException(Core.C_general_error.Make(MakeString("we cannot retreive a type from a variable ~S").Id(),MakeConstantList(g0061.Id()).Id())).Close()
           } 
         } 
       }  else if (x.Isa.IsIn(Language.C_List) == CTRUE) { 
-      { var g0063 *Language.List   = Language.To_List(x)
-        _ = g0063
+      { var g0062 *Language.List   = Language.To_List(x)
+        _ = g0062
         { 
           var v_list4 *ClaireList  
           var y *ClaireAny  
           var v_local4 *ClaireAny  
-          v_list4 = g0063.Args
+          v_list4 = g0062.Args
           Result = EID{CreateList(ToType(CEMPTY.Id()),v_list4.Length()).Id(),0}
           for CLcount := 0; CLcount < v_list4.Length(); CLcount++{ 
             y = v_list4.At(CLcount)
@@ -1268,8 +1268,8 @@ func F_Generate_retreive_list_any (x *ClaireAny ) EID {
           } 
         } 
       }  else if (x.Isa.IsIn(Language.C_Tuple) == CTRUE) { 
-      { var g0064 *Language.Tuple   = Language.To_Tuple(x)
-        _ = g0064
+      { var g0063 *Language.Tuple   = Language.To_Tuple(x)
+        _ = g0063
         { var arg_2 *ClaireList  
           _ = arg_2
           var try_3 EID 
@@ -1278,7 +1278,7 @@ func F_Generate_retreive_list_any (x *ClaireAny ) EID {
             var v_list5 *ClaireList  
             var y *ClaireAny  
             var v_local5 *ClaireAny  
-            v_list5 = g0064.Args
+            v_list5 = g0063.Args
             try_3 = EID{CreateList(ToType(CEMPTY.Id()),v_list5.Length()).Id(),0}
             for CLcount := 0; CLcount < v_list5.Length(); CLcount++{ 
               y = v_list5.At(CLcount)
@@ -1303,14 +1303,14 @@ func F_Generate_retreive_list_any (x *ClaireAny ) EID {
           } 
         } 
       }  else if (x.Isa.IsIn(Language.C_Call_method) == CTRUE) { 
-      { var g0065 *Language.CallMethod   = Language.To_CallMethod(x)
-        if ((g0065.Arg.Selector.Id() == C_nth.Id()) && 
-            (g0065.Args.Length() == 2)) { 
+      { var g0064 *Language.CallMethod   = Language.To_CallMethod(x)
+        if ((g0064.Arg.Selector.Id() == C_nth.Id()) && 
+            (g0064.Args.Length() == 2)) { 
           { var arg_5 *ClaireAny  
             _ = arg_5
             var try_7 EID 
             /*g_try(v2:"try_7",loop:false) */
-            try_7 = F_Generate_retreive_list_any(g0065.Args.At(1-1))
+            try_7 = F_Generate_retreive_list_any(g0064.Args.At(1-1))
             /* ERROR PROTECTION INSERTED (arg_5-Result) */
             if ErrorIn(try_7) {Result = try_7
             } else {
@@ -1319,7 +1319,7 @@ func F_Generate_retreive_list_any (x *ClaireAny ) EID {
               _ = arg_6
               var try_8 EID 
               /*g_try(v2:"try_8",loop:false) */
-              try_8 = F_Generate_retreive_list_any(g0065.Args.At(2-1))
+              try_8 = F_Generate_retreive_list_any(g0064.Args.At(2-1))
               /* ERROR PROTECTION INSERTED (arg_6-Result) */
               if ErrorIn(try_8) {Result = try_8
               } else {
@@ -1329,13 +1329,13 @@ func F_Generate_retreive_list_any (x *ClaireAny ) EID {
               } 
             }
             } 
-          }  else if ((g0065.Arg.Selector.Id() == C_nth.Id()) && 
-            (g0065.Args.Length() == 3)) { 
+          }  else if ((g0064.Arg.Selector.Id() == C_nth.Id()) && 
+            (g0064.Args.Length() == 3)) { 
           { var arg_9 *ClaireAny  
             _ = arg_9
             var try_12 EID 
             /*g_try(v2:"try_12",loop:false) */
-            try_12 = F_Generate_retreive_list_any(g0065.Args.At(1-1))
+            try_12 = F_Generate_retreive_list_any(g0064.Args.At(1-1))
             /* ERROR PROTECTION INSERTED (arg_9-Result) */
             if ErrorIn(try_12) {Result = try_12
             } else {
@@ -1344,7 +1344,7 @@ func F_Generate_retreive_list_any (x *ClaireAny ) EID {
               _ = arg_10
               var try_13 EID 
               /*g_try(v2:"try_13",loop:false) */
-              try_13 = F_Generate_retreive_list_any(g0065.Args.At(2-1))
+              try_13 = F_Generate_retreive_list_any(g0064.Args.At(2-1))
               /* ERROR PROTECTION INSERTED (arg_10-Result) */
               if ErrorIn(try_13) {Result = try_13
               } else {
@@ -1353,7 +1353,7 @@ func F_Generate_retreive_list_any (x *ClaireAny ) EID {
                 _ = arg_11
                 var try_14 EID 
                 /*g_try(v2:"try_14",loop:false) */
-                try_14 = F_Generate_retreive_list_any(g0065.Args.At(3-1))
+                try_14 = F_Generate_retreive_list_any(g0064.Args.At(3-1))
                 /* ERROR PROTECTION INSERTED (arg_11-Result) */
                 if ErrorIn(try_14) {Result = try_14
                 } else {
@@ -1365,13 +1365,13 @@ func F_Generate_retreive_list_any (x *ClaireAny ) EID {
               } 
             }
             } 
-          }  else if ((g0065.Arg.Selector.Id() == Core.C_Core_param_I.Id()) && 
-            (g0065.Args.Length() == 2)) { 
+          }  else if ((g0064.Arg.Selector.Id() == Core.C_Core_param_I.Id()) && 
+            (g0064.Args.Length() == 2)) { 
           { var arg_15 *ClaireAny  
             _ = arg_15
             var try_17 EID 
             /*g_try(v2:"try_17",loop:false) */
-            try_17 = F_Generate_retreive_list_any(g0065.Args.At(1-1))
+            try_17 = F_Generate_retreive_list_any(g0064.Args.At(1-1))
             /* ERROR PROTECTION INSERTED (arg_15-Result) */
             if ErrorIn(try_17) {Result = try_17
             } else {
@@ -1380,7 +1380,7 @@ func F_Generate_retreive_list_any (x *ClaireAny ) EID {
               _ = arg_16
               var try_18 EID 
               /*g_try(v2:"try_18",loop:false) */
-              try_18 = F_Generate_retreive_list_any(g0065.Args.At(2-1))
+              try_18 = F_Generate_retreive_list_any(g0064.Args.At(2-1))
               /* ERROR PROTECTION INSERTED (arg_16-Result) */
               if ErrorIn(try_18) {Result = try_18
               } else {
@@ -1390,13 +1390,13 @@ func F_Generate_retreive_list_any (x *ClaireAny ) EID {
               } 
             }
             } 
-          }  else if ((g0065.Arg.Selector.Id() == Core.C_U.Id()) && 
-            (g0065.Args.Length() == 2)) { 
+          }  else if ((g0064.Arg.Selector.Id() == Core.C_U.Id()) && 
+            (g0064.Args.Length() == 2)) { 
           { var arg_19 *ClaireAny  
             _ = arg_19
             var try_21 EID 
             /*g_try(v2:"try_21",loop:false) */
-            try_21 = F_Generate_retreive_list_any(g0065.Args.At(1-1))
+            try_21 = F_Generate_retreive_list_any(g0064.Args.At(1-1))
             /* ERROR PROTECTION INSERTED (arg_19-Result) */
             if ErrorIn(try_21) {Result = try_21
             } else {
@@ -1405,7 +1405,7 @@ func F_Generate_retreive_list_any (x *ClaireAny ) EID {
               _ = arg_20
               var try_22 EID 
               /*g_try(v2:"try_22",loop:false) */
-              try_22 = F_Generate_retreive_list_any(g0065.Args.At(2-1))
+              try_22 = F_Generate_retreive_list_any(g0064.Args.At(2-1))
               /* ERROR PROTECTION INSERTED (arg_20-Result) */
               if ErrorIn(try_22) {Result = try_22
               } else {
@@ -1415,13 +1415,13 @@ func F_Generate_retreive_list_any (x *ClaireAny ) EID {
               } 
             }
             } 
-          }  else if ((g0065.Arg.Selector.Id() == C__dot_dot.Id()) && 
-            (g0065.Args.Length() == 2)) { 
+          }  else if ((g0064.Arg.Selector.Id() == C__dot_dot.Id()) && 
+            (g0064.Args.Length() == 2)) { 
           { var arg_23 *ClaireAny  
             _ = arg_23
             var try_25 EID 
             /*g_try(v2:"try_25",loop:false) */
-            try_25 = F_Generate_retreive_list_any(g0065.Args.At(1-1))
+            try_25 = F_Generate_retreive_list_any(g0064.Args.At(1-1))
             /* ERROR PROTECTION INSERTED (arg_23-Result) */
             if ErrorIn(try_25) {Result = try_25
             } else {
@@ -1430,7 +1430,7 @@ func F_Generate_retreive_list_any (x *ClaireAny ) EID {
               _ = arg_24
               var try_26 EID 
               /*g_try(v2:"try_26",loop:false) */
-              try_26 = F_Generate_retreive_list_any(g0065.Args.At(2-1))
+              try_26 = F_Generate_retreive_list_any(g0064.Args.At(2-1))
               /* ERROR PROTECTION INSERTED (arg_24-Result) */
               if ErrorIn(try_26) {Result = try_26
               } else {
@@ -1441,7 +1441,7 @@ func F_Generate_retreive_list_any (x *ClaireAny ) EID {
             }
             } 
           } else {
-          Result = ToException(Core.C_general_error.Make(MakeString("we need to extend retreive_list to handle a type call: ~S").Id(),MakeConstantList(g0065.Id()).Id())).Close()
+          Result = ToException(Core.C_general_error.Make(MakeString("we need to extend retreive_list to handle a type call: ~S").Id(),MakeConstantList(g0064.Id()).Id())).Close()
           } 
         } 
       } else {
@@ -1933,7 +1933,7 @@ func E_Generate_cast_post_class (s1 EID,s2 EID) EID {
 /* {1} The go function for: equal_exp(c:go_producer,a1:any,pos?:boolean,a2:any,id?:any) [status=1] */
 func (c *GenerateGoProducer ) EqualExp (a1 *ClaireAny ,pos_ask *ClaireBoolean ,a2 *ClaireAny ,id_ask *ClaireAny ) EID { 
     var Result EID 
-    var g0067I *ClaireBoolean  
+    var g0066I *ClaireBoolean  
     var try_1 EID 
     /*g_try(v2:"try_1",loop:false) */
     { 
@@ -1983,11 +1983,11 @@ func (c *GenerateGoProducer ) EqualExp (a1 *ClaireAny ,pos_ask *ClaireBoolean ,a
         } 
       }}
       } 
-    /* ERROR PROTECTION INSERTED (g0067I-Result) */
+    /* ERROR PROTECTION INSERTED (g0066I-Result) */
     if ErrorIn(try_1) {Result = try_1
     } else {
-    g0067I = ToBoolean(OBJ(try_1))
-    if (g0067I == CTRUE) { 
+    g0066I = ToBoolean(OBJ(try_1))
+    if (g0066I == CTRUE) { 
       PRINC("(")
       /*g_try(v2:"Result",loop:true) */
       Result = Core.F_CALL(C_Generate_g_expression,ARGS(a1.ToEID(),EID{C_string.Id(),0}))
@@ -2021,7 +2021,7 @@ func (c *GenerateGoProducer ) EqualExp (a1 *ClaireAny ,pos_ask *ClaireBoolean ,a
       Result = EVOID
       }}
       } else {
-      var g0068I *ClaireBoolean  
+      var g0067I *ClaireBoolean  
       var try_8 EID 
       /*g_try(v2:"try_8",loop:false) */
       { 
@@ -2125,13 +2125,13 @@ func (c *GenerateGoProducer ) EqualExp (a1 *ClaireAny ,pos_ask *ClaireBoolean ,a
           } 
         }}
         } 
-      /* ERROR PROTECTION INSERTED (g0068I-Result) */
+      /* ERROR PROTECTION INSERTED (g0067I-Result) */
       if ErrorIn(try_8) {Result = try_8
       } else {
-      g0068I = ToBoolean(OBJ(try_8))
-      if (g0068I == CTRUE) { 
+      g0067I = ToBoolean(OBJ(try_8))
+      if (g0067I == CTRUE) { 
         /*g_try(v2:"Result",loop:true) */
-        var g0069I *ClaireBoolean  
+        var g0068I *ClaireBoolean  
         var try_20 EID 
         /*g_try(v2:"try_20",loop:false) */
         { var arg_21 *ClaireType  
@@ -2168,11 +2168,11 @@ func (c *GenerateGoProducer ) EqualExp (a1 *ClaireAny ,pos_ask *ClaireBoolean ,a
           try_20 = EID{Equal(arg_21.Id(),CEMPTY.Id()).Id(),0}
           }
           } 
-        /* ERROR PROTECTION INSERTED (g0069I-Result) */
+        /* ERROR PROTECTION INSERTED (g0068I-Result) */
         if ErrorIn(try_20) {Result = try_20
         } else {
-        g0069I = ToBoolean(OBJ(try_20))
-        if (g0069I == CTRUE) { 
+        g0068I = ToBoolean(OBJ(try_20))
+        if (g0068I == CTRUE) { 
           Optimize.F_Compile_warn_void()
           Result = Core.F_tformat_string(MakeString("~S = ~S will fail ! [263]"),2,MakeConstantList(a1,a2))
           } else {
@@ -2220,7 +2220,7 @@ func (c *GenerateGoProducer ) EqualExp (a1 *ClaireAny ,pos_ask *ClaireBoolean ,a
         }}
         }
         } else {
-        var g0070I *ClaireBoolean  
+        var g0069I *ClaireBoolean  
         var try_31 EID 
         /*g_try(v2:"try_31",loop:false) */
         { var arg_32 *ClaireClass  
@@ -2235,11 +2235,11 @@ func (c *GenerateGoProducer ) EqualExp (a1 *ClaireAny ,pos_ask *ClaireBoolean ,a
           try_31 = EID{Equal(arg_32.Id(),C_integer.Id()).Id(),0}
           }
           } 
-        /* ERROR PROTECTION INSERTED (g0070I-Result) */
+        /* ERROR PROTECTION INSERTED (g0069I-Result) */
         if ErrorIn(try_31) {Result = try_31
         } else {
-        g0070I = ToBoolean(OBJ(try_31))
-        if (g0070I == CTRUE) { 
+        g0069I = ToBoolean(OBJ(try_31))
+        if (g0069I == CTRUE) { 
           if (pos_ask != CTRUE) { 
             PRINC("!")
             } 
@@ -2295,9 +2295,9 @@ var Result *ClaireBoolean
     if (C_char.Id() == x.Isa.Id()) { 
       Result = CTRUE
       }  else if (x.Isa.IsIn(Language.C_Call_method) == CTRUE) { 
-      { var g0072 *Language.CallMethod   = Language.To_CallMethod(x)
-        _ = g0072
-        { var m *ClaireMethod   = g0072.Arg
+      { var g0071 *Language.CallMethod   = Language.To_CallMethod(x)
+        _ = g0071
+        { var m *ClaireMethod   = g0071.Arg
           Result = MakeBoolean((m.Id() == C_Generate__starnth_1_string_star.Value) || ((m.Id() == C_Generate__starnth_string_star.Value) && 
               (Optimize.C_compiler.Safety >= 2)))
           } 
@@ -2452,11 +2452,11 @@ func F_Generate_getC_any (x *ClaireAny ) *ClaireAny  {
     // procedure body with s = any 
 var Result *ClaireAny  
     if (x.Isa.IsIn(Core.C_global_variable) == CTRUE) { 
-      { var g0074 *Core.GlobalVariable   = Core.ToGlobalVariable(x)
-        if (Optimize.F_Compile_nativeVar_ask_global_variable(g0074) == CTRUE) { 
-          Result = g0074.Id()
+      { var g0073 *Core.GlobalVariable   = Core.ToGlobalVariable(x)
+        if (Optimize.F_Compile_nativeVar_ask_global_variable(g0073) == CTRUE) { 
+          Result = g0073.Id()
           } else {
-          Result = ANY(Core.F_CALL(C_Generate_to_C,ARGS(EID{Equal(C_arg.Id(),g0074.Id()).Id(),0},EID{Equal(Language.C_iClaire_set_arg.Id(),C_type.Id()).Id(),0})))
+          Result = ANY(Core.F_CALL(C_Generate_to_C,ARGS(EID{Equal(C_arg.Id(),g0073.Id()).Id(),0},EID{Equal(Language.C_iClaire_set_arg.Id(),C_type.Id()).Id(),0})))
           } 
         } 
       } else {
@@ -2739,7 +2739,7 @@ func E_Generate_g_clean_any (x EID) EID {
 /* {1} The go function for: simple_func?(x:any) [status=1] */
 func F_Generate_simple_func_ask_any (x *ClaireAny ) EID { 
     var Result EID 
-    var g0076I *ClaireBoolean  
+    var g0075I *ClaireBoolean  
     var try_1 EID 
     /*g_try(v2:"try_1",loop:false) */
     { 
@@ -2778,11 +2778,11 @@ func F_Generate_simple_func_ask_any (x *ClaireAny ) EID {
         } 
       }}
       } 
-    /* ERROR PROTECTION INSERTED (g0076I-Result) */
+    /* ERROR PROTECTION INSERTED (g0075I-Result) */
     if ErrorIn(try_1) {Result = try_1
     } else {
-    g0076I = ToBoolean(OBJ(try_1))
-    if (g0076I == CTRUE) { 
+    g0075I = ToBoolean(OBJ(try_1))
+    if (g0075I == CTRUE) { 
       Result = EID{CTRUE.Id(),0}
       } else {
       Result = EID{CFALSE.Id(),0}

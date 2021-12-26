@@ -1,5 +1,5 @@
-/***** CLAIRE Compilation of file /Users/ycaseau/claire/v4.0/meta/file.cl 
-         [version 4.0.02 / safety 5] Friday 12-24-2021 *****/
+/***** CLAIRE Compilation of file /Users/ycaseau/Dropbox/src/clairev4.03/src/meta/file.cl 
+         [version 4.0.04 / safety 5] Sunday 12-26-2021 17:16:10 *****/
 
 package Reader
 import (_ "fmt"
@@ -9,7 +9,7 @@ import (_ "fmt"
 )
 
 //-------- dumb function to prevent import errors --------
-func import_g0141() { 
+func import_g0126() { 
     _ = Core.It
     _ = Language.It
     } 
@@ -207,15 +207,15 @@ func E_checkno_meta_reader (r EID,n EID,y EID) EID {
 /* {1} The go function for: verify(t:any,x:any,y:any) [status=1] */
 func F_verify_any (t *ClaireAny ,x *ClaireAny ,y *ClaireAny ) EID { 
     var Result EID 
-    var g0144I *ClaireBoolean  
+    var g0129I *ClaireBoolean  
     var try_1 EID 
     /*g_try(v2:"try_1",loop:false) */
     try_1 = Core.F_BELONG(x,t)
-    /* ERROR PROTECTION INSERTED (g0144I-Result) */
+    /* ERROR PROTECTION INSERTED (g0129I-Result) */
     if ErrorIn(try_1) {Result = try_1
     } else {
-    g0144I = ToBoolean(OBJ(try_1))
-    if (g0144I == CTRUE) { 
+    g0129I = ToBoolean(OBJ(try_1))
+    if (g0129I == CTRUE) { 
       Result = x.ToEID()
       } else {
       Result = F_Serror_string(MakeString("[119] read ~S instead of a ~S in a ~S"),MakeConstantList(x,t,y))
@@ -251,15 +251,15 @@ func E_Serror_string (s EID,la EID) EID {
 /* {1} The go function for: extract_variable(self:any) [status=1] */
 func F_extract_variable_any (self *ClaireAny ) EID { 
     var Result EID 
-    var g0146I *ClaireBoolean  
+    var g0131I *ClaireBoolean  
     if (self.Isa.IsIn(C_Variable) == CTRUE) { 
-      { var g0145 *ClaireVariable   = To_Variable(self)
-        g0146I = Core.F__I_equal_any(g0145.Pname.Get(),g0145.Id())
+      { var g0130 *ClaireVariable   = To_Variable(self)
+        g0131I = Core.F__I_equal_any(g0130.Pname.Get(),g0130.Id())
         } 
       } else {
-      g0146I = CFALSE
+      g0131I = CFALSE
       } 
-    if (g0146I == CTRUE) { 
+    if (g0131I == CTRUE) { 
       /*g_try(v2:"Result",loop:true) */
       { 
         var va_arg1 *ClaireVariable  
@@ -485,16 +485,16 @@ func F_load_file_string (self *ClaireString ,b *ClaireBoolean ) EID {
                     ClEnv.Index= (top+(C_reader.Maxstack+1))
                     /*g_try(v2:"loop_3",loop:tuple("Result", EID)) */
                     if (C_string.Id() == _staritem_star.Isa.Id()) { 
-                      { var g0147 *ClaireString   = ToString(_staritem_star)
+                      { var g0132 *ClaireString   = ToString(_staritem_star)
                         if (ToBoolean(Language.C_NeedComment.Value) == CTRUE) { 
                           if (Language.C_iClaire_LastComment.Value != CNULL) { 
                             var v_gassign4 *ClaireAny  
-                            v_gassign4 = ANY(Core.F_CALL(ToProperty(C__7_plus.Id()),ARGS(EID{Language.C_iClaire_LastComment.Value,0},EID{F_append_string(MakeString("\n-- "),g0147).Id(),0})))
+                            v_gassign4 = ANY(Core.F_CALL(ToProperty(C__7_plus.Id()),ARGS(EID{Language.C_iClaire_LastComment.Value,0},EID{F_append_string(MakeString("\n-- "),g0132).Id(),0})))
                             Language.C_iClaire_LastComment.Value = v_gassign4
                             loop_3 = v_gassign4.ToEID()
                             } else {
                             var v_gassign5 *ClaireAny  
-                            v_gassign5 = (F_append_string(F_append_string(F_append_string(F_append_string(F_append_string(MakeString("["),C_reader.External),MakeString("(")),F_string_I_integer(ClEnv.NLine)),MakeString(")]\n-- ")),g0147)).Id()
+                            v_gassign5 = (F_append_string(F_append_string(F_append_string(F_append_string(F_append_string(MakeString("["),C_reader.External),MakeString("(")),F_string_I_integer(ClEnv.NLine)),MakeString(")]\n-- ")),g0132)).Id()
                             Language.C_iClaire_LastComment.Value = v_gassign5
                             loop_3 = v_gassign5.ToEID()
                             } 
@@ -762,9 +762,9 @@ func F_add_modules_module (self *ClaireModule ,l *ClaireSet ,result *ClaireList 
         for i_it := 0; i_it < x_len; i_it++ { 
           x = x_support.At(i_it)
           if (x.Isa.IsIn(C_module) == CTRUE) { 
-            { var g0149 *ClaireModule   = ToModule(x)
-              _ = g0149
-              result = F_add_modules_module(g0149,l,result)
+            { var g0134 *ClaireModule   = ToModule(x)
+              _ = g0134
+              result = F_add_modules_module(g0134,l,result)
               } 
             } 
           } 
@@ -1150,14 +1150,14 @@ func F_show_any (self *ClaireAny ) EID {
     var Result EID 
     /*g_try(v2:"Result",loop:true) */
     if (Core.F__Z_any1(self,C_object) == CTRUE) { 
-      { var g0150 *ClaireObject   = ToObject(self)
+      { var g0135 *ClaireObject   = ToObject(self)
         { 
           var rel *ClaireSlot  
           _ = rel
           var rel_iter *ClaireAny  
           Result= EID{CFALSE.Id(),0}
           var rel_support *ClaireList  
-          rel_support = g0150.Id().Isa.Slots
+          rel_support = g0135.Id().Isa.Slots
           for _,rel_iter = range(rel_support.ValuesO()){ 
             rel = ToSlot(rel_iter)
             var loop_1 EID 
@@ -1171,7 +1171,7 @@ func F_show_any (self *ClaireAny ) EID {
             } else {
             PRINC(": ")
             /*g_try(v2:"loop_1",loop:tuple("Result", EID)) */
-            loop_1 = Core.F_CALL(C_print,ARGS(Core.F_get_slot(rel,g0150).ToEID()))
+            loop_1 = Core.F_CALL(C_print,ARGS(Core.F_get_slot(rel,g0135).ToEID()))
             /* ERROR PROTECTION INSERTED (loop_1-loop_1) */
             if ErrorIn(loop_1) {Result = loop_1
             break
@@ -1212,9 +1212,9 @@ func E_show_any (self EID) EID {
 /* {1} The go function for: kill(self:object) [status=0] */
 func F_kill_object (self *ClaireObject ) *ClaireAny  { 
     if (self.Isa.IsIn(C_thing) == CTRUE) { 
-      { var g0152 *ClaireThing   = ToThing(self.Id())
-        _ = g0152
-        g0152.Name.Put(CNULL)
+      { var g0137 *ClaireThing   = ToThing(self.Id())
+        _ = g0137
+        g0137.Name.Put(CNULL)
         } 
       } 
     self.Isa.Instances = self.Isa.Instances.Delete(self.Id())
@@ -1361,14 +1361,14 @@ func F_float_I_string (self *ClaireString ) EID {
       } else {
       x = ANY(try_1)
       if (C_float.Id() == x.Isa.Id()) { 
-        { var g0153 float64  = ToFloat(x).Value
-          _ = g0153
-          Result = EID{C__FLOAT,FVAL(g0153)}
+        { var g0138 float64  = ToFloat(x).Value
+          _ = g0138
+          Result = EID{C__FLOAT,FVAL(g0138)}
           } 
         }  else if (C_integer.Id() == x.Isa.Id()) { 
-        { var g0154 int  = ToInteger(x).Value
-          _ = g0154
-          Result = EID{C__FLOAT,FVAL(F_to_float(g0154))}
+        { var g0139 int  = ToInteger(x).Value
+          _ = g0139
+          Result = EID{C__FLOAT,FVAL(F_to_float(g0139))}
           } 
         } else {
         Result = ToException(Core.C_general_error.Make(MakeString("[??] ~A is not a float").Id(),MakeConstantList((self).Id()).Id())).Close()

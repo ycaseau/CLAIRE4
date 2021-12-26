@@ -1,5 +1,5 @@
-/***** CLAIRE Compilation of file /Users/ycaseau/claire/v4.0/meta/read.cl 
-         [version 4.0.02 / safety 5] Friday 12-24-2021 *****/
+/***** CLAIRE Compilation of file /Users/ycaseau/Dropbox/src/clairev4.03/src/meta/read.cl 
+         [version 4.0.04 / safety 5] Sunday 12-26-2021 17:16:09 *****/
 
 package Reader
 import (_ "fmt"
@@ -9,7 +9,7 @@ import (_ "fmt"
 )
 
 //-------- dumb function to prevent import errors --------
-func import_g0001() { 
+func import_g0000() { 
     _ = Core.It
     _ = Language.It
     } 
@@ -47,9 +47,6 @@ func F_keyword_ask_any (x *ClaireAny ) *ClaireBoolean  {
 func E_keyword_ask_any (x EID) EID { 
     return EID{F_keyword_ask_any(ANY(x) ).Id(),0}} 
   
-// list of keywords 
-// special value : none <=> nothing specific is expected
-// special case for simple expression without LoopExp (<exp> <op> <exp>)
 // the meta_class of the reader --------------------------------------
 // The key values are placed in indexed so that they can be changed (eof ...).
 // The slot *internal* is used to give addresses to lexical variables.
@@ -181,27 +178,27 @@ func (r *MetaReader ) Nextunit () EID {
           if ErrorIn(try_8) {Result = try_8
           } else {
           x = ANY(try_8)
-          var g0005I *ClaireBoolean  
+          var g0004I *ClaireBoolean  
           { 
             var v_and5 *ClaireBoolean  
             
             v_and5 = r.Toplevel
-            if (v_and5 == CFALSE) {g0005I = CFALSE
+            if (v_and5 == CFALSE) {g0004I = CFALSE
             } else { 
               if (x.Isa.IsIn(Language.C_Assign) == CTRUE) { 
-                { var g0003 *Language.Assign   = Language.To_Assign(x)
-                  _ = g0003
-                  v_and5 = g0003.ClaireVar.Isa.IsIn(Language.C_Vardef)
+                { var g0002 *Language.Assign   = Language.To_Assign(x)
+                  _ = g0002
+                  v_and5 = g0002.ClaireVar.Isa.IsIn(Language.C_Vardef)
                   } 
                 } else {
                 v_and5 = CFALSE
                 } 
-              if (v_and5 == CFALSE) {g0005I = CFALSE
+              if (v_and5 == CFALSE) {g0004I = CFALSE
               } else { 
-                g0005I = CTRUE} 
+                g0004I = CTRUE} 
               } 
             } 
-          if (g0005I == CTRUE) { 
+          if (g0004I == CTRUE) { 
             { var _CL_obj *Language.Defobj   = Language.To_Defobj(new(Language.Defobj).Is(Language.C_Defobj))
               _CL_obj.Ident = ToSymbol(OBJ(Core.F_CALL(C_mClaire_pname,ARGS(Core.F_CALL(Language.C_var,ARGS(x.ToEID()))))))
               /*symbol->symbol*/_CL_obj.Arg = Core.C_global_variable
@@ -280,14 +277,14 @@ func (r *MetaReader ) Nextunit () EID {
             }  else if (C_string.Id() == x.Isa.Id()) { 
             Result = x.ToEID()
             } else {
-            var g0006I *ClaireBoolean  
+            var g0005I *ClaireBoolean  
             if (x.Isa.IsIn(Language.C_Call) == CTRUE) { 
-              { var g0004 *Language.Call   = Language.To_Call(x)
+              { var g0003 *Language.Call   = Language.To_Call(x)
                 { 
                   var v_and8 *ClaireBoolean  
                   
-                  v_and8 = r.SProperties.Contain_ask(g0004.Selector.Id())
-                  if (v_and8 == CFALSE) {g0006I = CFALSE
+                  v_and8 = r.SProperties.Contain_ask(g0003.Selector.Id())
+                  if (v_and8 == CFALSE) {g0005I = CFALSE
                   } else { 
                     { var arg_13 *ClaireAny  
                       _ = arg_13
@@ -296,7 +293,7 @@ func (r *MetaReader ) Nextunit () EID {
                         _ = y
                         arg_13= CFALSE.Id()
                         var y_support *ClaireList  
-                        y_support = g0004.Args
+                        y_support = g0003.Args
                         y_len := y_support.Length()
                         for i_it := 0; i_it < y_len; i_it++ { 
                           y = y_support.At(i_it)
@@ -308,16 +305,16 @@ func (r *MetaReader ) Nextunit () EID {
                         } 
                       v_and8 = Core.F_not_any(arg_13)
                       } 
-                    if (v_and8 == CFALSE) {g0006I = CFALSE
+                    if (v_and8 == CFALSE) {g0005I = CFALSE
                     } else { 
-                      g0006I = CTRUE} 
+                      g0005I = CTRUE} 
                     } 
                   } 
                 } 
               } else {
-              g0006I = CFALSE
+              g0005I = CFALSE
               } 
-            if (g0006I == CTRUE) { 
+            if (g0005I == CTRUE) { 
               { var z *Language.Call   = Language.To_Call(x)
                 { var a *ClaireAny   = z.Args.At(1-1)
                   /*g_try(v2:"Result",loop:true) */
@@ -437,27 +434,27 @@ func (r *MetaReader ) Nexts (e *ClaireKeyword ) EID {
           if (F_keyword_ask_any(x) == CTRUE) { 
             Result = r.Nextstruct(ToKeyword(x),e)
             } else {
-            var g0008I *ClaireBoolean  
+            var g0007I *ClaireBoolean  
             { 
               var v_and6 *ClaireBoolean  
               
               v_and6 = Equal(e.Id(),C_none.Id())
-              if (v_and6 == CFALSE) {g0008I = CFALSE
+              if (v_and6 == CFALSE) {g0007I = CFALSE
               } else { 
                 if (x.Isa.IsIn(Language.C_Call) == CTRUE) { 
-                  { var g0007 *Language.Call   = Language.To_Call(x)
-                    _ = g0007
-                    v_and6 = r.SProperties.Contain_ask(g0007.Selector.Id())
+                  { var g0006 *Language.Call   = Language.To_Call(x)
+                    _ = g0006
+                    v_and6 = r.SProperties.Contain_ask(g0006.Selector.Id())
                     } 
                   } else {
                   v_and6 = CFALSE
                   } 
-                if (v_and6 == CFALSE) {g0008I = CFALSE
+                if (v_and6 == CFALSE) {g0007I = CFALSE
                 } else { 
-                  g0008I = CTRUE} 
+                  g0007I = CTRUE} 
                 } 
               } 
-            if (g0008I == CTRUE) { 
+            if (g0007I == CTRUE) { 
               Result = x.ToEID()
               } else {
               Result = r.Loopexp(x,e,CFALSE)
@@ -478,148 +475,150 @@ func E_nexts_meta_reader (r EID,e EID) EID {
 /* {1} The go function for: loopexp(r:meta_reader,x:any,e:keyword,loop:boolean) [status=1] */
 func (r *MetaReader ) Loopexp (x *ClaireAny ,e *ClaireKeyword ,loop *ClaireBoolean ) EID { 
     var Result EID 
-    
-    if ((r.Toplevel == CTRUE) && 
-        ((e.Id() == C_none.Id()) && 
-          (r.Findeol() == CTRUE))) { 
-      Result = x.ToEID()
-      }  else if (x == C__ask.Id()) { 
-      { var _CL_obj *Language.Call   = Language.To_Call(new(Language.Call).Is(Language.C_Call))
-        _CL_obj.Selector = C_inspect
-        /*property->property*//*g_try(v2:"Result",loop:true) */
-        { 
-          var va_arg1 *Language.Call  
-          var va_arg2 *ClaireList  
-          va_arg1 = _CL_obj
-          var try_1 EID 
-          /*g_try(v2:"try_1",loop:false) */
+    { var c int  = r.Firstc()
+      _ = c
+      if ((r.Toplevel == CTRUE) && 
+          ((e.Id() == C_none.Id()) && 
+            (r.Findeol() == CTRUE))) { 
+        Result = x.ToEID()
+        }  else if (x == C__ask.Id()) { 
+        { var _CL_obj *Language.Call   = Language.To_Call(new(Language.Call).Is(Language.C_Call))
+          _CL_obj.Selector = C_inspect
+          /*property->property*//*g_try(v2:"Result",loop:true) */
           { 
-            var v_bag_arg *ClaireAny  
-            try_1= EID{ToType(CEMPTY.Id()).EmptyList().Id(),0}
-            var try_2 EID 
-            /*g_try(v2:"try_2",loop:false) */
-            try_2 = r.Nexte()
-            /* ERROR PROTECTION INSERTED (v_bag_arg-try_1) */
-            if ErrorIn(try_2) {try_1 = try_2
+            var va_arg1 *Language.Call  
+            var va_arg2 *ClaireList  
+            va_arg1 = _CL_obj
+            var try_1 EID 
+            /*g_try(v2:"try_1",loop:false) */
+            { 
+              var v_bag_arg *ClaireAny  
+              try_1= EID{ToType(CEMPTY.Id()).EmptyList().Id(),0}
+              var try_2 EID 
+              /*g_try(v2:"try_2",loop:false) */
+              try_2 = r.Nexte()
+              /* ERROR PROTECTION INSERTED (v_bag_arg-try_1) */
+              if ErrorIn(try_2) {try_1 = try_2
+              } else {
+              v_bag_arg = ANY(try_2)
+              ToList(OBJ(try_1)).AddFast(v_bag_arg)}
+              } 
+            /* ERROR PROTECTION INSERTED (va_arg2-Result) */
+            if ErrorIn(try_1) {Result = try_1
             } else {
-            v_bag_arg = ANY(try_2)
-            ToList(OBJ(try_1)).AddFast(v_bag_arg)}
+            va_arg2 = ToList(OBJ(try_1))
+            va_arg1.Args = va_arg2
+            /*list->list*/Result = EID{va_arg2.Id(),0}
+            }
             } 
-          /* ERROR PROTECTION INSERTED (va_arg2-Result) */
-          if ErrorIn(try_1) {Result = try_1
-          } else {
-          va_arg2 = ToList(OBJ(try_1))
-          va_arg1.Args = va_arg2
-          /*list->list*/Result = EID{va_arg2.Id(),0}
+          /* ERROR PROTECTION INSERTED (Result-Result) */
+          if !ErrorIn(Result) {
+          Result = EID{_CL_obj.Id(),0}
           }
           } 
-        /* ERROR PROTECTION INSERTED (Result-Result) */
-        if !ErrorIn(Result) {
-        Result = EID{_CL_obj.Id(),0}
-        }
-        } 
-      }  else if (r.Skipc() == 58) { 
-      { var y *ClaireAny  
-        var try_3 EID 
-        /*g_try(v2:"try_3",loop:false) */
-        try_3 = r.Cnext().Nexte()
-        /* ERROR PROTECTION INSERTED (y-Result) */
-        if ErrorIn(try_3) {Result = try_3
-        } else {
-        y = ANY(try_3)
-        if (y == C__equal.Id()) { 
-          { var arg_4 *ClaireAny  
-            _ = arg_4
-            var try_5 EID 
-            /*g_try(v2:"try_5",loop:false) */
-            { var arg_6 *ClaireAny  
-              _ = arg_6
-              var try_7 EID 
-              /*g_try(v2:"try_7",loop:false) */
-              try_7 = r.Nexte()
-              /* ERROR PROTECTION INSERTED (arg_6-try_5) */
-              if ErrorIn(try_7) {try_5 = try_7
-              } else {
-              arg_6 = ANY(try_7)
-              try_5 = F_combine_any(x,C_L__equal.Id(),arg_6)
-              }
-              } 
-            /* ERROR PROTECTION INSERTED (arg_4-Result) */
-            if ErrorIn(try_5) {Result = try_5
-            } else {
-            arg_4 = ANY(try_5)
-            Result = r.Loopexp(arg_4,e,CTRUE)
-            }
-            } 
-          }  else if (y == C_L_.Id()) { 
-          Result = r.Nextinst(x)
-          }  else if (F_operation_ask_any(y) == CTRUE) { 
-          { var arg_8 *ClaireAny  
-            _ = arg_8
-            var try_9 EID 
-            /*g_try(v2:"try_9",loop:false) */
-            { var arg_10 *ClaireAny  
-              _ = arg_10
-              var try_11 EID 
-              /*g_try(v2:"try_11",loop:false) */
-              try_11 = r.Nexte()
-              /* ERROR PROTECTION INSERTED (arg_10-try_9) */
-              if ErrorIn(try_11) {try_9 = try_11
-              } else {
-              arg_10 = ANY(try_11)
-              try_9 = r.Loopexp(arg_10,e,CFALSE)
-              }
-              } 
-            /* ERROR PROTECTION INSERTED (arg_8-Result) */
-            if ErrorIn(try_9) {Result = try_9
-            } else {
-            arg_8 = ANY(try_9)
-            Result = F_extended_operator_property(ToProperty(y),x,arg_8)
-            }
-            } 
-          }  else if (x.Isa.IsIn(Language.C_Call) == CTRUE) { 
-          { var w *ClaireAny  
-            var try_12 EID 
-            /*g_try(v2:"try_12",loop:false) */
-            try_12 = r.Nexte()
-            /* ERROR PROTECTION INSERTED (w-Result) */
-            if ErrorIn(try_12) {Result = try_12
-            } else {
-            w = ANY(try_12)
-            /*g_try(v2:"Result",loop:true) */
-            if (w == C__equal_sup.Id()) { 
-              { 
-                var va_arg1 *MetaReader  
-                var va_arg2 *ClaireBoolean  
-                va_arg1 = r
-                va_arg2 = CTRUE
-                va_arg1.LastArrow = va_arg2
-                /*boolean->boolean*/Result = EID{va_arg2.Id(),0}
-                } 
-              }  else if ((Equal(w,C_arrow.Value) != CTRUE) && 
-                (w != C_L__equal.Id())) { 
-              Result = F_Serror_string(MakeString("[149] wrong keyword (~S) after ~S"),MakeConstantList(w,y))
-              } else {
-              Result = EID{CFALSE.Id(),0}
-              } 
-            /* ERROR PROTECTION INSERTED (Result-Result) */
-            if !ErrorIn(Result) {
-            Result = r.Nextmethod(x,
-              y,
-              Equal(w,C_L__equal.Id()),
-              CFALSE,
-              Equal(w,C__equal_sup.Id()))
-            }
-            }
-            } 
+        }  else if (r.Skipc() == 58) { 
+        { var y *ClaireAny  
+          var try_3 EID 
+          /*g_try(v2:"try_3",loop:false) */
+          try_3 = r.Cnext().Nexte()
+          /* ERROR PROTECTION INSERTED (y-Result) */
+          if ErrorIn(try_3) {Result = try_3
           } else {
-          Result = C_pair.Make(x,y).ToEID()
+          y = ANY(try_3)
+          if (y == C__equal.Id()) { 
+            { var arg_4 *ClaireAny  
+              _ = arg_4
+              var try_5 EID 
+              /*g_try(v2:"try_5",loop:false) */
+              { var arg_6 *ClaireAny  
+                _ = arg_6
+                var try_7 EID 
+                /*g_try(v2:"try_7",loop:false) */
+                try_7 = r.Nexte()
+                /* ERROR PROTECTION INSERTED (arg_6-try_5) */
+                if ErrorIn(try_7) {try_5 = try_7
+                } else {
+                arg_6 = ANY(try_7)
+                try_5 = F_combine_any(x,C_L__equal.Id(),arg_6)
+                }
+                } 
+              /* ERROR PROTECTION INSERTED (arg_4-Result) */
+              if ErrorIn(try_5) {Result = try_5
+              } else {
+              arg_4 = ANY(try_5)
+              Result = r.Loopexp(arg_4,e,CTRUE)
+              }
+              } 
+            }  else if (y == C_L_.Id()) { 
+            Result = r.Nextinst(x)
+            }  else if (F_operation_ask_any(y) == CTRUE) { 
+            { var arg_8 *ClaireAny  
+              _ = arg_8
+              var try_9 EID 
+              /*g_try(v2:"try_9",loop:false) */
+              { var arg_10 *ClaireAny  
+                _ = arg_10
+                var try_11 EID 
+                /*g_try(v2:"try_11",loop:false) */
+                try_11 = r.Nexte()
+                /* ERROR PROTECTION INSERTED (arg_10-try_9) */
+                if ErrorIn(try_11) {try_9 = try_11
+                } else {
+                arg_10 = ANY(try_11)
+                try_9 = r.Loopexp(arg_10,e,CFALSE)
+                }
+                } 
+              /* ERROR PROTECTION INSERTED (arg_8-Result) */
+              if ErrorIn(try_9) {Result = try_9
+              } else {
+              arg_8 = ANY(try_9)
+              Result = F_extended_operator_property(ToProperty(y),x,arg_8)
+              }
+              } 
+            }  else if ((x.Isa.IsIn(Language.C_Call) == CTRUE) && 
+              (c == 32)) { 
+            
+            { var w *ClaireAny  
+              var try_12 EID 
+              /*g_try(v2:"try_12",loop:false) */
+              try_12 = r.Nexte()
+              /* ERROR PROTECTION INSERTED (w-Result) */
+              if ErrorIn(try_12) {Result = try_12
+              } else {
+              w = ANY(try_12)
+              /*g_try(v2:"Result",loop:true) */
+              if (w == C__equal_sup.Id()) { 
+                { 
+                  var va_arg1 *MetaReader  
+                  var va_arg2 *ClaireBoolean  
+                  va_arg1 = r
+                  va_arg2 = CTRUE
+                  va_arg1.LastArrow = va_arg2
+                  /*boolean->boolean*/Result = EID{va_arg2.Id(),0}
+                  } 
+                }  else if ((Equal(w,C_arrow.Value) != CTRUE) && 
+                  (w != C_L__equal.Id())) { 
+                Result = F_Serror_string(MakeString("[149] wrong keyword (~S) after ~S"),MakeConstantList(w,y))
+                } else {
+                Result = EID{CFALSE.Id(),0}
+                } 
+              /* ERROR PROTECTION INSERTED (Result-Result) */
+              if !ErrorIn(Result) {
+              Result = r.Nextmethod(x,
+                y,
+                Equal(w,C_L__equal.Id()),
+                CFALSE,
+                Equal(w,C__equal_sup.Id()))
+              }
+              }
+              } 
+            } else {
+            
+            Result = C_pair.Make(x,y).ToEID()
+            } 
+          }
           } 
-        }
-        } 
-      } else {
-      { var c int  = r.Firstc()
-        _ = c
+        } else {
         { var y *ClaireAny  
           var try_13 EID 
           /*g_try(v2:"try_13",loop:false) */
@@ -628,7 +627,6 @@ func (r *MetaReader ) Loopexp (x *ClaireAny ,e *ClaireKeyword ,loop *ClaireBoole
           if ErrorIn(try_13) {Result = try_13
           } else {
           y = ANY(try_13)
-          
           if ((y == e.Id()) || 
               ((y == C__equal_sup.Id()) && 
                   (e.Id() == C_arrow.Value))) { 
@@ -719,12 +717,12 @@ func E_loopexp_meta_reader (r EID,x EID,e EID,loop EID) EID {
 func F_extended_operator_property (p *ClaireProperty ,x *ClaireAny ,y *ClaireAny ) EID { 
     var Result EID 
     if (x.Isa.IsIn(Language.C_Call) == CTRUE) { 
-      { var g0009 *Language.Call   = Language.To_Call(x)
+      { var g0008 *Language.Call   = Language.To_Call(x)
         { var r *ClaireAny  
-          if (g0009.Selector.Id() == C_nth.Id()) { 
-            r = g0009.Args.At(2-1)
+          if (g0008.Selector.Id() == C_nth.Id()) { 
+            r = g0008.Args.At(2-1)
             } else {
-            r = g0009.Args.At(1-1)
+            r = g0008.Args.At(1-1)
             } 
           { var v *ClaireVariable  
             { var _CL_obj *ClaireVariable   = To_Variable(new(ClaireVariable).Is(C_Variable))
@@ -732,15 +730,15 @@ func F_extended_operator_property (p *ClaireProperty ,x *ClaireAny ,y *ClaireAny
               /*symbol->symbol*/v = _CL_obj
               } 
             { var x2 *Language.Call  
-              if (g0009.Selector.Id() == C_nth.Id()) { 
+              if (g0008.Selector.Id() == C_nth.Id()) { 
                 { var _CL_obj *Language.Call   = Language.To_Call(new(Language.Call).Is(Language.C_Call))
                   _CL_obj.Selector = C_nth
-                  /*property->property*/_CL_obj.Args = MakeConstantList(g0009.Args.At(1-1),v.Id())
+                  /*property->property*/_CL_obj.Args = MakeConstantList(g0008.Args.At(1-1),v.Id())
                   /*list->list*/x2 = _CL_obj
                   } 
                 } else {
                 { var _CL_obj *Language.Call   = Language.To_Call(new(Language.Call).Is(Language.C_Call))
-                  _CL_obj.Selector = g0009.Selector
+                  _CL_obj.Selector = g0008.Selector
                   /*property->property*/_CL_obj.Args = MakeConstantList(v.Id())
                   /*list->list*/x2 = _CL_obj
                   } 
@@ -786,12 +784,12 @@ func F_extended_operator_property (p *ClaireProperty ,x *ClaireAny ,y *ClaireAny
                   _ = arg_4
                   var try_5 EID 
                   /*g_try(v2:"try_5",loop:false) */
-                  try_5 = F_combine_any(g0009.Id(),p.Id(),y)
+                  try_5 = F_combine_any(g0008.Id(),p.Id(),y)
                   /* ERROR PROTECTION INSERTED (arg_4-Result) */
                   if ErrorIn(try_5) {Result = try_5
                   } else {
                   arg_4 = ANY(try_5)
-                  Result = F_combine_any(g0009.Id(),C_L__equal.Id(),arg_4)
+                  Result = F_combine_any(g0008.Id(),C_L__equal.Id(),arg_4)
                   }
                   } 
                 } 
@@ -818,249 +816,6 @@ func F_extended_operator_property (p *ClaireProperty ,x *ClaireAny ,y *ClaireAny
 // The EID go function for: extended_operator @ property (throw: true) 
 func E_extended_operator_property (p EID,x EID,y EID) EID { 
     return F_extended_operator_property(ToProperty(OBJ(p)),ANY(x),ANY(y) )} 
-  
-// new in v4.0  (list){e*} reads a lambda  - go inspired sytactic sugar
-/* {1} The go function for: readlambda(r:meta_reader,l:any) [status=1] */
-func (r *MetaReader ) Readlambda (l *ClaireAny ) EID { 
-    var Result EID 
-    { var lbody *ClaireAny  
-      var try_1 EID 
-      /*g_try(v2:"try_1",loop:false) */
-      try_1 = r.Cnext().Nextseq(125)
-      /* ERROR PROTECTION INSERTED (lbody-Result) */
-      if ErrorIn(try_1) {Result = try_1
-      } else {
-      lbody = ANY(try_1)
-      { var lvar *ClaireList   = ToType(C_any.Id()).EmptyList()
-        _ = lvar
-        
-        /*g_try(v2:"Result",loop:true) */
-        if (l.Isa.IsIn(Language.C_Vardef) == CTRUE) { 
-          { var g0011 *Language.Vardef   = Language.To_Vardef(l)
-            _ = g0011
-            lvar = lvar.AddFast(g0011.Id())/*t=any,s=list*/
-            Result = EID{lvar.Id(),0}
-            } 
-          }  else if (l.Isa.IsIn(Language.C_Do) == CTRUE) { 
-          { var g0012 *Language.Do   = Language.To_Do(l)
-            _ = g0012
-            { 
-              var y *ClaireAny  
-              _ = y
-              Result= EID{CFALSE.Id(),0}
-              var y_support *ClaireList  
-              y_support = g0012.Args
-              y_len := y_support.Length()
-              for i_it := 0; i_it < y_len; i_it++ { 
-                y = y_support.At(i_it)
-                var loop_2 EID 
-                _ = loop_2
-                /*g_try(v2:"loop_2",loop:tuple("Result", EID)) */
-                if (y.Isa.IsIn(Language.C_Vardef) == CTRUE) { 
-                  { var g0013 *Language.Vardef   = Language.To_Vardef(y)
-                    _ = g0013
-                    lvar = lvar.AddFast(g0013.Id())/*t=any,s=list*/
-                    loop_2 = EID{lvar.Id(),0}
-                    } 
-                  } else {
-                  var try_3 EID 
-                  /*g_try(v2:"try_3",loop:false) */
-                  { var arg_4 *Language.Vardef  
-                    _ = arg_4
-                    var try_5 EID 
-                    /*g_try(v2:"try_5",loop:false) */
-                    { var _CL_obj *Language.Vardef   = Language.To_Vardef(new(Language.Vardef).Is(Language.C_Vardef))
-                      /*g_try(v2:"try_5",loop:false) */
-                      { 
-                        var va_arg1 *ClaireVariable  
-                        var va_arg2 *ClaireSymbol  
-                        va_arg1 = To_Variable(_CL_obj.Id())
-                        var try_6 EID 
-                        /*g_try(v2:"try_6",loop:false) */
-                        try_6 = Language.F_extract_symbol_any(y)
-                        /* ERROR PROTECTION INSERTED (va_arg2-try_5) */
-                        if ErrorIn(try_6) {try_5 = try_6
-                        } else {
-                        va_arg2 = ToSymbol(OBJ(try_6))
-                        va_arg1.Pname = va_arg2
-                        /*symbol->symbol*/try_5 = EID{va_arg2.Id(),0}
-                        }
-                        } 
-                      /* ERROR PROTECTION INSERTED (try_5-try_5) */
-                      if !ErrorIn(try_5) {
-                      _CL_obj.Range = ToType(C_any.Id())
-                      /*type->type*/try_5 = EID{_CL_obj.Id(),0}
-                      }
-                      } 
-                    /* ERROR PROTECTION INSERTED (arg_4-try_3) */
-                    if ErrorIn(try_5) {try_3 = try_5
-                    } else {
-                    arg_4 = Language.To_Vardef(OBJ(try_5))
-                    try_3 = EID{lvar.AddFast(arg_4.Id()).Id(),0}/*t=any,s=EID*/
-                    }
-                    } 
-                  /* ERROR PROTECTION INSERTED (lvar-loop_2) */
-                  if ErrorIn(try_3) {loop_2 = try_3
-                  } else {
-                  lvar = ToList(OBJ(try_3))
-                  loop_2 = EID{lvar.Id(),0}
-                  }
-                  } 
-                /* ERROR PROTECTION INSERTED (loop_2-Result) */
-                if ErrorIn(loop_2) {Result = loop_2
-                break
-                } else {
-                }
-                } 
-              } 
-            } 
-          }  else if (l.Isa.IsIn(C_list) == CTRUE) { 
-          { var g0015 *ClaireList   = ToList(l)
-            _ = g0015
-            { 
-              var y *ClaireAny  
-              _ = y
-              Result= EID{CFALSE.Id(),0}
-              var y_support *ClaireList  
-              y_support = g0015
-              y_len := y_support.Length()
-              for i_it := 0; i_it < y_len; i_it++ { 
-                y = y_support.At(i_it)
-                var loop_7 EID 
-                _ = loop_7
-                /*g_try(v2:"loop_7",loop:tuple("Result", EID)) */
-                if (y.Isa.IsIn(Language.C_Vardef) == CTRUE) { 
-                  { var g0016 *Language.Vardef   = Language.To_Vardef(y)
-                    _ = g0016
-                    lvar = lvar.AddFast(g0016.Id())/*t=any,s=list*/
-                    loop_7 = EID{lvar.Id(),0}
-                    } 
-                  } else {
-                  var try_8 EID 
-                  /*g_try(v2:"try_8",loop:false) */
-                  { var arg_9 *Language.Vardef  
-                    _ = arg_9
-                    var try_10 EID 
-                    /*g_try(v2:"try_10",loop:false) */
-                    { var _CL_obj *Language.Vardef   = Language.To_Vardef(new(Language.Vardef).Is(Language.C_Vardef))
-                      /*g_try(v2:"try_10",loop:false) */
-                      { 
-                        var va_arg1 *ClaireVariable  
-                        var va_arg2 *ClaireSymbol  
-                        va_arg1 = To_Variable(_CL_obj.Id())
-                        var try_11 EID 
-                        /*g_try(v2:"try_11",loop:false) */
-                        try_11 = Language.F_extract_symbol_any(y)
-                        /* ERROR PROTECTION INSERTED (va_arg2-try_10) */
-                        if ErrorIn(try_11) {try_10 = try_11
-                        } else {
-                        va_arg2 = ToSymbol(OBJ(try_11))
-                        va_arg1.Pname = va_arg2
-                        /*symbol->symbol*/try_10 = EID{va_arg2.Id(),0}
-                        }
-                        } 
-                      /* ERROR PROTECTION INSERTED (try_10-try_10) */
-                      if !ErrorIn(try_10) {
-                      _CL_obj.Range = ToType(C_any.Id())
-                      /*type->type*/try_10 = EID{_CL_obj.Id(),0}
-                      }
-                      } 
-                    /* ERROR PROTECTION INSERTED (arg_9-try_8) */
-                    if ErrorIn(try_10) {try_8 = try_10
-                    } else {
-                    arg_9 = Language.To_Vardef(OBJ(try_10))
-                    try_8 = EID{lvar.AddFast(arg_9.Id()).Id(),0}/*t=any,s=EID*/
-                    }
-                    } 
-                  /* ERROR PROTECTION INSERTED (lvar-loop_7) */
-                  if ErrorIn(try_8) {loop_7 = try_8
-                  } else {
-                  lvar = ToList(OBJ(try_8))
-                  loop_7 = EID{lvar.Id(),0}
-                  }
-                  } 
-                /* ERROR PROTECTION INSERTED (loop_7-Result) */
-                if ErrorIn(loop_7) {Result = loop_7
-                break
-                } else {
-                }
-                } 
-              } 
-            } 
-          } else {
-          var try_12 EID 
-          /*g_try(v2:"try_12",loop:false) */
-          { var arg_13 *Language.Vardef  
-            _ = arg_13
-            var try_14 EID 
-            /*g_try(v2:"try_14",loop:false) */
-            { var _CL_obj *Language.Vardef   = Language.To_Vardef(new(Language.Vardef).Is(Language.C_Vardef))
-              /*g_try(v2:"try_14",loop:false) */
-              { 
-                var va_arg1 *ClaireVariable  
-                var va_arg2 *ClaireSymbol  
-                va_arg1 = To_Variable(_CL_obj.Id())
-                var try_15 EID 
-                /*g_try(v2:"try_15",loop:false) */
-                try_15 = Language.F_extract_symbol_any(l)
-                /* ERROR PROTECTION INSERTED (va_arg2-try_14) */
-                if ErrorIn(try_15) {try_14 = try_15
-                } else {
-                va_arg2 = ToSymbol(OBJ(try_15))
-                va_arg1.Pname = va_arg2
-                /*symbol->symbol*/try_14 = EID{va_arg2.Id(),0}
-                }
-                } 
-              /* ERROR PROTECTION INSERTED (try_14-try_14) */
-              if !ErrorIn(try_14) {
-              _CL_obj.Range = ToType(C_any.Id())
-              /*type->type*/try_14 = EID{_CL_obj.Id(),0}
-              }
-              } 
-            /* ERROR PROTECTION INSERTED (arg_13-try_12) */
-            if ErrorIn(try_14) {try_12 = try_14
-            } else {
-            arg_13 = Language.To_Vardef(OBJ(try_14))
-            try_12 = EID{lvar.AddFast(arg_13.Id()).Id(),0}/*t=any,s=EID*/
-            }
-            } 
-          /* ERROR PROTECTION INSERTED (lvar-Result) */
-          if ErrorIn(try_12) {Result = try_12
-          } else {
-          lvar = ToList(OBJ(try_12))
-          Result = EID{lvar.Id(),0}
-          }
-          } 
-        /* ERROR PROTECTION INSERTED (Result-Result) */
-        if !ErrorIn(Result) {
-        { var arg_16 *ClaireAny  
-          _ = arg_16
-          var try_17 EID 
-          /*g_try(v2:"try_17",loop:false) */
-          if ANY(Core.F_CALL(C_length,ARGS(lbody.ToEID()))).IsInt(1) { 
-            try_17 = Core.F_CALL(C_nth,ARGS(lbody.ToEID(),EID{C__INT,IVAL(1)}))
-            } else {
-            { var _CL_obj *Language.Do   = Language.To_Do(new(Language.Do).Is(Language.C_Do))
-              _CL_obj.Args = ToList(lbody)
-              /*list->list*/try_17 = EID{_CL_obj.Id(),0}
-              } 
-            } 
-          /* ERROR PROTECTION INSERTED (arg_16-Result) */
-          if ErrorIn(try_17) {Result = try_17
-          } else {
-          arg_16 = ANY(try_17)
-          Result = Language.F_lambda_I_list(lvar,arg_16)
-          }
-          } 
-        }
-        } 
-      }
-      } 
-    return Result} 
-  
-// The EID go function for: readlambda @ meta_reader (throw: true) 
-func E_Reader_readlambda_meta_reader (r EID,l EID) EID { 
-    return ToMetaReader(OBJ(r)).Readlambda(ANY(l) )} 
   
 // **********************************************************************
 // *   Part 3: reading expressions                                      *
@@ -1092,6 +847,7 @@ func E_nexte_meta_reader (r EID) EID {
   
 // v3.3
 // reading the next compact expression/ same
+//
 /* {1} The go function for: nextexp(r:meta_reader,str:boolean) [status=1] */
 func (r *MetaReader ) Nextexp (str *ClaireBoolean ) EID { 
     var Result EID 
@@ -1194,25 +950,7 @@ func (r *MetaReader ) Nextexp (str *ClaireBoolean ) EID {
             if ErrorIn(try_3) {Result = try_3
             } else {
             x = ANY(try_3)
-            if (r.Firstc() == 58) { 
-              
-              if (Equal(x,C_triangle.Value) == CTRUE) { 
-                Result = x.ToEID()
-                } else {
-                { var arg_9 *ClaireAny  
-                  _ = arg_9
-                  var try_10 EID 
-                  /*g_try(v2:"try_10",loop:false) */
-                  try_10 = r.Cnext().Nexte()
-                  /* ERROR PROTECTION INSERTED (arg_9-Result) */
-                  if ErrorIn(try_10) {Result = try_10
-                  } else {
-                  arg_9 = ANY(try_10)
-                  Result = C_pair.Make(x,arg_9).ToEID()
-                  }
-                  } 
-                } 
-              }  else if (C_string.Id() == y.Isa.Id()) { 
+            if (C_string.Id() == y.Isa.Id()) { 
               if (r.ExtendedComment_ask(ToString(y)) == CTRUE) { 
                 Result = r.ExtendedComment_I(ToString(y))
                 }  else if (str == CTRUE) { 
@@ -1227,101 +965,101 @@ func (r *MetaReader ) Nextexp (str *ClaireBoolean ) EID {
                   ((r.Firstc() == 46) || 
                     (r.Firstc() == 60))) { 
                 /* While stat, v:"Result" loop:true */
-                var loop_11 EID 
-                _ = loop_11
-                /*g_try(v2:"loop_11",loop:tuple("Result", EID)) */
+                var loop_9 EID 
+                _ = loop_9
+                /*g_try(v2:"loop_9",loop:tuple("Result", EID)) */
                 if (r.Firstc() == 60) { 
                   if (x == Language.C_map.Id()) { 
-                    var try_12 EID 
-                    /*g_try(v2:"try_12",loop:false) */
-                    try_12 = r.Readmap()
-                    /* ERROR PROTECTION INSERTED (x-loop_11) */
-                    if ErrorIn(try_12) {loop_11 = try_12
+                    var try_10 EID 
+                    /*g_try(v2:"try_10",loop:false) */
+                    try_10 = r.Readmap()
+                    /* ERROR PROTECTION INSERTED (x-loop_9) */
+                    if ErrorIn(try_10) {loop_9 = try_10
                     } else {
-                    x = ANY(try_12)
-                    loop_11 = x.ToEID()
+                    x = ANY(try_10)
+                    loop_9 = x.ToEID()
                     }
                     } else {
                     { var y *ClaireAny  
                       _ = y
-                      var try_13 EID 
-                      /*g_try(v2:"try_13",loop:false) */
-                      try_13 = r.Cnext().Nexte()
-                      /* ERROR PROTECTION INSERTED (y-loop_11) */
-                      if ErrorIn(try_13) {loop_11 = try_13
+                      var try_11 EID 
+                      /*g_try(v2:"try_11",loop:false) */
+                      try_11 = r.Cnext().Nexte()
+                      /* ERROR PROTECTION INSERTED (y-loop_9) */
+                      if ErrorIn(try_11) {loop_9 = try_11
                       } else {
-                      y = ANY(try_13)
+                      y = ANY(try_11)
                       if ((C_class.Id() == x.Isa.Id()) && 
                           (r.Firstc() == 62)) { 
                         r.Cnext()
-                        var try_14 EID 
-                        /*g_try(v2:"try_14",loop:tuple("Result", EID)) */
-                        { var arg_15 *ClaireList  
-                          _ = arg_15
+                        var try_12 EID 
+                        /*g_try(v2:"try_12",loop:tuple("Result", EID)) */
+                        { var arg_13 *ClaireList  
+                          _ = arg_13
                           { 
                             var v_bag_arg *ClaireAny  
-                            arg_15= ToType(CEMPTY.Id()).EmptyList()
+                            arg_13= ToType(CEMPTY.Id()).EmptyList()
                             { var _CL_obj *Language.Call   = Language.To_Call(new(Language.Call).Is(Language.C_Call))
                               _CL_obj.Selector = ToProperty(C__equal.Id())
                               /*property->property*/_CL_obj.Args = MakeConstantList(C_of.Id(),y)
                               /*list->list*/v_bag_arg = _CL_obj.Id()
                               } 
-                            arg_15.AddFast(v_bag_arg)} 
-                          try_14 = Language.F_extract_class_call_class(ToClass(x),arg_15)
+                            arg_13.AddFast(v_bag_arg)} 
+                          try_12 = Language.F_extract_class_call_class(ToClass(x),arg_13)
                           } 
-                        /* ERROR PROTECTION INSERTED (x-loop_11) */
-                        if ErrorIn(try_14) {loop_11 = try_14
+                        /* ERROR PROTECTION INSERTED (x-loop_9) */
+                        if ErrorIn(try_12) {loop_9 = try_12
+                        Result = try_12
+                        break
+                        } else {
+                        x = ANY(try_12)
+                        loop_9 = x.ToEID()
+                        var try_14 EID 
+                        /*g_try(v2:"try_14",loop:tuple("Result", EID)) */
+                        try_14 = r.Nexti(x)
+                        /* ERROR PROTECTION INSERTED (x-loop_9) */
+                        if ErrorIn(try_14) {loop_9 = try_14
                         Result = try_14
                         break
                         } else {
                         x = ANY(try_14)
-                        loop_11 = x.ToEID()
-                        var try_16 EID 
-                        /*g_try(v2:"try_16",loop:tuple("Result", EID)) */
-                        try_16 = r.Nexti(x)
-                        /* ERROR PROTECTION INSERTED (x-loop_11) */
-                        if ErrorIn(try_16) {loop_11 = try_16
-                        Result = try_16
-                        break
-                        } else {
-                        x = ANY(try_16)
-                        loop_11 = x.ToEID()
+                        loop_9 = x.ToEID()
                         }}
                         } else {
-                        loop_11 = F_Serror_string(MakeString("[154] ~S<~S not allowed"),MakeConstantList(x,y))
+                        loop_9 = F_Serror_string(MakeString("[154] ~S<~S not allowed"),MakeConstantList(x,y))
                         } 
                       }
                       } 
                     } 
                   }  else if (r.Firstc() == 91) { 
-                  var try_17 EID 
-                  /*g_try(v2:"try_17",loop:false) */
-                  try_17 = r.Readbracket(x)
-                  /* ERROR PROTECTION INSERTED (x-loop_11) */
-                  if ErrorIn(try_17) {loop_11 = try_17
+                  var try_15 EID 
+                  /*g_try(v2:"try_15",loop:false) */
+                  try_15 = r.Readbracket(x)
+                  /* ERROR PROTECTION INSERTED (x-loop_9) */
+                  if ErrorIn(try_15) {loop_9 = try_15
                   } else {
-                  x = ANY(try_17)
-                  loop_11 = x.ToEID()
+                  x = ANY(try_15)
+                  loop_9 = x.ToEID()
                   }
                   } else {
                   { var y *ClaireAny  
                     _ = y
-                    var try_18 EID 
-                    /*g_try(v2:"try_18",loop:false) */
-                    try_18 = r.Cnext().Fromp.ReadIdent()
-                    /* ERROR PROTECTION INSERTED (y-loop_11) */
-                    if ErrorIn(try_18) {loop_11 = try_18
+                    var try_16 EID 
+                    /*g_try(v2:"try_16",loop:false) */
+                    try_16 = r.Cnext().Fromp.ReadIdent()
+                    /* ERROR PROTECTION INSERTED (y-loop_9) */
+                    if ErrorIn(try_16) {loop_9 = try_16
                     } else {
-                    y = ANY(try_18)
+                    y = ANY(try_16)
                     { var p *ClaireProperty  
                       _ = p
-                      var try_19 EID 
-                      /*g_try(v2:"try_19",loop:false) */
-                      try_19 = Language.F_make_a_property_any(y)
-                      /* ERROR PROTECTION INSERTED (p-loop_11) */
-                      if ErrorIn(try_19) {loop_11 = try_19
+                      var try_17 EID 
+                      /*g_try(v2:"try_17",loop:false) */
+                      try_17 = Language.F_make_a_property_any(y)
+                      /* ERROR PROTECTION INSERTED (p-loop_9) */
+                      if ErrorIn(try_17) {loop_9 = try_17
                       } else {
-                      p = ToProperty(OBJ(try_19))
+                      p = ToProperty(OBJ(try_17))
                       { var _CL_obj *Language.Call_plus   = Language.To_Call_plus(new(Language.Call_plus).Is(Language.C_Call_plus))
                         _CL_obj.Selector = p
                         /*property->property*/_CL_obj.Args = MakeConstantList(x)
@@ -1333,17 +1071,17 @@ func (r *MetaReader ) Nextexp (str *ClaireBoolean ) EID {
                           /*property->property*/_CL_obj.Args = MakeConstantList(x)
                           /*list->list*/x = _CL_obj.Id()
                           } 
-                        loop_11 = x.ToEID()
+                        loop_9 = x.ToEID()
                         } else {
-                        loop_11 = EID{CFALSE.Id(),0}
+                        loop_9 = EID{CFALSE.Id(),0}
                         } 
                       }
                       } 
                     }
                     } 
                   } 
-                /* ERROR PROTECTION INSERTED (loop_11-Result) */
-                if ErrorIn(loop_11) {Result = loop_11
+                /* ERROR PROTECTION INSERTED (loop_9-Result) */
+                if ErrorIn(loop_9) {Result = loop_9
                 break
                 } else {
                 /* try?:false, v2:"v_while7" loop will be:tuple("Result", EID) */
@@ -1377,7 +1115,6 @@ func (r *MetaReader ) Readbracket (x *ClaireAny ) EID {
       if ErrorIn(try_1) {Result = try_1
       } else {
       l = ANY(try_1)
-      
       if ((C_class.Id() == x.Isa.Id()) && 
           ((x != C_type.Id()) && 
             (F_boolean_I_any(l) == CTRUE))) { 
@@ -1406,9 +1143,10 @@ func (r *MetaReader ) Readmap () EID {
       if ErrorIn(try_1) {Result = try_1
       } else {
       l1 = ANY(try_1)
+      
       /*g_try(v2:"Result",loop:true) */
       if !ANY(Core.F_CALL(C_length,ARGS(l1.ToEID()))).IsInt(2) { 
-        Result = F_Serror_string(MakeString("[XXX] map<~S> requires two types"),MakeConstantList(l1))
+        Result = F_Serror_string(MakeString("[XXX] map<~A requires two types"),MakeConstantList(l1))
         } else {
         Result = EID{CFALSE.Id(),0}
         } 
@@ -1463,18 +1201,7 @@ func (r *MetaReader ) Readmap () EID {
               va_arg1 = _CL_obj
               var try_7 EID 
               /*g_try(v2:"try_7",loop:false) */
-              { var arg_8 *ClaireAny  
-                _ = arg_8
-                var try_9 EID 
-                /*g_try(v2:"try_9",loop:false) */
-                try_9 = Core.F_CALL(C_nth,ARGS(l1.ToEID(),EID{C__INT,IVAL(2)}))
-                /* ERROR PROTECTION INSERTED (arg_8-try_7) */
-                if ErrorIn(try_9) {try_7 = try_9
-                } else {
-                arg_8 = ANY(try_9)
-                try_7 = Language.F_extract_type_any(arg_8)
-                }
-                } 
+              try_7 = Core.F_CALL(C_nth,ARGS(l1.ToEID(),EID{C__INT,IVAL(2)}))
               /* ERROR PROTECTION INSERTED (va_arg2-try_3) */
               if ErrorIn(try_7) {try_3 = try_7
               } else {
@@ -1498,47 +1225,47 @@ func (r *MetaReader ) Readmap () EID {
             _ = x
             Result= EID{CFALSE.Id(),0}
             var x_support *ClaireList  
-            var try_10 EID 
-            /*g_try(v2:"try_10",loop:false) */
-            try_10 = Core.F_enumerate_any(l2)
+            var try_8 EID 
+            /*g_try(v2:"try_8",loop:false) */
+            try_8 = Core.F_enumerate_any(l2)
             /* ERROR PROTECTION INSERTED (x_support-Result) */
-            if ErrorIn(try_10) {Result = try_10
+            if ErrorIn(try_8) {Result = try_8
             } else {
-            x_support = ToList(OBJ(try_10))
+            x_support = ToList(OBJ(try_8))
             x_len := x_support.Length()
             for i_it := 0; i_it < x_len; i_it++ { 
               x = x_support.At(i_it)
-              var loop_11 EID 
-              _ = loop_11
-              /*g_try(v2:"loop_11",loop:tuple("Result", EID)) */
+              var loop_9 EID 
+              _ = loop_9
+              /*g_try(v2:"loop_9",loop:tuple("Result", EID)) */
               if (x.Isa.IsIn(C_pair) == CTRUE) { 
-                { var g0036 *ClairePair   = ToPair(x)
-                  _ = g0036
+                { var g0013 *ClairePair   = ToPair(x)
+                  _ = g0013
                   { 
                     var va_arg1 *Language.Construct  
                     var va_arg2 *ClaireList  
                     va_arg1 = Language.To_Construct(m.Id())
-                    va_arg2 = m.Args.AddFast(g0036.Id())/*t=any,s=list*/
+                    va_arg2 = m.Args.AddFast(g0013.Id())/*t=any,s=list*/
                     va_arg1.Args = va_arg2
-                    /*list->list*/loop_11 = EID{va_arg2.Id(),0}
+                    /*list->list*/loop_9 = EID{va_arg2.Id(),0}
                     } 
                   } 
                 }  else if (x.Isa.IsIn(Language.C_Vardef) == CTRUE) { 
-                { var g0037 *Language.Vardef   = Language.To_Vardef(x)
+                { var g0014 *Language.Vardef   = Language.To_Vardef(x)
                   { 
                     var va_arg1 *Language.Construct  
                     var va_arg2 *ClaireList  
                     va_arg1 = Language.To_Construct(m.Id())
-                    va_arg2 = m.Args.AddFast(C_pair.Make(F_Reader_revVar_Vardef(g0037),g0037.Range.Id()))/*t=any,s=list*/
+                    va_arg2 = m.Args.AddFast(C_pair.Make(F_Reader_revVar_Vardef(g0014),g0014.Range.Id()))/*t=any,s=list*/
                     va_arg1.Args = va_arg2
-                    /*list->list*/loop_11 = EID{va_arg2.Id(),0}
+                    /*list->list*/loop_9 = EID{va_arg2.Id(),0}
                     } 
                   } 
                 } else {
-                loop_11 = F_Serror_string(MakeString("[XXX] ~S is not a pair a:b in map<~A>"),MakeConstantList(x,l1))
+                loop_9 = F_Serror_string(MakeString("~S in map<~A>(... is not a pair "),MakeConstantList(x,l1))
                 } 
-              /* ERROR PROTECTION INSERTED (loop_11-Result) */
-              if ErrorIn(loop_11) {Result = loop_11
+              /* ERROR PROTECTION INSERTED (loop_9-Result) */
+              if ErrorIn(loop_9) {Result = loop_9
               break
               } else {
               }}
@@ -1561,7 +1288,7 @@ func (r *MetaReader ) Readmap () EID {
 func E_Reader_readmap_meta_reader (r EID) EID { 
     return ToMetaReader(OBJ(r)).Readmap( )} 
   
-// reverse variable : if the symbol is known, return the symbol else an unbound symbl
+// returns to the original form from which the Vardef was created (name -> symbol)
 /* {1} The go function for: revVar(x:Vardef) [status=0] */
 func F_Reader_revVar_Vardef (x *Language.Vardef ) *ClaireAny  { 
     // procedure body with s = any 
@@ -1585,12 +1312,11 @@ func E_Reader_revVar_Vardef (x EID) EID {
     return F_Reader_revVar_Vardef(Language.To_Vardef(OBJ(x)) ).ToEID()} 
   
 // reads a compact expression that starts with an ident
+//
 /* {1} The go function for: nexti(r:meta_reader,val:any) [status=1] */
 func (r *MetaReader ) Nexti (val *ClaireAny ) EID { 
     var Result EID 
-    if (Equal(val,C_arrow.Value) == CTRUE) { 
-      Result = val.ToEID()
-      }  else if (r.Firstc() == 40) { 
+    if (r.Firstc() == 40) { 
       if ((val == C_forall.Id()) || 
           ((val == C_exists.Id()) || 
             (val == C_some.Id()))) { 
@@ -1633,7 +1359,7 @@ func (r *MetaReader ) Nexti (val *ClaireAny ) EID {
                 } else {
                 _Za3 = ANY(try_5)
                 Result = _Za3.ToEID()
-                var g0052I *ClaireBoolean  
+                var g0029I *ClaireBoolean  
                 var try_6 EID 
                 /*g_try(v2:"try_6",loop:false) */
                 { var arg_7 *ClaireAny  
@@ -1648,11 +1374,11 @@ func (r *MetaReader ) Nexti (val *ClaireAny ) EID {
                   try_6 = EID{Core.F__I_equal_any(arg_7,C_OR.Value).Id(),0}
                   }
                   } 
-                /* ERROR PROTECTION INSERTED (g0052I-Result) */
+                /* ERROR PROTECTION INSERTED (g0029I-Result) */
                 if ErrorIn(try_6) {Result = try_6
                 } else {
-                g0052I = ToBoolean(OBJ(try_6))
-                if (g0052I == CTRUE) { 
+                g0029I = ToBoolean(OBJ(try_6))
+                if (g0029I == CTRUE) { 
                   Result = F_Serror_string(MakeString("[155] missing | in exists / forall"),CNIL)
                   } else {
                   Result = EID{CFALSE.Id(),0}
@@ -1749,14 +1475,14 @@ func (r *MetaReader ) Nexti (val *ClaireAny ) EID {
         } else {
         s = ANY(try_10)
         if (s.Isa.IsIn(Language.C_Image) == CTRUE) { 
-          { var g0039 *Language.Image   = Language.To_Image(s)
-            g0039.Isa = Language.C_Collect
-            /*class->class*/Result = EID{g0039.Id(),0}
+          { var g0016 *Language.Image   = Language.To_Image(s)
+            g0016.Isa = Language.C_Collect
+            /*class->class*/Result = EID{g0016.Id(),0}
             } 
           }  else if (s.Isa.IsIn(Language.C_Select) == CTRUE) { 
-          { var g0040 *Language.Select   = Language.To_Select(s)
-            g0040.Isa = Language.C_Lselect
-            /*class->class*/Result = EID{g0040.Id(),0}
+          { var g0017 *Language.Select   = Language.To_Select(s)
+            g0017.Isa = Language.C_Lselect
+            /*class->class*/Result = EID{g0017.Id(),0}
             } 
           } else {
           Result = F_Serror_string(MakeString("[157] ~S cannot follow list{"),MakeConstantList(s))
@@ -1764,26 +1490,26 @@ func (r *MetaReader ) Nexti (val *ClaireAny ) EID {
         }
         } 
       } else {
-      var g0053I *ClaireBoolean  
+      var g0030I *ClaireBoolean  
       { 
         var v_and3 *ClaireBoolean  
         
         if (val.Isa.IsIn(Language.C_Call) == CTRUE) { 
-          { var g0042 *Language.Call   = Language.To_Call(val)
-            v_and3 = MakeBoolean((g0042.Selector.Id() == C_nth.Id()) && (g0042.Args.At(1-1) == C_list.Id()))
+          { var g0019 *Language.Call   = Language.To_Call(val)
+            v_and3 = MakeBoolean((g0019.Selector.Id() == C_nth.Id()) && (g0019.Args.At(1-1) == C_list.Id()))
             } 
           } else {
           v_and3 = CFALSE
           } 
-        if (v_and3 == CFALSE) {g0053I = CFALSE
+        if (v_and3 == CFALSE) {g0030I = CFALSE
         } else { 
           v_and3 = Equal(MakeInteger(r.Firstc()).Id(),MakeInteger(123).Id())
-          if (v_and3 == CFALSE) {g0053I = CFALSE
+          if (v_and3 == CFALSE) {g0030I = CFALSE
           } else { 
-            g0053I = CTRUE} 
+            g0030I = CTRUE} 
           } 
         } 
-      if (g0053I == CTRUE) { 
+      if (g0030I == CTRUE) { 
         { var s *ClaireAny  
           var try_13 EID 
           /*g_try(v2:"try_13",loop:false) */
@@ -1812,16 +1538,16 @@ func (r *MetaReader ) Nexti (val *ClaireAny ) EID {
             } else {
             x = ToType(OBJ(try_16))
             if (s.Isa.IsIn(Language.C_Image) == CTRUE) { 
-              { var g0044 *Language.Image   = Language.To_Image(s)
-                g0044.Isa = Language.C_Collect
-                /*class->class*/g0044.Of = x
-                /*type->type*/Result = EID{g0044.Id(),0}
+              { var g0021 *Language.Image   = Language.To_Image(s)
+                g0021.Isa = Language.C_Collect
+                /*class->class*/g0021.Of = x
+                /*type->type*/Result = EID{g0021.Id(),0}
                 } 
               }  else if (s.Isa.IsIn(Language.C_Select) == CTRUE) { 
-              { var g0045 *Language.Select   = Language.To_Select(s)
-                g0045.Isa = Language.C_Lselect
-                /*class->class*/g0045.Of = x
-                /*type->type*/Result = EID{g0045.Id(),0}
+              { var g0022 *Language.Select   = Language.To_Select(s)
+                g0022.Isa = Language.C_Lselect
+                /*class->class*/g0022.Of = x
+                /*type->type*/Result = EID{g0022.Id(),0}
                 } 
               } else {
               Result = F_Serror_string(MakeString("[157] ~S cannot follow list{"),MakeConstantList(s))
@@ -1831,26 +1557,26 @@ func (r *MetaReader ) Nexti (val *ClaireAny ) EID {
           }
           } 
         } else {
-        var g0054I *ClaireBoolean  
+        var g0031I *ClaireBoolean  
         { 
           var v_and4 *ClaireBoolean  
           
           if (val.Isa.IsIn(Language.C_Call) == CTRUE) { 
-            { var g0047 *Language.Call   = Language.To_Call(val)
-              v_and4 = MakeBoolean((g0047.Selector.Id() == C_nth.Id()) && (g0047.Args.At(1-1) == C_set.Id()))
+            { var g0024 *Language.Call   = Language.To_Call(val)
+              v_and4 = MakeBoolean((g0024.Selector.Id() == C_nth.Id()) && (g0024.Args.At(1-1) == C_set.Id()))
               } 
             } else {
             v_and4 = CFALSE
             } 
-          if (v_and4 == CFALSE) {g0054I = CFALSE
+          if (v_and4 == CFALSE) {g0031I = CFALSE
           } else { 
             v_and4 = Equal(MakeInteger(r.Firstc()).Id(),MakeInteger(123).Id())
-            if (v_and4 == CFALSE) {g0054I = CFALSE
+            if (v_and4 == CFALSE) {g0031I = CFALSE
             } else { 
-              g0054I = CTRUE} 
+              g0031I = CTRUE} 
             } 
           } 
-        if (g0054I == CTRUE) { 
+        if (g0031I == CTRUE) { 
           { var s *ClaireAny  
             var try_17 EID 
             /*g_try(v2:"try_17",loop:false) */
@@ -1879,14 +1605,14 @@ func (r *MetaReader ) Nexti (val *ClaireAny ) EID {
               } else {
               x = ToType(OBJ(try_20))
               if (s.Isa.IsIn(Language.C_Image) == CTRUE) { 
-                { var g0049 *Language.Image   = Language.To_Image(s)
-                  g0049.Of = x
-                  /*type->type*/Result = EID{g0049.Id(),0}
+                { var g0026 *Language.Image   = Language.To_Image(s)
+                  g0026.Of = x
+                  /*type->type*/Result = EID{g0026.Id(),0}
                   } 
                 }  else if (s.Isa.IsIn(Language.C_Select) == CTRUE) { 
-                { var g0050 *Language.Select   = Language.To_Select(s)
-                  g0050.Of = x
-                  /*type->type*/Result = EID{g0050.Id(),0}
+                { var g0027 *Language.Select   = Language.To_Select(s)
+                  g0027.Of = x
+                  /*type->type*/Result = EID{g0027.Id(),0}
                   } 
                 } else {
                 Result = F_Serror_string(MakeString("[157] ~S cannot follow list{"),MakeConstantList(s))
@@ -2085,7 +1811,7 @@ func (r *MetaReader ) Nexte_I (e *ClaireKeyword ) EID {
       if ErrorIn(try_1) {Result = try_1
       } else {
       x = ANY(try_1)
-      var g0055I *ClaireBoolean  
+      var g0032I *ClaireBoolean  
       var try_2 EID 
       /*g_try(v2:"try_2",loop:false) */
       { var arg_3 *ClaireAny  
@@ -2100,11 +1826,11 @@ func (r *MetaReader ) Nexte_I (e *ClaireKeyword ) EID {
         try_2 = EID{Equal(arg_3,e.Id()).Id(),0}
         }
         } 
-      /* ERROR PROTECTION INSERTED (g0055I-Result) */
+      /* ERROR PROTECTION INSERTED (g0032I-Result) */
       if ErrorIn(try_2) {Result = try_2
       } else {
-      g0055I = ToBoolean(OBJ(try_2))
-      if (g0055I == CTRUE) { 
+      g0032I = ToBoolean(OBJ(try_2))
+      if (g0032I == CTRUE) { 
         Result = x.ToEID()
         } else {
         Result = F_Serror_string(MakeString("[161] Missing keyword ~S after ~S"),MakeConstantList(e.Id(),x))
@@ -2187,10 +1913,10 @@ var Result *ClaireBoolean
           _ = arg_1
           { var i int  = 2
             _ = i
-            { var g0056 int  = n
-              _ = g0056
+            { var g0033 int  = n
+              _ = g0033
               arg_1= CFALSE.Id()
-              for (i <= g0056) { 
+              for (i <= g0033) { 
                 /* While stat, v:"arg_1" loop:false */
                 if (s.At(n) == '[') { 
                   arg_1 = CTRUE.Id()
@@ -2238,9 +1964,9 @@ func (r *MetaReader ) ExtendedComment_I (s *ClaireString ) EID {
                 (s.At(i) == '?')) { 
               PRINC("assert(")
               { var j int  = (i+2)
-                { var g0058 int  = m
-                  _ = g0058
-                  for (j <= g0058) { 
+                { var g0035 int  = m
+                  _ = g0035
+                  for (j <= g0035) { 
                     /* While stat, v:"Result" loop:true */
                     F_princ_char(s.At(j))
                     j = (j+1)
@@ -2252,9 +1978,9 @@ func (r *MetaReader ) ExtendedComment_I (s *ClaireString ) EID {
               } else {
               PRINC("trace(")
               { var j int  = 2
-                { var g0059 int  = (i-1)
-                  _ = g0059
-                  for (j <= g0059) { 
+                { var g0036 int  = (i-1)
+                  _ = g0036
+                  for (j <= g0036) { 
                     /* While stat, v:"Result" loop:true */
                     F_princ_char(s.At(j))
                     j = (j+1)
@@ -2264,9 +1990,9 @@ func (r *MetaReader ) ExtendedComment_I (s *ClaireString ) EID {
                 } 
               PRINC(",\"")
               { var j int  = (i+2)
-                { var g0060 int  = (k-1)
-                  _ = g0060
-                  for (j <= g0060) { 
+                { var g0037 int  = (k-1)
+                  _ = g0037
+                  for (j <= g0037) { 
                     /* While stat, v:"Result" loop:true */
                     F_princ_char(s.At(j))
                     j = (j+1)
@@ -2278,9 +2004,9 @@ func (r *MetaReader ) ExtendedComment_I (s *ClaireString ) EID {
               if ((k+3) <= m) { 
                 PRINC(",")
                 { var j int  = (k+3)
-                  { var g0061 int  = m
-                    _ = g0061
-                    for (j <= g0061) { 
+                  { var g0038 int  = m
+                    _ = g0038
+                    for (j <= g0038) { 
                       /* While stat, v:"Result" loop:true */
                       F_princ_char(s.At(j))
                       j = (j+1)

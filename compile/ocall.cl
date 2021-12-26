@@ -440,9 +440,9 @@ c_code_not(x:Select) : any
          y := self.args[3] in
        (if (p % OPT.to_remove) nil
         else if (sp = put |
-                 ((c_type(x) <= p.domain | compiler.safety >= 2) &
-                  (c_type(y) <= p.range | compiler.safety >= 2)))
-           (if (Update?(p, x, y) & (p.params % list | p.params % integer))        // check that we know how to manage in gostat.cl
+                 ((c_type(x) <= p.domain | compiler.safety >= 3) &
+                  (c_type(y) <= p.range | compiler.safety >= 3)))
+           (if (Update?(p, x, y) & (p.params % list | p.params % integer) & compiler.safety >= 3)        // check that we know how to manage in gostat.cl
                let %x := c_code(x, any),
                    %y := c_code(y, any) in
                  Update(selector = p, value = %y,

@@ -268,7 +268,7 @@ claire/BadMethods:list<method> :: unknown
      printf("/***** CLAIRE Compilation of ~A ~A.cl \n         [version ~A / safety ~S] ~A *****/\n\n",
             (if module? "module" else "file"), s, 
             release(),compiler.safety,
-            substring(date!(1),1,24)),
+            date!(0)),
      namespace!(p,m),
      printf("import (_ \"fmt\"\n"),
      if module? 

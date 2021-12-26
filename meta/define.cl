@@ -706,7 +706,7 @@ claire/interface(c:class,l:listargs) : void
 // we perform an on-the-fly optimization of lambdas through substitution (static calls)
 // Jito(l:lambda) -> apply makeJito to the body (in place substitution)
 [jito(self:any) : any
--> if (not(VARIANT) | system.Core/debug! >= 0) self
+-> if (not(jito?()) | system.Core/debug! >= 0) self
    else case self
       (list for x in self jito(x),
        Vardef (put(isa,self,Variable), self),
@@ -736,7 +736,7 @@ claire/interface(c:class,l:listargs) : void
        Definition (if fast_definition?(self.arg) put(isa,self,DefFast)),        
        any false) ]
 
- claire/VARIANT:boolean := true         // debug to remove, replace by jito?()
+ // claire/VARIANT:boolean := true         // debug to remove, replace by jito?()
 
  // Let is special in CLAIRE4 : we implement the implicit typing found in the compiler = to infer
  // the type  from the value (when no range is given)
@@ -760,6 +760,7 @@ claire/interface(c:class,l:listargs) : void
 //   - all domains are classes => class match
 //   - the only one match is a compiled method
 //   - the property is static (open = 1, vs extensible) and not too many restrictions
+// note: the 12 hard limit is to avoid spending too much time with self_print or equivalent methods ... it is arbitrary
 [makeJito(self:Call) : void
   -> jito(self.args),
      let p := self.selector, larg := self.args, n := length(larg), m := unknown in
@@ -767,7 +768,7 @@ claire/interface(c:class,l:listargs) : void
                   (case p2 (property (unknown?(inverse,p2) & not(p2.store?) & unknown?(if_write,p2)), 
                             any false))))
            (p := write_fast, self.selector := write_fast),
-        if (p.open <= 1 & length(p.restrictions) <= 10 & 
+        if (p.open <= 1 & length(p.restrictions) <= 12 & 
             forall(x in p.restrictions | forall(t in x.domain | t % class)))
           let lt := list{static_type(x) | x in larg} in
             (trace(3,"-- call jito: ~S : ~S\n",self,lt),

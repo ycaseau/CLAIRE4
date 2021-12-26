@@ -68,6 +68,17 @@ c_type(self:Set) : type
 [c_code(self:Tuple) : any
  -> Tuple(args = list{ c_code(%x,any) | %x in self.args}) ]
 
+// CLAIRE 4: extended to maps
+[c_type(self:Map) : type -> map_set]
+
+// macroexpension of the 
+[c_code(self:Map) : any
+  -> let %v:Variable := Variable!(*name*, 0, map_set) in
+       c_code(Let(var = %v,
+                   value = c_code(Call(mClaire/map!, list(domain(self), of(self)))),
+                   arg = Do(args = add(list{  Call(put,list(%v,(x as pair).first, (x as pair).second)) |
+                                              x in self.args}, %v))),
+              map_set)]
 
 // ******************************************************************
 // *      Part 2: Compiling Definitions                             *

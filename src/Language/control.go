@@ -1,5 +1,5 @@
-/***** CLAIRE Compilation of file /Users/ycaseau/claire/v4.0/meta/control.cl 
-         [version 4.0.02 / safety 5] Friday 12-24-2021 *****/
+/***** CLAIRE Compilation of file /Users/ycaseau/Dropbox/src/clairev4.03/src/meta/control.cl 
+         [version 4.0.04 / safety 5] Sunday 12-26-2021 17:16:09 *****/
 
 package Language
 import (_ "fmt"
@@ -8,7 +8,7 @@ import (_ "fmt"
 )
 
 //-------- dumb function to prevent import errors --------
-func import_g0125() { 
+func import_g0124() { 
     _ = Core.It
     } 
   
@@ -133,7 +133,7 @@ func (self *If ) Printelse () EID {
     var Result EID 
     { var e *ClaireAny   = self.Other
       if (e.Isa.IsIn(C_If) == CTRUE) { 
-        { var g0131 *If   = To_If(e)
+        { var g0130 *If   = To_If(e)
           PRINC(" ")
           /*g_try(v2:"Result",loop:true) */
           Result = F_lbreak_void()
@@ -141,17 +141,17 @@ func (self *If ) Printelse () EID {
           if !ErrorIn(Result) {
           PRINC("else if ")
           /*g_try(v2:"Result",loop:true) */
-          Result = F_printexp_any(g0131.Test,CFALSE)
+          Result = F_printexp_any(g0130.Test,CFALSE)
           /* ERROR PROTECTION INSERTED (Result-Result) */
           if !ErrorIn(Result) {
           PRINC(" ")
           /*g_try(v2:"Result",loop:true) */
-          Result = F_printif_any(g0131.Arg)
+          Result = F_printif_any(g0130.Arg)
           /* ERROR PROTECTION INSERTED (Result-Result) */
           if !ErrorIn(Result) {
           Core.C_pretty.Index = (Core.C_pretty.Index-3)
           /*integer->integer*//*g_try(v2:"Result",loop:true) */
-          Result = g0131.Printelse()
+          Result = g0130.Printelse()
           /* ERROR PROTECTION INSERTED (Result-Result) */
           if !ErrorIn(Result) {
           PRINC("")
@@ -280,9 +280,9 @@ func F_printdo_list (l *ClaireList ,clo *ClaireBoolean ) EID {
           { 
           /*g_try(v2:"loop_1",loop:tuple("Result", EID)) */
           if (x.Isa.IsIn(C_If) == CTRUE) { 
-            { var g0133 *If   = To_If(x)
-              _ = g0133
-              loop_1 = g0133.Printstat()
+            { var g0132 *If   = To_If(x)
+              _ = g0132
+              loop_1 = g0132.Printstat()
               } 
             } else {
             loop_1 = Core.F_CALL(C_print,ARGS(x.ToEID()))
@@ -329,14 +329,14 @@ func E_printdo_list (l EID,clo EID) EID {
 func F_printblock_any (x *ClaireAny ) EID { 
     var Result EID 
     if (x.Isa.IsIn(C_Do) == CTRUE) { 
-      { var g0135 *Do   = To_Do(x)
-        _ = g0135
-        Result = F_printdo_list(g0135.Args,CFALSE)
+      { var g0134 *Do   = To_Do(x)
+        _ = g0134
+        Result = F_printdo_list(g0134.Args,CFALSE)
         } 
       }  else if (x.Isa.IsIn(C_If) == CTRUE) { 
-      { var g0136 *If   = To_If(x)
-        _ = g0136
-        Result = g0136.Printstat()
+      { var g0135 *If   = To_If(x)
+        _ = g0135
+        Result = g0135.Printstat()
         } 
       } else {
       Result = Core.F_CALL(C_print,ARGS(x.ToEID()))
@@ -440,24 +440,24 @@ func (self *Let ) Printbody () EID {
     var Result EID 
     { var a *ClaireAny   = self.Arg
       if (a.Isa.IsIn(C_Let) == CTRUE) { 
-        { var g0139 *Let   = To_Let(a)
+        { var g0138 *Let   = To_Let(a)
           PRINC(",")
           /*g_try(v2:"Result",loop:true) */
           Result = F_lbreak_integer(4)
           /* ERROR PROTECTION INSERTED (Result-Result) */
           if !ErrorIn(Result) {
           /*g_try(v2:"Result",loop:true) */
-          Result = F_ppvariable_Variable(g0139.ClaireVar)
+          Result = F_ppvariable_Variable(g0138.ClaireVar)
           /* ERROR PROTECTION INSERTED (Result-Result) */
           if !ErrorIn(Result) {
           PRINC(" := ")
           /*g_try(v2:"Result",loop:true) */
-          Result = F_printexp_any(g0139.Value,CFALSE)
+          Result = F_printexp_any(g0138.Value,CFALSE)
           /* ERROR PROTECTION INSERTED (Result-Result) */
           if !ErrorIn(Result) {
           Core.C_pretty.Index = (Core.C_pretty.Index-4)
           /*integer->integer*//*g_try(v2:"Result",loop:true) */
-          Result = g0139.Printbody()
+          Result = g0138.Printbody()
           /* ERROR PROTECTION INSERTED (Result-Result) */
           if !ErrorIn(Result) {
           PRINC("")
@@ -701,15 +701,15 @@ func (self *Let_star ) SelfPrint () EID {
             break
             } else {
             { var lnext *ClaireAny   = ANY(Core.F_CALL(C_arg,ARGS(l.ToEID())))
-              var g0142I *ClaireBoolean  
+              var g0141I *ClaireBoolean  
               if (lnext.Isa.IsIn(C_Let) == CTRUE) { 
-                { var g0141 *Let   = To_Let(lnext)
-                  g0142I = MakeBoolean((g0141.Value.Isa.IsIn(C_Call) == CTRUE) && (ToList(OBJ(Core.F_CALL(C_args,ARGS(g0141.Value.ToEID())))).At(1-1) == self.ClaireVar.Id()))
+                { var g0140 *Let   = To_Let(lnext)
+                  g0141I = MakeBoolean((g0140.Value.Isa.IsIn(C_Call) == CTRUE) && (ToList(OBJ(Core.F_CALL(C_args,ARGS(g0140.Value.ToEID())))).At(1-1) == self.ClaireVar.Id()))
                   } 
                 } else {
-                g0142I = CFALSE
+                g0141I = CFALSE
                 } 
-              if (g0142I == CTRUE) { 
+              if (g0141I == CTRUE) { 
                 PRINC(",")
                 l = lnext
                 } else {
@@ -878,15 +878,15 @@ func (self *For ) SelfEval () EID {
         h_index := ClEnv.Index
         h_base := ClEnv.Base
         if (C_class.Id() == x.Isa.Id()) { 
-          { var g0145 *ClaireClass   = ToClass(x)
-            _ = g0145
+          { var g0144 *ClaireClass   = ToClass(x)
+            _ = g0144
             { 
               var y *ClaireClass  
               _ = y
               var y_iter *ClaireAny  
               Result= EID{CFALSE.Id(),0}
               var y_support *ClaireSet  
-              y_support = g0145.Descendents
+              y_support = g0144.Descendents
               for i_it := 0; i_it < y_support.Count; i_it++ { 
                 y_iter = y_support.At(i_it)
                 y = ToClass(y_iter)
@@ -930,14 +930,14 @@ func (self *For ) SelfEval () EID {
               } 
             } 
           }  else if (x.Isa.IsIn(C_list) == CTRUE) { 
-          { var g0146 *ClaireList   = ToList(x)
-            _ = g0146
+          { var g0145 *ClaireList   = ToList(x)
+            _ = g0145
             { 
               var z *ClaireAny  
               _ = z
               Result= EID{CFALSE.Id(),0}
               var z_support *ClaireList  
-              z_support = g0146
+              z_support = g0145
               z_len := z_support.Length()
               for i_it := 0; i_it < z_len; i_it++ { 
                 z = z_support.At(i_it)
@@ -962,20 +962,20 @@ func (self *For ) SelfEval () EID {
               } 
             } 
           }  else if (x.Isa.IsIn(C_array) == CTRUE) { 
-          { var g0147 *ClaireList   = ToArray(x)
-            { var n int  = g0147.Length()
+          { var g0146 *ClaireList   = ToArray(x)
+            { var n int  = g0146.Length()
               _ = n
-              { var g0148 int  = 1
-                { var g0149 int  = n
-                  _ = g0149
+              { var g0147 int  = 1
+                { var g0148 int  = n
+                  _ = g0148
                   Result= EID{CFALSE.Id(),0}
-                  for (g0148 <= g0149) { 
+                  for (g0147 <= g0148) { 
                     /* While stat, v:"Result" loop:false */
                     var loop_5 EID 
                     _ = loop_5
                     { 
                     /*g_try(v2:"loop_5",loop:tuple("Result", EID)) */
-                    { var z *ClaireAny   = ToList(g0147.Id()).At(g0148-1)
+                    { var z *ClaireAny   = ToList(g0146.Id()).At(g0147-1)
                       _ = z
                       /*g_try(v2:"loop_5",loop:tuple("Result", EID)) */
                       loop_5 = F_write_value_Variable(self.ClaireVar,z)
@@ -995,7 +995,7 @@ func (self *For ) SelfEval () EID {
                     if ErrorIn(loop_5) {Result = loop_5
                     break
                     } else {
-                    g0148 = (g0148+1)
+                    g0147 = (g0147+1)
                     }
                     /* try?:false, v2:"v_while9" loop will be:tuple("Result", EID) */
                     } 
@@ -1005,12 +1005,12 @@ func (self *For ) SelfEval () EID {
               } 
             } 
           }  else if (x.Isa.IsIn(C_Interval) == CTRUE) { 
-          { var g0150 *ClaireInterval   = To_Interval(x)
-            { var y int  = g0150.Arg1
-              { var g0151 int  = g0150.Arg2
-                _ = g0151
+          { var g0149 *ClaireInterval   = To_Interval(x)
+            { var y int  = g0149.Arg1
+              { var g0150 int  = g0149.Arg2
+                _ = g0150
                 Result= EID{CFALSE.Id(),0}
-                for (y <= g0151) { 
+                for (y <= g0150) { 
                   /* While stat, v:"Result" loop:false */
                   var loop_6 EID 
                   _ = loop_6
@@ -1042,8 +1042,8 @@ func (self *For ) SelfEval () EID {
               } 
             } 
           }  else if (x.Isa.IsIn(C_collection) == CTRUE) { 
-          { var g0152 *ClaireCollection   = ToCollection(x)
-            _ = g0152
+          { var g0151 *ClaireCollection   = ToCollection(x)
+            _ = g0151
             { 
               var y *ClaireAny  
               _ = y
@@ -1051,7 +1051,7 @@ func (self *For ) SelfEval () EID {
               var y_support *ClaireList  
               var try_7 EID 
               /*g_try(v2:"try_7",loop:false) */
-              try_7 = Core.F_enumerate_any(g0152.Id())
+              try_7 = Core.F_enumerate_any(g0151.Id())
               /* ERROR PROTECTION INSERTED (y_support-Result) */
               if ErrorIn(try_7) {Result = try_7
               } else {
@@ -1175,15 +1175,15 @@ func (self *Collect ) SelfEval () EID {
           } 
         /*g_try(v2:"Result",loop:true) */
         if (C_class.Id() == x.Isa.Id()) { 
-          { var g0155 *ClaireClass   = ToClass(x)
-            _ = g0155
+          { var g0154 *ClaireClass   = ToClass(x)
+            _ = g0154
             { 
               var y *ClaireClass  
               _ = y
               var y_iter *ClaireAny  
               Result= EID{CFALSE.Id(),0}
               var y_support *ClaireSet  
-              y_support = g0155.Descendents
+              y_support = g0154.Descendents
               for i_it := 0; i_it < y_support.Count; i_it++ { 
                 y_iter = y_support.At(i_it)
                 y = ToClass(y_iter)
@@ -1242,14 +1242,14 @@ func (self *Collect ) SelfEval () EID {
               } 
             } 
           }  else if (x.Isa.IsIn(C_list) == CTRUE) { 
-          { var g0156 *ClaireList   = ToList(x)
-            _ = g0156
+          { var g0155 *ClaireList   = ToList(x)
+            _ = g0155
             { 
               var y *ClaireAny  
               _ = y
               Result= EID{CFALSE.Id(),0}
               var y_support *ClaireList  
-              y_support = g0156
+              y_support = g0155
               y_len := y_support.Length()
               for i_it := 0; i_it < y_len; i_it++ { 
                 y = y_support.At(i_it)
@@ -1289,12 +1289,12 @@ func (self *Collect ) SelfEval () EID {
               } 
             } 
           }  else if (x.Isa.IsIn(C_Interval) == CTRUE) { 
-          { var g0157 *ClaireInterval   = To_Interval(x)
-            { var y int  = g0157.Arg1
-              { var g0158 int  = g0157.Arg2
-                _ = g0158
+          { var g0156 *ClaireInterval   = To_Interval(x)
+            { var y int  = g0156.Arg1
+              { var g0157 int  = g0156.Arg2
+                _ = g0157
                 Result= EID{CFALSE.Id(),0}
-                for (y <= g0158) { 
+                for (y <= g0157) { 
                   /* While stat, v:"Result" loop:true */
                   var loop_12 EID 
                   _ = loop_12
@@ -1634,15 +1634,15 @@ func (self *Select ) SelfEval () EID {
           } 
         /*g_try(v2:"Result",loop:true) */
         if (C_class.Id() == x.Isa.Id()) { 
-          { var g0162 *ClaireClass   = ToClass(x)
-            _ = g0162
+          { var g0161 *ClaireClass   = ToClass(x)
+            _ = g0161
             { 
               var y *ClaireClass  
               _ = y
               var y_iter *ClaireAny  
               Result= EID{CFALSE.Id(),0}
               var y_support *ClaireSet  
-              y_support = g0162.Descendents
+              y_support = g0161.Descendents
               for i_it := 0; i_it < y_support.Count; i_it++ { 
                 y_iter = y_support.At(i_it)
                 y = ToClass(y_iter)
@@ -1668,7 +1668,7 @@ func (self *Select ) SelfEval () EID {
                     break
                     } else {
                     /*g_try(v2:"loop_4",loop:tuple("loop_3", EID)) */
-                    var g0166I *ClaireBoolean  
+                    var g0165I *ClaireBoolean  
                     var try_5 EID 
                     /*g_try(v2:"try_5",loop:false) */
                     { var arg_6 *ClaireAny  
@@ -1683,11 +1683,11 @@ func (self *Select ) SelfEval () EID {
                       try_5 = EID{Core.F__I_equal_any(arg_6,CFALSE.Id()).Id(),0}
                       }
                       } 
-                    /* ERROR PROTECTION INSERTED (g0166I-loop_4) */
+                    /* ERROR PROTECTION INSERTED (g0165I-loop_4) */
                     if ErrorIn(try_5) {loop_4 = try_5
                     } else {
-                    g0166I = ToBoolean(OBJ(try_5))
-                    if (g0166I == CTRUE) { 
+                    g0165I = ToBoolean(OBJ(try_5))
+                    if (g0165I == CTRUE) { 
                       res = res.AddFast(z)/*t=any,s=set*/
                       loop_4 = EID{res.Id(),0}
                       } else {
@@ -1711,12 +1711,12 @@ func (self *Select ) SelfEval () EID {
               } 
             } 
           }  else if (x.Isa.IsIn(C_Interval) == CTRUE) { 
-          { var g0163 *ClaireInterval   = To_Interval(x)
-            { var y int  = g0163.Arg1
-              { var g0164 int  = g0163.Arg2
-                _ = g0164
+          { var g0162 *ClaireInterval   = To_Interval(x)
+            { var y int  = g0162.Arg1
+              { var g0163 int  = g0162.Arg2
+                _ = g0163
                 Result= EID{CFALSE.Id(),0}
-                for (y <= g0164) { 
+                for (y <= g0163) { 
                   /* While stat, v:"Result" loop:true */
                   var loop_8 EID 
                   _ = loop_8
@@ -1729,7 +1729,7 @@ func (self *Select ) SelfEval () EID {
                   break
                   } else {
                   /*g_try(v2:"loop_8",loop:tuple("Result", EID)) */
-                  var g0167I *ClaireBoolean  
+                  var g0166I *ClaireBoolean  
                   var try_9 EID 
                   /*g_try(v2:"try_9",loop:false) */
                   { var arg_10 *ClaireAny  
@@ -1744,11 +1744,11 @@ func (self *Select ) SelfEval () EID {
                     try_9 = EID{Core.F__I_equal_any(arg_10,CFALSE.Id()).Id(),0}
                     }
                     } 
-                  /* ERROR PROTECTION INSERTED (g0167I-loop_8) */
+                  /* ERROR PROTECTION INSERTED (g0166I-loop_8) */
                   if ErrorIn(try_9) {loop_8 = try_9
                   } else {
-                  g0167I = ToBoolean(OBJ(try_9))
-                  if (g0167I == CTRUE) { 
+                  g0166I = ToBoolean(OBJ(try_9))
+                  if (g0166I == CTRUE) { 
                     res = res.AddFast(MakeInteger(y).Id())/*t=any,s=set*/
                     loop_8 = EID{res.Id(),0}
                     } else {
@@ -1798,7 +1798,7 @@ func (self *Select ) SelfEval () EID {
               break
               } else {
               /*g_try(v2:"loop_13",loop:tuple("Result", EID)) */
-              var g0168I *ClaireBoolean  
+              var g0167I *ClaireBoolean  
               var try_14 EID 
               /*g_try(v2:"try_14",loop:false) */
               { var arg_15 *ClaireAny  
@@ -1813,11 +1813,11 @@ func (self *Select ) SelfEval () EID {
                 try_14 = EID{Core.F__I_equal_any(arg_15,CFALSE.Id()).Id(),0}
                 }
                 } 
-              /* ERROR PROTECTION INSERTED (g0168I-loop_13) */
+              /* ERROR PROTECTION INSERTED (g0167I-loop_13) */
               if ErrorIn(try_14) {loop_13 = try_14
               } else {
-              g0168I = ToBoolean(OBJ(try_14))
-              if (g0168I == CTRUE) { 
+              g0167I = ToBoolean(OBJ(try_14))
+              if (g0167I == CTRUE) { 
                 res = res.AddFast(y)/*t=any,s=set*/
                 loop_13 = EID{res.Id(),0}
                 } else {
@@ -1925,24 +1925,24 @@ func (self *Lselect ) SelfEval () EID {
       x = ANY(try_1)
       { var res *ClaireList  
         if (x.Isa.IsIn(C_list) == CTRUE) { 
-          { var g0170 *ClaireList   = ToList(x)
-            _ = g0170
-            res = g0170.Empty()
+          { var g0169 *ClaireList   = ToList(x)
+            _ = g0169
+            res = g0169.Empty()
             } 
           } else {
           res = ToType(CEMPTY.Id()).EmptyList()
           } 
         /*g_try(v2:"Result",loop:true) */
         if (C_class.Id() == x.Isa.Id()) { 
-          { var g0172 *ClaireClass   = ToClass(x)
-            _ = g0172
+          { var g0171 *ClaireClass   = ToClass(x)
+            _ = g0171
             { 
               var y *ClaireClass  
               _ = y
               var y_iter *ClaireAny  
               Result= EID{CFALSE.Id(),0}
               var y_support *ClaireSet  
-              y_support = g0172.Descendents
+              y_support = g0171.Descendents
               for i_it := 0; i_it < y_support.Count; i_it++ { 
                 y_iter = y_support.At(i_it)
                 y = ToClass(y_iter)
@@ -1968,7 +1968,7 @@ func (self *Lselect ) SelfEval () EID {
                     break
                     } else {
                     /*g_try(v2:"loop_3",loop:tuple("loop_2", EID)) */
-                    var g0174I *ClaireBoolean  
+                    var g0173I *ClaireBoolean  
                     var try_4 EID 
                     /*g_try(v2:"try_4",loop:false) */
                     { var arg_5 *ClaireAny  
@@ -1983,11 +1983,11 @@ func (self *Lselect ) SelfEval () EID {
                       try_4 = EID{Core.F__I_equal_any(arg_5,CFALSE.Id()).Id(),0}
                       }
                       } 
-                    /* ERROR PROTECTION INSERTED (g0174I-loop_3) */
+                    /* ERROR PROTECTION INSERTED (g0173I-loop_3) */
                     if ErrorIn(try_4) {loop_3 = try_4
                     } else {
-                    g0174I = ToBoolean(OBJ(try_4))
-                    if (g0174I == CTRUE) { 
+                    g0173I = ToBoolean(OBJ(try_4))
+                    if (g0173I == CTRUE) { 
                       res = res.AddFast(z)/*t=any,s=list*/
                       loop_3 = EID{res.Id(),0}
                       } else {
@@ -2036,7 +2036,7 @@ func (self *Lselect ) SelfEval () EID {
               break
               } else {
               /*g_try(v2:"loop_8",loop:tuple("Result", EID)) */
-              var g0175I *ClaireBoolean  
+              var g0174I *ClaireBoolean  
               var try_9 EID 
               /*g_try(v2:"try_9",loop:false) */
               { var arg_10 *ClaireAny  
@@ -2051,11 +2051,11 @@ func (self *Lselect ) SelfEval () EID {
                 try_9 = EID{Core.F__I_equal_any(arg_10,CFALSE.Id()).Id(),0}
                 }
                 } 
-              /* ERROR PROTECTION INSERTED (g0175I-loop_8) */
+              /* ERROR PROTECTION INSERTED (g0174I-loop_8) */
               if ErrorIn(try_9) {loop_8 = try_9
               } else {
-              g0175I = ToBoolean(OBJ(try_9))
-              if (g0175I == CTRUE) { 
+              g0174I = ToBoolean(OBJ(try_9))
+              if (g0174I == CTRUE) { 
                 res = res.AddFast(y)/*t=any,s=list*/
                 loop_8 = EID{res.Id(),0}
                 } else {
@@ -2234,15 +2234,15 @@ func (self *Exists ) SelfEval () EID {
           _ = res
           /*g_try(v2:"Result",loop:true) */
           if (C_class.Id() == x.Isa.Id()) { 
-            { var g0177 *ClaireClass   = ToClass(x)
-              _ = g0177
+            { var g0176 *ClaireClass   = ToClass(x)
+              _ = g0176
               { 
                 var y *ClaireClass  
                 _ = y
                 var y_iter *ClaireAny  
                 Result= EID{CFALSE.Id(),0}
                 var y_support *ClaireSet  
-                y_support = g0177.Descendents
+                y_support = g0176.Descendents
                 for i_it := 0; i_it < y_support.Count; i_it++ { 
                   y_iter = y_support.At(i_it)
                   y = ToClass(y_iter)
@@ -2268,7 +2268,7 @@ func (self *Exists ) SelfEval () EID {
                       break
                       } else {
                       /*g_try(v2:"loop_3",loop:tuple("loop_2", EID)) */
-                      var g0179I *ClaireBoolean  
+                      var g0178I *ClaireBoolean  
                       var try_4 EID 
                       /*g_try(v2:"try_4",loop:false) */
                       { var arg_5 *ClaireAny  
@@ -2283,11 +2283,11 @@ func (self *Exists ) SelfEval () EID {
                         try_4 = EID{Core.F__I_equal_any(arg_5,CFALSE.Id()).Id(),0}
                         }
                         } 
-                      /* ERROR PROTECTION INSERTED (g0179I-loop_3) */
+                      /* ERROR PROTECTION INSERTED (g0178I-loop_3) */
                       if ErrorIn(try_4) {loop_3 = try_4
                       } else {
-                      g0179I = ToBoolean(OBJ(try_4))
-                      if (g0179I == CTRUE) { 
+                      g0178I = ToBoolean(OBJ(try_4))
+                      if (g0178I == CTRUE) { 
                         if (b != CTRUE.Id()) { 
                           res = IfThenElse((F_boolean_I_any(b) == CTRUE),
                             z,
@@ -2347,7 +2347,7 @@ func (self *Exists ) SelfEval () EID {
                 break
                 } else {
                 /*g_try(v2:"loop_8",loop:tuple("Result", EID)) */
-                var g0180I *ClaireBoolean  
+                var g0179I *ClaireBoolean  
                 var try_9 EID 
                 /*g_try(v2:"try_9",loop:false) */
                 { var arg_10 *ClaireAny  
@@ -2362,11 +2362,11 @@ func (self *Exists ) SelfEval () EID {
                   try_9 = EID{Core.F__I_equal_any(arg_10,CFALSE.Id()).Id(),0}
                   }
                   } 
-                /* ERROR PROTECTION INSERTED (g0180I-loop_8) */
+                /* ERROR PROTECTION INSERTED (g0179I-loop_8) */
                 if ErrorIn(try_9) {loop_8 = try_9
                 } else {
-                g0180I = ToBoolean(OBJ(try_9))
-                if (g0180I == CTRUE) { 
+                g0179I = ToBoolean(OBJ(try_9))
+                if (g0179I == CTRUE) { 
                   if (b != CTRUE.Id()) { 
                     res = IfThenElse((F_boolean_I_any(b) == CTRUE),
                       y,
@@ -2557,7 +2557,7 @@ func (self *Case ) SelfEval () EID {
       { var flip *ClaireBoolean   = CTRUE
         _ = flip
         { var previous *ClaireAny   = CFALSE.Id()
-          var g0183I *ClaireBoolean  
+          var g0182I *ClaireBoolean  
           var try_2 EID 
           /*g_try(v2:"try_2",loop:false) */
           { 
@@ -2586,15 +2586,15 @@ func (self *Case ) SelfEval () EID {
                 loop_3 = previous.ToEID()
                 }
                 } else {
-                var g0184I *ClaireBoolean  
+                var g0183I *ClaireBoolean  
                 var try_5 EID 
                 /*g_try(v2:"try_5",loop:false) */
                 try_5 = Core.F_BELONG(truc,previous)
-                /* ERROR PROTECTION INSERTED (g0184I-loop_3) */
+                /* ERROR PROTECTION INSERTED (g0183I-loop_3) */
                 if ErrorIn(try_5) {loop_3 = try_5
                 } else {
-                g0184I = ToBoolean(OBJ(try_5))
-                if (g0184I == CTRUE) { 
+                g0183I = ToBoolean(OBJ(try_5))
+                if (g0183I == CTRUE) { 
                   var try_6 EID 
                   /*g_try(v2:"try_6",loop:tuple("try_2", EID)) */
                   try_6 = EVAL(x)
@@ -2621,11 +2621,11 @@ func (self *Case ) SelfEval () EID {
               }
               } 
             } 
-          /* ERROR PROTECTION INSERTED (g0183I-Result) */
+          /* ERROR PROTECTION INSERTED (g0182I-Result) */
           if ErrorIn(try_2) {Result = try_2
           } else {
-          g0183I = ToBoolean(OBJ(try_2))
-          if (g0183I == CTRUE) { 
+          g0182I = ToBoolean(OBJ(try_2))
+          if (g0182I == CTRUE) { 
             Result = previous.ToEID()
             } else {
             Result = EID{CFALSE.Id(),0}
@@ -2968,9 +2968,9 @@ func (self *Construct ) SelfPrint () EID {
       /*g_try(v2:"Result",loop:true) */
       if ((self.Isa.IsIn(C_List) == CTRUE) || 
           (self.Isa.IsIn(C_Set) == CTRUE)) { 
-        { var g0197 *Construct   = self
-          _ = g0197
-          { var _Zt *ClaireAny   = Core.F_get_property(C_of,ToObject(g0197.Id()))
+        { var g0196 *Construct   = self
+          _ = g0196
+          { var _Zt *ClaireAny   = Core.F_get_property(C_of,ToObject(g0196.Id()))
             if (_Zt != CNULL) { 
               if (Equal(_Zt,CEMPTY.Id()) != CTRUE) { 
                 PRINC("<")
@@ -2990,15 +2990,15 @@ func (self *Construct ) SelfPrint () EID {
             } 
           } 
         }  else if (self.Isa.IsIn(C_Map) == CTRUE) { 
-        { var g0198 *Map   = To_Map(self.Id())
+        { var g0197 *Map   = To_Map(self.Id())
           PRINC("<")
           /*g_try(v2:"Result",loop:true) */
-          Result = Core.F_print_any(g0198.Domain.Id())
+          Result = Core.F_print_any(g0197.Domain.Id())
           /* ERROR PROTECTION INSERTED (Result-Result) */
           if !ErrorIn(Result) {
           PRINC(",")
           /*g_try(v2:"Result",loop:true) */
-          Result = Core.F_print_any(g0198.Of.Id())
+          Result = Core.F_print_any(g0197.Of.Id())
           /* ERROR PROTECTION INSERTED (Result-Result) */
           if !ErrorIn(Result) {
           PRINC(">")
@@ -3050,10 +3050,10 @@ func (self *List ) SelfEval () EID {
           { var l *ClaireList   = CreateList(self.Of,n)
             /*g_try(v2:"Result",loop:true) */
             { var i int  = 1
-              { var g0199 int  = n
-                _ = g0199
+              { var g0198 int  = n
+                _ = g0198
                 Result= EID{CFALSE.Id(),0}
-                for (i <= g0199) { 
+                for (i <= g0198) { 
                   /* While stat, v:"Result" loop:true */
                   var loop_1 EID 
                   _ = loop_1
@@ -3088,10 +3088,10 @@ func (self *List ) SelfEval () EID {
           { var l *ClaireList   = CreateList(ToType(CEMPTY.Id()),n)
             /*g_try(v2:"Result",loop:true) */
             { var i int  = 1
-              { var g0200 int  = n
-                _ = g0200
+              { var g0199 int  = n
+                _ = g0199
                 Result= EID{CFALSE.Id(),0}
-                for (i <= g0200) { 
+                for (i <= g0199) { 
                   /* While stat, v:"Result" loop:true */
                   var loop_3 EID 
                   _ = loop_3
@@ -3149,10 +3149,10 @@ func (self *Set ) SelfEval () EID {
           { var l *ClaireSet   = self.Of.EmptySet()
             /*g_try(v2:"Result",loop:true) */
             { var i int  = 1
-              { var g0201 int  = n
-                _ = g0201
+              { var g0200 int  = n
+                _ = g0200
                 Result= EID{CFALSE.Id(),0}
-                for (i <= g0201) { 
+                for (i <= g0200) { 
                   /* While stat, v:"Result" loop:true */
                   var loop_1 EID 
                   _ = loop_1
@@ -3190,10 +3190,10 @@ func (self *Set ) SelfEval () EID {
           { var l *ClaireSet   = CEMPTY.EmptySet()
             /*g_try(v2:"Result",loop:true) */
             { var i int  = 1
-              { var g0202 int  = n
-                _ = g0202
+              { var g0201 int  = n
+                _ = g0201
                 Result= EID{CFALSE.Id(),0}
-                for (i <= g0202) { 
+                for (i <= g0201) { 
                   /* While stat, v:"Result" loop:true */
                   var loop_4 EID 
                   _ = loop_4
@@ -3296,10 +3296,10 @@ func (self *Array ) SelfEval () EID {
           { var l *ClaireList   = CreateList(self.Of,n)
             /*g_try(v2:"Result",loop:true) */
             { var i int  = 1
-              { var g0203 int  = n
-                _ = g0203
+              { var g0202 int  = n
+                _ = g0202
                 Result= EID{CFALSE.Id(),0}
-                for (i <= g0203) { 
+                for (i <= g0202) { 
                   /* While stat, v:"Result" loop:true */
                   var loop_1 EID 
                   _ = loop_1
@@ -3334,10 +3334,10 @@ func (self *Array ) SelfEval () EID {
           { var l *ClaireList   = CreateList(ToType(CEMPTY.Id()),n)
             /*g_try(v2:"Result",loop:true) */
             { var i int  = 1
-              { var g0204 int  = n
-                _ = g0204
+              { var g0203 int  = n
+                _ = g0203
                 Result= EID{CFALSE.Id(),0}
-                for (i <= g0204) { 
+                for (i <= g0203) { 
                   /* While stat, v:"Result" loop:true */
                   var loop_3 EID 
                   _ = loop_3
@@ -3389,7 +3389,6 @@ func EVAL_Array (x *ClaireAny) EID {
 func (self *Map ) SelfEval () EID { 
     var Result EID 
     { var m *ClaireMapSet   = self.Domain.Map_I(self.Of)
-      Core.F_tformat_string(MakeString("self_eval(~S) \n"),0,MakeConstantList(m.Id()))
       /*g_try(v2:"Result",loop:true) */
       { 
         var x *ClaireAny  
@@ -3404,30 +3403,8 @@ func (self *Map ) SelfEval () EID {
           _ = loop_1
           /*g_try(v2:"loop_1",loop:tuple("Result", EID)) */
           if (x.Isa.IsIn(C_pair) == CTRUE) { 
-            { var g0205 *ClairePair   = ToPair(x)
-              { var arg_2 *ClaireAny  
-                _ = arg_2
-                var try_4 EID 
-                /*g_try(v2:"try_4",loop:false) */
-                try_4 = EVAL(g0205.First)
-                /* ERROR PROTECTION INSERTED (arg_2-loop_1) */
-                if ErrorIn(try_4) {loop_1 = try_4
-                } else {
-                arg_2 = ANY(try_4)
-                { var arg_3 *ClaireAny  
-                  _ = arg_3
-                  var try_5 EID 
-                  /*g_try(v2:"try_5",loop:false) */
-                  try_5 = EVAL(g0205.Second)
-                  /* ERROR PROTECTION INSERTED (arg_3-loop_1) */
-                  if ErrorIn(try_5) {loop_1 = try_5
-                  } else {
-                  arg_3 = ANY(try_5)
-                  loop_1 = m.Put(arg_2,arg_3)
-                  }
-                  } 
-                }
-                } 
+            { var g0204 *ClairePair   = ToPair(x)
+              loop_1 = m.Put(g0204.First,g0204.Second)
               } 
             } else {
             loop_1 = ToException(Core.C_general_error.Make(MakeString("~S is not a pair, cannot be inserted in map ~S").Id(),MakeConstantList(x,m.Id()).Id())).Close()
@@ -3683,7 +3660,7 @@ func (self *Printf ) SelfEval () EID {
                           } else {
                           j = INT(try_8)
                           /*g_try(v2:"loop_1",loop:tuple("Result", EID)) */
-                          var g0207I *ClaireBoolean  
+                          var g0206I *ClaireBoolean  
                           var try_13 EID 
                           /*g_try(v2:"try_13",loop:false) */
                           { var arg_14 *ClaireAny  
@@ -3698,11 +3675,11 @@ func (self *Printf ) SelfEval () EID {
                             try_13 = EID{Equal(MakeChar('%').Id(),arg_14).Id(),0}
                             }
                             } 
-                          /* ERROR PROTECTION INSERTED (g0207I-loop_1) */
+                          /* ERROR PROTECTION INSERTED (g0206I-loop_1) */
                           if ErrorIn(try_13) {loop_1 = try_13
                           } else {
-                          g0207I = ToBoolean(OBJ(try_13))
-                          if (g0207I == CTRUE) { 
+                          g0206I = ToBoolean(OBJ(try_13))
+                          if (g0206I == CTRUE) { 
                             p_Z = CTRUE
                             j = 1
                             fv = ANY(Core.F_CALL(ToProperty(C__star.Id()),ARGS(fv.ToEID(),EID{C__FLOAT,FVAL(100)})))
@@ -3719,7 +3696,7 @@ func (self *Printf ) SelfEval () EID {
                           break
                           } else {
                           /*g_try(v2:"loop_1",loop:tuple("Result", EID)) */
-                          var g0208I *ClaireBoolean  
+                          var g0207I *ClaireBoolean  
                           var try_16 EID 
                           /*g_try(v2:"try_16",loop:false) */
                           { 
@@ -3752,11 +3729,11 @@ func (self *Printf ) SelfEval () EID {
                               } 
                             }
                             } 
-                          /* ERROR PROTECTION INSERTED (g0208I-loop_1) */
+                          /* ERROR PROTECTION INSERTED (g0207I-loop_1) */
                           if ErrorIn(try_16) {loop_1 = try_16
                           } else {
-                          g0208I = ToBoolean(OBJ(try_16))
-                          if (g0208I == CTRUE) { 
+                          g0207I = ToBoolean(OBJ(try_16))
+                          if (g0207I == CTRUE) { 
                             p_Z = CTRUE
                             fv = ANY(Core.F_CALL(ToProperty(C__star.Id()),ARGS(fv.ToEID(),EID{C__FLOAT,FVAL(100)})))
                             n = (n+1)
@@ -3909,27 +3886,27 @@ func (self *Trace ) SelfEval () EID {
                 }
                 } 
               } else {
-              var g0210I *ClaireBoolean  
+              var g0209I *ClaireBoolean  
               { 
                 var v_and7 *ClaireBoolean  
                 
                 v_and7 = Equal(C_string.Id(),a2.Isa.Id())
-                if (v_and7 == CFALSE) {g0210I = CFALSE
+                if (v_and7 == CFALSE) {g0209I = CFALSE
                 } else { 
                   if (C_integer.Id() == i.Isa.Id()) { 
-                    { var g0209 int  = ToInteger(i).Value
-                      _ = g0209
-                      v_and7 = Core.F__inf_equal_integer(g0209,ClEnv.Verbose)
+                    { var g0208 int  = ToInteger(i).Value
+                      _ = g0208
+                      v_and7 = Core.F__inf_equal_integer(g0208,ClEnv.Verbose)
                       } 
                     } else {
                     v_and7 = CFALSE
                     } 
-                  if (v_and7 == CFALSE) {g0210I = CFALSE
+                  if (v_and7 == CFALSE) {g0209I = CFALSE
                   } else { 
-                    g0210I = CTRUE} 
+                    g0209I = CTRUE} 
                   } 
                 } 
-              if (g0210I == CTRUE) { 
+              if (g0209I == CTRUE) { 
                 { var p *ClaireAny   = Core.F_get_property(C_ctrace,ToObject(ClEnv.Id()))
                   if (p != CNULL) { 
                     p = ToPort(p).UseAsOutput().Id()
@@ -3969,7 +3946,7 @@ func EVAL_Trace (x *ClaireAny) EID {
 func (self *Assert ) SelfEval () EID { 
     var Result EID 
     { var a *ClaireList   = self.Args
-      var g0211I *ClaireBoolean  
+      var g0210I *ClaireBoolean  
       var try_1 EID 
       /*g_try(v2:"try_1",loop:false) */
       { 
@@ -4017,11 +3994,11 @@ func (self *Assert ) SelfEval () EID {
           } 
         }
         } 
-      /* ERROR PROTECTION INSERTED (g0211I-Result) */
+      /* ERROR PROTECTION INSERTED (g0210I-Result) */
       if ErrorIn(try_1) {Result = try_1
       } else {
-      g0211I = ToBoolean(OBJ(try_1))
-      if (g0211I == CTRUE) { 
+      g0210I = ToBoolean(OBJ(try_1))
+      if (g0210I == CTRUE) { 
         { var p *ClairePort   = ClEnv.Ctrace.UseAsOutput()
           _ = p
           /*g_try(v2:"Result",loop:true) */
@@ -4083,7 +4060,7 @@ func (self *Branch ) SelfEval () EID {
       h_index := ClEnv.Index
       h_base := ClEnv.Base
       F_world_push()
-      var g0212I *ClaireBoolean  
+      var g0211I *ClaireBoolean  
       var try_1 EID 
       /*g_try(v2:"try_1",loop:false) */
       { var arg_2 *ClaireAny  
@@ -4098,11 +4075,11 @@ func (self *Branch ) SelfEval () EID {
         try_1 = EID{Core.F__I_equal_any(arg_2,CFALSE.Id()).Id(),0}
         }
         } 
-      /* ERROR PROTECTION INSERTED (g0212I-Result) */
+      /* ERROR PROTECTION INSERTED (g0211I-Result) */
       if ErrorIn(try_1) {Result = try_1
       } else {
-      g0212I = ToBoolean(OBJ(try_1))
-      if (g0212I == CTRUE) { 
+      g0211I = ToBoolean(OBJ(try_1))
+      if (g0211I == CTRUE) { 
         Result = EID{CTRUE.Id(),0}
         } else {
         F_world_pop()

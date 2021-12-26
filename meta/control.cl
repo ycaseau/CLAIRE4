@@ -445,6 +445,7 @@ Array <: Construct(of:type)        // v3.2.16   constructor for arrays
 Printf <: Construct()
 Error <: Construct()
 Branch <: Construct()
+claire/Map <: Construct(domain:type,of:type)
 
 self_print(self:Construct) : void
  -> (let %l := pretty.index in
@@ -458,9 +459,11 @@ self_print(self:Construct) : void
                   Trace "trace",
                   Assert "assert",
                   Branch "branch",
+                  Map "map",
                   any string!(self.isa.name))),
                (case self ((List U Set)
-                            when %t := get(of,self) in (if (%t != {}) printf("<~S>", %t) ))),
+                            when %t := get(of,self) in (if (%t != {}) printf("<~S>", %t) ),
+                           Map printf("<~S,~S>",self.domain,self.of))),
                set_level(), printbox(self.args)),
         pretty.index := %l))
 
@@ -508,6 +511,13 @@ self_eval(self:Array) : any
                (for i in (1 .. n)  l[i] := eval(self.args[i]),              // write without a test
                 array!(l)))
        
+ // create a map from a list of pairs
+self_eval(self:Map) : map_set
+  -> let m := map!(self.domain,self.of) in
+       (for x in self.args
+          (case x (pair put(m,x.first,x.second),
+                   any error("~S is not a pair, cannot be inserted in map ~S",x,m))),
+        m)        
 
 // Macros are a nice but undocumented feature of CLAIRE. This is deliberate :)
 // it is an advanced feature for those who want to expand the language. This

@@ -1,5 +1,5 @@
-/***** CLAIRE Compilation of file /Users/ycaseau/Dropbox/src/clairev4.0/src/compile/gosystem.cl 
-         [version 4.0.02 / safety 5] Friday 12-24-2021 *****/
+/***** CLAIRE Compilation of file /Users/ycaseau/Dropbox/src/clairev4.03/src/compile/gosystem.cl 
+         [version 4.0.04 / safety 5] Sunday 12-26-2021 17:16:12 *****/
 
 package Generate
 import (_ "fmt"
@@ -11,7 +11,7 @@ import (_ "fmt"
 )
 
 //-------- dumb function to prevent import errors --------
-func import_g0001() { 
+func import_g0000() { 
     _ = Core.It
     _ = Language.It
     _ = Reader.It
@@ -657,7 +657,7 @@ func (p *GenerateGoProducer ) StartFile (s *ClaireString ,m *ClaireModule ,modul
     /* ERROR PROTECTION INSERTED (Result-Result) */
     if !ErrorIn(Result) {
     PRINC("] ")
-    F_princ_string(F_substring_string(F_date_I_integer(1),1,24))
+    F_princ_string(F_date_I_integer(0))
     PRINC(" *****/\n\n")
     Result = EVOID
     }}
@@ -666,7 +666,7 @@ func (p *GenerateGoProducer ) StartFile (s *ClaireString ,m *ClaireModule ,modul
     p.Namespace_I(m)
     PRINC("import (_ \"fmt\"\n")
     if (module_ask == CTRUE) { 
-      var g0006I *ClaireBoolean  
+      var g0005I *ClaireBoolean  
       { var arg_3 *ClaireAny  
         _ = arg_3
         { 
@@ -684,9 +684,9 @@ func (p *GenerateGoProducer ) StartFile (s *ClaireString ,m *ClaireModule ,modul
               } 
             } 
           } 
-        g0006I = F_boolean_I_any(arg_3)
+        g0005I = F_boolean_I_any(arg_3)
         } 
-      if (g0006I == CTRUE) { 
+      if (g0005I == CTRUE) { 
         PRINC("\t\"unsafe\"\n")
         } 
       } 
@@ -852,16 +852,16 @@ func F_Generate_representative_module (m *ClaireModule ) EID {
         x_len := x_support.Length()
         for i_it := 0; i_it < x_len; i_it++ { 
           x = x_support.At(i_it)
-          var g0009I *ClaireBoolean  
+          var g0008I *ClaireBoolean  
           { 
             var v_and5 *ClaireBoolean  
             
             v_and5 = Equal(ToSymbol(OBJ(Core.F_CALL(C_name,ARGS(x.ToEID())))).Defined().Id(),m.Id())
-            if (v_and5 == CFALSE) {g0009I = CFALSE
+            if (v_and5 == CFALSE) {g0008I = CFALSE
             } else { 
               if (x.Isa.IsIn(C_property) == CTRUE) { 
-                { var g0007 *ClaireProperty   = ToProperty(x)
-                  _ = g0007
+                { var g0006 *ClaireProperty   = ToProperty(x)
+                  _ = g0006
                   { var arg_2 *ClaireAny  
                     _ = arg_2
                     { 
@@ -869,7 +869,7 @@ func F_Generate_representative_module (m *ClaireModule ) EID {
                       _ = y
                       var y_iter *ClaireAny  
                       arg_2= CFALSE.Id()
-                      for _,y_iter = range(g0007.Restrictions.ValuesO()){ 
+                      for _,y_iter = range(g0006.Restrictions.ValuesO()){ 
                         y = ToRestriction(y_iter)
                         if (y.Module_I.Id() == m.Id()) { 
                           arg_2 = CTRUE.Id()
@@ -883,12 +883,12 @@ func F_Generate_representative_module (m *ClaireModule ) EID {
                 } else {
                 v_and5 = CTRUE
                 } 
-              if (v_and5 == CFALSE) {g0009I = CFALSE
+              if (v_and5 == CFALSE) {g0008I = CFALSE
               } else { 
-                g0009I = CTRUE} 
+                g0008I = CTRUE} 
               } 
             } 
-          if (g0009I == CTRUE) { 
+          if (g0008I == CTRUE) { 
             x_some = x
             Result = x_some.ToEID()
             break
@@ -918,14 +918,14 @@ var Result *ClaireList
         { var i int  = (n-1)
           for (i > 1) { 
             /* While stat, v:"Result" loop:false */
-            var g0011I *ClaireBoolean  
+            var g0010I *ClaireBoolean  
             { var arg_1 *ClaireAny  
               _ = arg_1
               { var j int  = (i+1)
-                { var g0010 int  = n
-                  _ = g0010
+                { var g0009 int  = n
+                  _ = g0009
                   arg_1= CFALSE.Id()
-                  for (j <= g0010) { 
+                  for (j <= g0009) { 
                     /* While stat, v:"arg_1" loop:tuple("Result", void) */
                     if (ToBoolean(Reader.F_add_modules_list(MakeConstantList(l.At(j-1))).Contain_ask(l.At(i-1)).Id()) == CTRUE) { 
                       arg_1 = CTRUE.Id()
@@ -936,9 +936,9 @@ var Result *ClaireList
                     } 
                   } 
                 } 
-              g0011I = F_boolean_I_any(arg_1)
+              g0010I = F_boolean_I_any(arg_1)
               } 
-            if (g0011I == CTRUE) { 
+            if (g0010I == CTRUE) { 
               l2 = l2.Delete(l.At(i-1))
               } 
             i = (i-1)
@@ -1311,14 +1311,14 @@ func (p *GenerateGoProducer ) GenObjects (m *ClaireModule ) EID {
         x = x_support.At(i_it)
         F_Generate_breakline_void()
         if (x.Isa.IsIn(Core.C_global_variable) == CTRUE) { 
-          { var g0012 *Core.GlobalVariable   = Core.ToGlobalVariable(x)
+          { var g0011 *Core.GlobalVariable   = Core.ToGlobalVariable(x)
             PRINC("var ")
-            F_Generate_go_var_symbol(g0012.Name)
+            F_Generate_go_var_symbol(g0011.Name)
             PRINC(" ")
             { var arg_1 *ClaireAny  
               _ = arg_1
-              if (Optimize.F_Compile_nativeVar_ask_global_variable(g0012) == CTRUE) { 
-                arg_1 = ANY(Core.F_CALL(C_Generate_getRange,ARGS(EID{g0012.Id(),0})))
+              if (Optimize.F_Compile_nativeVar_ask_global_variable(g0011) == CTRUE) { 
+                arg_1 = ANY(Core.F_CALL(C_Generate_getRange,ARGS(EID{g0011.Id(),0})))
                 } else {
                 arg_1 = Core.C_global_variable.Id()
                 } 
@@ -1369,7 +1369,7 @@ func (p *GenerateGoProducer ) GenObjects (m *ClaireModule ) EID {
                   _ = loop_4
                   /*g_try(v2:"loop_4",loop:tuple("try_3", EID)) */
                   if (p2 != x.Id()) { 
-                    var g0014I *ClaireBoolean  
+                    var g0013I *ClaireBoolean  
                     var try_5 EID 
                     /*g_try(v2:"try_5",loop:false) */
                     { var arg_6 *ClaireAny  
@@ -1384,11 +1384,11 @@ func (p *GenerateGoProducer ) GenObjects (m *ClaireModule ) EID {
                       try_5 = EID{Equal(arg_6,(x.Name.String_I()).Id()).Id(),0}
                       }
                       } 
-                    /* ERROR PROTECTION INSERTED (g0014I-loop_4) */
+                    /* ERROR PROTECTION INSERTED (g0013I-loop_4) */
                     if ErrorIn(try_5) {loop_4 = try_5
                     } else {
-                    g0014I = ToBoolean(OBJ(try_5))
-                    if (g0014I == CTRUE) { 
+                    g0013I = ToBoolean(OBJ(try_5))
+                    if (g0013I == CTRUE) { 
                       p2_some = p2
                       try_3 = p2_some.ToEID()
                       break
@@ -1593,15 +1593,15 @@ func (p *GenerateGoProducer ) GenMetaLoad (m *ClaireModule ) EID {
             loop_2 = EVOID
             }
             } else {
-            var g0015I *ClaireBoolean  
+            var g0014I *ClaireBoolean  
             var try_3 EID 
             /*g_try(v2:"try_3",loop:false) */
             try_3 = Optimize.F_Compile_g_throw_any(i)
-            /* ERROR PROTECTION INSERTED (g0015I-loop_2) */
+            /* ERROR PROTECTION INSERTED (g0014I-loop_2) */
             if ErrorIn(try_3) {loop_2 = try_3
             } else {
-            g0015I = ToBoolean(OBJ(try_3))
-            if (g0015I == CTRUE) { 
+            g0014I = ToBoolean(OBJ(try_3))
+            if (g0014I == CTRUE) { 
               F_Generate_new_block_void()
               /*g_try(v2:"loop_2",loop:tuple("Result", EID)) */
               if (p.Debug_ask == CTRUE) { 
@@ -1640,15 +1640,15 @@ func (p *GenerateGoProducer ) GenMetaLoad (m *ClaireModule ) EID {
               loop_2 = EVOID
               }}
               } else {
-              var g0016I *ClaireBoolean  
+              var g0015I *ClaireBoolean  
               var try_4 EID 
               /*g_try(v2:"try_4",loop:false) */
               try_4 = F_Generate_simple_func_ask_any(i)
-              /* ERROR PROTECTION INSERTED (g0016I-loop_2) */
+              /* ERROR PROTECTION INSERTED (g0015I-loop_2) */
               if ErrorIn(try_4) {loop_2 = try_4
               } else {
-              g0016I = ToBoolean(OBJ(try_4))
-              if (g0016I == CTRUE) { 
+              g0015I = ToBoolean(OBJ(try_4))
+              if (g0015I == CTRUE) { 
                 PRINC("_ = ")
                 /*g_try(v2:"loop_2",loop:tuple("Result", EID)) */
                 { var arg_5 *ClaireClass  
@@ -2255,9 +2255,9 @@ func (p *GenerateGoProducer ) GenerateFunctionStart (self *ClaireLambda ,s *Clai
           PRINC("} The go function for: ")
           /*g_try(v2:"Result",loop:true) */
           if (C_method.Id() == m.Isa.Id()) { 
-            { var g0020 *ClaireMethod   = ToMethod(m)
+            { var g0019 *ClaireMethod   = ToMethod(m)
               /*g_try(v2:"Result",loop:true) */
-              Result = Core.F_print_any(g0020.Selector.Id())
+              Result = Core.F_print_any(g0019.Selector.Id())
               /* ERROR PROTECTION INSERTED (Result-Result) */
               if !ErrorIn(Result) {
               PRINC("(")
@@ -2266,7 +2266,7 @@ func (p *GenerateGoProducer ) GenerateFunctionStart (self *ClaireLambda ,s *Clai
               /* ERROR PROTECTION INSERTED (Result-Result) */
               if !ErrorIn(Result) {
               PRINC(") [status=")
-              F_princ_integer(g0020.Status)
+              F_princ_integer(g0019.Status)
               PRINC("]")
               Result = EVOID
               }}
@@ -2423,7 +2423,7 @@ func (p *GenerateGoProducer ) MakeGoFunction (self *ClaireLambda ,_Znom *ClaireS
                 /*integer->integer*/Result = EID{C__INT,IVAL(va_arg2)}
                 } 
               } else {
-              var g0024I *ClaireBoolean  
+              var g0023I *ClaireBoolean  
               var try_7 EID 
               /*g_try(v2:"try_7",loop:false) */
               { var arg_8 *ClaireBoolean  
@@ -2438,11 +2438,11 @@ func (p *GenerateGoProducer ) MakeGoFunction (self *ClaireLambda ,_Znom *ClaireS
                 try_7 = EID{Core.F__I_equal_any(throw_ask.Id(),arg_8.Id()).Id(),0}
                 }
                 } 
-              /* ERROR PROTECTION INSERTED (g0024I-Result) */
+              /* ERROR PROTECTION INSERTED (g0023I-Result) */
               if ErrorIn(try_7) {Result = try_7
               } else {
-              g0024I = ToBoolean(OBJ(try_7))
-              if (g0024I == CTRUE) { 
+              g0023I = ToBoolean(OBJ(try_7))
+              if (g0023I == CTRUE) { 
                 Optimize.F_Compile_warn_void()
                 Core.F_tformat_string(MakeString(">>>>> ~S body produces an error (g_throw = true) while status is 0 <<<<<<< \n"),1,MakeConstantList(m.Id()))
                 if (m.Status == 0) { 
@@ -2498,7 +2498,7 @@ func (p *GenerateGoProducer ) MakeGoFunction (self *ClaireLambda ,_Znom *ClaireS
               /* ERROR PROTECTION INSERTED (Result-Result) */
               if !ErrorIn(Result) {
               F_Generate_new_block_void()
-              var g0025I *ClaireBoolean  
+              var g0024I *ClaireBoolean  
               var try_11 EID 
               /*g_try(v2:"try_11",loop:false) */
               { 
@@ -2544,11 +2544,11 @@ func (p *GenerateGoProducer ) MakeGoFunction (self *ClaireLambda ,_Znom *ClaireS
                   } 
                 }
                 } 
-              /* ERROR PROTECTION INSERTED (g0025I-Result) */
+              /* ERROR PROTECTION INSERTED (g0024I-Result) */
               if ErrorIn(try_11) {Result = try_11
               } else {
-              g0025I = ToBoolean(OBJ(try_11))
-              if (g0025I == CTRUE) { 
+              g0024I = ToBoolean(OBJ(try_11))
+              if (g0024I == CTRUE) { 
                 Result = F_Generate_procedure_body_method(m,self,_Zbody,s)
                 } else {
                 /*g_try(v2:"Result",loop:true) */
@@ -2617,13 +2617,13 @@ func E_Generate_make_go_function_go_producer (p EID,self EID,_Znom EID,m EID) EI
 func F_Generate_simple_body_ask_any (self *ClaireAny ) EID { 
     var Result EID 
     if (self.Isa.IsIn(Language.C_If) == CTRUE) { 
-      { var g0026 *Language.If   = Language.To_If(self)
+      { var g0025 *Language.If   = Language.To_If(self)
         { 
           var v_and4 *ClaireBoolean  
           
           var try_1 EID 
           /*g_try(v2:"try_1",loop:false) */
-          try_1 = F_Generate_g_func_any(g0026.Test)
+          try_1 = F_Generate_g_func_any(g0025.Test)
           /* ERROR PROTECTION INSERTED (v_and4-Result) */
           if ErrorIn(try_1) {Result = try_1
           } else {
@@ -2632,7 +2632,7 @@ func F_Generate_simple_body_ask_any (self *ClaireAny ) EID {
           } else { 
             var try_2 EID 
             /*g_try(v2:"try_2",loop:false) */
-            try_2 = F_Generate_simple_body_ask_any(g0026.Arg)
+            try_2 = F_Generate_simple_body_ask_any(g0025.Arg)
             /* ERROR PROTECTION INSERTED (v_and4-Result) */
             if ErrorIn(try_2) {Result = try_2
             } else {
@@ -2641,7 +2641,7 @@ func F_Generate_simple_body_ask_any (self *ClaireAny ) EID {
             } else { 
               var try_3 EID 
               /*g_try(v2:"try_3",loop:false) */
-              try_3 = F_Generate_simple_body_ask_any(g0026.Other)
+              try_3 = F_Generate_simple_body_ask_any(g0025.Other)
               /* ERROR PROTECTION INSERTED (v_and4-Result) */
               if ErrorIn(try_3) {Result = try_3
               } else {
@@ -2655,13 +2655,13 @@ func F_Generate_simple_body_ask_any (self *ClaireAny ) EID {
           } 
         } 
       }  else if (self.Isa.IsIn(Language.C_Do) == CTRUE) { 
-      { var g0027 *Language.Do   = Language.To_Do(self)
-        _ = g0027
+      { var g0026 *Language.Do   = Language.To_Do(self)
+        _ = g0026
         { var arg_4 *ClaireAny  
           _ = arg_4
           var try_5 EID 
           /*g_try(v2:"try_5",loop:false) */
-          try_5 = Core.F_last_list(g0027.Args)
+          try_5 = Core.F_last_list(g0026.Args)
           /* ERROR PROTECTION INSERTED (arg_4-Result) */
           if ErrorIn(try_5) {Result = try_5
           } else {
@@ -2753,7 +2753,7 @@ func F_Generate_function_body_If (self *Language.If ,s *ClaireClass ) EID {
       Result = EVOID
       }
       } else {
-      var g0029I *ClaireBoolean  
+      var g0028I *ClaireBoolean  
       var try_1 EID 
       /*g_try(v2:"try_1",loop:false) */
       { 
@@ -2789,11 +2789,11 @@ func F_Generate_function_body_If (self *Language.If ,s *ClaireClass ) EID {
           } 
         }
         } 
-      /* ERROR PROTECTION INSERTED (g0029I-Result) */
+      /* ERROR PROTECTION INSERTED (g0028I-Result) */
       if ErrorIn(try_1) {Result = try_1
       } else {
-      g0029I = ToBoolean(OBJ(try_1))
-      if (g0029I == CTRUE) { 
+      g0028I = ToBoolean(OBJ(try_1))
+      if (g0028I == CTRUE) { 
         PRINC("} else {")
         F_Generate_breakline_void()
         /*g_try(v2:"Result",loop:true) */
@@ -3054,10 +3054,10 @@ func F_Generate_generate_eid_dual_lambda (self *ClaireLambda ,_Znom *ClaireStrin
         PRINC("(")
         /*g_try(v2:"Result",loop:true) */
         { var n int  = 1
-          { var g0030 int  = lv.Length()
-            _ = g0030
+          { var g0029 int  = lv.Length()
+            _ = g0029
             Result= EID{CFALSE.Id(),0}
-            for (n <= g0030) { 
+            for (n <= g0029) { 
               /* While stat, v:"Result" loop:true */
               var loop_1 EID 
               _ = loop_1
@@ -3147,10 +3147,10 @@ func F_Generate_print_EID_call_method (m *ClaireMethod ,l *ClaireList ,_Zsig *Cl
             F_Generate_goMethod_method(m)
             PRINC("(")
             { var n int  = 2
-              { var g0033 int  = l.Length()
-                _ = g0033
+              { var g0032 int  = l.Length()
+                _ = g0032
                 Result= EID{CFALSE.Id(),0}
-                for (n <= g0033) { 
+                for (n <= g0032) { 
                   /* While stat, v:"Result" loop:true */
                   var loop_2 EID 
                   _ = loop_2
@@ -3185,10 +3185,10 @@ func F_Generate_print_EID_call_method (m *ClaireMethod ,l *ClaireList ,_Zsig *Cl
               l = CNIL
               } 
             { var n int  = 1
-              { var g0034 int  = l.Length()
-                _ = g0034
+              { var g0033 int  = l.Length()
+                _ = g0033
                 Result= EID{CFALSE.Id(),0}
-                for (n <= g0034) { 
+                for (n <= g0033) { 
                   /* While stat, v:"Result" loop:true */
                   var loop_3 EID 
                   _ = loop_3
@@ -3426,11 +3426,11 @@ func F_Generate_need_debug_ask_any (m *ClaireAny ) *ClaireBoolean  {
     // procedure body with s = boolean 
 var Result *ClaireBoolean  
     if (C_method.Id() == m.Isa.Id()) { 
-      { var g0035 *ClaireMethod   = ToMethod(m)
-        { var p *ClaireProperty   = g0035.Selector
-          Result = MakeBoolean((Optimize.C_compiler.Debug_ask.Memq(g0035.Module_I.Id()) == CTRUE) && 
-          (Core.F_domain_I_restriction(ToRestriction(g0035.Id())).Id() != C_environment.Id()) && 
-          (g0035.Module_I.Id() != C_claire.Id()) && 
+      { var g0034 *ClaireMethod   = ToMethod(m)
+        { var p *ClaireProperty   = g0034.Selector
+          Result = MakeBoolean((Optimize.C_compiler.Debug_ask.Memq(g0034.Module_I.Id()) == CTRUE) && 
+          (Core.F_domain_I_restriction(ToRestriction(g0034.Id())).Id() != C_environment.Id()) && 
+          (g0034.Module_I.Id() != C_claire.Id()) && 
           (p.Id() != Core.C_self_eval.Id()) && 
           (p.Id() != Core.C_execute.Id()) && 
           (p.Id() != Core.C_eval_message.Id()) && 
@@ -3467,9 +3467,9 @@ func (c *GenerateGoProducer ) GenerateProfile (m *ClaireAny ) EID {
     { var arg_1 *ClaireProperty  
       _ = arg_1
       if (C_method.Id() == m.Isa.Id()) { 
-        { var g0037 *ClaireMethod   = ToMethod(m)
-          _ = g0037
-          arg_1 = g0037.Selector
+        { var g0036 *ClaireMethod   = ToMethod(m)
+          _ = g0036
+          arg_1 = g0036.Selector
           } 
         } else {
         arg_1 = C_fastcall
@@ -3643,9 +3643,9 @@ func F_Generate_get_dependents_method (m *ClaireMethod ) EID {
         var loop_2 EID 
         _ = loop_2
         /*g_try(v2:"loop_2",loop:tuple("Result", EID)) */
-        { var g0040 *ClaireProperty   = m.Selector
-          _ = g0040
-          loop_2 = Core.F_add_table(Reader.C_Reader_PRdependent,g0040.Id(),p.Id())
+        { var g0039 *ClaireProperty   = m.Selector
+          _ = g0039
+          loop_2 = Core.F_add_table(Reader.C_Reader_PRdependent,g0039.Id(),p.Id())
           } 
         /* ERROR PROTECTION INSERTED (loop_2-Result) */
         if ErrorIn(loop_2) {Result = loop_2
@@ -3676,9 +3676,9 @@ func E_c_princ_function (self EID) EID {
 func F_Generate_import_princ_string (s *ClaireString )  { 
     // procedure body with s = void 
 { var i int  = 1
-      { var g0041 int  = F_length_string(s)
-        _ = g0041
-        for (i <= g0041) { 
+      { var g0040 int  = F_length_string(s)
+        _ = g0040
+        for (i <= g0040) { 
           /* While stat, v:"Unused" loop:false */
           if ((i > 1) || 
               (s.At(i) != '#')) { 

@@ -1,110 +1,30 @@
-(printf("Hello CLAIRE3, this is our init.cl file\n"))
+(printf("Hello CLAIRE4, this is our init.cl file\n"))
 
 // Mac version
-*where* :: "/Users/ycaseau/claire/v4.0/go3"                      // where the init file is
-*output* :: "/Users/ycaseau/claire/v4.0/go3/src"
-*meta* :: "/Users/ycaseau/claire/v4.0/meta"                     // source files on github
-*compile* :: "/Users/ycaseau/Dropbox/src/clairev4.0/src/compile"   // source files on dropbox
+*where* :: "/Users/ycaseau/claire/v4.0/go4"                      // where the init file is
+*output* :: "/Users/ycaseau/claire/v4.0/go4/src"
+*meta* :: "/Users/ycaseau/Dropbox/src/clairev4.03/src/meta"            // source files on dropbox (v2)
+*compile* :: "/Users/ycaseau/Dropbox/src/clairev4.03/src/compile"      // source files on dropbox (v2)
 *bsrc* :: "/Users/ycaseau/claire/v4.0/go1/bsrc"
 *tsrc* :: "/Users/ycaseau/claire/v4.0/go1/test"
 
 // these are the global variables expected by the compiler
-RELEASE:float :: 0.03    // August 4th, 2021 
+RELEASE:float :: 0.04    // December 24th, 2021 
 
 // ***************************************************************************
 // *    Part 1: Modules & compiler environment                               *
 // ***************************************************************************
 
 // meta files are now the "official" github directory
-(for m in {Core,Language,Reader} source(m) := *meta*)
+// (for m in {Core,Language,Reader} source(m) := *meta*,
+//  for m in {Optimize,Generate} source(m) := *compile*)
+
 
 // where we want to generate the go code
 (when c := get_value("compiler") in 
    (c.safety := 5,
+    verbose() := 1,
     source(c) := *output*))
-
-// debug 
-[foo(n:integer) 
-  -> if (n < 1) bar(n, 1, 0) else foo(n - 1) ] 
-
-[bar(n:integer, l:listargs) : integer
-  -> printf("l = ~S\n",l),
-     12 / n ]
-
- // extensions
- begin(Language)
-[self_print(x:pair) -> princ("pair")]
-
-[self_eval(self:pair) : any
-   -> pair(first = eval(self.first), second = eval(self.second))]
-
-claire/Map <: Construct(domain:type,of:type)
-
-// map is the most famous function on a lambda
-[claire/map(self:lambda,%l:bag) : any
-  -> case %l (set {funcall(self,x) | x in %l},
-              any list{funcall(self,x) | x in (%l as list)})]
-
- // create a map from a list of pairs
-self_eval(self:Map) : map_set
-  -> let m := map!(self.domain,self.of) in
-       (for x in self.args
-          (case x (pair put(m,x.first,x.second),
-                   any error("~S is not a pair, cannot be inserted in map ~S",x,m))),
-        m)  
-
-
-[self_print(self:map_set) : void
-  -> printf("map<~S,~S>", domain(self), range(self)) ]               
- 
- end(Language)  
-
- begin(Reader)
- 
- // extended in CLAIRE4: reads the x[y] patterns
-[readbracket(r:meta_reader,x:any) : any 
-  -> let l := nextseq(cnext(r), #/]) in
-      (if (x % class & x != type & l) extract_class_call(x,l)
-       else if (l % pair | l % Vardef)        // slice CLAIRE4 syntax x[i:j]
-         let i := (case l (Vardef l , pair l.first, any unknown)),
-             j :=  (case l (Vardef range(l), pair l.second, any unknown)) in
-           Call(slice,list(x,i,j)) 
-       else Call!(nth, x cons l)) ]
-                       
-
-// new in CLAIRE4: reads map<t1,t2>(pairs*)
-[readmap(r:meta_reader) : Map
- -> let l1 := nextseq(cnext(r), #/>) in 
-     (//[0] readmap l=~S, char = ~<s // l1, firstc(r),
-      let l2 := nextseq(cnext(r), #/)),
-          m := Map(range = extract_type(l1[1]), of = l1[2]) in
-        (for x in l2
-           (case x (pair m.args :add x)),
-          m))
- ]
-        
- [revVar(x:Vardef) : any
-   -> let s := mClaire/pname(x), v := value(s) in
-        (if (v = unknown) unbound_symbol(name = s)
-         else v) ]
-
-// variant in CLAIRE4 when e = ), which can also read a lambda
-readList(r:meta_reader, x:any) : any
-  -> let y := readblock(r,x,#/)) in
-       (if (firstc(r) = #/{) readlambda(r,y) else y)
-       
-
-readlambda(r:meta_reader,l:any) : any 
--> let e := nexte(r), lvar := list() in
-        (case l
-           (Vardef lvar :add l,
-            list (for y in l
-                    (case y (Vardef lvar :add y,
-                             any Serror("[200] ~S is not a variable in lambda (...)->~S",l,e)))),
-            any Serror("[200] ~S is not a variable in lambda (...)->~S",l,e)),
-         lambda!(lvar,e))        
-
-end(Reader)  
 
 
 // ***************************************************************************

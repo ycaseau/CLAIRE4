@@ -115,7 +115,7 @@ nextunit(r:meta_reader) : any
       (if (n = eof(r)) (next(r), eof)
        else if (n = #/[) let z := nexte(cnext(r)) in nextdefinition(r,z,nexte(r),true)
        else if (n = #/() (if toplevel(r) nexts(r, none)
-                          else readblock(r, nexte(cnext(r)), #/)))
+                          else readList(r, nexte(cnext(r))))
        else if (n = #/`) Quote(arg = nextunit(cnext(r)))
        else if (n = #/;)
           (while (firstc(r) != eof(r) & firstc(r) != 10) next(r),
@@ -156,7 +156,8 @@ nexts(r:meta_reader, e:keyword) : any
 // loops until the right expression is built (ends with e ',', '}' or ')')
 // x is the first expression that was read
 loopexp(r:meta_reader, x:any, e:keyword, loop:boolean) : any
- -> (if (toplevel(r) & e = none & findeol(r)) x
+ -> let c := firstc(r) in                                        // last char read
+   (if (toplevel(r) & e = none & findeol(r)) x
     else if (x = ?) Call(inspect, list(nexte(r)))
     else if (skipc(r) = #/:)     // reads :* forms
        let y := nexte(cnext(r)) in
@@ -164,13 +165,15 @@ loopexp(r:meta_reader, x:any, e:keyword, loop:boolean) : any
      //     else if (toplevel(r) & y = :) nextinst(r, x)
           else if (y = :) nextinst(r, x)    // AHA (v3.0.05)
           else if operation?(y) extended_operator(y,x,loopexp(r, nexte(r), e, false)) // v3.3.32
-          else if (x % Call)
-             let w := nexte(r) in
+          else if (x % Call & c = 32)                            // expects a space (CLAIRE4)
+              (//[5] Call+: c = ~S // c,
+               let w := nexte(r) in
                (if (w = =>) r.last_arrow := true                  // v3.3.00
                 else if not(w = arrow | w = :=) 
                   Serror("[149] wrong keyword (~S) after ~S",list(w,y)),
-                nextmethod(r,x,y,(w = :=),false,(w = =>)))
-          else Serror("[150] Illegal use of :~S after ~S", list(y, x)))
+                nextmethod(r,x,y,(w = :=),false,(w = =>))))
+          else (//[5] create a pair ~S ~S// x,y,
+                pair(first = x, second = y)))
     else let y := nexte(r) in
            (if (y = e | (y = => & e = arrow))
                (if (y != e) r.last_arrow := true,                   // v3.3
@@ -226,7 +229,7 @@ nextexp(r:meta_reader,str:boolean) : any
        else if (n = #/`) Quote(arg = nexte(cnext(r)))
        else let y:any := unknown,
                 x := (if (n = #/") Kernel/read_string(cnext(r).fromp)  ;"
-                      else if (n = #/() readblock(r,nexte(cnext(r)), #/))
+                      else if (n = #/() readList(r,nexte(cnext(r)))
                       else if (n >= #/0 & n <= #/9) Kernel/read_number(r.fromp)         // read an int or a float
                       else if (n = #/{) readset(r, nexte(cnext(r)))                     // read a set
                       else (y := Kernel/read_ident(r.fromp),
@@ -238,22 +241,47 @@ nextexp(r:meta_reader,str:boolean) : any
                    else nexte(r))         // read a comment => ignored
                else (while (firstc(r) = #/[ | firstc(r) = #/. | firstc(r) = #/<)
 	              (if (firstc(r) = #/<)
-                        let y := nexte(cnext(r)) in
+                    (if (x = map) (x := readmap(r))
+                     else let y := nexte(cnext(r)) in
                           (if (x % class & firstc(r) = #/>)
                             (cnext(r),
                              x := extract_class_call(x,list(Call(=,list(of,y)))),
                              x := nexti(r,x))
-                           else Serror("[154] ~S<~S not allowed",list(x,y)))
-                 else if (firstc(r) = #/[)
-                        let l := nextseq(cnext(r), #/]) in
-                         x := (if (x % class & x != type & l)
-                                  extract_class_call(x,l)
-                               else Call!(nth, x cons l))
+                           else Serror("[154] ~S<~S not allowed",list(x,y))))
+                 else if (firstc(r) = #/[) (x := readbracket(r,x))
                  else let y := Kernel/read_ident(cnext(r).fromp),
                                 p := make_a_property(y)  in
                          (x := Call+(selector = p, args = list(x)),
                           if (p.reified = true) x := Call( read, list(x)))),
-                     x))))
+                 x))))
+
+// extended in CLAIRE4: reads the x[y] patterns
+[readbracket(r:meta_reader,x:any) : any 
+  -> let l := nextseq(cnext(r), #/]) in
+      (if (x % class & x != type & l) extract_class_call(x,l)
+       else Call!(nth, x cons l)) ]
+                       
+// new in CLAIRE4: reads map<t1,t2>(pairs*)
+[readmap(r:meta_reader) : Map
+ -> //[5] enter readmap with char=~S // firstc(r),
+    let l1 := nextseq(cnext(r), #/>) in 
+     (//[5] readmap l=~S, char = ~<s // l1, firstc(r),
+      if (length(l1) != 2) Serror("[XXX] map<~A requires two types",list(l1)),
+      let l2 := nextseq(cnext(r), #/)),
+          m := Map(domain = extract_type(l1[1]), of = l1[2]) in
+        (for x in l2
+           (case x 
+             (pair m.args :add x,
+              Vardef m.args :add pair(first = revVar(x), second = range(x)),
+              any Serror("~S in map<~A>(... is not a pair ",list(x,l1)))),
+          m))
+ ]
+
+// returns to the original form from which the Vardef was created (name -> symbol)
+[revVar(x:Vardef) : any
+   -> let s := mClaire/pname(x), v := value(s) in
+        (if (v = unknown) unbound_symbol(name = s)
+         else v) ]
 
 // reads a compact expression that starts with an ident
 //

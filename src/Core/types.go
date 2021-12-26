@@ -1,5 +1,5 @@
-/***** CLAIRE Compilation of file /Users/ycaseau/claire/v4.0/meta/types.cl 
-         [version 4.0.02 / safety 5] Friday 12-24-2021 *****/
+/***** CLAIRE Compilation of file /Users/ycaseau/Dropbox/src/clairev4.03/src/meta/types.cl 
+         [version 4.0.04 / safety 5] Sunday 12-26-2021 17:16:09 *****/
 
 package Core
 import (_ "fmt"
@@ -35,8 +35,8 @@ var Result *ClaireBoolean
     if (C_set.Id() == self.Isa.Id()) { 
       Result = CTRUE
       }  else if (self.Isa.IsIn(C_list) == CTRUE) { 
-      { var g0125 *ClaireList   = ToList(self.Id())
-        _ = g0125
+      { var g0126 *ClaireList   = ToList(self.Id())
+        _ = g0126
         { var arg_1 *ClaireAny  
           _ = arg_1
           { 
@@ -44,7 +44,7 @@ var Result *ClaireBoolean
             _ = t
             arg_1= CFALSE.Id()
             var t_support *ClaireList  
-            t_support = g0125
+            t_support = g0126
             t_len := t_support.Length()
             for i_it := 0; i_it < t_len; i_it++ { 
               t = t_support.At(i_it)
@@ -60,8 +60,8 @@ var Result *ClaireBoolean
           } 
         } 
       }  else if (C_class.Id() == self.Isa.Id()) { 
-      { var g0126 *ClaireClass   = ToClass(self.Id())
-        { var n int  = g0126.Open
+      { var g0127 *ClaireClass   = ToClass(self.Id())
+        { var n int  = g0127.Open
           { 
             /* Or stat: v="Result", loop=false */
             var v_or5 *ClaireBoolean  
@@ -78,7 +78,7 @@ var Result *ClaireBoolean
                 v_or5 = Equal(MakeInteger(n).Id(),ANY(F_CALL(C_Core_closed,ARGS(EID{ClEnv.Id(),0}))))
                 if (v_or5 == CTRUE) {Result = CTRUE
                 } else { 
-                  /* Or stat: try ((= @ any(n,abstract @ environment(<environment>))) & (not @ any(for c:class in (subclass @ class(g0126)) (if (not @ any(finite? @ type(c))) break(true) else false)))) with try:false, v="Result", loop=false */
+                  /* Or stat: try ((= @ any(n,abstract @ environment(<environment>))) & (not @ any(for c:class in (subclass @ class(g0127)) (if (not @ any(finite? @ type(c))) break(true) else false)))) with try:false, v="Result", loop=false */
                   { 
                     var v_and9 *ClaireBoolean  
                     
@@ -93,7 +93,7 @@ var Result *ClaireBoolean
                           var c_iter *ClaireAny  
                           arg_2= CFALSE.Id()
                           var c_support *ClaireSet  
-                          c_support = g0126.Subclass
+                          c_support = g0127.Subclass
                           for i_it := 0; i_it < c_support.Count; i_it++ { 
                             c_iter = c_support.At(i_it)
                             c = ToClass(c_iter)
@@ -134,23 +134,23 @@ func E_finite_ask_type (self EID) EID {
 func F_enumerate_any (self *ClaireAny ) EID { 
     var Result EID 
     if (self.Isa.IsIn(C_list) == CTRUE) { 
-      { var g0128 *ClaireList   = ToList(self)
-        _ = g0128
-        Result = EID{g0128.Id(),0}
+      { var g0129 *ClaireList   = ToList(self)
+        _ = g0129
+        Result = EID{g0129.Id(),0}
         } 
       }  else if (C_set.Id() == self.Isa.Id()) { 
-      { var g0129 *ClaireSet   = ToSet(self)
-        _ = g0129
-        Result = EID{g0129.List_I().Id(),0}
+      { var g0130 *ClaireSet   = ToSet(self)
+        _ = g0130
+        Result = EID{g0130.List_I().Id(),0}
         } 
       }  else if (self.Isa.IsIn(C_array) == CTRUE) { 
-      { var g0130 *ClaireList   = ToArray(self)
-        _ = g0130
-        Result = EID{F_list_I_array(g0130).Id(),0}
+      { var g0131 *ClaireList   = ToArray(self)
+        _ = g0131
+        Result = EID{F_list_I_array(g0131).Id(),0}
         } 
       }  else if (C_class.Id() == self.Isa.Id()) { 
-      { var g0131 *ClaireClass   = ToClass(self)
-        _ = g0131
+      { var g0132 *ClaireClass   = ToClass(self)
+        _ = g0132
         { var l *ClaireList   = ToType(C_object.Id()).EmptyList()
           _ = l
           { 
@@ -158,7 +158,7 @@ func F_enumerate_any (self *ClaireAny ) EID {
             _ = c
             var c_iter *ClaireAny  
             var c_support *ClaireSet  
-            c_support = g0131.Descendents
+            c_support = g0132.Descendents
             for i_it := 0; i_it < c_support.Count; i_it++ { 
               c_iter = c_support.At(i_it)
               c = ToClass(c_iter)
@@ -169,22 +169,22 @@ func F_enumerate_any (self *ClaireAny ) EID {
           } 
         } 
       }  else if (self.Isa.IsIn(C_Interval) == CTRUE) { 
-      { var g0132 *ClaireInterval   = To_Interval(self)
-        Result = EID{F_list_integer(g0132.Arg1,g0132.Arg2).Id(),0}
+      { var g0133 *ClaireInterval   = To_Interval(self)
+        Result = EID{F_list_integer(g0133.Arg1,g0133.Arg2).Id(),0}
         } 
       }  else if (C_integer.Id() == self.Isa.Id()) { 
-      { var g0133 int  = ToInteger(self).Value
-        _ = g0133
-        Result = EID{F_make_set_integer(g0133).List_I().Id(),0}
+      { var g0134 int  = ToInteger(self).Value
+        _ = g0134
+        Result = EID{F_make_set_integer(g0134).List_I().Id(),0}
         } 
       }  else if (self.Isa.IsIn(C_collection) == CTRUE) { 
-      { var g0134 *ClaireCollection   = ToCollection(self)
-        _ = g0134
+      { var g0135 *ClaireCollection   = ToCollection(self)
+        _ = g0135
         { var arg_1 *ClaireAny  
           _ = arg_1
           var try_2 EID 
           /*g_try(v2:"try_2",loop:false) */
-          try_2 = F_CALL(C_set_I,ARGS(EID{g0134.Id(),0}))
+          try_2 = F_CALL(C_set_I,ARGS(EID{g0135.Id(),0}))
           /* ERROR PROTECTION INSERTED (arg_1-Result) */
           if ErrorIn(try_2) {Result = try_2
           } else {
@@ -219,9 +219,9 @@ func F_sort_I_type (x *ClaireType ) *ClaireClass  {
     // procedure body with s = class 
 var Result *ClaireClass  
     if (C_class.Id() == x.Isa.Id()) { 
-      { var g0136 *ClaireClass   = ToClass(x.Id())
-        _ = g0136
-        Result = g0136.Sort_I()
+      { var g0137 *ClaireClass   = ToClass(x.Id())
+        _ = g0137
+        Result = g0137.Sort_I()
         } 
       } else {
       Result = x.Class_I().Sort_I()
@@ -255,34 +255,34 @@ func E__Z_any1 (self EID,ens EID) EID {
 func F_BELONG (x *ClaireAny ,y *ClaireAny ) EID { 
     var Result EID 
     if (C_class.Id() == y.Isa.Id()) { 
-      { var g0138 *ClaireClass   = ToClass(y)
-        _ = g0138
-        Result = EID{F__Z_any1(x,g0138).Id(),0}
+      { var g0139 *ClaireClass   = ToClass(y)
+        _ = g0139
+        Result = EID{F__Z_any1(x,g0139).Id(),0}
         } 
       }  else if (y.Isa.IsIn(C_list) == CTRUE) { 
-      { var g0139 *ClaireList   = ToList(y)
-        _ = g0139
-        Result = EID{g0139.Contain_ask(x).Id(),0}
+      { var g0140 *ClaireList   = ToList(y)
+        _ = g0140
+        Result = EID{g0140.Contain_ask(x).Id(),0}
         } 
       }  else if (C_set.Id() == y.Isa.Id()) { 
-      { var g0140 *ClaireSet   = ToSet(y)
-        _ = g0140
-        Result = EID{ToType(g0140.Id()).Contains(x).Id(),0}
+      { var g0141 *ClaireSet   = ToSet(y)
+        _ = g0141
+        Result = EID{ToType(g0141.Id()).Contains(x).Id(),0}
         } 
       }  else if (y.Isa.IsIn(C_array) == CTRUE) { 
-      { var g0141 *ClaireList   = ToArray(y)
-        _ = g0141
-        Result = EID{ToList(g0141.Id()).Contain_ask(x).Id(),0}
+      { var g0142 *ClaireList   = ToArray(y)
+        _ = g0142
+        Result = EID{ToList(g0142.Id()).Contain_ask(x).Id(),0}
         } 
       }  else if (C_tuple.Id() == y.Isa.Id()) { 
-      { var g0142 *ClaireTuple   = ToTuple(y)
+      { var g0143 *ClaireTuple   = ToTuple(y)
         { 
           var v_and4 *ClaireBoolean  
           
           v_and4 = Equal(C_tuple.Id(),x.Isa.Id())
           if (v_and4 == CFALSE) {Result = EID{CFALSE.Id(),0}
           } else { 
-            v_and4 = Equal(ANY(F_CALL(C_length,ARGS(x.ToEID()))),MakeInteger(g0142.Length()).Id())
+            v_and4 = Equal(ANY(F_CALL(C_length,ARGS(x.ToEID()))),MakeInteger(g0143.Length()).Id())
             if (v_and4 == CFALSE) {Result = EID{CFALSE.Id(),0}
             } else { 
               var try_1 EID 
@@ -292,16 +292,16 @@ func F_BELONG (x *ClaireAny ,y *ClaireAny ) EID {
                 var try_3 EID 
                 /*g_try(v2:"try_3",loop:false) */
                 { var i int  = 1
-                  { var g0143 int  = INT(F_CALL(C_length,ARGS(x.ToEID())))
-                    _ = g0143
+                  { var g0144 int  = INT(F_CALL(C_length,ARGS(x.ToEID())))
+                    _ = g0144
                     try_3= EID{CFALSE.Id(),0}
-                    for (i <= g0143) { 
+                    for (i <= g0144) { 
                       /* While stat, v:"try_3" loop:false */
                       var loop_4 EID 
                       _ = loop_4
                       { 
                       /*g_try(v2:"loop_4",loop:tuple("try_3", EID)) */
-                      var g0150I *ClaireBoolean  
+                      var g0151I *ClaireBoolean  
                       var try_5 EID 
                       /*g_try(v2:"try_5",loop:false) */
                       { var arg_6 *ClaireBoolean  
@@ -317,7 +317,7 @@ func F_BELONG (x *ClaireAny ,y *ClaireAny ) EID {
                           if ErrorIn(try_9) {try_7 = try_9
                           } else {
                           arg_8 = ANY(try_9)
-                          try_7 = F_BELONG(arg_8,ToList(g0142.Id()).At(i-1))
+                          try_7 = F_BELONG(arg_8,ToList(g0143.Id()).At(i-1))
                           }
                           } 
                         /* ERROR PROTECTION INSERTED (arg_6-try_5) */
@@ -327,11 +327,11 @@ func F_BELONG (x *ClaireAny ,y *ClaireAny ) EID {
                         try_5 = EID{arg_6.Not.Id(),0}
                         }
                         } 
-                      /* ERROR PROTECTION INSERTED (g0150I-loop_4) */
+                      /* ERROR PROTECTION INSERTED (g0151I-loop_4) */
                       if ErrorIn(try_5) {loop_4 = try_5
                       } else {
-                      g0150I = ToBoolean(OBJ(try_5))
-                      if (g0150I == CTRUE) { 
+                      g0151I = ToBoolean(OBJ(try_5))
+                      if (g0151I == CTRUE) { 
                         try_3 = EID{CTRUE.Id(),0}
                         break
                         } else {
@@ -369,17 +369,17 @@ func F_BELONG (x *ClaireAny ,y *ClaireAny ) EID {
           } 
         } 
       }  else if (y.Isa.IsIn(C_type_operator) == CTRUE) { 
-      { var g0144 *ClaireTypeOperator   = ToTypeOperator(y)
-        _ = g0144
-        Result = EID{ToType(g0144.Id()).Contains(x).Id(),0}
+      { var g0145 *ClaireTypeOperator   = ToTypeOperator(y)
+        _ = g0145
+        Result = EID{ToType(g0145.Id()).Contains(x).Id(),0}
         } 
       }  else if (C_integer.Id() == y.Isa.Id()) { 
-      { var g0145 int  = ToInteger(y).Value
-        _ = g0145
+      { var g0146 int  = ToInteger(y).Value
+        _ = g0146
         if (C_integer.Id() == x.Isa.Id()) { 
-          { var g0146 int  = ToInteger(x).Value
-            _ = g0146
-            Result = EID{BitVectorContains(g0145,g0146).Id(),0}
+          { var g0147 int  = ToInteger(x).Value
+            _ = g0147
+            Result = EID{BitVectorContains(g0146,g0147).Id(),0}
             } 
           } else {
           Result = EID{CFALSE.Id(),0}
@@ -390,15 +390,15 @@ func F_BELONG (x *ClaireAny ,y *ClaireAny ) EID {
         ClEnv.Push(x.ToEID())
         ClEnv.Push(y.ToEID())
         { var m *ClaireObject   = F_find_which_property(ToProperty(C__Z.Id()),start,x.Isa)
-          var g0151I *ClaireBoolean  
+          var g0152I *ClaireBoolean  
           if (C_method.Id() == m.Isa.Id()) { 
-            { var g0149 *ClaireMethod   = ToMethod(m.Id())
-              g0151I = MakeBoolean((g0149.Domain.Length() == 2) && (g0149.Domain.ValuesO()[2-1] != C_any.Id()))
+            { var g0150 *ClaireMethod   = ToMethod(m.Id())
+              g0152I = MakeBoolean((g0150.Domain.Length() == 2) && (g0150.Domain.ValuesO()[2-1] != C_any.Id()))
               } 
             } else {
-            g0151I = CFALSE
+            g0152I = CFALSE
             } 
-          if (g0151I == CTRUE) { 
+          if (g0152I == CTRUE) { 
             Result = F_eval_message_property(ToProperty(C__Z.Id()),m,start,CTRUE)
             } else {
             Result = ToException(C_general_error.Make(MakeString("[179] (~S % ~S): not implemented!").Id(),MakeConstantList(x,y).Id())).Close()
@@ -554,10 +554,10 @@ func F_self_print_Param_Core (self *ClaireParam ) EID {
       PRINC("[")
       /*g_try(v2:"Result",loop:true) */
       { var i int  = 1
-        { var g0152 int  = self.Args.Length()
-          _ = g0152
+        { var g0153 int  = self.Args.Length()
+          _ = g0153
           Result= EID{CFALSE.Id(),0}
-          for (i <= g0152) { 
+          for (i <= g0153) { 
             /* While stat, v:"Result" loop:true */
             var loop_3 EID 
             _ = loop_3
@@ -833,9 +833,9 @@ var Result *ClaireAny
       _ = l
       { var i int  = 1
         _ = i
-        { var g0153 int  = l.Length()
-          _ = g0153
-          for (i <= g0153) { 
+        { var g0154 int  = l.Length()
+          _ = g0154
+          for (i <= g0154) { 
             /* While stat, v:"Result" loop:false */
             y = ANY(F_funcall_property(ToProperty(l.At(i-1)),y))
             i = (i+1)
@@ -873,9 +873,9 @@ func F__at_Reference (self *ClaireReference ,l *ClaireList ,y *ClaireAny ) *Clai
     
     { var i int  = 1
       _ = i
-      { var g0154 int  = l.Length()
-        _ = g0154
-        for (i <= g0154) { 
+      { var g0155 int  = l.Length()
+        _ = g0155
+        for (i <= g0155) { 
           /* While stat, v:"Unused" loop:false */
           y = ToType(y).At(ToProperty(l.At(i-1))).Id()
           i = (i+1)
@@ -1101,7 +1101,7 @@ func F_size_Union (x *ClaireUnion ) EID {
         if ErrorIn(try_6) {Result = try_6
         } else {
         arg_5 = ToSet(OBJ(try_6))
-        Result = EID{C__INT,IVAL(arg_5.Size())}
+        Result = F_CALL(C_length,ARGS(EID{arg_5.Id(),0}))
         }
         } 
       } 
@@ -1177,7 +1177,7 @@ func F_size_Param (x *ClaireParam ) EID {
       if ErrorIn(try_2) {Result = try_2
       } else {
       arg_1 = ToSet(OBJ(try_2))
-      Result = EID{C__INT,IVAL(arg_1.Size())}
+      Result = F_CALL(C_length,ARGS(EID{arg_1.Id(),0}))
       }
       } 
     return Result} 
@@ -1290,10 +1290,10 @@ func F_set_I_tuple (x *ClaireTuple ) EID {
           l1 = ToSet(OBJ(try_1))
           /*g_try(v2:"Result",loop:true) */
           { var n int  = 2
-            { var g0155 int  = l.Length()
-              _ = g0155
+            { var g0156 int  = l.Length()
+              _ = g0156
               Result= EID{CFALSE.Id(),0}
-              for (n <= g0155) { 
+              for (n <= g0156) { 
                 /* While stat, v:"Result" loop:true */
                 var loop_3 EID 
                 _ = loop_3
@@ -1382,10 +1382,10 @@ func F_size_tuple (l *ClaireTuple ) EID {
         /*g_try(v2:"Result",loop:true) */
         { var n int  = 2
           _ = n
-          { var g0156 int  = l.Length()
-            _ = g0156
+          { var g0157 int  = l.Length()
+            _ = g0157
             Result= EID{CFALSE.Id(),0}
-            for (n <= g0156) { 
+            for (n <= g0157) { 
               /* While stat, v:"Result" loop:true */
               var loop_2 EID 
               _ = loop_2
@@ -1447,14 +1447,14 @@ func F_U_type (x *ClaireType ,y *ClaireType ) *ClaireType  {
     // procedure body with s = type 
 var Result *ClaireType  
     if (C_set.Id() == x.Isa.Id()) { 
-      { var g0157 *ClaireSet   = ToSet(x.Id())
+      { var g0158 *ClaireSet   = ToSet(x.Id())
         if (C_set.Id() == y.Isa.Id()) { 
-          { var g0158 *ClaireSet   = ToSet(y.Id())
-            _ = g0158
-            Result = ToType(F_append_set(g0157,g0158).Id())
+          { var g0159 *ClaireSet   = ToSet(y.Id())
+            _ = g0159
+            Result = ToType(F_append_set(g0158,g0159).Id())
             } 
           } else {
-          Result = F_U_type(y,ToType(g0157.Id()))
+          Result = F_U_type(y,ToType(g0158.Id()))
           } 
         } 
       }  else if (y.Included(x) == CTRUE) { 
@@ -1464,13 +1464,13 @@ var Result *ClaireType
       }  else if (y.Isa.IsIn(C_Union) == CTRUE) { 
       Result = F_U_type(F_U_type(x,ToType(OBJ(F_CALL(C_mClaire_t1,ARGS(EID{y.Id(),0}))))),To_Union(y.Id()).T2)
       } else {
-      var g0166I *ClaireBoolean  
+      var g0167I *ClaireBoolean  
       if (x.Isa.IsIn(C_Interval) == CTRUE) { 
-        g0166I = y.Isa.IsIn(C_Interval)
+        g0167I = y.Isa.IsIn(C_Interval)
         } else {
-        g0166I = CFALSE
+        g0167I = CFALSE
         } 
-      if (g0166I == CTRUE) { 
+      if (g0167I == CTRUE) { 
         if (((To_Interval(y.Id()).Arg1-1) <= To_Interval(x.Id()).Arg2) && 
             (To_Interval(x.Id()).Arg1 <= To_Interval(y.Id()).Arg1)) { 
           Result = F__dot_dot_integer(To_Interval(x.Id()).Arg1,To_Interval(y.Id()).Arg2)
@@ -1485,13 +1485,13 @@ var Result *ClaireType
             } 
           } 
         } else {
-        var g0167I *ClaireBoolean  
+        var g0168I *ClaireBoolean  
         if (x.Isa.IsIn(C_Union) == CTRUE) { 
-          g0167I = y.Isa.IsIn(C_Interval)
+          g0168I = y.Isa.IsIn(C_Interval)
           } else {
-          g0167I = CFALSE
+          g0168I = CFALSE
           } 
-        if (g0167I == CTRUE) { 
+        if (g0168I == CTRUE) { 
           { var z *ClaireType   = F_U_type(To_Union(x.Id()).T2,y)
             if (z.Isa.IsIn(C_Union) == CTRUE) { 
               { var _CL_obj *ClaireUnion   = To_Union(new(ClaireUnion).Is(C_Union))
@@ -1504,16 +1504,16 @@ var Result *ClaireType
               } 
             } 
           } else {
-          var g0168I *ClaireBoolean  
+          var g0169I *ClaireBoolean  
           if (x.Isa.IsIn(C_Interval) == CTRUE) { 
-            { var g0165 *ClaireInterval   = To_Interval(x.Id())
-              g0168I = MakeBoolean((C_set.Id() == y.Isa.Id()) && ((y.Contains(MakeInteger((g0165.Arg1-1)).Id()) == CTRUE) || 
-                  (y.Contains(MakeInteger((g0165.Arg2+1)).Id()) == CTRUE)))
+            { var g0166 *ClaireInterval   = To_Interval(x.Id())
+              g0169I = MakeBoolean((C_set.Id() == y.Isa.Id()) && ((y.Contains(MakeInteger((g0166.Arg1-1)).Id()) == CTRUE) || 
+                  (y.Contains(MakeInteger((g0166.Arg2+1)).Id()) == CTRUE)))
               } 
             } else {
-            g0168I = CFALSE
+            g0169I = CFALSE
             } 
-          if (g0168I == CTRUE) { 
+          if (g0169I == CTRUE) { 
             { var a int  = To_Interval(x.Id()).Arg1
               { var b int  = To_Interval(x.Id()).Arg2
                 if (y.Contains(MakeInteger((a-1)).Id()) == CTRUE) { 
@@ -1579,7 +1579,7 @@ func E__dot_dot_integer (x EID,y EID) EID {
 /* {1} The go function for: _dot_dot_integer_type */
 func F__dot_dot_integer_type (x *ClaireType ,y *ClaireType ) EID { 
     var Result EID 
-    var g0169I *ClaireBoolean  
+    var g0170I *ClaireBoolean  
     var try_1 EID 
     /*g_try(v2:"try_1",loop:false) */
     { 
@@ -1627,11 +1627,11 @@ func F__dot_dot_integer_type (x *ClaireType ,y *ClaireType ) EID {
         } 
       }
       } 
-    /* ERROR PROTECTION INSERTED (g0169I-Result) */
+    /* ERROR PROTECTION INSERTED (g0170I-Result) */
     if ErrorIn(try_1) {Result = try_1
     } else {
-    g0169I = ToBoolean(OBJ(try_1))
-    if (g0169I == CTRUE) { 
+    g0170I = ToBoolean(OBJ(try_1))
+    if (g0170I == CTRUE) { 
       { 
         var v_bag_arg *ClaireAny  
         Result= EID{ToType(CEMPTY.Id()).EmptySet().Id(),0}
@@ -1682,9 +1682,9 @@ func E__dot_dot_integer_type (x EID,y EID) EID {
 func F_but_any (s *ClaireAny ,x *ClaireAny ) EID { 
     var Result EID 
     if (s.Isa.IsIn(C_list) == CTRUE) { 
-      { var g0170 *ClaireList   = ToList(s)
-        _ = g0170
-        { var y_in *ClaireList   = g0170
+      { var g0171 *ClaireList   = ToList(s)
+        _ = g0171
+        { var y_in *ClaireList   = g0171
           { var y_out *ClaireList   = y_in.Empty()
             { 
               var y *ClaireAny  
@@ -1704,9 +1704,9 @@ func F_but_any (s *ClaireAny ,x *ClaireAny ) EID {
           } 
         } 
       }  else if (C_set.Id() == s.Isa.Id()) { 
-      { var g0171 *ClaireSet   = ToSet(s)
-        _ = g0171
-        Result = EID{g0171.Copy().Delete(x).Id(),0}
+      { var g0172 *ClaireSet   = ToSet(s)
+        _ = g0172
+        Result = EID{g0172.Copy().Delete(x).Id(),0}
         } 
       } else {
       { var arg_1 *ClaireList  
@@ -1830,36 +1830,36 @@ func F_glb_Interval (x *ClaireInterval ,y *ClaireType ) *ClaireType  {
     // procedure body with s = type 
 var Result *ClaireType  
     if (C_class.Id() == y.Isa.Id()) { 
-      { var g0173 *ClaireClass   = ToClass(y.Id())
-        _ = g0173
-        Result = ToType(IfThenElse((ToType(C_integer.Id()).Included(ToType(g0173.Id())) == CTRUE),
+      { var g0174 *ClaireClass   = ToClass(y.Id())
+        _ = g0174
+        Result = ToType(IfThenElse((ToType(C_integer.Id()).Included(ToType(g0174.Id())) == CTRUE),
           x.Id(),
           CEMPTY.Id()))
         } 
       }  else if (C_set.Id() == y.Isa.Id()) { 
-      { var g0174 *ClaireSet   = ToSet(y.Id())
-        _ = g0174
-        Result = ToType(F_glb_set(g0174,ToType(x.Id())).Id())
+      { var g0175 *ClaireSet   = ToSet(y.Id())
+        _ = g0175
+        Result = ToType(F_glb_set(g0175,ToType(x.Id())).Id())
         } 
       }  else if (y.Isa.IsIn(C_Interval) == CTRUE) { 
-      { var g0175 *ClaireInterval   = To_Interval(y.Id())
-        if (x.Arg1 <= g0175.Arg1) { 
-          if (g0175.Arg1 <= x.Arg2) { 
-            if (x.Arg2 <= g0175.Arg2) { 
-              Result = F__dot_dot_integer(g0175.Arg1,x.Arg2)
+      { var g0176 *ClaireInterval   = To_Interval(y.Id())
+        if (x.Arg1 <= g0176.Arg1) { 
+          if (g0176.Arg1 <= x.Arg2) { 
+            if (x.Arg2 <= g0176.Arg2) { 
+              Result = F__dot_dot_integer(g0176.Arg1,x.Arg2)
               } else {
-              Result = ToType(g0175.Id())
+              Result = ToType(g0176.Id())
               } 
             } else {
             Result = ToType(CEMPTY.Id())
             } 
           } else {
-          Result = F_glb_Interval(g0175,ToType(x.Id()))
+          Result = F_glb_Interval(g0176,ToType(x.Id()))
           } 
         } 
       }  else if (y.Isa.IsIn(C_Union) == CTRUE) { 
-      { var g0176 *ClaireUnion   = To_Union(y.Id())
-        Result = F_U_type(F_glb_Interval(x,g0176.T1),F_glb_Interval(x,g0176.T2))
+      { var g0177 *ClaireUnion   = To_Union(y.Id())
+        Result = F_U_type(F_glb_Interval(x,g0177.T1),F_glb_Interval(x,g0177.T2))
         } 
       } else {
       Result = ToType(CEMPTY.Id())
@@ -1911,9 +1911,9 @@ var Result *ClaireType
         Result = F_Uall_list(arg_1)
         } 
       }  else if (C_class.Id() == y.Isa.Id()) { 
-      { var g0178 *ClaireClass   = ToClass(y.Id())
-        _ = g0178
-        Result = F_join_class(x,g0178)
+      { var g0179 *ClaireClass   = ToClass(y.Id())
+        _ = g0179
+        Result = F_join_class(x,g0179)
         } 
       } else {
       Result = ToType(OBJ(F_CALL(ToProperty(C_glb.Id()),ARGS(EID{y.Id(),0},EID{x.Id(),0}))))
@@ -1929,9 +1929,9 @@ func F_glb_Param (x *ClaireParam ,y *ClaireType ) *ClaireType  {
     // procedure body with s = type 
 var Result *ClaireType  
     if (y.Isa.IsIn(C_Param) == CTRUE) { 
-      { var g0180 *ClaireParam   = To_Param(y.Id())
-        { var c *ClaireType   = F_join_class(x.Arg,g0180.Arg)
-          { var lp *ClaireList   = x.Params.Append(g0180.Params).Set_I().List_I()
+      { var g0181 *ClaireParam   = To_Param(y.Id())
+        { var c *ClaireType   = F_join_class(x.Arg,g0181.Arg)
+          { var lp *ClaireList   = x.Params.Append(g0181.Params).Set_I().List_I()
             { var l *ClaireList   = ToType(C_any.Id()).EmptyList()
               _ = l
               { 
@@ -1942,7 +1942,7 @@ var Result *ClaireType
                 p_len := p_support.Length()
                 for i_it := 0; i_it < p_len; i_it++ { 
                   p = p_support.At(i_it)
-                  { var t *ClaireType   = ToType(OBJ(F_CALL(ToProperty(C_glb.Id()),ARGS(EID{x.At(ToProperty(p)).Id(),0},EID{g0180.At(ToProperty(p)).Id(),0}))))
+                  { var t *ClaireType   = ToType(OBJ(F_CALL(ToProperty(C_glb.Id()),ARGS(EID{x.At(ToProperty(p)).Id(),0},EID{g0181.At(ToProperty(p)).Id(),0}))))
                     _ = t
                     if (Equal(t.Id(),CEMPTY.Id()) != CTRUE) { 
                       l = l.AddFast(t.Id())/*t=any,s=list*/
@@ -1969,9 +1969,9 @@ var Result *ClaireType
           } 
         } 
       }  else if (C_class.Id() == y.Isa.Id()) { 
-      { var g0181 *ClaireClass   = ToClass(y.Id())
-        _ = g0181
-        { var c *ClaireType   = F_join_class(x.Arg,g0181)
+      { var g0182 *ClaireClass   = ToClass(y.Id())
+        _ = g0182
+        { var c *ClaireType   = F_join_class(x.Arg,g0182)
           if (Equal(c.Id(),CEMPTY.Id()) != CTRUE) { 
             { var _CL_obj *ClaireParam   = To_Param(new(ClaireParam).Is(C_Param))
               _CL_obj.Arg = ToClass(c.Id())
@@ -2000,27 +2000,27 @@ func F_glb_subtype (x *ClaireSubtype ,y *ClaireType ) *ClaireType  {
     // procedure body with s = type 
 var Result *ClaireType  
     if (C_class.Id() == y.Isa.Id()) { 
-      { var g0183 *ClaireClass   = ToClass(y.Id())
-        if (Equal(F_join_class(x.Arg,g0183).Id(),CEMPTY.Id()) != CTRUE) { 
-          Result = F_nth_class1(ToClass(F_join_class(x.Arg,g0183).Id()),x.T1)
+      { var g0184 *ClaireClass   = ToClass(y.Id())
+        if (Equal(F_join_class(x.Arg,g0184).Id(),CEMPTY.Id()) != CTRUE) { 
+          Result = F_nth_class1(ToClass(F_join_class(x.Arg,g0184).Id()),x.T1)
           } else {
           Result = ToType(CEMPTY.Id())
           } 
         } 
       }  else if (y.Isa.IsIn(C_Param) == CTRUE) { 
-      { var g0184 *ClaireParam   = To_Param(y.Id())
-        if (Equal(F_join_class(x.Arg,g0184.Arg).Id(),CEMPTY.Id()) != CTRUE) { 
-          Result = F_param_I_class(ToClass(F_join_class(x.Arg,g0184.Arg).Id()),ToType(OBJ(F_CALL(ToProperty(C_glb.Id()),ARGS(EID{F_member_type(ToType(x.Id())).Id(),0},EID{F_member_type(ToType(g0184.Id())).Id(),0})))))
+      { var g0185 *ClaireParam   = To_Param(y.Id())
+        if (Equal(F_join_class(x.Arg,g0185.Arg).Id(),CEMPTY.Id()) != CTRUE) { 
+          Result = F_param_I_class(ToClass(F_join_class(x.Arg,g0185.Arg).Id()),ToType(OBJ(F_CALL(ToProperty(C_glb.Id()),ARGS(EID{F_member_type(ToType(x.Id())).Id(),0},EID{F_member_type(ToType(g0185.Id())).Id(),0})))))
           } else {
           Result = ToType(CEMPTY.Id())
           } 
         } 
       }  else if (y.Isa.IsIn(C_subtype) == CTRUE) { 
-      { var g0185 *ClaireSubtype   = ToSubtype(y.Id())
-        if (Equal(F_join_class(x.Arg,g0185.Arg).Id(),CEMPTY.Id()) != CTRUE) { 
-          { var t *ClaireType   = ToType(OBJ(F_CALL(ToProperty(C_glb.Id()),ARGS(EID{x.T1.Id(),0},EID{g0185.T1.Id(),0}))))
+      { var g0186 *ClaireSubtype   = ToSubtype(y.Id())
+        if (Equal(F_join_class(x.Arg,g0186.Arg).Id(),CEMPTY.Id()) != CTRUE) { 
+          { var t *ClaireType   = ToType(OBJ(F_CALL(ToProperty(C_glb.Id()),ARGS(EID{x.T1.Id(),0},EID{g0186.T1.Id(),0}))))
             if (Equal(t.Id(),CEMPTY.Id()) != CTRUE) { 
-              Result = F_nth_class1(ToClass(F_join_class(x.Arg,g0185.Arg).Id()),t)
+              Result = F_nth_class1(ToClass(F_join_class(x.Arg,g0186.Arg).Id()),t)
               } else {
               Result = ToType(CEMPTY.Id())
               } 
@@ -2044,22 +2044,22 @@ func F_glb_tuple (x *ClaireTuple ,y *ClaireType ) *ClaireType  {
     // procedure body with s = type 
 var Result *ClaireType  
     if (C_class.Id() == y.Isa.Id()) { 
-      { var g0187 *ClaireClass   = ToClass(y.Id())
-        _ = g0187
-        Result = ToType(IfThenElse((C_tuple.IsIn(g0187) == CTRUE),
+      { var g0188 *ClaireClass   = ToClass(y.Id())
+        _ = g0188
+        Result = ToType(IfThenElse((C_tuple.IsIn(g0188) == CTRUE),
           x.Id(),
           CEMPTY.Id()))
         } 
       }  else if (y.Isa.IsIn(C_Param) == CTRUE) { 
       Result = ToType(CEMPTY.Id())
       }  else if (C_tuple.Id() == y.Isa.Id()) { 
-      { var g0189 *ClaireTuple   = ToTuple(y.Id())
-        _ = g0189
-        Result = ToType(F__exp_list(ToList(x.Id()),ToList(g0189.Id())).Tuple_I().Id())
+      { var g0190 *ClaireTuple   = ToTuple(y.Id())
+        _ = g0190
+        Result = ToType(F__exp_list(ToList(x.Id()),ToList(g0190.Id())).Tuple_I().Id())
         } 
       }  else if (y.Isa.IsIn(C_subtype) == CTRUE) { 
-      { var g0190 *ClaireSubtype   = ToSubtype(y.Id())
-        if (g0190.Arg.Id() == C_tuple.Id()) { 
+      { var g0191 *ClaireSubtype   = ToSubtype(y.Id())
+        if (g0191.Arg.Id() == C_tuple.Id()) { 
           { var arg_1 *ClaireList  
             _ = arg_1
             { var z_bag *ClaireList   = ToType(CEMPTY.Id()).EmptyList()
@@ -2071,7 +2071,7 @@ var Result *ClaireType
                 z_len := z_support.Length()
                 for i_it := 0; i_it < z_len; i_it++ { 
                   z = z_support.At(i_it)
-                  z_bag.AddFast(ANY(F_CALL(ToProperty(C_glb.Id()),ARGS(z.ToEID(),EID{g0190.T1.Id(),0}))))/*t=any,s=void*/
+                  z_bag.AddFast(ANY(F_CALL(ToProperty(C_glb.Id()),ARGS(z.ToEID(),EID{g0191.T1.Id(),0}))))/*t=any,s=void*/
                   } 
                 } 
               arg_1 = z_bag
@@ -2149,9 +2149,9 @@ var Result *ClaireList
         _ = r
         if (n == y.Length()) { 
           { var i int  = 1
-            { var g0192 int  = n
-              _ = g0192
-              for (i <= g0192) { 
+            { var g0193 int  = n
+              _ = g0193
+              for (i <= g0193) { 
                 /* While stat, v:"Result" loop:false */
                 { var z *ClaireTypeExpression   = ToTypeExpression(OBJ(F_CALL(ToProperty(C_glb.Id()),ARGS(x.At(i-1).ToEID(),y.At(i-1).ToEID()))))
                   _ = z
@@ -2223,8 +2223,8 @@ func E__inf_equalt_type (s EID,y EID) EID {
 func F__inf_equal_type_expression (x *ClaireTypeExpression ,y *ClaireTypeExpression ) EID { 
     var Result EID 
     if (C_set.Id() == x.Isa.Id()) { 
-      { var g0193 *ClaireSet   = ToSet(x.Id())
-        _ = g0193
+      { var g0194 *ClaireSet   = ToSet(x.Id())
+        _ = g0194
         { var arg_1 *ClaireAny  
           _ = arg_1
           var try_2 EID 
@@ -2234,13 +2234,13 @@ func F__inf_equal_type_expression (x *ClaireTypeExpression ,y *ClaireTypeExpress
             _ = z
             try_2= EID{CFALSE.Id(),0}
             var z_support *ClaireSet  
-            z_support = g0193
+            z_support = g0194
             for i_it := 0; i_it < z_support.Count; i_it++ { 
               z = z_support.At(i_it)
               var loop_3 EID 
               _ = loop_3
               /*g_try(v2:"loop_3",loop:tuple("try_2", EID)) */
-              var g0198I *ClaireBoolean  
+              var g0199I *ClaireBoolean  
               var try_4 EID 
               /*g_try(v2:"try_4",loop:false) */
               { var arg_5 *ClaireBoolean  
@@ -2255,11 +2255,11 @@ func F__inf_equal_type_expression (x *ClaireTypeExpression ,y *ClaireTypeExpress
                 try_4 = EID{arg_5.Not.Id(),0}
                 }
                 } 
-              /* ERROR PROTECTION INSERTED (g0198I-loop_3) */
+              /* ERROR PROTECTION INSERTED (g0199I-loop_3) */
               if ErrorIn(try_4) {loop_3 = try_4
               } else {
-              g0198I = ToBoolean(OBJ(try_4))
-              if (g0198I == CTRUE) { 
+              g0199I = ToBoolean(OBJ(try_4))
+              if (g0199I == CTRUE) { 
                 try_2 = EID{CTRUE.Id(),0}
                 break
                 } else {
@@ -2282,14 +2282,14 @@ func F__inf_equal_type_expression (x *ClaireTypeExpression ,y *ClaireTypeExpress
           } 
         } 
       }  else if (x.Isa.IsIn(C_type) == CTRUE) { 
-      { var g0194 *ClaireType   = ToType(x.Id())
+      { var g0195 *ClaireType   = ToType(x.Id())
         if (y.Isa.IsIn(C_type) == CTRUE) { 
-          { var g0195 *ClaireType   = ToType(y.Id())
-            _ = g0195
-            Result = EID{g0194.Included(g0195).Id(),0}
+          { var g0196 *ClaireType   = ToType(y.Id())
+            _ = g0196
+            Result = EID{g0195.Included(g0196).Id(),0}
             } 
           } else {
-          { var z *ClaireAny   = g0194.Id()
+          { var z *ClaireAny   = g0195.Id()
             _ = z
             Result = F_CALL(ToProperty(C_less_ask.Id()),ARGS(z.ToEID(),EID{y.Id(),0}))
             } 
@@ -2337,57 +2337,57 @@ func F_member_type (x *ClaireType ) *ClaireType  {
     // procedure body with s = type 
 var Result *ClaireType  
     if (C_class.Id() == x.Isa.Id()) { 
-      { var g0199 *ClaireClass   = ToClass(x.Id())
-        _ = g0199
-        if (g0199.Id() == C_Interval.Id()) { 
+      { var g0200 *ClaireClass   = ToClass(x.Id())
+        _ = g0200
+        if (g0200.Id() == C_Interval.Id()) { 
           Result = ToType(C_integer.Id())
           } else {
           Result = ToType(C_any.Id())
           } 
         } 
       }  else if (x.Isa.IsIn(C_Union) == CTRUE) { 
-      { var g0200 *ClaireUnion   = To_Union(x.Id())
-        Result = F_U_type(F_member_type(g0200.T1),F_member_type(g0200.T2))
+      { var g0201 *ClaireUnion   = To_Union(x.Id())
+        Result = F_U_type(F_member_type(g0201.T1),F_member_type(g0201.T2))
         } 
       }  else if (x.Isa.IsIn(C_Interval) == CTRUE) { 
       Result = ToType(CEMPTY.Id())
       }  else if (x.Isa.IsIn(C_Param) == CTRUE) { 
-      { var g0202 *ClaireParam   = To_Param(x.Id())
-        _ = g0202
-        Result = F_member_type(g0202.At(C_of))
+      { var g0203 *ClaireParam   = To_Param(x.Id())
+        _ = g0203
+        Result = F_member_type(g0203.At(C_of))
         } 
       }  else if (C_tuple.Id() == x.Isa.Id()) { 
-      { var g0203 *ClaireTuple   = ToTuple(x.Id())
-        _ = g0203
-        Result = F_Uall_list(ToList(g0203.Id()))
+      { var g0204 *ClaireTuple   = ToTuple(x.Id())
+        _ = g0204
+        Result = F_Uall_list(ToList(g0204.Id()))
         } 
       }  else if (x.Isa.IsIn(C_subtype) == CTRUE) { 
-      { var g0204 *ClaireSubtype   = ToSubtype(x.Id())
-        _ = g0204
-        Result = g0204.T1
+      { var g0205 *ClaireSubtype   = ToSubtype(x.Id())
+        _ = g0205
+        Result = g0205.T1
         } 
       }  else if (C_set.Id() == x.Isa.Id()) { 
-      { var g0205 *ClaireSet   = ToSet(x.Id())
-        _ = g0205
+      { var g0206 *ClaireSet   = ToSet(x.Id())
+        _ = g0206
         { var arg_1 *ClaireList  
           _ = arg_1
           { 
             var v_list5 *ClaireSet  
             var y *ClaireAny  
             var v_local5 *ClaireAny  
-            v_list5 = g0205
+            v_list5 = g0206
             arg_1 = CreateList(ToType(CEMPTY.Id()),v_list5.Length())
             for CLcount := 0; CLcount < v_list5.Count; CLcount++{ 
               y = v_list5.At(CLcount)
               if (y.Isa.IsIn(C_list) == CTRUE) { 
-                { var g0206 *ClaireList   = ToList(y)
-                  _ = g0206
-                  v_local5 = g0206.Set_I().Id()
+                { var g0207 *ClaireList   = ToList(y)
+                  _ = g0207
+                  v_local5 = g0207.Set_I().Id()
                   } 
                 }  else if (y.Isa.IsIn(C_type) == CTRUE) { 
-                { var g0207 *ClaireType   = ToType(y)
-                  _ = g0207
-                  v_local5 = g0207.Id()
+                { var g0208 *ClaireType   = ToType(y)
+                  _ = g0208
+                  v_local5 = g0208.Id()
                   } 
                 } else {
                 v_local5 = CEMPTY.Id()
@@ -2420,14 +2420,14 @@ var Result *ClaireType
         if (To_Param(x.Id()).Params.At(1-1) == C_of.Id()) { 
           { var y *ClaireType   = ToType(To_Param(x.Id()).Args.At(1-1))
             if (C_set.Id() == y.Isa.Id()) { 
-              { var g0210 *ClaireSet   = ToSet(y.Id())
-                _ = g0210
-                Result = ToType(g0210.List_I().At(1-1))
+              { var g0211 *ClaireSet   = ToSet(y.Id())
+                _ = g0211
+                Result = ToType(g0211.List_I().At(1-1))
                 } 
               }  else if (y.Isa.IsIn(C_subtype) == CTRUE) { 
-              { var g0211 *ClaireSubtype   = ToSubtype(y.Id())
-                _ = g0211
-                Result = g0211.T1
+              { var g0212 *ClaireSubtype   = ToSubtype(y.Id())
+                _ = g0212
+                Result = g0212.T1
                 } 
               } else {
               Result = ToType(C_any.Id())
@@ -2452,13 +2452,13 @@ func F_unique_ask_type (x *ClaireType ) *ClaireBoolean  {
     // procedure body with s = boolean 
 var Result *ClaireBoolean  
     if (C_set.Id() == x.Isa.Id()) { 
-      { var g0213 *ClaireSet   = ToSet(x.Id())
-        _ = g0213
-        Result = Equal(MakeInteger(g0213.Size()).Id(),MakeInteger(1).Id())
+      { var g0214 *ClaireSet   = ToSet(x.Id())
+        _ = g0214
+        Result = Equal(MakeInteger(g0214.Size()).Id(),MakeInteger(1).Id())
         } 
       }  else if (C_class.Id() == x.Isa.Id()) { 
-      { var g0214 *ClaireClass   = ToClass(x.Id())
-        Result = MakeBoolean((g0214.Open == 0) && (F_size_class(g0214) == 1))
+      { var g0215 *ClaireClass   = ToClass(x.Id())
+        Result = MakeBoolean((g0215.Open == 0) && (F_size_class(g0215) == 1))
         } 
       } else {
       Result = CFALSE
@@ -2572,9 +2572,9 @@ func F_make_set_integer (x int) *ClaireSet  {
 var Result *ClaireSet  
     { var i_out *ClaireSet   = ToType(CEMPTY.Id()).EmptySet()
       { var i int  = 0
-        { var g0216 int  = 29
-          _ = g0216
-          for (i <= g0216) { 
+        { var g0217 int  = 29
+          _ = g0217
+          for (i <= g0217) { 
             /* While stat, v:"Result" loop:false */
             if (F_nth_integer(x,i) == CTRUE) { 
               i_out.AddFast(MakeInteger(i).Id())/*t=any,s=void*/
@@ -2607,14 +2607,14 @@ var Result *ClaireType
           for i_it := 0; i_it < x_support.Count; i_it++ { 
             x = x_support.At(i_it)
             if (C_integer.Id() == x.Isa.Id()) { 
-              { var g0217 int  = ToInteger(x).Value
+              { var g0218 int  = ToInteger(x).Value
                 if (m1 > m2) { 
-                  m1 = g0217
-                  m2 = g0217
-                  }  else if (g0217 > m2) { 
-                  m2 = g0217
-                  }  else if (g0217 < m1) { 
-                  m1 = g0217
+                  m1 = g0218
+                  m2 = g0218
+                  }  else if (g0218 > m2) { 
+                  m2 = g0218
+                  }  else if (g0218 < m1) { 
+                  m1 = g0218
                   } 
                 } 
               } else {
@@ -2640,44 +2640,44 @@ func F_abstract_type_operation (p *ClaireOperation ,xt1 *ClaireType ,xt2 *Claire
     // procedure body with s = type 
 var Result *ClaireType  
     if (C_set.Id() == xt1.Isa.Id()) { 
-      { var g0219 *ClaireSet   = ToSet(xt1.Id())
-        if (Equal(g0219.Id(),CEMPTY.Id()) != CTRUE) { 
-          Result = F_abstract_type_operation(p,F_abstract_type_set(g0219),xt2)
+      { var g0220 *ClaireSet   = ToSet(xt1.Id())
+        if (Equal(g0220.Id(),CEMPTY.Id()) != CTRUE) { 
+          Result = F_abstract_type_operation(p,F_abstract_type_set(g0220),xt2)
           } else {
-          Result = ToType(g0219.Id())
+          Result = ToType(g0220.Id())
           } 
         } 
       }  else if (xt1.Isa.IsIn(C_Interval) == CTRUE) { 
-      { var g0220 *ClaireInterval   = To_Interval(xt1.Id())
+      { var g0221 *ClaireInterval   = To_Interval(xt1.Id())
         if (xt2.Isa.IsIn(C_Interval) == CTRUE) { 
-          { var g0221 *ClaireInterval   = To_Interval(xt2.Id())
+          { var g0222 *ClaireInterval   = To_Interval(xt2.Id())
             if (p.Id() == C__plus.Id()) { 
-              Result = F__dot_dot_integer((g0220.Arg1+g0221.Arg1),(g0220.Arg2+g0221.Arg2))
+              Result = F__dot_dot_integer((g0221.Arg1+g0222.Arg1),(g0221.Arg2+g0222.Arg2))
               }  else if (p.Id() == C__dash.Id()) { 
-              Result = F__dot_dot_integer((g0220.Arg1-g0221.Arg2),(g0220.Arg2-g0221.Arg1))
+              Result = F__dot_dot_integer((g0221.Arg1-g0222.Arg2),(g0221.Arg2-g0222.Arg1))
               } else {
               Result = ToType(C_integer.Id())
               } 
             } 
           }  else if (C_set.Id() == xt2.Isa.Id()) { 
-          { var g0222 *ClaireSet   = ToSet(xt2.Id())
-            if (Equal(g0222.Id(),CEMPTY.Id()) != CTRUE) { 
-              Result = F_abstract_type_operation(p,ToType(g0220.Id()),F_abstract_type_set(g0222))
+          { var g0223 *ClaireSet   = ToSet(xt2.Id())
+            if (Equal(g0223.Id(),CEMPTY.Id()) != CTRUE) { 
+              Result = F_abstract_type_operation(p,ToType(g0221.Id()),F_abstract_type_set(g0223))
               } else {
-              Result = ToType(g0222.Id())
+              Result = ToType(g0223.Id())
               } 
             } 
           }  else if (xt2.Isa.IsIn(C_Union) == CTRUE) { 
-          { var g0223 *ClaireUnion   = To_Union(xt2.Id())
-            Result = F_U_type(F_abstract_type_operation(p,ToType(g0220.Id()),g0223.T1),F_abstract_type_operation(p,ToType(g0220.Id()),g0223.T2))
+          { var g0224 *ClaireUnion   = To_Union(xt2.Id())
+            Result = F_U_type(F_abstract_type_operation(p,ToType(g0221.Id()),g0224.T1),F_abstract_type_operation(p,ToType(g0221.Id()),g0224.T2))
             } 
           } else {
           Result = ToType(C_integer.Id())
           } 
         } 
       }  else if (xt1.Isa.IsIn(C_Union) == CTRUE) { 
-      { var g0225 *ClaireUnion   = To_Union(xt1.Id())
-        Result = F_U_type(F_abstract_type_operation(p,g0225.T1,xt2),F_abstract_type_operation(p,g0225.T2,xt2))
+      { var g0226 *ClaireUnion   = To_Union(xt1.Id())
+        Result = F_U_type(F_abstract_type_operation(p,g0226.T1,xt2),F_abstract_type_operation(p,g0226.T2,xt2))
         } 
       } else {
       Result = ToType(C_integer.Id())

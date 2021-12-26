@@ -91,9 +91,7 @@ eval_message(self:property,r:object,start:integer,int?:boolean) : any
            else  stack_apply(m.functional, start, index!())))    // CLAIRE 4: use functional
     else if ( owner(r) = slot & index!() = (start + 1))
                let val := get(r as slot, get_stack(start) as object) in
-                 (if (unknown?(val) & not(val % range(r as slot)))
-                     read_slot_error(arg = get_stack(start), wrong = self),
-                  set_index(start),
+                 (set_index(start),
                   let n := trace!() in
                     (if (n > 0 & trace!(self) + verbose() > 4 )
                       (put(trace!, system, 0),
@@ -147,11 +145,16 @@ eval(self:any) : any -> eval(self)
 // reads an inline definition for a method
 // notice that it does not return an error
 [inlineok?(self:method,s:string) : method
- -> try let p := read,
-            l := call(p, s) in
+ -> try let p := read, l := call(p, s) in
         (self.inline? := true, self.formula := (l as lambda))
      catch any unsafe(trace(0,"---- WARNING: inline definition of ~S is wrong\n", self)),
      self ]
+
+// reads a lambda
+[claire/read_lambda(s:string) : lambda
+ -> try let p := read, l := call(p, s) in
+          (case l (lambda l, any error("compiled lambda error with ~S (not a lambda!)",s)))
+    catch any error("compiled lambda parse error with ~S",s)]     
 
 // ****************************************************************
 // *    Part 2: Update methods                                    *

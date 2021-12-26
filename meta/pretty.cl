@@ -117,10 +117,15 @@ apply(self:lambda,%l:list) : any
 call(self:lambda,l:listargs) : any -> apply(self, l)
 
 // printing a lambda
-//
 self_print(self:lambda) : void
  -> printf("lambda[(~I),~I~S~I]", ppvariable(self.vars), lbreak(1),
            self.body, (pretty.index :- 1))
+
+
+// map is the most famous function on a lambda
+[claire/map(self:lambda,%l:bag) : any
+  -> case %l (set {funcall(self,x) | x in %l},
+              any list{funcall(self,x) | x in (%l as list)}) ]
 
 // lambda! and flexical_build communicate via a global_variable, which
 // however is only used in this file (and also by cfile :-) ):
@@ -363,6 +368,15 @@ pretty_print(self:any) : void
 [self_print(self:tuple) : void
  -> printf("tuple(~I)", printbox(self as list)) ]
 
+// a map_set 
+[self_print(self:map_set) : void
+  -> printf("map<~S,~S>", domain(self), range(self)) ]  
+
+// a pair
+[self_print(x:pair) : void
+    -> printexp(x.first,false),
+       princ(":"),
+       printexp(x.second,false) ]
 
 // *********************************************************************
 // *  Part 5: simple type inference  (class based)                     *

@@ -1,5 +1,5 @@
-/***** CLAIRE Compilation of file /Users/ycaseau/claire/v4.0/meta/function.cl 
-         [version 4.0.02 / safety 5] Friday 12-24-2021 *****/
+/***** CLAIRE Compilation of file /Users/ycaseau/Dropbox/src/clairev4.03/src/meta/function.cl 
+         [version 4.0.04 / safety 5] Sunday 12-26-2021 17:16:09 *****/
 
 package Core
 import (_ "fmt"
@@ -126,27 +126,27 @@ func F_apply_self_print_any (self *ClaireAny ) EID {
       PRINC("unknown")
       Result = EVOID
       }  else if (self.Isa.IsIn(C_thing) == CTRUE) { 
-      { var g0095 *ClaireThing   = ToThing(self)
-        _ = g0095
-        g0095.Name.Princ()
-        Result = EVOID
-        } 
-      }  else if (C_class.Id() == self.Isa.Id()) { 
-      { var g0096 *ClaireClass   = ToClass(self)
+      { var g0096 *ClaireThing   = ToThing(self)
         _ = g0096
         g0096.Name.Princ()
         Result = EVOID
         } 
-      }  else if (C_integer.Id() == self.Isa.Id()) { 
-      { var g0097 int  = ToInteger(self).Value
+      }  else if (C_class.Id() == self.Isa.Id()) { 
+      { var g0097 *ClaireClass   = ToClass(self)
         _ = g0097
-        F_princ_integer(g0097)
+        g0097.Name.Princ()
+        Result = EVOID
+        } 
+      }  else if (C_integer.Id() == self.Isa.Id()) { 
+      { var g0098 int  = ToInteger(self).Value
+        _ = g0098
+        F_princ_integer(g0098)
         Result = EVOID
         } 
       }  else if (C_string.Id() == self.Isa.Id()) { 
-      { var g0098 *ClaireString   = ToString(self)
-        _ = g0098
-        Result = F_CALL(C_self_print,ARGS(EID{(g0098).Id(),0}))
+      { var g0099 *ClaireString   = ToString(self)
+        _ = g0099
+        Result = F_CALL(C_self_print,ARGS(EID{(g0099).Id(),0}))
         } 
       } else {
       { var _Zprop *ClaireMethod   = ToMethod(F__at_property1(C_self_print,self.Isa).Id())
@@ -198,10 +198,10 @@ func F_self_print_any_Core (self *ClaireAny ) EID {
             PRINC("(")
             /*g_try(v2:"Result",loop:true) */
             { var i int  = 1
-              { var g0100 int  = n
-                _ = g0100
+              { var g0101 int  = n
+                _ = g0101
                 Result= EID{CFALSE.Id(),0}
-                for (i <= g0100) { 
+                for (i <= g0101) { 
                   /* While stat, v:"Result" loop:true */
                   var loop_1 EID 
                   _ = loop_1
@@ -539,9 +539,9 @@ func F_Core_new_defaults_object (self *ClaireObject ,lp *ClaireList ) EID {
     if !ErrorIn(Result) {
     { var m *ClaireAny   = F__at_property1(C_close,self.Id().Isa).Id()
       if (C_method.Id() == m.Isa.Id()) { 
-        { var g0101 *ClaireMethod   = ToMethod(m)
-          _ = g0101
-          Result = F_funcall_method1(g0101,self.Id())
+        { var g0102 *ClaireMethod   = ToMethod(m)
+          _ = g0102
+          Result = F_funcall_method1(g0102,self.Id())
           } 
         } else {
         Result = EID{self.Id(),0}
@@ -639,8 +639,8 @@ func F_check_in_bag (self *ClaireBag ,c *ClaireClass ,y *ClaireType ) EID {
     { var OK *ClaireBoolean  
       _ = OK
       if (self.Isa.IsIn(C_list) == CTRUE) { 
-        { var g0103 *ClaireList   = ToList(self.Id())
-          _ = g0103
+        { var g0104 *ClaireList   = ToList(self.Id())
+          _ = g0104
           { var arg_1 *ClaireAny  
             _ = arg_1
             { 
@@ -648,7 +648,7 @@ func F_check_in_bag (self *ClaireBag ,c *ClaireClass ,y *ClaireType ) EID {
               _ = z
               arg_1= CFALSE.Id()
               var z_support *ClaireList  
-              z_support = g0103
+              z_support = g0104
               z_len := z_support.Length()
               for i_it := 0; i_it < z_len; i_it++ { 
                 z = z_support.At(i_it)
@@ -1049,20 +1049,20 @@ func E_abstract_property (p EID) EID {
 func F_final_relation (r *ClaireRelation )  { 
     // procedure body with s = void 
 if (r.Isa.IsIn(C_property) == CTRUE) { 
-      { var g0105 *ClaireProperty   = ToProperty(r.Id())
-        if (g0105.Open <= 2) { 
-          g0105.Open = 1
+      { var g0106 *ClaireProperty   = ToProperty(r.Id())
+        if (g0106.Open <= 2) { 
+          g0106.Open = 1
           /*integer->integer*/{ 
             var va_arg1 *ClaireRelation  
             var va_arg2 *ClaireType  
-            va_arg1 = ToRelation(g0105.Id())
+            va_arg1 = ToRelation(g0106.Id())
             { var arg_1 *ClaireList  
               _ = arg_1
               { 
                 var v_list7 *ClaireList  
                 var x *ClaireRestriction  
                 var v_local7 *ClaireAny  
-                v_list7 = g0105.Restrictions
+                v_list7 = g0106.Restrictions
                 arg_1 = CreateList(ToType(CEMPTY.Id()),v_list7.Length())
                 for CLcount := 0; CLcount < v_list7.Length(); CLcount++{ 
                   x = ToRestriction(v_list7.At(CLcount))
@@ -1077,14 +1077,14 @@ if (r.Isa.IsIn(C_property) == CTRUE) {
           { 
             var va_arg1 *ClaireRelation  
             var va_arg2 *ClaireType  
-            va_arg1 = ToRelation(g0105.Id())
+            va_arg1 = ToRelation(g0106.Id())
             { var arg_2 *ClaireList  
               _ = arg_2
               { 
                 var v_list7 *ClaireList  
                 var x *ClaireRestriction  
                 var v_local7 *ClaireAny  
-                v_list7 = g0105.Restrictions
+                v_list7 = g0106.Restrictions
                 arg_2 = CreateList(ToType(CEMPTY.Id()),v_list7.Length())
                 for CLcount := 0; CLcount < v_list7.Length(); CLcount++{ 
                   x = ToRestriction(v_list7.At(CLcount))
@@ -1243,16 +1243,16 @@ var Result *ClaireAny
       for i_it := 0; i_it < r_len; i_it++ { 
         r = r_support.At(i_it)
         if (r.Isa.IsIn(C_relation) == CTRUE) { 
-          { var g0108 *ClaireRelation   = ToRelation(r)
-            g0108.Store_ask = CTRUE
+          { var g0109 *ClaireRelation   = ToRelation(r)
+            g0109.Store_ask = CTRUE
             /*boolean->boolean*/} 
           }  else if (C_string.Id() == r.Isa.Id()) { 
-          { var g0109 *ClaireString   = ToString(r)
-            _ = g0109
-            { var v *ClaireAny   = F_value_string(g0109)
+          { var g0110 *ClaireString   = ToString(r)
+            _ = g0110
+            { var v *ClaireAny   = F_value_string(g0110)
               if (v.Isa.IsIn(C_global_variable) == CTRUE) { 
-                { var g0110 *GlobalVariable   = ToGlobalVariable(v)
-                  g0110.Store_ask = CTRUE
+                { var g0111 *GlobalVariable   = ToGlobalVariable(v)
+                  g0111.Store_ask = CTRUE
                   /*boolean->boolean*/} 
                 } 
               } 
@@ -1884,7 +1884,7 @@ func F_min_method2 (f *ClaireMethod ,self *ClaireSet ) EID {
             var loop_1 EID 
             _ = loop_1
             /*g_try(v2:"loop_1",loop:tuple("Result", EID)) */
-            var g0111I *ClaireBoolean  
+            var g0112I *ClaireBoolean  
             var try_2 EID 
             /*g_try(v2:"try_2",loop:false) */
             { 
@@ -1909,11 +1909,11 @@ func F_min_method2 (f *ClaireMethod ,self *ClaireSet ) EID {
                 } 
               }
               } 
-            /* ERROR PROTECTION INSERTED (g0111I-loop_1) */
+            /* ERROR PROTECTION INSERTED (g0112I-loop_1) */
             if ErrorIn(try_2) {loop_1 = try_2
             } else {
-            g0111I = ToBoolean(OBJ(try_2))
-            if (g0111I == CTRUE) { 
+            g0112I = ToBoolean(OBJ(try_2))
+            if (g0112I == CTRUE) { 
               x = y
               loop_1 = x.ToEID()
               } else {
@@ -1969,7 +1969,7 @@ func F_max_method2 (f *ClaireMethod ,self *ClaireSet ) EID {
             var loop_1 EID 
             _ = loop_1
             /*g_try(v2:"loop_1",loop:tuple("Result", EID)) */
-            var g0112I *ClaireBoolean  
+            var g0113I *ClaireBoolean  
             var try_2 EID 
             /*g_try(v2:"try_2",loop:false) */
             { 
@@ -2016,11 +2016,11 @@ func F_max_method2 (f *ClaireMethod ,self *ClaireSet ) EID {
                 } 
               }
               } 
-            /* ERROR PROTECTION INSERTED (g0112I-loop_1) */
+            /* ERROR PROTECTION INSERTED (g0113I-loop_1) */
             if ErrorIn(try_2) {loop_1 = try_2
             } else {
-            g0112I = ToBoolean(OBJ(try_2))
-            if (g0112I == CTRUE) { 
+            g0113I = ToBoolean(OBJ(try_2))
+            if (g0113I == CTRUE) { 
               x = y
               loop_1 = x.ToEID()
               } else {
@@ -2068,24 +2068,24 @@ func F_min_method3 (f *ClaireMethod ,self *ClaireList ) EID {
         { var x *ClaireAny   = self.At(1-1)
           /*g_try(v2:"Result",loop:true) */
           { var i int  = 2
-            { var g0113 int  = n
-              _ = g0113
+            { var g0114 int  = n
+              _ = g0114
               Result= EID{CFALSE.Id(),0}
-              for (i <= g0113) { 
+              for (i <= g0114) { 
                 /* While stat, v:"Result" loop:true */
                 var loop_1 EID 
                 _ = loop_1
                 { 
                 /*g_try(v2:"loop_1",loop:tuple("Result", EID)) */
-                var g0114I *ClaireBoolean  
+                var g0115I *ClaireBoolean  
                 var try_2 EID 
                 /*g_try(v2:"try_2",loop:false) */
                 try_2 = F_funcall_method2(f,self.At(i-1),x)
-                /* ERROR PROTECTION INSERTED (g0114I-loop_1) */
+                /* ERROR PROTECTION INSERTED (g0115I-loop_1) */
                 if ErrorIn(try_2) {loop_1 = try_2
                 } else {
-                g0114I = ToBoolean(OBJ(try_2))
-                if (g0114I == CTRUE) { 
+                g0115I = ToBoolean(OBJ(try_2))
+                if (g0115I == CTRUE) { 
                   x = self.At(i-1)
                   loop_1 = x.ToEID()
                   } else {
@@ -2137,16 +2137,16 @@ func F_max_method3 (f *ClaireMethod ,self *ClaireList ) EID {
         { var x *ClaireAny   = self.At(1-1)
           /*g_try(v2:"Result",loop:true) */
           { var i int  = 2
-            { var g0115 int  = n
-              _ = g0115
+            { var g0116 int  = n
+              _ = g0116
               Result= EID{CFALSE.Id(),0}
-              for (i <= g0115) { 
+              for (i <= g0116) { 
                 /* While stat, v:"Result" loop:true */
                 var loop_1 EID 
                 _ = loop_1
                 { 
                 /*g_try(v2:"loop_1",loop:tuple("Result", EID)) */
-                var g0116I *ClaireBoolean  
+                var g0117I *ClaireBoolean  
                 var try_2 EID 
                 /*g_try(v2:"try_2",loop:false) */
                 { var arg_3 *ClaireBoolean  
@@ -2172,11 +2172,11 @@ func F_max_method3 (f *ClaireMethod ,self *ClaireList ) EID {
                   try_2 = EID{F__I_equal_any(arg_3.Id(),CTRUE.Id()).Id(),0}
                   }
                   } 
-                /* ERROR PROTECTION INSERTED (g0116I-loop_1) */
+                /* ERROR PROTECTION INSERTED (g0117I-loop_1) */
                 if ErrorIn(try_2) {loop_1 = try_2
                 } else {
-                g0116I = ToBoolean(OBJ(try_2))
-                if (g0116I == CTRUE) { 
+                g0117I = ToBoolean(OBJ(try_2))
+                if (g0117I == CTRUE) { 
                   x = self.At(i-1)
                   loop_1 = x.ToEID()
                   } else {
@@ -2329,15 +2329,15 @@ func F_quicksort_list (self *ClaireList ,f *ClaireMethod ,n int,m int) EID {
     if (m > n) { 
       { var x *ClaireAny   = self.At(n-1)
         if (m == (n+1)) { 
-          var g0118I *ClaireBoolean  
+          var g0119I *ClaireBoolean  
           var try_1 EID 
           /*g_try(v2:"try_1",loop:false) */
           try_1 = F_funcall_method2(f,self.At(m-1),x)
-          /* ERROR PROTECTION INSERTED (g0118I-Result) */
+          /* ERROR PROTECTION INSERTED (g0119I-Result) */
           if ErrorIn(try_1) {Result = try_1
           } else {
-          g0118I = ToBoolean(OBJ(try_1))
-          if (g0118I == CTRUE) { 
+          g0119I = ToBoolean(OBJ(try_1))
+          if (g0119I == CTRUE) { 
             ToArray(self.Id()).NthPut(n,self.At(m-1))
             Result = ToArray(self.Id()).NthPut(m,x).ToEID()
             } else {
@@ -2354,24 +2354,24 @@ func F_quicksort_list (self *ClaireList ,f *ClaireMethod ,n int,m int) EID {
                 } 
               /*g_try(v2:"Result",loop:true) */
               { var p int  = (n+1)
-                { var g0117 int  = m
-                  _ = g0117
+                { var g0118 int  = m
+                  _ = g0118
                   Result= EID{CFALSE.Id(),0}
-                  for (p <= g0117) { 
+                  for (p <= g0118) { 
                     /* While stat, v:"Result" loop:true */
                     var loop_2 EID 
                     _ = loop_2
                     { 
                     /*g_try(v2:"loop_2",loop:tuple("Result", EID)) */
-                    var g0119I *ClaireBoolean  
+                    var g0120I *ClaireBoolean  
                     var try_3 EID 
                     /*g_try(v2:"try_3",loop:false) */
                     try_3 = F_funcall_method2(f,self.At(p-1),x)
-                    /* ERROR PROTECTION INSERTED (g0119I-loop_2) */
+                    /* ERROR PROTECTION INSERTED (g0120I-loop_2) */
                     if ErrorIn(try_3) {loop_2 = try_3
                     } else {
-                    g0119I = ToBoolean(OBJ(try_3))
-                    if (g0119I == CTRUE) { 
+                    g0120I = ToBoolean(OBJ(try_3))
+                    if (g0120I == CTRUE) { 
                       ToArray(self.Id()).NthPut(n,self.At(p-1))
                       n = (n+1)
                       if (p > n) { 
@@ -2463,14 +2463,14 @@ func F_make_copy_list_integer (n int,d *ClaireAny ) *ClaireList  {
 var Result *ClaireList  
     { var l *ClaireList   = F_make_list_integer(n,d)
       if (d.Isa.IsIn(C_list) == CTRUE) { 
-        { var g0120 *ClaireList   = ToList(d)
-          _ = g0120
+        { var g0121 *ClaireList   = ToList(d)
+          _ = g0121
           { var i int  = 1
-            { var g0121 int  = n
-              _ = g0121
-              for (i <= g0121) { 
+            { var g0122 int  = n
+              _ = g0122
+              for (i <= g0122) { 
                 /* While stat, v:"Result" loop:false */
-                ToArray(l.Id()).NthPut(i,g0120.Copy().Id())
+                ToArray(l.Id()).NthPut(i,g0121.Copy().Id())
                 i = (i+1)
                 /* try?:false, v2:"v_while7" loop will be:tuple("Result", void) */
                 } 
@@ -2498,14 +2498,14 @@ var Result *ClaireList
       } else {
       { var l *ClaireList   = F_make_list_integer(n,d)
         if (d.Isa.IsIn(C_bag) == CTRUE) { 
-          { var g0122 *ClaireBag   = ToBag(d)
-            _ = g0122
+          { var g0123 *ClaireBag   = ToBag(d)
+            _ = g0123
             { var i int  = 1
-              { var g0123 int  = n
-                _ = g0123
-                for (i <= g0123) { 
+              { var g0124 int  = n
+                _ = g0124
+                for (i <= g0124) { 
                   /* While stat, v:"Result" loop:false */
-                  ToArray(l.Id()).NthPut(i,ANY(F_CALL(C_copy,ARGS(EID{g0122.Id(),0}))))
+                  ToArray(l.Id()).NthPut(i,ANY(F_CALL(C_copy,ARGS(EID{g0123.Id(),0}))))
                   i = (i+1)
                   /* try?:false, v2:"v_while8" loop will be:tuple("Result", void) */
                   } 
