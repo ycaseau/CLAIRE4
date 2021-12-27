@@ -130,7 +130,7 @@ stdout :: global_variable(range = port, value = externC("ClEnv.Cout.Id()"))
 
 stdin :: global_variable(range = port, value = externC("ClEnv.Cin.Id()"))
 
-*fs*:string :: Id(*fs*)
+*fs*:string :: file_separator()
 
 /(s:string,s2:string) : string -> ((s /+ *fs*) /+ s2)
 

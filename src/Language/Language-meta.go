@@ -1,5 +1,5 @@
 /***** CLAIRE Compilation of module Language.cl 
-         [version 4.0.04 / safety 5] Sunday 12-26-2021 17:16:09 *****/
+         [version 4.0.03 / safety 5] Monday 12-27-2021 10:35:23 *****/
 
 package Language
 import (_ "fmt"
@@ -1255,6 +1255,15 @@ var C_Language_rule_object *ClaireClass  /*obj*/
 var C_Language_relations *ClaireTable  /*obj*/
 var C_Language_last_rule *ClaireTable  /*obj*/
 var C_eval_rule *ClaireProperty  /*obj*/
+var C_Language_no_eval *ClaireProperty  // Language/"no_eval"
+var C_Language_ppvariable *ClaireProperty  // Language/"ppvariable"
+var C_Language_write_value *ClaireProperty  // Language/"write_value"
+var C_var *ClaireProperty  // claire/"var"
+var C_iClaire_lambda_I *ClaireProperty  // iClaire/"lambda!"
+var C_iClaire_lexical_build *ClaireProperty  // iClaire/"lexical_build"
+var C_iClaire_lexical_change *ClaireProperty  // iClaire/"lexical_change"
+var C_iClaire_extract_symbol *ClaireProperty  // iClaire/"extract_symbol"
+var C_iClaire_make_a_property *ClaireProperty  // iClaire/"make_a_property"
 var C_Language_lbreak *ClaireProperty  // Language/"lbreak"
 var C_Language_put_buffer *ClaireProperty  // Language/"put_buffer"
 var C_Language_checkfar *ClaireProperty  // Language/"checkfar"
@@ -1312,15 +1321,6 @@ var C_Language_makeCallMatch *ClaireProperty  // Language/"makeCallMatch"
 var C_Language_new_writes *ClaireProperty  // Language/"new_writes"
 var C_Language_occurexact *ClaireProperty  // Language/"occurexact"
 var C_Language_wrong *ClaireProperty  // Language/"wrong"
-var C_Language_no_eval *ClaireProperty  // Language/"no_eval"
-var C_Language_ppvariable *ClaireProperty  // Language/"ppvariable"
-var C_Language_write_value *ClaireProperty  // Language/"write_value"
-var C_var *ClaireProperty  // claire/"var"
-var C_iClaire_lambda_I *ClaireProperty  // iClaire/"lambda!"
-var C_iClaire_lexical_build *ClaireProperty  // iClaire/"lexical_build"
-var C_iClaire_lexical_change *ClaireProperty  // iClaire/"lexical_change"
-var C_iClaire_extract_symbol *ClaireProperty  // iClaire/"extract_symbol"
-var C_iClaire_make_a_property *ClaireProperty  // iClaire/"make_a_property"
 var C_map *ClaireProperty  // claire/"map"
 var It *ClaireModule
 var C_iClaire *ClaireModule 
@@ -1328,10 +1328,19 @@ var C_iClaire *ClaireModule
 func MetaLoad() { 
   
   It = MakeModule("Language",C_iClaire)
-  It.Comment = MakeString("Compiled on Sunday 12-26-2021 17:16:09(v4.0.04), lines:2244, warnings:11,safety:5")
+  It.Comment = MakeString("Compiled on Monday 12-27-2021 10:35:23(v4.0.03), lines:2244, warnings:11,safety:5")
   ClEnv.Module_I = It
   // definition of the properties 
   
+  C_Language_no_eval = MakeProperty("no_eval",1,It)
+  C_Language_ppvariable = MakeProperty("ppvariable",1,It)
+  C_Language_write_value = MakeProperty("write_value",1,It)
+  C_var = MakeProperty("var",0,C_claire)
+  C_iClaire_lambda_I = MakeProperty("lambda!",1,C_iClaire)
+  C_iClaire_lexical_build = MakeProperty("lexical_build",1,C_iClaire)
+  C_iClaire_lexical_change = MakeProperty("lexical_change",1,C_iClaire)
+  C_iClaire_extract_symbol = MakeProperty("extract_symbol",1,C_iClaire)
+  C_iClaire_make_a_property = MakeProperty("make_a_property",1,C_iClaire)
   C_Language_lbreak = MakeProperty("lbreak",1,It)
   C_Language_put_buffer = MakeProperty("put_buffer",1,It)
   C_Language_checkfar = MakeProperty("checkfar",1,It)
@@ -1389,15 +1398,6 @@ func MetaLoad() {
   C_Language_new_writes = MakeProperty("new_writes",1,It)
   C_Language_occurexact = MakeProperty("occurexact",1,It)
   C_Language_wrong = MakeProperty("wrong",2,It)
-  C_Language_no_eval = MakeProperty("no_eval",1,It)
-  C_Language_ppvariable = MakeProperty("ppvariable",1,It)
-  C_Language_write_value = MakeProperty("write_value",1,It)
-  C_var = MakeProperty("var",0,C_claire)
-  C_iClaire_lambda_I = MakeProperty("lambda!",1,C_iClaire)
-  C_iClaire_lexical_build = MakeProperty("lexical_build",1,C_iClaire)
-  C_iClaire_lexical_change = MakeProperty("lexical_change",1,C_iClaire)
-  C_iClaire_extract_symbol = MakeProperty("extract_symbol",1,C_iClaire)
-  C_iClaire_make_a_property = MakeProperty("make_a_property",1,C_iClaire)
   C_map = MakeProperty("map",1,C_claire)
   
   // instructions from module sources

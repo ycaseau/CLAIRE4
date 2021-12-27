@@ -1,5 +1,5 @@
 /***** CLAIRE Compilation of module Reader.cl 
-         [version 4.0.04 / safety 5] Sunday 12-26-2021 17:16:10 *****/
+         [version 4.0.03 / safety 5] Monday 12-27-2021 10:35:24 *****/
 
 package Reader
 import (_ "fmt"
@@ -311,7 +311,7 @@ var It *ClaireModule
 func MetaLoad() { 
   
   It = MakeModule("Reader",Language.C_iClaire)
-  It.Comment = MakeString("Compiled on Sunday 12-26-2021 17:16:10(v4.0.04), lines:1874, warnings:16,safety:5")
+  It.Comment = MakeString("Compiled on Monday 12-27-2021 10:35:24(v4.0.03), lines:1874, warnings:16,safety:5")
   ClEnv.Module_I = It
   // definition of the properties 
   
@@ -948,7 +948,7 @@ func MetaLoad() {
       
       _CL_obj = C__starfs_star
       _CL_obj.Range = ToType(C_string.Id())
-      /*type->type*/_CL_obj.Value = MakeString("/").Id()
+      /*type->type*/_CL_obj.Value = (ClEnv.FileSeparator()).Id()
       /*any->any*/expr = _CL_obj.Close()
       } 
     ErrorCheck(expr)} 

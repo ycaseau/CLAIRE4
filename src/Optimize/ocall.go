@@ -1,5 +1,5 @@
 /***** CLAIRE Compilation of file /Users/ycaseau/Dropbox/src/clairev4.03/src/compile/ocall.cl 
-         [version 4.0.04 / safety 5] Sunday 12-26-2021 17:16:12 *****/
+         [version 4.0.03 / safety 5] Monday 12-27-2021 10:35:27 *****/
 
 package Optimize
 import (_ "fmt"
@@ -829,7 +829,7 @@ func F_Optimize_c_code_call_Call (self *Language.Call ,sx *ClaireClass ) EID {
                   { 
                     var v_and9 *ClaireBoolean  
                     
-                    v_and9 = MakeBoolean((s.Id() == C__equal.Id()) || (s.Id() == Core.C__I_equal.Id()))
+                    v_and9 = MakeBoolean((s.Id() == Core.C__I_equal.Id()) || (s.Id() == C__equal.Id()))
                     if (v_and9 == CFALSE) {try_16 = EID{CFALSE.Id(),0}
                     } else { 
                       var try_17 EID 
@@ -869,7 +869,7 @@ func F_Optimize_c_code_call_Call (self *Language.Call ,sx *ClaireClass ) EID {
                     { 
                       var v_and10 *ClaireBoolean  
                       
-                      v_and10 = MakeBoolean((s.Id() == C__equal.Id()) || (s.Id() == Core.C__I_equal.Id()))
+                      v_and10 = MakeBoolean((s.Id() == Core.C__I_equal.Id()) || (s.Id() == C__equal.Id()))
                       if (v_and10 == CFALSE) {try_20 = EID{CFALSE.Id(),0}
                       } else { 
                         var try_21 EID 

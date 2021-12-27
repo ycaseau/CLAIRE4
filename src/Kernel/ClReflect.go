@@ -861,6 +861,7 @@ func BootSlot() {
 	C_imports = makeProperty("imports")
 	C_first = makeProperty("first")
 	C_second = makeProperty("second")
+	C_osname = makeProperty("osname")
 
 	// slots (same order as Kernel)
 	C_any.AddSlot(C_isa, ToType(C_class.Id()), CNULL)
@@ -949,6 +950,7 @@ func BootSlot() {
 	C_environment.AddSlot(C_exception_I, ToType(C_exception.Id()), CNULL)
 	C_environment.AddSlot(C_module_I, ToType(C_module.Id()), CNULL)
 	C_environment.AddSlot(C_name, ToType(C_string.Id()), CNULL)
+	C_environment.AddSlot(C_osname, ToType(C_string.Id()), CNULL)
 	C_environment.AddSlot(C_version, ToType(C_float.Id()), AnyFloat(0.0))
 	C_environment.AddSlot(C_ctrace, ToType(C_port.Id()), CNULL)
 	C_environment.AddSlot(C_cout, ToType(C_port.Id()), CNULL)
@@ -1084,6 +1086,7 @@ func BootMethod() {
 	C_arity = makeKernelProperty("arity")
 	C_set_arity = makeKernelProperty("set_arity")
 	C_slice = makeProperty("slice")
+	C_file_separator = makeProperty("file_separator")
 	// C_getenv = makeProperty("getenv")
 
 	// operation
@@ -1256,6 +1259,7 @@ func BootMethod() {
 	C_shell.AddMethod(Signature(C_string.Id(), C_void.Id()), 0, MakeFunction1(E_claire_shell, "claire_shell"))
 	C_exit.AddMethod(Signature(C_integer.Id(), C_void.Id()), 0, MakeFunction1(E_CL_exit, "CL_exit"))
 	C_abort.AddMethod(Signature(C_environment.Id(), C_void.Id()), 0, MakeFunction1(E_abort_system, "abort_system"))
+	C_file_separator.AddMethod(Signature(C_environment.Id(), C_string.Id()), 0, MakeFunction1(E_file_separator, "file_separator"))
 	C_mClaire_restore_state.AddMethod(Signature(C_void.Id(), C_void.Id()), 0, MakeFunction1(E_restore_state_void, "restore_state_void"))
 	C_store.AddMethod(Signature(C_list.Id(), C_integer.Id(), C_any.Id(), C_boolean.Id(), C_any.Id()), 0, MakeFunction4(E_store_list, "store_list"))
 	C_store.AddMethod(Signature(C_array.Id(), C_integer.Id(), C_any.Id(), C_boolean.Id(), C_any.Id()), 0, MakeFunction4(E_store_list, "store_list"))

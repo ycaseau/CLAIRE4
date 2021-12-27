@@ -1,5 +1,5 @@
 /***** CLAIRE Compilation of module Core.cl 
-         [version 4.0.04 / safety 5] Sunday 12-26-2021 17:16:09 *****/
+         [version 4.0.03 / safety 5] Monday 12-27-2021 10:35:23 *****/
 
 package Core
 import (_ "fmt"
@@ -238,46 +238,6 @@ var C__backslash *ClaireOperation  /*obj*/
 var C_glb *ClaireOperation  /*obj*/
 var C_Core__inf_equalt *ClaireOperation  /*obj*/
 var C_Core__Zt *ClaireOperation  /*obj*/
-var C_Uall *ClaireProperty  // claire/"Uall"
-var C_unique_ask *ClaireProperty  // claire/"unique?"
-var C_the *ClaireProperty  // claire/"the"
-var C_Core_abstract_type *ClaireProperty  // Core/"abstract_type"
-var C_Core_insert_definition *ClaireProperty  // Core/"insert_definition"
-var C_mClaire_cpretty *ClaireProperty  // mClaire/"cpretty"
-var C_mClaire_cprevious *ClaireProperty  // mClaire/"cprevious"
-var C_mClaire_width *ClaireProperty  // mClaire/"width"
-var C_mClaire_pprint *ClaireProperty  // mClaire/"pprint"
-var C_mClaire_pbreak *ClaireProperty  // mClaire/"pbreak"
-var C_mClaire_set_base *ClaireProperty  // mClaire/"set_base"
-var C_mClaire_set_index *ClaireProperty  // mClaire/"set_index"
-var C_mClaire_update *ClaireProperty  // mClaire/"update"
-var C_make_set *ClaireProperty  // claire/"make_set"
-var C_get_symbol *ClaireProperty  // claire/"get_symbol"
-var C_time_read *ClaireProperty  // claire/"time_read"
-var C_Core_first_arg_type *ClaireProperty  // Core/"first_arg_type"
-var C_Core_second_arg_type *ClaireProperty  // Core/"second_arg_type"
-var C_Core_meet_arg_types *ClaireProperty  // Core/"meet_arg_types"
-var C_make_copy_list *ClaireProperty  // claire/"make_copy_list"
-var C_make_table *ClaireProperty  // claire/"make_table"
-var C_Core_first_member_type *ClaireProperty  // Core/"first_member_type"
-var C_mClaire_printFDigit *ClaireProperty  // mClaire/"printFDigit"
-var C_abs *ClaireProperty  // claire/"abs"
-var C_less_ask *ClaireOperation  // claire/"less?"
-var C_unsafe *ClaireProperty  // claire/"unsafe"
-var C_attach *ClaireProperty  // claire/"attach"
-var C_Core_nth_arg_type *ClaireProperty  // Core/"nth_arg_type"
-var C_instanced *ClaireProperty  // claire/"instanced"
-var C_typed_copy_list *ClaireProperty  // claire/"typed_copy_list"
-var C_nth_write *ClaireProperty  // claire/"nth_write"
-var C_Core_belong *ClaireProperty  // Core/"belong"
-var C_Core_super_apply *ClaireProperty  // Core/"super_apply"
-var C_Core_add_value_I *ClaireProperty  // Core/"add_value!"
-var C_mClaire_nth_object *ClaireProperty  // mClaire/"nth_object"
-var C_Core_thing_type_class *ClaireProperty  // Core/"thing_type_class"
-var C_Core_object_type_class *ClaireProperty  // Core/"object_type_class"
-var C_Core_new_defaults *ClaireProperty  // Core/"new_defaults"
-var C_Reference_I *ClaireProperty  // claire/"Reference!"
-var C_Core_closed *ClaireProperty  // Core/"closed"
 var C_owner *ClaireProperty  // claire/"owner"
 var C_check_in *ClaireProperty  // claire/"check_in"
 var C_Core_initialize *ClaireProperty  // Core/"initialize"
@@ -333,6 +293,46 @@ var C_Core_of_extract *ClaireProperty  // Core/"of_extract"
 var C_member *ClaireProperty  // claire/"member"
 var C_get_value *ClaireProperty  // claire/"get_value"
 var C_Core_enumerate *ClaireProperty  // Core/"enumerate"
+var C_Uall *ClaireProperty  // claire/"Uall"
+var C_unique_ask *ClaireProperty  // claire/"unique?"
+var C_the *ClaireProperty  // claire/"the"
+var C_Core_abstract_type *ClaireProperty  // Core/"abstract_type"
+var C_Core_insert_definition *ClaireProperty  // Core/"insert_definition"
+var C_mClaire_cpretty *ClaireProperty  // mClaire/"cpretty"
+var C_mClaire_cprevious *ClaireProperty  // mClaire/"cprevious"
+var C_mClaire_width *ClaireProperty  // mClaire/"width"
+var C_mClaire_pprint *ClaireProperty  // mClaire/"pprint"
+var C_mClaire_pbreak *ClaireProperty  // mClaire/"pbreak"
+var C_mClaire_set_base *ClaireProperty  // mClaire/"set_base"
+var C_mClaire_set_index *ClaireProperty  // mClaire/"set_index"
+var C_mClaire_update *ClaireProperty  // mClaire/"update"
+var C_make_set *ClaireProperty  // claire/"make_set"
+var C_get_symbol *ClaireProperty  // claire/"get_symbol"
+var C_time_read *ClaireProperty  // claire/"time_read"
+var C_Core_first_arg_type *ClaireProperty  // Core/"first_arg_type"
+var C_Core_second_arg_type *ClaireProperty  // Core/"second_arg_type"
+var C_Core_meet_arg_types *ClaireProperty  // Core/"meet_arg_types"
+var C_make_copy_list *ClaireProperty  // claire/"make_copy_list"
+var C_make_table *ClaireProperty  // claire/"make_table"
+var C_Core_first_member_type *ClaireProperty  // Core/"first_member_type"
+var C_mClaire_printFDigit *ClaireProperty  // mClaire/"printFDigit"
+var C_abs *ClaireProperty  // claire/"abs"
+var C_less_ask *ClaireOperation  // claire/"less?"
+var C_unsafe *ClaireProperty  // claire/"unsafe"
+var C_attach *ClaireProperty  // claire/"attach"
+var C_Core_nth_arg_type *ClaireProperty  // Core/"nth_arg_type"
+var C_instanced *ClaireProperty  // claire/"instanced"
+var C_typed_copy_list *ClaireProperty  // claire/"typed_copy_list"
+var C_nth_write *ClaireProperty  // claire/"nth_write"
+var C_Core_belong *ClaireProperty  // Core/"belong"
+var C_Core_super_apply *ClaireProperty  // Core/"super_apply"
+var C_Core_add_value_I *ClaireProperty  // Core/"add_value!"
+var C_mClaire_nth_object *ClaireProperty  // mClaire/"nth_object"
+var C_Core_thing_type_class *ClaireProperty  // Core/"thing_type_class"
+var C_Core_object_type_class *ClaireProperty  // Core/"object_type_class"
+var C_Core_new_defaults *ClaireProperty  // Core/"new_defaults"
+var C_Reference_I *ClaireProperty  // claire/"Reference!"
+var C_Core_closed *ClaireProperty  // Core/"closed"
 var C_read_lambda *ClaireProperty  // claire/"read_lambda"
 var It *ClaireModule
 
@@ -340,50 +340,10 @@ var It *ClaireModule
 func MetaLoad() { 
   
   It = MakeModule("Core",C_mClaire)
-  It.Comment = MakeString("Compiled on Sunday 12-26-2021 17:16:09(v4.0.04), lines:2396, warnings:15,safety:5")
+  It.Comment = MakeString("Compiled on Monday 12-27-2021 10:35:23(v4.0.03), lines:2396, warnings:15,safety:5")
   ClEnv.Module_I = It
   // definition of the properties 
   
-  C_Uall = MakeProperty("Uall",1,C_claire)
-  C_unique_ask = MakeProperty("unique?",1,C_claire)
-  C_the = MakeProperty("the",1,C_claire)
-  C_Core_abstract_type = MakeProperty("abstract_type",1,It)
-  C_Core_insert_definition = MakeProperty("insert_definition",1,It)
-  C_mClaire_cpretty = MakeProperty("cpretty",1,C_mClaire)
-  C_mClaire_cprevious = MakeProperty("cprevious",1,C_mClaire)
-  C_mClaire_width = MakeProperty("width",1,C_mClaire)
-  C_mClaire_pprint = MakeProperty("pprint",1,C_mClaire)
-  C_mClaire_pbreak = MakeProperty("pbreak",1,C_mClaire)
-  C_mClaire_set_base = MakeProperty("set_base",1,C_mClaire)
-  C_mClaire_set_index = MakeProperty("set_index",1,C_mClaire)
-  C_mClaire_update = MakeProperty("update",1,C_mClaire)
-  C_make_set = MakeProperty("make_set",1,C_claire)
-  C_get_symbol = MakeProperty("get_symbol",1,C_claire)
-  C_time_read = MakeProperty("time_read",2,C_claire)
-  C_Core_first_arg_type = MakeProperty("first_arg_type",1,It)
-  C_Core_second_arg_type = MakeProperty("second_arg_type",1,It)
-  C_Core_meet_arg_types = MakeProperty("meet_arg_types",1,It)
-  C_make_copy_list = MakeProperty("make_copy_list",1,C_claire)
-  C_make_table = MakeProperty("make_table",1,C_claire)
-  C_Core_first_member_type = MakeProperty("first_member_type",1,It)
-  C_mClaire_printFDigit = MakeProperty("printFDigit",1,C_mClaire)
-  C_abs = MakeProperty("abs",1,C_claire)
-  C_less_ask = MakeOperation("less?",1,C_claire,60)
-  C_unsafe = MakeProperty("unsafe",1,C_claire)
-  C_attach = MakeProperty("attach",1,C_claire)
-  C_Core_nth_arg_type = MakeProperty("nth_arg_type",1,It)
-  C_instanced = MakeProperty("instanced",1,C_claire)
-  C_typed_copy_list = MakeProperty("typed_copy_list",1,C_claire)
-  C_nth_write = MakeProperty("nth_write",1,C_claire)
-  C_Core_belong = MakeProperty("belong",1,It)
-  C_Core_super_apply = MakeProperty("super_apply",1,It)
-  C_Core_add_value_I = MakeProperty("add_value!",1,It)
-  C_mClaire_nth_object = MakeProperty("nth_object",1,C_mClaire)
-  C_Core_thing_type_class = MakeProperty("thing_type_class",1,It)
-  C_Core_object_type_class = MakeProperty("object_type_class",1,It)
-  C_Core_new_defaults = MakeProperty("new_defaults",1,It)
-  C_Reference_I = MakeProperty("Reference!",1,C_claire)
-  C_Core_closed = MakeProperty("closed",2,It)
   C_owner = MakeProperty("owner",1,C_claire)
   C_check_in = MakeProperty("check_in",2,C_claire)
   C_Core_initialize = MakeProperty("initialize",1,It)
@@ -439,6 +399,46 @@ func MetaLoad() {
   C_member = MakeProperty("member",1,C_claire)
   C_get_value = MakeProperty("get_value",1,C_claire)
   C_Core_enumerate = MakeProperty("enumerate",1,It)
+  C_Uall = MakeProperty("Uall",1,C_claire)
+  C_unique_ask = MakeProperty("unique?",1,C_claire)
+  C_the = MakeProperty("the",1,C_claire)
+  C_Core_abstract_type = MakeProperty("abstract_type",1,It)
+  C_Core_insert_definition = MakeProperty("insert_definition",1,It)
+  C_mClaire_cpretty = MakeProperty("cpretty",1,C_mClaire)
+  C_mClaire_cprevious = MakeProperty("cprevious",1,C_mClaire)
+  C_mClaire_width = MakeProperty("width",1,C_mClaire)
+  C_mClaire_pprint = MakeProperty("pprint",1,C_mClaire)
+  C_mClaire_pbreak = MakeProperty("pbreak",1,C_mClaire)
+  C_mClaire_set_base = MakeProperty("set_base",1,C_mClaire)
+  C_mClaire_set_index = MakeProperty("set_index",1,C_mClaire)
+  C_mClaire_update = MakeProperty("update",1,C_mClaire)
+  C_make_set = MakeProperty("make_set",1,C_claire)
+  C_get_symbol = MakeProperty("get_symbol",1,C_claire)
+  C_time_read = MakeProperty("time_read",2,C_claire)
+  C_Core_first_arg_type = MakeProperty("first_arg_type",1,It)
+  C_Core_second_arg_type = MakeProperty("second_arg_type",1,It)
+  C_Core_meet_arg_types = MakeProperty("meet_arg_types",1,It)
+  C_make_copy_list = MakeProperty("make_copy_list",1,C_claire)
+  C_make_table = MakeProperty("make_table",1,C_claire)
+  C_Core_first_member_type = MakeProperty("first_member_type",1,It)
+  C_mClaire_printFDigit = MakeProperty("printFDigit",1,C_mClaire)
+  C_abs = MakeProperty("abs",1,C_claire)
+  C_less_ask = MakeOperation("less?",1,C_claire,60)
+  C_unsafe = MakeProperty("unsafe",1,C_claire)
+  C_attach = MakeProperty("attach",1,C_claire)
+  C_Core_nth_arg_type = MakeProperty("nth_arg_type",1,It)
+  C_instanced = MakeProperty("instanced",1,C_claire)
+  C_typed_copy_list = MakeProperty("typed_copy_list",1,C_claire)
+  C_nth_write = MakeProperty("nth_write",1,C_claire)
+  C_Core_belong = MakeProperty("belong",1,It)
+  C_Core_super_apply = MakeProperty("super_apply",1,It)
+  C_Core_add_value_I = MakeProperty("add_value!",1,It)
+  C_mClaire_nth_object = MakeProperty("nth_object",1,C_mClaire)
+  C_Core_thing_type_class = MakeProperty("thing_type_class",1,It)
+  C_Core_object_type_class = MakeProperty("object_type_class",1,It)
+  C_Core_new_defaults = MakeProperty("new_defaults",1,It)
+  C_Reference_I = MakeProperty("Reference!",1,C_claire)
+  C_Core_closed = MakeProperty("closed",2,It)
   C_read_lambda = MakeProperty("read_lambda",1,C_claire)
   
   // instructions from module sources
@@ -731,7 +731,7 @@ func MetaLoad() {
   /*float->float*/PRINC("-- CLAIRE run-time library v 4.")
   F_princ_float(0.04)
   PRINC(" [os: ")
-  PRINC("MacOS")
+  PRINC("macos")
   PRINC(", compiler:")
   PRINC("go")
   PRINC(" ] --\n")
@@ -1020,7 +1020,7 @@ func MetaLoad() {
       
       _CL_obj = C_claire_date
       _CL_obj.Range = ToType(C_string.Id())
-      /*type->type*/_CL_obj.Value = MakeString("Sunday 12-26-2021").Id()
+      /*type->type*/_CL_obj.Value = MakeString("Monday 12-27-2021").Id()
       /*any->any*/expr = _CL_obj.Close()
       } 
     ErrorCheck(expr)} 

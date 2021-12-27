@@ -52,7 +52,8 @@ type ClaireEnvironment struct {
 	Verbose            int
 	Exception_I        *ClaireException // last
 	Module_I           *ClaireModule    // current module
-	Name               *ClaireString
+	Name               *ClaireString    // name of the environment ()
+	Osname             *ClaireString    // the name of the env "macos","win","linux",...
 	Version            float64     // version number ! (4.0 implicit)
 	Ctrace             *ClairePort //  current trace port
 	Cout               *ClairePort //  current out port
@@ -151,6 +152,7 @@ func finishClEnv() {
 	ClEnv.Isa = C_environment
 	C_claire.register(makeSymbol("system"), ClEnv.Id()) // link symbol to object
 	ClEnv.Name = MakeString("Kernel")
+	ClEnv.Osname = MakeString("macos")
 	ClEnv.Exception_I = ToException(CNULL)
 	ClEnv.Spy_I = ToObject(CNULL)
 	ClEnv.moduleStack = makeEmptyObjectList(0)
@@ -296,6 +298,14 @@ func E_abort_system(s EID) EID {
 	return EVOID
 }
 
+// returns the appropriate file separator
+func (c *ClaireEnvironment) FileSeparator() *ClaireString {
+	if c.Osname.Value == "win" {return MakeString("\\")
+    } else {return MakeString("/")} 
+}
+
+func E_file_separator (c EID) EID {return EID{ClEnv.FileSeparator().Id(),0}}
+
 // restore a good working state.
 // used to be called clean_state -> called from the meta-reader more complex form
 func F_restore_state_void() {
@@ -419,8 +429,10 @@ func E_time_show_void(void EID) EID {
 // shell
 func F_claire_shell(s *ClaireString) {
 	fmt.Printf("execute: %s\n",s.Value)
+	var cmd *exec.Cmd
 	// var stdout bytes.Buffer        -> left if one day we want the result
-	cmd := exec.Command("bash","-c",s.Value)
+	if ClEnv.Osname.Value == "win" {cmd = exec.Command("cmd","/C",s.Value)
+	} else { cmd = exec.Command("bash","-c",s.Value)}
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stdout
 	// cmd.Stdout = &stdout

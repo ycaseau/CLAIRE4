@@ -1,5 +1,5 @@
 /***** CLAIRE Compilation of file /Users/ycaseau/Dropbox/src/clairev4.03/src/compile/gomain.cl 
-         [version 4.0.04 / safety 5] Sunday 12-26-2021 17:16:13 *****/
+         [version 4.0.03 / safety 5] Monday 12-27-2021 10:35:27 *****/
 
 package Generate
 import (_ "fmt"
@@ -129,9 +129,7 @@ func F_Generate_complex_main_void () EID {
                         { 
                           h_index := ClEnv.Index
                           h_base := ClEnv.Base
-                          Reader.C__starfs_star.Value = MakeString("/").Id()
-                          Optimize.C_compiler.Env = MakeString("MacOS")
-                          /*string->string*//*g_try(v2:"Result",loop:false) */
+                          /*g_try(v2:"Result",loop:false) */
                           Result= EID{CFALSE.Id(),0}
                           for (l.Length() != 0) { 
                             /* While stat, v:"Result" loop:false */

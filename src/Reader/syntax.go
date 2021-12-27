@@ -1,5 +1,5 @@
 /***** CLAIRE Compilation of file /Users/ycaseau/Dropbox/src/clairev4.03/src/meta/syntax.cl 
-         [version 4.0.04 / safety 5] Sunday 12-26-2021 17:16:09 *****/
+         [version 4.0.03 / safety 5] Monday 12-27-2021 10:35:24 *****/
 
 package Reader
 import (_ "fmt"

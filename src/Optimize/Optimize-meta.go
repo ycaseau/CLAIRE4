@@ -1,5 +1,5 @@
 /***** CLAIRE Compilation of module Optimize.cl 
-         [version 4.0.04 / safety 5] Sunday 12-26-2021 17:16:12 *****/
+         [version 4.0.03 / safety 5] Monday 12-27-2021 10:35:27 *****/
 
 package Optimize
 import (_ "fmt"
@@ -222,17 +222,6 @@ var C_PENIBLE *Core.GlobalVariable
 var C_Compile__starname_star *Core.GlobalVariable 
 var C_Optimize__staradd_method2_star *Core.GlobalVariable 
 var C_Optimize__equalsig_ask *ClaireOperation  /*obj*/
-var C_Optimize_Produce_put *ClaireProperty  // Optimize/"Produce_put"
-var C_Optimize_Produce_get *ClaireProperty  // Optimize/"Produce_get"
-var C_Optimize_Produce_remove *ClaireProperty  // Optimize/"Produce_remove"
-var C_Compile_compute_set_write *ClaireProperty  // Compile/"compute_set_write"
-var C_Optimize_Tighten *ClaireProperty  // Optimize/"Tighten"
-var C_Compile_Tighten_I *ClaireProperty  // Compile/"Tighten!"
-var C_Compile_lexical_num *ClaireProperty  // Compile/"lexical_num"
-var C_Optimize_compile_if_write *ClaireProperty  // Optimize/"compile_if_write"
-var C_Optimize_demon_function *ClaireProperty  // Optimize/"demon_function"
-var C_Optimize_compileEventMethod *ClaireProperty  // Optimize/"compileEventMethod"
-var C_Optimize_demon_substitution *ClaireProperty  // Optimize/"demon_substitution"
 var C_safety *ClaireProperty  // claire/"safety"
 var C_home *ClaireProperty  // claire/"home"
 var C_Compile_instructions *ClaireProperty  // Compile/"instructions"
@@ -259,7 +248,6 @@ var C_Compile_non_identifiable_set *ClaireProperty  // Compile/"non_identifiable
 var C_Compile_use_string_update *ClaireProperty  // Compile/"use_string_update"
 var C_debug_ask *ClaireProperty  // claire/"debug?"
 var C_active_ask *ClaireProperty  // claire/"active?"
-var C_env *ClaireProperty  // claire/"env"
 var C_libraries *ClaireProperty  // claire/"libraries"
 var C_loading_ask *ClaireProperty  // claire/"loading?"
 var C_overflow_ask *ClaireProperty  // claire/"overflow?"
@@ -271,6 +259,10 @@ var C_n_dynamic *ClaireProperty  // claire/"n_dynamic"
 var C_n_methods *ClaireProperty  // claire/"n_methods"
 var C_n_metheids *ClaireProperty  // claire/"n_metheids"
 var C_Compile_current_file *ClaireProperty  // Compile/"current_file"
+var C_safe *ClaireProperty  // claire/"safe"
+var C_Optimize_ptype *ClaireProperty  // Optimize/"ptype"
+var C_Optimize_c_code_call *ClaireProperty  // Optimize/"c_code_call"
+var C_Optimize_c_register *ClaireProperty  // Optimize/"c_register"
 var C_Optimize_get_sort *ClaireProperty  // Optimize/"get_sort"
 var C_Optimize_selector_psort *ClaireProperty  // Optimize/"selector_psort"
 var C_Optimize_c_srange *ClaireProperty  // Optimize/"c_srange"
@@ -327,10 +319,6 @@ var C_Optimize_c_code_not *ClaireProperty  // Optimize/"c_code_not"
 var C_Optimize_Update_ask *ClaireProperty  // Optimize/"Update?"
 var C_Optimize_Call_method_I *ClaireProperty  // Optimize/"Call_method!"
 var C_Optimize_nth_type_check *ClaireProperty  // Optimize/"nth_type_check"
-var C_safe *ClaireProperty  // claire/"safe"
-var C_Optimize_ptype *ClaireProperty  // Optimize/"ptype"
-var C_Optimize_c_code_call *ClaireProperty  // Optimize/"c_code_call"
-var C_Optimize_c_register *ClaireProperty  // Optimize/"c_register"
 var C_Optimize_extendedTest_ask *ClaireProperty  // Optimize/"extendedTest?"
 var C_Optimize_case_branch *ClaireProperty  // Optimize/"case_branch"
 var C_Optimize_case_substitution *ClaireProperty  // Optimize/"case_substitution"
@@ -347,27 +335,28 @@ var C_Optimize_sort_code *ClaireProperty  // Optimize/"sort_code"
 var C_Optimize_add_method_I *ClaireProperty  // Optimize/"add_method!"
 var C_Optimize_type_extension *ClaireProperty  // Optimize/"type_extension"
 var C_Compile_compute_if_write_inverse *ClaireProperty  // Compile/"compute_if_write_inverse"
+var C_Optimize_Produce_put *ClaireProperty  // Optimize/"Produce_put"
+var C_Optimize_Produce_get *ClaireProperty  // Optimize/"Produce_get"
+var C_Optimize_Produce_remove *ClaireProperty  // Optimize/"Produce_remove"
+var C_Compile_compute_set_write *ClaireProperty  // Compile/"compute_set_write"
+var C_Optimize_Tighten *ClaireProperty  // Optimize/"Tighten"
+var C_Compile_Tighten_I *ClaireProperty  // Compile/"Tighten!"
+var C_Compile_lexical_num *ClaireProperty  // Compile/"lexical_num"
+var C_Optimize_compile_if_write *ClaireProperty  // Optimize/"compile_if_write"
+var C_Optimize_demon_function *ClaireProperty  // Optimize/"demon_function"
+var C_Optimize_compileEventMethod *ClaireProperty  // Optimize/"compileEventMethod"
+var C_Optimize_demon_substitution *ClaireProperty  // Optimize/"demon_substitution"
+var C_env *ClaireProperty  // claire/"env"
 var It *ClaireModule
 var C_Compile *ClaireModule 
 // definition of the meta-model for module Optimize 
 func MetaLoad() { 
   
   It = MakeModule("Optimize",C_Compile)
-  It.Comment = MakeString("Compiled on Sunday 12-26-2021 17:16:12(v4.0.04), lines:3013, warnings:11,safety:5")
+  It.Comment = MakeString("Compiled on Monday 12-27-2021 10:35:27(v4.0.03), lines:3013, warnings:11,safety:5")
   ClEnv.Module_I = It
   // definition of the properties 
   
-  C_Optimize_Produce_put = MakeProperty("Produce_put",1,It)
-  C_Optimize_Produce_get = MakeProperty("Produce_get",1,It)
-  C_Optimize_Produce_remove = MakeProperty("Produce_remove",1,It)
-  C_Compile_compute_set_write = MakeProperty("compute_set_write",1,C_Compile)
-  C_Optimize_Tighten = MakeProperty("Tighten",1,It)
-  C_Compile_Tighten_I = MakeProperty("Tighten!",1,C_Compile)
-  C_Compile_lexical_num = MakeProperty("lexical_num",1,C_Compile)
-  C_Optimize_compile_if_write = MakeProperty("compile_if_write",1,It)
-  C_Optimize_demon_function = MakeProperty("demon_function",1,It)
-  C_Optimize_compileEventMethod = MakeProperty("compileEventMethod",1,It)
-  C_Optimize_demon_substitution = MakeProperty("demon_substitution",1,It)
   C_safety = MakeProperty("safety",2,C_claire)
   C_home = MakeProperty("home",1,C_claire)
   C_Compile_instructions = MakeProperty("instructions",2,C_Compile)
@@ -394,7 +383,6 @@ func MetaLoad() {
   C_Compile_use_string_update = MakeProperty("use_string_update",2,C_Compile)
   C_debug_ask = MakeProperty("debug?",2,C_claire)
   C_active_ask = MakeProperty("active?",2,C_claire)
-  C_env = MakeProperty("env",2,C_claire)
   C_libraries = MakeProperty("libraries",2,C_claire)
   C_loading_ask = MakeProperty("loading?",2,C_claire)
   C_overflow_ask = MakeProperty("overflow?",2,C_claire)
@@ -406,6 +394,10 @@ func MetaLoad() {
   C_n_methods = MakeProperty("n_methods",2,C_claire)
   C_n_metheids = MakeProperty("n_metheids",2,C_claire)
   C_Compile_current_file = MakeProperty("current_file",2,C_Compile)
+  C_safe = MakeProperty("safe",1,C_claire)
+  C_Optimize_ptype = MakeProperty("ptype",1,It)
+  C_Optimize_c_code_call = MakeProperty("c_code_call",1,It)
+  C_Optimize_c_register = MakeProperty("c_register",1,It)
   C_Optimize_get_sort = MakeProperty("get_sort",1,It)
   C_Optimize_selector_psort = MakeProperty("selector_psort",1,It)
   C_Optimize_c_srange = MakeProperty("c_srange",1,It)
@@ -462,10 +454,6 @@ func MetaLoad() {
   C_Optimize_Update_ask = MakeProperty("Update?",1,It)
   C_Optimize_Call_method_I = MakeProperty("Call_method!",1,It)
   C_Optimize_nth_type_check = MakeProperty("nth_type_check",1,It)
-  C_safe = MakeProperty("safe",1,C_claire)
-  C_Optimize_ptype = MakeProperty("ptype",1,It)
-  C_Optimize_c_code_call = MakeProperty("c_code_call",1,It)
-  C_Optimize_c_register = MakeProperty("c_register",1,It)
   C_Optimize_extendedTest_ask = MakeProperty("extendedTest?",1,It)
   C_Optimize_case_branch = MakeProperty("case_branch",1,It)
   C_Optimize_case_substitution = MakeProperty("case_substitution",1,It)
@@ -482,6 +470,18 @@ func MetaLoad() {
   C_Optimize_add_method_I = MakeProperty("add_method!",1,It)
   C_Optimize_type_extension = MakeProperty("type_extension",1,It)
   C_Compile_compute_if_write_inverse = MakeProperty("compute_if_write_inverse",1,C_Compile)
+  C_Optimize_Produce_put = MakeProperty("Produce_put",1,It)
+  C_Optimize_Produce_get = MakeProperty("Produce_get",1,It)
+  C_Optimize_Produce_remove = MakeProperty("Produce_remove",1,It)
+  C_Compile_compute_set_write = MakeProperty("compute_set_write",1,C_Compile)
+  C_Optimize_Tighten = MakeProperty("Tighten",1,It)
+  C_Compile_Tighten_I = MakeProperty("Tighten!",1,C_Compile)
+  C_Compile_lexical_num = MakeProperty("lexical_num",1,C_Compile)
+  C_Optimize_compile_if_write = MakeProperty("compile_if_write",1,It)
+  C_Optimize_demon_function = MakeProperty("demon_function",1,It)
+  C_Optimize_compileEventMethod = MakeProperty("compileEventMethod",1,It)
+  C_Optimize_demon_substitution = MakeProperty("demon_substitution",1,It)
+  C_env = MakeProperty("env",2,C_claire)
   
   // instructions from module sources
   { 
@@ -638,7 +638,7 @@ func MetaLoad() {
   C_compiler = ToOptimizeMetaCompiler(new(OptimizeMetaCompiler).IsNamed(C_Optimize_meta_compiler,MakeSymbol("compiler",C_claire)))
   C_compiler.External = MakeString("go")
   /*string->string*/C_compiler.Env = MakeString("MacOS")
-  /*string->string*/C_compiler.Version = MakeFloat(0.04).Id()
+  /*string->string*/C_compiler.Version = MakeFloat(0.03).Id()
   /*any->any*/C_compiler.Source = MakeString("")
   /*string->string*/C_compiler.Libraries = MakeList(ToType(C_string.Id()),MakeString("Kernel").Id())
   /*list->list*/

@@ -72,9 +72,7 @@
          %main := false,                           // do we cant to call main() ?
          l := (copy(params()) as list<string>) in  // args list
  (try
-  (*fs* := Id(*fs*),                         // file separator, OS dependent
-   compiler.env := Id(compiler.env),         // unused in CLAIRE4 (but open for CLAIRE 5 :))
-   while (l)
+  (while (l)
    (case l[1]
     ({"?", "-help"} printHelp(),
      {"-q"} (vlevel := 0, l :<< 1),

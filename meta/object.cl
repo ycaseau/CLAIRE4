@@ -23,7 +23,7 @@
 // release() should produce a version number
 (system.version := Id(RELEASE),
  printf("-- CLAIRE run-time library v 4.~A [os: ~A, compiler:~A ] --\n",
-        Id(RELEASE),Id(compiler.env), Id(compiler.external)))
+        Id(RELEASE),Id(osname()), Id(compiler.external)))
 
 [release() : any 
    -> ("4." /+ string!(system.version)) ]

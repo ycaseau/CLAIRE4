@@ -1,5 +1,5 @@
 /***** CLAIRE Compilation of file /Users/ycaseau/Dropbox/src/clairev4.03/src/meta/object.cl 
-         [version 4.0.04 / safety 5] Sunday 12-26-2021 17:16:09 *****/
+         [version 4.0.03 / safety 5] Monday 12-27-2021 10:35:23 *****/
 
 package Core
 import (_ "fmt"
@@ -271,7 +271,7 @@ func F_push_debug_property (prop *ClaireProperty ,arity int,start int) EID {
                 if (ClEnv.CountTrigger == C_spy.Id()) { 
                   Result = F_update_property(C_spy_I,
                     ToObject(ClEnv.Id()),
-                    16,
+                    17,
                     C_object,
                     F__at_property1(C_spy,C_void).Id())
                   } else {

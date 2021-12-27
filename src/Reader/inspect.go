@@ -1,5 +1,5 @@
 /***** CLAIRE Compilation of file /Users/ycaseau/Dropbox/src/clairev4.03/src/meta/inspect.cl 
-         [version 4.0.04 / safety 5] Sunday 12-26-2021 17:16:10 *****/
+         [version 4.0.03 / safety 5] Monday 12-27-2021 10:35:24 *****/
 
 package Reader
 import (_ "fmt"
@@ -602,7 +602,7 @@ func F_trace_on_any (self *ClaireAny ) EID {
           { var m *ClaireAny   = Core.F__at_property1(Core.C_spy,C_void).Id()
             if (F_boolean_I_any(m) == CTRUE) { 
               Result = F_store_object(ToObject(ClEnv.Id()),
-                16,
+                17,
                 C_object,
                 m,
                 CFALSE).ToEID()
@@ -808,7 +808,7 @@ func F_spy_listargs2_Reader (l *ClaireList )  {
 { var m *ClaireAny   = Core.F__at_property1(Core.C_spy,C_void).Id()
       if (F_boolean_I_any(m) == CTRUE) { 
         F_store_object(ToObject(ClEnv.Id()),
-          16,
+          17,
           C_object,
           m,
           CFALSE)

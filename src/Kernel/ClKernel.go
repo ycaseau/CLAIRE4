@@ -1136,6 +1136,8 @@ var C_imports *ClaireProperty      // new in CLAIRE 4: pragma for modules
 var C_first *ClaireProperty
 var C_second *ClaireProperty
 var C_slice *ClaireProperty
+var C_osname *ClaireProperty
+var C_file_separator *ClaireProperty
 	
 // operations
 var C_add *ClaireOperation
