@@ -1086,6 +1086,7 @@ func BootMethod() {
 	C_arity = makeKernelProperty("arity")
 	C_set_arity = makeKernelProperty("set_arity")
 	C_slice = makeProperty("slice")
+	C_stat = makeProperty("stat")
 	C_file_separator = makeProperty("file_separator")
 	// C_getenv = makeProperty("getenv")
 
@@ -1260,6 +1261,7 @@ func BootMethod() {
 	C_exit.AddMethod(Signature(C_integer.Id(), C_void.Id()), 0, MakeFunction1(E_CL_exit, "CL_exit"))
 	C_abort.AddMethod(Signature(C_environment.Id(), C_void.Id()), 0, MakeFunction1(E_abort_system, "abort_system"))
 	C_file_separator.AddMethod(Signature(C_environment.Id(), C_string.Id()), 0, MakeFunction1(E_file_separator, "file_separator"))
+	C_stat.AddMethod(Signature(C_void.Id(), C_void.Id()), 0, MakeFunction1(E_claire_stat, "claire_stat"))
 	C_mClaire_restore_state.AddMethod(Signature(C_void.Id(), C_void.Id()), 0, MakeFunction1(E_restore_state_void, "restore_state_void"))
 	C_store.AddMethod(Signature(C_list.Id(), C_integer.Id(), C_any.Id(), C_boolean.Id(), C_any.Id()), 0, MakeFunction4(E_store_list, "store_list"))
 	C_store.AddMethod(Signature(C_array.Id(), C_integer.Id(), C_any.Id(), C_boolean.Id(), C_any.Id()), 0, MakeFunction4(E_store_list, "store_list"))

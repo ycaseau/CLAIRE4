@@ -97,12 +97,12 @@ unfold_use(ldef:list,x:any,s:class,v:string,err:boolean,loop:any) : void
 [g_try(self:any,v:string,e:class,vglobal:string,loop:any) : void
   -> let v2 := (if (e = EID) v else genvar("try_")) in 
         (if (e != EID) var_declaration(v2,EID,1),
-         printf("/*g_try(v2:~S,loop:~S) */~I",v2,loop,breakline()),
+         if PRODUCER.debug? printf("/*g_try(v2:~S,loop:~S) */~I",v2,loop,breakline()),
          g_statement(self,EID,v2,true,loop),
          // AUDACIEUX: if self is a Do, and we have a loop, break statements cover the error case
-         if (self % Do & loop % Tuple) printf("/*A*/{~I",breakline())
+         if (self % Do & loop % Tuple) printf("{~I",breakline())
          else
-           (printf("/* ERROR PROTECTION INSERTED (~A-~A) */~I",v,vglobal,breakline()),   // for debug
+           (if PRODUCER.debug? printf("/* ERROR PROTECTION INSERTED (~A-~A) */~I",v,vglobal,breakline()),   // for debug
             if (v = vglobal & e = EID & not(loop % tuple))   // simpler since the value is already in vglobal !
               printf("if !ErrorIn(~I) {~I", c_princ(v2), breakline())
            else (printf("if ErrorIn(~I) {", c_princ(v2)),
@@ -292,7 +292,7 @@ unfold_eid(ldef:list,self:any,s:class, v:any,err:boolean,loop:any) : void
                if f printf(" = ~I", g_expression(x,ev)),
                breakline(),
                // printf("/* noccur = ~A */~I",Language/occurexact(self.arg, self.var),breakline()),   // occurexact should discard setup !
-               if (Language/occurexact(self.arg, self.var) <= 1)          // avoid unused variable error
+               if (Language/occurexact(self.arg, self.var) < 1)          // avoid unused variable error (1 safe, 0 optimized)
                   (// THIS SHOULD BE A PROPER WARNING ==============
                    //[5] >>>>>>>>  variable ~S declared but unused  // v2,          
                    printf("_ = ~A~I", v2,breakline())),                    
@@ -391,7 +391,6 @@ unfold_eid(ldef:list,self:any,s:class, v:any,err:boolean,loop:any) : void
 [g_statement(self:And,s:class,v:string,err:boolean,loop:any) : void
   -> let v2 := check_var("v_and"), count_try := 0 in
        (new_block("and"),
-        // printf("/* and into ~A */",v),
         var_declaration(v2,boolean,1),
         breakline(),
         for x in self.args
@@ -416,13 +415,11 @@ unfold_eid(ldef:list,self:any,s:class, v:any,err:boolean,loop:any) : void
 [g_statement(self:Or,s:class,v:string,err:boolean,loop:any) : void
  -> let v2 := check_var("v_or"), count_try := 0 in
        (new_block("or"),
-        printf("/* Or stat: v=~S, loop=~S */~I",v,loop,breakline()),
         var_declaration(v2,boolean,1),
         breakline(),
         for x in self.args
               let try? := g_throw(x) in
-                (printf("/* Or stat: try ~S with try:~S, v=~S, loop=~S */~I",x,try?,v,loop,breakline()),
-                 if try? 
+                (if try? 
                      (g_try(x,v2,boolean,v,loop), count_try :+ 1)           // if loop ... it must be used !
                  else statement(x,boolean,v2,loop),
                  printf("if (~I == CTRUE) {~I~I} else ~I", c_princ(v2),
@@ -498,7 +495,6 @@ unfold_eid(ldef:list,self:any,s:class, v:any,err:boolean,loop:any) : void
        sbag := bag_class(%set), smember := g_member(%set),                  // list or set + member_type
        %direct := (v2_range = any | smember = integer | smember = float) in     // direct means v4 not necessary
       (new_block("For"),
-       // printf("/*%direct=~S smember=~S*/",%direct,smember),
        var_declaration(v2,v2_range,2),                                        // 2:Special : _ = v needed
        if not(%direct) var_declaration(v4,any,1) else v4 := v2,                // do not use v4 (v2 is filled directly)
        if (s != void) printf("~I= ~ICFALSE~I~I", c_princ(v), 
@@ -509,8 +505,7 @@ unfold_eid(ldef:list,self:any,s:class, v:any,err:boolean,loop:any) : void
        if not(%direct) printf("~A = ~I~A~I~I",v2,cast_prefix(any,v2_range),v4,
                                    cast_post(any,v2_range),breakline()),
        if g_throw(self.arg)
-          (// printf("/*protect ~S*/~I",self.arg,breakline()),
-           g_try_void(self.arg, v, tuple(v,s)),     // loop = context for inner compiling
+          (g_try_void(self.arg, v, tuple(v,s)),     // loop = context for inner compiling
            count_try :+ 1)
        else statement(self.arg, void, v,tuple(v,s)),     // ... set the loop parameter to vreturn 
        close_try(count_try),
@@ -614,10 +609,8 @@ unfold_eid(ldef:list,self:any,s:class, v:any,err:boolean,loop:any) : void
               printf("for ~A ~I CTRUE ", v2,
                       (if self.other princ("!=") else princ("==")))),      // v3.00.05
         new_block("while"),
-        printf("/* While stat, v:~S loop:~S */~I",v,loop,breakline()),
         if try2? g_try_void(self.arg,v,tuple(v,s))           //    Aspecial form of g_try (no need)
         else statement(self.arg,void,v,tuple(v,s)),               // notice the loop parameter is set
-        printf("/* try?:~S, v2:~S loop will be:~S */~I",try?,v2,tuple(v,s),breakline()),
         if try? g_try(self.iClaire/test,v2,boolean,v,tuple(v,s))  // will generate a break if an error
         else if not(f?) statement(self.iClaire/test,boolean,v2,false),
         close_block("while"),
@@ -662,8 +655,7 @@ unfold_eid(ldef:list,self:any,s:class, v:any,err:boolean,loop:any) : void
                  printf("~I = ~I~I",symbol_ident(a1),
                            declare(PRODUCER,value(a1)), 
                            breakline())
-              else  (// printf("/* object!:~S ->~S*/",a1,defined(a1)),
-                     printf("~I = ~Inew(~I).IsNamed(~I,MakeSymbol(~S,~I))~I~I",symbol_ident(a1),
+              else  (printf("~I = ~Inew(~I).IsNamed(~I,MakeSymbol(~S,~I))~I~I",symbol_ident(a1),
                                   object_prefix(any,a2),
                                   go_class(a2),                  // v3.3.14
                                   class_ident(a2),
@@ -714,7 +706,7 @@ unfold_eid(ldef:list,self:any,s:class, v:any,err:boolean,loop:any) : void
 
 // trivial 
 [g_statement(self:Cast,s:class,v:string,err:boolean,loop:any) : void
- -> statement(self.arg, s, s, v, loop)]
+ -> statement(self.arg, s, v, loop)]
 
 
 //-------------- compiling a handle -------------------------------------
@@ -804,8 +796,7 @@ unfold_eid(ldef:list,self:any,s:class, v:any,err:boolean,loop:any) : void
      if (not(err) & g_func(self.var.arg) & g_func(self.value) & s = void)  
          update_statement(self,class!(sr))
      else if (g_clean(self.var.arg) & g_clean(self.value) & update_write?(self))
-        (printf("/* update_write ~S : ~S x ~S */~I",self,domain(self.selector),range(self.selector),breakline()),
-         printf("~A = ",v),
+        (printf("~A = ",v),
          update_statement(self,class!(sr)))
      else let try_count := 0,
           varg1 :=  build_Variable("va_arg1", (case X
@@ -866,20 +857,19 @@ unfold_eid(ldef:list,self:any,s:class, v:any,err:boolean,loop:any) : void
                       g_expression(v, any),
                       breakline())
             else let s2 := class!(c_type((x as Call_slot).arg)), n := (p @ s2).mClaire/index in
-               printf("~I.Store~A(~A,~I,CTRUE)/*c:~S*/~I",
+               printf("~I.Store~A(~A,~I,CTRUE)~I",
                      g_expression(x.arg,object),
                      (if (s = integer) "Int" else if (s = float) "Float" else "Obj"),
                      n,
                      g_expression(v, (if (s = integer | s = float) s else any)),
-                     s2,
                      breakline()))
         else if (case x (Call_array (sort!(member(c_type(p))) = any), any false))
             (//[5] UNSORTED array p is ~S, index is ~S, type : ~S// p, arg(x), c_type(p),
-             printf("~I.PutAt(~I,~I)/*unsorted-x:~S,sm:~S*/~I", 
+             printf("~I.PutAt(~I,~I)~I", 
                g_expression(c_code(p,array), list), 
                g_expression(arg(x),integer),
                g_expression(v, any),
-               owner(x),sort!(member(c_type(p))), breakline()))
+               breakline()))
         else if (case x (Call_table (sort!(member(c_type(p))) % {integer,float}), any false))
             (printf("~I.PutAt(~I,~I-1)~I", 
                g_expression(p,table), 
@@ -891,7 +881,7 @@ unfold_eid(ldef:list,self:any,s:class, v:any,err:boolean,loop:any) : void
                  (s2 := sort!(member(c_type(p))),
                   if (s2 = object) s2 := any)
               else if (x % Call_slot) s2 := class!(range(rootSlot(x.selector))),    // what go expects
-              printf("~I = ~I~I/*~S->~S*/", g_expression(x, s2), g_expression(v, s2),breakline(),s,s2))) ]
+              printf("~I = ~I~I", g_expression(x, s2), g_expression(v, s2),breakline()))) ]
           
     
 // in the expansion of Defarray, we generate x.graph := make_list(29,unknonw) that we need to trap

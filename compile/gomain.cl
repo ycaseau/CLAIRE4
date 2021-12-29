@@ -66,7 +66,7 @@
 // -s is ignored because it is trapped earlier (see the file generator)
 [complex_main() : void
   -> let %cm := "", %sf := "", %out := "",        // names of files/modules
-         dblevel := 1, vlevel := 2,               // defaults that can be overiden
+         dblevel := 1, vlevel := 1,               // defaults that can be overiden
          %init? := true, %exe := false,           // do we want to load init.cl ? an executable ?
          %safety := unknown,                      // safety level for compiler
          %main := false,                           // do we cant to call main() ?
@@ -100,7 +100,7 @@
               else error("option: -od <directory>")),
      {"-o"} (if (length(l) >= 2) (%out := l[2], l :<< 2) 
              else error("option: -o <name>")),
-     {"-p"} (OPT.Compile/profile? := true, dblevel :max 1, l :<< 1),
+     {"-p"} (OPT.Compile/profile? := true, dblevel :max 2, l :<< 1),
      {"-D"} (dblevel := 0, l :<< 1),
      {"-O"} (compiler.optimize? := true, %safety := 2, dblevel := 2, l :<< 1),
      {"-O2"} (compiler.optimize? := true, %safety := 3, dblevel := 2, l :<< 1),
@@ -137,7 +137,7 @@
          compiler.active? := true,
 	       if (%out != "") external(m) := %out,
 	       load(m),                        // load the module
-         if (dblevel < 1) (compiler.safety :min 4, compiler.debug? :add m),
+         if (dblevel < 1) (compiler.safety :min 1, compiler.debug? :add m),
          compile_dir(m),
          compile(m),
          if (%exe) 
@@ -180,13 +180,14 @@
         printf("package main\n"),
         system_imports(m),
         load_function(m,l_necessary),
-        main_function(l_used,%main),
+        main_function(m,l_used,%main),
         fclose(p)) ]
 
 // create the import declaration for this system file
 [system_imports(m:module) : void
   ->  printf("import (\n"),
-      printf("\t\"fmt\"\n"),
+      // printf("\t\"fmt\"\n"),                // not necessary if no printf statement is in the code
+      if OPT.profile? printf("\t\"os\"\n\t\"runtime/pprof\"\n"),
       import_declaration(m),
       printf("\t\"~A\"\n",string!(m.name)),
       printf(")\n")]
@@ -219,28 +220,30 @@
        printf("~I.MetaLoad()~I",ident(x.name),breakline()),
     for x in list{m in l_necessary | m.status = 5}
       ( printf("~I.it->evaluate = ~I~I",ident(x.name),
-               expression(make_function("load_" /+ string!(x.name)), false),
+               g_expression(make_function("load_" /+ string!(x.name)), function),
                breakline()),
         printf("~I.it->status = 2;~I",ident(x.name), breakline())),
     printf("ClEnv.Module_I = ~I; ~I", g_expression( m, module), breakline()),
-    /*if OPT.profile?
-       for p in Kernel/graph(Reader/PRdependent)
-         case p (property for p2 in Reader/PRdependent[p]
-                     (if (not(p2 % OPT.to_remove) &
-                           mClaire/definition(p.name) = mClaire/definition(p2.name))   // v3.2.58
-                     printf("PRdepends_property(~I,~I);\n",expression(p,nil),
-                                 expression(p2,nil)))),*/
     close_block() ]
 
 
 // create the main function
 // %main = true means call main()
-[main_function(l_used:list[module],%main:boolean) : void
+[main_function(m:module,l_used:list[module],%main:boolean) : void
  -> // stuff that is useful to parse
     printf("\n// the main function \n"),
     printf("func main() ~I",new_block()),
     printf("MemoryFlags()~I",breakline()),
-    printf("fmt.Printf(\"=== CLAIRE4 interpreter version 1.0    ===\\n\")~I",breakline()),
+    if OPT.profile?
+       (printf("// instruction for GO profiling - to be used with go tool pprof <m.prof>\n"),
+        new_block(),
+        printf("f,err := os.Create(\"~A.prof\")~I",string!(m.name),breakline()),
+        printf("if err == nil "),
+        new_block(),
+        printf("pprof.StartCPUProfile(f)~Idefer pprof.StopCPUProfile()",breakline()),
+        close_block(),
+        close_block()),
+    // printf("fmt.Printf(\"=== CLAIRE4 interpreter version 1.0    ===\\n\")~I",breakline()),
     printf("Bootstrap()~I",breakline()),
     printf("Load()~I",breakline()),
     if (get_value("Generate") % l_used)

@@ -1,5 +1,5 @@
 /***** CLAIRE Compilation of file /Users/ycaseau/Dropbox/src/clairev4.03/src/meta/file.cl 
-         [version 4.0.03 / safety 5] Monday 12-27-2021 10:35:24 *****/
+         [version 4.0.03 / safety 5] Wednesday 12-29-2021 08:34:14 *****/
 
 package Reader
 import (_ "fmt"
@@ -38,6 +38,7 @@ func import_g0126() {
 //
 /* {1} The go function for: self_eval(self:delimiter) [status=1] */
 func (self *Delimiter ) SelfEval () EID { 
+    // eid body s = void
     var Result EID 
     C_reader.Next()
     Result = ToException(Core.C_general_error.Make(MakeString("[117] loose delimiter ~S in program [line ~A ?]").Id(),MakeConstantList(self.Id(),MakeInteger(ClEnv.NLine).Id()).Id())).Close()
@@ -62,7 +63,7 @@ func EVAL_delimiter (x *ClaireAny) EID {
 func F_useless_c_integer (r int) *ClaireBoolean  { 
     if (r == 10) { 
       ClEnv.NLine = (ClEnv.NLine+1)
-      /*integer->integer*/} 
+      } 
     if ((r == C_reader.Space) || 
         ((r == 10) || 
           ((r == 13) || 
@@ -79,16 +80,13 @@ func E_useless_c_integer (r EID) EID {
 /* {1} The go function for: skipc(self:meta_reader) [status=0] */
 func (self *MetaReader ) Skipc () int { 
     for (F_useless_c_integer(self.Firstc()) == CTRUE) { 
-      /* While stat, v:"Unused" loop:false */
       { var b *ClaireBoolean   = Equal(MakeInteger(self.Firstc()).Id(),MakeInteger(10).Id())
-        _ = b
         self.Next()
         if ((b == CTRUE) && 
             (self.Firstc() == 13)) { 
           self.Next()
           } 
         } 
-      /* try?:false, v2:"v_while2" loop will be:tuple("Unused", void) */
       } 
     return  self.Firstc()
     } 
@@ -100,28 +98,24 @@ func E_skipc_meta_reader (self EID) EID {
 // look for a meaningful termination char such as ) or ]
 /* {1} The go function for: skipc!(r:meta_reader) [status=1] */
 func (r *MetaReader ) Skipc_I () EID { 
+    // eid body s = integer
     var Result EID 
     { var c int  = r.Skipc()
       if (c == 59) { 
         for ((r.Firstc() != r.Eof) && 
             (r.Firstc() != 10)) { 
-          /* While stat, v:"Result" loop:true */
           r.Next()
-          /* try?:false, v2:"v_while4" loop will be:tuple("Result", void) */
           } 
         if (r.Firstc() == r.Eof) { 
           Result = EID{Language.C_EOF.Value,0}
           } else {
           ClEnv.NLine = (ClEnv.NLine+1)
-          /*integer->integer*/Result = r.Skipc_I()
+          Result = r.Skipc_I()
           } 
         }  else if (c == 47) { 
         { var x *ClaireAny  
-          _ = x
           var try_1 EID 
-          /*g_try(v2:"try_1",loop:false) */
           try_1 = r.Fromp.ReadIdent()
-          /* ERROR PROTECTION INSERTED (x-Result) */
           if ErrorIn(try_1) {Result = try_1
           } else {
           x = ANY(try_1)
@@ -154,26 +148,21 @@ func E_cnext_meta_reader (self EID) EID {
   
 /* {1} The go function for: findeol(self:meta_reader) [status=0] */
 func (self *MetaReader ) Findeol () *ClaireBoolean  { 
-    // procedure body with s = boolean 
-var Result *ClaireBoolean  
+    // procedure body with s = boolean
+    var Result *ClaireBoolean  
     { 
-      /* Or stat: v="Result", loop=false */
       var v_or2 *ClaireBoolean  
       
-      /* Or stat: try while (useless_c @ integer(firstc @ meta_reader(self))) (if (= @ any(firstc @ meta_reader(self),10)) break(true) else false, next @ meta_reader(self)) with try:false, v="Result", loop=false */
       v_or2= CFALSE
       for (F_useless_c_integer(self.Firstc()) == CTRUE) { 
-        /* While stat, v:"v_or2" loop:false */
         if (self.Firstc() == 10) { 
           v_or2 = CTRUE
           break
           } 
         self.Next()
-        /* try?:false, v2:"v_while3" loop will be:tuple("v_or2", boolean) */
         } 
       if (v_or2 == CTRUE) {Result = CTRUE
       } else { 
-        /* Or stat: try = @ any(firstc @ meta_reader(self),eof @ meta_reader(self)) with try:false, v="Result", loop=false */
         v_or2 = Equal(MakeInteger(self.Firstc()).Id(),MakeInteger(self.Eof).Id())
         if (v_or2 == CTRUE) {Result = CTRUE
         } else { 
@@ -190,6 +179,7 @@ func E_findeol_meta_reader (self EID) EID {
 //
 /* {1} The go function for: checkno(r:meta_reader,n:integer,y:any) [status=1] */
 func (r *MetaReader ) Checkno (n int,y *ClaireAny ) EID { 
+    // eid body s = any
     var Result EID 
     if (r.Firstc() != n) { 
       Result = EID{r.Id(),0}
@@ -206,12 +196,11 @@ func E_checkno_meta_reader (r EID,n EID,y EID) EID {
 //
 /* {1} The go function for: verify(t:any,x:any,y:any) [status=1] */
 func F_verify_any (t *ClaireAny ,x *ClaireAny ,y *ClaireAny ) EID { 
+    // eid body s = any
     var Result EID 
     var g0129I *ClaireBoolean  
     var try_1 EID 
-    /*g_try(v2:"try_1",loop:false) */
     try_1 = Core.F_BELONG(x,t)
-    /* ERROR PROTECTION INSERTED (g0129I-Result) */
     if ErrorIn(try_1) {Result = try_1
     } else {
     g0129I = ToBoolean(OBJ(try_1))
@@ -231,6 +220,7 @@ func E_verify_any (t EID,x EID,y EID) EID {
 //
 /* {1} The go function for: Serror(s:string,la:list) [status=1] */
 func F_Serror_string (s *ClaireString ,la *ClaireList ) EID { 
+    // eid body s = void
     var Result EID 
     PRINC("---- Syntax Error[line: ")
     F_princ_integer(ClEnv.NLine)
@@ -250,6 +240,7 @@ func E_Serror_string (s EID,la EID) EID {
 //
 /* {1} The go function for: extract_variable(self:any) [status=1] */
 func F_extract_variable_any (self *ClaireAny ) EID { 
+    // eid body s = Variable
     var Result EID 
     var g0131I *ClaireBoolean  
     if (self.Isa.IsIn(C_Variable) == CTRUE) { 
@@ -260,58 +251,48 @@ func F_extract_variable_any (self *ClaireAny ) EID {
       g0131I = CFALSE
       } 
     if (g0131I == CTRUE) { 
-      /*g_try(v2:"Result",loop:true) */
       { 
         var va_arg1 *ClaireVariable  
         var va_arg2 *ClaireType  
         va_arg1 = To_Variable(self)
         var try_1 EID 
-        /*g_try(v2:"try_1",loop:false) */
         try_1 = Language.F_extract_type_any(ANY(Core.F_CALL(C_range,ARGS(self.ToEID()))))
-        /* ERROR PROTECTION INSERTED (va_arg2-Result) */
         if ErrorIn(try_1) {Result = try_1
         } else {
         va_arg2 = ToType(OBJ(try_1))
         va_arg1.Range = va_arg2
-        /*type->type*/Result = EID{va_arg2.Id(),0}
+        Result = EID{va_arg2.Id(),0}
         }
         } 
-      /* ERROR PROTECTION INSERTED (Result-Result) */
       if !ErrorIn(Result) {
       Result = self.ToEID()
       }
       } else {
       { var v *ClaireVariable  
         var try_2 EID 
-        /*g_try(v2:"try_2",loop:false) */
         { var _CL_obj *ClaireVariable   = To_Variable(new(ClaireVariable).Is(C_Variable))
-          /*g_try(v2:"try_2",loop:false) */
           { 
             var va_arg1 *ClaireVariable  
             var va_arg2 *ClaireSymbol  
             va_arg1 = _CL_obj
             var try_3 EID 
-            /*g_try(v2:"try_3",loop:false) */
             try_3 = Language.F_extract_symbol_any(self)
-            /* ERROR PROTECTION INSERTED (va_arg2-try_2) */
             if ErrorIn(try_3) {try_2 = try_3
             } else {
             va_arg2 = ToSymbol(OBJ(try_3))
             va_arg1.Pname = va_arg2
-            /*symbol->symbol*/try_2 = EID{va_arg2.Id(),0}
+            try_2 = EID{va_arg2.Id(),0}
             }
             } 
-          /* ERROR PROTECTION INSERTED (try_2-try_2) */
           if !ErrorIn(try_2) {
           try_2 = EID{_CL_obj.Id(),0}
           }
           } 
-        /* ERROR PROTECTION INSERTED (v-Result) */
         if ErrorIn(try_2) {Result = try_2
         } else {
         v = To_Variable(OBJ(try_2))
         C_reader.LastForm = v.Id()
-        /*any->any*/Result = EID{v.Id(),0}
+        Result = EID{v.Id(),0}
         }
         } 
       } 
@@ -324,15 +305,14 @@ func E_extract_variable_any (self EID) EID {
 // create a variable and add it to the lexical environment
 /* {1} The go function for: bind!(self:meta_reader,%v:Variable) [status=0] */
 func (self *MetaReader ) Bind_I (_Zv *ClaireVariable ) *ClaireList  { 
-    // procedure body with s = list 
-var Result *ClaireList  
+    // procedure body with s = list
+    var Result *ClaireList  
     _Zv.Index = self.Index
-    /*integer->integer*/{ var value *ClaireAny   = _Zv.Pname.Get()
-      _ = value
+    { var value *ClaireAny   = _Zv.Pname.Get()
       self.Index = (self.Index+1)
-      /*integer->integer*/if (self.Index > self.Maxstack) { 
+      if (self.Index > self.Maxstack) { 
         self.Maxstack = self.Index
-        /*integer->integer*/} 
+        } 
       _Zv.Pname.Put(_Zv.Id())
       Result = MakeConstantList(_Zv.Id(),value)
       } 
@@ -346,12 +326,11 @@ func E_bind_I_meta_reader (self EID,_Zv EID) EID {
 //
 /* {1} The go function for: unbind!(self:meta_reader,%first:list) [status=0] */
 func (self *MetaReader ) Unbind_I (_Zfirst *ClaireList ) *ClaireAny  { 
-    // procedure body with s = any 
-var Result *ClaireAny  
+    // procedure body with s = any
+    var Result *ClaireAny  
     { var ClaireVar *ClaireAny   = _Zfirst.At(1-1)
-      _ = ClaireVar
       self.Index = (self.Index-1)
-      /*integer->integer*/Result = ToSymbol(OBJ(Core.F_CALL(C_mClaire_pname,ARGS(ClaireVar.ToEID())))).Put(_Zfirst.At(2-1))
+      Result = ToSymbol(OBJ(Core.F_CALL(C_mClaire_pname,ARGS(ClaireVar.ToEID())))).Put(_Zfirst.At(2-1))
       } 
     return Result} 
   
@@ -378,13 +357,13 @@ func E__7_string (s EID,s2 EID) EID {
 // closes the input port to free the associated file ! <yc>
 /* {1} The go function for: mClaire/restore_state(self:meta_reader) [status=0] */
 func (self *MetaReader ) RestoreState ()  { 
-    // procedure body with s = void 
-if (Equal(self.Fromp.Id(),C_stdin.Value) != CTRUE) { 
+    // procedure body with s = void
+    if (Equal(self.Fromp.Id(),C_stdin.Value) != CTRUE) { 
       self.Fromp.Fclose()
       } 
     self.Fromp = ToPort(C_stdin.Value)
-    /*port->port*/self.Index = 1
-    /*integer->integer*/F_pushback_port(ToPort(C_stdin.Value),32)
+    self.Index = 1
+    F_pushback_port(ToPort(C_stdin.Value),32)
     F_restore_state_void()
     } 
   
@@ -400,18 +379,16 @@ func E_restore_state_meta_reader (self EID) EID {
 //
 /* {1} The go function for: load_file(self:string,b:boolean) [status=1] */
 func F_load_file_string (self *ClaireString ,b *ClaireBoolean ) EID { 
+    // eid body s = any
     var Result EID 
     C_reader.Index = 0
-    /*integer->integer*/C_reader.Maxstack = 0
-    /*integer->integer*/ClEnv.NLine = 1
-    /*integer->integer*/C_reader.External = self
-    /*string->string*/Core.F_tformat_string(MakeString("---- [load CLAIRE file: ~A]\n"),2,MakeConstantList((self).Id()))
-    /*g_try(v2:"Result",loop:true) */
+    C_reader.Maxstack = 0
+    ClEnv.NLine = 1
+    C_reader.External = self
+    Core.F_tformat_string(MakeString("---- [load CLAIRE file: ~A]\n"),2,MakeConstantList((self).Id()))
     { var s2 *ClaireString   = F_append_string(self,MakeString(".cl"))
-      _ = s2
       { var p1 *ClairePort  
         var try_1 EID 
-        /*g_try(v2:"try_1",loop:false) */
         { 
           h_index := ClEnv.Index
           h_base := ClEnv.Base
@@ -431,44 +408,33 @@ func F_load_file_string (self *ClaireString ,b *ClaireBoolean ) EID {
               } 
             } 
           } 
-        /* ERROR PROTECTION INSERTED (p1-Result) */
         if ErrorIn(try_1) {Result = try_1
         } else {
         p1 = ToPort(OBJ(try_1))
         { var start int  = ClEnv.Base
-          _ = start
           { var top int  = ClEnv.Index
             { var p2 *ClairePort   = C_reader.Fromp
-              _ = p2
               { var b2 *ClaireBoolean   = C_reader.Toplevel
-                _ = b2
                 { var _staritem_star *ClaireAny   = CNULL
                   ClEnv.Base= top
                   C_reader.Fromp = p1
-                  /*port->port*/C_reader.Toplevel = CFALSE
-                  /*boolean->boolean*/var try_2 EID 
-                  /*g_try(v2:"try_2",loop:true) */
+                  C_reader.Toplevel = CFALSE
+                  var try_2 EID 
                   try_2 = F_readblock_port(p1)
-                  /* ERROR PROTECTION INSERTED (_staritem_star-Result) */
                   if ErrorIn(try_2) {Result = try_2
                   } else {
                   _staritem_star = ANY(try_2)
                   Result = _staritem_star.ToEID()
-                  /*g_try(v2:"Result",loop:true) */
                   Result= EID{CFALSE.Id(),0}
                   for (_staritem_star != C_Reader_eof.Id()) { 
-                    /* While stat, v:"Result" loop:true */
                     var loop_3 EID 
                     _ = loop_3
                     { 
-                    /*g_try(v2:"loop_3",loop:tuple("Result", EID)) */
                     if (b == CTRUE) { 
                       PRINC("<")
                       F_princ_integer(ClEnv.NLine)
                       PRINC(">:")
-                      /*g_try(v2:"loop_3",loop:tuple("Result", EID)) */
                       loop_3 = Core.F_CALL(C_print,ARGS(_staritem_star.ToEID()))
-                      /* ERROR PROTECTION INSERTED (loop_3-loop_3) */
                       if ErrorIn(loop_3) {Result = loop_3
                       break
                       } else {
@@ -478,12 +444,10 @@ func F_load_file_string (self *ClaireString ,b *ClaireBoolean ) EID {
                       } else {
                       loop_3 = EID{CFALSE.Id(),0}
                       } 
-                    /* ERROR PROTECTION INSERTED (loop_3-loop_3) */
                     if ErrorIn(loop_3) {Result = loop_3
                     break
                     } else {
                     ClEnv.Index= (top+(C_reader.Maxstack+1))
-                    /*g_try(v2:"loop_3",loop:tuple("Result", EID)) */
                     if (C_string.Id() == _staritem_star.Isa.Id()) { 
                       { var g0132 *ClaireString   = ToString(_staritem_star)
                         if (ToBoolean(Language.C_NeedComment.Value) == CTRUE) { 
@@ -504,9 +468,7 @@ func F_load_file_string (self *ClaireString ,b *ClaireBoolean ) EID {
                         } 
                       } else {
                       var try_6 EID 
-                      /*g_try(v2:"try_6",loop:tuple("Result", EID)) */
                       try_6 = EVAL(_staritem_star)
-                      /* ERROR PROTECTION INSERTED (_staritem_star-loop_3) */
                       if ErrorIn(try_6) {loop_3 = try_6
                       Result = try_6
                       break
@@ -519,17 +481,13 @@ func F_load_file_string (self *ClaireString ,b *ClaireBoolean ) EID {
                       loop_3 = v_gassign7.ToEID()
                       }
                       } 
-                    /* ERROR PROTECTION INSERTED (loop_3-loop_3) */
                     if ErrorIn(loop_3) {Result = loop_3
                     break
                     } else {
-                    /*g_try(v2:"loop_3",loop:tuple("Result", EID)) */
                     if ((b == CTRUE) && 
                         (C_string.Id() != _staritem_star.Isa.Id())) { 
                       PRINC("=> ")
-                      /*g_try(v2:"loop_3",loop:tuple("Result", EID)) */
                       loop_3 = Core.F_CALL(C_print,ARGS(_staritem_star.ToEID()))
-                      /* ERROR PROTECTION INSERTED (loop_3-loop_3) */
                       if ErrorIn(loop_3) {Result = loop_3
                       break
                       } else {
@@ -539,14 +497,11 @@ func F_load_file_string (self *ClaireString ,b *ClaireBoolean ) EID {
                       } else {
                       loop_3 = EID{CFALSE.Id(),0}
                       } 
-                    /* ERROR PROTECTION INSERTED (loop_3-loop_3) */
                     if ErrorIn(loop_3) {Result = loop_3
                     break
                     } else {
                     var try_8 EID 
-                    /*g_try(v2:"try_8",loop:tuple("Result", EID)) */
                     try_8 = F_readblock_port(p1)
-                    /* ERROR PROTECTION INSERTED (_staritem_star-loop_3) */
                     if ErrorIn(try_8) {loop_3 = try_8
                     Result = try_8
                     break
@@ -554,17 +509,15 @@ func F_load_file_string (self *ClaireString ,b *ClaireBoolean ) EID {
                     _staritem_star = ANY(try_8)
                     loop_3 = _staritem_star.ToEID()
                     }}}}
-                    /* try?:false, v2:"v_while9" loop will be:tuple("Result", EID) */
                     } 
                   }
-                  /* ERROR PROTECTION INSERTED (Result-Result) */
                   if !ErrorIn(Result) {
                   ClEnv.Base= start
                   ClEnv.Index= top
                   C_reader.Toplevel = b2
-                  /*boolean->boolean*/C_reader.Fromp = p2
-                  /*port->port*/C_reader.External = MakeString("toplevel")
-                  /*string->string*/p1.Fclose()
+                  C_reader.Fromp = p2
+                  C_reader.External = MakeString("toplevel")
+                  p1.Fclose()
                   Result = EVOID
                   }}
                   } 
@@ -575,7 +528,6 @@ func F_load_file_string (self *ClaireString ,b *ClaireBoolean ) EID {
         }
         } 
       } 
-    /* ERROR PROTECTION INSERTED (Result-Result) */
     if !ErrorIn(Result) {
     Result = EID{CTRUE.Id(),0}
     }
@@ -589,6 +541,7 @@ func E_load_file_string (self EID,b EID) EID {
 //
 /* {1} The go function for: load(self:string) [status=1] */
 func F_load_string (self *ClaireString ) EID { 
+    // eid body s = any
     var Result EID 
     Result = F_load_file_string(self,CFALSE)
     return Result} 
@@ -599,6 +552,7 @@ func E_load_string (self EID) EID {
   
 /* {1} The go function for: sload(self:string) [status=1] */
 func F_sload_string (self *ClaireString ) EID { 
+    // eid body s = any
     var Result EID 
     Result = F_load_file_string(self,CTRUE)
     return Result} 
@@ -611,29 +565,22 @@ func E_sload_string (self EID) EID {
 // The correct package is open and each file is loaded.
 /* {1} The go function for: load_file(self:module,b:boolean) [status=1] */
 func F_load_file_module (self *ClaireModule ,b *ClaireBoolean ) EID { 
+    // eid body s = void
     var Result EID 
-    /*g_try(v2:"Result",loop:true) */
     if (self.Status == 2) { 
-      /*g_try(v2:"Result",loop:true) */
-      Result = Core.F_CALL(C_funcall,ARGS(Core.F_CALL(C_mClaire_evaluate,ARGS(EID{self.Id(),0})),EID{C_any.Id(),0}))
-      /* ERROR PROTECTION INSERTED (Result-Result) */
-      if !ErrorIn(Result) {
       { 
         var va_arg1 *ClaireModule  
         var va_arg2 int 
         va_arg1 = self
         va_arg2 = 3
         va_arg1.Status = va_arg2
-        /*integer->integer*/Result = EID{C__INT,IVAL(va_arg2)}
+        Result = EID{C__INT,IVAL(va_arg2)}
         } 
-      }
       }  else if ((self.Status == 0) && 
         ((self.Source).Id() != CNULL)) { 
       Core.F_tformat_string(MakeString("---- Loading the module ~S.\n"),1,MakeConstantList(self.Id()))
       self.Begin()
-      /*g_try(v2:"Result",loop:true) */
       { var s *ClaireString   = F_append_string(self.Source,ToString(C__starfs_star.Value))
-        _ = s
         { 
           var x *ClaireAny  
           _ = x
@@ -645,9 +592,7 @@ func F_load_file_module (self *ClaireModule ,b *ClaireBoolean ) EID {
             x = x_support.At(i_it)
             var loop_1 EID 
             _ = loop_1
-            /*g_try(v2:"loop_1",loop:tuple("Result", EID)) */
             loop_1 = Core.F_CALL(C_Reader_load_file,ARGS(Core.F_CALL(ToProperty(C__7_plus.Id()),ARGS(EID{F_append_string(s,ToString(x)).Id(),0},EID{MakeString(".cl").Id(),0})),EID{b.Id(),0}))
-            /* ERROR PROTECTION INSERTED (loop_1-Result) */
             if ErrorIn(loop_1) {Result = loop_1
             break
             } else {
@@ -655,7 +600,6 @@ func F_load_file_module (self *ClaireModule ,b *ClaireBoolean ) EID {
             } 
           } 
         } 
-      /* ERROR PROTECTION INSERTED (Result-Result) */
       if !ErrorIn(Result) {
       { 
         var va_arg1 *ClaireModule  
@@ -663,13 +607,12 @@ func F_load_file_module (self *ClaireModule ,b *ClaireBoolean ) EID {
         va_arg1 = self
         va_arg2 = 1
         va_arg1.Status = va_arg2
-        /*integer->integer*/Result = EID{C__INT,IVAL(va_arg2)}
+        Result = EID{C__INT,IVAL(va_arg2)}
         } 
       }
       } else {
       Result = EID{CFALSE.Id(),0}
       } 
-    /* ERROR PROTECTION INSERTED (Result-Result) */
     if !ErrorIn(Result) {
     self.End()
     Result = EVOID
@@ -684,6 +627,7 @@ func E_load_file_module (self EID,b EID) EID {
 //
 /* {1} The go function for: load(self:module) [status=1] */
 func F_load_module (self *ClaireModule ) EID { 
+    // eid body s = any
     var Result EID 
     { 
       var x *ClaireAny  
@@ -696,9 +640,7 @@ func F_load_module (self *ClaireModule ) EID {
         x = x_support.At(i_it)
         var loop_1 EID 
         _ = loop_1
-        /*g_try(v2:"loop_1",loop:tuple("Result", EID)) */
         loop_1 = Core.F_CALL(C_Reader_load_file,ARGS(x.ToEID(),EID{CFALSE.Id(),0}))
-        /* ERROR PROTECTION INSERTED (loop_1-Result) */
         if ErrorIn(loop_1) {Result = loop_1
         break
         } else {
@@ -713,6 +655,7 @@ func E_load_module (self EID) EID {
   
 /* {1} The go function for: sload(self:module) [status=1] */
 func F_sload_module (self *ClaireModule ) EID { 
+    // eid body s = any
     var Result EID 
     { 
       var x *ClaireAny  
@@ -725,9 +668,7 @@ func F_sload_module (self *ClaireModule ) EID {
         x = x_support.At(i_it)
         var loop_1 EID 
         _ = loop_1
-        /*g_try(v2:"loop_1",loop:tuple("Result", EID)) */
         loop_1 = Core.F_CALL(C_Reader_load_file,ARGS(x.ToEID(),EID{CTRUE.Id(),0}))
-        /* ERROR PROTECTION INSERTED (loop_1-Result) */
         if ErrorIn(loop_1) {Result = loop_1
         break
         } else {
@@ -750,9 +691,9 @@ func F_add_modules_module (self *ClaireModule ,l *ClaireSet ,result *ClaireList 
     if (result.Memq(self.Id()) == CTRUE) { 
       return  result
       }  else if (l.Contain_ask(self.Id()) == CTRUE) { 
-      return  result.AddFast(self.Id())/*t=any,s=list*/
+      return  result.AddFast(self.Id())
       } else {
-      l = l.AddFast(self.Id())/*t=any,s=set*/
+      l = l.AddFast(self.Id())
       { 
         var x *ClaireAny  
         _ = x
@@ -763,14 +704,13 @@ func F_add_modules_module (self *ClaireModule ,l *ClaireSet ,result *ClaireList 
           x = x_support.At(i_it)
           if (x.Isa.IsIn(C_module) == CTRUE) { 
             { var g0134 *ClaireModule   = ToModule(x)
-              _ = g0134
               result = F_add_modules_module(g0134,l,result)
               } 
             } 
           } 
         } 
       if (result.Memq(self.Id()) != CTRUE) { 
-        result = result.AddFast(self.Id())/*t=any,s=list*/
+        result = result.AddFast(self.Id())
         } 
       { 
         var x *ClaireAny  
@@ -796,10 +736,9 @@ func E_add_modules_module (self EID,l EID,result EID) EID {
 //
 /* {1} The go function for: add_modules(self:list) [status=0] */
 func F_add_modules_list (self *ClaireList ) *ClaireList  { 
-    // procedure body with s = list 
-var Result *ClaireList  
+    // procedure body with s = list
+    var Result *ClaireList  
     { var l *ClaireList   = ToType(C_module.Id()).EmptyList()
-      _ = l
       { 
         var x *ClaireAny  
         _ = x
@@ -822,20 +761,17 @@ func E_add_modules_list (self EID) EID {
 // load a file of expressions (quite useful)
 /* {1} The go function for: eload(self:string) [status=1] */
 func F_eload_string (self *ClaireString ) EID { 
+    // eid body s = any
     var Result EID 
     C_reader.Index = 0
-    /*integer->integer*/C_reader.Maxstack = 0
-    /*integer->integer*/ClEnv.NLine = 1
-    /*integer->integer*/C_reader.External = self
-    /*string->string*/Core.F_tformat_string(MakeString("---- [eload CLAIRE file: ~A]\n"),2,MakeConstantList((self).Id()))
-    /*g_try(v2:"Result",loop:true) */
+    C_reader.Maxstack = 0
+    ClEnv.NLine = 1
+    C_reader.External = self
+    Core.F_tformat_string(MakeString("---- [eload CLAIRE file: ~A]\n"),2,MakeConstantList((self).Id()))
     { var s2 *ClaireString   = F_append_string(self,MakeString(".cl"))
-      _ = s2
       { var p0 *ClairePort   = C_reader.Fromp
-        _ = p0
         { var p1 *ClairePort  
           var try_1 EID 
-          /*g_try(v2:"try_1",loop:false) */
           { 
             h_index := ClEnv.Index
             h_base := ClEnv.Base
@@ -855,40 +791,30 @@ func F_eload_string (self *ClaireString ) EID {
                 } 
               } 
             } 
-          /* ERROR PROTECTION INSERTED (p1-Result) */
           if ErrorIn(try_1) {Result = try_1
           } else {
           p1 = ToPort(OBJ(try_1))
           { var start int  = ClEnv.Base
-            _ = start
             { var top int  = ClEnv.Index
               { var b2 *ClaireBoolean   = C_reader.Toplevel
-                _ = b2
                 { var _staritem_star *ClaireAny   = CNULL
-                  _ = _staritem_star
                   ClEnv.Base= top
                   C_reader.Toplevel = CFALSE
-                  /*boolean->boolean*/C_reader.Fromp = p1
-                  /*port->port*/var try_2 EID 
-                  /*g_try(v2:"try_2",loop:true) */
+                  C_reader.Fromp = p1
+                  var try_2 EID 
                   try_2 = F_read_port(p1)
-                  /* ERROR PROTECTION INSERTED (_staritem_star-Result) */
                   if ErrorIn(try_2) {Result = try_2
                   } else {
                   _staritem_star = ANY(try_2)
                   Result = _staritem_star.ToEID()
-                  /*g_try(v2:"Result",loop:true) */
                   Result= EID{CFALSE.Id(),0}
                   for (_staritem_star != C_Reader_eof.Id()) { 
-                    /* While stat, v:"Result" loop:true */
                     var loop_3 EID 
                     _ = loop_3
                     { 
                     ClEnv.Index= (top+(C_reader.Maxstack+1))
                     var try_4 EID 
-                    /*g_try(v2:"try_4",loop:tuple("Result", EID)) */
                     try_4 = EVAL(_staritem_star)
-                    /* ERROR PROTECTION INSERTED (_staritem_star-loop_3) */
                     if ErrorIn(try_4) {loop_3 = try_4
                     Result = try_4
                     break
@@ -896,9 +822,7 @@ func F_eload_string (self *ClaireString ) EID {
                     _staritem_star = ANY(try_4)
                     loop_3 = _staritem_star.ToEID()
                     var try_5 EID 
-                    /*g_try(v2:"try_5",loop:tuple("Result", EID)) */
                     try_5 = F_read_port(p1)
-                    /* ERROR PROTECTION INSERTED (_staritem_star-loop_3) */
                     if ErrorIn(try_5) {loop_3 = try_5
                     Result = try_5
                     break
@@ -906,17 +830,15 @@ func F_eload_string (self *ClaireString ) EID {
                     _staritem_star = ANY(try_5)
                     loop_3 = _staritem_star.ToEID()
                     }}
-                    /* try?:false, v2:"v_while9" loop will be:tuple("Result", EID) */
                     } 
                   }
-                  /* ERROR PROTECTION INSERTED (Result-Result) */
                   if !ErrorIn(Result) {
                   ClEnv.Base= start
                   ClEnv.Index= top
                   C_reader.Fromp = p0
-                  /*port->port*/C_reader.Toplevel = b2
-                  /*boolean->boolean*/C_reader.External = MakeString("toplevel")
-                  /*string->string*/p1.Fclose()
+                  C_reader.Toplevel = b2
+                  C_reader.External = MakeString("toplevel")
+                  p1.Fclose()
                   Result = EVOID
                   }}
                   } 
@@ -927,7 +849,6 @@ func F_eload_string (self *ClaireString ) EID {
           } 
         } 
       } 
-    /* ERROR PROTECTION INSERTED (Result-Result) */
     if !ErrorIn(Result) {
     Result = EID{CTRUE.Id(),0}
     }
@@ -946,23 +867,20 @@ func E_eload_string (self EID) EID {
 // the last character read (and not used) is in last(reader)
 /* {1} The go function for: readblock(p:port) [status=1] */
 func F_readblock_port (p *ClairePort ) EID { 
+    // eid body s = any
     var Result EID 
     if (Equal(C_reader.Fromp.Id(),p.Id()) == CTRUE) { 
       Result = C_reader.Nextunit()
       } else {
       { var p2 *ClairePort   = C_reader.Fromp
-        _ = p2
         C_reader.Fromp = p
-        /*port->port*/{ var val *ClaireAny  
+        { var val *ClaireAny  
           var try_1 EID 
-          /*g_try(v2:"try_1",loop:false) */
           try_1 = C_reader.Nextunit()
-          /* ERROR PROTECTION INSERTED (val-Result) */
           if ErrorIn(try_1) {Result = try_1
           } else {
           val = ANY(try_1)
           C_reader.Fromp = p2
-          /*port->port*//*g_try(v2:"Result",loop:true) */
           if ((Equal(val,C_reader.Paren) == CTRUE) || 
               ((Equal(val,C_reader.Curly) == CTRUE) || 
                 ((Equal(val,C_reader.Comma) == CTRUE) || 
@@ -971,7 +889,6 @@ func F_readblock_port (p *ClairePort ) EID {
             } else {
             Result = EID{CFALSE.Id(),0}
             } 
-          /* ERROR PROTECTION INSERTED (Result-Result) */
           if !ErrorIn(Result) {
           Result = val.ToEID()
           }
@@ -988,27 +905,25 @@ func E_readblock_port (p EID) EID {
 // read reads a closed expression
 /* {1} The go function for: read(p:port) [status=1] */
 func F_read_port (p *ClairePort ) EID { 
+    // eid body s = any
     var Result EID 
     { var p2 *ClairePort   = C_reader.Fromp
       if (Equal(p.Id(),p2.Id()) != CTRUE) { 
         C_reader.Fromp = p
-        /*port->port*/} 
+        } 
       { var val *ClaireAny  
         var try_1 EID 
-        /*g_try(v2:"try_1",loop:false) */
         if (C_reader.Skipc() == C_reader.Eof) { 
           try_1 = EID{C_Reader_eof.Id(),0}
           } else {
           try_1 = C_reader.Nexte()
           } 
-        /* ERROR PROTECTION INSERTED (val-Result) */
         if ErrorIn(try_1) {Result = try_1
         } else {
         val = ANY(try_1)
         if (Equal(p.Id(),p2.Id()) != CTRUE) { 
           C_reader.Fromp = p2
-          /*port->port*/} 
-        /*g_try(v2:"Result",loop:true) */
+          } 
         if ((Equal(val,C_reader.Paren) == CTRUE) || 
             ((Equal(val,C_reader.Curly) == CTRUE) || 
               ((Equal(val,C_reader.Comma) == CTRUE) || 
@@ -1017,7 +932,6 @@ func F_read_port (p *ClairePort ) EID {
           } else {
           Result = EID{CFALSE.Id(),0}
           } 
-        /* ERROR PROTECTION INSERTED (Result-Result) */
         if !ErrorIn(Result) {
         Result = val.ToEID()
         }
@@ -1033,22 +947,18 @@ func E_read_port (p EID) EID {
 // read into a string
 /* {1} The go function for: read(self:string) [status=1] */
 func F_read_string (self *ClaireString ) EID { 
+    // eid body s = any
     var Result EID 
     { var b *ClaireBoolean   = C_reader.Toplevel
-      _ = b
       { var p *ClairePort   = C_reader.Fromp
         { var x *ClaireAny   = CNULL
-          _ = x
           C_reader.Toplevel = CTRUE
-          /*boolean->boolean*/C_reader.Fromp = F_port_I_string(self)
-          /*port->port*//*g_try(v2:"Result",loop:true) */
+          C_reader.Fromp = F_port_I_string(self)
           { 
             h_index := ClEnv.Index
             h_base := ClEnv.Base
             var try_1 EID 
-            /*g_try(v2:"try_1",loop:false) */
             try_1 = C_reader.Nextunit()
-            /* ERROR PROTECTION INSERTED (x-Result) */
             if ErrorIn(try_1) {Result = try_1
             } else {
             x = ANY(try_1)
@@ -1059,20 +969,19 @@ func F_read_string (self *ClaireString ) EID {
               va_arg1 = C_reader
               va_arg2 = p
               va_arg1.Fromp = va_arg2
-              /*port->port*/Result = va_arg2.ToEID()
+              Result = va_arg2.ToEID()
               } 
             }
             if ErrorIn(Result){ 
               ClEnv.Index = h_index
               ClEnv.Base = h_base
               C_reader.Fromp = p
-              /*port->port*/Result = ClEnv.Exception_I.Close()
+              Result = ClEnv.Exception_I.Close()
               } 
             } 
-          /* ERROR PROTECTION INSERTED (Result-Result) */
           if !ErrorIn(Result) {
           C_reader.Toplevel = b
-          /*boolean->boolean*/Result = x.ToEID()
+          Result = x.ToEID()
           }
           } 
         } 
@@ -1087,6 +996,7 @@ func E_read_string (self EID) EID {
 // calls the debugger
 /* {1} The go function for: debug_if_possible(_CL_obj:void) [status=1] */
 func F_debug_if_possible_void () EID { 
+    // eid body s = any
     var Result EID 
     if (ClEnv.Debug_I >= 0) { 
       Result = F_funcall1(ToMethod(C_call_debug.Restrictions.ValuesO()[1-1]).Functional,ClEnv.Id())
@@ -1105,10 +1015,9 @@ func E_debug_if_possible_void (_CL_obj EID) EID {
 // function
 /* {1} The go function for: print_exception(_CL_obj:void) [status=0] */
 func F_print_exception_void () *ClaireAny  { 
-    // procedure body with s = any 
-var Result *ClaireAny  
+    // procedure body with s = any
+    var Result *ClaireAny  
     { var p *ClairePort   = ToPort(C_stdout.Value).UseAsOutput()
-      _ = p
       { var _Zerr *ClaireException   = ClEnv.Exception_I
         { var _Zprop *ClaireMethod   = ToMethod(Core.F__at_property1(C_self_print,_Zerr.Id().Isa).Id())
           { 
@@ -1147,8 +1056,8 @@ func E_print_exception_void (_CL_obj EID) EID {
 //
 /* {1} The go function for: show(self:any) [status=1] */
 func F_show_any (self *ClaireAny ) EID { 
+    // eid body s = any
     var Result EID 
-    /*g_try(v2:"Result",loop:true) */
     if (Core.F__Z_any1(self,C_object) == CTRUE) { 
       { var g0135 *ClaireObject   = ToObject(self)
         { 
@@ -1163,16 +1072,12 @@ func F_show_any (self *ClaireAny ) EID {
             var loop_1 EID 
             _ = loop_1
             { 
-            /*g_try(v2:"loop_1",loop:tuple("Result", EID)) */
             loop_1 = Core.F_print_any(rel.Selector.Id())
-            /* ERROR PROTECTION INSERTED (loop_1-loop_1) */
             if ErrorIn(loop_1) {Result = loop_1
             break
             } else {
             PRINC(": ")
-            /*g_try(v2:"loop_1",loop:tuple("Result", EID)) */
             loop_1 = Core.F_CALL(C_print,ARGS(Core.F_get_slot(rel,g0135).ToEID()))
-            /* ERROR PROTECTION INSERTED (loop_1-loop_1) */
             if ErrorIn(loop_1) {Result = loop_1
             break
             } else {
@@ -1183,20 +1088,15 @@ func F_show_any (self *ClaireAny ) EID {
           } 
         } 
       } else {
-      /*g_try(v2:"Result",loop:true) */
       Result = Core.F_CALL(C_print,ARGS(self.ToEID()))
-      /* ERROR PROTECTION INSERTED (Result-Result) */
       if !ErrorIn(Result) {
       PRINC(" is a ")
-      /*g_try(v2:"Result",loop:true) */
       Result = Core.F_print_any(self.Isa.Id())
-      /* ERROR PROTECTION INSERTED (Result-Result) */
       if !ErrorIn(Result) {
       PRINC("\n")
       Result = EVOID
       }}
       } 
-    /* ERROR PROTECTION INSERTED (Result-Result) */
     if !ErrorIn(Result) {
     Result = EID{CTRUE.Id(),0}
     }
@@ -1213,12 +1113,11 @@ func E_show_any (self EID) EID {
 func F_kill_object (self *ClaireObject ) *ClaireAny  { 
     if (self.Isa.IsIn(C_thing) == CTRUE) { 
       { var g0137 *ClaireThing   = ToThing(self.Id())
-        _ = g0137
         g0137.Name.Put(CNULL)
         } 
       } 
     self.Isa.Instances = self.Isa.Instances.Delete(self.Id())
-    /*list->list*/return  CEMPTY.Id()
+    return  CEMPTY.Id()
     } 
   
 // The EID go function for: kill @ object (throw: false) 
@@ -1228,9 +1127,7 @@ func E_kill_object (self EID) EID {
 /* {1} The go function for: kill(self:class) [status=0] */
 func F_kill_class (self *ClaireClass ) *ClaireAny  { 
     for (self.Instances.Length() != 0) { 
-      /* While stat, v:"Unused" loop:false */
       Core.F_CALL(C_kill,ARGS(self.Instances.At(1-1).ToEID()))
-      /* try?:false, v2:"v_while2" loop will be:tuple("Unused", void) */
       } 
     { 
       var x *ClaireClass  
@@ -1308,6 +1205,7 @@ func E_max_float (x EID,y EID) EID {
   
 /* {1} The go function for: min(x:any,y:any) [status=1] */
 func F_min_any (x *ClaireAny ,y *ClaireAny ) EID { 
+    // eid body s = any
     var Result EID 
     Result = IfThenElse((ToBoolean(OBJ(Core.F_CALL(ToProperty(C__inf_equal.Id()),ARGS(x.ToEID(),y.ToEID())))) == CTRUE),
       x,
@@ -1320,6 +1218,7 @@ func E_min_any (x EID,y EID) EID {
   
 /* {1} The go function for: max(x:any,y:any) [status=1] */
 func F_max_any (x *ClaireAny ,y *ClaireAny ) EID { 
+    // eid body s = any
     var Result EID 
     Result = IfThenElse((ToBoolean(OBJ(Core.F_CALL(ToProperty(C__inf_equal.Id()),ARGS(x.ToEID(),y.ToEID())))) == CTRUE),
       y,
@@ -1351,23 +1250,20 @@ func E_unknown_ask_table (a EID,x EID) EID {
   
 /* {1} The go function for: float!(self:string) [status=1] */
 func F_float_I_string (self *ClaireString ) EID { 
+    // eid body s = float
     var Result EID 
     { var x *ClaireAny  
       var try_1 EID 
-      /*g_try(v2:"try_1",loop:false) */
       try_1 = F_read_string(self)
-      /* ERROR PROTECTION INSERTED (x-Result) */
       if ErrorIn(try_1) {Result = try_1
       } else {
       x = ANY(try_1)
       if (C_float.Id() == x.Isa.Id()) { 
         { var g0138 float64  = ToFloat(x).Value
-          _ = g0138
           Result = EID{C__FLOAT,FVAL(g0138)}
           } 
         }  else if (C_integer.Id() == x.Isa.Id()) { 
         { var g0139 int  = ToInteger(x).Value
-          _ = g0139
           Result = EID{C__FLOAT,FVAL(F_to_float(g0139))}
           } 
         } else {

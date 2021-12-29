@@ -207,7 +207,7 @@ sload(self:string) : any -> load_file(self, true)
 // The correct package is open and each file is loaded.
 [load_file(self:module,b:boolean) : void
  ->  if (self.mClaire/status = 2)
-        (funcall(self.mClaire/evaluate, any),
+        (// funcall(self.mClaire/evaluate, any),              // currently not implemented in CLAIRE4 : all compiled modules are loaded
          self.mClaire/status := 3)
      else if (self.mClaire/status = 0 & known?(source,self))
         (trace(1, "---- Loading the module ~S.\n", self),

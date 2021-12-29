@@ -116,7 +116,7 @@ self_print(self:Defvar) : void
 //
 self_eval(self:Definition) : any
  -> (let %c := self.arg,
-         %o := (if (%c.open <= 1) error("[105] cannot instantiate ~S", %c),  // 1:final()
+         %o := (if (%c.open <= 0) error("[105] cannot instantiate ~S", %c),  // 1:final()
                 mClaire/new!(%c)) in                   // v3.2.26
         Core/new_defaults(%o,new_writes(%o, self.args)))
 
@@ -144,7 +144,7 @@ new_writes(self:object,%l:list) : list
            y := eval(x.args[2]),
            s := (p @ self.isa) in
          case s
-          (slot (if (y = unknown) lp :add p,
+          (slot (if (y = unknown) lp :add! p,
                  if not(y % s.range) range_is_wrong(s, y)
                  else mClaire/update(p, self, s.index, s.Core/srange, y)),
            any error("[106] the object ~S does not understand ~S", self, p)),
@@ -153,8 +153,8 @@ new_writes(self:object,%l:list) : list
 
 // creation of a new named object
 self_eval(self:Defobj) : any
- -> let %c := self.arg, %o:object := unknown in
-       (if (%c.open <= 1) error("[105] cannot instantiate ~S", %c),
+ -> let %c := self.arg, %o:object := (unknown as object) in
+       (if (%c.open <= 0) error("[105] cannot instantiate ~S", %c),
         if (%c inherit? thing)
             (%o := mClaire/new!(%c, self.ident),
              case %o (property (if (length(%o.restrictions) > 0)     // v3.2.58 : cause compiler problems !
@@ -264,7 +264,7 @@ attach_comment(x:any) : void
 extract_pattern(x:any,path:list) : any
  -> (case x
       (class x,
-       set let z := (if (length(x) = 1) extract_pattern(x[1], nil)) in
+       set let z := (if (size(x) = 1) extract_pattern(the(x), nil)) in
              case z
               (Reference let w:Reference := copy(z) in
                            (write(arg, w, true), w),
@@ -296,7 +296,7 @@ extract_pattern(x:any,path:list) : any
                  (if known?(v) v.range
                   else if (case path (list length(path) > 1))
                     let y := Reference!(cdr(path), path[1]),
-                        v := Variable(mClaire/pname = s, range = y) in
+                        v := Variable(mClaire/pname = s, range = (y as type)) in
                       (//[5] create a reference for ~S args=~S // s,y.args,
                        LDEF :add v, void)
                   else unknown),
@@ -464,11 +464,13 @@ self_eval(self:Defarray) : any
          d := (case e (lambda unknown, any eval(self.body))) in
        (write(range, ar, extract_pattern(self.set_arg, nil)),
         if unknown?(range,ar) range_error(mClaire/cause = table, arg = self.set_arg, wrong = type), // v3.3.18
+        if (unknown?(d) & (ar.range <= integer | ar.range <= float)) 
+            trace(0,"=== CLAIRE4 Warning: unknown not allowed as a default for table with range ~S\n ",ar.range),
         if known?(d) 
            (if not(d % ar.range)                  // v3.1.06
                range_error(mClaire/cause = ar,arg = d, wrong = ar.range))
-        else if (s <= integer) d := 0
-        else if (s <= float) d := 0.0,                        // v4.0: unknown not allowed as a float or int
+        else if (ar.range <= integer) d := 0
+        else if (ar.range <= float) d := 0.0,                        // v4.0: unknown not allowed as a float or int
         put(range, v, s),
         attach_comment(ar),
         if (class!(ar.range) inherit? set) write(multivalued?, ar, true),
@@ -535,13 +537,13 @@ self_eval(self:Defrule) : any
      else let %condition := self.arg,
               ru := get(self.iClaire/ident) in        // name of the rule
        (put(isa, ru, rule_object), 
-        add(rule_object.instances,ru),
+        add!(rule_object.instances,ru),
         let (R,lvar) := make_filter(%condition) in
          let d := make_demon(R,ru.name,
                             lvar,%condition,lexical_build(self.body,lvar,0)) in
          (if (R.if_write % function)
              error("cannot define a new rule on ~S which is closed", R),
-          //[0] we have defined a demon ~S for ~S // d,R,
+          //[5] we have defined a demon ~S for ~S // d,R,
           demons[R] :add d,
           last_rule[R] := ru,
           if (length(demons[R]) = 1) eval_if_write(R),
@@ -593,7 +595,7 @@ self_eval(self:Defrule) : any
    -> let x := lvar[1], y := lvar[2],
           %test:any := Call((if multivalued?(R) % else =), list(y, readCall(R,x))),
           %body:any := conc in
-        (//[0] make a demon for ~S from ~S => ~S (name = ~S) // R, cond, conc,n,
+        (//[5] make a demon for ~S from ~S => ~S (name = ~S) // R, cond, conc,n,
           if (mClaire/trace!(if_write) > verbose())   // add a trace to the conclusion
            conc := Do(list(Call(format,list("--- trigger ~A(~S,~S)\n", 
                                              List(args = list(string!(n), x, y)))), 
@@ -606,7 +608,6 @@ self_eval(self:Defrule) : any
                        any %body := conc)
          else case cond (And %test := And(args = list(%test) /+ cdr(cond.args))),        
          case %body (If %body.test := %test),
-         //[0] create a demon with name ~S // n,
          demon(mClaire/pname = n,
                formula = lambda!(lvar,%body))) ]
 
@@ -639,7 +640,7 @@ eval_if_write(R:relation) : void
         l2 := list<any>(For(var = dv,
                             iClaire/set_arg = Call(nth,list(demons,R)),
                             arg = Call(funcall,list(dv) /+ lvar))) in
-     (//[0] generate a if_write demon for ~S // R,
+     (//[5] generate a if_write demon for ~S // R,
       for v in lvar put(range,v,class!(v.range)),
       if known?(inverse,R)
          (if not(multivalued?(R)) 
@@ -665,38 +666,7 @@ eventMethod(p:property) : void
         Kernel/set_arity(%f,2),
         put(functional, m, %f))                   // when we compile -> directly call the demon 
 
-/* new in v3.1: the inter face pragma ******************************
 
-// this array is used to store the declarations
-InterfaceList[c:class] : list := nil
-
-claire/interface :: property()
-
-// define a property as an interface
-[claire/interface(p:property) : void
- -> if not(p.restrictions)
-       error("[185] cannot define an empty property ~S as an interface",p),
-    if (not(Core/uniform(p)) | float % domain(p.restrictions[1]))
-       error("[185] cannot define an non-uniform property ~S as an interface",p),
-    let d := domain!(p.restrictions[1]),
-        ls := list<any>() in
-      (for p2 in property
-        (if (p2.mClaire/dispatcher > 0 & p2.domain glb p.domain)
-            ls :add p2.mClaire/dispatcher),
-       for x in p.restrictions d :meet domain!(x),
-       p.domain := d,
-       p.mClaire/dispatcher := some(i in (1 .. (length(ls) + 1)) |
-                                    not(i % ls))) ]
-
-claire/interface(c:class,l:listargs) : void
-  -> (InterfaceList[c] := list<property>{x in l | x % property},
-      let px := claire/interface in            // v3.2 trick to avoid ignore !
-         for p in InterfaceList[c] 
-           (if (p.open = 3) call(px,p)))       // only implied for open properties !!!!  */
-
-// safe pragma  - used to be defined in optimize
-// this pragma tells to compile with full safety (include arithmetic checks) 
-// claire/safe(x:any) : type[x] -> x
 
 // **************************************************************************
 // *     Part 5: JITO for methods                                           *
@@ -754,7 +724,6 @@ claire/interface(c:class,l:listargs) : void
           jito(self.arg),
           if untyped put(range,v,unknown)) ]
             
-
 // we optimize statically (Call(p) -> Call_method(m)) when
 //   - only one restriction match 
 //   - all domains are classes => class match

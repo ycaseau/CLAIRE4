@@ -300,14 +300,14 @@ readlambda(r:meta_reader,l:any) : any
 -> let lbody := nextseq(cnext(r),#/}), lvar := list() in
         (//[5] read a lambda ~S with body ~S // l, lbody,
          case l
-           (Vardef lvar :add l,
+           (Vardef lvar :add! l,
             Do (for y in l.args
-                  (case y (Vardef lvar :add y,
-                           any lvar :add Variable(mClaire/pname = extract_symbol(y), range = any)))),
+                  (case y (Vardef lvar :add! y,
+                           any lvar :add! Variable(mClaire/pname = extract_symbol(y), range = any)))),
             list (for y in l
-                    (case y (Vardef lvar :add y,
-                             any lvar :add Variable(mClaire/pname = extract_symbol(y), range = any)))),
-            any lvar :add Variable(mClaire/pname = extract_symbol(l), range = any)),
+                    (case y (Vardef lvar :add! y,
+                             any lvar :add! Variable(mClaire/pname = extract_symbol(y), range = any)))),
+            any lvar :add! Variable(mClaire/pname = extract_symbol(l), range = any)),
          lambda!(lvar,(if (length(lbody) = 1) lbody[1] else Do(lbody))))                
 
 Do!(x:any, y:any) : any

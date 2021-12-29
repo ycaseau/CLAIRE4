@@ -432,7 +432,7 @@ uniform(p:property) : boolean
 // insert into the hash table - since the order is not garanteed when we build the dictionary, we
 // need to check that m is more suited than anything that could be there
 [hashinsert(c:class,m:method) : any
- -> if (c.dictionary = unknown) c.dictionary := (map!(property,method) as list),   // UGLY -  remove the cast
+ -> if (c.dictionary = unknown) c.dictionary := map!(property,method),   
     let m1 := dict_get(c.dictionary,m.selector) in
        (if (m1 = unknown |  domain!(m) inherit? domain!(m1 as method))
             dict_put(c.dictionary,m.selector,m)),

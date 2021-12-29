@@ -1,5 +1,5 @@
 /***** CLAIRE Compilation of file /Users/ycaseau/Dropbox/src/clairev4.03/src/meta/method.cl 
-         [version 4.0.03 / safety 5] Monday 12-27-2021 10:35:23 *****/
+         [version 4.0.03 / safety 5] Wednesday 12-29-2021 08:34:14 *****/
 
 package Core
 import (_ "fmt"
@@ -51,7 +51,7 @@ func E_close_method (r EID) EID {
 /* {1} The go function for: attach(r:method,s:string) [status=0] */
 func F_attach_method (r *ClaireMethod ,s *ClaireString ) *ClaireMethod  { 
     r.Comment = F_append_string(MakeString("defined in file "),s)
-    /*string->string*/return  F_close_method(r)
+    return  F_close_method(r)
     } 
   
 // The EID go function for: attach @ method (throw: false) 
@@ -70,6 +70,7 @@ func E_attach_method (r EID,s EID) EID {
 // int? tells us if this is an interpreted message
 /* {1} The go function for: eval_message(self:property,r:object,start:integer,int?:boolean) [status=1] */
 func F_eval_message_property (self *ClaireProperty ,r *ClaireObject ,start int,int_ask *ClaireBoolean ) EID { 
+    // eid body s = any
     var Result EID 
     if (r.Isa.Id() == C_method.Id()) { 
       if (ClEnv.Debug_I != -1) { 
@@ -78,14 +79,11 @@ func F_eval_message_property (self *ClaireProperty ,r *ClaireObject ,start int,i
         { var m *ClaireMethod   = ToMethod(r.Id())
           if (m.Formula.Id() != CNULL) { 
             { var retour int  = ClEnv.Base
-              _ = retour
               ClEnv.Base= start
               F_stack_add(m.Formula.Dimension)
               { 
                 var val EID 
-                /*g_try(v2:"val",loop:false) */
                 val = EVAL(m.Formula.Body)
-                /* ERROR PROTECTION INSERTED (val-Result) */
                 if ErrorIn(val) {Result = val
                 } else {
                 ClEnv.Base= retour
@@ -102,31 +100,22 @@ func F_eval_message_property (self *ClaireProperty ,r *ClaireObject ,start int,i
         (ClEnv.Index == (start+1))) { 
       { var val *ClaireAny   = F_get_slot(ToSlot(r.Id()),ToObject(OBJ(ClEnv.EvalStack[start])))
         ClEnv.Index= start
-        /*g_try(v2:"Result",loop:true) */
         { var n int  = ClEnv.Trace_I
           if ((n > 0) && 
               ((self.Trace_I+ClEnv.Verbose) > 4)) { 
             ClEnv.Trace_I = 0
-            /*integer->integer*//*g_try(v2:"Result",loop:true) */
             PRINC("read: ")
-            /*g_try(v2:"Result",loop:true) */
             Result = F_print_any(self.Id())
-            /* ERROR PROTECTION INSERTED (Result-Result) */
             if !ErrorIn(Result) {
             PRINC("(")
-            /*g_try(v2:"Result",loop:true) */
             Result = F_CALL(C_print,ARGS(ClEnv.EvalStack[start]))
-            /* ERROR PROTECTION INSERTED (Result-Result) */
             if !ErrorIn(Result) {
             PRINC(") = ")
-            /*g_try(v2:"Result",loop:true) */
             Result = F_CALL(C_print,ARGS(val.ToEID()))
-            /* ERROR PROTECTION INSERTED (Result-Result) */
             if !ErrorIn(Result) {
             PRINC("\n")
             Result = EVOID
             }}}
-            /* ERROR PROTECTION INSERTED (Result-Result) */
             if !ErrorIn(Result) {
             { 
               var va_arg1 *ClaireEnvironment  
@@ -134,14 +123,13 @@ func F_eval_message_property (self *ClaireProperty ,r *ClaireObject ,start int,i
               va_arg1 = ClEnv
               va_arg2 = n
               va_arg1.Trace_I = va_arg2
-              /*integer->integer*/Result = EID{C__INT,IVAL(va_arg2)}
+              Result = EID{C__INT,IVAL(va_arg2)}
               } 
             }
             } else {
             Result = EID{CFALSE.Id(),0}
             } 
           } 
-        /* ERROR PROTECTION INSERTED (Result-Result) */
         if !ErrorIn(Result) {
         Result = val.ToEID()
         }
@@ -160,20 +148,16 @@ func E_eval_message_property (self EID,r EID,start EID,int_ask EID) EID {
   
 /* {1} The go function for: noeval_message(self:property,start:integer) [status=1] */
 func F_noeval_message_property2 (self *ClaireProperty ,start int) EID { 
+    // eid body s = any
     var Result EID 
     { var l *ClaireList   = F_get_args_integer(start)
-      _ = l
-      /*g_try(v2:"Result",loop:true) */
       if (ClEnv.Debug_I != -1) { 
         Result = F_push_debug_property(self,(ClEnv.Index-start),start)
         } else {
         Result = EID{CFALSE.Id(),0}
         } 
-      /* ERROR PROTECTION INSERTED (Result-Result) */
       if !ErrorIn(Result) {
-      /*g_try(v2:"Result",loop:true) */
       Result = ToException(C_selector_error.Make(self.Id(),l.Id())).Close()
-      /* ERROR PROTECTION INSERTED (Result-Result) */
       if !ErrorIn(Result) {
       Result = EID{CNIL.Id(),0}
       }}
@@ -188,49 +172,41 @@ func E_noeval_message_property2 (self EID,start EID) EID {
 // and (2) takes care of the debugging piece, which implies a slower run (GC)
 /* {1} The go function for: execute(self:method,start:integer,int?:boolean) [status=1] */
 func F_execute_method (self *ClaireMethod ,start int,int_ask *ClaireBoolean ) EID { 
+    // eid body s = any
     var Result EID 
     { var n int  = self.Domain.Length()
       if (self.Formula.Id() != CNULL) { 
         { var retour int  = ClEnv.Base
-          _ = retour
           { var st_ask *ClaireBoolean   = MakeBoolean((ClEnv.Debug_I != -1) && ((int_ask == CTRUE) || 
                 (self.Module_I.Status != 4)))
             ClEnv.Base= start
             F_stack_add(self.Formula.Dimension)
-            /*g_try(v2:"Result",loop:true) */
             if (st_ask == CTRUE) { 
               Result = F_push_debug_property(self.Selector,n,start)
               } else {
               Result = EID{CFALSE.Id(),0}
               } 
-            /* ERROR PROTECTION INSERTED (Result-Result) */
             if !ErrorIn(Result) {
             { var val *ClaireAny  
               var try_1 EID 
-              /*g_try(v2:"try_1",loop:false) */
               try_1 = EVAL(self.Formula.Body)
-              /* ERROR PROTECTION INSERTED (val-Result) */
               if ErrorIn(try_1) {Result = try_1
               } else {
               val = ANY(try_1)
-              /*g_try(v2:"Result",loop:true) */
               if (st_ask == CTRUE) { 
                 Result = F_pop_debug_property(self.Selector,0,val)
                 } else {
                 Result = EID{CFALSE.Id(),0}
                 } 
-              /* ERROR PROTECTION INSERTED (Result-Result) */
               if !ErrorIn(Result) {
               ClEnv.Base= retour
               ClEnv.Index= start
-              /*g_try(v2:"Result",loop:true) */
               if ((ClEnv.Debug_I != -1) && 
                   (self.Range.Contains(val) != CTRUE)) { 
                 Result = ToException(C_range_error.Make(self.Id(),val,self.Range.Id())).Close()
                 } else {
                 Result = EID{CFALSE.Id(),0}
                 } 
-              /* ERROR PROTECTION INSERTED (Result-Result) */
               if !ErrorIn(Result) {
               Result = val.ToEID()
               }}
@@ -243,39 +219,30 @@ func F_execute_method (self *ClaireMethod ,start int,int_ask *ClaireBoolean ) EI
         { var st_ask *ClaireBoolean   = MakeBoolean((ClEnv.Debug_I != -1) && ((int_ask == CTRUE) || 
               (self.Module_I.Status != 3)) && (self.Selector.Id() != C_debug.Id()))
           { var i int  = ClEnv.Index
-            _ = i
-            /*g_try(v2:"Result",loop:true) */
             if (st_ask == CTRUE) { 
               Result = F_push_debug_property(self.Selector,n,start)
               } else {
               Result = EID{CFALSE.Id(),0}
               } 
-            /* ERROR PROTECTION INSERTED (Result-Result) */
             if !ErrorIn(Result) {
             { var val *ClaireAny  
               var try_2 EID 
-              /*g_try(v2:"try_2",loop:false) */
               try_2 = F_stack_apply_function(self.Functional,start,i)
-              /* ERROR PROTECTION INSERTED (val-Result) */
               if ErrorIn(try_2) {Result = try_2
               } else {
               val = ANY(try_2)
-              /*g_try(v2:"Result",loop:true) */
               if (st_ask == CTRUE) { 
                 Result = F_pop_debug_property(self.Selector,0,val)
                 } else {
                 Result = EID{CFALSE.Id(),0}
                 } 
-              /* ERROR PROTECTION INSERTED (Result-Result) */
               if !ErrorIn(Result) {
-              /*g_try(v2:"Result",loop:true) */
               if ((ClEnv.Debug_I != -1) && 
                   (self.Range.Contains(val) != CTRUE)) { 
                 Result = ToException(C_range_error.Make(self.Id(),val,self.Range.Id())).Close()
                 } else {
                 Result = EID{CFALSE.Id(),0}
                 } 
-              /* ERROR PROTECTION INSERTED (Result-Result) */
               if !ErrorIn(Result) {
               Result = val.ToEID()
               }}
@@ -295,6 +262,7 @@ func E_execute_method (self EID,start EID,int_ask EID) EID {
 // the evaluator is open coded
 /* {1} The go function for: eval(self:any) [status=1] */
 func F_eval_any (self *ClaireAny ) EID { 
+    // eid body s = any
     var Result EID 
     Result = EVAL(self)
     return Result} 
@@ -314,24 +282,20 @@ func F_inlineok_ask_method (self *ClaireMethod ,s *ClaireString ) *ClaireMethod 
       h_index := ClEnv.Index
       h_base := ClEnv.Base
       { var p *ClaireProperty   = C_read
-        _ = p
         { var l *ClaireAny  
-          _ = l
           var try_1 EID 
-          /*g_try(v2:"try_1",loop:false) */
           try_1 = F_CALL(C_call,ARGS(EID{p.Id(),0},EID{(s).Id(),0}))
-          /* ERROR PROTECTION INSERTED (l-Unused_H) */
           if ErrorIn(try_1) {Unused_H = try_1
           } else {
           l = ANY(try_1)
           self.Inline_ask = CTRUE
-          /*boolean->boolean*/{ 
+          { 
             var va_arg1 *ClaireMethod  
             var va_arg2 *ClaireLambda  
             va_arg1 = self
             va_arg2 = ToLambda(l)
             va_arg1.Formula = va_arg2
-            /*lambda->lambda*/Unused_H = EID{va_arg2.Id(),0}
+            Unused_H = EID{va_arg2.Id(),0}
             } 
           }
           } 
@@ -352,23 +316,20 @@ func E_inlineok_ask_method (self EID,s EID) EID {
 // reads a lambda
 /* {1} The go function for: read_lambda(s:string) [status=1] */
 func F_read_lambda_string (s *ClaireString ) EID { 
+    // eid body s = lambda
     var Result EID 
     { 
       h_index := ClEnv.Index
       h_base := ClEnv.Base
       { var p *ClaireProperty   = C_read
-        _ = p
         { var l *ClaireAny  
           var try_1 EID 
-          /*g_try(v2:"try_1",loop:false) */
           try_1 = F_CALL(C_call,ARGS(EID{p.Id(),0},EID{(s).Id(),0}))
-          /* ERROR PROTECTION INSERTED (l-Result) */
           if ErrorIn(try_1) {Result = try_1
           } else {
           l = ANY(try_1)
           if (l.Isa.IsIn(C_lambda) == CTRUE) { 
             { var g0000 *ClaireLambda   = ToLambda(l)
-              _ = g0000
               Result = EID{g0000.Id(),0}
               } 
             } else {
@@ -419,8 +380,8 @@ func E_put_slot (s EID,x EID,y EID) EID {
 // when unknown is not allowed, we use read which is defined in Kernel
 /* {1} The go function for: get(self:property,x:object) [status=0] */
 func F_get_property (self *ClaireProperty ,x *ClaireObject ) *ClaireAny  { 
-    // procedure body with s = any 
-var Result *ClaireAny  
+    // procedure body with s = any
+    var Result *ClaireAny  
     { var s *ClaireObject   = F__at_property1(self,x.Id().Isa)
       if (C_slot.Id() == s.Isa.Id()) { 
         { var g0002 *ClaireSlot   = ToSlot(s.Id())
@@ -439,6 +400,7 @@ func E_get_property (self EID,x EID) EID {
 // a more general value that is useful for types
 /* {1} The go function for: funcall(self:property,x:any) [status=1] */
 func F_funcall_property (self *ClaireProperty ,x *ClaireAny ) EID { 
+    // eid body s = any
     var Result EID 
     { var s *ClaireObject   = F__at_property1(self,x.Isa)
       if (C_slot.Id() == s.Isa.Id()) { 
@@ -447,7 +409,6 @@ func F_funcall_property (self *ClaireProperty ,x *ClaireAny ) EID {
           } 
         }  else if (C_method.Id() == s.Isa.Id()) { 
         { var g0005 *ClaireMethod   = ToMethod(s.Id())
-          _ = g0005
           Result = F_funcall_method1(g0005,x)
           } 
         } else {
@@ -463,15 +424,14 @@ func E_funcall_property (self EID,x EID) EID {
 // verifying
 /* {1} The go function for: hold?(self:property,x:object,y:any) [status=0] */
 func F_hold_ask_property (self *ClaireProperty ,x *ClaireObject ,y *ClaireAny ) *ClaireBoolean  { 
-    // procedure body with s = boolean 
-var Result *ClaireBoolean  
+    // procedure body with s = boolean
+    var Result *ClaireBoolean  
     { var s *ClaireObject   = F__at_property1(self,x.Id().Isa)
       if (C_slot.Id() == s.Isa.Id()) { 
         { var g0007 *ClaireSlot   = ToSlot(s.Id())
           { var z *ClaireAny   = x.SlotGet(g0007.Index,g0007.Srange)
             if (C_set.Id() == z.Isa.Id()) { 
               { var g0008 *ClaireSet   = ToSet(z)
-                _ = g0008
                 Result = g0008.Contain_ask(y)
                 } 
               } else {
@@ -496,8 +456,8 @@ func E_hold_ask_property (self EID,x EID,y EID) EID {
 // note in CLAIRE 4: with no inverse/store write_fast, defined in Kernel, works better
 /* {1} The go function for: write(self:property,x:object,y:any) [status=1] */
 func F_write_property (self *ClaireProperty ,x *ClaireObject ,y *ClaireAny ) EID { 
+    // eid body s = void
     var Result EID 
-    /*g_try(v2:"Result",loop:true) */
     { var s *ClaireObject   = F__at_property1(self,x.Id().Isa)
       if (C_slot.Id() == s.Isa.Id()) { 
         { var g0011 *ClaireSlot   = ToSlot(s.Id())
@@ -521,7 +481,6 @@ func F_write_property (self *ClaireProperty ,x *ClaireObject ,y *ClaireAny ) EID
         Result = ToException(C_selector_error.Make(self.Id(),MakeConstantList(x.Id()).Id())).Close()
         } 
       } 
-    /* ERROR PROTECTION INSERTED (Result-Result) */
     if !ErrorIn(Result) {
     Result = y.ToEID()
     }
@@ -534,6 +493,7 @@ func E_write_property (self EID,x EID,y EID) EID {
 // the value does not belong to the range: error!
 /* {1} The go function for: range_is_wrong(self:slot,y:any) [status=1] */
 func F_range_is_wrong_slot (self *ClaireSlot ,y *ClaireAny ) EID { 
+    // eid body s = void
     var Result EID 
     Result = ToException(C_range_error.Make(self.Id(),y,self.Range.Id())).Close()
     return Result} 
@@ -545,6 +505,7 @@ func E_range_is_wrong_slot (self EID,y EID) EID {
 // to remove
 /* {1} The go function for: put(p:property,x:object,n:integer,s:class,y:any) [status=1] */
 func F_put_property1 (p *ClaireProperty ,x *ClaireObject ,n int,s *ClaireClass ,y *ClaireAny ) EID { 
+    // eid body s = void
     var Result EID 
     Result = F_update_property(p,
       x,
@@ -567,12 +528,12 @@ func E_put_property1 (p EID,x EID,n EID,s EID,y EID) EID {
 // CLAIRE 4: inverse management only applies with set multivalued properties
 /* {1} The go function for: mClaire/update(p:property,x:object,n:integer,s:class,y:any) [status=1] */
 func F_update_property (p *ClaireProperty ,x *ClaireObject ,n int,s *ClaireClass ,y *ClaireAny ) EID { 
+    // eid body s = void
     var Result EID 
     { var old *ClaireAny   = x.SlotGet(n,s)
       if (ClEnv.Verbose == 8) { 
         F_tformat_string(MakeString("update ~S(~S) old = ~S\n"),0,MakeConstantList(p.Id(),x.Id(),old))
         } 
-      /*g_try(v2:"Result",loop:true) */
       if (p.Multivalued_ask.Id() == CTRUE.Id()) { 
         if (INT(F_CALL(C_length,ARGS(old.ToEID()))) > 0) { 
           { var v *ClaireSet   = ToType(CEMPTY.Id()).EmptySet()
@@ -612,9 +573,7 @@ func F_update_property (p *ClaireProperty ,x *ClaireObject ,n int,s *ClaireClass
             z = z_support.At(i_it)
             var loop_1 EID 
             _ = loop_1
-            /*g_try(v2:"loop_1",loop:tuple("Result", EID)) */
             loop_1 = F_add_I_property(p,x,n,z)
-            /* ERROR PROTECTION INSERTED (loop_1-Result) */
             if ErrorIn(loop_1) {Result = loop_1
             break
             } else {
@@ -640,7 +599,6 @@ func F_update_property (p *ClaireProperty ,x *ClaireObject ,n int,s *ClaireClass
         } else {
         Result = EID{CFALSE.Id(),0}
         } 
-      /* ERROR PROTECTION INSERTED (Result-Result) */
       if !ErrorIn(Result) {
       Result = y.ToEID()
       }
@@ -658,6 +616,7 @@ func E_update_property (p EID,x EID,n EID,s EID,y EID) EID {
 // this method checks the correctness of the inverse from a global view.
 /* {1} The go function for: update+(self:relation,x:any,y:any) [status=1] */
 func F_update_plus_relation (self *ClaireRelation ,x *ClaireAny ,y *ClaireAny ) EID { 
+    // eid body s = void
     var Result EID 
     { var r *ClaireRelation   = self.Inverse
       if ((r.Id() != CNULL) && 
@@ -669,7 +628,6 @@ func F_update_plus_relation (self *ClaireRelation ,x *ClaireAny ,y *ClaireAny ) 
               if (C_slot.Id() == s.Isa.Id()) { 
                 { var g0014 *ClaireSlot   = ToSlot(s.Id())
                   { var old_y *ClaireAny   = F_get_slot(g0014,ToObject(y))
-                    _ = old_y
                     if (g0013.Multivalued_ask.Id() != CFALSE.Id()) { 
                       Result = EID{F_Core_add_value_I_property(g0013,
                         ToObject(y),
@@ -720,19 +678,17 @@ func E_update_plus_relation (self EID,x EID,y EID) EID {
 // this methods deletes a value in the inverse of a global_relation
 /* {1} The go function for: update-(r:relation,x:any,y:any) [status=0] */
 func F_update_dash_relation (r *ClaireRelation ,x *ClaireAny ,y *ClaireAny )  { 
-    // procedure body with s = void 
-if (r.Isa.IsIn(C_property) == CTRUE) { 
+    // procedure body with s = void
+    if (r.Isa.IsIn(C_property) == CTRUE) { 
       { var g0017 *ClaireProperty   = ToProperty(r.Id())
         { var s *ClaireObject   = F__at_property1(g0017,x.Isa)
           if (C_slot.Id() == s.Isa.Id()) { 
             { var g0018 *ClaireSlot   = ToSlot(s.Id())
               { var l *ClaireAny   = F_get_slot(g0018,ToObject(x))
                 { var v *ClaireAny  
-                  _ = v
                   if (C_set.Id() == l.Isa.Id()) { 
                     { var g0019 *ClaireSet   = ToSet(l)
                       { var arg_1 *ClaireSet  
-                        _ = arg_1
                         if (g0017.Store_ask == CTRUE) { 
                           arg_1 = g0019.Copy()
                           } else {
@@ -755,11 +711,9 @@ if (r.Isa.IsIn(C_property) == CTRUE) {
       { var g0021 *ClaireTable   = ToTable(r.Id())
         { var l *ClaireAny   = F_get_table(g0021,x)
           { var v *ClaireAny  
-            _ = v
             if (C_set.Id() == l.Isa.Id()) { 
               { var g0022 *ClaireSet   = ToSet(l)
                 { var arg_2 *ClaireSet  
-                  _ = arg_2
                   if (g0021.Store_ask == CTRUE) { 
                     arg_2 = g0022.Copy()
                     } else {
@@ -787,12 +741,12 @@ func E_update_dash_relation (r EID,x EID,y EID) EID {
 // this is the multi-valued equivalent of update - we know self to be multivalued (hence a set in Claire 4)
 /* {1} The go function for: add!(self:property,x:object,n:integer,y:any) [status=1] */
 func F_add_I_property (self *ClaireProperty ,x *ClaireObject ,n int,y *ClaireAny ) EID { 
+    // eid body s = void
     var Result EID 
     if (self.IfWrite != CNULL) { 
       Result = F_fastcall_relation2(ToRelation(self.Id()),x.Id(),y)
       } else {
       { var s1 *ClaireSet   = ToSet(x.SlotGet(n,C_object))
-        _ = s1
         if (F_Core_add_value_I_property(self,
           x,
           n,
@@ -818,19 +772,17 @@ func E_add_I_property (self EID,x EID,n EID,y EID) EID {
 // return true if the set is actually changed (y added to s)
 /* {1} The go function for: add_value!(self:property,x:object,n:integer,s1:set,y:any) [status=0] */
 func F_Core_add_value_I_property (self *ClaireProperty ,x *ClaireObject ,n int,s1 *ClaireSet ,y *ClaireAny ) *ClaireBoolean  { 
-    // procedure body with s = boolean 
-var Result *ClaireBoolean  
+    // procedure body with s = boolean
+    var Result *ClaireBoolean  
     if (s1.Contain_ask(y) != CTRUE) { 
       { var s2 *ClaireSet  
-        _ = s2
         { var arg_1 *ClaireSet  
-          _ = arg_1
           if (self.Store_ask == CTRUE) { 
             arg_1 = s1.Copy()
             } else {
             arg_1 = s1
             } 
-          s2 = arg_1.AddFast(y)/*t=any,s=set*/
+          s2 = arg_1.AddFast(y)
           } 
         F_store_object(x,
           n,
@@ -855,8 +807,8 @@ func E_Core_add_value_I_property (self EID,x EID,n EID,s1 EID,y EID) EID {
 // same method with error checking
 /* {1} The go function for: add(self:property,x:object,y:any) [status=1] */
 func F_add_property (self *ClaireProperty ,x *ClaireObject ,y *ClaireAny ) EID { 
+    // eid body s = void
     var Result EID 
-    /*g_try(v2:"Result",loop:true) */
     { var s *ClaireObject   = F__at_property1(self,x.Id().Isa)
       if (F_boolean_I_any(s.Id()).Id() != CTRUE.Id()) { 
         Result = ToException(C_selector_error.Make(self.Id(),MakeConstantList(x.Id()).Id())).Close()
@@ -872,7 +824,6 @@ func F_add_property (self *ClaireProperty ,x *ClaireObject ,y *ClaireAny ) EID {
         Result = F_range_is_wrong_slot(ToSlot(s.Id()),y)
         } 
       } 
-    /* ERROR PROTECTION INSERTED (Result-Result) */
     if !ErrorIn(Result) {
     Result = y.ToEID()
     }
@@ -885,8 +836,8 @@ func E_add_property (self EID,x EID,y EID) EID {
 // known ?
 /* {1} The go function for: known?(self:property,x:object) [status=0] */
 func F_known_ask_property (self *ClaireProperty ,x *ClaireObject ) *ClaireBoolean  { 
-    // procedure body with s = boolean 
-var Result *ClaireBoolean  
+    // procedure body with s = boolean
+    var Result *ClaireBoolean  
     { var s *ClaireObject   = F__at_property1(self,x.Id().Isa)
       if (C_slot.Id() == s.Isa.Id()) { 
         { var g0024 *ClaireSlot   = ToSlot(s.Id())
@@ -904,8 +855,8 @@ func E_known_ask_property (self EID,x EID) EID {
   
 /* {1} The go function for: unknown?(self:property,x:object) [status=0] */
 func F_unknown_ask_property (self *ClaireProperty ,x *ClaireObject ) *ClaireBoolean  { 
-    // procedure body with s = boolean 
-var Result *ClaireBoolean  
+    // procedure body with s = boolean
+    var Result *ClaireBoolean  
     { var s *ClaireObject   = F__at_property1(self,x.Id().Isa)
       if (C_slot.Id() == s.Isa.Id()) { 
         { var g0026 *ClaireSlot   = ToSlot(s.Id())
@@ -925,6 +876,7 @@ func E_unknown_ask_property (self EID,x EID) EID {
 // assumes that self is multivalued -> should check !
 /* {1} The go function for: delete(self:property,x:object,y:any) [status=1] */
 func F_delete_property (self *ClaireProperty ,x *ClaireObject ,y *ClaireAny ) EID { 
+    // eid body s = any
     var Result EID 
     { var s *ClaireObject   = F__at_property1(self,x.Id().Isa)
       if (F_boolean_I_any(s.Id()).Id() != CTRUE.Id()) { 
@@ -933,7 +885,6 @@ func F_delete_property (self *ClaireProperty ,x *ClaireObject ,y *ClaireAny ) EI
         { var l1 *ClaireSet   = ToSet(x.SlotGet(ToSlot(s.Id()).Index,C_object))
           { var l *ClaireSet  
             { var arg_1 *ClaireSet  
-              _ = arg_1
               if (self.Store_ask == CTRUE) { 
                 arg_1 = l1.Copy()
                 } else {
@@ -968,6 +919,7 @@ func E_delete_property (self EID,x EID,y EID) EID {
 // v3.2.22: take care of multi-valued slot as well
 /* {1} The go function for: erase(self:property,x:object) [status=1] */
 func F_erase_property (self *ClaireProperty ,x *ClaireObject ) EID { 
+    // eid body s = any
     var Result EID 
     { var s *ClaireObject   = F__at_property1(self,x.Id().Isa)
       if (F_boolean_I_any(s.Id()).Id() != CTRUE.Id()) { 
@@ -1024,11 +976,11 @@ func E_erase_property (self EID,x EID) EID {
   
 /* {1} The go function for: set_range(p:property,c:class,r:type) [status=0] */
 func F_set_range_property (p *ClaireProperty ,c *ClaireClass ,r *ClaireType )  { 
-    // procedure body with s = void 
-{ var s *ClaireSlot   = ToSlot(F__at_property1(p,c).Id())
+    // procedure body with s = void
+    { var s *ClaireSlot   = ToSlot(F__at_property1(p,c).Id())
       s.Range = r
-      /*type->type*/s.Srange = r.Class_I()
-      /*class->class*/} 
+      s.Srange = r.Class_I()
+      } 
     } 
   
 // The EID go function for: set_range @ property (throw: false) 
@@ -1044,12 +996,12 @@ func E_set_range_property (p EID,c EID,r EID) EID {
 // this method allows to bypass the storage mechanism - to be optimized ..
 /* {1} The go function for: put_store(self:property,x:object,y:any,b:boolean) [status=1] */
 func F_put_store_property2 (self *ClaireProperty ,x *ClaireObject ,y *ClaireAny ,b *ClaireBoolean ) EID { 
+    // eid body s = void
     var Result EID 
     { var s *ClaireObject   = F__at_property1(self,x.Id().Isa)
       if (C_slot.Id() == s.Isa.Id()) { 
         { var g0028 *ClaireSlot   = ToSlot(s.Id())
           { var z *ClaireAny   = x.SlotGet(g0028.Index,g0028.Srange)
-            _ = z
             if (Equal(z,y) != CTRUE) { 
               Result = F_store_object(x,
                 g0028.Index,
@@ -1085,6 +1037,7 @@ func E_put_store_property2 (self EID,x EID,y EID,b EID) EID {
 // thus write(R,x,y) <=> fastcall(R,x,y) <=> f(x,y)
 /* {1} The go function for: fastcall(r:relation,x:any,y:any) [status=1] */
 func F_fastcall_relation2 (r *ClaireRelation ,x *ClaireAny ,y *ClaireAny ) EID { 
+    // eid body s = void
     var Result EID 
     { var f *ClaireAny   = r.IfWrite
       if (f.Isa.IsIn(C_lambda) == CTRUE) { 
@@ -1106,9 +1059,9 @@ func E_fastcall_relation2 (r EID,x EID,y EID) EID {
 // insertion in the definition tree
 /* {1} The go function for: insert_definition(p:property,r:restriction) [status=0] */
 func F_insert_definition_property (p *ClaireProperty ,r *ClaireRestriction )  { 
-    // procedure body with s = void 
-p.Definition = F_initialize_restriction1(r,ToTypeExpression(r.Domain.ValuesO()[1-1]).Class_I(),p.Definition)
-    /*list->list*/} 
+    // procedure body with s = void
+    p.Definition = F_initialize_restriction1(r,ToTypeExpression(r.Domain.ValuesO()[1-1]).Class_I(),p.Definition)
+    } 
   
 // The EID go function for: insert_definition @ property (throw: false) 
 func E_insert_definition_property (p EID,r EID) EID { 
@@ -1119,8 +1072,8 @@ func E_insert_definition_property (p EID,r EID) EID {
 // claire4 : get rid of dispatcher
 /* {1} The go function for: initialize(x:restriction,d:class,l:list) [status=0] */
 func F_initialize_restriction1 (x *ClaireRestriction ,d *ClaireClass ,l *ClaireList ) *ClaireList  { 
-    // procedure body with s = list 
-var Result *ClaireList  
+    // procedure body with s = list
+    var Result *ClaireList  
     { var p *ClaireProperty   = x.Selector
       if ((p.Restrictions.Length() == 5) && 
           (F_uniform_property(p) == CTRUE)) { 
@@ -1134,13 +1087,13 @@ var Result *ClaireList
             } 
           } 
         p.Dictionary = CTRUE
-        /*boolean->boolean*/} 
+        } 
       if (p.Dictionary == CTRUE) { 
         if (F_uniform_restriction(x) == CTRUE) { 
           F_hashinsert_restriction(x)
           } else {
           p.Dictionary = CFALSE
-          /*boolean->boolean*/} 
+          } 
         } 
       Result = F_initialize_restriction2(x,l)
       } 
@@ -1153,12 +1106,11 @@ func E_initialize_restriction1 (x EID,d EID,l EID) EID {
 // only uniform properties can use the dictionary representation
 /* {1} The go function for: uniform(x:restriction) [status=0] */
 func F_uniform_restriction (x *ClaireRestriction ) *ClaireBoolean  { 
-    // procedure body with s = boolean 
-var Result *ClaireBoolean  
+    // procedure body with s = boolean
+    var Result *ClaireBoolean  
     { var l *ClaireList   = x.Domain
       { var n int  = l.Length()
         { var arg_1 *ClaireAny  
-          _ = arg_1
           { 
             var r *ClaireRestriction  
             _ = r
@@ -1168,7 +1120,6 @@ var Result *ClaireBoolean
               r = ToRestriction(r_iter)
               var g0031I *ClaireBoolean  
               { var arg_2 *ClaireBoolean  
-                _ = arg_2
                 { var l2 *ClaireList   = r.Domain
                   { 
                     var v_and9 *ClaireBoolean  
@@ -1183,13 +1134,10 @@ var Result *ClaireBoolean
                         if (v_and9 == CFALSE) {arg_2 = CFALSE
                         } else { 
                           { var arg_3 *ClaireAny  
-                            _ = arg_3
                             { var i int  = 2
                               { var g0030 int  = n
-                                _ = g0030
                                 arg_3= CFALSE.Id()
                                 for (i <= g0030) { 
-                                  /* While stat, v:"arg_3" loop:tuple("arg_1", any) */
                                   if ((Equal(l.ValuesO()[i-1],l2.ValuesO()[i-1]) != CTRUE) && 
                                       ((l.ValuesO()[i-1].Isa.Id() == C_class.Id()) || 
                                           ((l.ValuesO()[i-1].Isa.Id() != l2.ValuesO()[i-1].Isa.Id()) || 
@@ -1198,7 +1146,6 @@ var Result *ClaireBoolean
                                     break
                                     } 
                                   i = (i+1)
-                                  /* try?:false, v2:"v_while16" loop will be:tuple("arg_3", any) */
                                   } 
                                 } 
                               } 
@@ -1234,13 +1181,12 @@ func E_uniform_restriction (x EID) EID {
 // v3.0.54 check that a uniform property only uses methods !
 /* {1} The go function for: uniform(p:property) [status=0] */
 func F_uniform_property (p *ClaireProperty ) *ClaireBoolean  { 
-    // procedure body with s = boolean 
-var Result *ClaireBoolean  
+    // procedure body with s = boolean
+    var Result *ClaireBoolean  
     { 
       var v_and2 *ClaireBoolean  
       
       { var arg_1 *ClaireAny  
-        _ = arg_1
         { 
           var x *ClaireRestriction  
           _ = x
@@ -1273,14 +1219,12 @@ func E_uniform_property (p EID) EID {
 // insert a restriction in a list with the good order
 /* {1} The go function for: initialize(x:restriction,l:list) [status=0] */
 func F_initialize_restriction2 (x *ClaireRestriction ,l *ClaireList ) *ClaireList  { 
-    // procedure body with s = list 
-var Result *ClaireList  
+    // procedure body with s = list
+    var Result *ClaireList  
     { var l1 *ClaireList   = CNIL
       { var i int  = 1
         { var g0032 int  = l.Length()
-          _ = g0032
           for (i <= g0032) { 
-            /* While stat, v:"Result" loop:false */
             { var l2 *ClaireList   = ToRestriction(l.At(i-1)).Domain
               if (F_tmatch_ask_list(x.Domain,l2) == CTRUE) { 
                 if (F_tmatch_ask_list(l2,x.Domain) == CTRUE) { 
@@ -1299,14 +1243,13 @@ var Result *ClaireList
                 } 
               } 
             i = (i+1)
-            /* try?:false, v2:"v_while5" loop will be:tuple("Result", void) */
             } 
           } 
         } 
       if (l1.Length() != 0) { 
         Result = l1
         } else {
-        Result = l.AddFast(x.Id())/*t=any,s=list*/
+        Result = l.AddFast(x.Id())
         } 
       } 
     return Result} 
@@ -1318,10 +1261,9 @@ func E_initialize_restriction2 (x EID,l EID) EID {
 // definition of dictionary: standart hash-table
 /* {1} The go function for: hashinsert(m:restriction) [status=0] */
 func F_hashinsert_restriction (m *ClaireRestriction ) *ClaireAny  { 
-    // procedure body with s = any 
-var Result *ClaireAny  
+    // procedure body with s = any
+    var Result *ClaireAny  
     { var c *ClaireClass   = F_domain_I_restriction(m)
-      _ = c
       { 
         var c2 *ClaireClass  
         _ = c2
@@ -1348,7 +1290,7 @@ func E_hashinsert_restriction (m EID) EID {
 func F_hashinsert_class (c *ClaireClass ,m *ClaireMethod ) *ClaireAny  { 
     if (c.Dictionary.Id() == CNULL) { 
       c.Dictionary = ToType(C_property.Id()).Map_I(ToType(C_method.Id()))
-      /*map_set->map_set*/} 
+      } 
     { var m1 *ClaireAny   = F_dict_get_any(c.Dictionary.Id(),m.Selector.Id())
       if ((m1 == CNULL) || 
           (F_domain_I_restriction(ToRestriction(m.Id())).IsIn(F_domain_I_restriction(ToRestriction(m1))) == CTRUE)) { 
@@ -1377,8 +1319,8 @@ func E_hashget_class (c EID,p EID) EID {
 // note that the first case with classes is necessary for bootstraping
 /* {1} The go function for: join(x:list,y:list) [status=0] */
 func F_join_list (x *ClaireList ,y *ClaireList ) *ClaireBoolean  { 
-    // procedure body with s = boolean 
-var Result *ClaireBoolean  
+    // procedure body with s = boolean
+    var Result *ClaireBoolean  
     { var n int  = x.Length()
       { 
         var v_and3 *ClaireBoolean  
@@ -1387,19 +1329,15 @@ var Result *ClaireBoolean
         if (v_and3 == CFALSE) {Result = CFALSE
         } else { 
           { var arg_1 *ClaireAny  
-            _ = arg_1
             { var i int  = 1
               { var g0033 int  = n
-                _ = g0033
                 arg_1= CFALSE.Id()
                 for (i <= g0033) { 
-                  /* While stat, v:"arg_1" loop:false */
                   if (F_boolean_I_any(F_join_class(ToTypeExpression(x.At(i-1)).Class_I(),ToTypeExpression(y.At(i-1)).Class_I()).Id()).Id() != CTRUE.Id()) { 
                     arg_1 = CTRUE.Id()
                     break
                     } 
                   i = (i+1)
-                  /* try?:false, v2:"v_while8" loop will be:tuple("arg_1", any) */
                   } 
                 } 
               } 
@@ -1408,19 +1346,15 @@ var Result *ClaireBoolean
           if (v_and3 == CFALSE) {Result = CFALSE
           } else { 
             { var arg_2 *ClaireAny  
-              _ = arg_2
               { var i int  = 1
                 { var g0034 int  = n
-                  _ = g0034
                   arg_2= CFALSE.Id()
                   for (i <= g0034) { 
-                    /* While stat, v:"arg_2" loop:false */
                     if (F_boolean_I_any(ANY(F_CALL(ToProperty(C_glb.Id()),ARGS(x.At(i-1).ToEID(),y.At(i-1).ToEID())))).Id() != CTRUE.Id()) { 
                       arg_2 = CTRUE.Id()
                       break
                       } 
                     i = (i+1)
-                    /* try?:false, v2:"v_while9" loop will be:tuple("arg_2", any) */
                     } 
                   } 
                 } 
@@ -1448,6 +1382,7 @@ func E_join_list (x EID,y EID) EID {
 // n is the number of args that have been pushed in the stack
 /* {1} The go function for: stack_apply(p:property,n:integer) [status=1] */
 func F_CALL (p *ClaireProperty ,n int) EID { 
+    // eid body s = any
     var Result EID 
     { var i int  = (ClEnv.Index-n)
       Result = F_eval_message_property(p,F_find_which_property(p,i,OWNER(ClEnv.EvalStack[i])),i,CFALSE)
@@ -1461,6 +1396,7 @@ func E_CALL (p EID,n EID) EID {
 // version where the class of first argument is forced (super)       
 /* {1} The go function for: super_apply(p:property,c:class,n:integer) [status=1] */
 func F_SUPER (p *ClaireProperty ,c *ClaireClass ,n int) EID { 
+    // eid body s = any
     var Result EID 
     { var i int  = (ClEnv.Index-n)
       Result = F_eval_message_property(p,F_find_which_property(p,i,c),i,CFALSE)
@@ -1475,8 +1411,8 @@ func E_SUPER (p EID,c EID,n EID) EID {
 // This is also optimized because it is very useful (it returns false if none is found)
 /* {1} The go function for: @(self:property,x:class) [status=0] */
 func F__at_property1 (self *ClaireProperty ,x *ClaireClass ) *ClaireObject  { 
-    // procedure body with s = object 
-var Result *ClaireObject  
+    // procedure body with s = object
+    var Result *ClaireObject  
     if (self.Dictionary == CTRUE) { 
       { var rx *ClaireObject   = F_hashget_class(x,self)
         Result = ToObject(IfThenElse((rx.Id() != CNULL),
@@ -1486,7 +1422,6 @@ var Result *ClaireObject
       } else {
       { var rx *ClaireAny  
         { var r_some *ClaireAny   = CNULL
-          _ = r_some
           { 
             var r *ClaireRestriction  
             _ = r
@@ -1515,11 +1450,10 @@ func E__at_property1 (self EID,x EID) EID {
 // finds a property through its full domain
 /* {1} The go function for: @(self:property,lt:list) [status=0] */
 func F__at_property2 (self *ClaireProperty ,lt *ClaireList ) *ClaireObject  { 
-    // procedure body with s = object 
-var Result *ClaireObject  
+    // procedure body with s = object
+    var Result *ClaireObject  
     { var rx *ClaireAny  
       { var r_some *ClaireAny   = CNULL
-        _ = r_some
         { 
           var r *ClaireRestriction  
           _ = r
@@ -1548,20 +1482,17 @@ func E__at_property2 (self EID,lt EID) EID {
 // we match a list of args in the stack [n ... m] to the list of type_expressions l
 /* {1} The go function for: matching?(l:list,n:integer,m:integer) [status=0] */
 func F_matching_ask_list (l *ClaireList ,n int,m int) *ClaireBoolean  { 
-    // procedure body with s = boolean 
-var Result *ClaireBoolean  
+    // procedure body with s = boolean
+    var Result *ClaireBoolean  
     { var x int  = (m-n)
       { var z int  = l.Length()
         if ((z == x) && 
             (l.ValuesO()[x-1].Id() != C_listargs.Id())) { 
           { var arg_1 *ClaireAny  
-            _ = arg_1
             { var i int  = 1
               { var g0035 int  = x
-                _ = g0035
                 arg_1= CFALSE.Id()
                 for (i <= g0035) { 
-                  /* While stat, v:"arg_1" loop:false */
                   { var y int  = ((n-1)+i)
                     { var u *ClaireAny   = l.ValuesO()[i-1].Id()
                       var g0037I *ClaireBoolean  
@@ -1577,7 +1508,6 @@ var Result *ClaireBoolean
                       } 
                     } 
                   i = (i+1)
-                  /* try?:false, v2:"v_while8" loop will be:tuple("arg_1", any) */
                   } 
                 } 
               } 
@@ -1586,13 +1516,10 @@ var Result *ClaireBoolean
           }  else if ((ANY(F_last_list(l)) == C_listargs.Id()) && 
             (x >= (z-1))) { 
           { var arg_2 *ClaireAny  
-            _ = arg_2
             { var i int  = 1
               { var g0036 int  = z
-                _ = g0036
                 arg_2= CFALSE.Id()
                 for (i <= g0036) { 
-                  /* While stat, v:"arg_2" loop:false */
                   { var y int  = ((n-1)+i)
                     if (l.At(i-1) == C_listargs.Id()) { 
                       ClEnv.EvalStack[y]=EID{F_get_args_integer(y).Id(),0}
@@ -1605,7 +1532,6 @@ var Result *ClaireBoolean
                       } 
                     } 
                   i = (i+1)
-                  /* try?:false, v2:"v_while8" loop will be:tuple("arg_2", any) */
                   } 
                 } 
               } 
@@ -1627,16 +1553,14 @@ func E_matching_ask_list (l EID,n EID,m EID) EID {
 // t is the type expression and x is the value
 /* {1} The go function for: vmatch?(t:any,x:any,n:integer) [status=0] */
 func F_vmatch_ask_any (t *ClaireAny ,x *ClaireAny ,n int) *ClaireBoolean  { 
-    // procedure body with s = boolean 
-var Result *ClaireBoolean  
+    // procedure body with s = boolean
+    var Result *ClaireBoolean  
     if (C_class.Id() == t.Isa.Id()) { 
       { var g0038 *ClaireClass   = ToClass(t)
-        _ = g0038
         Result = x.Isa.IsIn(g0038)
         } 
       }  else if (C_set.Id() == t.Isa.Id()) { 
       { var g0039 *ClaireSet   = ToSet(t)
-        _ = g0039
         Result = g0039.Contain_ask(x)
         } 
       }  else if (t.Isa.IsIn(C_subtype) == CTRUE) { 
@@ -1667,22 +1591,17 @@ var Result *ClaireBoolean
           if (v_and4 == CFALSE) {Result = CFALSE
           } else { 
             { var arg_1 *ClaireAny  
-              _ = arg_1
               { var i int  = 1
                 { var g0042 int  = g0041.Params.Length()
-                  _ = g0042
                   arg_1= CFALSE.Id()
                   for (i <= g0042) { 
-                    /* While stat, v:"arg_1" loop:false */
                     var g0049I *ClaireBoolean  
                     { var arg_2 *ClaireBoolean  
-                      _ = arg_2
                       { var _Zt *ClaireAny   = g0041.Args.At(i-1)
                         { var _Zv *ClaireAny   = ANY(F_funcall_property(ToProperty(g0041.Params.At(i-1)),x))
                           if ((C_set.Id() == _Zt.Isa.Id()) && 
                               (_Zv.Isa.IsIn(C_type) == CTRUE)) { 
                             { var arg_3 *ClaireAny  
-                              _ = arg_3
                               { 
                                 var z *ClaireAny  
                                 _ = z
@@ -1711,7 +1630,6 @@ var Result *ClaireBoolean
                       break
                       } 
                     i = (i+1)
-                    /* try?:false, v2:"v_while9" loop will be:tuple("arg_1", any) */
                     } 
                   } 
                 } 
@@ -1744,19 +1662,15 @@ var Result *ClaireBoolean
               if (v_and6 == CFALSE) {Result = CFALSE
               } else { 
                 { var arg_4 *ClaireAny  
-                  _ = arg_4
                   { var i int  = 1
                     { var g0046 int  = g0045.Length()
-                      _ = g0046
                       arg_4= CFALSE.Id()
                       for (i <= g0046) { 
-                        /* While stat, v:"arg_4" loop:false */
                         if (F_vmatch_ask_any(ToList(g0044.Id()).At(i-1),ToList(g0045.Id()).At(i-1),n) != CTRUE) { 
                           arg_4 = CTRUE.Id()
                           break
                           } 
                         i = (i+1)
-                        /* try?:false, v2:"v_while11" loop will be:tuple("arg_4", any) */
                         } 
                       } 
                     } 
@@ -1786,8 +1700,8 @@ func E_vmatch_ask_any (t EID,x EID,n EID) EID {
 // this is an extension of <=t to   all type expressions
 /* {1} The go function for: tmatch?(l:list,l2:list) [status=0] */
 func F_tmatch_ask_list (l *ClaireList ,l2 *ClaireList ) *ClaireBoolean  { 
-    // procedure body with s = boolean 
-var Result *ClaireBoolean  
+    // procedure body with s = boolean
+    var Result *ClaireBoolean  
     { var x int  = l2.Length()
       { var z int  = l.Length()
         if ((z != x) && 
@@ -1796,13 +1710,10 @@ var Result *ClaireBoolean
           Result = CFALSE
           } else {
           { var arg_1 *ClaireAny  
-            _ = arg_1
             { var i int  = 1
               { var g0050 int  = x
-                _ = g0050
                 arg_1= CFALSE.Id()
                 for (i <= g0050) { 
-                  /* While stat, v:"arg_1" loop:false */
                   if ((i == x) && 
                       (l2.At(i-1) == C_listargs.Id())) { 
                     arg_1 = CFALSE.Id()
@@ -1812,7 +1723,6 @@ var Result *ClaireBoolean
                     break
                     } 
                   i = (i+1)
-                  /* try?:false, v2:"v_while8" loop will be:tuple("arg_1", any) */
                   } 
                 } 
               } 
@@ -1831,8 +1741,8 @@ func E_tmatch_ask_list (l EID,l2 EID) EID {
 // this is an extension of <=t for the pattern Reference
 /* {1} The go function for: tmatch?(t:any,mClaire/t2:any,l:list) [status=0] */
 func F_tmatch_ask_any (t *ClaireAny ,t2 *ClaireAny ,l *ClaireList ) *ClaireBoolean  { 
-    // procedure body with s = boolean 
-var Result *ClaireBoolean  
+    // procedure body with s = boolean
+    var Result *ClaireBoolean  
     if (t2.Isa.IsIn(C_Reference) == CTRUE) { 
       { var g0051 *ClaireReference   = To_Reference(t2)
         if (g0051.Arg == CTRUE) { 
@@ -1843,9 +1753,7 @@ var Result *ClaireBoolean
             } 
           }  else if (t.Isa.IsIn(C_type) == CTRUE) { 
           { var g0053 *ClaireType   = ToType(t)
-            _ = g0053
             { var tref *ClaireType   = F_member_type(ToType(F__at_Reference(g0051,g0051.Args,l.At((g0051.Index+1)-1))))
-              _ = tref
               
               Result = g0053.Included(tref)
               } 
@@ -1858,7 +1766,6 @@ var Result *ClaireBoolean
       { var g0054 *ClaireType   = ToType(t2)
         if (t.Isa.IsIn(C_type) == CTRUE) { 
           { var g0055 *ClaireType   = ToType(t)
-            _ = g0055
             Result = g0055.Included(g0054)
             } 
           } else {
@@ -1877,8 +1784,8 @@ func E_tmatch_ask_any (t EID,t2 EID,l EID) EID {
 // find the restriction
 /* {1} The go function for: find_which(p:property,n:integer,c:class) [status=0] */
 func F_find_which_property (p *ClaireProperty ,n int,c *ClaireClass ) *ClaireObject  { 
-    // procedure body with s = object 
-var Result *ClaireObject  
+    // procedure body with s = object
+    var Result *ClaireObject  
     if (p.Dictionary == CTRUE) { 
       Result = F_hashget_class(c,p)
       } else {
@@ -1904,8 +1811,8 @@ func E_find_which_property (p EID,n EID,c EID) EID {
   
 /* {1} The go function for: find_which(l:list,c:class,n:integer,m:integer) [status=0] */
 func F_find_which_list (l *ClaireList ,c *ClaireClass ,n int,m int) *ClaireObject  { 
-    // procedure body with s = object 
-var Result *ClaireObject  
+    // procedure body with s = object
+    var Result *ClaireObject  
     { 
       var r *ClaireRestriction  
       _ = r
@@ -1935,8 +1842,8 @@ func E_find_which_list (l EID,c EID,n EID,m EID) EID {
 // special version for super
 /* {1} The go function for: find_which(c:class,l:list,n:integer,m:integer) [status=0] */
 func F_find_which_class (c *ClaireClass ,l *ClaireList ,n int,m int) *ClaireObject  { 
-    // procedure body with s = object 
-var Result *ClaireObject  
+    // procedure body with s = object
+    var Result *ClaireObject  
     { 
       var r *ClaireRestriction  
       _ = r

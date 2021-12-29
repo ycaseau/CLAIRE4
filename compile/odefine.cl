@@ -76,7 +76,7 @@ c_type(self:Set) : type
   -> let %v:Variable := Variable!(*name*, 0, map_set) in
        c_code(Let(var = %v,
                    value = c_code(Call(mClaire/map!, list(domain(self), of(self)))),
-                   arg = Do(args = add(list{  Call(put,list(%v,(x as pair).first, (x as pair).second)) |
+                   arg = Do(args = add!(list{  Call(put,list(%v,(x as pair).first, (x as pair).second)) |
                                               x in self.args}, %v))),
               map_set)]
 
@@ -485,7 +485,7 @@ Produce_put(r:property,x:Variable,y:any) : any
 // v3.2.50: use ptype(x.range) for variable whose type is t U any :-)
 Produce_erase(r:property,x:Variable) : any
   -> let l := list<any>(),
-         val := (if (r.multivalued? = list) list<any>() else set<any>()) in
+         val := set<any>() in
        (cast!(val,member(r.range)),
         for xs in {xs in r.restrictions | (xs % slot & ptype(x.range) ^ domain!(xs)) }
           l :add* list(domain!(xs),
@@ -541,11 +541,8 @@ Tighten(r:relation) : void
                     r.open := 1,
                     if (ad != {})
                     (put(domain,r,class!(ad)),
-                     put(range,r,
-                         (if (r.multivalued? = list) Core/param!(list,class!(ar))
-                          else if (r.multivalued? = set) Core/param!(set,class!(ar))
-                          else ar))),
-                    trace(5,"~S -> ~S x ~S\n", r, r.domain,r.range))))
+                     put(range,r, (if r.multivalued? Core/param!(set,class!(ar)) else ar))),
+                     trace(5,"~S -> ~S x ~S\n", r, r.domain,r.range))))
 
 Compile/Tighten!(r:relation) : void -> (if (r.open > 0) Tighten(r))
 
@@ -572,7 +569,7 @@ c_type(self:Defrule) : type -> any
 // compile a rule definition
 c_code(self:Defrule,s:class) : any
  -> let ru := get(self.iClaire/ident), l := list<any>() in
-       (//[0] compile a rule ~S // ru,
+       (//[5] compile a rule ~S // ru,
         for r in Language/relations[ru] 
             (if not(Language/eventMethod?(r)) Tighten(r)),   // ensures better code generation  
         for r in Language/relations[ru]
@@ -581,7 +578,7 @@ c_code(self:Defrule,s:class) : any
            let dn := (r.name /+ "_write"),
                s := string!(dn),
                lb := r.if_write in
-             (//[0] ################ the if-write is ~S // lb,
+             (//[5] ################ the if-write is ~S // lb,
               compile_lambda(s, lb, void), 
               l add Call(put,list(if_write,r,demon_function(s))))),
         for r in Language/relations[ru]
@@ -591,7 +588,7 @@ c_code(self:Defrule,s:class) : any
       
 // produce a beautiful if_write demon from all the claire demons created by each rule that applies to R
 [compile_if_write(R:relation) : void
- -> printf("compile_if_write(~S) l = ~S, lvar = ~S [multi:~S]\n",R,demons[R],(demons[R])[1].formula.vars,R.multivalued?),
+ -> // printf("compile_if_write(~S) l = ~S, lvar = ~S [multi:~S]\n",R,demons[R],(demons[R])[1].formula.vars,R.multivalued?),
     let l := demons[R],
         lvar := l[1].formula.vars,  // list(x,y) from 1st demon
         l1 := list<any>(Produce_put(R,lvar[1],lvar[2])),
@@ -599,7 +596,6 @@ c_code(self:Defrule,s:class) : any
      (Tighten(R),
       put(range,lvar[1],domain(R)),
       put(range,lvar[2],range(R)), 
-      printf(">>>>>>>>>> vars = ~S:~S and ~S:~S   <<<<<<<<<<<<<\n",lvar[1],domain(R),lvar[2],range(R)),
       for v in lvar put(range,v,class!(v.range)),
       if (l2[1] % If & not(Language/eventMethod?(R)))
          (if ((l2[1] as If).test % And)

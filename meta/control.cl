@@ -578,7 +578,8 @@ Trace <: Construct()
 
 // CLAIRE4: self_eval is defined once for all, hence exteneded
 self_eval(self:Trace) : any
- -> (let a := self.args,
+ -> (if (length(self.args) = 0) (if (system.trace! = 0) "inactive" else "active")
+     else let a := self.args,
          l := list{ eval(x) | x in a},
          i := l[1],
          a2 := (if (length(a) > 1) a[2]) in

@@ -365,7 +365,7 @@ self_eval(self:Return) : error -> return_error(arg = eval(self.arg))
        list let n := 0 in
              (for i in (1 .. length(self)) n :+ occurexact(self[i], x), n),
        unbound_symbol 0,
-       Assign occurexact(self.value,x),
+       Assign occurexact(self.arg,x),
        Instruction let n := 0 in
                      (for s in owner(self).slots
                         n :+ occurexact(get(s, self), x),

@@ -46,7 +46,7 @@
 // ClaireX is added to X
 GO_PRODUCER :: go_producer(
   Generate/open_comparators = list(<, >, >=, <=),     // do not change -> goexp uses the specific order !
-  Generate/open_operators = list(+,-,*,/,>>),
+  Generate/open_operators = list(+,-,*,>>),
   Generate/div_operators = list(/,mod),
   Generate/extension = ".go",
   comment = "Go",
@@ -444,14 +444,14 @@ c_string(c:go_producer, self:symbol) : string
     else if (s inherit? object | s = any | s = primitive) g_expression(x,s)
     else error("[internal] to_cl for a ~S is not implemented", s) ]
 
-// reverse function : produce a native forme from a claire object
+/* reverse function : produce a native forme from a claire object
 // quite simple with go since for object, OID is the object
 [to_c(c:go_producer,x:any,s:class) : void
   -> if (x = unknown) printf("CNULL")
      // else if (x % global_variable & x.range = {} & x.value = nil)   printf("Kernel.nil")
      else if (s = integer | s = float | s = string | s = char | s = function) 
-       printf("~I.Value", expression(x, s))
-     else c_expression(x,s) ]
+       printf("~I.Value", g_expression(x, s))
+     else g_expression(x,s) ] */
 
 // new for go: compile to an EID form (128 bit generic representation)
 // s is the expected sort
@@ -523,13 +523,6 @@ c_string(c:go_producer, self:symbol) : string
          (if (inferred <= object) princ("EID{"))     // objects use EID{x,0} undetermined must use toEID()
       else if (expected = inferred) nil
       else if (expected = char) princ("ToChar(")        // TODO : fix this mess : why is char special => bad name exception
-      /*else if (expected = integer) princ("ToInteger(")
-      else if (expected = float) princ("ToFloat(")
-      else if (expected = char) princ("ToChar(")      
-      else if (expected = array) princ("ToList(")
-      else if (expected = string) princ("ToString(")
-      else if (expected = port) princ("ToPort(")
-      else if (expected = function) princ("ToFunction(") */
       else if (expected <= primitive) (cast_class(expected),princ("("))
       else if (expected <= object) (cast_class(expected),princ("(")) ]
 
@@ -587,7 +580,7 @@ c_string(c:go_producer, self:symbol) : string
         printf("(~I ~I ~I)", g_expression(a1,char), sign_equal(pos?),  g_expression(a2,char))
      else if ((id? | identifiable?(a1) | identifiable?(a2) | g_sort(a1) = float) & g_sort(a1) = g_sort(a2))
          (if (stupid_t(a1) glb stupid_t(a2) = {})
-            (warn(), trace(2,"~S = ~S will fail ! [263]",a1,a2)),
+            (warn(), trace(1,"~S = ~S will fail ! [263]",a1,a2)),
          printf("(~I ~I ~I)", g_expression(a1, g_sort(a1)), sign_equal(pos?), 
                  g_expression(a2, g_sort(a1))))
     else if (stupid_t(a2) = integer)
@@ -631,14 +624,6 @@ c_string(c:go_producer, self:symbol) : string
   -> self % thing | self % boolean | self % Variable | self % string | self = unknown |
       self = nil | self = {} | self % global_variable ]
 
-// patch: remove protection and conversion layers
-[getC(x:any) : any
-  -> case x (// Generate/to_CL getC(x.arg),
-             // Generate/to_protect getC(x.arg),
-             global_variable (if nativeVar?(x) x                        // v3.3
-                              else  to_C(arg = x, set_arg = type)),     // AHA new in v3.0.42
-             any x) ]
-
 // short cut for variable
 [go_range(v:Variable) : class
   -> class!(v.range)] 
@@ -668,17 +653,6 @@ c_string(c:go_producer, self:symbol) : string
 [cast_Values(sbag:class,gmem:class) : void 
    ->  let short := (if (gmem = integer) "I" else if (gmem = float) "F" else "O") in
           printf(".Values~A()",short) ]
-
-/* this is a critical set of two methods used for compiled calls, slots and variable updates
-// needs to be called after g_expression(self, ...)
-// expected and inferred are two classes ("go class hierarchy")
-[goCast(expected:class,inferred:class)  : void
-  -> if (expected != inferred) printf(".~I()", cast_class(expected)) ] 
-
-// this is a simplified version for x.* expression since Go performs class inheritance polymorphism in that case
-// we only need the cast is inferred s_type(x) is bigger than what is expected (class!(claire type))
-[downCast(expected:class,inferred:class) : void
-  -> if not(inferred <= expected) printf(".~I()", cast_class(expected)) ] */
 
 // this method does nothing. It used to check if a name could create a naming conflict.
 // we keep it until we have tested that it is safe to remove it

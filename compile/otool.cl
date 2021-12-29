@@ -76,7 +76,7 @@ self_print(self:Pattern) : void
 // this is very lazy, we could do better
 glb(x:Pattern,y:type_expression) : type_expression
   -> (case y (Pattern (if (x.selector = y.selector) Pattern(selector = x.selector,
-                                                            args = glb(x.args,y.args))
+                                                            arg = glb(x.arg,y.arg))
                       else {}),
              any {}))
 
@@ -301,7 +301,7 @@ pmember(x:type) : type -> member(ptype(x))
 // we require the range to be safe, no backtrack & local global var
 [Compile/nativeVar?(x:global_variable) : boolean
   -> (compiler.optimize? & x.Kernel/store? = false &              // v3.3.04: only when optimized
-      x.name.module! = x.name.mClaire/definition & gcsafe?(x.range)) ]
+      x.name.module! = defined(x.name)) ]
 
 // v3.3 finds the possible return type of a block (within a loop)
 // it returns a class for the time being ...

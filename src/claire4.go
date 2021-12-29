@@ -1,8 +1,7 @@
-// --- System configuration file for "claire4" , ["Monday 12-27-2021"] ---
+// --- System configuration file for "claire4" , ["Wednesday 12-29-2021"] ---
 
 package main
 import (
-	"fmt"
 	. "Kernel"
 	"Core"
 	"Language"
@@ -66,7 +65,6 @@ func Load() {
 // the main function 
 func main() { 
   MemoryFlags()
-  fmt.Printf("=== CLAIRE4 interpreter version 1.0    ===\n")
   Bootstrap()
   Load()
   ClEnv.Module_I = C_claire

@@ -1138,6 +1138,7 @@ var C_second *ClaireProperty
 var C_slice *ClaireProperty
 var C_osname *ClaireProperty
 var C_file_separator *ClaireProperty
+var C_stat *ClaireProperty
 	
 // operations
 var C_add *ClaireOperation
@@ -1436,20 +1437,10 @@ func (x *ClaireObject) SetFloat(i int, y float64) {
 
 // class inclusion : c <= c2  <=>   c.ancestor = (void ... c2.....) with c2 in position n - 1 (len ancestors)
 func (c *ClaireClass) IsIn(c2 *ClaireClass) *ClaireBoolean {
-	//	if ClEnv.Verbose > 1 {
-	//		fmt.Printf("call isIn: %s and %s\n", c.Prt(), c2.Prt())
-	//	}
 	n := len(c2.Ancestors.ValuesO())
 	if n <= len(c.Ancestors.ValuesO()) && c.Ancestors.ValuesO()[n-1] == c2.Id() {
 		return CTRUE
 	} else {
-		/*	if ClEnv.Verbose > 10 {
-			if n <= len(c.Ancestors.ValuesO()) {
-				fmt.Printf("isIn failed n=%d, %p vs %p\n", n, c.Ancestors.ValuesO()[n-1], c2)
-			} else {
-				fmt.Printf("n1 = %d > n2 = %d\n", len(c.Ancestors.ValuesO()), n)
-			}
-		} */
 		return CFALSE
 	}
 }
@@ -1471,8 +1462,8 @@ func (c *ClaireClass) isIn(c2 *ClaireClass) *ClaireBoolean {
 // set,list,string = deep equality
 // imported = same value  (integer, float, char, string, ....
 func Equal(x *ClaireAny, y *ClaireAny) *ClaireBoolean {
-	if ClEnv.Verbose == 122 {
-		 fmt.Printf("Equal with %s(%s) and %s(%s)\n",x.Prt(),x.Isa.Prt(),y.Prt(),y.Isa.Prt()) }
+	// if ClEnv.Verbose == 122 {
+	//	 fmt.Printf("Equal with %s(%s) and %s(%s)\n",x.Prt(),x.Isa.Prt(),y.Prt(),y.Isa.Prt()) }
 	if x == y {
 		return CTRUE
 	} else if x.Isa.Ident_ask == CTRUE || y.Isa.Ident_ask == CTRUE {
@@ -1535,19 +1526,10 @@ func (p *ClaireProperty) Of(x *ClaireObject) *ClaireAny {
 // find the restriction that applies to a class (slot or method with no args)
 func (p *ClaireProperty) findRestriction(c *ClaireClass) *ClaireRestriction {
 	n := p.Restrictions.Length()
-	if ClEnv.Verbose > 10 {
-		fmt.Printf("---FindRestriction %s on %s with %d restriction\n", p.Prt(), c.Prt(), n)
-	}
 	for i := 0; i < n; i++ {
 		m := ToRestriction(p.Restrictions.ValuesO()[i])
-		if ClEnv.Verbose > 10 {
-			fmt.Printf("--- Look if restriction %s matches %s\n", m.Prt(), c.Prt())
-		}
 		if c.IsIn(ToClass(m.Domain.ValuesO()[0])) == CTRUE && 
 		     (m.Isa == C_slot ||  m.Domain.Length() == 1) {
-			if ClEnv.Verbose > 10 {
-				fmt.Printf("findRestruction returns %s\n", m.Prt())
-			}
 			return m
 		}
 	}
@@ -1558,18 +1540,9 @@ func (p *ClaireProperty) findRestriction(c *ClaireClass) *ClaireRestriction {
 // deprecated
 func (p *ClaireProperty) FindSlot(c *ClaireClass) *ClaireSlot {
 	n := p.Restrictions.Length()
-	if ClEnv.Verbose > 10 {
-		fmt.Printf("--- NEW FindSlot %s on %s with %d restriction\n", p.Prt(), c.Prt(), n)
-	}
 	for i := 0; i < n; i++ {
 		m := ToSlot(p.Restrictions.ValuesO()[i])
-		if ClEnv.Verbose > 10 {
-			fmt.Printf("--- Look if restriction %s matches %s\n", m.Prt(), c.Prt())
-		}
 		if c.IsIn(ToClass(m.Domain.ValuesO()[0])) == CTRUE && m.Isa.IsIn(C_slot) == CTRUE {
-			if ClEnv.Verbose > 10 {
-				fmt.Printf("findSlot returns %s\n", m.Prt())
-			}
 			return m
 		}
 	}
@@ -1590,7 +1563,7 @@ func ARGS(args ...EID) int {
 // applies a claire function (EID) to the content of the eval stack
 func F_stack_apply_function(f *ClaireFunction, i int, top int) EID {
 	var x EID
-	if ClEnv.Verbose == 13 {fmt.Printf(">>> stack apply will use f=%s\n",f.name)}
+	// if ClEnv.Verbose == 13 {fmt.Printf(">>> stack apply will use f=%s\n",f.name)}
 	if top == i+1 {
 		x = toFunction1(f).call(ClEnv.EvalStack[i])
 	} else if top == i+2 {
@@ -1607,9 +1580,7 @@ func F_stack_apply_function(f *ClaireFunction, i int, top int) EID {
 		panic("CLAIRE does not handle so many parameters in stack apply")
 	}
 	ClEnv.Index = i
-	if ClEnv.Verbose > 12 {
-		fmt.Printf("stack_apply returns %s\n",PEID(x))
-	}
+	// if ClEnv.Verbose > 12 { fmt.Printf("stack_apply returns %s\n",PEID(x))}
 	return x
 }
 

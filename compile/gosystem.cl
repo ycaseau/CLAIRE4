@@ -186,7 +186,9 @@ breakline() : any -> (princ("\n"), indent_c())
         OPT.outfile := stdout,
         compiler.inline? := true, 
         PRODUCER.current := claire,
-        //[0] ---- code produced by the optimizer ------------------- //,
+        trace(0,"\n---- code produced by the optimizer -------------------\n"),
+        pretty_print(c_strict_code(formula(m).body,class!(m.range))),
+        trace(0,"\n---- code produced by the generator ------------------- \n"),
         make_go_function(PRODUCER,formula(m),"test",m),
         OPT.in_method := unknown ) ]
 
@@ -248,7 +250,6 @@ claire/BadMethods:list<method> :: unknown
         s := string!(m.name) in
       (//[2] ==== generate file for module ~S ==== // m,
        OPT.outfile := prt,
-       verbose() := 3,
        start_file(p,s,m,true),            // true tells this is the module file
        use_as_output(OPT.outfile),
        gen_classes(p,m),                 // v4.0 : keep the class/struct definition in the module
@@ -257,7 +258,7 @@ claire/BadMethods:list<method> :: unknown
        breakline(),
        close_block(),
        breakline(),                       // v3.0.3
-       //[2] ===== ~A BAD METHODS : ~S // length(BadMethods), BadMethods,
+       if (compiler.safety > 4) //[1] ===== [CROSS]  ~A BAD METHODS : ~S  // length(BadMethods), BadMethods,
        fclose(OPT.outfile)) ]
 
 // start the produced go file
@@ -426,6 +427,10 @@ claire/BadMethods:list<method> :: unknown
            m2 := m2.part_of)),
     breakline()]
 
+// extract the range for a global_variable
+[getRange(x:global_variable) : class
+  -> (if (x.range = {}) owner(x.value) else class!(x.range)) ]    
+
 // generate the meta_load function
 // in go the load function for M is M_load()
 [gen_meta_load(p:go_producer,m:module) : void   // v0.02
@@ -433,7 +438,7 @@ claire/BadMethods:list<method> :: unknown
      printf("// definition of the meta-model for module ~S ~I",m, breakline()),
      printf("func MetaLoad() ~I~I",new_block(), breakline()),
      gen_module(p,m,m),
-     printf("// definition of the properties ~I",breakline()),
+     printf("~I// definition of the properties",breakline()),
      for x in {p in OPT.properties | not(p % OPT.objects) & p != value & p != vars}      // vars & value moved to kernel
         printf("~I~I = ~I", breakline(), thing_ident(x), declare(p,x)),
      breakline(), 
@@ -474,6 +479,7 @@ claire/BadMethods:list<method> :: unknown
                     "), lines:" /+ string!(compiler.n_loc) /+ ", warnings:" /+
                     string!(compiler.n_warnings) /+ ",safety:" /+ string!(compiler.safety)) in
         printf("It.Comment = MakeString(~S)~I",s,breakline()),
+     if (m % compiler.debug?) printf("It.Status = 4~I",breakline()),
      printf("ClEnv.Module_I = It~I",breakline())]        // implicit begin(m)
 
 // reciprocate : finds the concrete module where a package module must be defined.
@@ -585,7 +591,7 @@ parents(self:list) : list
          lv := (if (length(self.vars) = 1 & %dom % {void, environment})  nil       // v3.0.05 was : & not(s = float)
                 else self.vars) in
       (OPT.functions :add list(%f, lv, s),        // register the function in the API list
-       printf("\n/* {~A} The go function for: ~I */\n", OPT.Compile/level,
+       printf("\n/* The go function for: ~I */\n",     // for debug: add {~A}, OPT.Compile/level,
                (case m
                  (method printf("~S(~I) [status=~A]", m.selector, Language/ppvariable(self.vars), m.status),
                   any princ(string!(%f))))),
@@ -613,7 +619,7 @@ parents(self:list) : list
        if (m.status = -1) (m.status := (if throw? 1 else 0))     // nice case we have not seen m yet.
        else if (throw? != can_throw?(m))                         // avoids generating go code that will break
           (warn(),
-           //[1] >>>>> ~S body produces an error (g_throw = true) while status is 0 <<<<<<< // m,
+           //[1] [CROSS] ~S body produces an error (g_throw = true) while status is 0 // m,
            if (m.status = 0) BadMethods :add m
            else throw? := true                         // avoid generating wrong code (rest of world assumes EID since m.status was 1)
           ),
@@ -625,7 +631,7 @@ parents(self:list) : list
            new_block(),
            if (need_debug?(m) |  OPT.profile? | not(simple_body?(%body)) | s = void) 
               procedure_body(m,self,%body,s)
-           else (if p.debug? princ("// use function body compiling ~I",breakline()),
+           else (if p.debug? printf("// use function body compiling ~I",breakline()),
                  function_body(%body,s)))
        else (//[3] --- EID function generation (can throw = ~S) // throw?,
              throw? := true,  
@@ -633,7 +639,7 @@ parents(self:list) : list
              generate_function_start(PRODUCER, self, EID, m, %nom),        
              new_block(),
              // printf("/*G_throw = ~S for ~S, s:~S*/~I",throw?,%body,s,breakline()),  => does not work when "*/" exist in the code
-             eid_body(%body,typeOK,s)),
+             eid_body(m,%body,typeOK,s)),
        close_block(),
        generate_eid_function(self,m,throw?),
        if (m.selector = self_eval) generate_eval_function(self,m),
@@ -682,22 +688,29 @@ parents(self:list) : list
 
 // default complex case : create a variable "Result"
 [procedure_body(m:method, %l:lambda, %body:any,s:class) : void
-  ->  if OPT.profile? generate_profile(PRODUCER,m),
-      if need_debug?(m) debug_intro(PRODUCER,m),
-      printf("// procedure body with s = ~S \n",s),
+  ->  if need_debug?(m) debug_intro(PRODUCER,%l,m),
+      printf("// procedure body with s = ~S~I",s,breakline()),
       if (s != void) 
          (var_declaration("Result",s,1),
           statement(%body,s,"Result",false))
       else statement(%body,void,"Unused",false),
       return_result(PRODUCER,s,m,"Result") ]
 
-// generate an EID function 
-// call for the debug/profile is needed     
+// generate an EID function (lambda)    
 [eid_body(%body:any,typeOK:boolean, s:class) : void
- -> // printf("/* eid_body s = ~S */\n",s),
+ -> var_declaration("Result",EID,1),
+    statement(%body,EID,"Result",g_throw(%body)),
+    printf("return Result")]
+
+// generate an EID body for a method 
+// call for the debug/profile is needed     
+[eid_body(m:method,%body:any,typeOK:boolean, s:class) : void
+ -> if need_debug?(m) debug_intro(PRODUCER,m.formula,m),
+    printf("// eid body s = ~S~I",s,breakline()),
     var_declaration("Result",EID,1),
     statement(%body,EID,"Result",g_throw(%body)),
-    if (typeOK | safety(compiler) >= 2) printf("return Result")
+    if need_debug?(m) return_result(PRODUCER,EID,m,"Result")
+    else if (typeOK | safety(compiler) >= 2) printf("return Result")
     else printf("return RangeCheck(~I,Result)",g_expression(s,type))]
 
 // generate the EID function associated to each method (used by the interpreter - EID mode)
@@ -797,35 +810,28 @@ claire/ABODY:any :: unknown
  -> case m
       (method let p := m.selector in
                 (m.module! % compiler.debug? &
-                 domain!(m) != environment &
+                 // domain!(m) != environment &
                  m.module! != claire & p != self_eval & p != execute &
                  p != eval_message & p != Core/push_debug & p != Core/pop_debug &
                  p != Core/tr_indent & p != Core/find_which & p != Core/matching? &
                  p != Core/vmatch?),
        any false) ]
 
-// profiler code 
-[generate_profile(c:go_producer,m:any) : void
- -> if (m % method) get_dependents(m),
-    printf("   var PR_x *ClairePRcount PRget_property(~I).Start();~I",
-             expression( (case m (method m.selector, any fastcall)), nil),
-             breakline())  ]
-
-
 // produce the debugging code introduction
-// in go we have no macros but functions with variable number of args
-// assumes DebugBind(module, method, ClaireAny args* ) 
+// db_bind is defined in  method.cl
 [debug_intro(c:go_producer,self:lambda,x:method) : void
  -> let m := (case x (method x.module!)),
-        n := 1 in
-       printf("DebugBind(~I,~I~I);~I", ident(m),
-              expression(x.selector, {}), 
+        n := 1 in 
+       printf("Core.F_Core_db_bind_module(~I,~I,ARGS(~I));~I", 
+              g_expression(m,module),
+              g_expression(x.selector, property), 
               (if (length(self.vars) = 1 & (self.vars[1]).range = void)       // foo() means foo(system) ?
-                  printf(",EID{C_object,ClEnv.Uip()}));")
+                  printf("EID{ClEnv.Id(),0}")
               else (for v in self.vars
-                      (printf(", ~I", to_eid(c, v, go_signature(x)[n])),
+                      (if (n > 1) princ(","),
+                       printf("~I", to_eid(c, v, go_signature(x)[n])),
                        n :+ 1))),
-               breakline()) ]
+              breakline()) ]
                   
 
 // auxiliary to produce the end statement for the function. s tells if the result is needed.
@@ -833,16 +839,14 @@ claire/ABODY:any :: unknown
 // we also add the debugging unbind if needed.  (used to be called protect_result)
 [return_result(p:go_producer,s:class,x:method,%res:string) : void
  ->  if need_debug?(x)
-           printf("DebugUnbind(~I,~I,~I)~I", ident(x), g_expression(x.selector, property),
-                     to_eid(p, (if (s = void) unknown else build_Variable("Result", s)), object),
-                     breakline())
-      else if OPT.profile? printf("PRend(PR_x)~I",breakline()),
-      if (s != void) printf("return ~A", %res) ]
+           printf("Core.F_Core_db_unbind_module(~I,~I,~I)~I", 
+                     g_expression(x.module!, module), 
+                     g_expression(x.selector, property),
+                     g_expression((if (s = void) unknown else build_Variable("Result", s)), any),
+                     breakline()),
+     if (s != void) printf("return ~A", %res) ]
           
 
-// computes the inter-module dependence
-get_dependents(m:method) : void
-  -> (for p in Reader/dependents(m) Reader/PRdependent[m.selector] :add p)
 
 // prints a function name without the # syntactic marker for imported
 [c_princ(self:function) : void  -> import_princ(string!(self)) ]

@@ -1339,6 +1339,7 @@ func (l *ClaireSet) ContainSetObject(x *ClaireAny) *ClaireBoolean {
 	
 
 // simple dichotomic search
+// returns the go position : -1 if not here, or k such l[k]=x
 func (l *ClaireSet) getInteger(x int) int {
 	s := ToSetInteger(l.Id())
 	if s.Count == 0 { return -1} 
@@ -1400,7 +1401,7 @@ func (l *ClaireSet) getObject(val *ClaireAny) int {
 	} else {return -1}
 }
 
-// generic access to index
+// generic access to index: -1 if not here
 func (s *ClaireSet) getIndex(x *ClaireAny) int {
 	if s.Srange == C_integer {return s.getInteger(ToInteger(x).Value)
 	} else if s.Srange == C_float {return s.getFloat(ToFloat(x).Value)
@@ -1496,7 +1497,6 @@ func E_empty_set(s EID) EID { return EID{ToSet(OBJ(s)).Empty().Id(), 0} }
 // ----------------  delete an object from a set is another complex method ----------------------------------
 
 // two steps : find the index (similar to contains) + deleteAt
-
 func (s *ClaireSet) Delete(x *ClaireAny) *ClaireSet {
 	i := s.getIndex(x)
 	if i >= 0 {s.deleteAt(i)}
@@ -1516,19 +1516,19 @@ func (s *ClaireSet) deleteAt(i int)  {
 func (s *ClaireSet) deleteAtInteger(i int)  {
 	ls := ToSetInteger(s.Id()).Values
 	n := ToSetInteger(s.Id()).Count
-	for k := i; k < n ; k++ {ls[k] = ls[k+1]}  // 
+	for k := i + 1; k < n ; k++ {ls[k - 1] = ls[k]}  // 
 	ToSetInteger(s.Id()).Count = n - 1
 }
 func (s *ClaireSet) deleteAtFloat(i int)  {
 	ls := ToSetFloat(s.Id()).Values
 	n := ToSetFloat(s.Id()).Count
-	for k := i; k < n ; k++ {ls[k] = ls[k+1]}  // 
+	for k := i + 1; k < n ; k++ {ls[k - 1] = ls[k]}  // 
 	ToSetFloat(s.Id()).Count = n - 1
 }
 func (s *ClaireSet) deleteAtObject(i int) {
 	ls := ToSetObject(s.Id()).Values
 	n := ToSetObject(s.Id()).Count
-	for k := i; k < n ; k++ {ls[k] = ls[k+1]}  // 
+	for k := i + 1; k < n ; k++ {ls[k - 1] = ls[k]}  // 
 	ToSetObject(s.Id()).Count = n - 1
 }
 

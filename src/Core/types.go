@@ -1,5 +1,5 @@
 /***** CLAIRE Compilation of file /Users/ycaseau/Dropbox/src/clairev4.03/src/meta/types.cl 
-         [version 4.0.03 / safety 5] Monday 12-27-2021 10:35:23 *****/
+         [version 4.0.03 / safety 5] Wednesday 12-29-2021 08:34:14 *****/
 
 package Core
 import (_ "fmt"
@@ -30,15 +30,13 @@ import (_ "fmt"
 // ----------------------- useful methods ------------------------------
 /* {1} The go function for: finite?(self:type) [status=0] */
 func F_finite_ask_type (self *ClaireType ) *ClaireBoolean  { 
-    // procedure body with s = boolean 
-var Result *ClaireBoolean  
+    // procedure body with s = boolean
+    var Result *ClaireBoolean  
     if (C_set.Id() == self.Isa.Id()) { 
       Result = CTRUE
       }  else if (self.Isa.IsIn(C_list) == CTRUE) { 
       { var g0126 *ClaireList   = ToList(self.Id())
-        _ = g0126
         { var arg_1 *ClaireAny  
-          _ = arg_1
           { 
             var t *ClaireAny  
             _ = t
@@ -63,22 +61,17 @@ var Result *ClaireBoolean
       { var g0127 *ClaireClass   = ToClass(self.Id())
         { var n int  = g0127.Open
           { 
-            /* Or stat: v="Result", loop=false */
             var v_or5 *ClaireBoolean  
             
-            /* Or stat: try = @ any(n,open @ environment(<environment>)) with try:false, v="Result", loop=false */
             v_or5 = Equal(MakeInteger(n).Id(),MakeInteger(ClEnv.Open).Id())
             if (v_or5 == CTRUE) {Result = CTRUE
             } else { 
-              /* Or stat: try = @ any(n,final @ environment(<environment>)) with try:false, v="Result", loop=false */
               v_or5 = Equal(MakeInteger(n).Id(),MakeInteger(ClEnv.Final).Id())
               if (v_or5 == CTRUE) {Result = CTRUE
               } else { 
-                /* Or stat: try = @ any(n,closed()) with try:false, v="Result", loop=false */
-                v_or5 = Equal(MakeInteger(n).Id(),ANY(F_CALL(C_Core_closed,ARGS(EID{ClEnv.Id(),0}))))
+                v_or5 = Equal(MakeInteger(n).Id(),MakeInteger(ClEnv.Close).Id())
                 if (v_or5 == CTRUE) {Result = CTRUE
                 } else { 
-                  /* Or stat: try ((= @ any(n,abstract @ environment(<environment>))) & (not @ any(for c:class in (subclass @ class(g0127)) (if (not @ any(finite? @ type(c))) break(true) else false)))) with try:false, v="Result", loop=false */
                   { 
                     var v_and9 *ClaireBoolean  
                     
@@ -86,7 +79,6 @@ var Result *ClaireBoolean
                     if (v_and9 == CFALSE) {v_or5 = CFALSE
                     } else { 
                       { var arg_2 *ClaireAny  
-                        _ = arg_2
                         { 
                           var c *ClaireClass  
                           _ = c
@@ -132,27 +124,23 @@ func E_finite_ask_type (self EID) EID {
 // this is a list since order matters in enumeration
 /* {1} The go function for: enumerate(self:any) [status=1] */
 func F_enumerate_any (self *ClaireAny ) EID { 
+    // eid body s = list
     var Result EID 
     if (self.Isa.IsIn(C_list) == CTRUE) { 
       { var g0129 *ClaireList   = ToList(self)
-        _ = g0129
         Result = EID{g0129.Id(),0}
         } 
       }  else if (C_set.Id() == self.Isa.Id()) { 
       { var g0130 *ClaireSet   = ToSet(self)
-        _ = g0130
         Result = EID{g0130.List_I().Id(),0}
         } 
       }  else if (self.Isa.IsIn(C_array) == CTRUE) { 
       { var g0131 *ClaireList   = ToArray(self)
-        _ = g0131
         Result = EID{F_list_I_array(g0131).Id(),0}
         } 
       }  else if (C_class.Id() == self.Isa.Id()) { 
       { var g0132 *ClaireClass   = ToClass(self)
-        _ = g0132
         { var l *ClaireList   = ToType(C_object.Id()).EmptyList()
-          _ = l
           { 
             var c *ClaireClass  
             _ = c
@@ -174,18 +162,13 @@ func F_enumerate_any (self *ClaireAny ) EID {
         } 
       }  else if (C_integer.Id() == self.Isa.Id()) { 
       { var g0134 int  = ToInteger(self).Value
-        _ = g0134
         Result = EID{F_make_set_integer(g0134).List_I().Id(),0}
         } 
       }  else if (self.Isa.IsIn(C_collection) == CTRUE) { 
       { var g0135 *ClaireCollection   = ToCollection(self)
-        _ = g0135
         { var arg_1 *ClaireAny  
-          _ = arg_1
           var try_2 EID 
-          /*g_try(v2:"try_2",loop:false) */
           try_2 = F_CALL(C_set_I,ARGS(EID{g0135.Id(),0}))
-          /* ERROR PROTECTION INSERTED (arg_1-Result) */
           if ErrorIn(try_2) {Result = try_2
           } else {
           arg_1 = ANY(try_2)
@@ -216,11 +199,10 @@ func E__equaltype_ask_any (self EID,ens EID) EID {
 // finds the sort associated to a type
 /* {1} The go function for: sort!(x:type) [status=0] */
 func F_sort_I_type (x *ClaireType ) *ClaireClass  { 
-    // procedure body with s = class 
-var Result *ClaireClass  
+    // procedure body with s = class
+    var Result *ClaireClass  
     if (C_class.Id() == x.Isa.Id()) { 
       { var g0137 *ClaireClass   = ToClass(x.Id())
-        _ = g0137
         Result = g0137.Sort_I()
         } 
       } else {
@@ -253,25 +235,22 @@ func E__Z_any1 (self EID,ens EID) EID {
 // note that belong may create an error => heavier => optimize with %t when possible 
 /* {1} The go function for: belong(x:any,y:any) [status=1] */
 func F_BELONG (x *ClaireAny ,y *ClaireAny ) EID { 
+    // eid body s = boolean
     var Result EID 
     if (C_class.Id() == y.Isa.Id()) { 
       { var g0139 *ClaireClass   = ToClass(y)
-        _ = g0139
         Result = EID{F__Z_any1(x,g0139).Id(),0}
         } 
       }  else if (y.Isa.IsIn(C_list) == CTRUE) { 
       { var g0140 *ClaireList   = ToList(y)
-        _ = g0140
         Result = EID{g0140.Contain_ask(x).Id(),0}
         } 
       }  else if (C_set.Id() == y.Isa.Id()) { 
       { var g0141 *ClaireSet   = ToSet(y)
-        _ = g0141
         Result = EID{ToType(g0141.Id()).Contains(x).Id(),0}
         } 
       }  else if (y.Isa.IsIn(C_array) == CTRUE) { 
       { var g0142 *ClaireList   = ToArray(y)
-        _ = g0142
         Result = EID{ToList(g0142.Id()).Contain_ask(x).Id(),0}
         } 
       }  else if (C_tuple.Id() == y.Isa.Id()) { 
@@ -286,48 +265,34 @@ func F_BELONG (x *ClaireAny ,y *ClaireAny ) EID {
             if (v_and4 == CFALSE) {Result = EID{CFALSE.Id(),0}
             } else { 
               var try_1 EID 
-              /*g_try(v2:"try_1",loop:false) */
               { var arg_2 *ClaireAny  
-                _ = arg_2
                 var try_3 EID 
-                /*g_try(v2:"try_3",loop:false) */
                 { var i int  = 1
                   { var g0144 int  = INT(F_CALL(C_length,ARGS(x.ToEID())))
-                    _ = g0144
                     try_3= EID{CFALSE.Id(),0}
                     for (i <= g0144) { 
-                      /* While stat, v:"try_3" loop:false */
                       var loop_4 EID 
                       _ = loop_4
                       { 
-                      /*g_try(v2:"loop_4",loop:tuple("try_3", EID)) */
                       var g0151I *ClaireBoolean  
                       var try_5 EID 
-                      /*g_try(v2:"try_5",loop:false) */
                       { var arg_6 *ClaireBoolean  
-                        _ = arg_6
                         var try_7 EID 
-                        /*g_try(v2:"try_7",loop:false) */
                         { var arg_8 *ClaireAny  
-                          _ = arg_8
                           var try_9 EID 
-                          /*g_try(v2:"try_9",loop:false) */
                           try_9 = F_CALL(C_nth,ARGS(x.ToEID(),EID{C__INT,IVAL(i)}))
-                          /* ERROR PROTECTION INSERTED (arg_8-try_7) */
                           if ErrorIn(try_9) {try_7 = try_9
                           } else {
                           arg_8 = ANY(try_9)
                           try_7 = F_BELONG(arg_8,ToList(g0143.Id()).At(i-1))
                           }
                           } 
-                        /* ERROR PROTECTION INSERTED (arg_6-try_5) */
                         if ErrorIn(try_7) {try_5 = try_7
                         } else {
                         arg_6 = ToBoolean(OBJ(try_7))
                         try_5 = EID{arg_6.Not.Id(),0}
                         }
                         } 
-                      /* ERROR PROTECTION INSERTED (g0151I-loop_4) */
                       if ErrorIn(try_5) {loop_4 = try_5
                       } else {
                       g0151I = ToBoolean(OBJ(try_5))
@@ -338,25 +303,21 @@ func F_BELONG (x *ClaireAny ,y *ClaireAny ) EID {
                         loop_4 = EID{CFALSE.Id(),0}
                         } 
                       }
-                      /* ERROR PROTECTION INSERTED (loop_4-loop_4) */
                       if ErrorIn(loop_4) {try_3 = loop_4
                       break
                       } else {
                       i = (i+1)
                       }
-                      /* try?:false, v2:"v_while10" loop will be:tuple("try_3", EID) */
                       } 
                     }
                     } 
                   } 
-                /* ERROR PROTECTION INSERTED (arg_2-try_1) */
                 if ErrorIn(try_3) {try_1 = try_3
                 } else {
                 arg_2 = ANY(try_3)
                 try_1 = EID{F_not_any(arg_2).Id(),0}
                 }
                 } 
-              /* ERROR PROTECTION INSERTED (v_and4-Result) */
               if ErrorIn(try_1) {Result = try_1
               } else {
               v_and4 = ToBoolean(OBJ(try_1))
@@ -370,15 +331,12 @@ func F_BELONG (x *ClaireAny ,y *ClaireAny ) EID {
         } 
       }  else if (y.Isa.IsIn(C_type_operator) == CTRUE) { 
       { var g0145 *ClaireTypeOperator   = ToTypeOperator(y)
-        _ = g0145
         Result = EID{ToType(g0145.Id()).Contains(x).Id(),0}
         } 
       }  else if (C_integer.Id() == y.Isa.Id()) { 
       { var g0146 int  = ToInteger(y).Value
-        _ = g0146
         if (C_integer.Id() == x.Isa.Id()) { 
           { var g0147 int  = ToInteger(x).Value
-            _ = g0147
             Result = EID{BitVectorContains(g0146,g0147).Id(),0}
             } 
           } else {
@@ -416,6 +374,7 @@ func E_BELONG (x EID,y EID) EID {
 // CLAIRE4 : cannot be a macro (too early)
 /* {1} The go function for: %(x:any,y:any) [status=1] */
 func F_belong_to (x *ClaireAny ,y *ClaireAny ) EID { 
+    // eid body s = boolean
     var Result EID 
     Result = F_BELONG(x,y)
     return Result} 
@@ -439,16 +398,13 @@ func E_belong_to (x EID,y EID) EID {
 // This is achieved in the U method
 /* {1} The go function for: self_print(self:Union) [status=1] */
 func F_self_print_Union_Core (self *ClaireUnion ) EID { 
+    // eid body s = void
     var Result EID 
     PRINC("(")
-    /*g_try(v2:"Result",loop:true) */
     Result = F_print_any(self.T1.Id())
-    /* ERROR PROTECTION INSERTED (Result-Result) */
     if !ErrorIn(Result) {
     PRINC(" U ")
-    /*g_try(v2:"Result",loop:true) */
     Result = F_print_any(self.T2.Id())
-    /* ERROR PROTECTION INSERTED (Result-Result) */
     if !ErrorIn(Result) {
     PRINC(")")
     Result = EVOID
@@ -472,16 +428,13 @@ func E_finite_ask_Union (self EID) EID {
 // Intervals of integers ----------
 /* {1} The go function for: self_print(self:Interval) [status=1] */
 func F_self_print_Interval_Core (self *ClaireInterval ) EID { 
+    // eid body s = void
     var Result EID 
     PRINC("(")
-    /*g_try(v2:"Result",loop:true) */
     Result = F_print_any(MakeInteger(self.Arg1).Id())
-    /* ERROR PROTECTION INSERTED (Result-Result) */
     if !ErrorIn(Result) {
     PRINC(" .. ")
-    /*g_try(v2:"Result",loop:true) */
     Result = F_print_any(MakeInteger(self.Arg2).Id())
-    /* ERROR PROTECTION INSERTED (Result-Result) */
     if !ErrorIn(Result) {
     PRINC(")")
     Result = EVOID
@@ -504,6 +457,7 @@ func E_finite_ask_Interval (self EID) EID {
 // true constructor
 /* {1} The go function for: --(x:integer,y:integer) [status=1] */
 func F__dash_dash_integer (x int,y int) EID { 
+    // eid body s = Interval
     var Result EID 
     if (x <= y) { 
       Result = EID{F__dot_dot_integer(x,y).Id(),0}
@@ -519,87 +473,66 @@ func E__dash_dash_integer (x EID,y EID) EID {
 // Parameterized class. -------------------------------------------
 /* {1} The go function for: self_print(self:Param) [status=1] */
 func F_self_print_Param_Core (self *ClaireParam ) EID { 
+    // eid body s = void
     var Result EID 
     if ((self.Params.Length() == 1) && 
         ((self.Params.At(1-1) == C_of.Id()) && 
           (C_set.Id() == self.Args.At(1-1).Isa.Id()))) { 
-      /*g_try(v2:"Result",loop:true) */
       Result = F_print_any(self.Arg.Id())
-      /* ERROR PROTECTION INSERTED (Result-Result) */
       if !ErrorIn(Result) {
       PRINC("<")
-      /*g_try(v2:"Result",loop:true) */
       { var arg_1 *ClaireAny  
-        _ = arg_1
         var try_2 EID 
-        /*g_try(v2:"try_2",loop:false) */
         try_2 = F_the_type(ToType(self.Args.At(1-1)))
-        /* ERROR PROTECTION INSERTED (arg_1-Result) */
         if ErrorIn(try_2) {Result = try_2
         } else {
         arg_1 = ANY(try_2)
         Result = F_CALL(C_print,ARGS(arg_1.ToEID()))
         }
         } 
-      /* ERROR PROTECTION INSERTED (Result-Result) */
       if !ErrorIn(Result) {
       PRINC(">")
       Result = EVOID
       }}
       } else {
-      /*g_try(v2:"Result",loop:true) */
       Result = F_print_any(self.Arg.Id())
-      /* ERROR PROTECTION INSERTED (Result-Result) */
       if !ErrorIn(Result) {
       PRINC("[")
-      /*g_try(v2:"Result",loop:true) */
       { var i int  = 1
         { var g0153 int  = self.Args.Length()
-          _ = g0153
           Result= EID{CFALSE.Id(),0}
           for (i <= g0153) { 
-            /* While stat, v:"Result" loop:true */
             var loop_3 EID 
             _ = loop_3
             { 
-            /*g_try(v2:"loop_3",loop:tuple("Result", EID)) */
             if (i != 1) { 
               PRINC(", ")
               } 
-            /*g_try(v2:"loop_3",loop:tuple("Result", EID)) */
-            /*g_try(v2:"loop_3",loop:tuple("Result", EID)) */
             loop_3 = F_CALL(C_print,ARGS(self.Params.At(i-1).ToEID()))
-            /* ERROR PROTECTION INSERTED (loop_3-loop_3) */
             if ErrorIn(loop_3) {Result = loop_3
             break
             } else {
             PRINC(":(")
-            /*g_try(v2:"loop_3",loop:tuple("Result", EID)) */
             loop_3 = F_CALL(C_print,ARGS(self.Args.At(i-1).ToEID()))
-            /* ERROR PROTECTION INSERTED (loop_3-loop_3) */
             if ErrorIn(loop_3) {Result = loop_3
             break
             } else {
             PRINC(")")
             loop_3 = EVOID
             }}
-            /* ERROR PROTECTION INSERTED (loop_3-loop_3) */
             if ErrorIn(loop_3) {Result = loop_3
             break
             } else {
             }
-            /* ERROR PROTECTION INSERTED (loop_3-loop_3) */
             if ErrorIn(loop_3) {Result = loop_3
             break
             } else {
             i = (i+1)
             }
-            /* try?:false, v2:"v_while5" loop will be:tuple("Result", EID) */
             } 
           }
           } 
         } 
-      /* ERROR PROTECTION INSERTED (Result-Result) */
       if !ErrorIn(Result) {
       PRINC("]")
       Result = EVOID
@@ -627,25 +560,20 @@ func E_finite_ask_Param (self EID) EID {
 // thus we can ensure that Y is a class
 /* {1} The go function for: self_print(self:subtype) [status=1] */
 func F_self_print_subtype_Core (self *ClaireSubtype ) EID { 
+    // eid body s = void
     var Result EID 
     if (self.Arg.Id() == C_type.Id()) { 
       PRINC("subtype[")
-      /*g_try(v2:"Result",loop:true) */
       Result = F_print_any(self.T1.Id())
-      /* ERROR PROTECTION INSERTED (Result-Result) */
       if !ErrorIn(Result) {
       PRINC("]")
       Result = EVOID
       }
       } else {
-      /*g_try(v2:"Result",loop:true) */
       Result = F_print_any(self.Arg.Id())
-      /* ERROR PROTECTION INSERTED (Result-Result) */
       if !ErrorIn(Result) {
       PRINC("[")
-      /*g_try(v2:"Result",loop:true) */
       Result = F_print_any(self.T1.Id())
-      /* ERROR PROTECTION INSERTED (Result-Result) */
       if !ErrorIn(Result) {
       PRINC("]")
       Result = EVOID
@@ -673,14 +601,14 @@ func E_finite_ask_subtype (self EID) EID {
 // v4.0 => no error
 /* {1} The go function for: nth(self:class,x:type) [status=0] */
 func F_nth_class1 (self *ClaireClass ,x *ClaireType ) *ClaireType  { 
-    // procedure body with s = type 
-var Result *ClaireType  
+    // procedure body with s = type
+    var Result *ClaireType  
     if ((self.Id() == C_set.Id()) || 
         (self.Id() == C_list.Id())) { 
       { var _CL_obj *ClaireSubtype   = ToSubtype(new(ClaireSubtype).Is(C_subtype))
         _CL_obj.Arg = self
-        /*class->class*/_CL_obj.T1 = x
-        /*type->type*/Result = ToType(_CL_obj.Id())
+        _CL_obj.T1 = x
+        Result = ToType(_CL_obj.Id())
         } 
       }  else if (self.IsIn(C_type) != CTRUE) { 
       Result = ToType(CEMPTY.Id())
@@ -696,9 +624,9 @@ var Result *ClaireType
             va_arg2 = self
             } 
           va_arg1.Arg = va_arg2
-          /*class->class*/} 
+          } 
         _CL_obj.T1 = x
-        /*type->type*/Result = ToType(_CL_obj.Id())
+        Result = ToType(_CL_obj.Id())
         } 
       } 
     return Result} 
@@ -712,8 +640,8 @@ func E_nth_class1 (self EID,x EID) EID {
 // v4.0 => no error
 /* {1} The go function for: nth(self:class,l1:list,l2:list) [status=0] */
 func F_nth_class2 (self *ClaireClass ,l1 *ClaireList ,l2 *ClaireList ) *ClaireType  { 
-    // procedure body with s = type 
-var Result *ClaireType  
+    // procedure body with s = type
+    var Result *ClaireType  
     if (((self.Id() == C_list.Id()) || 
           (self.Id() == C_set.Id())) && 
         (l2.At(1-1).Isa.IsIn(C_subtype) == CTRUE)) { 
@@ -725,9 +653,9 @@ var Result *ClaireType
       } else {
       { var _CL_obj *ClaireParam   = To_Param(new(ClaireParam).Is(C_Param))
         _CL_obj.Arg = self
-        /*class->class*/_CL_obj.Params = l1
-        /*list->list*/_CL_obj.Args = l2
-        /*list->list*/Result = ToType(_CL_obj.Id())
+        _CL_obj.Params = l1
+        _CL_obj.Args = l2
+        Result = ToType(_CL_obj.Id())
         } 
       } 
     return Result} 
@@ -739,13 +667,13 @@ func E_nth_class2 (self EID,l1 EID,l2 EID) EID {
 // create a Param of the stack[X] kind
 /* {1} The go function for: param!(self:class,tx:type) [status=0] */
 func F_param_I_class (self *ClaireClass ,tx *ClaireType ) *ClaireType  { 
-    // procedure body with s = type 
-var Result *ClaireType  
+    // procedure body with s = type
+    var Result *ClaireType  
     { var _CL_obj *ClaireParam   = To_Param(new(ClaireParam).Is(C_Param))
       _CL_obj.Arg = self
-      /*class->class*/_CL_obj.Params = MakeConstantList(C_of.Id())
-      /*list->list*/_CL_obj.Args = MakeConstantList(MakeConstantSet(tx.Id()).Id())
-      /*list->list*/Result = ToType(_CL_obj.Id())
+      _CL_obj.Params = MakeConstantList(C_of.Id())
+      _CL_obj.Args = MakeConstantList(MakeConstantSet(tx.Id()).Id())
+      Result = ToType(_CL_obj.Id())
       } 
     return Result} 
   
@@ -756,13 +684,13 @@ func E_param_I_class (self EID,tx EID) EID {
 // create the t[] param
 /* {1} The go function for: nth(self:type) [status=0] */
 func F_nth_type (self *ClaireType ) *ClaireType  { 
-    // procedure body with s = type 
-var Result *ClaireType  
+    // procedure body with s = type
+    var Result *ClaireType  
     { var _CL_obj *ClaireParam   = To_Param(new(ClaireParam).Is(C_Param))
       _CL_obj.Arg = C_array
-      /*class->class*/_CL_obj.Params = MakeConstantList(C_of.Id())
-      /*list->list*/_CL_obj.Args = MakeConstantList(MakeConstantSet(self.Id()).Id())
-      /*list->list*/Result = ToType(_CL_obj.Id())
+      _CL_obj.Params = MakeConstantList(C_of.Id())
+      _CL_obj.Args = MakeConstantList(MakeConstantSet(self.Id()).Id())
+      Result = ToType(_CL_obj.Id())
       } 
     return Result} 
   
@@ -773,10 +701,9 @@ func E_nth_type (self EID) EID {
 // tuple are types
 /* {1} The go function for: finite?(self:tuple) [status=0] */
 func F_finite_ask_tuple (self *ClaireTuple ) *ClaireBoolean  { 
-    // procedure body with s = boolean 
-var Result *ClaireBoolean  
+    // procedure body with s = boolean
+    var Result *ClaireBoolean  
     { var arg_1 *ClaireAny  
-      _ = arg_1
       { 
         var x *ClaireAny  
         _ = x
@@ -808,11 +735,10 @@ func E_finite_ask_tuple (self EID) EID {
 // arg is set to true when we copy a reference in define.cl (unclear why)
 /* {1} The go function for: self_print(self:Reference) [status=1] */
 func F_self_print_Reference_Core (self *ClaireReference ) EID { 
+    // eid body s = void
     var Result EID 
     PRINC("<ref:")
-    /*g_try(v2:"Result",loop:true) */
     Result = F_print_any(self.Args.Id())
-    /* ERROR PROTECTION INSERTED (Result-Result) */
     if !ErrorIn(Result) {
     PRINC("(ltype[")
     F_princ_integer(self.Index)
@@ -827,19 +753,14 @@ func E_self_print_Reference_Core (self EID) EID {
   
 /* {1} The go function for: get(self:Reference,y:any) [status=0] */
 func F_get_Reference (self *ClaireReference ,y *ClaireAny ) *ClaireAny  { 
-    // procedure body with s = any 
-var Result *ClaireAny  
+    // procedure body with s = any
+    var Result *ClaireAny  
     { var l *ClaireList   = self.Args
-      _ = l
       { var i int  = 1
-        _ = i
         { var g0154 int  = l.Length()
-          _ = g0154
           for (i <= g0154) { 
-            /* While stat, v:"Result" loop:false */
             y = ANY(F_funcall_property(ToProperty(l.At(i-1)),y))
             i = (i+1)
-            /* try?:false, v2:"v_while5" loop will be:tuple("Result", void) */
             } 
           } 
         } 
@@ -854,12 +775,12 @@ func E_get_Reference (self EID,y EID) EID {
 // we need a constructor
 /* {1} The go function for: Reference!(l:list,n:integer) [status=0] */
 func F_Reference_I_list (l *ClaireList ,n int) *ClaireReference  { 
-    // procedure body with s = Reference 
-var Result *ClaireReference  
+    // procedure body with s = Reference
+    var Result *ClaireReference  
     { var _CL_obj *ClaireReference   = To_Reference(new(ClaireReference).Is(C_Reference))
       _CL_obj.Args = l
-      /*list->list*/_CL_obj.Index = n
-      /*integer->integer*/Result = _CL_obj
+      _CL_obj.Index = n
+      Result = _CL_obj
       } 
     return Result} 
   
@@ -872,14 +793,10 @@ func E_Reference_I_list (l EID,n EID) EID {
 func F__at_Reference (self *ClaireReference ,l *ClaireList ,y *ClaireAny ) *ClaireAny  { 
     
     { var i int  = 1
-      _ = i
       { var g0155 int  = l.Length()
-        _ = g0155
         for (i <= g0155) { 
-          /* While stat, v:"Unused" loop:false */
           y = ToType(y).At(ToProperty(l.At(i-1))).Id()
           i = (i+1)
-          /* try?:false, v2:"v_while4" loop will be:tuple("Unused", void) */
           } 
         } 
       } 
@@ -896,6 +813,7 @@ func E__at_Reference (self EID,l EID,y EID) EID {
 // a proper definition that could be interpreted !
 /* {1} The go function for: set!(x:collection) [status=1] */
 func F_set_I_collection (x *ClaireCollection ) EID { 
+    // eid body s = set
     var Result EID 
     { var m *ClaireAny   = F__at_property1(C_set_I,x.Isa).Id()
       if (F_domain_I_restriction(ToRestriction(m)).Id() != C_collection.Id()) { 
@@ -912,17 +830,15 @@ func E_set_I_collection (x EID) EID {
   
 /* {1} The go function for: size(x:collection) [status=1] */
 func F_size_collection (x *ClaireCollection ) EID { 
+    // eid body s = integer
     var Result EID 
     { var m *ClaireAny   = F__at_property1(C_size,x.Isa).Id()
       if (F_domain_I_restriction(ToRestriction(m)).Id() != C_collection.Id()) { 
         Result = F_CALL(C_funcall,ARGS(m.ToEID(),EID{x.Id(),0}))
         } else {
         { var arg_1 *ClaireAny  
-          _ = arg_1
           var try_2 EID 
-          /*g_try(v2:"try_2",loop:false) */
           try_2 = F_CALL(C_set_I,ARGS(EID{x.Id(),0}))
-          /* ERROR PROTECTION INSERTED (arg_1-Result) */
           if ErrorIn(try_2) {Result = try_2
           } else {
           arg_1 = ANY(try_2)
@@ -962,10 +878,9 @@ func E_size_list2_Core (x EID) EID {
 // class  -> return a read-only list  (v3.2)
 /* {1} The go function for: set!(x:class) [status=1] */
 func F_set_I_class (x *ClaireClass ) EID { 
+    // eid body s = set
     var Result EID 
     { var rep *ClaireList   = ToType(CEMPTY.Id()).EmptyList()
-      _ = rep
-      /*g_try(v2:"Result",loop:true) */
       { 
         var c *ClaireClass  
         _ = c
@@ -978,7 +893,6 @@ func F_set_I_class (x *ClaireClass ) EID {
           c = ToClass(c_iter)
           var loop_1 EID 
           _ = loop_1
-          /*g_try(v2:"loop_1",loop:tuple("Result", EID)) */
           if ((c.IsIn(C_primitive) == CTRUE) && 
               (c.Id() != C_boolean.Id())) { 
             loop_1 = ToException(C_general_error.Make(MakeString("[178] cannot enumerate ~S").Id(),MakeConstantList(c.Id()).Id())).Close()
@@ -986,14 +900,12 @@ func F_set_I_class (x *ClaireClass ) EID {
             rep = rep.Append(c.Instances)
             loop_1 = EID{rep.Id(),0}
             } 
-          /* ERROR PROTECTION INSERTED (loop_1-Result) */
           if ErrorIn(loop_1) {Result = loop_1
           break
           } else {
           }
           } 
         } 
-      /* ERROR PROTECTION INSERTED (Result-Result) */
       if !ErrorIn(Result) {
       Result = EID{rep.Set_I().Id(),0}
       }
@@ -1006,10 +918,9 @@ func E_set_I_class (x EID) EID {
   
 /* {1} The go function for: size(self:class) [status=0] */
 func F_size_class (self *ClaireClass ) int { 
-    // procedure body with s = integer 
-var Result int 
+    // procedure body with s = integer
+    var Result int 
     { var n int  = 0
-      _ = n
       { 
         var x *ClaireClass  
         _ = x
@@ -1033,22 +944,17 @@ func E_size_class (self EID) EID {
 // Union
 /* {1} The go function for: set!(x:Union) [status=1] */
 func F_set_I_Union (x *ClaireUnion ) EID { 
+    // eid body s = set
     var Result EID 
     { var arg_1 *ClaireAny  
-      _ = arg_1
       var try_3 EID 
-      /*g_try(v2:"try_3",loop:false) */
       try_3 = F_CALL(C_set_I,ARGS(EID{x.T1.Id(),0}))
-      /* ERROR PROTECTION INSERTED (arg_1-Result) */
       if ErrorIn(try_3) {Result = try_3
       } else {
       arg_1 = ANY(try_3)
       { var arg_2 *ClaireAny  
-        _ = arg_2
         var try_4 EID 
-        /*g_try(v2:"try_4",loop:false) */
         try_4 = F_CALL(C_set_I,ARGS(EID{x.T2.Id(),0}))
-        /* ERROR PROTECTION INSERTED (arg_2-Result) */
         if ErrorIn(try_4) {Result = try_4
         } else {
         arg_2 = ANY(try_4)
@@ -1065,24 +971,19 @@ func E_set_I_Union (x EID) EID {
   
 /* {1} The go function for: size(x:Union) [status=1] */
 func F_size_Union (x *ClaireUnion ) EID { 
+    // eid body s = integer
     var Result EID 
     if ((x.T1.Isa.IsIn(C_Interval) == CTRUE) || 
         (C_set.Id() == x.T1.Isa.Id())) { 
       { var arg_1 *ClaireAny  
-        _ = arg_1
         var try_3 EID 
-        /*g_try(v2:"try_3",loop:false) */
         try_3 = F_CALL(C_size,ARGS(EID{x.T1.Id(),0}))
-        /* ERROR PROTECTION INSERTED (arg_1-Result) */
         if ErrorIn(try_3) {Result = try_3
         } else {
         arg_1 = ANY(try_3)
         { var arg_2 *ClaireAny  
-          _ = arg_2
           var try_4 EID 
-          /*g_try(v2:"try_4",loop:false) */
           try_4 = F_CALL(C_size,ARGS(EID{x.T2.Id(),0}))
-          /* ERROR PROTECTION INSERTED (arg_2-Result) */
           if ErrorIn(try_4) {Result = try_4
           } else {
           arg_2 = ANY(try_4)
@@ -1093,15 +994,12 @@ func F_size_Union (x *ClaireUnion ) EID {
         } 
       } else {
       { var arg_5 *ClaireSet  
-        _ = arg_5
         var try_6 EID 
-        /*g_try(v2:"try_6",loop:false) */
         try_6 = F_set_I_Union(x)
-        /* ERROR PROTECTION INSERTED (arg_5-Result) */
         if ErrorIn(try_6) {Result = try_6
         } else {
         arg_5 = ToSet(OBJ(try_6))
-        Result = F_CALL(C_length,ARGS(EID{arg_5.Id(),0}))
+        Result = EID{C__INT,IVAL(arg_5.Size())}
         }
         } 
       } 
@@ -1133,12 +1031,11 @@ func E_size_Interval (self EID) EID {
 // param
 /* {1} The go function for: set!(x:Param) [status=1] */
 func F_set_I_Param (x *ClaireParam ) EID { 
+    // eid body s = set
     var Result EID 
     { var y_in *ClaireSet  
       var try_1 EID 
-      /*g_try(v2:"try_1",loop:false) */
       try_1 = F_set_I_class(x.Arg)
-      /* ERROR PROTECTION INSERTED (y_in-Result) */
       if ErrorIn(try_1) {Result = try_1
       } else {
       y_in = ToSet(OBJ(try_1))
@@ -1151,7 +1048,7 @@ func F_set_I_Param (x *ClaireParam ) EID {
           for i_it := 0; i_it < y_support.Count; i_it++ { 
             y = y_support.At(i_it)
             if (ToType(x.Id()).Contains(y) == CTRUE) { 
-              y_out.AddFast(y)/*t=any,s=void*/
+              y_out.AddFast(y)
               } 
             } 
           } 
@@ -1167,17 +1064,15 @@ func E_set_I_Param (x EID) EID {
   
 /* {1} The go function for: size(x:Param) [status=1] */
 func F_size_Param (x *ClaireParam ) EID { 
+    // eid body s = integer
     var Result EID 
     { var arg_1 *ClaireSet  
-      _ = arg_1
       var try_2 EID 
-      /*g_try(v2:"try_2",loop:false) */
       try_2 = F_set_I_Param(x)
-      /* ERROR PROTECTION INSERTED (arg_1-Result) */
       if ErrorIn(try_2) {Result = try_2
       } else {
       arg_1 = ToSet(OBJ(try_2))
-      Result = F_CALL(C_length,ARGS(EID{arg_1.Id(),0}))
+      Result = EID{C__INT,IVAL(arg_1.Size())}
       }
       } 
     return Result} 
@@ -1189,25 +1084,20 @@ func E_size_Param (x EID) EID {
 // subtype
 /* {1} The go function for: set!(x:subtype) [status=1] */
 func F_set_I_subtype (x *ClaireSubtype ) EID { 
+    // eid body s = set
     var Result EID 
     if (x.Arg.Id() == C_set.Id()) { 
       { var arg_1 *ClaireList  
-        _ = arg_1
         var try_2 EID 
-        /*g_try(v2:"try_2",loop:false) */
         { var arg_3 *ClaireAny  
-          _ = arg_3
           var try_4 EID 
-          /*g_try(v2:"try_4",loop:false) */
           try_4 = F_CALL(C_set_I,ARGS(EID{x.T1.Id(),0}))
-          /* ERROR PROTECTION INSERTED (arg_3-try_2) */
           if ErrorIn(try_4) {try_2 = try_4
           } else {
           arg_3 = ANY(try_4)
           try_2 = EID{ToSet(arg_3).List_I().Id(),0}
           }
           } 
-        /* ERROR PROTECTION INSERTED (arg_1-Result) */
         if ErrorIn(try_2) {Result = try_2
         } else {
         arg_1 = ToList(OBJ(try_2))
@@ -1225,14 +1115,12 @@ func E_set_I_subtype (x EID) EID {
   
 /* {1} The go function for: size(x:subtype) [status=1] */
 func F_size_subtype (x *ClaireSubtype ) EID { 
+    // eid body s = integer
     var Result EID 
     if (x.Arg.Id() == C_set.Id()) { 
       { var arg_1 *ClaireAny  
-        _ = arg_1
         var try_2 EID 
-        /*g_try(v2:"try_2",loop:false) */
         try_2 = F_CALL(C_size,ARGS(EID{x.T1.Id(),0}))
-        /* ERROR PROTECTION INSERTED (arg_1-Result) */
         if ErrorIn(try_2) {Result = try_2
         } else {
         arg_1 = ANY(try_2)
@@ -1251,6 +1139,7 @@ func E_size_subtype (x EID) EID {
 // tuple
 /* {1} The go function for: set!(x:tuple) [status=1] */
 func F_set_I_tuple (x *ClaireTuple ) EID { 
+    // eid body s = set
     var Result EID 
     { var l *ClaireList   = ToList(x.Id())
       if (F_boolean_I_any(l.Id()).Id() != CTRUE.Id()) { 
@@ -1258,59 +1147,45 @@ func F_set_I_tuple (x *ClaireTuple ) EID {
         } else {
         { var l1 *ClaireSet  
           var try_1 EID 
-          /*g_try(v2:"try_1",loop:false) */
           { var y_bag *ClaireSet   = ToType(CEMPTY.Id()).EmptySet()
-            /*g_try(v2:"try_1",loop:false) */
             { 
               var y *ClaireAny  
               _ = y
               try_1= EID{CFALSE.Id(),0}
               var y_support *ClaireSet  
               var try_2 EID 
-              /*g_try(v2:"try_2",loop:false) */
               try_2 = F_CALL(C_set_I,ARGS(l.At(1-1).ToEID()))
-              /* ERROR PROTECTION INSERTED (y_support-try_1) */
               if ErrorIn(try_2) {try_1 = try_2
               } else {
               y_support = ToSet(OBJ(try_2))
               for i_it := 0; i_it < y_support.Count; i_it++ { 
                 y = y_support.At(i_it)
-                y_bag.AddFast(MakeConstantList(y).Id())/*t=any,s=void*/
+                y_bag.AddFast(MakeConstantList(y).Id())
                 }
                 } 
               } 
-            /* ERROR PROTECTION INSERTED (try_1-try_1) */
             if !ErrorIn(try_1) {
             try_1 = EID{y_bag.Id(),0}
             }
             } 
-          /* ERROR PROTECTION INSERTED (l1-Result) */
           if ErrorIn(try_1) {Result = try_1
           } else {
           l1 = ToSet(OBJ(try_1))
-          /*g_try(v2:"Result",loop:true) */
           { var n int  = 2
             { var g0156 int  = l.Length()
-              _ = g0156
               Result= EID{CFALSE.Id(),0}
               for (n <= g0156) { 
-                /* While stat, v:"Result" loop:true */
                 var loop_3 EID 
                 _ = loop_3
                 { 
-                /*g_try(v2:"loop_3",loop:tuple("Result", EID)) */
                 { var l2 *ClaireSet   = ToType(C_any.Id()).EmptySet()
-                  _ = l2
-                  /*g_try(v2:"loop_3",loop:tuple("Result", EID)) */
                   { 
                     var z *ClaireAny  
                     _ = z
                     loop_3= EID{CFALSE.Id(),0}
                     var z_support *ClaireSet  
                     var try_4 EID 
-                    /*g_try(v2:"try_4",loop:false) */
                     try_4 = F_CALL(C_set_I,ARGS(l.At(n-1).ToEID()))
-                    /* ERROR PROTECTION INSERTED (z_support-loop_3) */
                     if ErrorIn(try_4) {loop_3 = try_4
                     } else {
                     z_support = ToSet(OBJ(try_4))
@@ -1325,13 +1200,12 @@ func F_set_I_tuple (x *ClaireTuple ) EID {
                         for i_it := 0; i_it < l3_support.Count; i_it++ { 
                           l3_iter = l3_support.At(i_it)
                           l3 = ToList(l3_iter)
-                          l2 = l2.AddFast(l3.Copy().AddFast(z).Id()/*t=any,s=any*/)/*t=any,s=set*/
+                          l2 = l2.AddFast(l3.Copy().AddFast(z).Id())
                           } 
                         } 
                       }
                       } 
                     } 
-                  /* ERROR PROTECTION INSERTED (loop_3-loop_3) */
                   if ErrorIn(loop_3) {Result = loop_3
                   break
                   } else {
@@ -1339,18 +1213,15 @@ func F_set_I_tuple (x *ClaireTuple ) EID {
                   loop_3 = EID{l1.Id(),0}
                   }
                   } 
-                /* ERROR PROTECTION INSERTED (loop_3-loop_3) */
                 if ErrorIn(loop_3) {Result = loop_3
                 break
                 } else {
                 n = (n+1)
                 }
-                /* try?:false, v2:"v_while7" loop will be:tuple("Result", EID) */
                 } 
               }
               } 
             } 
-          /* ERROR PROTECTION INSERTED (Result-Result) */
           if !ErrorIn(Result) {
           Result = EID{l1.Id(),0}
           }
@@ -1366,45 +1237,34 @@ func E_set_I_tuple (x EID) EID {
   
 /* {1} The go function for: size(l:tuple) [status=1] */
 func F_size_tuple (l *ClaireTuple ) EID { 
+    // eid body s = integer
     var Result EID 
     if (F_boolean_I_any(l.Id()).Id() != CTRUE.Id()) { 
       Result = EID{C__INT,IVAL(1)}
       } else {
       { var m int 
-        _ = m
         var try_1 EID 
-        /*g_try(v2:"try_1",loop:false) */
         try_1 = F_CALL(C_size,ARGS(ToList(l.Id()).At(1-1).ToEID()))
-        /* ERROR PROTECTION INSERTED (m-Result) */
         if ErrorIn(try_1) {Result = try_1
         } else {
         m = INT(try_1)
-        /*g_try(v2:"Result",loop:true) */
         { var n int  = 2
-          _ = n
           { var g0157 int  = l.Length()
-            _ = g0157
             Result= EID{CFALSE.Id(),0}
             for (n <= g0157) { 
-              /* While stat, v:"Result" loop:true */
               var loop_2 EID 
               _ = loop_2
               { 
               var try_3 EID 
-              /*g_try(v2:"try_3",loop:tuple("Result", EID)) */
               { var arg_4 *ClaireAny  
-                _ = arg_4
                 var try_5 EID 
-                /*g_try(v2:"try_5",loop:false) */
                 try_5 = F_CALL(C_size,ARGS(ToList(l.Id()).At(n-1).ToEID()))
-                /* ERROR PROTECTION INSERTED (arg_4-try_3) */
                 if ErrorIn(try_5) {try_3 = try_5
                 } else {
                 arg_4 = ANY(try_5)
                 try_3 = EID{C__INT,IVAL((m*ToInteger(arg_4).Value))}
                 }
                 } 
-              /* ERROR PROTECTION INSERTED (m-loop_2) */
               if ErrorIn(try_3) {loop_2 = try_3
               Result = try_3
               break
@@ -1413,12 +1273,10 @@ func F_size_tuple (l *ClaireTuple ) EID {
               loop_2 = EID{C__INT,IVAL(m)}
               n = (n+1)
               }
-              /* try?:false, v2:"v_while6" loop will be:tuple("Result", EID) */
               } 
             }
             } 
           } 
-        /* ERROR PROTECTION INSERTED (Result-Result) */
         if !ErrorIn(Result) {
         Result = EID{C__INT,IVAL(m)}
         }
@@ -1444,13 +1302,12 @@ func E_size_tuple (l EID) EID {
 // a union of intervals is ALWAYS disjoint
 /* {1} The go function for: U(x:type,y:type) [status=0] */
 func F_U_type (x *ClaireType ,y *ClaireType ) *ClaireType  { 
-    // procedure body with s = type 
-var Result *ClaireType  
+    // procedure body with s = type
+    var Result *ClaireType  
     if (C_set.Id() == x.Isa.Id()) { 
       { var g0158 *ClaireSet   = ToSet(x.Id())
         if (C_set.Id() == y.Isa.Id()) { 
           { var g0159 *ClaireSet   = ToSet(y.Id())
-            _ = g0159
             Result = ToType(F_append_set(g0158,g0159).Id())
             } 
           } else {
@@ -1480,8 +1337,8 @@ var Result *ClaireType
           } else {
           { var _CL_obj *ClaireUnion   = To_Union(new(ClaireUnion).Is(C_Union))
             _CL_obj.T1 = x
-            /*type->type*/_CL_obj.T2 = y
-            /*type->type*/Result = ToType(_CL_obj.Id())
+            _CL_obj.T2 = y
+            Result = ToType(_CL_obj.Id())
             } 
           } 
         } else {
@@ -1496,8 +1353,8 @@ var Result *ClaireType
             if (z.Isa.IsIn(C_Union) == CTRUE) { 
               { var _CL_obj *ClaireUnion   = To_Union(new(ClaireUnion).Is(C_Union))
                 _CL_obj.T1 = F_U_type(ToType(OBJ(F_CALL(C_mClaire_t1,ARGS(EID{x.Id(),0})))),y)
-                /*type->type*/_CL_obj.T2 = To_Union(x.Id()).T2
-                /*type->type*/Result = ToType(_CL_obj.Id())
+                _CL_obj.T2 = To_Union(x.Id()).T2
+                Result = ToType(_CL_obj.Id())
                 } 
               } else {
               Result = F_U_type(ToType(OBJ(F_CALL(C_mClaire_t1,ARGS(EID{x.Id(),0})))),z)
@@ -1537,7 +1394,7 @@ var Result *ClaireType
                     for i_it := 0; i_it < z_support.Count; i_it++ { 
                       z = z_support.At(i_it)
                       if (x.Contains(z) != CTRUE) { 
-                        z_out.AddFast(z)/*t=any,s=void*/
+                        z_out.AddFast(z)
                         } 
                       } 
                     } 
@@ -1547,8 +1404,8 @@ var Result *ClaireType
               } 
             { var _CL_obj *ClaireUnion   = To_Union(new(ClaireUnion).Is(C_Union))
               _CL_obj.T1 = x
-              /*type->type*/_CL_obj.T2 = y
-              /*type->type*/Result = ToType(_CL_obj.Id())
+              _CL_obj.T2 = y
+              Result = ToType(_CL_obj.Id())
               } 
             } 
           } 
@@ -1563,8 +1420,8 @@ func E_U_type (x EID,y EID) EID {
 // the Interval construction method has a smart second-order type  - fix on v3.1.06
 /* {1} The go function for: ..(x:integer,y:integer) [status=0] */
 func F__dot_dot_integer (x int,y int) *ClaireType  { 
-    // procedure body with s = type 
-var Result *ClaireType  
+    // procedure body with s = type
+    var Result *ClaireType  
     if (x <= y) { 
       Result = ToType(C_Interval.MakeInts(x,y))
       } else {
@@ -1581,7 +1438,6 @@ func F__dot_dot_integer_type (x *ClaireType ,y *ClaireType ) EID {
     var Result EID 
     var g0170I *ClaireBoolean  
     var try_1 EID 
-    /*g_try(v2:"try_1",loop:false) */
     { 
       var v_and2 *ClaireBoolean  
       
@@ -1592,22 +1448,15 @@ func F__dot_dot_integer_type (x *ClaireType ,y *ClaireType ) EID {
         if (v_and2 == CFALSE) {try_1 = EID{CFALSE.Id(),0}
         } else { 
           var try_2 EID 
-          /*g_try(v2:"try_2",loop:false) */
           { var arg_3 *ClaireAny  
-            _ = arg_3
             var try_5 EID 
-            /*g_try(v2:"try_5",loop:false) */
             try_5 = F_the_type(x)
-            /* ERROR PROTECTION INSERTED (arg_3-try_2) */
             if ErrorIn(try_5) {try_2 = try_5
             } else {
             arg_3 = ANY(try_5)
             { var arg_4 *ClaireAny  
-              _ = arg_4
               var try_6 EID 
-              /*g_try(v2:"try_6",loop:false) */
               try_6 = F_the_type(y)
-              /* ERROR PROTECTION INSERTED (arg_4-try_2) */
               if ErrorIn(try_6) {try_2 = try_6
               } else {
               arg_4 = ANY(try_6)
@@ -1616,7 +1465,6 @@ func F__dot_dot_integer_type (x *ClaireType ,y *ClaireType ) EID {
               } 
             }
             } 
-          /* ERROR PROTECTION INSERTED (v_and2-try_1) */
           if ErrorIn(try_2) {try_1 = try_2
           } else {
           v_and2 = ToBoolean(OBJ(try_2))
@@ -1627,7 +1475,6 @@ func F__dot_dot_integer_type (x *ClaireType ,y *ClaireType ) EID {
         } 
       }
       } 
-    /* ERROR PROTECTION INSERTED (g0170I-Result) */
     if ErrorIn(try_1) {Result = try_1
     } else {
     g0170I = ToBoolean(OBJ(try_1))
@@ -1636,22 +1483,15 @@ func F__dot_dot_integer_type (x *ClaireType ,y *ClaireType ) EID {
         var v_bag_arg *ClaireAny  
         Result= EID{ToType(CEMPTY.Id()).EmptySet().Id(),0}
         var try_7 EID 
-        /*g_try(v2:"try_7",loop:false) */
         { var arg_8 *ClaireAny  
-          _ = arg_8
           var try_10 EID 
-          /*g_try(v2:"try_10",loop:false) */
           try_10 = F_the_type(x)
-          /* ERROR PROTECTION INSERTED (arg_8-try_7) */
           if ErrorIn(try_10) {try_7 = try_10
           } else {
           arg_8 = ANY(try_10)
           { var arg_9 *ClaireAny  
-            _ = arg_9
             var try_11 EID 
-            /*g_try(v2:"try_11",loop:false) */
             try_11 = F_the_type(y)
-            /* ERROR PROTECTION INSERTED (arg_9-try_7) */
             if ErrorIn(try_11) {try_7 = try_11
             } else {
             arg_9 = ANY(try_11)
@@ -1660,7 +1500,6 @@ func F__dot_dot_integer_type (x *ClaireType ,y *ClaireType ) EID {
             } 
           }
           } 
-        /* ERROR PROTECTION INSERTED (v_bag_arg-Result) */
         if ErrorIn(try_7) {Result = try_7
         } else {
         v_bag_arg = ANY(try_7)
@@ -1680,10 +1519,10 @@ func E__dot_dot_integer_type (x EID,y EID) EID {
 // exception
 /* {1} The go function for: but(s:any,x:any) [status=1] */
 func F_but_any (s *ClaireAny ,x *ClaireAny ) EID { 
+    // eid body s = any
     var Result EID 
     if (s.Isa.IsIn(C_list) == CTRUE) { 
       { var g0171 *ClaireList   = ToList(s)
-        _ = g0171
         { var y_in *ClaireList   = g0171
           { var y_out *ClaireList   = y_in.Empty()
             { 
@@ -1695,7 +1534,7 @@ func F_but_any (s *ClaireAny ,x *ClaireAny ) EID {
               for i_it := 0; i_it < y_len; i_it++ { 
                 y = y_support.At(i_it)
                 if (Equal(y,x) != CTRUE) { 
-                  y_out.AddFast(y)/*t=any,s=void*/
+                  y_out.AddFast(y)
                   } 
                 } 
               } 
@@ -1705,16 +1544,12 @@ func F_but_any (s *ClaireAny ,x *ClaireAny ) EID {
         } 
       }  else if (C_set.Id() == s.Isa.Id()) { 
       { var g0172 *ClaireSet   = ToSet(s)
-        _ = g0172
         Result = EID{g0172.Copy().Delete(x).Id(),0}
         } 
       } else {
       { var arg_1 *ClaireList  
-        _ = arg_1
         var try_2 EID 
-        /*g_try(v2:"try_2",loop:false) */
         try_2 = F_enumerate_any(s)
-        /* ERROR PROTECTION INSERTED (arg_1-Result) */
         if ErrorIn(try_2) {Result = try_2
         } else {
         arg_1 = ToList(OBJ(try_2))
@@ -1748,18 +1583,16 @@ func E_but_any_type (s EID,x EID) EID {
 // a set difference (extended to types, with implicit enumeration)
 /* {1} The go function for: \(x:type,y:type) [status=1] */
 func F__backslash_type (x *ClaireType ,y *ClaireType ) EID { 
+    // eid body s = set
     var Result EID 
     { var z_out *ClaireSet   = ToType(CEMPTY.Id()).EmptySet()
-      /*g_try(v2:"Result",loop:true) */
       { 
         var z *ClaireAny  
         _ = z
         Result= EID{CFALSE.Id(),0}
         var z_support *ClaireList  
         var try_1 EID 
-        /*g_try(v2:"try_1",loop:false) */
         try_1 = F_enumerate_any(x.Id())
-        /* ERROR PROTECTION INSERTED (z_support-Result) */
         if ErrorIn(try_1) {Result = try_1
         } else {
         z_support = ToList(OBJ(try_1))
@@ -1767,12 +1600,11 @@ func F__backslash_type (x *ClaireType ,y *ClaireType ) EID {
         for i_it := 0; i_it < z_len; i_it++ { 
           z = z_support.At(i_it)
           if (y.Contains(z) != CTRUE) { 
-            z_out.AddFast(z)/*t=any,s=void*/
+            z_out.AddFast(z)
             } 
           }
           } 
         } 
-      /* ERROR PROTECTION INSERTED (Result-Result) */
       if !ErrorIn(Result) {
       Result = EID{z_out.Id(),0}
       }
@@ -1791,8 +1623,8 @@ func E__backslash_type (x EID,y EID) EID {
 // new in v3.0.60: we reintroduce a glb method
 /* {1} The go function for: glb(x:set,y:type) [status=0] */
 func F_glb_set (x *ClaireSet ,y *ClaireType ) *ClaireSet  { 
-    // procedure body with s = set 
-var Result *ClaireSet  
+    // procedure body with s = set
+    var Result *ClaireSet  
     { var z_in *ClaireSet   = x
       { var z_out *ClaireSet   = z_in.Empty()
         { 
@@ -1803,7 +1635,7 @@ var Result *ClaireSet
           for i_it := 0; i_it < z_support.Count; i_it++ { 
             z = z_support.At(i_it)
             if (y.Contains(z) == CTRUE) { 
-              z_out.AddFast(z)/*t=any,s=void*/
+              z_out.AddFast(z)
               } 
             } 
           } 
@@ -1827,18 +1659,16 @@ func E_glb_Union (x EID,y EID) EID {
   
 /* {1} The go function for: glb(x:Interval,y:type) [status=0] */
 func F_glb_Interval (x *ClaireInterval ,y *ClaireType ) *ClaireType  { 
-    // procedure body with s = type 
-var Result *ClaireType  
+    // procedure body with s = type
+    var Result *ClaireType  
     if (C_class.Id() == y.Isa.Id()) { 
       { var g0174 *ClaireClass   = ToClass(y.Id())
-        _ = g0174
         Result = ToType(IfThenElse((ToType(C_integer.Id()).Included(ToType(g0174.Id())) == CTRUE),
           x.Id(),
           CEMPTY.Id()))
         } 
       }  else if (C_set.Id() == y.Isa.Id()) { 
       { var g0175 *ClaireSet   = ToSet(y.Id())
-        _ = g0175
         Result = ToType(F_glb_set(g0175,ToType(x.Id())).Id())
         } 
       }  else if (y.Isa.IsIn(C_Interval) == CTRUE) { 
@@ -1872,8 +1702,8 @@ func E_glb_Interval (x EID,y EID) EID {
   
 /* {1} The go function for: glb(x:class,y:type) [status=0] */
 func F_glb_class (x *ClaireClass ,y *ClaireType ) *ClaireType  { 
-    // procedure body with s = type 
-var Result *ClaireType  
+    // procedure body with s = type
+    var Result *ClaireType  
     if ((x.Open == ClEnv.ABSTRACT) && 
         (F_boolean_I_any(x.Subclass.Id()).Id() != CTRUE.Id())) { 
       { var z_out *ClaireSet   = ToType(CEMPTY.Id()).EmptySet()
@@ -1886,7 +1716,7 @@ var Result *ClaireType
           for i_it := 0; i_it < z_len; i_it++ { 
             z = z_support.At(i_it)
             if (y.Contains(z) == CTRUE) { 
-              z_out.AddFast(z)/*t=any,s=void*/
+              z_out.AddFast(z)
               } 
             } 
           } 
@@ -1895,7 +1725,6 @@ var Result *ClaireType
       }  else if ((x.Open == ClEnv.ABSTRACT) && 
         (F_boolean_I_any(x.Instances.Id()).Id() != CTRUE.Id())) { 
       { var arg_1 *ClaireList  
-        _ = arg_1
         { 
           var v_list4 *ClaireSet  
           var z *ClaireType  
@@ -1912,7 +1741,6 @@ var Result *ClaireType
         } 
       }  else if (C_class.Id() == y.Isa.Id()) { 
       { var g0179 *ClaireClass   = ToClass(y.Id())
-        _ = g0179
         Result = F_join_class(x,g0179)
         } 
       } else {
@@ -1926,14 +1754,13 @@ func E_glb_class (x EID,y EID) EID {
   
 /* {1} The go function for: glb(x:Param,y:type) [status=0] */
 func F_glb_Param (x *ClaireParam ,y *ClaireType ) *ClaireType  { 
-    // procedure body with s = type 
-var Result *ClaireType  
+    // procedure body with s = type
+    var Result *ClaireType  
     if (y.Isa.IsIn(C_Param) == CTRUE) { 
       { var g0181 *ClaireParam   = To_Param(y.Id())
         { var c *ClaireType   = F_join_class(x.Arg,g0181.Arg)
           { var lp *ClaireList   = x.Params.Append(g0181.Params).Set_I().List_I()
             { var l *ClaireList   = ToType(C_any.Id()).EmptyList()
-              _ = l
               { 
                 var p *ClaireAny  
                 _ = p
@@ -1943,9 +1770,8 @@ var Result *ClaireType
                 for i_it := 0; i_it < p_len; i_it++ { 
                   p = p_support.At(i_it)
                   { var t *ClaireType   = ToType(OBJ(F_CALL(ToProperty(C_glb.Id()),ARGS(EID{x.At(ToProperty(p)).Id(),0},EID{g0181.At(ToProperty(p)).Id(),0}))))
-                    _ = t
                     if (Equal(t.Id(),CEMPTY.Id()) != CTRUE) { 
-                      l = l.AddFast(t.Id())/*t=any,s=list*/
+                      l = l.AddFast(t.Id())
                       } else {
                       c = ToType(CEMPTY.Id())
                       
@@ -1957,9 +1783,9 @@ var Result *ClaireType
               if (Equal(c.Id(),CEMPTY.Id()) != CTRUE) { 
                 { var _CL_obj *ClaireParam   = To_Param(new(ClaireParam).Is(C_Param))
                   _CL_obj.Arg = ToClass(c.Id())
-                  /*class->class*/_CL_obj.Params = lp
-                  /*list->list*/_CL_obj.Args = l
-                  /*list->list*/Result = ToType(_CL_obj.Id())
+                  _CL_obj.Params = lp
+                  _CL_obj.Args = l
+                  Result = ToType(_CL_obj.Id())
                   } 
                 } else {
                 Result = ToType(CEMPTY.Id())
@@ -1970,14 +1796,13 @@ var Result *ClaireType
         } 
       }  else if (C_class.Id() == y.Isa.Id()) { 
       { var g0182 *ClaireClass   = ToClass(y.Id())
-        _ = g0182
         { var c *ClaireType   = F_join_class(x.Arg,g0182)
           if (Equal(c.Id(),CEMPTY.Id()) != CTRUE) { 
             { var _CL_obj *ClaireParam   = To_Param(new(ClaireParam).Is(C_Param))
               _CL_obj.Arg = ToClass(c.Id())
-              /*class->class*/_CL_obj.Params = x.Params
-              /*list->list*/_CL_obj.Args = x.Args
-              /*list->list*/Result = ToType(_CL_obj.Id())
+              _CL_obj.Params = x.Params
+              _CL_obj.Args = x.Args
+              Result = ToType(_CL_obj.Id())
               } 
             } else {
             Result = ToType(CEMPTY.Id())
@@ -1997,8 +1822,8 @@ func E_glb_Param (x EID,y EID) EID {
 // the result is a subtype
 /* {1} The go function for: glb(x:subtype,y:type) [status=0] */
 func F_glb_subtype (x *ClaireSubtype ,y *ClaireType ) *ClaireType  { 
-    // procedure body with s = type 
-var Result *ClaireType  
+    // procedure body with s = type
+    var Result *ClaireType  
     if (C_class.Id() == y.Isa.Id()) { 
       { var g0184 *ClaireClass   = ToClass(y.Id())
         if (Equal(F_join_class(x.Arg,g0184).Id(),CEMPTY.Id()) != CTRUE) { 
@@ -2041,11 +1866,10 @@ func E_glb_subtype (x EID,y EID) EID {
 // set, Interval, list
 /* {1} The go function for: glb(x:tuple,y:type) [status=0] */
 func F_glb_tuple (x *ClaireTuple ,y *ClaireType ) *ClaireType  { 
-    // procedure body with s = type 
-var Result *ClaireType  
+    // procedure body with s = type
+    var Result *ClaireType  
     if (C_class.Id() == y.Isa.Id()) { 
       { var g0188 *ClaireClass   = ToClass(y.Id())
-        _ = g0188
         Result = ToType(IfThenElse((C_tuple.IsIn(g0188) == CTRUE),
           x.Id(),
           CEMPTY.Id()))
@@ -2054,14 +1878,12 @@ var Result *ClaireType
       Result = ToType(CEMPTY.Id())
       }  else if (C_tuple.Id() == y.Isa.Id()) { 
       { var g0190 *ClaireTuple   = ToTuple(y.Id())
-        _ = g0190
         Result = ToType(F__exp_list(ToList(x.Id()),ToList(g0190.Id())).Tuple_I().Id())
         } 
       }  else if (y.Isa.IsIn(C_subtype) == CTRUE) { 
       { var g0191 *ClaireSubtype   = ToSubtype(y.Id())
         if (g0191.Arg.Id() == C_tuple.Id()) { 
           { var arg_1 *ClaireList  
-            _ = arg_1
             { var z_bag *ClaireList   = ToType(CEMPTY.Id()).EmptyList()
               { 
                 var z *ClaireAny  
@@ -2071,7 +1893,7 @@ var Result *ClaireType
                 z_len := z_support.Length()
                 for i_it := 0; i_it < z_len; i_it++ { 
                   z = z_support.At(i_it)
-                  z_bag.AddFast(ANY(F_CALL(ToProperty(C_glb.Id()),ARGS(z.ToEID(),EID{g0191.T1.Id(),0}))))/*t=any,s=void*/
+                  z_bag.AddFast(ANY(F_CALL(ToProperty(C_glb.Id()),ARGS(z.ToEID(),EID{g0191.T1.Id(),0}))))
                   } 
                 } 
               arg_1 = z_bag
@@ -2114,8 +1936,8 @@ func E__exp_type (x EID,y EID) EID {
 // the old lattice_glb
 /* {1} The go function for: join(x:class,y:class) [status=0] */
 func F_join_class (x *ClaireClass ,y *ClaireClass ) *ClaireType  { 
-    // procedure body with s = type 
-var Result *ClaireType  
+    // procedure body with s = type
+    var Result *ClaireType  
     { var l1 *ClaireList   = x.Ancestors
       { var n1 int  = l1.Length()
         { var l2 *ClaireList   = y.Ancestors
@@ -2142,21 +1964,17 @@ func E_join_class (x EID,y EID) EID {
 // for lists
 /* {1} The go function for: ^(x:list,y:list) [status=0] */
 func F__exp_list (x *ClaireList ,y *ClaireList ) *ClaireList  { 
-    // procedure body with s = list 
-var Result *ClaireList  
+    // procedure body with s = list
+    var Result *ClaireList  
     { var n int  = x.Length()
       { var r *ClaireList   = ToType(CEMPTY.Id()).EmptyList()
-        _ = r
         if (n == y.Length()) { 
           { var i int  = 1
             { var g0193 int  = n
-              _ = g0193
               for (i <= g0193) { 
-                /* While stat, v:"Result" loop:false */
                 { var z *ClaireTypeExpression   = ToTypeExpression(OBJ(F_CALL(ToProperty(C_glb.Id()),ARGS(x.At(i-1).ToEID(),y.At(i-1).ToEID()))))
-                  _ = z
                   if (Equal(z.Id(),CEMPTY.Id()) != CTRUE) { 
-                    r = r.AddFast(z.Id())/*t=any,s=list*/
+                    r = r.AddFast(z.Id())
                     } else {
                     r = CNIL
                     
@@ -2164,7 +1982,6 @@ var Result *ClaireList
                     } 
                   } 
                 i = (i+1)
-                /* try?:false, v2:"v_while7" loop will be:tuple("Result", void) */
                 } 
               } 
             } 
@@ -2181,10 +1998,9 @@ func E__exp_list (x EID,y EID) EID {
 // a combined union
 /* {1} The go function for: Uall(l:list) [status=0] */
 func F_Uall_list (l *ClaireList ) *ClaireType  { 
-    // procedure body with s = type 
-var Result *ClaireType  
+    // procedure body with s = type
+    var Result *ClaireType  
     { var rep *ClaireSet   = CEMPTY
-      _ = rep
       { 
         var x *ClaireAny  
         _ = x
@@ -2221,14 +2037,12 @@ func E__inf_equalt_type (s EID,y EID) EID {
 // default order for types
 /* {1} The go function for: <=(x:type_expression,y:type_expression) [status=1] */
 func F__inf_equal_type_expression (x *ClaireTypeExpression ,y *ClaireTypeExpression ) EID { 
+    // eid body s = boolean
     var Result EID 
     if (C_set.Id() == x.Isa.Id()) { 
       { var g0194 *ClaireSet   = ToSet(x.Id())
-        _ = g0194
         { var arg_1 *ClaireAny  
-          _ = arg_1
           var try_2 EID 
-          /*g_try(v2:"try_2",loop:false) */
           { 
             var z *ClaireAny  
             _ = z
@@ -2239,23 +2053,17 @@ func F__inf_equal_type_expression (x *ClaireTypeExpression ,y *ClaireTypeExpress
               z = z_support.At(i_it)
               var loop_3 EID 
               _ = loop_3
-              /*g_try(v2:"loop_3",loop:tuple("try_2", EID)) */
               var g0199I *ClaireBoolean  
               var try_4 EID 
-              /*g_try(v2:"try_4",loop:false) */
               { var arg_5 *ClaireBoolean  
-                _ = arg_5
                 var try_6 EID 
-                /*g_try(v2:"try_6",loop:false) */
                 try_6 = F_BELONG(z,y.Id())
-                /* ERROR PROTECTION INSERTED (arg_5-try_4) */
                 if ErrorIn(try_6) {try_4 = try_6
                 } else {
                 arg_5 = ToBoolean(OBJ(try_6))
                 try_4 = EID{arg_5.Not.Id(),0}
                 }
                 } 
-              /* ERROR PROTECTION INSERTED (g0199I-loop_3) */
               if ErrorIn(try_4) {loop_3 = try_4
               } else {
               g0199I = ToBoolean(OBJ(try_4))
@@ -2266,14 +2074,12 @@ func F__inf_equal_type_expression (x *ClaireTypeExpression ,y *ClaireTypeExpress
                 loop_3 = EID{CFALSE.Id(),0}
                 } 
               }
-              /* ERROR PROTECTION INSERTED (loop_3-try_2) */
               if ErrorIn(loop_3) {try_2 = loop_3
               break
               } else {
               }
               } 
             } 
-          /* ERROR PROTECTION INSERTED (arg_1-Result) */
           if ErrorIn(try_2) {Result = try_2
           } else {
           arg_1 = ANY(try_2)
@@ -2285,12 +2091,10 @@ func F__inf_equal_type_expression (x *ClaireTypeExpression ,y *ClaireTypeExpress
       { var g0195 *ClaireType   = ToType(x.Id())
         if (y.Isa.IsIn(C_type) == CTRUE) { 
           { var g0196 *ClaireType   = ToType(y.Id())
-            _ = g0196
             Result = EID{g0195.Included(g0196).Id(),0}
             } 
           } else {
           { var z *ClaireAny   = g0195.Id()
-            _ = z
             Result = F_CALL(ToProperty(C_less_ask.Id()),ARGS(z.ToEID(),EID{y.Id(),0}))
             } 
           } 
@@ -2334,11 +2138,10 @@ func E_less_ask_type_expression (x EID,y EID) EID {
 // the type x.This is much simpler in v3.0
 /* {1} The go function for: member(x:type) [status=0] */
 func F_member_type (x *ClaireType ) *ClaireType  { 
-    // procedure body with s = type 
-var Result *ClaireType  
+    // procedure body with s = type
+    var Result *ClaireType  
     if (C_class.Id() == x.Isa.Id()) { 
       { var g0200 *ClaireClass   = ToClass(x.Id())
-        _ = g0200
         if (g0200.Id() == C_Interval.Id()) { 
           Result = ToType(C_integer.Id())
           } else {
@@ -2353,24 +2156,19 @@ var Result *ClaireType
       Result = ToType(CEMPTY.Id())
       }  else if (x.Isa.IsIn(C_Param) == CTRUE) { 
       { var g0203 *ClaireParam   = To_Param(x.Id())
-        _ = g0203
         Result = F_member_type(g0203.At(C_of))
         } 
       }  else if (C_tuple.Id() == x.Isa.Id()) { 
       { var g0204 *ClaireTuple   = ToTuple(x.Id())
-        _ = g0204
         Result = F_Uall_list(ToList(g0204.Id()))
         } 
       }  else if (x.Isa.IsIn(C_subtype) == CTRUE) { 
       { var g0205 *ClaireSubtype   = ToSubtype(x.Id())
-        _ = g0205
         Result = g0205.T1
         } 
       }  else if (C_set.Id() == x.Isa.Id()) { 
       { var g0206 *ClaireSet   = ToSet(x.Id())
-        _ = g0206
         { var arg_1 *ClaireList  
-          _ = arg_1
           { 
             var v_list5 *ClaireSet  
             var y *ClaireAny  
@@ -2381,12 +2179,10 @@ var Result *ClaireType
               y = v_list5.At(CLcount)
               if (y.Isa.IsIn(C_list) == CTRUE) { 
                 { var g0207 *ClaireList   = ToList(y)
-                  _ = g0207
                   v_local5 = g0207.Set_I().Id()
                   } 
                 }  else if (y.Isa.IsIn(C_type) == CTRUE) { 
                 { var g0208 *ClaireType   = ToType(y)
-                  _ = g0208
                   v_local5 = g0208.Id()
                   } 
                 } else {
@@ -2411,8 +2207,8 @@ func E_member_type (x EID) EID {
 // dumb code because it is used early in the bootstrap
 /* {1} The go function for: of_extract(x:type) [status=0] */
 func F_of_extract_type (x *ClaireType ) *ClaireType  { 
-    // procedure body with s = type 
-var Result *ClaireType  
+    // procedure body with s = type
+    var Result *ClaireType  
     { var c *ClaireClass   = x.Isa
       if (c.Id() == C_subtype.Id()) { 
         Result = ToSubtype(x.Id()).T1
@@ -2421,12 +2217,10 @@ var Result *ClaireType
           { var y *ClaireType   = ToType(To_Param(x.Id()).Args.At(1-1))
             if (C_set.Id() == y.Isa.Id()) { 
               { var g0211 *ClaireSet   = ToSet(y.Id())
-                _ = g0211
                 Result = ToType(g0211.List_I().At(1-1))
                 } 
               }  else if (y.Isa.IsIn(C_subtype) == CTRUE) { 
               { var g0212 *ClaireSubtype   = ToSubtype(y.Id())
-                _ = g0212
                 Result = g0212.T1
                 } 
               } else {
@@ -2449,11 +2243,10 @@ func E_of_extract_type (x EID) EID {
 // useful type functions for the compiler
 /* {1} The go function for: unique?(x:type) [status=0] */
 func F_unique_ask_type (x *ClaireType ) *ClaireBoolean  { 
-    // procedure body with s = boolean 
-var Result *ClaireBoolean  
+    // procedure body with s = boolean
+    var Result *ClaireBoolean  
     if (C_set.Id() == x.Isa.Id()) { 
       { var g0214 *ClaireSet   = ToSet(x.Id())
-        _ = g0214
         Result = Equal(MakeInteger(g0214.Size()).Id(),MakeInteger(1).Id())
         } 
       }  else if (C_class.Id() == x.Isa.Id()) { 
@@ -2472,24 +2265,19 @@ func E_unique_ask_type (x EID) EID {
 // returns the unique element of the type
 /* {1} The go function for: the(x:type) [status=1] */
 func F_the_type (x *ClaireType ) EID { 
+    // eid body s = any
     var Result EID 
     { var arg_1 *ClaireList  
-      _ = arg_1
       var try_2 EID 
-      /*g_try(v2:"try_2",loop:false) */
       { var arg_3 *ClaireAny  
-        _ = arg_3
         var try_4 EID 
-        /*g_try(v2:"try_4",loop:false) */
         try_4 = F_CALL(C_set_I,ARGS(EID{x.Id(),0}))
-        /* ERROR PROTECTION INSERTED (arg_3-try_2) */
         if ErrorIn(try_4) {try_2 = try_4
         } else {
         arg_3 = ANY(try_4)
         try_2 = EID{ToSet(arg_3).List_I().Id(),0}
         }
         } 
-      /* ERROR PROTECTION INSERTED (arg_1-Result) */
       if ErrorIn(try_2) {Result = try_2
       } else {
       arg_1 = ToList(OBJ(try_2))
@@ -2506,10 +2294,9 @@ func E_the_type (x EID) EID {
 // v0.01: should not use set[0 .. 29] => burden on caller is too heavy
 /* {1} The go function for: integer!(s:set[integer]) [status=1] */
 func F_integer_I_set (s *ClaireSet ) EID { 
+    // eid body s = integer
     var Result EID 
     { var n int  = 0
-      _ = n
-      /*g_try(v2:"Result",loop:true) */
       { 
         var y int 
         _ = y
@@ -2522,24 +2309,18 @@ func F_integer_I_set (s *ClaireSet ) EID {
           y = ToInteger(y_iter).Value
           var loop_1 EID 
           _ = loop_1
-          /*g_try(v2:"loop_1",loop:tuple("Result", EID)) */
           if ((y >= 0) && 
               (y <= 29)) { 
             var try_2 EID 
-            /*g_try(v2:"try_2",loop:false) */
             { var arg_3 int 
-              _ = arg_3
               var try_4 EID 
-              /*g_try(v2:"try_4",loop:false) */
               try_4 = F__exp2_integer(y)
-              /* ERROR PROTECTION INSERTED (arg_3-try_2) */
               if ErrorIn(try_4) {try_2 = try_4
               } else {
               arg_3 = INT(try_4)
               try_2 = EID{C__INT,IVAL((n+arg_3))}
               }
               } 
-            /* ERROR PROTECTION INSERTED (n-loop_1) */
             if ErrorIn(try_2) {loop_1 = try_2
             } else {
             n = INT(try_2)
@@ -2548,14 +2329,12 @@ func F_integer_I_set (s *ClaireSet ) EID {
             } else {
             loop_1 = EID{CFALSE.Id(),0}
             } 
-          /* ERROR PROTECTION INSERTED (loop_1-Result) */
           if ErrorIn(loop_1) {Result = loop_1
           break
           } else {
           }
           } 
         } 
-      /* ERROR PROTECTION INSERTED (Result-Result) */
       if !ErrorIn(Result) {
       Result = EID{C__INT,IVAL(n)}
       }
@@ -2568,19 +2347,16 @@ func E_integer_I_set (s EID) EID {
   
 /* {1} The go function for: make_set(x:integer) [status=0] */
 func F_make_set_integer (x int) *ClaireSet  { 
-    // procedure body with s = set 
-var Result *ClaireSet  
+    // procedure body with s = set
+    var Result *ClaireSet  
     { var i_out *ClaireSet   = ToType(CEMPTY.Id()).EmptySet()
       { var i int  = 0
         { var g0217 int  = 29
-          _ = g0217
           for (i <= g0217) { 
-            /* While stat, v:"Result" loop:false */
-            if (F_nth_integer(x,i) == CTRUE) { 
-              i_out.AddFast(MakeInteger(i).Id())/*t=any,s=void*/
+            if (BitVectorContains(x,i) == CTRUE) { 
+              i_out.AddFast(MakeInteger(i).Id())
               } 
             i = (i+1)
-            /* try?:false, v2:"v_while5" loop will be:tuple("Result", void) */
             } 
           } 
         } 
@@ -2595,8 +2371,8 @@ func E_make_set_integer (x EID) EID {
 // asbtract coercion of a set into an interval
 /* {1} The go function for: abstract_type(xt1:set) [status=0] */
 func F_abstract_type_set (xt1 *ClaireSet ) *ClaireType  { 
-    // procedure body with s = type 
-var Result *ClaireType  
+    // procedure body with s = type
+    var Result *ClaireType  
     { var m1 int  = 1
       { var m2 int  = 0
         { 
@@ -2637,8 +2413,8 @@ func E_abstract_type_set (xt1 EID) EID {
 // abstract interpretation of integer arithmetique
 /* {1} The go function for: abstract_type(p:operation,xt1:type,xt2:type) [status=0] */
 func F_abstract_type_operation (p *ClaireOperation ,xt1 *ClaireType ,xt2 *ClaireType ) *ClaireType  { 
-    // procedure body with s = type 
-var Result *ClaireType  
+    // procedure body with s = type
+    var Result *ClaireType  
     if (C_set.Id() == xt1.Isa.Id()) { 
       { var g0220 *ClaireSet   = ToSet(xt1.Id())
         if (Equal(g0220.Id(),CEMPTY.Id()) != CTRUE) { 
@@ -2739,15 +2515,13 @@ func E_first_member_type_type (x EID,y EID) EID {
 // nth@bag (list / set) is now in Kernel (CLAIRE4)
 /* {1} The go function for: nth_arg_type(x:type,y:type) [status=1] */
 func F_Core_nth_arg_type_type (x *ClaireType ,y *ClaireType ) EID { 
+    // eid body s = type
     var Result EID 
     if ((C_tuple.Id() == x.Isa.Id()) && 
         (F_unique_ask_type(y) == CTRUE)) { 
       { var arg_1 *ClaireAny  
-        _ = arg_1
         var try_2 EID 
-        /*g_try(v2:"try_2",loop:false) */
         try_2 = F_the_type(y)
-        /* ERROR PROTECTION INSERTED (arg_1-Result) */
         if ErrorIn(try_2) {Result = try_2
         } else {
         arg_1 = ANY(try_2)
@@ -2787,6 +2561,7 @@ func E_nth_get_array_type (a EID,n EID) EID {
 // managed by cross-compiler ?
 /* {1} The go function for: nth(self:array,x:integer) [status=1] */
 func F_nth_array (self *ClaireList ,x int) EID { 
+    // eid body s = any
     var Result EID 
     if ((x > 0) && 
         (x <= self.Length())) { 
@@ -2816,11 +2591,8 @@ func F_make_array_integer_type (i *ClaireType ,t *ClaireType ,v *ClaireType ) EI
     var Result EID 
     if (F_unique_ask_type(t) == CTRUE) { 
       { var arg_1 *ClaireAny  
-        _ = arg_1
         var try_2 EID 
-        /*g_try(v2:"try_2",loop:false) */
         try_2 = F_the_type(t)
-        /* ERROR PROTECTION INSERTED (arg_1-Result) */
         if ErrorIn(try_2) {Result = try_2
         } else {
         arg_1 = ANY(try_2)
@@ -2851,11 +2623,8 @@ func F_make_list_integer2_type (n *ClaireType ,t *ClaireType ,x *ClaireType ) EI
     var Result EID 
     if (F_unique_ask_type(t) == CTRUE) { 
       { var arg_1 *ClaireAny  
-        _ = arg_1
         var try_2 EID 
-        /*g_try(v2:"try_2",loop:false) */
         try_2 = F_the_type(t)
-        /* ERROR PROTECTION INSERTED (arg_1-Result) */
         if ErrorIn(try_2) {Result = try_2
         } else {
         arg_1 = ANY(try_2)
@@ -2960,14 +2729,14 @@ func E_list_I_set_type (l EID) EID {
     return F_list_I_set_type(ToType(OBJ(l)))} 
   
 // get the type from class if a constant
-/* {1} The go function for: thing_type_class(x:type) [status=0] */
-func F_Core_thing_type_class_type (x *ClaireType ) *ClaireType  { 
+/* {1} The go function for: thing_type_class(x:type,y:type) [status=0] */
+func F_Core_thing_type_class_type2 (x *ClaireType ,y *ClaireType ) *ClaireType  { 
     return  F_glb_class(C_thing,F_member_type(x))
     } 
   
 // The EID go function for: thing_type_class @ type (throw: false) 
-func E_Core_thing_type_class_type (x EID) EID { 
-    return EID{F_Core_thing_type_class_type(ToType(OBJ(x)) ).Id(),0}} 
+func E_Core_thing_type_class_type2 (x EID,y EID) EID { 
+    return EID{F_Core_thing_type_class_type2(ToType(OBJ(x)),ToType(OBJ(y)) ).Id(),0}} 
   
 /* {1} The go function for: object_type_class(x:type) [status=0] */
 func F_Core_object_type_class_type (x *ClaireType ) *ClaireType  { 

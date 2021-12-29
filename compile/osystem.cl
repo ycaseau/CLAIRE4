@@ -351,7 +351,7 @@ Compile/NoErrorOptimize :: list<any>(nth @ list, nth= @ list, nth @ tuple, nth @
 // these two variabler are used for cross-compiling, when the status changes from the existing(compiled) version to the
 // new one being compiled
 Compile/ForceThrow :: list<method>()
-Compile/ForceNotThrow :: list<method> 
+Compile/ForceNotThrow :: list<method>()  
 
 
 // NEW in claire 4, because error handling is mananaged by the compiler

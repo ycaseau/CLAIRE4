@@ -31,7 +31,7 @@ claire/-- :: operation(precedence = precedence(..))
       (set true,
        list not({ t in self | not(finite?(t))}),
        class let n := self.open in 
-              ((n = open()) | (n = final()) | (n = closed()) |
+              ((n = open()) | (n = final()) | (n = close()) |
                     (n = abstract() &  forall(c in self.subclass | finite?(c)))),
        any false) ]
 
@@ -247,7 +247,7 @@ set!(x:Union) : set -> (set!(x.t1) /+ set!(x.t2))
 
 size(x:Union) : integer
   ->  (if (x.t1 % Interval | x.t1 % set)  (size(x.t1) + size(x.t2))
-       else length(set!(x)))
+       else size(set!(x)))
 
 // interval
 set!(x:Interval) : set
@@ -259,7 +259,7 @@ size(self:Interval) : integer
 // param
 set!(x:Param) : set
   -> { y in set!(x.arg) | y % x}
-size(x:Param) : integer -> length(set!(x))
+size(x:Param) : integer -> size(set!(x))
 
 // subtype
 set!(x:subtype) : set
@@ -605,7 +605,7 @@ list!(l:set<X>) : type[(if (X = any) list else list<X>)]
   -> function!(list_I_set)
 
  // get the type from class if a constant
- thing_type_class(x:type) : type ->  (thing glb member(x))
+ thing_type_class(x:type,y:type) : type ->  (thing glb member(x))
  object_type_class(x:type) : type ->  (object glb member(x))
 
 // new in v3.0.60 : second-order type for copy

@@ -256,7 +256,7 @@ instanced(c:class) : any
 // declares a class as an abtract class (without instances)
 abstract(c:class) : any
  -> let n := c.open in
-       (if (n = closed()) error("[125] closed classes cannot be abstract")
+       (if (n = close()) error("[125] closed classes cannot be abstract")
         else if (length(c.instances) != 0)
           error("[125] instanced classes cannot be abstract")
         else (write(open, c, abstract())),
@@ -266,8 +266,8 @@ abstract(c:class) : any
 final(c:class) : any
  -> let n := c.open in
        (if (n = default()) error("[125] ephemetral classes cannot be final")
-        else if (length(c.subclass) != 0)
-          error("[125] a class with wsubclasses cannot be final")
+        else if (size(c.subclass) != 0)
+          error("[125] a class with subclasses cannot be final")
         else (write(open, c, final())),
         c)
 
@@ -505,13 +505,13 @@ nth_write(self:list,i:integer,v:any) : any
 
 // CLAIRE 4 duplication: define min/max for sets first
 min(f:method,self:set) : type[member(self)]     // v3.1.08
- -> (if (length(self) != 0)
+ -> (if (size(self) != 0)
         let x:any := unknown in
                  (for y in self (if (x = unknown | funcall(f, y, x) as boolean) x := y), x)
      else error("[183] min of empty set is undefined"))
 
 max(f:method,self:set) : type[member(self)]     // v3.1.08
- -> (if (length(self) != 0)
+ -> (if (size(self) != 0)
         let x:any := unknown in
                   (for y in self (if (x = unknown | not(funcall(f, y, x))) x := y), x)
      else error("[183] max of empty set is undefined"))

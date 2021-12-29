@@ -5,8 +5,9 @@
 *output* :: "/Users/ycaseau/claire/v4.0/go4/src"
 *meta* :: "/Users/ycaseau/Dropbox/src/clairev4.03/src/meta"            // source files on dropbox (v2)
 *compile* :: "/Users/ycaseau/Dropbox/src/clairev4.03/src/compile"      // source files on dropbox (v2)
-*bsrc* :: "/Users/ycaseau/claire/v4.0/go1/bsrc"
-*tsrc* :: "/Users/ycaseau/claire/v4.0/go1/test"
+*bsrc* :: "/Users/ycaseau/claire/v4.0/test/nonreg"
+*tsrc* :: "/Users/ycaseau/claire/v4.0/test/perf"
+*rsrc* :: "/Users/ycaseau/claire/v4.0/test/rules"
 
 // these are the global variables expected by the compiler
 RELEASE:float :: 0.04    // December 24th, 2021 
@@ -140,6 +141,24 @@ bu16 :: module( uses = list(Reader), source = *bsrc*,
 // ***************************************************************************
 // *    Part 4: Simple rule examples                                              *
 // ***************************************************************************
+
+// dinner
+mDinner :: module( uses = list(Reader), source = *rsrc*,
+                    made_of = list("dinner"))
+
+
+// filter
+mFilter :: module( uses = list(Reader), source = *rsrc*,
+                   made_of = list("filter"))
+
+// monkey
+mMonkey :: module( uses = list(Reader), source = *rsrc*,
+                   made_of = list("monkey"))
+
+// zebra
+mZebra :: module( uses = list(Reader), source = *rsrc*,
+                  made_of = list("zebra"))
+
 
 // these are the old non-regression tests files (refreshed in July 2021)
 (printf("Done. \n"))

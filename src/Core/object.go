@@ -1,5 +1,5 @@
 /***** CLAIRE Compilation of file /Users/ycaseau/Dropbox/src/clairev4.03/src/meta/object.cl 
-         [version 4.0.03 / safety 5] Monday 12-27-2021 10:35:23 *****/
+         [version 4.0.03 / safety 5] Wednesday 12-29-2021 08:34:14 *****/
 
 package Core
 import (_ "fmt"
@@ -27,13 +27,11 @@ import (_ "fmt"
 // release() should produce a version number
 /* {1} The go function for: release(_CL_obj:void) [status=1] */
 func F_release_void () EID { 
+    // eid body s = any
     var Result EID 
     { var arg_1 *ClaireString  
-      _ = arg_1
       var try_2 EID 
-      /*g_try(v2:"try_2",loop:false) */
       try_2 = F_string_I_float(ClEnv.Version)
-      /* ERROR PROTECTION INSERTED (arg_1-Result) */
       if ErrorIn(try_2) {Result = try_2
       } else {
       arg_1 = ToString(OBJ(try_2))
@@ -72,15 +70,12 @@ func E_about_void (_CL_obj EID) EID {
 // create the list of arguments if needed : allocate on the stack
 /* {1} The go function for: mClaire/get_args(i:integer) [status=0] */
 func F_get_args_integer (i int) *ClaireList  { 
-    // procedure body with s = list 
-var Result *ClaireList  
+    // procedure body with s = list
+    var Result *ClaireList  
     { var liste *ClaireList   = ToType(C_any.Id()).EmptyList()
-      _ = liste
       for (i < ClEnv.Index) { 
-        /* While stat, v:"Result" loop:false */
-        liste = liste.AddFast(ANY(ClEnv.EvalStack[i]))/*t=any,s=list*/
+        liste = liste.AddFast(ANY(ClEnv.EvalStack[i]))
         i = (i+1)
-        /* try?:false, v2:"v_while3" loop will be:tuple("Result", void) */
         } 
       Result = liste
       } 
@@ -93,9 +88,9 @@ func E_get_args_integer (i EID) EID {
 // a simple method for a direct call with no argument
 /* {1} The go function for: funcall(self:method,x:any) [status=1] */
 func F_funcall_method1 (self *ClaireMethod ,x *ClaireAny ) EID { 
+    // eid body s = any
     var Result EID 
     { var start int  = ClEnv.Index
-      _ = start
       ClEnv.Push(x.ToEID())
       Result = F_execute_method(self,start,CFALSE)
       } 
@@ -108,9 +103,9 @@ func E_funcall_method1 (self EID,x EID) EID {
 // this is a simple method for calling directly a method with one argument
 /* {1} The go function for: funcall(self:method,x:any,y:any) [status=1] */
 func F_funcall_method2 (self *ClaireMethod ,x *ClaireAny ,y *ClaireAny ) EID { 
+    // eid body s = any
     var Result EID 
     { var start int  = ClEnv.Index
-      _ = start
       ClEnv.Push(x.ToEID())
       ClEnv.Push(y.ToEID())
       Result = F_execute_method(self,start,CFALSE)
@@ -124,9 +119,9 @@ func E_funcall_method2 (self EID,x EID,y EID) EID {
 // this is a simple method for calling directly a method with two arguments
 /* {1} The go function for: funcall(self:method,x:any,y:any,z:any) [status=1] */
 func F_funcall_method3 (self *ClaireMethod ,x *ClaireAny ,y *ClaireAny ,z *ClaireAny ) EID { 
+    // eid body s = any
     var Result EID 
     { var start int  = ClEnv.Index
-      _ = start
       ClEnv.Push(x.ToEID())
       ClEnv.Push(y.ToEID())
       ClEnv.Push(z.ToEID())
@@ -144,6 +139,7 @@ func E_funcall_method3 (self EID,x EID,y EID,z EID) EID {
 // how to apply a property to a list  (the function case is handled in Kernel - primitive go code)
 /* {1} The go function for: call(p:property,l:listargs) [status=1] */
 func F_call_property (p *ClaireProperty ,l *ClaireList ) EID { 
+    // eid body s = any
     var Result EID 
     Result = F_apply_property(p,ToList(l.Id()))
     return Result} 
@@ -154,6 +150,7 @@ func E_call_property (p EID,l EID) EID {
   
 /* {1} The go function for: apply(p:property,l:list) [status=1] */
 func F_apply_property (p *ClaireProperty ,l *ClaireList ) EID { 
+    // eid body s = any
     var Result EID 
     { var start int  = ClEnv.Index
       { 
@@ -177,9 +174,9 @@ func E_apply_property (p EID,l EID) EID {
   
 /* {1} The go function for: apply(m:method,l:list) [status=1] */
 func F_apply_method (m *ClaireMethod ,l *ClaireList ) EID { 
+    // eid body s = any
     var Result EID 
     { var start int  = ClEnv.Index
-      _ = start
       { 
         var x *ClaireAny  
         _ = x
@@ -204,67 +201,51 @@ func E_apply_method (m EID,l EID) EID {
 // this method also does the tracing and the steppping
 /* {1} The go function for: push_debug(prop:property,arity:integer,start:integer) [status=1] */
 func F_push_debug_property (prop *ClaireProperty ,arity int,start int) EID { 
+    // eid body s = void
     var Result EID 
     { var i int  = ClEnv.Index
       { var n int  = ClEnv.Trace_I
-        /*g_try(v2:"Result",loop:true) */
         if ((n > 0) && 
             ((prop.Trace_I+ClEnv.Verbose) > 4)) { 
           { var p *ClairePort   = ClEnv.Ctrace.UseAsOutput()
-            _ = p
             ClEnv.Trace_I = 0
-            /*integer->integer*//*g_try(v2:"Result",loop:true) */
             F_tr_indent_boolean(CFALSE,n)
             PRINC(" ")
-            /*g_try(v2:"Result",loop:true) */
             Result = F_print_any(prop.Id())
-            /* ERROR PROTECTION INSERTED (Result-Result) */
             if !ErrorIn(Result) {
             PRINC("(")
-            /*g_try(v2:"Result",loop:true) */
             Result = F_CALL(C_print,ARGS(ClEnv.EvalStack[start]))
-            /* ERROR PROTECTION INSERTED (Result-Result) */
             if !ErrorIn(Result) {
             PRINC("")
             Result = EVOID
             }}
-            /* ERROR PROTECTION INSERTED (Result-Result) */
             if !ErrorIn(Result) {
-            /*g_try(v2:"Result",loop:true) */
             { var j int  = (start+1)
               Result= EID{CFALSE.Id(),0}
               for (j < (start+arity)) { 
-                /* While stat, v:"Result" loop:true */
                 var loop_1 EID 
                 _ = loop_1
                 { 
-                /*g_try(v2:"loop_1",loop:tuple("Result", EID)) */
                 PRINC(",")
-                /*g_try(v2:"loop_1",loop:tuple("Result", EID)) */
                 loop_1 = F_CALL(C_print,ARGS(ClEnv.EvalStack[j]))
-                /* ERROR PROTECTION INSERTED (loop_1-loop_1) */
                 if ErrorIn(loop_1) {Result = loop_1
                 break
                 } else {
                 PRINC("")
                 loop_1 = EVOID
                 }
-                /* ERROR PROTECTION INSERTED (loop_1-loop_1) */
                 if ErrorIn(loop_1) {Result = loop_1
                 break
                 } else {
                 j = (j+1)
                 }
-                /* try?:false, v2:"v_while7" loop will be:tuple("Result", EID) */
                 } 
               }
               } 
-            /* ERROR PROTECTION INSERTED (Result-Result) */
             if !ErrorIn(Result) {
-            /*g_try(v2:"Result",loop:true) */
             if (ClEnv.CountCall >= 0) { 
               ClEnv.CountCall = (ClEnv.CountCall+1)
-              /*integer->integer*/PRINC(" [")
+              PRINC(" [")
               F_princ_integer(ClEnv.CountCall)
               PRINC("]")
               if (ClEnv.CountCall == ClEnv.CountLevel) { 
@@ -281,7 +262,7 @@ func F_push_debug_property (prop *ClaireProperty ,arity int,start int) EID {
                     va_arg1 = ClEnv
                     va_arg2 = ToInteger(ClEnv.CountTrigger).Value
                     va_arg1.Verbose = va_arg2
-                    /*integer->integer*/Result = EID{C__INT,IVAL(va_arg2)}
+                    Result = EID{C__INT,IVAL(va_arg2)}
                     } 
                   } 
                 } else {
@@ -290,38 +271,28 @@ func F_push_debug_property (prop *ClaireProperty ,arity int,start int) EID {
               } else {
               Result = EID{CFALSE.Id(),0}
               } 
-            /* ERROR PROTECTION INSERTED (Result-Result) */
             if !ErrorIn(Result) {
             PRINC(")\n")
             ClEnv.Trace_I = (n+1)
-            /*integer->integer*/Result = p.UseAsOutput().ToEID()
+            Result = p.UseAsOutput().ToEID()
             }}}
             } 
           } else {
           Result = EID{CFALSE.Id(),0}
           } 
-        /* ERROR PROTECTION INSERTED (Result-Result) */
         if !ErrorIn(Result) {
-        /*g_try(v2:"Result",loop:true) */
         if (F_get_table(C_Core_StopProperty,prop.Id()) != CNULL) { 
           var g0060I *ClaireBoolean  
           var try_2 EID 
-          /*g_try(v2:"try_2",loop:false) */
           { 
-            /* Or stat: v="try_2", loop=false */
             var v_or5 *ClaireBoolean  
             
-            /* Or stat: try = @ any(nth @ list<type_expression>(table, any)(StopProperty,prop),nil) with try:false, v="try_2", loop=false */
             v_or5 = Equal(F_get_table(C_Core_StopProperty,prop.Id()),CNIL.Id())
             if (v_or5 == CTRUE) {try_2 = EID{CTRUE.Id(),0}
             } else { 
-              /* Or stat: try boolean! @ any(for l2:any in (<nth @ list<type_expression>(table, any)(StopProperty,prop):list>) (if (not @ any(let j:integer := 1,g0059:integer := length(l2) in while (<= @ integer(j,g0059)) (if (not @ any(((<= @ integer(+ @ list<type_expression>(integer, integer)(j,start),i)) & (= @ any(l2[j],mClaire/get_stack((- @ list<type_expression>(integer, integer)(+ @ list<type_expression>(integer, integer)(start,j),1)))))))) break(true) else false, j := (+ @ list<type_expression>(integer, integer)(j,1))))) break(true) else false)) with try:true, v="try_2", loop=false */
               var try_3 EID 
-              /*g_try(v2:"try_3",loop:false) */
               { var arg_4 *ClaireAny  
-                _ = arg_4
                 var try_5 EID 
-                /*g_try(v2:"try_5",loop:false) */
                 { 
                   var l2 *ClaireAny  
                   _ = l2
@@ -333,31 +304,21 @@ func F_push_debug_property (prop *ClaireProperty ,arity int,start int) EID {
                     l2 = l2_support.At(i_it)
                     var loop_6 EID 
                     _ = loop_6
-                    /*g_try(v2:"loop_6",loop:tuple("try_5", EID)) */
                     var g0061I *ClaireBoolean  
                     var try_7 EID 
-                    /*g_try(v2:"try_7",loop:false) */
                     { var arg_8 *ClaireAny  
-                      _ = arg_8
                       var try_9 EID 
-                      /*g_try(v2:"try_9",loop:false) */
                       { var j int  = 1
                         { var g0059 int  = INT(F_CALL(C_length,ARGS(l2.ToEID())))
-                          _ = g0059
                           try_9= EID{CFALSE.Id(),0}
                           for (j <= g0059) { 
-                            /* While stat, v:"try_9" loop:false */
                             var loop_10 EID 
                             _ = loop_10
                             { 
-                            /*g_try(v2:"loop_10",loop:tuple("try_9", EID)) */
                             var g0062I *ClaireBoolean  
                             var try_11 EID 
-                            /*g_try(v2:"try_11",loop:false) */
                             { var arg_12 *ClaireBoolean  
-                              _ = arg_12
                               var try_13 EID 
-                              /*g_try(v2:"try_13",loop:false) */
                               { 
                                 var v_and15 *ClaireBoolean  
                                 
@@ -365,20 +326,15 @@ func F_push_debug_property (prop *ClaireProperty ,arity int,start int) EID {
                                 if (v_and15 == CFALSE) {try_13 = EID{CFALSE.Id(),0}
                                 } else { 
                                   var try_14 EID 
-                                  /*g_try(v2:"try_14",loop:false) */
                                   { var arg_15 *ClaireAny  
-                                    _ = arg_15
                                     var try_16 EID 
-                                    /*g_try(v2:"try_16",loop:false) */
                                     try_16 = F_CALL(C_nth,ARGS(l2.ToEID(),EID{C__INT,IVAL(j)}))
-                                    /* ERROR PROTECTION INSERTED (arg_15-try_14) */
                                     if ErrorIn(try_16) {try_14 = try_16
                                     } else {
                                     arg_15 = ANY(try_16)
                                     try_14 = EID{Equal(arg_15,ANY(ClEnv.EvalStack[((start+j)-1)])).Id(),0}
                                     }
                                     } 
-                                  /* ERROR PROTECTION INSERTED (v_and15-try_13) */
                                   if ErrorIn(try_14) {try_13 = try_14
                                   } else {
                                   v_and15 = ToBoolean(OBJ(try_14))
@@ -388,14 +344,12 @@ func F_push_debug_property (prop *ClaireProperty ,arity int,start int) EID {
                                   } 
                                 }
                                 } 
-                              /* ERROR PROTECTION INSERTED (arg_12-try_11) */
                               if ErrorIn(try_13) {try_11 = try_13
                               } else {
                               arg_12 = ToBoolean(OBJ(try_13))
                               try_11 = EID{arg_12.Not.Id(),0}
                               }
                               } 
-                            /* ERROR PROTECTION INSERTED (g0062I-loop_10) */
                             if ErrorIn(try_11) {loop_10 = try_11
                             } else {
                             g0062I = ToBoolean(OBJ(try_11))
@@ -406,25 +360,21 @@ func F_push_debug_property (prop *ClaireProperty ,arity int,start int) EID {
                               loop_10 = EID{CFALSE.Id(),0}
                               } 
                             }
-                            /* ERROR PROTECTION INSERTED (loop_10-loop_10) */
                             if ErrorIn(loop_10) {try_9 = loop_10
                             break
                             } else {
                             j = (j+1)
                             }
-                            /* try?:false, v2:"v_while13" loop will be:tuple("try_9", EID) */
                             } 
                           }
                           } 
                         } 
-                      /* ERROR PROTECTION INSERTED (arg_8-try_7) */
                       if ErrorIn(try_9) {try_7 = try_9
                       } else {
                       arg_8 = ANY(try_9)
                       try_7 = EID{F_not_any(arg_8).Id(),0}
                       }
                       } 
-                    /* ERROR PROTECTION INSERTED (g0061I-loop_6) */
                     if ErrorIn(try_7) {loop_6 = try_7
                     } else {
                     g0061I = ToBoolean(OBJ(try_7))
@@ -435,21 +385,18 @@ func F_push_debug_property (prop *ClaireProperty ,arity int,start int) EID {
                       loop_6 = EID{CFALSE.Id(),0}
                       } 
                     }
-                    /* ERROR PROTECTION INSERTED (loop_6-try_5) */
                     if ErrorIn(loop_6) {try_5 = loop_6
                     break
                     } else {
                     }
                     } 
                   } 
-                /* ERROR PROTECTION INSERTED (arg_4-try_3) */
                 if ErrorIn(try_5) {try_3 = try_5
                 } else {
                 arg_4 = ANY(try_5)
                 try_3 = EID{F_boolean_I_any(arg_4).Id(),0}
                 }
                 } 
-              /* ERROR PROTECTION INSERTED (v_or5-try_2) */
               if ErrorIn(try_3) {try_2 = try_3
               } else {
               v_or5 = ToBoolean(OBJ(try_3))
@@ -459,7 +406,6 @@ func F_push_debug_property (prop *ClaireProperty ,arity int,start int) EID {
               } 
             }
             } 
-          /* ERROR PROTECTION INSERTED (g0060I-Result) */
           if ErrorIn(try_2) {Result = try_2
           } else {
           g0060I = ToBoolean(OBJ(try_2))
@@ -472,7 +418,6 @@ func F_push_debug_property (prop *ClaireProperty ,arity int,start int) EID {
           } else {
           Result = EID{CFALSE.Id(),0}
           } 
-        /* ERROR PROTECTION INSERTED (Result-Result) */
         if !ErrorIn(Result) {
         ClEnv.Push(EID{C__INT,IVAL(ClEnv.Debug_I)})
         ClEnv.Push(EID{prop.Id(),0})
@@ -484,7 +429,7 @@ func F_push_debug_property (prop *ClaireProperty ,arity int,start int) EID {
           va_arg1 = ClEnv
           va_arg2 = i
           va_arg1.Debug_I = va_arg2
-          /*integer->integer*/Result = EID{C__INT,IVAL(va_arg2)}
+          Result = EID{C__INT,IVAL(va_arg2)}
           } 
         }}
         } 
@@ -499,6 +444,7 @@ func E_push_debug_property (prop EID,arity EID,start EID) EID {
 // n is 0 for interpreted code and 1 for compiled code
 /* {1} The go function for: pop_debug(self:property,n:integer,val:any) [status=1] */
 func F_pop_debug_property (self *ClaireProperty ,n int,val *ClaireAny ) EID { 
+    // eid body s = void
     var Result EID 
     { var v int  = ClEnv.Debug_I
       if (v > 0) { 
@@ -506,14 +452,11 @@ func F_pop_debug_property (self *ClaireProperty ,n int,val *ClaireAny ) EID {
           ClEnv.Index= INT(ClEnv.EvalStack[(v+3)])
           } 
         ClEnv.Debug_I = INT(ClEnv.EvalStack[ClEnv.Debug_I])
-        /*integer->integer*//*g_try(v2:"Result",loop:true) */
         if (self.IfWrite == CNULL) { 
           { var m *ClaireObject   = ClEnv.Spy_I
             if (m.Id() != CNULL) { 
               ClEnv.Spy_I = ToObject(CNULL)
-              /*object->object*//*g_try(v2:"Result",loop:true) */
               Result = F_funcall_method1(ToMethod(m.Id()),ClEnv.Id())
-              /* ERROR PROTECTION INSERTED (Result-Result) */
               if !ErrorIn(Result) {
               { 
                 var va_arg1 *ClaireEnvironment  
@@ -521,7 +464,7 @@ func F_pop_debug_property (self *ClaireProperty ,n int,val *ClaireAny ) EID {
                 va_arg1 = ClEnv
                 va_arg2 = m
                 va_arg1.Spy_I = va_arg2
-                /*object->object*/Result = EID{va_arg2.Id(),0}
+                Result = EID{va_arg2.Id(),0}
                 } 
               }
               } else {
@@ -531,27 +474,20 @@ func F_pop_debug_property (self *ClaireProperty ,n int,val *ClaireAny ) EID {
           } else {
           Result = EID{CFALSE.Id(),0}
           } 
-        /* ERROR PROTECTION INSERTED (Result-Result) */
         if !ErrorIn(Result) {
         if ((ClEnv.Trace_I > 1) && 
             ((self.Trace_I+ClEnv.Verbose) > 4)) { 
           { var i int  = ClEnv.Trace_I
             ClEnv.Trace_I = 0
-            /*integer->integer*//*g_try(v2:"Result",loop:true) */
             if ((self.Trace_I+ClEnv.Verbose) > 4) { 
               { var p *ClairePort   = ClEnv.Ctrace.UseAsOutput()
-                _ = p
-                /*g_try(v2:"Result",loop:true) */
                 F_tr_indent_boolean(CTRUE,(i-1))
                 PRINC(" ")
-                /*g_try(v2:"Result",loop:true) */
                 Result = F_CALL(C_print,ARGS(val.ToEID()))
-                /* ERROR PROTECTION INSERTED (Result-Result) */
                 if !ErrorIn(Result) {
                 PRINC("\n")
                 Result = EVOID
                 }
-                /* ERROR PROTECTION INSERTED (Result-Result) */
                 if !ErrorIn(Result) {
                 Result = p.UseAsOutput().ToEID()
                 }
@@ -559,7 +495,6 @@ func F_pop_debug_property (self *ClaireProperty ,n int,val *ClaireAny ) EID {
               } else {
               Result = EID{CFALSE.Id(),0}
               } 
-            /* ERROR PROTECTION INSERTED (Result-Result) */
             if !ErrorIn(Result) {
             { 
               var va_arg1 *ClaireEnvironment  
@@ -567,7 +502,7 @@ func F_pop_debug_property (self *ClaireProperty ,n int,val *ClaireAny ) EID {
               va_arg1 = ClEnv
               va_arg2 = (i-1)
               va_arg1.Trace_I = va_arg2
-              /*integer->integer*/Result = EID{C__INT,IVAL(va_arg2)}
+              Result = EID{C__INT,IVAL(va_arg2)}
               } 
             }
             } 
@@ -588,8 +523,8 @@ func E_pop_debug_property (self EID,n EID,val EID) EID {
 // print a nice indented mark
 /* {1} The go function for: tr_indent(return?:boolean,n:integer) [status=0] */
 func F_tr_indent_boolean (return_ask *ClaireBoolean ,n int)  { 
-    // procedure body with s = void 
-if (return_ask == CTRUE) { 
+    // procedure body with s = void
+    if (return_ask == CTRUE) { 
       PRINC("[")
       F_princ_integer(n)
       PRINC("]")
@@ -598,16 +533,12 @@ if (return_ask == CTRUE) {
       PRINC(":=")
       } 
     for (n > 9) { 
-      /* While stat, v:"Unused" loop:false */
       PRINC("=")
       n = (n-10)
-      /* try?:false, v2:"v_while2" loop will be:tuple("Unused", void) */
       } 
     for (n > 0) { 
-      /* While stat, v:"Unused" loop:false */
       PRINC(">")
       n = (n-1)
-      /* try?:false, v2:"v_while2" loop will be:tuple("Unused", void) */
       } 
     } 
   
@@ -615,6 +546,39 @@ if (return_ask == CTRUE) {
 func E_tr_indent_boolean (return_ask EID,n EID) EID { 
     F_tr_indent_boolean(ToBoolean(OBJ(return_ask)),INT(n) )
     return EVOID} 
+  
+// CLAIRE4 : because macros do not exist in go
+// #define DB_BIND(m,p,n,l) if (m.it->status == 4) {l push_debug_property(p,n,ClEnv->index - n);}
+/* {1} The go function for: db_bind(m:module,p:property,n:integer) [status=1] */
+func F_Core_db_bind_module (m *ClaireModule ,p *ClaireProperty ,n int) EID { 
+    // eid body s = void
+    var Result EID 
+    if (m.Status == 4) { 
+      Result = F_push_debug_property(p,n,(ClEnv.Index-n))
+      } else {
+      Result = EID{CFALSE.Id(),0}
+      } 
+    return Result} 
+  
+// The EID go function for: db_bind @ module (throw: true) 
+func E_Core_db_bind_module (m EID,p EID,n EID) EID { 
+    return F_Core_db_bind_module(ToModule(OBJ(m)),ToProperty(OBJ(p)),INT(n) )} 
+  
+// #define DB_UNBIND(m,p,v) if (m.it->status == 4) pop_debug_property(p,1,v)
+/* {1} The go function for: db_unbind(m:module,p:property,v:any) [status=1] */
+func F_Core_db_unbind_module (m *ClaireModule ,p *ClaireProperty ,v *ClaireAny ) EID { 
+    // eid body s = void
+    var Result EID 
+    if (m.Status == 4) { 
+      Result = F_pop_debug_property(p,1,v)
+      } else {
+      Result = EID{CFALSE.Id(),0}
+      } 
+    return Result} 
+  
+// The EID go function for: db_unbind @ module (throw: true) 
+func E_Core_db_unbind_module (m EID,p EID,v EID) EID { 
+    return F_Core_db_unbind_module(ToModule(OBJ(m)),ToProperty(OBJ(p)),ANY(v) )} 
   
 // *********************************************************************
 // *   Part 2: Tables                                                  *
@@ -649,6 +613,7 @@ func E_identical_ask_any (x EID,y EID) EID {
 // (it requires some inheritance conflict processing)
 /* {1} The go function for: put(self:property,x:object,y:any) [status=1] */
 func F_put_property2 (self *ClaireProperty ,x *ClaireObject ,y *ClaireAny ) EID { 
+    // eid body s = any
     var Result EID 
     { var s *ClaireObject   = F__at_property1(self,x.Id().Isa)
       if (C_slot.Id() == s.Isa.Id()) { 
@@ -672,6 +637,7 @@ func E_put_property2 (self EID,x EID,y EID) EID {
 // v3.2 : same but multi valued
 /* {1} The go function for: add_value(self:property,x:object,y:any) [status=1] */
 func F_add_value_property3 (self *ClaireProperty ,x *ClaireObject ,y *ClaireAny ) EID { 
+    // eid body s = void
     var Result EID 
     { var s *ClaireObject   = F__at_property1(self,x.Id().Isa)
       if (F_boolean_I_any(s.Id()).Id() != CTRUE.Id()) { 
@@ -681,7 +647,6 @@ func F_add_value_property3 (self *ClaireProperty ,x *ClaireObject ,y *ClaireAny 
         } else {
         { var n int  = ToSlot(s.Id()).Index
           { var l1 *ClaireSet   = ToSet(x.SlotGet(n,C_object))
-            _ = l1
             Result = EID{F_Core_add_value_I_property(self,
               x,
               n,
@@ -705,19 +670,17 @@ func E_add_value_property3 (self EID,x EID,y EID) EID {
 // in Claire4 there is always a default hence the unknown check has disapeared
 /* {1} The go function for: nth(a:table,x:any) [status=1] */
 func F_nth_table1 (a *ClaireTable ,x *ClaireAny ) EID { 
+    // eid body s = any
     var Result EID 
     { var p *ClaireAny   = a.Params
-      /*g_try(v2:"Result",loop:true) */
       if (a.Domain.Contains(x) != CTRUE) { 
         Result = ToException(C_general_error.Make(MakeString("[135] ~S does not belong to the domain of ~S").Id(),MakeConstantList(x,a.Id()).Id())).Close()
         } else {
         Result = EID{CFALSE.Id(),0}
         } 
-      /* ERROR PROTECTION INSERTED (Result-Result) */
       if !ErrorIn(Result) {
       if (C_integer.Id() == p.Isa.Id()) { 
         { var g0065 int  = ToInteger(p).Value
-          _ = g0065
           Result = ToList(a.Graph).At((ToInteger(x).Value-g0065)-1).ToEID()
           } 
         }  else if (p.Isa.IsIn(C_list) == CTRUE) { 
@@ -738,11 +701,8 @@ func F_nth_table1_type (a *ClaireType ,x *ClaireType ) EID {
     var Result EID 
     if (F_unique_ask_type(a) == CTRUE) { 
       { var arg_1 *ClaireAny  
-        _ = arg_1
         var try_2 EID 
-        /*g_try(v2:"try_2",loop:false) */
         try_2 = F_the_type(a)
-        /* ERROR PROTECTION INSERTED (arg_1-Result) */
         if ErrorIn(try_2) {Result = try_2
         } else {
         arg_1 = ANY(try_2)
@@ -762,12 +722,11 @@ func E_nth_table1_type (a EID,x EID) EID {
 // get is the same, with no error            
 /* {1} The go function for: get(a:table,x:any) [status=0] */
 func F_get_table (a *ClaireTable ,x *ClaireAny ) *ClaireAny  { 
-    // procedure body with s = any 
-var Result *ClaireAny  
+    // procedure body with s = any
+    var Result *ClaireAny  
     { var p *ClaireAny   = a.Params
       if (C_integer.Id() == p.Isa.Id()) { 
         { var g0068 int  = ToInteger(p).Value
-          _ = g0068
           Result = ToList(a.Graph).At((ToInteger(x).Value-g0068)-1)
           } 
         }  else if (p.Isa.IsIn(C_list) == CTRUE) { 
@@ -787,11 +746,8 @@ func F_get_table_type (a *ClaireType ,x *ClaireType ) EID {
     var Result EID 
     if (F_unique_ask_type(a) == CTRUE) { 
       { var arg_1 *ClaireAny  
-        _ = arg_1
         var try_2 EID 
-        /*g_try(v2:"try_2",loop:false) */
         try_2 = F_the_type(a)
-        /* ERROR PROTECTION INSERTED (arg_1-Result) */
         if ErrorIn(try_2) {Result = try_2
         } else {
         arg_1 = ANY(try_2)
@@ -811,22 +767,19 @@ func E_get_table_type (a EID,x EID) EID {
 // interface update method for a[x] := y
 /* {1} The go function for: nth=(a:table,x:any,y:any) [status=1] */
 func F_nth_equal_table1 (a *ClaireTable ,x *ClaireAny ,y *ClaireAny ) EID { 
+    // eid body s = void
     var Result EID 
-    /*g_try(v2:"Result",loop:true) */
     if (a.Domain.Contains(x) != CTRUE) { 
       Result = ToException(C_general_error.Make(MakeString("[135] ~S does not belong to the domain of ~S").Id(),MakeConstantList(x,a.Id()).Id())).Close()
       } else {
       Result = EID{CFALSE.Id(),0}
       } 
-    /* ERROR PROTECTION INSERTED (Result-Result) */
     if !ErrorIn(Result) {
-    /*g_try(v2:"Result",loop:true) */
     if (a.Range.Contains(y) != CTRUE) { 
       Result = ToException(C_range_error.Make(a.Id(),y,a.Range.Id())).Close()
       } else {
       Result = EID{CFALSE.Id(),0}
       } 
-    /* ERROR PROTECTION INSERTED (Result-Result) */
     if !ErrorIn(Result) {
     Result = F_nth_put_table(a,x,y)
     }}
@@ -840,6 +793,7 @@ func E_nth_equal_table1 (a EID,x EID,y EID) EID {
 // equivalent of update = put + put_inverse
 /* {1} The go function for: nth_put(a:table,x:any,y:any) [status=1] */
 func F_nth_put_table (a *ClaireTable ,x *ClaireAny ,y *ClaireAny ) EID { 
+    // eid body s = void
     var Result EID 
     if ((a.IfWrite != CNULL) && 
         (a.Multivalued_ask != CTRUE)) { 
@@ -871,9 +825,7 @@ func F_nth_put_table (a *ClaireTable ,x *ClaireAny ,y *ClaireAny ) EID {
               z = z_support.At(i_it)
               var loop_1 EID 
               _ = loop_1
-              /*g_try(v2:"loop_1",loop:tuple("Result", EID)) */
               loop_1 = F_update_plus_relation(ToRelation(a.Id()),x,z)
-              /* ERROR PROTECTION INSERTED (loop_1-Result) */
               if ErrorIn(loop_1) {Result = loop_1
               break
               } else {
@@ -885,7 +837,6 @@ func F_nth_put_table (a *ClaireTable ,x *ClaireAny ,y *ClaireAny ) EID {
       } else {
       { var r *ClaireAny   = F_get_property(C_inverse,ToObject(a.Id()))
         { var z *ClaireAny   = F_get_table(a,x)
-          _ = z
           if (Equal(z,y) != CTRUE) { 
             if (r != CNULL) { 
               { var z *ClaireAny   = F_get_table(a,x)
@@ -914,14 +865,12 @@ func E_nth_put_table (a EID,x EID,y EID) EID {
 // put does NOT update the inverse, but handles store ...
 /* {1} The go function for: put(a:table,x:any,y:any) [status=0] */
 func F_put_table (a *ClaireTable ,x *ClaireAny ,y *ClaireAny )  { 
-    // procedure body with s = void 
-{ var p *ClaireAny   = a.Params
+    // procedure body with s = void
+    { var p *ClaireAny   = a.Params
       { var z *ClaireAny   = F_get_table(a,x)
-        _ = z
         if (Equal(z,y) != CTRUE) { 
           if (C_integer.Id() == p.Isa.Id()) { 
             { var g0071 int  = ToInteger(p).Value
-              _ = g0071
               F_store_list(ToList(a.Graph),(ToInteger(x).Value-g0071),y,a.Store_ask)
               } 
             }  else if (p.Isa.IsIn(C_list) == CTRUE) { 
@@ -943,22 +892,19 @@ func E_put_table (a EID,x EID,y EID) EID {
 // adds a value to a multi-valued table: interface method
 /* {1} The go function for: add(a:table,x:any,y:any) [status=1] */
 func F_add_table (a *ClaireTable ,x *ClaireAny ,y *ClaireAny ) EID { 
+    // eid body s = void
     var Result EID 
-    /*g_try(v2:"Result",loop:true) */
     if (a.Domain.Contains(x) != CTRUE) { 
       Result = ToException(C_general_error.Make(MakeString("[135] ~S does not belong to the domain of ~S").Id(),MakeConstantList(x,a.Id()).Id())).Close()
       } else {
       Result = EID{CFALSE.Id(),0}
       } 
-    /* ERROR PROTECTION INSERTED (Result-Result) */
     if !ErrorIn(Result) {
-    /*g_try(v2:"Result",loop:true) */
     if (F_member_type(a.Range).Contains(y) != CTRUE) { 
       Result = ToException(C_range_error.Make(a.Id(),y,a.Range.Id())).Close()
       } else {
       Result = EID{CFALSE.Id(),0}
       } 
-    /* ERROR PROTECTION INSERTED (Result-Result) */
     if !ErrorIn(Result) {
     Result = F_add_I_table(a,x,y)
     }}
@@ -971,12 +917,12 @@ func E_add_table (a EID,x EID,y EID) EID {
 // adds a value to a multi-valued table: internal version without type checks
 /* {1} The go function for: add!(a:table,x:any,y:any) [status=1] */
 func F_add_I_table (a *ClaireTable ,x *ClaireAny ,y *ClaireAny ) EID { 
+    // eid body s = void
     var Result EID 
     if (a.IfWrite != CNULL) { 
       Result = F_fastcall_relation2(ToRelation(a.Id()),x,y)
       } else {
       { var old *ClaireSet   = ToSet(F_get_table(a,x))
-        _ = old
         if (F_Core_add_value_I_table(a,x,old,y) == CTRUE) { 
           Result = F_update_plus_relation(ToRelation(a.Id()),x,y)
           } else {
@@ -994,19 +940,17 @@ func E_add_I_table (a EID,x EID,y EID) EID {
 // s1 is the current value in the table
 /* {1} The go function for: add_value!(self:table,x:any,s1:set,y:any) [status=0] */
 func F_Core_add_value_I_table (self *ClaireTable ,x *ClaireAny ,s1 *ClaireSet ,y *ClaireAny ) *ClaireBoolean  { 
-    // procedure body with s = boolean 
-var Result *ClaireBoolean  
+    // procedure body with s = boolean
+    var Result *ClaireBoolean  
     if (s1.Contain_ask(y) != CTRUE) { 
       { var s2 *ClaireSet  
-        _ = s2
         { var arg_1 *ClaireSet  
-          _ = arg_1
           if (self.Store_ask == CTRUE) { 
             arg_1 = s1.Copy()
             } else {
             arg_1 = s1
             } 
-          s2 = arg_1.AddFast(y)/*t=any,s=set*/
+          s2 = arg_1.AddFast(y)
           } 
         F_put_table(self,x,s2.Id())
         Result = CTRUE
@@ -1026,9 +970,8 @@ func E_Core_add_value_I_table (self EID,x EID,s1 EID,y EID) EID {
 // a direct version (v3.2) that can be used in lieu of add!
 /* {1} The go function for: add_value(self:table,x:any,y:any) [status=0] */
 func F_add_value_table3 (self *ClaireTable ,x *ClaireAny ,y *ClaireAny )  { 
-    // procedure body with s = void 
-{ var old *ClaireSet   = ToSet(F_get_table(self,x))
-      _ = old
+    // procedure body with s = void
+    { var old *ClaireSet   = ToSet(F_get_table(self,x))
       F_Core_add_value_I_table(self,x,old,y)
       } 
     } 
@@ -1041,13 +984,12 @@ func E_add_value_table3 (self EID,x EID,y EID) EID {
 // removes a value from an table (multivalued only)
 /* {1} The go function for: delete(a:table,x:any,y:any) [status=0] */
 func F_delete_table (a *ClaireTable ,x *ClaireAny ,y *ClaireAny ) *ClaireAny  { 
-    // procedure body with s = any 
-var Result *ClaireAny  
+    // procedure body with s = any
+    var Result *ClaireAny  
     { var old *ClaireSet   = ToSet(F_get_table(a,x))
       if (old.Contain_ask(y) == CTRUE) { 
         { var s *ClaireSet  
           { var arg_1 *ClaireSet  
-            _ = arg_1
             if (a.Store_ask == CTRUE) { 
               arg_1 = old.Copy()
               } else {
@@ -1076,18 +1018,16 @@ func E_delete_table (a EID,x EID,y EID) EID {
 // direct access to 2-dim tables
 /* {1} The go function for: nth(a:table,x:any,y:any) [status=1] */
 func F_nth_table2 (a *ClaireTable ,x *ClaireAny ,y *ClaireAny ) EID { 
+    // eid body s = any
     var Result EID 
     { var p *ClaireAny   = a.Params
-      _ = p
       if (p.Isa.IsIn(C_list) == CTRUE) { 
-        /*g_try(v2:"Result",loop:true) */
         if ((ToType(ToList(a.Domain.Id()).At(1-1)).Contains(x) != CTRUE) || 
             (ToType(ToList(a.Domain.Id()).At(2-1)).Contains(y) != CTRUE)) { 
           Result = ToException(C_general_error.Make(MakeString("[135] ~S does not belong to the domain of ~S").Id(),MakeConstantList(x,a.Id()).Id())).Close()
           } else {
           Result = EID{CFALSE.Id(),0}
           } 
-        /* ERROR PROTECTION INSERTED (Result-Result) */
         if !ErrorIn(Result) {
         Result = F_CALL(C_nth,ARGS(a.Graph.ToEID(),EID{C__INT,IVAL(F_get_index_table2(a,ToInteger(x).Value,ToInteger(y).Value))}))
         }
@@ -1106,11 +1046,8 @@ func F_nth_table2_type (a *ClaireType ,x *ClaireType ,y *ClaireType ) EID {
     var Result EID 
     if (F_unique_ask_type(a) == CTRUE) { 
       { var arg_1 *ClaireAny  
-        _ = arg_1
         var try_2 EID 
-        /*g_try(v2:"try_2",loop:false) */
         try_2 = F_the_type(a)
-        /* ERROR PROTECTION INSERTED (arg_1-Result) */
         if ErrorIn(try_2) {Result = try_2
         } else {
         arg_1 = ANY(try_2)
@@ -1130,26 +1067,22 @@ func E_nth_table2_type (a EID,x EID,y EID) EID {
 // sets a value in a 2-dim table
 /* {1} The go function for: nth=(a:table,x:any,y:any,z:any) [status=1] */
 func F_nth_equal_table2 (a *ClaireTable ,x *ClaireAny ,y *ClaireAny ,z *ClaireAny ) EID { 
+    // eid body s = void
     var Result EID 
     { var p *ClaireAny   = a.Params
-      _ = p
       if (p.Isa.IsIn(C_list) == CTRUE) { 
-        /*g_try(v2:"Result",loop:true) */
         if ((ToType(ToList(a.Domain.Id()).At(1-1)).Contains(x) != CTRUE) || 
             (ToType(ToList(a.Domain.Id()).At(2-1)).Contains(y) != CTRUE)) { 
           Result = ToException(C_general_error.Make(MakeString("[135] ~S does not belong to the domain of ~S").Id(),MakeConstantList(MakeConstantList(x,y).Id(),a.Id()).Id())).Close()
           } else {
           Result = EID{CFALSE.Id(),0}
           } 
-        /* ERROR PROTECTION INSERTED (Result-Result) */
         if !ErrorIn(Result) {
-        /*g_try(v2:"Result",loop:true) */
         if (a.Range.Contains(z) != CTRUE) { 
           Result = ToException(C_range_error.Make(a.Id(),z,a.Range.Id())).Close()
           } else {
           Result = EID{CFALSE.Id(),0}
           } 
-        /* ERROR PROTECTION INSERTED (Result-Result) */
         if !ErrorIn(Result) {
         if ((a.Inverse.Id() != CNULL) || 
             (a.IfWrite != CNULL)) { 
@@ -1174,12 +1107,11 @@ func E_nth_equal_table2 (a EID,x EID,y EID,z EID) EID {
 // v3.2.16 tuple(a,b) is not list(a,b) !
 /* {1} The go function for: get_index(a:table,x:any) [status=0] */
 func F_get_index_table1 (a *ClaireTable ,x *ClaireAny ) int { 
-    // procedure body with s = integer 
-var Result int 
+    // procedure body with s = integer
+    var Result int 
     { var p *ClaireAny   = a.Params
       if (C_integer.Id() == p.Isa.Id()) { 
         { var g0078 int  = ToInteger(p).Value
-          _ = g0078
           Result = (ToInteger(x).Value-g0078)
           } 
         }  else if (p.Isa.IsIn(C_list) == CTRUE) { 
@@ -1196,8 +1128,8 @@ func E_get_index_table1 (a EID,x EID) EID {
   
 /* {1} The go function for: get_index(a:table,x:integer,y:integer) [status=0] */
 func F_get_index_table2 (a *ClaireTable ,x int,y int) int { 
-    // procedure body with s = integer 
-var Result int 
+    // procedure body with s = integer
+    var Result int 
     { var p *ClaireList   = ToList(a.Params)
       Result = (((p.ValuesI()[1-1]*x)+y)-p.ValuesI()[2-1])
       } 
@@ -1210,6 +1142,7 @@ func E_get_index_table2 (a EID,x EID,y EID) EID {
 // erase an table means to clean its graph so that it becomes empty.
 /* {1} The go function for: erase(a:table) [status=1] */
 func F_erase_table (a *ClaireTable ) EID { 
+    // eid body s = void
     var Result EID 
     { var p *ClaireAny   = a.Params
       if (C_integer.Id() == p.Isa.Id()) { 
@@ -1219,9 +1152,7 @@ func F_erase_table (a *ClaireTable ) EID {
           Result= EID{CFALSE.Id(),0}
           var i_support *ClaireList  
           var try_1 EID 
-          /*g_try(v2:"try_1",loop:false) */
           try_1 = F_enumerate_any(a.Domain.Id())
-          /* ERROR PROTECTION INSERTED (i_support-Result) */
           if ErrorIn(try_1) {Result = try_1
           } else {
           i_support = ToList(OBJ(try_1))
@@ -1230,9 +1161,7 @@ func F_erase_table (a *ClaireTable ) EID {
             i = i_support.At(i_it)
             var loop_2 EID 
             _ = loop_2
-            /*g_try(v2:"loop_2",loop:tuple("Result", EID)) */
             loop_2 = F_CALL(C_nth_equal,ARGS(a.Graph.ToEID(),EID{C__INT,IVAL(F_get_index_table1(a,i))},a.Default.ToEID()))
-            /* ERROR PROTECTION INSERTED (loop_2-Result) */
             if ErrorIn(loop_2) {Result = loop_2
             break
             } else {
@@ -1247,9 +1176,7 @@ func F_erase_table (a *ClaireTable ) EID {
           Result= EID{CFALSE.Id(),0}
           var l_support *ClaireList  
           var try_3 EID 
-          /*g_try(v2:"try_3",loop:false) */
           try_3 = F_enumerate_any(a.Domain.Id())
-          /* ERROR PROTECTION INSERTED (l_support-Result) */
           if ErrorIn(try_3) {Result = try_3
           } else {
           l_support = ToList(OBJ(try_3))
@@ -1259,9 +1186,7 @@ func F_erase_table (a *ClaireTable ) EID {
             l = ToList(l_iter)
             var loop_4 EID 
             _ = loop_4
-            /*g_try(v2:"loop_4",loop:tuple("Result", EID)) */
             loop_4 = F_CALL(C_nth_equal,ARGS(a.Graph.ToEID(),EID{C__INT,IVAL(F_get_index_table2(a,ToInteger(l.At(1-1)).Value,ToInteger(l.At(2-1)).Value))},a.Default.ToEID()))
-            /* ERROR PROTECTION INSERTED (loop_4-Result) */
             if ErrorIn(loop_4) {Result = loop_4
             break
             } else {
@@ -1282,14 +1207,15 @@ func E_erase_table (a EID) EID {
 // new in v3.2.50 a constructor for building a table dynamically
 /* {1} The go function for: make_table(%domain:type,%range:type,%default:any) [status=1] */
 func F_make_table_type (_Zdomain *ClaireType ,_Zrange *ClaireType ,_Zdefault *ClaireAny ) EID { 
+    // eid body s = table
     var Result EID 
     { var t *ClaireTable   = ToTable(new(ClaireTable).Is(C_table))
       t.Range = _Zrange
-      /*type->type*/C_table.Instances = C_table.Instances.AddFast(t.Id())/*t=any,s=list*/
-      /*list->list*/t.Domain = _Zdomain
-      /*type->type*/t.Default = _Zdefault
-      /*any->any*/t.Params = C_any.Id()
-      /*any->any*/t.GraphInit()
+      C_table.Instances = C_table.Instances.AddFast(t.Id())
+      t.Domain = _Zdomain
+      t.Default = _Zdefault
+      t.Params = C_any.Id()
+      t.GraphInit()
       Result = EID{t.Id(),0}
       } 
     return Result} 
@@ -1305,18 +1231,16 @@ func E_make_table_type (_Zdomain EID,_Zrange EID,_Zdefault EID) EID {
 // applying a lambda to one argument
 /* {1} The go function for: funcall(self:lambda,x:any) [status=1] */
 func F_funcall_lambda1 (self *ClaireLambda ,x *ClaireAny ) EID { 
+    // eid body s = any
     var Result EID 
     { var start int  = ClEnv.Index
       { var retour int  = ClEnv.Base
-        _ = retour
         ClEnv.Base= start
         ClEnv.Push(x.ToEID())
         F_stack_add(self.Dimension)
         { 
           var val EID 
-          /*g_try(v2:"val",loop:false) */
           val = EVAL(self.Body)
-          /* ERROR PROTECTION INSERTED (val-Result) */
           if ErrorIn(val) {Result = val
           } else {
           ClEnv.Base= retour
@@ -1334,19 +1258,17 @@ func E_funcall_lambda1 (self EID,x EID) EID {
 // applying a lambda to two argument
 /* {1} The go function for: funcall(self:lambda,x:any,y:any) [status=1] */
 func F_funcall_lambda2 (self *ClaireLambda ,x *ClaireAny ,y *ClaireAny ) EID { 
+    // eid body s = any
     var Result EID 
     { var start int  = ClEnv.Index
       { var retour int  = ClEnv.Base
-        _ = retour
         ClEnv.Base= start
         ClEnv.Push(x.ToEID())
         ClEnv.Push(y.ToEID())
         F_stack_add(self.Dimension)
         { 
           var val EID 
-          /*g_try(v2:"val",loop:false) */
           val = EVAL(self.Body)
-          /* ERROR PROTECTION INSERTED (val-Result) */
           if ErrorIn(val) {Result = val
           } else {
           ClEnv.Base= retour
@@ -1364,10 +1286,10 @@ func E_funcall_lambda2 (self EID,x EID,y EID) EID {
 // applying a lambda to two argument
 /* {1} The go function for: funcall(self:lambda,x:any,y:any,z:any) [status=1] */
 func F_funcall_lambda3 (self *ClaireLambda ,x *ClaireAny ,y *ClaireAny ,z *ClaireAny ) EID { 
+    // eid body s = any
     var Result EID 
     { var start int  = ClEnv.Index
       { var retour int  = ClEnv.Base
-        _ = retour
         ClEnv.Base= start
         ClEnv.Push(x.ToEID())
         ClEnv.Push(y.ToEID())
@@ -1375,9 +1297,7 @@ func F_funcall_lambda3 (self *ClaireLambda ,x *ClaireAny ,y *ClaireAny ,z *Clair
         F_stack_add(self.Dimension)
         { 
           var val EID 
-          /*g_try(v2:"val",loop:false) */
           val = EVAL(self.Body)
-          /* ERROR PROTECTION INSERTED (val-Result) */
           if ErrorIn(val) {Result = val
           } else {
           ClEnv.Base= retour
@@ -1398,23 +1318,20 @@ func E_funcall_lambda3 (self EID,x EID,y EID,z EID) EID {
 // dealing with inverse
 /* {1} The go function for: check_inverse(%r1:any,%r2:any) [status=1] */
 func F_check_inverse_any (_Zr1 *ClaireAny ,_Zr2 *ClaireAny ) EID { 
+    // eid body s = void
     var Result EID 
     { var r1 *ClaireRelation   = ToRelation(_Zr1)
       { var r2 *ClaireRelation   = ToRelation(_Zr2)
         r1.Inverse = r2
-        /*relation->relation*/r2.Inverse = r1
-        /*relation->relation*/F_final_relation(r1)
+        r2.Inverse = r1
+        F_final_relation(r1)
         F_final_relation(r2)
         var g0085I *ClaireBoolean  
         { 
-          /* Or stat: v="g0085I", loop=true */
           var v_or4 *ClaireBoolean  
           
-          /* Or stat: try not @ any(<= @ type_expression(domain @ relation(r1),(if (multivalued? @ relation(r2)) member @ type(range @ relation(r2)) else range @ relation(r2)))) with try:false, v="g0085I", loop=true */
           { var arg_1 *ClaireBoolean  
-            _ = arg_1
             { var arg_2 *ClaireType  
-              _ = arg_2
               if (r2.Multivalued_ask == CTRUE) { 
                 arg_2 = F_member_type(r2.Range)
                 } else {
@@ -1426,11 +1343,8 @@ func F_check_inverse_any (_Zr1 *ClaireAny ,_Zr2 *ClaireAny ) EID {
             } 
           if (v_or4 == CTRUE) {g0085I = CTRUE
           } else { 
-            /* Or stat: try not @ any(<= @ type_expression(domain @ relation(r2),(if (multivalued? @ relation(r1)) member @ type(range @ relation(r1)) else range @ relation(r1)))) with try:false, v="g0085I", loop=true */
             { var arg_3 *ClaireBoolean  
-              _ = arg_3
               { var arg_4 *ClaireType  
-                _ = arg_4
                 if (r1.Multivalued_ask == CTRUE) { 
                   arg_4 = F_member_type(r1.Range)
                   } else {
@@ -1461,15 +1375,14 @@ func E_check_inverse_any (_Zr1 EID,_Zr2 EID) EID {
 // very useful
 /* {1} The go function for: invert(r:relation,x:any) [status=1] */
 func F_invert_relation (r *ClaireRelation ,x *ClaireAny ) EID { 
+    // eid body s = set
     var Result EID 
     { var r2 *ClaireAny   = F_get_property(C_inverse,ToObject(r.Id()))
       if (C_table.Id() == r2.Isa.Id()) { 
         { var g0086 *ClaireTable   = ToTable(r2)
           { var v *ClaireAny  
             var try_1 EID 
-            /*g_try(v2:"try_1",loop:false) */
             try_1 = F_nth_table1(g0086,x)
-            /* ERROR PROTECTION INSERTED (v-Result) */
             if ErrorIn(try_1) {Result = try_1
             } else {
             v = ANY(try_1)
@@ -1495,16 +1408,13 @@ func F_invert_relation (r *ClaireRelation ,x *ClaireAny ) EID {
         { var g0089 *ClaireProperty   = ToProperty(r.Id())
           if (g0089.Multivalued_ask.Id() != CFALSE.Id()) { 
             { var z_out *ClaireSet   = ToType(CEMPTY.Id()).EmptySet()
-              /*g_try(v2:"Result",loop:true) */
               { 
                 var z *ClaireAny  
                 _ = z
                 Result= EID{CFALSE.Id(),0}
                 var z_support *ClaireList  
                 var try_2 EID 
-                /*g_try(v2:"try_2",loop:false) */
                 try_2 = F_enumerate_any(g0089.Domain.Id())
-                /* ERROR PROTECTION INSERTED (z_support-Result) */
                 if ErrorIn(try_2) {Result = try_2
                 } else {
                 z_support = ToList(OBJ(try_2))
@@ -1512,28 +1422,24 @@ func F_invert_relation (r *ClaireRelation ,x *ClaireAny ) EID {
                 for i_it := 0; i_it < z_len; i_it++ { 
                   z = z_support.At(i_it)
                   if (ToType(F_get_property(g0089,ToObject(z))).Contains(x) == CTRUE) { 
-                    z_out.AddFast(z)/*t=any,s=void*/
+                    z_out.AddFast(z)
                     } 
                   }
                   } 
                 } 
-              /* ERROR PROTECTION INSERTED (Result-Result) */
               if !ErrorIn(Result) {
               Result = EID{z_out.Id(),0}
               }
               } 
             } else {
             { var z_out *ClaireSet   = ToType(CEMPTY.Id()).EmptySet()
-              /*g_try(v2:"Result",loop:true) */
               { 
                 var z *ClaireAny  
                 _ = z
                 Result= EID{CFALSE.Id(),0}
                 var z_support *ClaireList  
                 var try_3 EID 
-                /*g_try(v2:"try_3",loop:false) */
                 try_3 = F_enumerate_any(g0089.Domain.Id())
-                /* ERROR PROTECTION INSERTED (z_support-Result) */
                 if ErrorIn(try_3) {Result = try_3
                 } else {
                 z_support = ToList(OBJ(try_3))
@@ -1541,12 +1447,11 @@ func F_invert_relation (r *ClaireRelation ,x *ClaireAny ) EID {
                 for i_it := 0; i_it < z_len; i_it++ { 
                   z = z_support.At(i_it)
                   if (Equal(F_get_property(g0089,ToObject(z)),x) == CTRUE) { 
-                    z_out.AddFast(z)/*t=any,s=void*/
+                    z_out.AddFast(z)
                     } 
                   }
                   } 
                 } 
-              /* ERROR PROTECTION INSERTED (Result-Result) */
               if !ErrorIn(Result) {
               Result = EID{z_out.Id(),0}
               }
@@ -1557,16 +1462,13 @@ func F_invert_relation (r *ClaireRelation ,x *ClaireAny ) EID {
         { var g0090 *ClaireTable   = ToTable(r.Id())
           if (g0090.Multivalued_ask.Id() != CFALSE.Id()) { 
             { var z_out *ClaireSet   = ToType(CEMPTY.Id()).EmptySet()
-              /*g_try(v2:"Result",loop:true) */
               { 
                 var z *ClaireAny  
                 _ = z
                 Result= EID{CFALSE.Id(),0}
                 var z_support *ClaireList  
                 var try_4 EID 
-                /*g_try(v2:"try_4",loop:false) */
                 try_4 = F_enumerate_any(g0090.Domain.Id())
-                /* ERROR PROTECTION INSERTED (z_support-Result) */
                 if ErrorIn(try_4) {Result = try_4
                 } else {
                 z_support = ToList(OBJ(try_4))
@@ -1575,56 +1477,45 @@ func F_invert_relation (r *ClaireRelation ,x *ClaireAny ) EID {
                   z = z_support.At(i_it)
                   var loop_5 EID 
                   _ = loop_5
-                  /*g_try(v2:"loop_5",loop:tuple("Result", EID)) */
                   var g0091I *ClaireBoolean  
                   var try_6 EID 
-                  /*g_try(v2:"try_6",loop:false) */
                   { var arg_7 *ClaireAny  
-                    _ = arg_7
                     var try_8 EID 
-                    /*g_try(v2:"try_8",loop:false) */
                     try_8 = F_nth_table1(g0090,z)
-                    /* ERROR PROTECTION INSERTED (arg_7-try_6) */
                     if ErrorIn(try_8) {try_6 = try_8
                     } else {
                     arg_7 = ANY(try_8)
                     try_6 = EID{ToType(arg_7).Contains(x).Id(),0}
                     }
                     } 
-                  /* ERROR PROTECTION INSERTED (g0091I-loop_5) */
                   if ErrorIn(try_6) {loop_5 = try_6
                   } else {
                   g0091I = ToBoolean(OBJ(try_6))
                   if (g0091I == CTRUE) { 
-                    loop_5 = EID{z_out.AddFast(z).Id(),0}/*t=any,s=EID*/
+                    loop_5 = EID{z_out.AddFast(z).Id(),0}
                     } else {
                     loop_5 = EID{CFALSE.Id(),0}
                     } 
                   }
-                  /* ERROR PROTECTION INSERTED (loop_5-Result) */
                   if ErrorIn(loop_5) {Result = loop_5
                   break
                   } else {
                   }}
                   } 
                 } 
-              /* ERROR PROTECTION INSERTED (Result-Result) */
               if !ErrorIn(Result) {
               Result = EID{z_out.Id(),0}
               }
               } 
             } else {
             { var z_out *ClaireSet   = ToType(CEMPTY.Id()).EmptySet()
-              /*g_try(v2:"Result",loop:true) */
               { 
                 var z *ClaireAny  
                 _ = z
                 Result= EID{CFALSE.Id(),0}
                 var z_support *ClaireList  
                 var try_9 EID 
-                /*g_try(v2:"try_9",loop:false) */
                 try_9 = F_enumerate_any(g0090.Domain.Id())
-                /* ERROR PROTECTION INSERTED (z_support-Result) */
                 if ErrorIn(try_9) {Result = try_9
                 } else {
                 z_support = ToList(OBJ(try_9))
@@ -1633,40 +1524,32 @@ func F_invert_relation (r *ClaireRelation ,x *ClaireAny ) EID {
                   z = z_support.At(i_it)
                   var loop_10 EID 
                   _ = loop_10
-                  /*g_try(v2:"loop_10",loop:tuple("Result", EID)) */
                   var g0092I *ClaireBoolean  
                   var try_11 EID 
-                  /*g_try(v2:"try_11",loop:false) */
                   { var arg_12 *ClaireAny  
-                    _ = arg_12
                     var try_13 EID 
-                    /*g_try(v2:"try_13",loop:false) */
                     try_13 = F_nth_table1(g0090,z)
-                    /* ERROR PROTECTION INSERTED (arg_12-try_11) */
                     if ErrorIn(try_13) {try_11 = try_13
                     } else {
                     arg_12 = ANY(try_13)
                     try_11 = EID{Equal(arg_12,x).Id(),0}
                     }
                     } 
-                  /* ERROR PROTECTION INSERTED (g0092I-loop_10) */
                   if ErrorIn(try_11) {loop_10 = try_11
                   } else {
                   g0092I = ToBoolean(OBJ(try_11))
                   if (g0092I == CTRUE) { 
-                    loop_10 = EID{z_out.AddFast(z).Id(),0}/*t=any,s=EID*/
+                    loop_10 = EID{z_out.AddFast(z).Id(),0}
                     } else {
                     loop_10 = EID{CFALSE.Id(),0}
                     } 
                   }
-                  /* ERROR PROTECTION INSERTED (loop_10-Result) */
                   if ErrorIn(loop_10) {Result = loop_10
                   break
                   } else {
                   }}
                   } 
                 } 
-              /* ERROR PROTECTION INSERTED (Result-Result) */
               if !ErrorIn(Result) {
               Result = EID{z_out.Id(),0}
               }
@@ -1695,8 +1578,8 @@ func E_domain_I_restriction (x EID) EID {
   
 /* {1} The go function for: methods(d:class,r:class) [status=0] */
 func F_methods_class (d *ClaireClass ,r *ClaireClass ) *ClaireSet  { 
-    // procedure body with s = set 
-var Result *ClaireSet  
+    // procedure body with s = set
+    var Result *ClaireSet  
     { var m_out *ClaireSet   = ToType(CEMPTY.Id()).EmptySet()
       { 
         var m *ClaireMethod  
@@ -1710,7 +1593,7 @@ var Result *ClaireSet
           m = ToMethod(m_iter)
           if ((ToType(m.Domain.ValuesO()[1-1]).Included(ToType(d.Id())) == CTRUE) && 
               (m.Range.Included(ToType(r.Id())) == CTRUE)) { 
-            m_out.AddFast(m.Id())/*t=any,s=void*/
+            m_out.AddFast(m.Id())
             } 
           } 
         } 
@@ -1725,8 +1608,8 @@ func E_methods_class (d EID,r EID) EID {
 // sets the reified flag
 /* {1} The go function for: reify(l:listargs) [status=0] */
 func F_reify_listargs (l *ClaireList )  { 
-    // procedure body with s = void 
-{ 
+    // procedure body with s = void
+    { 
       var p *ClaireAny  
       _ = p
       var p_support *ClaireList  
@@ -1737,7 +1620,7 @@ func F_reify_listargs (l *ClaireList )  {
         if (p.Isa.IsIn(C_property) == CTRUE) { 
           { var g0093 *ClaireProperty   = ToProperty(p)
             g0093.Reified = CTRUE
-            /*boolean->boolean*/} 
+            } 
           } 
         } 
       } 
@@ -1756,11 +1639,10 @@ func E_reify_listargs (l EID) EID {
 // a generic error that is produced by the error(" ....") instruction
 /* {1} The go function for: self_print(self:general_error) [status=1] */
 func (self *GeneralError ) SelfPrint () EID { 
+    // eid body s = void
     var Result EID 
     PRINC("**** An error has occurred.\n")
-    /*g_try(v2:"Result",loop:true) */
     Result = F_format_string(ToString(self.Cause),ToList(self.Arg))
-    /* ERROR PROTECTION INSERTED (Result-Result) */
     if !ErrorIn(Result) {
     PRINC("\n")
     Result = EVOID
@@ -1774,16 +1656,13 @@ func E_self_print_general_error_Core (self EID) EID {
 // a read_slot error is produced when an unknown value is found
 /* {1} The go function for: self_print(self:read_slot_error) [status=1] */
 func (self *ReadSlotError ) SelfPrint () EID { 
+    // eid body s = void
     var Result EID 
     PRINC("****[138] The value of ")
-    /*g_try(v2:"Result",loop:true) */
     Result = F_CALL(C_print,ARGS(self.Wrong.ToEID()))
-    /* ERROR PROTECTION INSERTED (Result-Result) */
     if !ErrorIn(Result) {
     PRINC("(")
-    /*g_try(v2:"Result",loop:true) */
     Result = F_CALL(C_print,ARGS(self.Arg.ToEID()))
-    /* ERROR PROTECTION INSERTED (Result-Result) */
     if !ErrorIn(Result) {
     PRINC(") is unknown")
     Result = EVOID
@@ -1797,21 +1676,16 @@ func E_self_print_read_slot_error_Core (self EID) EID {
 // range errors
 /* {1} The go function for: self_print(self:range_error) [status=1] */
 func (self *RangeError ) SelfPrint () EID { 
+    // eid body s = void
     var Result EID 
     PRINC("****[139] ")
-    /*g_try(v2:"Result",loop:true) */
     Result = F_CALL(C_print,ARGS(self.Cause.ToEID()))
-    /* ERROR PROTECTION INSERTED (Result-Result) */
     if !ErrorIn(Result) {
     PRINC(": range error, ")
-    /*g_try(v2:"Result",loop:true) */
     Result = F_CALL(C_print,ARGS(self.Arg.ToEID()))
-    /* ERROR PROTECTION INSERTED (Result-Result) */
     if !ErrorIn(Result) {
     PRINC(" does not belong? to ")
-    /*g_try(v2:"Result",loop:true) */
     Result = F_CALL(C_print,ARGS(self.Wrong.ToEID()))
-    /* ERROR PROTECTION INSERTED (Result-Result) */
     if !ErrorIn(Result) {
     PRINC(".\n")
     Result = EVOID
@@ -1825,32 +1699,25 @@ func E_self_print_range_error_Core (self EID) EID {
 // selector errors
 /* {1} The go function for: self_print(self:selector_error) [status=1] */
 func (self *SelectorError ) SelfPrint () EID { 
+    // eid body s = void
     var Result EID 
     { var p *ClaireAny   = self.Selector
       if (F_boolean_I_any(ToProperty(p).Restrictions.Id()).Id() != CTRUE.Id()) { 
         PRINC("[140] The property ")
-        /*g_try(v2:"Result",loop:true) */
         Result = F_CALL(C_print,ARGS(p.ToEID()))
-        /* ERROR PROTECTION INSERTED (Result-Result) */
         if !ErrorIn(Result) {
         PRINC(" is not defined (was applied to ")
-        /*g_try(v2:"Result",loop:true) */
         Result = F_CALL(C_print,ARGS(self.Arg.ToEID()))
-        /* ERROR PROTECTION INSERTED (Result-Result) */
         if !ErrorIn(Result) {
         PRINC(").\n")
         Result = EVOID
         }}
         } else {
         PRINC("****[141] ")
-        /*g_try(v2:"Result",loop:true) */
         Result = F_CALL(C_print,ARGS(self.Arg.ToEID()))
-        /* ERROR PROTECTION INSERTED (Result-Result) */
         if !ErrorIn(Result) {
         PRINC(" is a wrong arg list for ")
-        /*g_try(v2:"Result",loop:true) */
         Result = F_CALL(C_print,ARGS(p.ToEID()))
-        /* ERROR PROTECTION INSERTED (Result-Result) */
         if !ErrorIn(Result) {
         PRINC(".\n")
         Result = EVOID
@@ -1866,8 +1733,8 @@ func E_self_print_selector_error_Core (self EID) EID {
 // produced by a return (usually trapped)
 /* {1} The go function for: self_print(self:return_error) [status=0] */
 func (self *ReturnError ) SelfPrint ()  { 
-    // procedure body with s = void 
-PRINC("****[142] return called outside of a loop (for or while).")
+    // procedure body with s = void
+    PRINC("****[142] return called outside of a loop (for or while).")
     } 
   
 // The EID go function for: self_print @ return_error (throw: false) 
@@ -1878,13 +1745,13 @@ func E_self_print_return_error_Core (self EID) EID {
 // interpretation of all the error codes
 /* {1} The go function for: self_print(self:system_error) [status=1] */
 func F_self_print_system_error_Core (self *ClaireSystemError ) EID { 
+    // eid body s = void
     var Result EID 
     { var n int  = self.Index
       PRINC("**** An internal error [")
       F_princ_integer(n)
       PRINC("] has occured:\n")
       { var arg_1 *ClaireString  
-        _ = arg_1
         if (n == 1) { 
           arg_1 = MakeString("Slot Access : ~S(~S) is unknown")
           }  else if (n == 2) { 
@@ -1967,7 +1834,7 @@ func F_self_print_system_error_Core (self *ClaireSystemError ) EID {
           arg_1 = MakeString("C++ imported error (~S) : ~S")
           } else {
           self.Value = MakeInteger(n).Id()
-          /*any->any*/arg_1 = MakeString("What the hell is this ! [code: ~S^]")
+          arg_1 = MakeString("What the hell is this ! [code: ~S^]")
           } 
         Result = F_format_string(arg_1,MakeConstantList(self.Value,self.Arg))
         } 
@@ -1981,8 +1848,8 @@ func E_self_print_system_error_Core (self EID) EID {
 // contradictions are nice exceptions
 /* {1} The go function for: self_print(x:contradiction) [status=0] */
 func (x *Contradiction ) SelfPrint ()  { 
-    // procedure body with s = void 
-PRINC("A contradiction has occured.")
+    // procedure body with s = void
+    PRINC("A contradiction has occured.")
     } 
   
 // The EID go function for: self_print @ contradiction (throw: false) 
@@ -1993,29 +1860,23 @@ func E_self_print_contradiction_Core (x EID) EID {
 // the format method is used to print error messages (similar to a printf)
 /* {1} The go function for: format(self:string,larg:list) [status=1] */
 func F_format_string (self *ClaireString ,larg *ClaireList ) EID { 
+    // eid body s = void
     var Result EID 
     { var s *ClaireString   = self
       { var n int  = F_get_string(s,'~')
         { var l *ClaireList   = larg.Copy()
-          /*g_try(v2:"Result",loop:true) */
           Result= EID{CFALSE.Id(),0}
           for (n != 0) { 
-            /* While stat, v:"Result" loop:true */
             var loop_1 EID 
             _ = loop_1
-            /*g_try(v2:"loop_1",loop:tuple("Result", EID)) */
             { var m rune  = s.At((n+1))
               if (n > 1) { 
                 F_princ_string(F_substring_string(s,1,(n-1)))
                 } 
-              /*g_try(v2:"loop_1",loop:tuple("Result", EID)) */
               if ('A' == m) { 
                 { var arg_2 *ClaireAny  
-                  _ = arg_2
                   var try_3 EID 
-                  /*g_try(v2:"try_3",loop:false) */
                   try_3 = F_car_list(l)
-                  /* ERROR PROTECTION INSERTED (arg_2-loop_1) */
                   if ErrorIn(try_3) {loop_1 = try_3
                   } else {
                   arg_2 = ANY(try_3)
@@ -2024,11 +1885,8 @@ func F_format_string (self *ClaireString ,larg *ClaireList ) EID {
                   } 
                 }  else if ('S' == m) { 
                 { var arg_4 *ClaireAny  
-                  _ = arg_4
                   var try_5 EID 
-                  /*g_try(v2:"try_5",loop:false) */
                   try_5 = F_car_list(l)
-                  /* ERROR PROTECTION INSERTED (arg_4-loop_1) */
                   if ErrorIn(try_5) {loop_1 = try_5
                   } else {
                   arg_4 = ANY(try_5)
@@ -2040,7 +1898,6 @@ func F_format_string (self *ClaireString ,larg *ClaireList ) EID {
                 } else {
                 loop_1 = EID{CFALSE.Id(),0}
                 } 
-              /* ERROR PROTECTION INSERTED (loop_1-loop_1) */
               if ErrorIn(loop_1) {Result = loop_1
               break
               } else {
@@ -2052,14 +1909,11 @@ func F_format_string (self *ClaireString ,larg *ClaireList ) EID {
               loop_1 = EID{C__INT,IVAL(n)}
               }
               } 
-            /* ERROR PROTECTION INSERTED (loop_1-Result) */
             if ErrorIn(loop_1) {Result = loop_1
             break
             } else {
-            /* try?:false, v2:"v_while5" loop will be:tuple("Result", EID) */
             } 
           }
-          /* ERROR PROTECTION INSERTED (Result-Result) */
           if !ErrorIn(Result) {
           if (F_length_string(s) > 0) { 
             F_princ_string(s)
@@ -2080,13 +1934,11 @@ func E_format_string (self EID,larg EID) EID {
 // special version that prints in the trace port
 /* {1} The go function for: tformat(self:string,i:integer,l:list) [status=1] */
 func F_tformat_string (self *ClaireString ,i int,l *ClaireList ) EID { 
+    // eid body s = any
     var Result EID 
     if (i <= ClEnv.Verbose) { 
       { var p *ClairePort   = ClEnv.Ctrace.UseAsOutput()
-        _ = p
-        /*g_try(v2:"Result",loop:true) */
         Result = F_format_string(self,l)
-        /* ERROR PROTECTION INSERTED (Result-Result) */
         if !ErrorIn(Result) {
         Result = p.UseAsOutput().ToEID()
         }
@@ -2103,9 +1955,9 @@ func E_tformat_string (self EID,i EID,l EID) EID {
 // printing a bag without ( ) separate between sets and lists in CLAIRE4
 /* {1} The go function for: princ(s:list) [status=1] */
 func F_princ_list (s *ClaireList ) EID { 
+    // eid body s = void
     var Result EID 
     { var f *ClaireBoolean   = CTRUE
-      _ = f
       { 
         var x *ClaireAny  
         _ = x
@@ -2123,9 +1975,7 @@ func F_princ_list (s *ClaireList ) EID {
             } else {
             PRINC(",")
             } 
-          /*g_try(v2:"loop_1",loop:tuple("Result", EID)) */
           loop_1 = F_CALL(C_print,ARGS(x.ToEID()))
-          /* ERROR PROTECTION INSERTED (loop_1-loop_1) */
           if ErrorIn(loop_1) {Result = loop_1
           break
           } else {
@@ -2142,9 +1992,9 @@ func E_princ_list (s EID) EID {
   
 /* {1} The go function for: princ(s:set) [status=1] */
 func F_princ_set (s *ClaireSet ) EID { 
+    // eid body s = void
     var Result EID 
     { var f *ClaireBoolean   = CTRUE
-      _ = f
       { 
         var x *ClaireAny  
         _ = x
@@ -2161,9 +2011,7 @@ func F_princ_set (s *ClaireSet ) EID {
             } else {
             PRINC(",")
             } 
-          /*g_try(v2:"loop_1",loop:tuple("Result", EID)) */
           loop_1 = F_CALL(C_print,ARGS(x.ToEID()))
-          /* ERROR PROTECTION INSERTED (loop_1-loop_1) */
           if ErrorIn(loop_1) {Result = loop_1
           break
           } else {
@@ -2183,21 +2031,20 @@ func E_princ_set (s EID) EID {
 // GV are defeasible
 /* {1} The go function for: close(self:global_variable) [status=1] */
 func (self *GlobalVariable ) Close () EID { 
+    // eid body s = global_variable
     var Result EID 
-    /*g_try(v2:"Result",loop:true) */
     if ((self.Value != CNULL) && 
         ((ToType(C_set.Id()).Contains(self.Range.Id()) != CTRUE) && 
             (self.Range.Contains(self.Value) != CTRUE))) { 
       { var _CL_obj *RangeError   = ToRangeError(new(RangeError).Is(C_range_error))
         _CL_obj.Arg = self.Value
-        /*any->any*/_CL_obj.Cause = self.Id()
-        /*any->any*/_CL_obj.Wrong = self.Range.Id()
-        /*any->any*/Result = _CL_obj.Close()
+        _CL_obj.Cause = self.Id()
+        _CL_obj.Wrong = self.Range.Id()
+        Result = _CL_obj.Close()
         } 
       } else {
       Result = EID{CFALSE.Id(),0}
       } 
-    /* ERROR PROTECTION INSERTED (Result-Result) */
     if !ErrorIn(Result) {
     Result = EID{self.Id(),0}
     }
@@ -2209,6 +2056,7 @@ func E_close_global_variable (self EID) EID {
   
 /* {1} The go function for: self_eval(self:global_variable) [status=0] */
 func (self *GlobalVariable ) SelfEval () EID { 
+    // eid body s = any
     var Result EID 
     Result = self.Value.ToEID()
     return Result} 
@@ -2226,6 +2074,7 @@ func EVAL_global_variable (x *ClaireAny) EID {
 // how to use it
 /* {1} The go function for: contradiction!(_CL_obj:void) [status=1] */
 func F_contradiction_I_void () EID { 
+    // eid body s = void
     var Result EID 
     Result = ToContradiction(C_contradiction_occurs.Value).Close()
     return Result} 

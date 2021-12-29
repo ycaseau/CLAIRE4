@@ -1,5 +1,5 @@
 /***** CLAIRE Compilation of module Language.cl 
-         [version 4.0.03 / safety 5] Monday 12-27-2021 10:35:23 *****/
+         [version 4.0.03 / safety 5] Wednesday 12-29-2021 08:34:14 *****/
 
 package Language
 import (_ "fmt"
@@ -1255,6 +1255,25 @@ var C_Language_rule_object *ClaireClass  /*obj*/
 var C_Language_relations *ClaireTable  /*obj*/
 var C_Language_last_rule *ClaireTable  /*obj*/
 var C_eval_rule *ClaireProperty  /*obj*/
+var C_Language_readCall *ClaireProperty  // Language/"readCall"
+var C_Language_eventMethod *ClaireProperty  // Language/"eventMethod"
+var C_Language_eventMethod_ask *ClaireProperty  // Language/"eventMethod?"
+var C_Language_putCall *ClaireProperty  // Language/"putCall"
+var C_Language_safeRange *ClaireProperty  // Language/"safeRange"
+var C_imported_function *ClaireProperty  // claire/"imported_function"
+var C_occurchange *ClaireProperty  // claire/"occurchange"
+var C_Language_getDefault *ClaireProperty  // Language/"getDefault"
+var C_Language_fast_definition_ask *ClaireProperty  // Language/"fast_definition?"
+var C_static_type *ClaireProperty  // claire/"static_type"
+var C_Language_static_type_nth *ClaireProperty  // Language/"static_type_nth"
+var C_Language_jito *ClaireProperty  // Language/"jito"
+var C_Language_makeJito *ClaireProperty  // Language/"makeJito"
+var C_Language_letJito *ClaireProperty  // Language/"letJito"
+var C_Language_makeCallMatch *ClaireProperty  // Language/"makeCallMatch"
+var C_Language_new_writes *ClaireProperty  // Language/"new_writes"
+var C_Language_occurexact *ClaireProperty  // Language/"occurexact"
+var C_Language_wrong *ClaireProperty  // Language/"wrong"
+var C_map *ClaireProperty  // claire/"map"
 var C_Language_no_eval *ClaireProperty  // Language/"no_eval"
 var C_Language_ppvariable *ClaireProperty  // Language/"ppvariable"
 var C_Language_write_value *ClaireProperty  // Language/"write_value"
@@ -1303,35 +1322,35 @@ var C_Language_priority *ClaireProperty  // Language/"priority"
 var C_Language_make_filter *ClaireProperty  // Language/"make_filter"
 var C_Language_make_demon *ClaireProperty  // Language/"make_demon"
 var C_Language_eval_if_write *ClaireProperty  // Language/"eval_if_write"
-var C_Language_readCall *ClaireProperty  // Language/"readCall"
-var C_Language_eventMethod *ClaireProperty  // Language/"eventMethod"
-var C_Language_eventMethod_ask *ClaireProperty  // Language/"eventMethod?"
-var C_Language_putCall *ClaireProperty  // Language/"putCall"
-var C_Language_safeRange *ClaireProperty  // Language/"safeRange"
-var C_imported_function *ClaireProperty  // claire/"imported_function"
-var C_occurchange *ClaireProperty  // claire/"occurchange"
-var C_Language_getDefault *ClaireProperty  // Language/"getDefault"
-var C_Language_fast_definition_ask *ClaireProperty  // Language/"fast_definition?"
-var C_static_type *ClaireProperty  // claire/"static_type"
-var C_Language_static_type_nth *ClaireProperty  // Language/"static_type_nth"
-var C_Language_jito *ClaireProperty  // Language/"jito"
-var C_Language_makeJito *ClaireProperty  // Language/"makeJito"
-var C_Language_letJito *ClaireProperty  // Language/"letJito"
-var C_Language_makeCallMatch *ClaireProperty  // Language/"makeCallMatch"
-var C_Language_new_writes *ClaireProperty  // Language/"new_writes"
-var C_Language_occurexact *ClaireProperty  // Language/"occurexact"
-var C_Language_wrong *ClaireProperty  // Language/"wrong"
-var C_map *ClaireProperty  // claire/"map"
 var It *ClaireModule
 var C_iClaire *ClaireModule 
 // definition of the meta-model for module Language 
 func MetaLoad() { 
   
   It = MakeModule("Language",C_iClaire)
-  It.Comment = MakeString("Compiled on Monday 12-27-2021 10:35:23(v4.0.03), lines:2244, warnings:11,safety:5")
+  It.Comment = MakeString("Compiled on Wednesday 12-29-2021 08:34:14(v4.0.03), lines:2214, warnings:1,safety:5")
   ClEnv.Module_I = It
-  // definition of the properties 
   
+  // definition of the properties
+  C_Language_readCall = MakeProperty("readCall",1,It)
+  C_Language_eventMethod = MakeProperty("eventMethod",1,It)
+  C_Language_eventMethod_ask = MakeProperty("eventMethod?",1,It)
+  C_Language_putCall = MakeProperty("putCall",1,It)
+  C_Language_safeRange = MakeProperty("safeRange",1,It)
+  C_imported_function = MakeProperty("imported_function",1,C_claire)
+  C_occurchange = MakeProperty("occurchange",1,C_claire)
+  C_Language_getDefault = MakeProperty("getDefault",1,It)
+  C_Language_fast_definition_ask = MakeProperty("fast_definition?",1,It)
+  C_static_type = MakeProperty("static_type",1,C_claire)
+  C_Language_static_type_nth = MakeProperty("static_type_nth",1,It)
+  C_Language_jito = MakeProperty("jito",1,It)
+  C_Language_makeJito = MakeProperty("makeJito",1,It)
+  C_Language_letJito = MakeProperty("letJito",1,It)
+  C_Language_makeCallMatch = MakeProperty("makeCallMatch",1,It)
+  C_Language_new_writes = MakeProperty("new_writes",1,It)
+  C_Language_occurexact = MakeProperty("occurexact",1,It)
+  C_Language_wrong = MakeProperty("wrong",2,It)
+  C_map = MakeProperty("map",1,C_claire)
   C_Language_no_eval = MakeProperty("no_eval",1,It)
   C_Language_ppvariable = MakeProperty("ppvariable",1,It)
   C_Language_write_value = MakeProperty("write_value",1,It)
@@ -1380,25 +1399,6 @@ func MetaLoad() {
   C_Language_make_filter = MakeProperty("make_filter",1,It)
   C_Language_make_demon = MakeProperty("make_demon",1,It)
   C_Language_eval_if_write = MakeProperty("eval_if_write",1,It)
-  C_Language_readCall = MakeProperty("readCall",1,It)
-  C_Language_eventMethod = MakeProperty("eventMethod",1,It)
-  C_Language_eventMethod_ask = MakeProperty("eventMethod?",1,It)
-  C_Language_putCall = MakeProperty("putCall",1,It)
-  C_Language_safeRange = MakeProperty("safeRange",1,It)
-  C_imported_function = MakeProperty("imported_function",1,C_claire)
-  C_occurchange = MakeProperty("occurchange",1,C_claire)
-  C_Language_getDefault = MakeProperty("getDefault",1,It)
-  C_Language_fast_definition_ask = MakeProperty("fast_definition?",1,It)
-  C_static_type = MakeProperty("static_type",1,C_claire)
-  C_Language_static_type_nth = MakeProperty("static_type_nth",1,It)
-  C_Language_jito = MakeProperty("jito",1,It)
-  C_Language_makeJito = MakeProperty("makeJito",1,It)
-  C_Language_letJito = MakeProperty("letJito",1,It)
-  C_Language_makeCallMatch = MakeProperty("makeCallMatch",1,It)
-  C_Language_new_writes = MakeProperty("new_writes",1,It)
-  C_Language_occurexact = MakeProperty("occurexact",1,It)
-  C_Language_wrong = MakeProperty("wrong",2,It)
-  C_map = MakeProperty("map",1,C_claire)
   
   // instructions from module sources
   C_Basic_instruction = MakeClass("Basic_instruction",C_Instruction,C_claire)
@@ -1412,8 +1412,8 @@ func MetaLoad() {
       
       _CL_obj = C_iClaire_typing
       _CL_obj.Range = ToType(CEMPTY.Id())
-      /*type->type*/_CL_obj.Value = C_Kernel_typing.Id()
-      /*any->any*/expr = _CL_obj.Close()
+      _CL_obj.Value = C_Kernel_typing.Id()
+      expr = _CL_obj.Close()
       } 
     ErrorCheck(expr)} 
   
@@ -1424,8 +1424,8 @@ func MetaLoad() {
       
       _CL_obj = C_iClaire_index
       _CL_obj.Range = ToType(CEMPTY.Id())
-      /*type->type*/_CL_obj.Value = C_mClaire_index.Id()
-      /*any->any*/expr = _CL_obj.Close()
+      _CL_obj.Value = C_mClaire_index.Id()
+      expr = _CL_obj.Close()
       } 
     ErrorCheck(expr)} 
   
@@ -1463,8 +1463,8 @@ func MetaLoad() {
       
       _CL_obj = C_EOF
       _CL_obj.Range = ToType(C_char.Id())
-      /*type->type*/_CL_obj.Value = MakeChar(F_char_I_integer(-1)).Id()
-      /*any->any*/expr = _CL_obj.Close()
+      _CL_obj.Value = MakeChar(F_char_I_integer(-1)).Id()
+      expr = _CL_obj.Close()
       } 
     ErrorCheck(expr)} 
   
@@ -1475,8 +1475,8 @@ func MetaLoad() {
       
       _CL_obj = C_EOS
       _CL_obj.Range = ToType(C_char.Id())
-      /*type->type*/_CL_obj.Value = MakeChar(F_char_I_integer(0)).Id()
-      /*any->any*/expr = _CL_obj.Close()
+      _CL_obj.Value = MakeChar(F_char_I_integer(0)).Id()
+      expr = _CL_obj.Close()
       } 
     ErrorCheck(expr)} 
   
@@ -1487,8 +1487,8 @@ func MetaLoad() {
       
       _CL_obj = C_MAX_INTEGER
       _CL_obj.Range = ToType(CEMPTY.Id())
-      /*type->type*/_CL_obj.Value = MakeInteger(1073741822).Id()
-      /*any->any*/expr = _CL_obj.Close()
+      _CL_obj.Value = MakeInteger(1073741822).Id()
+      expr = _CL_obj.Close()
       } 
     ErrorCheck(expr)} 
   
@@ -1507,8 +1507,8 @@ func MetaLoad() {
       
       _CL_obj = C__starvariable_index_star
       _CL_obj.Range = ToType(C_integer.Id())
-      /*type->type*/_CL_obj.Value = MakeInteger(0).Id()
-      /*any->any*/expr = _CL_obj.Close()
+      _CL_obj.Value = MakeInteger(0).Id()
+      expr = _CL_obj.Close()
       } 
     ErrorCheck(expr)} 
   
@@ -1537,8 +1537,8 @@ func MetaLoad() {
       
       _CL_obj = C_Language_PPC
       _CL_obj.Range = ToType(C_integer.Id())
-      /*type->type*/_CL_obj.Value = MakeInteger(0).Id()
-      /*any->any*/expr = _CL_obj.Close()
+      _CL_obj.Value = MakeInteger(0).Id()
+      expr = _CL_obj.Close()
       } 
     ErrorCheck(expr)} 
   
@@ -1593,8 +1593,8 @@ func MetaLoad() {
       
       _CL_obj = C_iClaire_LastCall
       _CL_obj.Range = ToType(C_any.Id())
-      /*type->type*/_CL_obj.Value = CNULL
-      /*any->any*/expr = _CL_obj.Close()
+      _CL_obj.Value = CNULL
+      expr = _CL_obj.Close()
       } 
     ErrorCheck(expr)} 
   
@@ -1602,13 +1602,13 @@ func MetaLoad() {
   Core.F_close_slot(C_Call.AddSlot(C_selector,ToType(C_property.Id()),CNULL))
   Core.F_close_slot(C_Call.AddSlot(C_args,ToType(C_list.Id()),ToType(C_any.Id()).EmptyList().Id()))
   C_Call.Params = MakeList(ToType(C_any.Id()),C_selector.Id(),C_args.Id())
-  /*list->list*/
+  
   C_Call_star = MakeClass("Call*",C_Call,C_claire)
   C_Call_star.Params = MakeList(ToType(C_any.Id()),C_selector.Id(),C_args.Id())
-  /*list->list*/
+  
   C_Call_plus = MakeClass("Call+",C_Call,C_claire)
   C_Call_plus.Params = MakeList(ToType(C_any.Id()),C_selector.Id(),C_args.Id())
-  /*list->list*/
+  
   _ = Core.F_attach_method(C_self_print.AddMethod(Signature(C_Call.Id(),C_void.Id()),1,MakeFunction1(E_self_print_Call_Language,"self_print_Call_Language")),MakeString("call.cl:68"))
   
   _ = Core.F_attach_method(C_self_print.AddMethod(Signature(C_Call_plus.Id(),C_void.Id()),1,MakeFunction1(E_self_print_Call_plus_Language,"self_print_Call_plus_Language")),MakeString("call.cl:71"))
@@ -1778,7 +1778,7 @@ func MetaLoad() {
   C_Do = MakeClass("Do",C_Control_structure,C_claire)
   Core.F_close_slot(C_Do.AddSlot(C_args,ToType(C_list.Id()),ToType(C_any.Id()).EmptyList().Id()))
   C_Do.Params = MakeList(ToType(C_any.Id()),C_args.Id())
-  /*list->list*/
+  
   _ = Core.F_attach_method(C_self_print.AddMethod(Signature(C_Do.Id(),C_void.Id()),1,MakeFunction1(E_self_print_Do_Language,"self_print_Do_Language")),MakeString("control.cl:74"))
   
   _ = Core.F_attach_method(C_Language_printdo.AddMethod(Signature(C_list.Id(),C_boolean.Id(),C_void.Id()),1,MakeFunction2(E_printdo_list,"printdo_list")),MakeString("control.cl:82"))
@@ -1929,7 +1929,7 @@ func MetaLoad() {
   
   C_macroexpand = MakeProperty("macroexpand",3,C_claire)
   C_macroexpand.Open = 3
-  /*integer->integer*/
+  
   
   _ = Core.F_attach_method(Core.C_self_eval.AddEvalMethod(Signature(C_Macro.Id(),C_any.Id()),1,MakeFunction1(E_self_eval_Macro2,"self_eval_Macro2"),EVAL_Macro),MakeString("control.cl:528"))
   
@@ -1942,15 +1942,15 @@ func MetaLoad() {
   
   C_Trace = MakeClass("Trace",C_Construct,C_claire)
   
-  _ = Core.F_attach_method(Core.C_self_eval.AddEvalMethod(Signature(C_Trace.Id(),C_any.Id()),1,MakeFunction1(E_self_eval_Trace,"self_eval_Trace"),EVAL_Trace),MakeString("control.cl:595"))
+  _ = Core.F_attach_method(Core.C_self_eval.AddEvalMethod(Signature(C_Trace.Id(),C_any.Id()),1,MakeFunction1(E_self_eval_Trace,"self_eval_Trace"),EVAL_Trace),MakeString("control.cl:596"))
   
   C_Assert = MakeClass("Assert",C_Construct,C_claire)
   Core.F_close_slot(C_Assert.AddSlot(C_mClaire_index,ToType(C_integer.Id()),MakeInteger(0).Id()))
   Core.F_close_slot(C_Assert.AddSlot(C_external,ToType(C_string.Id()),CNULL))
   
-  _ = Core.F_attach_method(Core.C_self_eval.AddEvalMethod(Signature(C_Assert.Id(),C_any.Id()),1,MakeFunction1(E_self_eval_Assert,"self_eval_Assert"),EVAL_Assert),MakeString("control.cl:609"))
+  _ = Core.F_attach_method(Core.C_self_eval.AddEvalMethod(Signature(C_Assert.Id(),C_any.Id()),1,MakeFunction1(E_self_eval_Assert,"self_eval_Assert"),EVAL_Assert),MakeString("control.cl:610"))
   
-  _ = Core.F_attach_method(Core.C_self_eval.AddEvalMethod(Signature(C_Branch.Id(),C_any.Id()),1,MakeFunction1(E_self_eval_Branch,"self_eval_Branch"),EVAL_Branch),MakeString("control.cl:615"))
+  _ = Core.F_attach_method(Core.C_self_eval.AddEvalMethod(Signature(C_Branch.Id(),C_any.Id()),1,MakeFunction1(E_self_eval_Branch,"self_eval_Branch"),EVAL_Branch),MakeString("control.cl:616"))
   
   C_extract_item = MakeProperty("extract_item",1,C_claire)
   
@@ -1965,8 +1965,8 @@ func MetaLoad() {
       
       _CL_obj = C_iClaire_LastComment
       _CL_obj.Range = ToType(C_any.Id())
-      /*type->type*/_CL_obj.Value = CNULL
-      /*any->any*/expr = _CL_obj.Close()
+      _CL_obj.Value = CNULL
+      expr = _CL_obj.Close()
       } 
     ErrorCheck(expr)} 
   
@@ -1977,8 +1977,8 @@ func MetaLoad() {
       
       _CL_obj = C_NeedComment
       _CL_obj.Range = ToType(C_boolean.Id())
-      /*type->type*/_CL_obj.Value = CFALSE.Id()
-      /*any->any*/expr = _CL_obj.Close()
+      _CL_obj.Value = CFALSE.Id()
+      expr = _CL_obj.Close()
       } 
     ErrorCheck(expr)} 
   
@@ -2050,17 +2050,17 @@ func MetaLoad() {
       
       _CL_obj = C_LDEF
       _CL_obj.Range = ToType(C_any.Id())
-      /*type->type*/_CL_obj.Value = ToType(CEMPTY.Id()).EmptyList().Id()
-      /*any->any*/expr = _CL_obj.Close()
+      _CL_obj.Value = ToType(CEMPTY.Id()).EmptyList().Id()
+      expr = _CL_obj.Close()
       } 
     ErrorCheck(expr)} 
   
   _ = Core.F_attach_method(Core.C_self_eval.AddEvalMethod(Signature(C_Defmethod.Id(),C_any.Id()),1,MakeFunction1(E_self_eval_Defmethod,"self_eval_Defmethod"),EVAL_Defmethod),MakeString("define.cl:235"))
   
   C__Z.Open = -1
-  /*integer->integer*/C__sup_equal.Open = -1
-  /*integer->integer*/C__equal.Open = -1
-  /*integer->integer*/
+  C__sup_equal.Open = -1
+  C__equal.Open = -1
+  
   _ = Core.F_attach_method(C_Language_attach_comment.AddMethod(Signature(C_any.Id(),C_void.Id()),1,MakeFunction1(E_attach_comment_any,"attach_comment_any")),MakeString("define.cl:244"))
   
   _ = Core.F_attach_method(C_iClaire_extract_signature.AddMethod(Signature(C_list.Id(),C_list.Id()),1,MakeFunction1(E_extract_signature_list,"extract_signature_list")),MakeString("define.cl:257"))
@@ -2091,34 +2091,34 @@ func MetaLoad() {
   
   _ = Core.F_attach_method(C_iClaire_type_I.AddMethod(Signature(C_any.Id(),C_type.Id()),0,MakeFunction1(E_type_I_any,"type_I_any")),MakeString("define.cl:449"))
   
-  _ = Core.F_attach_method(Core.C_self_eval.AddEvalMethod(Signature(C_Defarray.Id(),C_any.Id()),1,MakeFunction1(E_self_eval_Defarray,"self_eval_Defarray"),EVAL_Defarray),MakeString("define.cl:504"))
+  _ = Core.F_attach_method(Core.C_self_eval.AddEvalMethod(Signature(C_Defarray.Id(),C_any.Id()),1,MakeFunction1(E_self_eval_Defarray,"self_eval_Defarray"),EVAL_Defarray),MakeString("define.cl:506"))
   
   C_Language_demon = MakeClass("demon",C_lambda,It)
   Core.F_close_slot(C_Language_demon.AddSlot(C_mClaire_pname,ToType(C_symbol.Id()),Core.F_symbol_I_string2(MakeString("unamed")).Id()))
   Core.F_close_slot(C_Language_demon.AddSlot(C_Language_priority,ToType(C_integer.Id()),MakeInteger(0).Id()))
   Core.F_close_slot(C_Language_demon.AddSlot(C_formula,ToType(C_lambda.Id()),CNULL))
   
-  _ = Core.F_attach_method(C_self_print.AddMethod(Signature(C_Language_demon.Id(),C_void.Id()),1,MakeFunction1(E_self_print_demon,"self_print_demon")),MakeString("define.cl:514"))
+  _ = Core.F_attach_method(C_self_print.AddMethod(Signature(C_Language_demon.Id(),C_void.Id()),1,MakeFunction1(E_self_print_demon,"self_print_demon")),MakeString("define.cl:516"))
   
   _ = Core.F_attach_method(C_funcall.AddMethod(Signature(C_Language_demon.Id(),
     C_any.Id(),
     C_any.Id(),
-    C_any.Id()),1,MakeFunction3(E_funcall_demon1,"funcall_demon1")),MakeString("define.cl:515"))
+    C_any.Id()),1,MakeFunction3(E_funcall_demon1,"funcall_demon1")),MakeString("define.cl:517"))
   
   _ = Core.F_attach_method(C_funcall.AddMethod(Signature(C_Language_demon.Id(),
     C_any.Id(),
     C_any.Id(),
     C_any.Id(),
-    C_any.Id()),1,MakeFunction4(E_funcall_demon2,"funcall_demon2")),MakeString("define.cl:516"))
+    C_any.Id()),1,MakeFunction4(E_funcall_demon2,"funcall_demon2")),MakeString("define.cl:518"))
   
   C_demons = ToTable(new(ClaireTable).IsNamed(C_table,MakeSymbol("demons",C_claire)))
   C_demons.Range = Core.F_param_I_class(C_list,ToType(C_Language_demon.Id()))
-  /*type->type*/C_demons.Params = C_any.Id()
-  /*any->any*/C_demons.Domain = ToType(C_relation.Id())
-  /*type->type*/C_demons.GraphInit()
+  C_demons.Params = C_any.Id()
+  C_demons.Domain = ToType(C_relation.Id())
+  C_demons.GraphInit()
   
   C_demons.Default = ToType(C_Language_demon.Id()).EmptyList().Id()
-  /*any->any*/
+  
   C__inf_dash = ToOperation(new(ClaireOperation).IsNamed(C_operation,MakeSymbol("<-",C_claire)))
   
   
@@ -2126,21 +2126,21 @@ func MetaLoad() {
   
   C_Language_relations = ToTable(new(ClaireTable).IsNamed(C_table,MakeSymbol("relations",It)))
   C_Language_relations.Multivalued_ask = CTRUE
-  /*boolean->boolean*/C_Language_relations.Range = ToType(C_set.Id())
-  /*type->type*/C_Language_relations.Params = C_any.Id()
-  /*any->any*/C_Language_relations.Domain = ToType(C_Language_rule_object.Id())
-  /*type->type*/C_Language_relations.GraphInit()
+  C_Language_relations.Range = ToType(C_set.Id())
+  C_Language_relations.Params = C_any.Id()
+  C_Language_relations.Domain = ToType(C_Language_rule_object.Id())
+  C_Language_relations.GraphInit()
   
   C_Language_relations.Default = CEMPTY.Id()
-  /*any->any*/
+  
   C_Language_last_rule = ToTable(new(ClaireTable).IsNamed(C_table,MakeSymbol("last_rule",It)))
   C_Language_last_rule.Range = ToType(C_Language_rule_object.Id())
-  /*type->type*/C_Language_last_rule.Params = C_any.Id()
-  /*any->any*/C_Language_last_rule.Domain = ToType(C_relation.Id())
-  /*type->type*/C_Language_last_rule.GraphInit()
+  C_Language_last_rule.Params = C_any.Id()
+  C_Language_last_rule.Domain = ToType(C_relation.Id())
+  C_Language_last_rule.GraphInit()
   
   C_Language_last_rule.Default = CNULL
-  /*any->any*/
+  
   { 
     var expr EID 
     expr = Core.F_update_property(C_inverse,
@@ -2152,48 +2152,48 @@ func MetaLoad() {
   
   C_eval_rule = MakeProperty("eval_rule",3,C_claire)
   C_eval_rule.Open = 3
-  /*integer->integer*/
   
-  _ = Core.F_attach_method(Core.C_self_eval.AddEvalMethod(Signature(C_Defrule.Id(),C_any.Id()),1,MakeFunction1(E_self_eval_Defrule,"self_eval_Defrule"),EVAL_Defrule),MakeString("define.cl:550"))
   
-  _ = Core.F_attach_method(C_Language_eventMethod_ask.AddMethod(Signature(C_relation.Id(),C_boolean.Id()),0,MakeFunction1(E_eventMethod_ask_relation2,"eventMethod_ask_relation2")),MakeString("define.cl:554"))
+  _ = Core.F_attach_method(Core.C_self_eval.AddEvalMethod(Signature(C_Defrule.Id(),C_any.Id()),1,MakeFunction1(E_self_eval_Defrule,"self_eval_Defrule"),EVAL_Defrule),MakeString("define.cl:552"))
   
-  _ = Core.F_attach_method(C_Language_make_filter.AddMethod(Signature(C_any.Id(),MakeTuple(C_relation.Id(),Core.F_nth_class1(C_list,ToType(C_Variable.Id())).Id()).Id()),1,MakeFunction1(E_make_filter_any,"make_filter_any")),MakeString("define.cl:587"))
+  _ = Core.F_attach_method(C_Language_eventMethod_ask.AddMethod(Signature(C_relation.Id(),C_boolean.Id()),0,MakeFunction1(E_eventMethod_ask_relation2,"eventMethod_ask_relation2")),MakeString("define.cl:556"))
+  
+  _ = Core.F_attach_method(C_Language_make_filter.AddMethod(Signature(C_any.Id(),MakeTuple(C_relation.Id(),Core.F_nth_class1(C_list,ToType(C_Variable.Id())).Id()).Id()),1,MakeFunction1(E_make_filter_any,"make_filter_any")),MakeString("define.cl:589"))
   
   _ = Core.F_attach_method(C_Language_make_demon.AddMethod(Signature(C_relation.Id(),
     C_symbol.Id(),
     Core.F_nth_class1(C_list,ToType(C_Variable.Id())).Id(),
     C_any.Id(),
     C_any.Id(),
-    C_Language_demon.Id()),1,MakeFunction5(E_make_demon_relation,"make_demon_relation")),MakeString("define.cl:611"))
+    C_Language_demon.Id()),1,MakeFunction5(E_make_demon_relation,"make_demon_relation")),MakeString("define.cl:612"))
   
-  _ = Core.F_attach_method(C_Language_readCall.AddMethod(Signature(C_relation.Id(),C_any.Id(),C_Call.Id()),0,MakeFunction2(E_readCall_relation,"readCall_relation")),MakeString("define.cl:616"))
+  _ = Core.F_attach_method(C_Language_readCall.AddMethod(Signature(C_relation.Id(),C_any.Id(),C_Call.Id()),0,MakeFunction2(E_readCall_relation,"readCall_relation")),MakeString("define.cl:617"))
   
   _ = Core.F_attach_method(C_Language_putCall.AddMethod(Signature(C_relation.Id(),
     C_any.Id(),
     C_any.Id(),
-    C_Call.Id()),0,MakeFunction3(E_putCall_relation2,"putCall_relation2")),MakeString("define.cl:621"))
+    C_Call.Id()),0,MakeFunction3(E_putCall_relation2,"putCall_relation2")),MakeString("define.cl:622"))
   
-  _ = Core.F_attach_method(C_Language_safeRange.AddMethod(Signature(C_relation.Id(),C_type.Id()),0,MakeFunction1(E_safeRange_relation,"safeRange_relation")),MakeString("define.cl:629"))
+  _ = Core.F_attach_method(C_Language_safeRange.AddMethod(Signature(C_relation.Id(),C_type.Id()),0,MakeFunction1(E_safeRange_relation,"safeRange_relation")),MakeString("define.cl:630"))
   
-  _ = Core.F_attach_method(C_Language_eval_if_write.AddMethod(Signature(C_relation.Id(),C_void.Id()),1,MakeFunction1(E_eval_if_write_relation,"eval_if_write_relation")),MakeString("define.cl:657"))
+  _ = Core.F_attach_method(C_Language_eval_if_write.AddMethod(Signature(C_relation.Id(),C_void.Id()),1,MakeFunction1(E_eval_if_write_relation,"eval_if_write_relation")),MakeString("define.cl:658"))
   
-  _ = Core.F_attach_method(C_Language_eventMethod.AddMethod(Signature(C_property.Id(),C_void.Id()),0,MakeFunction1(E_eventMethod_property,"eventMethod_property")),MakeString("define.cl:666"))
+  _ = Core.F_attach_method(C_Language_eventMethod.AddMethod(Signature(C_property.Id(),C_void.Id()),0,MakeFunction1(E_eventMethod_property,"eventMethod_property")),MakeString("define.cl:667"))
   
-  _ = Core.F_attach_method(C_Language_jito.AddMethod(Signature(C_any.Id(),C_any.Id()),1,MakeFunction1(E_Language_jito_any,"Language_jito_any")),MakeString("define.cl:737"))
+  _ = Core.F_attach_method(C_Language_jito.AddMethod(Signature(C_any.Id(),C_any.Id()),1,MakeFunction1(E_Language_jito_any,"Language_jito_any")),MakeString("define.cl:707"))
   
-  _ = Core.F_attach_method(C_Language_letJito.AddMethod(Signature(C_Let.Id(),C_any.Id()),1,MakeFunction1(E_Language_letJito_Let,"Language_letJito_Let")),MakeString("define.cl:755"))
+  _ = Core.F_attach_method(C_Language_letJito.AddMethod(Signature(C_Let.Id(),C_any.Id()),1,MakeFunction1(E_Language_letJito_Let,"Language_letJito_Let")),MakeString("define.cl:725"))
   
-  _ = Core.F_attach_method(C_Language_makeJito.AddMethod(Signature(C_Call.Id(),C_void.Id()),1,MakeFunction1(E_Language_makeJito_Call,"Language_makeJito_Call")),MakeString("define.cl:782"))
+  _ = Core.F_attach_method(C_Language_makeJito.AddMethod(Signature(C_Call.Id(),C_void.Id()),1,MakeFunction1(E_Language_makeJito_Call,"Language_makeJito_Call")),MakeString("define.cl:751"))
   
-  _ = Core.F_attach_method(C_Language_makeCallMatch.AddMethod(Signature(C_restriction.Id(),C_list.Id(),C_boolean.Id()),0,MakeFunction2(E_Language_makeCallMatch_restriction,"Language_makeCallMatch_restriction")),MakeString("define.cl:790"))
+  _ = Core.F_attach_method(C_Language_makeCallMatch.AddMethod(Signature(C_restriction.Id(),C_list.Id(),C_boolean.Id()),0,MakeFunction2(E_Language_makeCallMatch_restriction,"Language_makeCallMatch_restriction")),MakeString("define.cl:759"))
   
   C_table.Open = ClEnv.Final
-  /*integer->integer*/C_class.Open = ClEnv.Final
-  /*integer->integer*/C_method.Open = ClEnv.Final
-  /*integer->integer*/C_slot.Open = ClEnv.Final
-  /*integer->integer*/C_boolean.Open = -1
-  /*integer->integer*/{ 
+  C_class.Open = ClEnv.Final
+  C_method.Open = ClEnv.Final
+  C_slot.Open = ClEnv.Final
+  C_boolean.Open = -1
+  { 
     var x *ClaireClass  
     _ = x
     var x_iter *ClaireAny  
@@ -2203,7 +2203,7 @@ func MetaLoad() {
       x_iter = x_support.At(i_it)
       x = ToClass(x_iter)
       x.Open = ClEnv.Default
-      /*integer->integer*/} 
+      } 
     } 
   
   } 

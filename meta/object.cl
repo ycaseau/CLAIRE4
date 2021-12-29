@@ -148,6 +148,16 @@ tr_indent(return?:boolean,n:integer) : void
      while (n > 9) (princ("="), n := n - 10),
      while (n > 0) (princ(">"), n := n - 1))
 
+// CLAIRE4 : because macros do not exist in go
+// #define DB_BIND(m,p,n,l) if (m.it->status == 4) {l push_debug_property(p,n,ClEnv->index - n);}
+db_bind(m:module,p:property,n:integer)
+ -> (if (m.status = 4) push_debug(p,n,index!() - n))
+
+// #define DB_UNBIND(m,p,v) if (m.it->status == 4) pop_debug_property(p,1,v)
+db_unbind(m:module,p:property,v:any) : void
+-> (if (m.status = 4) pop_debug(p,1,v))
+
+
 // *********************************************************************
 // *   Part 2: Tables                                                  *
 // *********************************************************************
@@ -325,7 +335,7 @@ erase(a:table)  : void
 claire/make_table(%domain:type, %range:type, %default:any) : table
   -> let t := (mClaire/new!(table) as table) in   
        (t.range := %range, 
-        table.instances :add t,                          // v3.3.3
+        table.instances :add! t,                          // v3.3.3
         t.domain := %domain,
         t.default := %default,
         t.params := any,

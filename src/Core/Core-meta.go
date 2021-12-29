@@ -1,5 +1,5 @@
 /***** CLAIRE Compilation of module Core.cl 
-         [version 4.0.03 / safety 5] Monday 12-27-2021 10:35:23 *****/
+         [version 4.0.03 / safety 5] Wednesday 12-29-2021 08:34:14 *****/
 
 package Core
 import (_ "fmt"
@@ -238,6 +238,49 @@ var C__backslash *ClaireOperation  /*obj*/
 var C_glb *ClaireOperation  /*obj*/
 var C_Core__inf_equalt *ClaireOperation  /*obj*/
 var C_Core__Zt *ClaireOperation  /*obj*/
+var C_Core_of_extract *ClaireProperty  // Core/"of_extract"
+var C_member *ClaireProperty  // claire/"member"
+var C_get_value *ClaireProperty  // claire/"get_value"
+var C_Core_enumerate *ClaireProperty  // Core/"enumerate"
+var C_Uall *ClaireProperty  // claire/"Uall"
+var C_unique_ask *ClaireProperty  // claire/"unique?"
+var C_the *ClaireProperty  // claire/"the"
+var C_Core_abstract_type *ClaireProperty  // Core/"abstract_type"
+var C_Core_insert_definition *ClaireProperty  // Core/"insert_definition"
+var C_mClaire_cpretty *ClaireProperty  // mClaire/"cpretty"
+var C_mClaire_cprevious *ClaireProperty  // mClaire/"cprevious"
+var C_mClaire_width *ClaireProperty  // mClaire/"width"
+var C_mClaire_pprint *ClaireProperty  // mClaire/"pprint"
+var C_mClaire_pbreak *ClaireProperty  // mClaire/"pbreak"
+var C_mClaire_set_base *ClaireProperty  // mClaire/"set_base"
+var C_mClaire_set_index *ClaireProperty  // mClaire/"set_index"
+var C_mClaire_update *ClaireProperty  // mClaire/"update"
+var C_make_set *ClaireProperty  // claire/"make_set"
+var C_get_symbol *ClaireProperty  // claire/"get_symbol"
+var C_time_read *ClaireProperty  // claire/"time_read"
+var C_Core_first_arg_type *ClaireProperty  // Core/"first_arg_type"
+var C_Core_second_arg_type *ClaireProperty  // Core/"second_arg_type"
+var C_Core_meet_arg_types *ClaireProperty  // Core/"meet_arg_types"
+var C_make_copy_list *ClaireProperty  // claire/"make_copy_list"
+var C_make_table *ClaireProperty  // claire/"make_table"
+var C_Core_first_member_type *ClaireProperty  // Core/"first_member_type"
+var C_mClaire_printFDigit *ClaireProperty  // mClaire/"printFDigit"
+var C_abs *ClaireProperty  // claire/"abs"
+var C_less_ask *ClaireOperation  // claire/"less?"
+var C_unsafe *ClaireProperty  // claire/"unsafe"
+var C_attach *ClaireProperty  // claire/"attach"
+var C_Core_nth_arg_type *ClaireProperty  // Core/"nth_arg_type"
+var C_instanced *ClaireProperty  // claire/"instanced"
+var C_typed_copy_list *ClaireProperty  // claire/"typed_copy_list"
+var C_nth_write *ClaireProperty  // claire/"nth_write"
+var C_Core_belong *ClaireProperty  // Core/"belong"
+var C_Core_super_apply *ClaireProperty  // Core/"super_apply"
+var C_Core_add_value_I *ClaireProperty  // Core/"add_value!"
+var C_mClaire_nth_object *ClaireProperty  // mClaire/"nth_object"
+var C_Core_thing_type_class *ClaireProperty  // Core/"thing_type_class"
+var C_Core_object_type_class *ClaireProperty  // Core/"object_type_class"
+var C_Core_new_defaults *ClaireProperty  // Core/"new_defaults"
+var C_Reference_I *ClaireProperty  // claire/"Reference!"
 var C_owner *ClaireProperty  // claire/"owner"
 var C_check_in *ClaireProperty  // claire/"check_in"
 var C_Core_initialize *ClaireProperty  // Core/"initialize"
@@ -289,61 +332,62 @@ var C_sort *ClaireProperty  // claire/"sort"
 var C_Core_quicksort *ClaireProperty  // Core/"quicksort"
 var C_Core_build_powerset *ClaireProperty  // Core/"build_powerset"
 var C_difference *ClaireProperty  // claire/"difference"
-var C_Core_of_extract *ClaireProperty  // Core/"of_extract"
-var C_member *ClaireProperty  // claire/"member"
-var C_get_value *ClaireProperty  // claire/"get_value"
-var C_Core_enumerate *ClaireProperty  // Core/"enumerate"
-var C_Uall *ClaireProperty  // claire/"Uall"
-var C_unique_ask *ClaireProperty  // claire/"unique?"
-var C_the *ClaireProperty  // claire/"the"
-var C_Core_abstract_type *ClaireProperty  // Core/"abstract_type"
-var C_Core_insert_definition *ClaireProperty  // Core/"insert_definition"
-var C_mClaire_cpretty *ClaireProperty  // mClaire/"cpretty"
-var C_mClaire_cprevious *ClaireProperty  // mClaire/"cprevious"
-var C_mClaire_width *ClaireProperty  // mClaire/"width"
-var C_mClaire_pprint *ClaireProperty  // mClaire/"pprint"
-var C_mClaire_pbreak *ClaireProperty  // mClaire/"pbreak"
-var C_mClaire_set_base *ClaireProperty  // mClaire/"set_base"
-var C_mClaire_set_index *ClaireProperty  // mClaire/"set_index"
-var C_mClaire_update *ClaireProperty  // mClaire/"update"
-var C_make_set *ClaireProperty  // claire/"make_set"
-var C_get_symbol *ClaireProperty  // claire/"get_symbol"
-var C_time_read *ClaireProperty  // claire/"time_read"
-var C_Core_first_arg_type *ClaireProperty  // Core/"first_arg_type"
-var C_Core_second_arg_type *ClaireProperty  // Core/"second_arg_type"
-var C_Core_meet_arg_types *ClaireProperty  // Core/"meet_arg_types"
-var C_make_copy_list *ClaireProperty  // claire/"make_copy_list"
-var C_make_table *ClaireProperty  // claire/"make_table"
-var C_Core_first_member_type *ClaireProperty  // Core/"first_member_type"
-var C_mClaire_printFDigit *ClaireProperty  // mClaire/"printFDigit"
-var C_abs *ClaireProperty  // claire/"abs"
-var C_less_ask *ClaireOperation  // claire/"less?"
-var C_unsafe *ClaireProperty  // claire/"unsafe"
-var C_attach *ClaireProperty  // claire/"attach"
-var C_Core_nth_arg_type *ClaireProperty  // Core/"nth_arg_type"
-var C_instanced *ClaireProperty  // claire/"instanced"
-var C_typed_copy_list *ClaireProperty  // claire/"typed_copy_list"
-var C_nth_write *ClaireProperty  // claire/"nth_write"
-var C_Core_belong *ClaireProperty  // Core/"belong"
-var C_Core_super_apply *ClaireProperty  // Core/"super_apply"
-var C_Core_add_value_I *ClaireProperty  // Core/"add_value!"
-var C_mClaire_nth_object *ClaireProperty  // mClaire/"nth_object"
-var C_Core_thing_type_class *ClaireProperty  // Core/"thing_type_class"
-var C_Core_object_type_class *ClaireProperty  // Core/"object_type_class"
-var C_Core_new_defaults *ClaireProperty  // Core/"new_defaults"
-var C_Reference_I *ClaireProperty  // claire/"Reference!"
-var C_Core_closed *ClaireProperty  // Core/"closed"
 var C_read_lambda *ClaireProperty  // claire/"read_lambda"
+var C_Core_db_bind *ClaireProperty  // Core/"db_bind"
+var C_Core_db_unbind *ClaireProperty  // Core/"db_unbind"
 var It *ClaireModule
 
 // definition of the meta-model for module Core 
 func MetaLoad() { 
   
   It = MakeModule("Core",C_mClaire)
-  It.Comment = MakeString("Compiled on Monday 12-27-2021 10:35:23(v4.0.03), lines:2396, warnings:15,safety:5")
+  It.Comment = MakeString("Compiled on Wednesday 12-29-2021 08:34:14(v4.0.03), lines:2406, warnings:5,safety:5")
   ClEnv.Module_I = It
-  // definition of the properties 
   
+  // definition of the properties
+  C_Core_of_extract = MakeProperty("of_extract",1,It)
+  C_member = MakeProperty("member",1,C_claire)
+  C_get_value = MakeProperty("get_value",1,C_claire)
+  C_Core_enumerate = MakeProperty("enumerate",1,It)
+  C_Uall = MakeProperty("Uall",1,C_claire)
+  C_unique_ask = MakeProperty("unique?",1,C_claire)
+  C_the = MakeProperty("the",1,C_claire)
+  C_Core_abstract_type = MakeProperty("abstract_type",1,It)
+  C_Core_insert_definition = MakeProperty("insert_definition",1,It)
+  C_mClaire_cpretty = MakeProperty("cpretty",1,C_mClaire)
+  C_mClaire_cprevious = MakeProperty("cprevious",1,C_mClaire)
+  C_mClaire_width = MakeProperty("width",1,C_mClaire)
+  C_mClaire_pprint = MakeProperty("pprint",1,C_mClaire)
+  C_mClaire_pbreak = MakeProperty("pbreak",1,C_mClaire)
+  C_mClaire_set_base = MakeProperty("set_base",1,C_mClaire)
+  C_mClaire_set_index = MakeProperty("set_index",1,C_mClaire)
+  C_mClaire_update = MakeProperty("update",1,C_mClaire)
+  C_make_set = MakeProperty("make_set",1,C_claire)
+  C_get_symbol = MakeProperty("get_symbol",1,C_claire)
+  C_time_read = MakeProperty("time_read",2,C_claire)
+  C_Core_first_arg_type = MakeProperty("first_arg_type",1,It)
+  C_Core_second_arg_type = MakeProperty("second_arg_type",1,It)
+  C_Core_meet_arg_types = MakeProperty("meet_arg_types",1,It)
+  C_make_copy_list = MakeProperty("make_copy_list",1,C_claire)
+  C_make_table = MakeProperty("make_table",1,C_claire)
+  C_Core_first_member_type = MakeProperty("first_member_type",1,It)
+  C_mClaire_printFDigit = MakeProperty("printFDigit",1,C_mClaire)
+  C_abs = MakeProperty("abs",1,C_claire)
+  C_less_ask = MakeOperation("less?",1,C_claire,60)
+  C_unsafe = MakeProperty("unsafe",1,C_claire)
+  C_attach = MakeProperty("attach",1,C_claire)
+  C_Core_nth_arg_type = MakeProperty("nth_arg_type",1,It)
+  C_instanced = MakeProperty("instanced",1,C_claire)
+  C_typed_copy_list = MakeProperty("typed_copy_list",1,C_claire)
+  C_nth_write = MakeProperty("nth_write",1,C_claire)
+  C_Core_belong = MakeProperty("belong",1,It)
+  C_Core_super_apply = MakeProperty("super_apply",1,It)
+  C_Core_add_value_I = MakeProperty("add_value!",1,It)
+  C_mClaire_nth_object = MakeProperty("nth_object",1,C_mClaire)
+  C_Core_thing_type_class = MakeProperty("thing_type_class",1,It)
+  C_Core_object_type_class = MakeProperty("object_type_class",1,It)
+  C_Core_new_defaults = MakeProperty("new_defaults",1,It)
+  C_Reference_I = MakeProperty("Reference!",1,C_claire)
   C_owner = MakeProperty("owner",1,C_claire)
   C_check_in = MakeProperty("check_in",2,C_claire)
   C_Core_initialize = MakeProperty("initialize",1,It)
@@ -395,51 +439,9 @@ func MetaLoad() {
   C_Core_quicksort = MakeProperty("quicksort",1,It)
   C_Core_build_powerset = MakeProperty("build_powerset",1,It)
   C_difference = MakeProperty("difference",1,C_claire)
-  C_Core_of_extract = MakeProperty("of_extract",1,It)
-  C_member = MakeProperty("member",1,C_claire)
-  C_get_value = MakeProperty("get_value",1,C_claire)
-  C_Core_enumerate = MakeProperty("enumerate",1,It)
-  C_Uall = MakeProperty("Uall",1,C_claire)
-  C_unique_ask = MakeProperty("unique?",1,C_claire)
-  C_the = MakeProperty("the",1,C_claire)
-  C_Core_abstract_type = MakeProperty("abstract_type",1,It)
-  C_Core_insert_definition = MakeProperty("insert_definition",1,It)
-  C_mClaire_cpretty = MakeProperty("cpretty",1,C_mClaire)
-  C_mClaire_cprevious = MakeProperty("cprevious",1,C_mClaire)
-  C_mClaire_width = MakeProperty("width",1,C_mClaire)
-  C_mClaire_pprint = MakeProperty("pprint",1,C_mClaire)
-  C_mClaire_pbreak = MakeProperty("pbreak",1,C_mClaire)
-  C_mClaire_set_base = MakeProperty("set_base",1,C_mClaire)
-  C_mClaire_set_index = MakeProperty("set_index",1,C_mClaire)
-  C_mClaire_update = MakeProperty("update",1,C_mClaire)
-  C_make_set = MakeProperty("make_set",1,C_claire)
-  C_get_symbol = MakeProperty("get_symbol",1,C_claire)
-  C_time_read = MakeProperty("time_read",2,C_claire)
-  C_Core_first_arg_type = MakeProperty("first_arg_type",1,It)
-  C_Core_second_arg_type = MakeProperty("second_arg_type",1,It)
-  C_Core_meet_arg_types = MakeProperty("meet_arg_types",1,It)
-  C_make_copy_list = MakeProperty("make_copy_list",1,C_claire)
-  C_make_table = MakeProperty("make_table",1,C_claire)
-  C_Core_first_member_type = MakeProperty("first_member_type",1,It)
-  C_mClaire_printFDigit = MakeProperty("printFDigit",1,C_mClaire)
-  C_abs = MakeProperty("abs",1,C_claire)
-  C_less_ask = MakeOperation("less?",1,C_claire,60)
-  C_unsafe = MakeProperty("unsafe",1,C_claire)
-  C_attach = MakeProperty("attach",1,C_claire)
-  C_Core_nth_arg_type = MakeProperty("nth_arg_type",1,It)
-  C_instanced = MakeProperty("instanced",1,C_claire)
-  C_typed_copy_list = MakeProperty("typed_copy_list",1,C_claire)
-  C_nth_write = MakeProperty("nth_write",1,C_claire)
-  C_Core_belong = MakeProperty("belong",1,It)
-  C_Core_super_apply = MakeProperty("super_apply",1,It)
-  C_Core_add_value_I = MakeProperty("add_value!",1,It)
-  C_mClaire_nth_object = MakeProperty("nth_object",1,C_mClaire)
-  C_Core_thing_type_class = MakeProperty("thing_type_class",1,It)
-  C_Core_object_type_class = MakeProperty("object_type_class",1,It)
-  C_Core_new_defaults = MakeProperty("new_defaults",1,It)
-  C_Reference_I = MakeProperty("Reference!",1,C_claire)
-  C_Core_closed = MakeProperty("closed",2,It)
   C_read_lambda = MakeProperty("read_lambda",1,C_claire)
+  C_Core_db_bind = MakeProperty("db_bind",1,It)
+  C_Core_db_unbind = MakeProperty("db_unbind",1,It)
   
   // instructions from module sources
   { 
@@ -728,7 +730,7 @@ func MetaLoad() {
     C_object.Id()),0,MakeFunction4(E_find_which_class,"find_which_class")),MakeString("method.cl:567"))
   
   ClEnv.Version = 0.04
-  /*float->float*/PRINC("-- CLAIRE run-time library v 4.")
+  PRINC("-- CLAIRE run-time library v 4.")
   F_princ_float(0.04)
   PRINC(" [os: ")
   PRINC("macos")
@@ -742,11 +744,11 @@ func MetaLoad() {
   
   C_mClaire_index_I = MakeProperty("index!",1,C_mClaire)
   C_mClaire_index_I.Range = ToType(C_integer.Id())
-  /*type->type*/
+  
   
   C_mClaire_base_I = MakeProperty("base!",1,C_mClaire)
   C_mClaire_base_I.Range = ToType(C_integer.Id())
-  /*type->type*/
+  
   
   _ = F_attach_method(C_mClaire_get_args.AddMethod(Signature(C_integer.Id(),C_list.Id()),0,MakeFunction1(E_get_args_integer,"get_args_integer")),MakeString("object.cl:55"))
   
@@ -784,123 +786,131 @@ func MetaLoad() {
   
   _ = F_attach_method(C_Core_tr_indent.AddMethod(Signature(C_boolean.Id(),C_integer.Id(),C_void.Id()),0,MakeFunction2(E_tr_indent_boolean,"tr_indent_boolean")),MakeString("object.cl:149"))
   
-  _ = F_attach_method(C_Core_identified_ask.AddMethod(Signature(C_class.Id(),C_boolean.Id()),0,MakeFunction1(E_identified_ask_class,"identified_ask_class")),MakeString("object.cl:158"))
+  _ = F_attach_method(C_Core_db_bind.AddMethod(Signature(C_module.Id(),
+    C_property.Id(),
+    C_integer.Id(),
+    C_void.Id()),1,MakeFunction3(E_Core_db_bind_module,"Core_db_bind_module")),MakeString("object.cl:154"))
   
-  _ = F_attach_method(C_identical_ask.AddMethod(Signature(C_any.Id(),C_any.Id(),C_boolean.Id()),0,MakeFunction2(E_identical_ask_any,"identical_ask_any")),MakeString("object.cl:162"))
+  _ = F_attach_method(C_Core_db_unbind.AddMethod(Signature(C_module.Id(),
+    C_property.Id(),
+    C_any.Id(),
+    C_void.Id()),1,MakeFunction3(E_Core_db_unbind_module,"Core_db_unbind_module")),MakeString("object.cl:158"))
+  
+  _ = F_attach_method(C_Core_identified_ask.AddMethod(Signature(C_class.Id(),C_boolean.Id()),0,MakeFunction1(E_identified_ask_class,"identified_ask_class")),MakeString("object.cl:168"))
+  
+  _ = F_attach_method(C_identical_ask.AddMethod(Signature(C_any.Id(),C_any.Id(),C_boolean.Id()),0,MakeFunction2(E_identical_ask_any,"identical_ask_any")),MakeString("object.cl:172"))
   
   _ = F_attach_method(C_put.AddMethod(Signature(C_property.Id(),
     C_object.Id(),
     C_any.Id(),
-    C_any.Id()),1,MakeFunction3(E_put_property2,"put_property2")),MakeString("object.cl:172"))
+    C_any.Id()),1,MakeFunction3(E_put_property2,"put_property2")),MakeString("object.cl:182"))
   
   _ = F_attach_method(C_add_value.AddMethod(Signature(C_property.Id(),
     C_object.Id(),
     C_any.Id(),
-    C_void.Id()),1,MakeFunction3(E_add_value_property3,"add_value_property3")),MakeString("object.cl:181"))
+    C_void.Id()),1,MakeFunction3(E_add_value_property3,"add_value_property3")),MakeString("object.cl:191"))
   
-  F_attach_method(C_nth.AddMethod(Signature(C_table.Id(),C_any.Id(),C_any.Id()),1,MakeFunction2(E_nth_table1,"nth_table1")),MakeString("object.cl:197")).Typing = MakeFunction2(E_nth_table1_type,"nth_table1_type").Id()
-  /*any->any*/
-  F_attach_method(C_get.AddMethod(Signature(C_table.Id(),C_any.Id(),C_any.Id()),0,MakeFunction2(E_get_table,"get_table")),MakeString("object.cl:206")).Typing = MakeFunction2(E_get_table_type,"get_table_type").Id()
-  /*any->any*/
+  F_attach_method(C_nth.AddMethod(Signature(C_table.Id(),C_any.Id(),C_any.Id()),1,MakeFunction2(E_nth_table1,"nth_table1")),MakeString("object.cl:207")).Typing = MakeFunction2(E_nth_table1_type,"nth_table1_type").Id()
+  
+  F_attach_method(C_get.AddMethod(Signature(C_table.Id(),C_any.Id(),C_any.Id()),0,MakeFunction2(E_get_table,"get_table")),MakeString("object.cl:216")).Typing = MakeFunction2(E_get_table_type,"get_table_type").Id()
+  
   _ = F_attach_method(C_nth_equal.AddMethod(Signature(C_table.Id(),
     C_any.Id(),
     C_any.Id(),
-    C_void.Id()),1,MakeFunction3(E_nth_equal_table1,"nth_equal_table1")),MakeString("object.cl:213"))
+    C_void.Id()),1,MakeFunction3(E_nth_equal_table1,"nth_equal_table1")),MakeString("object.cl:223"))
   
   _ = F_attach_method(C_nth_put.AddMethod(Signature(C_table.Id(),
     C_any.Id(),
     C_any.Id(),
-    C_void.Id()),1,MakeFunction3(E_nth_put_table,"nth_put_table")),MakeString("object.cl:232"))
+    C_void.Id()),1,MakeFunction3(E_nth_put_table,"nth_put_table")),MakeString("object.cl:242"))
   
   _ = F_attach_method(C_put.AddMethod(Signature(C_table.Id(),
     C_any.Id(),
     C_any.Id(),
-    C_void.Id()),0,MakeFunction3(E_put_table,"put_table")),MakeString("object.cl:243"))
+    C_void.Id()),0,MakeFunction3(E_put_table,"put_table")),MakeString("object.cl:253"))
   
   _ = F_attach_method(C_add.AddMethod(Signature(C_table.Id(),
     C_any.Id(),
     C_any.Id(),
-    C_void.Id()),1,MakeFunction3(E_add_table,"add_table")),MakeString("object.cl:250"))
+    C_void.Id()),1,MakeFunction3(E_add_table,"add_table")),MakeString("object.cl:260"))
   
   _ = F_attach_method(C_add_I.AddMethod(Signature(C_table.Id(),
     C_any.Id(),
     C_any.Id(),
-    C_void.Id()),1,MakeFunction3(E_add_I_table,"add_I_table")),MakeString("object.cl:255"))
+    C_void.Id()),1,MakeFunction3(E_add_I_table,"add_I_table")),MakeString("object.cl:265"))
   
   _ = F_attach_method(C_Core_add_value_I.AddMethod(Signature(C_table.Id(),
     C_any.Id(),
     C_set.Id(),
     C_any.Id(),
-    C_boolean.Id()),0,MakeFunction4(E_Core_add_value_I_table,"Core_add_value_I_table")),MakeString("object.cl:263"))
+    C_boolean.Id()),0,MakeFunction4(E_Core_add_value_I_table,"Core_add_value_I_table")),MakeString("object.cl:273"))
   
   _ = F_attach_method(C_add_value.AddMethod(Signature(C_table.Id(),
     C_any.Id(),
     C_any.Id(),
-    C_void.Id()),0,MakeFunction3(E_add_value_table3,"add_value_table3")),MakeString("object.cl:268"))
+    C_void.Id()),0,MakeFunction3(E_add_value_table3,"add_value_table3")),MakeString("object.cl:278"))
   
   _ = F_attach_method(C_delete.AddMethod(Signature(C_table.Id(),
     C_any.Id(),
     C_any.Id(),
-    C_any.Id()),0,MakeFunction3(E_delete_table,"delete_table")),MakeString("object.cl:278"))
+    C_any.Id()),0,MakeFunction3(E_delete_table,"delete_table")),MakeString("object.cl:288"))
   
   F_attach_method(C_nth.AddMethod(Signature(C_table.Id(),
     C_any.Id(),
     C_any.Id(),
-    C_any.Id()),1,MakeFunction3(E_nth_table2,"nth_table2")),MakeString("object.cl:288")).Typing = MakeFunction3(E_nth_table2_type,"nth_table2_type").Id()
-  /*any->any*/
+    C_any.Id()),1,MakeFunction3(E_nth_table2,"nth_table2")),MakeString("object.cl:298")).Typing = MakeFunction3(E_nth_table2_type,"nth_table2_type").Id()
+  
   _ = F_attach_method(C_nth_equal.AddMethod(Signature(C_table.Id(),
     C_any.Id(),
     C_any.Id(),
     C_any.Id(),
-    C_void.Id()),1,MakeFunction4(E_nth_equal_table2,"nth_equal_table2")),MakeString("object.cl:302"))
+    C_void.Id()),1,MakeFunction4(E_nth_equal_table2,"nth_equal_table2")),MakeString("object.cl:312"))
   
-  _ = F_attach_method(C_Core_get_index.AddMethod(Signature(C_table.Id(),C_any.Id(),C_integer.Id()),0,MakeFunction2(E_get_index_table1,"get_index_table1")),MakeString("object.cl:309"))
+  _ = F_attach_method(C_Core_get_index.AddMethod(Signature(C_table.Id(),C_any.Id(),C_integer.Id()),0,MakeFunction2(E_get_index_table1,"get_index_table1")),MakeString("object.cl:319"))
   
   _ = F_attach_method(C_Core_get_index.AddMethod(Signature(C_table.Id(),
     C_integer.Id(),
     C_integer.Id(),
-    C_integer.Id()),0,MakeFunction3(E_get_index_table2,"get_index_table2")),MakeString("object.cl:312"))
+    C_integer.Id()),0,MakeFunction3(E_get_index_table2,"get_index_table2")),MakeString("object.cl:322"))
   
-  _ = F_attach_method(C_erase.AddMethod(Signature(C_table.Id(),C_void.Id()),1,MakeFunction1(E_erase_table,"erase_table")),MakeString("object.cl:321"))
+  _ = F_attach_method(C_erase.AddMethod(Signature(C_table.Id(),C_void.Id()),1,MakeFunction1(E_erase_table,"erase_table")),MakeString("object.cl:331"))
   
   _ = F_attach_method(C_make_table.AddMethod(Signature(C_type.Id(),
     C_type.Id(),
     C_any.Id(),
-    C_table.Id()),1,MakeFunction3(E_make_table_type,"make_table_type")),MakeString("object.cl:333"))
+    C_table.Id()),1,MakeFunction3(E_make_table_type,"make_table_type")),MakeString("object.cl:343"))
   
   C_Core_StopProperty = ToTable(new(ClaireTable).IsNamed(C_table,MakeSymbol("StopProperty",It)))
   C_Core_StopProperty.Range = ToType(C_list.Id())
-  /*type->type*/C_Core_StopProperty.Params = C_any.Id()
-  /*any->any*/C_Core_StopProperty.Domain = ToType(C_property.Id())
-  /*type->type*/C_Core_StopProperty.GraphInit()
+  C_Core_StopProperty.Params = C_any.Id()
+  C_Core_StopProperty.Domain = ToType(C_property.Id())
+  C_Core_StopProperty.GraphInit()
   
   C_Core_StopProperty.Default = CNULL
-  /*any->any*/
-  _ = F_attach_method(C_funcall.AddMethod(Signature(C_lambda.Id(),C_any.Id(),C_any.Id()),1,MakeFunction2(E_funcall_lambda1,"funcall_lambda1")),MakeString("object.cl:351"))
+  
+  _ = F_attach_method(C_funcall.AddMethod(Signature(C_lambda.Id(),C_any.Id(),C_any.Id()),1,MakeFunction2(E_funcall_lambda1,"funcall_lambda1")),MakeString("object.cl:361"))
   
   _ = F_attach_method(C_funcall.AddMethod(Signature(C_lambda.Id(),
     C_any.Id(),
     C_any.Id(),
-    C_any.Id()),1,MakeFunction3(E_funcall_lambda2,"funcall_lambda2")),MakeString("object.cl:364"))
+    C_any.Id()),1,MakeFunction3(E_funcall_lambda2,"funcall_lambda2")),MakeString("object.cl:374"))
   
   _ = F_attach_method(C_funcall.AddMethod(Signature(C_lambda.Id(),
     C_any.Id(),
     C_any.Id(),
     C_any.Id(),
-    C_any.Id()),1,MakeFunction4(E_funcall_lambda3,"funcall_lambda3")),MakeString("object.cl:378"))
+    C_any.Id()),1,MakeFunction4(E_funcall_lambda3,"funcall_lambda3")),MakeString("object.cl:388"))
   
-  _ = F_attach_method(C_Core_check_inverse.AddMethod(Signature(C_any.Id(),C_any.Id(),C_void.Id()),1,MakeFunction2(E_check_inverse_any,"check_inverse_any")),MakeString("object.cl:390"))
+  _ = F_attach_method(C_Core_check_inverse.AddMethod(Signature(C_any.Id(),C_any.Id(),C_void.Id()),1,MakeFunction2(E_check_inverse_any,"check_inverse_any")),MakeString("object.cl:400"))
   
   { 
     var expr EID 
     C_relation.Open = 0
-    /*integer->integer*//*g_try(v2:"expr",loop:false) */
     expr = F_update_property(C_inverse,
       ToObject(C_inverse.Id()),
       8,
       C_relation,
       C_inverse.Id())
-    /* ERROR PROTECTION INSERTED (expr-expr) */
     if !ErrorIn(expr) {
     { 
       var va_arg1 *ClaireRelation  
@@ -908,81 +918,81 @@ func MetaLoad() {
       va_arg1 = ToRelation(C_inverse.Id())
       va_arg2 = ToMethod(F__at_property1(C_Core_check_inverse,C_any).Id()).Functional.Id()
       va_arg1.IfWrite = va_arg2
-      /*any->any*/expr = va_arg2.ToEID()
+      expr = va_arg2.ToEID()
       } 
     }
     ErrorCheck(expr)} 
   
-  _ = F_attach_method(C_invert.AddMethod(Signature(C_relation.Id(),C_any.Id(),C_set.Id()),1,MakeFunction2(E_invert_relation,"invert_relation")),MakeString("object.cl:408"))
+  _ = F_attach_method(C_invert.AddMethod(Signature(C_relation.Id(),C_any.Id(),C_set.Id()),1,MakeFunction2(E_invert_relation,"invert_relation")),MakeString("object.cl:418"))
   
-  _ = F_attach_method(C_domain_I.AddMethod(Signature(C_restriction.Id(),C_class.Id()),0,MakeFunction1(E_domain_I_restriction,"domain_I_restriction")),MakeString("object.cl:411"))
+  _ = F_attach_method(C_domain_I.AddMethod(Signature(C_restriction.Id(),C_class.Id()),0,MakeFunction1(E_domain_I_restriction,"domain_I_restriction")),MakeString("object.cl:421"))
   
-  _ = F_attach_method(C_methods.AddMethod(Signature(C_class.Id(),C_class.Id(),C_set.Id()),0,MakeFunction2(E_methods_class,"methods_class")),MakeString("object.cl:413"))
+  _ = F_attach_method(C_methods.AddMethod(Signature(C_class.Id(),C_class.Id(),C_set.Id()),0,MakeFunction2(E_methods_class,"methods_class")),MakeString("object.cl:423"))
   
   C_reify = MakeProperty("reify",1,C_claire)
   
   
-  _ = F_attach_method(C_reify.AddMethod(Signature(C_listargs.Id(),C_void.Id()),0,MakeFunction1(E_reify_listargs,"reify_listargs")),MakeString("object.cl:419"))
+  _ = F_attach_method(C_reify.AddMethod(Signature(C_listargs.Id(),C_void.Id()),0,MakeFunction1(E_reify_listargs,"reify_listargs")),MakeString("object.cl:429"))
   
   C_Core__star_stararg = MakeProperty("**arg",0,It)
   C_Core__star_stararg.Open = 0
-  /*integer->integer*/
+  
   
   C_general_error = MakeClass("general_error",C_error,C_claire)
   F_close_slot(C_general_error.AddSlot(C_mClaire_cause,ToType(C_any.Id()),CNULL))
   F_close_slot(C_general_error.AddSlot(C_arg,ToType(C_any.Id()),CNULL))
   
-  _ = F_attach_method(C_self_print.AddMethod(Signature(C_general_error.Id(),C_void.Id()),1,MakeFunction1(E_self_print_general_error_Core,"self_print_general_error_Core")),MakeString("object.cl:432"))
+  _ = F_attach_method(C_self_print.AddMethod(Signature(C_general_error.Id(),C_void.Id()),1,MakeFunction1(E_self_print_general_error_Core,"self_print_general_error_Core")),MakeString("object.cl:442"))
   
   C_read_slot_error = MakeClass("read_slot_error",C_error,C_claire)
   F_close_slot(C_read_slot_error.AddSlot(C_arg,ToType(C_any.Id()),CNULL))
   F_close_slot(C_read_slot_error.AddSlot(C_Core_wrong,ToType(C_any.Id()),CNULL))
   
-  _ = F_attach_method(C_self_print.AddMethod(Signature(C_read_slot_error.Id(),C_void.Id()),1,MakeFunction1(E_self_print_read_slot_error_Core,"self_print_read_slot_error_Core")),MakeString("object.cl:437"))
+  _ = F_attach_method(C_self_print.AddMethod(Signature(C_read_slot_error.Id(),C_void.Id()),1,MakeFunction1(E_self_print_read_slot_error_Core,"self_print_read_slot_error_Core")),MakeString("object.cl:447"))
   
   C_range_error = MakeClass("range_error",C_error,C_claire)
   F_close_slot(C_range_error.AddSlot(C_mClaire_cause,ToType(C_any.Id()),CNULL))
   F_close_slot(C_range_error.AddSlot(C_arg,ToType(C_any.Id()),CNULL))
   F_close_slot(C_range_error.AddSlot(C_Core_wrong,ToType(C_any.Id()),CNULL))
   
-  _ = F_attach_method(C_self_print.AddMethod(Signature(C_range_error.Id(),C_void.Id()),1,MakeFunction1(E_self_print_range_error_Core,"self_print_range_error_Core")),MakeString("object.cl:443"))
+  _ = F_attach_method(C_self_print.AddMethod(Signature(C_range_error.Id(),C_void.Id()),1,MakeFunction1(E_self_print_range_error_Core,"self_print_range_error_Core")),MakeString("object.cl:453"))
   
   C_selector_error = MakeClass("selector_error",C_error,C_claire)
   F_close_slot(C_selector_error.AddSlot(C_selector,ToType(C_any.Id()),CNULL))
   F_close_slot(C_selector_error.AddSlot(C_arg,ToType(C_any.Id()),CNULL))
   
-  _ = F_attach_method(C_self_print.AddMethod(Signature(C_selector_error.Id(),C_void.Id()),1,MakeFunction1(E_self_print_selector_error_Core,"self_print_selector_error_Core")),MakeString("object.cl:451"))
+  _ = F_attach_method(C_self_print.AddMethod(Signature(C_selector_error.Id(),C_void.Id()),1,MakeFunction1(E_self_print_selector_error_Core,"self_print_selector_error_Core")),MakeString("object.cl:461"))
   
   C_return_error = MakeClass("return_error",C_error,C_claire)
   F_close_slot(C_return_error.AddSlot(C_arg,ToType(C_any.Id()),CNULL))
   
-  _ = F_attach_method(C_self_print.AddMethod(Signature(C_return_error.Id(),C_void.Id()),0,MakeFunction1(E_self_print_return_error_Core,"self_print_return_error_Core")),MakeString("object.cl:456"))
+  _ = F_attach_method(C_self_print.AddMethod(Signature(C_return_error.Id(),C_void.Id()),0,MakeFunction1(E_self_print_return_error_Core,"self_print_return_error_Core")),MakeString("object.cl:466"))
   
-  _ = F_attach_method(C_self_print.AddMethod(Signature(C_system_error.Id(),C_void.Id()),1,MakeFunction1(E_self_print_system_error_Core,"self_print_system_error_Core")),MakeString("object.cl:504"))
+  _ = F_attach_method(C_self_print.AddMethod(Signature(C_system_error.Id(),C_void.Id()),1,MakeFunction1(E_self_print_system_error_Core,"self_print_system_error_Core")),MakeString("object.cl:514"))
   
   C_contradiction = MakeClass("contradiction",C_exception,C_claire)
   
-  _ = F_attach_method(C_self_print.AddMethod(Signature(C_contradiction.Id(),C_void.Id()),0,MakeFunction1(E_self_print_contradiction_Core,"self_print_contradiction_Core")),MakeString("object.cl:509"))
+  _ = F_attach_method(C_self_print.AddMethod(Signature(C_contradiction.Id(),C_void.Id()),0,MakeFunction1(E_self_print_contradiction_Core,"self_print_contradiction_Core")),MakeString("object.cl:519"))
   
-  _ = F_attach_method(C_format.AddMethod(Signature(C_string.Id(),C_list.Id(),C_void.Id()),1,MakeFunction2(E_format_string,"format_string")),MakeString("object.cl:525"))
+  _ = F_attach_method(C_format.AddMethod(Signature(C_string.Id(),C_list.Id(),C_void.Id()),1,MakeFunction2(E_format_string,"format_string")),MakeString("object.cl:535"))
   
   _ = F_attach_method(C_Core_tformat.AddMethod(Signature(C_string.Id(),
     C_integer.Id(),
     C_list.Id(),
-    C_any.Id()),1,MakeFunction3(E_tformat_string,"tformat_string")),MakeString("object.cl:531"))
+    C_any.Id()),1,MakeFunction3(E_tformat_string,"tformat_string")),MakeString("object.cl:541"))
   
-  _ = F_attach_method(C_princ.AddMethod(Signature(C_list.Id(),C_void.Id()),1,MakeFunction1(E_princ_list,"princ_list")),MakeString("object.cl:536"))
+  _ = F_attach_method(C_princ.AddMethod(Signature(C_list.Id(),C_void.Id()),1,MakeFunction1(E_princ_list,"princ_list")),MakeString("object.cl:546"))
   
-  _ = F_attach_method(C_princ.AddMethod(Signature(C_set.Id(),C_void.Id()),1,MakeFunction1(E_princ_set,"princ_set")),MakeString("object.cl:540"))
+  _ = F_attach_method(C_princ.AddMethod(Signature(C_set.Id(),C_void.Id()),1,MakeFunction1(E_princ_set,"princ_set")),MakeString("object.cl:550"))
   
   C_global_variable = MakeClass("global_variable",C_system_thing,C_claire)
   F_close_slot(C_global_variable.AddSlot(C_value,ToType(C_any.Id()),CNULL))
   F_close_slot(C_global_variable.AddSlot(C_range,ToType(C_type.Id()),C_any.Id()))
   F_close_slot(C_global_variable.AddSlot(C_store_ask,ToType(C_boolean.Id()),CFALSE.Id()))
   
-  _ = F_attach_method(C_close.AddMethod(Signature(C_global_variable.Id(),C_global_variable.Id()),1,MakeFunction1(E_close_global_variable,"close_global_variable")),MakeString("object.cl:553"))
+  _ = F_attach_method(C_close.AddMethod(Signature(C_global_variable.Id(),C_global_variable.Id()),1,MakeFunction1(E_close_global_variable,"close_global_variable")),MakeString("object.cl:563"))
   
-  _ = F_attach_method(C_self_eval.AddEvalMethod(Signature(C_global_variable.Id(),C_any.Id()),0,MakeFunction1(E_self_eval_global_variable,"self_eval_global_variable"),EVAL_global_variable),MakeString("object.cl:555"))
+  _ = F_attach_method(C_self_eval.AddEvalMethod(Signature(C_global_variable.Id(),C_any.Id()),0,MakeFunction1(E_self_eval_global_variable,"self_eval_global_variable"),EVAL_global_variable),MakeString("object.cl:565"))
   
   C__inf_equal2 = ToOperation(new(ClaireOperation).IsNamed(C_operation,MakeSymbol("<=2",C_claire)))
   
@@ -994,12 +1004,12 @@ func MetaLoad() {
       
       _CL_obj = C_contradiction_occurs
       _CL_obj.Range = ToType(C_contradiction.Id())
-      /*type->type*/_CL_obj.Value = new(Contradiction).Is(C_contradiction)
-      /*any->any*/expr = _CL_obj.Close()
+      _CL_obj.Value = new(Contradiction).Is(C_contradiction)
+      expr = _CL_obj.Close()
       } 
     ErrorCheck(expr)} 
   
-  _ = F_attach_method(C_contradiction_I.AddMethod(Signature(C_void.Id(),C_void.Id()),1,MakeFunction1(E_contradiction_I_void,"contradiction_I_void")),MakeString("object.cl:564"))
+  _ = F_attach_method(C_contradiction_I.AddMethod(Signature(C_void.Id(),C_void.Id()),1,MakeFunction1(E_contradiction_I_void,"contradiction_I_void")),MakeString("object.cl:574"))
   
   { 
     var expr EID 
@@ -1008,8 +1018,8 @@ func MetaLoad() {
       
       _CL_obj = C_nil
       _CL_obj.Range = ToType(CEMPTY.Id())
-      /*type->type*/_CL_obj.Value = CNIL.Id()
-      /*any->any*/expr = _CL_obj.Close()
+      _CL_obj.Value = CNIL.Id()
+      expr = _CL_obj.Close()
       } 
     ErrorCheck(expr)} 
   
@@ -1020,22 +1030,22 @@ func MetaLoad() {
       
       _CL_obj = C_claire_date
       _CL_obj.Range = ToType(C_string.Id())
-      /*type->type*/_CL_obj.Value = MakeString("Monday 12-27-2021").Id()
-      /*any->any*/expr = _CL_obj.Close()
+      _CL_obj.Value = MakeString("Wednesday 12-29-2021").Id()
+      expr = _CL_obj.Close()
       } 
     ErrorCheck(expr)} 
   
   C__I_equal = ToOperation(new(ClaireOperation).IsNamed(C_operation,MakeSymbol("!=",C_claire)))
   C__I_equal.Precedence = 60
-  /*integer->integer*/
+  
   
   C__inf_inf = ToOperation(new(ClaireOperation).IsNamed(C_operation,MakeSymbol("<<",C_claire)))
   C__inf_inf.Precedence = 10
-  /*integer->integer*/
+  
   
   C__sup_sup = ToOperation(new(ClaireOperation).IsNamed(C_operation,MakeSymbol(">>",C_claire)))
   C__sup_sup.Precedence = 10
-  /*integer->integer*/
+  
   
   C_and = ToOperation(new(ClaireOperation).IsNamed(C_operation,MakeSymbol("and",C_claire)))
   
@@ -1045,7 +1055,7 @@ func MetaLoad() {
   
   C_U = ToOperation(new(ClaireOperation).IsNamed(C_operation,MakeSymbol("U",C_claire)))
   C_U.Precedence = 50
-  /*integer->integer*/
+  
   
   C__and = ToOperation(new(ClaireOperation).IsNamed(C_operation,MakeSymbol("&",C_claire)))
   
@@ -1058,11 +1068,11 @@ func MetaLoad() {
   
   C__dash_dash_ask = ToOperation(new(ClaireOperation).IsNamed(C_operation,MakeSymbol("--?",C_claire)))
   C__dash_dash_ask.Precedence = 30
-  /*integer->integer*/
+  
   
   C__dash_dash_I = ToOperation(new(ClaireOperation).IsNamed(C_operation,MakeSymbol("--!",C_claire)))
   C__dash_dash_I.Precedence = 30
-  /*integer->integer*/
+  
   
   C_Core_cpstack = MakeProperty("cpstack",1,It)
   
@@ -1078,8 +1088,8 @@ func MetaLoad() {
   
   C_pretty = ToPrettyPrinter(new(PrettyPrinter).IsNamed(C_pretty_printer,MakeSymbol("pretty",C_claire)))
   C_pretty.Cpretty = F_port_I_void()
-  /*port->port*/C_pretty.Cpstack = CNIL
-  /*list->list*/
+  C_pretty.Cpstack = CNIL
+  
   
   C_apply_self_print = MakeProperty("apply_self_print",1,C_claire)
   
@@ -1145,9 +1155,9 @@ func MetaLoad() {
   _ = F_attach_method(C_final.AddMethod(Signature(C_class.Id(),C_any.Id()),1,MakeFunction1(E_final_class,"final_class")),MakeString("function.cl:272"))
   
   F_attach_method(C_new.AddMethod(Signature(C_class.Id(),C_object.Id()),1,MakeFunction1(E_new_class1,"new_class1")),MakeString("function.cl:280")).Typing = MakeFunction1(E_new_class1_type,"new_class1_type").Id()
-  /*any->any*/
+  
   F_attach_method(C_new.AddMethod(Signature(C_class.Id(),C_symbol.Id(),C_thing.Id()),1,MakeFunction2(E_new_class2,"new_class2")),MakeString("function.cl:285")).Typing = MakeFunction2(E_new_class2_type,"new_class2_type").Id()
-  /*any->any*/
+  
   _ = F_attach_method(C_meet.AddMethod(Signature(C_class.Id(),C_class.Id(),C_class.Id()),0,MakeFunction2(E_meet_class,"meet_class")),MakeString("function.cl:299"))
   
   _ = F_attach_method(C_inherit_ask.AddMethod(Signature(C_class.Id(),C_class.Id(),C_boolean.Id()),0,MakeFunction2(E_inherit_ask_class,"inherit_ask_class")),MakeString("function.cl:306"))
@@ -1193,8 +1203,8 @@ func MetaLoad() {
       
       _CL_obj = C_world_plus
       _CL_obj.Range = ToType(CEMPTY.Id())
-      /*type->type*/_CL_obj.Value = C_choice.Id()
-      /*any->any*/expr = _CL_obj.Close()
+      _CL_obj.Value = C_choice.Id()
+      expr = _CL_obj.Close()
       } 
     ErrorCheck(expr)} 
   
@@ -1205,8 +1215,8 @@ func MetaLoad() {
       
       _CL_obj = C_world_dash
       _CL_obj.Range = ToType(CEMPTY.Id())
-      /*type->type*/_CL_obj.Value = C_backtrack.Id()
-      /*any->any*/expr = _CL_obj.Close()
+      _CL_obj.Value = C_backtrack.Id()
+      expr = _CL_obj.Close()
       } 
     ErrorCheck(expr)} 
   
@@ -1217,8 +1227,8 @@ func MetaLoad() {
       
       _CL_obj = C_world_dash_I
       _CL_obj.Range = ToType(CEMPTY.Id())
-      /*type->type*/_CL_obj.Value = C_commit.Id()
-      /*any->any*/expr = _CL_obj.Close()
+      _CL_obj.Value = C_commit.Id()
+      expr = _CL_obj.Close()
       } 
     ErrorCheck(expr)} 
   
@@ -1246,15 +1256,15 @@ func MetaLoad() {
   _ = F_attach_method(C_externC.AddMethod(Signature(C_string.Id(),C_void.Id()),1,MakeFunction1(E_externC_string,"externC_string")),MakeString("function.cl:411"))
   
   F_attach_method(C_externC.AddMethod(Signature(C_string.Id(),C_class.Id(),C_any.Id()),1,MakeFunction2(E_externC_string2,"externC_string2")),MakeString("function.cl:412")).Typing = MakeFunction2(E_externC_string2_type,"externC_string2_type").Id()
-  /*any->any*/
+  
   _ = F_attach_method(C_make_string.AddMethod(Signature(C_symbol.Id(),C_string.Id()),1,MakeFunction1(E_make_string_symbol,"make_string_symbol")),MakeString("function.cl:417"))
   
   _ = F_attach_method(C_self_print.AddMethod(Signature(C_symbol.Id(),C_void.Id()),1,MakeFunction1(E_self_print_symbol_Core,"self_print_symbol_Core")),MakeString("function.cl:419"))
   
   F_attach_method(C__plus.AddMethod(Signature(C_integer.Id(),C_integer.Id(),C_integer.Id()),0,MakeFunction2(E__plus_integer,"_plus_integer")),MakeString("function.cl:424")).Typing = MakeFunction2(E__plus_integer_type,"_plus_integer_type").Id()
-  /*any->any*/
+  
   F_attach_method(C__dash.AddMethod(Signature(C_integer.Id(),C_integer.Id(),C_integer.Id()),0,MakeFunction2(E__dash_integer1,"_dash_integer1")),MakeString("function.cl:425")).Typing = MakeFunction2(E__dash_integer1_type,"_dash_integer1_type").Id()
-  /*any->any*/
+  
   _ = F_attach_method(C__dash_dash_ask.AddMethod(Signature(C_integer.Id(),C_integer.Id(),C_collection.Id()),0,MakeFunction2(E_sequence_integer,"#sequence_integer")),MakeString("function.cl:430"))
   
   _ = F_attach_method(C__dash_dash_I.AddMethod(Signature(C_integer.Id(),C_integer.Id(),C_list.Id()),0,MakeFunction2(E_list_integer,"#list_integer")),MakeString("function.cl:431"))
@@ -1286,7 +1296,7 @@ func MetaLoad() {
   _ = F_attach_method(C_divide_ask.AddMethod(Signature(C_integer.Id(),C_integer.Id(),C_boolean.Id()),1,MakeFunction2(E_divide_ask_integer,"divide_ask_integer")),MakeString("function.cl:450"))
   
   F_attach_method(C_Id.AddMethod(Signature(C_any.Id(),C_any.Id()),0,MakeFunction1(E_Id_any,"Id_any")),MakeString("function.cl:451")).Typing = MakeFunction1(E_Id_any_type,"Id_any_type").Id()
-  /*any->any*/
+  
   _ = F_attach_method(C_self_print.AddMethod(Signature(C_float.Id(),C_void.Id()),0,MakeFunction1(E_print_float,"#print_float")),MakeString("function.cl:454"))
   
   _ = F_attach_method(C__plus.AddMethod(Signature(C_float.Id(),C_float.Id(),C_float.Id()),0,MakeFunction2(E__plus_float,"_plus_float")),MakeString("function.cl:455"))
@@ -1317,17 +1327,17 @@ func MetaLoad() {
     C_any.Id()),1,MakeFunction3(E_nth_write_list,"nth_write_list")),MakeString("function.cl:504"))
   
   F_attach_method(C_min.AddMethod(Signature(C_method.Id(),C_set.Id(),C_any.Id()),1,MakeFunction2(E_min_method2,"min_method2")),MakeString("function.cl:511")).Typing = MakeFunction2(E_min_method2_type,"min_method2_type").Id()
-  /*any->any*/
+  
   F_attach_method(C_max.AddMethod(Signature(C_method.Id(),C_set.Id(),C_any.Id()),1,MakeFunction2(E_max_method2,"max_method2")),MakeString("function.cl:517")).Typing = MakeFunction2(E_max_method2_type,"max_method2_type").Id()
-  /*any->any*/
+  
   F_attach_method(C_min.AddMethod(Signature(C_method.Id(),C_list.Id(),C_any.Id()),1,MakeFunction2(E_min_method3,"min_method3")),MakeString("function.cl:525")).Typing = MakeFunction2(E_min_method3_type,"min_method3_type").Id()
-  /*any->any*/
+  
   F_attach_method(C_max.AddMethod(Signature(C_method.Id(),C_list.Id(),C_any.Id()),1,MakeFunction2(E_max_method3,"max_method3")),MakeString("function.cl:532")).Typing = MakeFunction2(E_max_method3_type,"max_method3_type").Id()
-  /*any->any*/
+  
   F_attach_method(C_random.AddMethod(Signature(C_list.Id(),C_any.Id()),0,MakeFunction1(E_random_list,"random_list")),MakeString("function.cl:537")).Typing = MakeFunction1(E_random_list_type,"random_list_type").Id()
-  /*any->any*/
+  
   F_attach_method(C_last.AddMethod(Signature(C_list.Id(),C_any.Id()),1,MakeFunction1(E_last_list,"last_list")),MakeString("function.cl:542")).Typing = MakeFunction1(E_last_list_type,"last_list_type").Id()
-  /*any->any*/
+  
   _ = F_attach_method(C_rmlast.AddMethod(Signature(C_list.Id(),C_list.Id()),1,MakeFunction1(E_rmlast_list,"rmlast_list")),MakeString("function.cl:545"))
   
   _ = F_attach_method(C_car.AddMethod(Signature(C_list.Id(),C_any.Id()),1,MakeFunction1(E_car_list,"car_list")),MakeString("function.cl:549"))
@@ -1370,7 +1380,7 @@ func MetaLoad() {
   
   C__dash_dash = ToOperation(new(ClaireOperation).IsNamed(C_operation,MakeSymbol("--",C_claire)))
   C__dash_dash.Precedence = C__dot_dot.Precedence
-  /*integer->integer*/
+  
   
   _ = F_attach_method(C_finite_ask.AddMethod(Signature(C_type.Id(),C_boolean.Id()),0,MakeFunction1(E_finite_ask_type,"finite_ask_type")),MakeString("types.cl:36"))
   
@@ -1465,17 +1475,11 @@ func MetaLoad() {
   
   { 
     var expr EID 
-    /*g_try(v2:"expr",loop:false) */
     expr = F_ephemeral_class(C_Union)
-    /* ERROR PROTECTION INSERTED (expr-expr) */
     if !ErrorIn(expr) {
-    /*g_try(v2:"expr",loop:false) */
     expr = F_ephemeral_class(C_Param)
-    /* ERROR PROTECTION INSERTED (expr-expr) */
     if !ErrorIn(expr) {
-    /*g_try(v2:"expr",loop:false) */
     expr = F_ephemeral_class(C_Interval)
-    /* ERROR PROTECTION INSERTED (expr-expr) */
     if !ErrorIn(expr) {
     expr = F_ephemeral_class(C_subtype)
     }}}
@@ -1484,23 +1488,23 @@ func MetaLoad() {
   _ = F_attach_method(C_U.AddMethod(Signature(C_type.Id(),C_type.Id(),C_type.Id()),0,MakeFunction2(E_U_type,"U_type")),MakeString("types.cl:331"))
   
   F_attach_method(C__dot_dot.AddMethod(Signature(C_integer.Id(),C_integer.Id(),F_nth_class1(C_type,ToType(C_integer.Id())).Id()),0,MakeFunction2(E__dot_dot_integer,"_dot_dot_integer")),MakeString("types.cl:338")).Typing = MakeFunction2(E__dot_dot_integer_type,"_dot_dot_integer_type").Id()
-  /*any->any*/
+  
   C_but = ToOperation(new(ClaireOperation).IsNamed(C_operation,MakeSymbol("but",C_claire)))
   
   
   F_attach_method(C_but.AddMethod(Signature(C_any.Id(),C_any.Id(),C_any.Id()),1,MakeFunction2(E_but_any,"but_any")),MakeString("types.cl:345")).Typing = MakeFunction2(E_but_any_type,"but_any_type").Id()
-  /*any->any*/
+  
   C__backslash = ToOperation(new(ClaireOperation).IsNamed(C_operation,MakeSymbol("\\",C_claire)))
   C__backslash.Precedence = C_U.Precedence
-  /*integer->integer*/
+  
   
   _ = F_attach_method(C__backslash.AddMethod(Signature(C_type.Id(),C_type.Id(),C_set.Id()),1,MakeFunction2(E__backslash_type,"_backslash_type")),MakeString("types.cl:349"))
   
   C_glb = ToOperation(new(ClaireOperation).IsNamed(C_operation,MakeSymbol("glb",C_claire)))
   C_glb.Precedence = C__exp.Precedence
-  /*integer->integer*/C_glb.Domain = ToType(C_type_expression.Id())
-  /*type->type*/C_glb.Range = ToType(C_type.Id())
-  /*type->type*/
+  C_glb.Domain = ToType(C_type_expression.Id())
+  C_glb.Range = ToType(C_type.Id())
+  
   
   _ = F_attach_method(C_glb.AddMethod(Signature(C_set.Id(),C_type.Id(),C_set.Id()),0,MakeFunction2(E_glb_set,"glb_set")),MakeString("types.cl:362"))
   
@@ -1528,9 +1532,9 @@ func MetaLoad() {
   
   C_Core__inf_equalt = ToOperation(new(ClaireOperation).IsNamed(C_operation,MakeSymbol("<=t",It)))
   C_Core__inf_equalt.Precedence = C__inf_equal.Precedence
-  /*integer->integer*/C_Core__inf_equalt.Domain = ToType(C_type.Id())
-  /*type->type*/C_Core__inf_equalt.Range = ToType(C_boolean.Id())
-  /*type->type*/
+  C_Core__inf_equalt.Domain = ToType(C_type.Id())
+  C_Core__inf_equalt.Range = ToType(C_boolean.Id())
+  
   
   _ = F_attach_method(C_Core__inf_equalt.AddMethod(Signature(C_type.Id(),C_type.Id(),C_boolean.Id()),0,MakeFunction2(E__inf_equalt_type,"_inf_equalt_type")),MakeString("types.cl:462"))
   
@@ -1538,9 +1542,9 @@ func MetaLoad() {
   
   C_Core__Zt = ToOperation(new(ClaireOperation).IsNamed(C_operation,MakeSymbol("%t",It)))
   C_Core__Zt.Precedence = C__inf_equal.Precedence
-  /*integer->integer*/C_Core__Zt.Domain = ToType(C_type.Id())
-  /*type->type*/C_Core__Zt.Range = ToType(C_boolean.Id())
-  /*type->type*/
+  C_Core__Zt.Domain = ToType(C_type.Id())
+  C_Core__Zt.Range = ToType(C_boolean.Id())
+  
   
   _ = F_attach_method(C_Core__Zt.AddMethod(Signature(C_any.Id(),C_type.Id(),C_boolean.Id()),0,MakeFunction2(E_Core__Zt_any,"Core__Zt_any")),MakeString("types.cl:475"))
   
@@ -1589,30 +1593,30 @@ func MetaLoad() {
   _ = F_attach_method(C_Core_nth_arg_type.AddMethod(Signature(C_type.Id(),C_type.Id(),C_type.Id()),1,MakeFunction2(E_Core_nth_arg_type_type,"Core_nth_arg_type_type")),MakeString("types.cl:579"))
   
   F_attach_method(C_nth_get.AddMethod(Signature(C_array.Id(),C_integer.Id(),C_any.Id()),0,MakeFunction2(E_nth_get_array,"nth_get_array")),MakeString("types.cl:582")).Typing = MakeFunction2(E_nth_get_array_type,"nth_get_array_type").Id()
-  /*any->any*/
+  
   F_attach_method(C_nth.AddMethod(Signature(C_array.Id(),C_integer.Id(),C_any.Id()),1,MakeFunction2(E_nth_array,"nth_array")),MakeString("types.cl:585")).Typing = MakeFunction2(E_nth_array_type,"nth_array_type").Id()
-  /*any->any*/
+  
   F_attach_method(C_make_array.AddMethod(Signature(C_integer.Id(),
     C_type.Id(),
     C_any.Id(),
     C_array.Id()),0,MakeFunction3(E_make_array_integer,"#make_array_integer")),MakeString("types.cl:587")).Typing = MakeFunction3(E_make_array_integer_type,"make_array_integer_type").Id()
-  /*any->any*/
+  
   F_attach_method(C_make_list.AddMethod(Signature(C_integer.Id(),
     C_type.Id(),
     C_any.Id(),
     C_list.Id()),0,MakeFunction3(E_make_list_integer2,"make_list_integer2")),MakeString("types.cl:590")).Typing = MakeFunction3(E_make_list_integer2_type,"make_list_integer2_type").Id()
-  /*any->any*/
+  
   F_attach_method(C_make_set.AddMethod(Signature(F_nth_class2(C_array,MakeList(ToType(C_any.Id()),C_of.Id()),MakeConstantList(C_any.Id())).Id(),C_set.Id()),0,MakeFunction1(E_make_set_array,"make_set_array")),MakeString("types.cl:593")).Typing = MakeFunction1(E_make_set_array_type,"make_set_array_type").Id()
-  /*any->any*/
+  
   F_attach_method(C_list_I.AddMethod(Signature(F_nth_class2(C_array,MakeList(ToType(C_any.Id()),C_of.Id()),MakeConstantList(C_any.Id())).Id(),C_list.Id()),0,MakeFunction1(E_list_I_array,"#list_I_array")),MakeString("types.cl:598")).Typing = MakeFunction1(E_list_I_array_type,"list_I_array_type").Id()
-  /*any->any*/
+  
   F_attach_method(C_array_I.AddMethod(Signature(F_nth_class2(C_list,MakeList(ToType(C_any.Id()),C_of.Id()),MakeConstantList(C_any.Id())).Id(),C_array.Id()),0,MakeFunction1(E_array_I_list,"#array_I_list")),MakeString("types.cl:600")).Typing = MakeFunction1(E_array_I_list_type,"array_I_list_type").Id()
-  /*any->any*/
+  
   F_attach_method(C_set_I.AddMethod(Signature(F_nth_class2(C_list,MakeList(ToType(C_any.Id()),C_of.Id()),MakeConstantList(C_any.Id())).Id(),C_set.Id()),0,MakeFunction1(E_set_I_list,"set_I_list")),MakeString("types.cl:603")).Typing = MakeFunction1(E_set_I_list_type,"set_I_list_type").Id()
-  /*any->any*/
+  
   F_attach_method(C_list_I.AddMethod(Signature(F_nth_class2(C_set,MakeList(ToType(C_any.Id()),C_of.Id()),MakeConstantList(C_any.Id())).Id(),C_list.Id()),0,MakeFunction1(E_list_I_set,"#list_I_set")),MakeString("types.cl:605")).Typing = MakeFunction1(E_list_I_set_type,"list_I_set_type").Id()
-  /*any->any*/
-  _ = F_attach_method(C_Core_thing_type_class.AddMethod(Signature(C_type.Id(),C_type.Id()),0,MakeFunction1(E_Core_thing_type_class_type,"Core_thing_type_class_type")),MakeString("types.cl:608"))
+  
+  _ = F_attach_method(C_Core_thing_type_class.AddMethod(Signature(C_type.Id(),C_type.Id(),C_type.Id()),0,MakeFunction2(E_Core_thing_type_class_type2,"Core_thing_type_class_type2")),MakeString("types.cl:608"))
   
   _ = F_attach_method(C_Core_object_type_class.AddMethod(Signature(C_type.Id(),C_type.Id()),0,MakeFunction1(E_Core_object_type_class_type,"Core_object_type_class_type")),MakeString("types.cl:609"))
   
@@ -1623,7 +1627,7 @@ func MetaLoad() {
     for _,r_iter = range(C_copy.Restrictions.ValuesO()){ 
       r = ToRestriction(r_iter)
       ToMethod(r.Id()).Typing = C_Id.Id()
-      /*any->any*/} 
+      } 
     } 
   { 
     var r *ClaireRestriction  
@@ -1632,7 +1636,7 @@ func MetaLoad() {
     for _,r_iter = range(C_empty.Restrictions.ValuesO()){ 
       r = ToRestriction(r_iter)
       ToMethod(r.Id()).Typing = C_Id.Id()
-      /*any->any*/} 
+      } 
     } 
   { 
     var r *ClaireRestriction  
@@ -1641,7 +1645,7 @@ func MetaLoad() {
     for _,r_iter = range(C_sort.Restrictions.ValuesO()){ 
       r = ToRestriction(r_iter)
       ToMethod(r.Id()).Typing = C_Core_second_arg_type.Id()
-      /*any->any*/} 
+      } 
     } 
   { 
     var r *ClaireRestriction  
@@ -1650,21 +1654,21 @@ func MetaLoad() {
     for _,r_iter = range(C__7_plus.Restrictions.ValuesO()){ 
       r = ToRestriction(r_iter)
       ToMethod(r.Id()).Typing = C_Core_meet_arg_types.Id()
-      /*any->any*/} 
+      } 
     } 
   ToMethod(F__at_property2(C_mClaire_new_I,MakeConstantList(C_class.Id(),C_symbol.Id())).Id()).Typing = C_Core_thing_type_class.Id()
-  /*any->any*/ToMethod(F__at_property2(C_mClaire_new_I,MakeConstantList(C_class.Id())).Id()).Typing = C_Core_object_type_class.Id()
-  /*any->any*/ToMethod(F__at_property1(C_nth_get,C_array).Id()).Typing = C_Core_first_member_type.Id()
-  /*any->any*/ToMethod(F__at_property1(C_nth,C_list).Id()).Typing = C_Core_nth_arg_type.Id()
-  /*any->any*/ToMethod(F__at_property1(C_nth,C_set).Id()).Typing = C_Core_nth_arg_type.Id()
-  /*any->any*/{ 
+  ToMethod(F__at_property2(C_mClaire_new_I,MakeConstantList(C_class.Id())).Id()).Typing = C_Core_object_type_class.Id()
+  ToMethod(F__at_property1(C_nth_get,C_array).Id()).Typing = C_Core_first_member_type.Id()
+  ToMethod(F__at_property1(C_nth,C_list).Id()).Typing = C_Core_nth_arg_type.Id()
+  ToMethod(F__at_property1(C_nth,C_set).Id()).Typing = C_Core_nth_arg_type.Id()
+  { 
     var r *ClaireRestriction  
     _ = r
     var r_iter *ClaireAny  
     for _,r_iter = range(C_nth_plus.Restrictions.ValuesO()){ 
       r = ToRestriction(r_iter)
       ToMethod(r.Id()).Typing = C_Core_first_arg_type.Id()
-      /*any->any*/} 
+      } 
     } 
   { 
     var r *ClaireRestriction  
@@ -1674,7 +1678,7 @@ func MetaLoad() {
       r = ToRestriction(r_iter)
       if (r.Domain.Length() == 2) { 
         ToMethod(r.Id()).Typing = C_Core_first_arg_type.Id()
-        /*any->any*/} 
+        } 
       } 
     } 
   { 
@@ -1685,7 +1689,7 @@ func MetaLoad() {
       r = ToRestriction(r_iter)
       if (r.Domain.Length() == 2) { 
         ToMethod(r.Id()).Typing = C_Core_first_arg_type.Id()
-        /*any->any*/} 
+        } 
       } 
     } 
   

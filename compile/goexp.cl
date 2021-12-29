@@ -223,7 +223,7 @@ g_expression(self:list,s:class) : void
 
 // new in CLAIRE 4 !! compilation of lambda is OK but requires the reader (similar to macros)
 g_expression(self:lambda,s:class) : void
- -> (legal?(Reader,self),
+ -> (Optimize/legal?(Reader,self),
      printf("~ICore.F_read_lambda(MakeString(\"lambda[(~I),~S]\"))~I",
           cast_prefix(lambda,s),
           Language/ppvariable(self.vars), 
@@ -393,7 +393,9 @@ g_expression(self:Call_method,s:class) : void -> inline_exp(PRODUCER,self,s)
                   g_expression(module!(a1),module))    // <yc>  7/98  safer (was current_module)
         else if ( (m.domain[1] = m.domain[2]) &  (s1 = integer | s1 = float) & 
                   (p % c.open_operators |
-                   (p % c.div_operators & (case a2 (integer a2 != 0, float a2 != 0.0, any false)))))
+                   (p % c.div_operators & (case a2 (integer a2 != 0, 
+                                                    float a2 != 0.0, 
+                                                    any (compiler.safety >= 3))))))
            printf("~I(~I~A~I)~I", cast_prefix(s1,s),
                      bounded_expression(a1,s1), 
                      (if (p = mod) "%" else string!(p.name)), 
@@ -450,9 +452,9 @@ g_expression(self:Call_method,s:class) : void -> inline_exp(PRODUCER,self,s)
                printf("~I.AddFastInteger(~I)",  g_expression(a1,list), g_expression(a2,integer))
             else if (sbag = set & %type = integer)
                printf("~I~I.AddSetInteger(~I)~I", cast_prefix(sbag,s), g_expression(a1,set), g_expression(a2,integer),cast_post(sbag,s))
-            else printf("~I~I.AddFast(~I)~I/*t=~S,s=~S*/", cast_prefix(sbag,s),
+            else printf("~I~I.AddFast(~I)~I", cast_prefix(sbag,s),
                         g_expression(a1,domain!(m)), g_expression(a2,any),
-                        cast_post(sbag,s),%type,s))
+                        cast_post(sbag,s)))
         else if (m = *nth_1_string* | (m = *nth_string* & compiler.safety >= 3))
            printf("~I~I.At(~I)~I", char_prefix(s),g_expression(a1, string), 
                    g_expression(a2, integer),native_post(s))
@@ -497,10 +499,6 @@ g_expression(self:Call_method,s:class) : void -> inline_exp(PRODUCER,self,s)
                    g_expression(a2, integer),
                    g_expression(a3, any)) */
         else if (m.selector = add_slot & getC(a1) % class)
-          // let s := (getC(a2) @  getC(a1)), r := getC(a3),        // code is ugly to be robust
-          //    v := (case s (slot s.default,                       // we have found the slot
-          //                 any (if (r % type) Language/getDefault(r,self.args[4])
-          //                      else self.args[4]))) in
            printf("~IF_close_slot(~I.AddSlot(~I,~I,~I))", preCore?(),
                         g_expression(a1,class),
                         g_expression(a2,property),           // property
@@ -553,13 +551,6 @@ g_expression(self:Call_method,s:class) : void -> inline_exp(PRODUCER,self,s)
           if (n = 0 & st <= s) g_expression(x,st)
           else g_expression(x,s)) ]
              
-/* previous version
- [external_casted_arg(x:any,s:class,n:integer,nl?:boolean) : void
-   ->  let st := static_type(x) in
-        ( if (n > 1) (princ(","), if nl? breakline()),
-          g_expression(x,st),
-          if (n = 0) downCast(s,st)
-          else goCast(s,st)) ] */
 
 //**********************************************************************
 //*          Part 4: expression for structures                       *
@@ -637,8 +628,7 @@ g_expression(self:Generate/C_cast,s:class) : void
         dc := static_type(self.arg),             // type of argument ... should be in domain
         s2 := (if (dc <= domain!(self.selector)) dc else class!(domain!(self.selector))),
         kt? := (known?(test,self) & self.test) in
-     (if not(kt?) cast_prefix(sc,s)
-       else printf("/*call_slot known ? s:~S*/",s),
+     (if not(kt?) cast_prefix(sc,s),
       c_member(PRODUCER, self.arg, s2,self.selector.selector),
       if kt? printf(".KNOWN(~I)", g_expression(self.selector.selector, any))
       else cast_post(sc,s)) ]
@@ -680,7 +670,6 @@ g_expression(self:Generate/C_cast,s:class) : void
   -> let sa := type_sort(member(c_type(self.selector))),
          sm := g_member(self.selector) in
        (cast_prefix(sa,s),
-        printf("/*sm:~S*/",sm),
         if (sm != any)
             printf("~I.~I[~I - 1]",g_expression(self.selector, list), valuesSlot(sm), g_expression(self.arg, integer))
         else printf("~I.At(~I - 1)",g_expression(self.selector, list), g_expression(self.arg, integer)),
@@ -712,6 +701,10 @@ sign_or(self:boolean) : void -> (if self princ("||") else princ("&&"))
 // default solution
 [bool_exp(self:any,pos?:boolean) : void 
   -> printf("(~I ~I CTRUE)", g_expression(self, boolean), sign_equal(pos?)) ]
+
+// strange : not clear why we should see a C_cast here
+[bool_exp(self:C_cast,pos?:boolean) : void 
+  -> bool_exp(self.arg,pos?) ]
 
 
 // if we have a CL, we know that the self.arg is of type boolean

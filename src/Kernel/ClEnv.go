@@ -13,6 +13,7 @@ import (
 //	"bytes"
 	"math"
 	"os"
+	"runtime"
 	"os/exec"
 	"strconv"
 	"time"
@@ -168,7 +169,7 @@ func MemoryFlags() {
  if len(os.Args) > 2 && os.Args[1] == "-s" {
 		 size,err := strconv.Atoi(os.Args[2])
          if err == nil {
-			 fmt.Printf("==> change size to %d ===\n",size)
+			 fmt.Printf("==> change CAIRE size factor to %d (string buffer & stacks) ===\n",size)
              CLAIRESIZE = size }}
 }
     
@@ -454,6 +455,26 @@ func E_CL_exit(s EID) EID {
 	os.Exit(INT(s))
 	return EVOID
 }
+
+// memory management is left to go in CLAIRE4 ! 
+// this function prints some information
+func F_claire_stat() {
+   fmt.Printf("--------------- Claire memory statistics ---------------------------\n")
+   fmt.Printf("eval stack size:%d \n",ClEnv.maxStack)
+   fmt.Printf("string buffer size:%d \n",ClEnv.maxBuffer)
+   m := new(runtime.MemStats)
+   runtime.ReadMemStats(m)
+   fmt.Printf("total allocated objects:%d \n",m.TotalAlloc)
+   fmt.Printf("currently allocated objects:%d \n",m.HeapAlloc)
+   fmt.Printf("number of Go GC:%d \n",m.NumGC)
+  
+}
+
+func E_claire_stat(x EID) EID {
+	F_claire_stat()
+	return EVOID
+}
+
 
 // +---------------------------------------------------------------------------+
 // |  Part 2: Exceptions                                                       |
