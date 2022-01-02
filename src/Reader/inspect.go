@@ -1,5 +1,5 @@
 /***** CLAIRE Compilation of file /Users/ycaseau/Dropbox/src/clairev4.03/src/meta/inspect.cl 
-         [version 4.0.03 / safety 5] Wednesday 12-29-2021 08:34:14 *****/
+         [version 4.0.04 / safety 5] Saturday 01-01-2022 16:47:18 *****/
 
 package Reader
 import (_ "fmt"
@@ -44,7 +44,7 @@ func import_g0141() {
 // for debug loop, store the stack context
 // this is the classical print(eval(read)) LISP top level :)
 // error are caught
-/* {1} The go function for: top_level(r:meta_reader) [status=1] */
+/* The go function for: top_level(r:meta_reader) [status=1] */
 func (r *MetaReader ) TopLevel () EID { 
     // eid body s = void
     var Result EID 
@@ -175,7 +175,7 @@ func E_Reader_top_level_meta_reader (r EID) EID {
   
 //        exit(1)) ]
 // start a debug loop - aha 
-/* {1} The go function for: debugLoop(r:meta_reader) [status=0] */
+/* The go function for: debugLoop(r:meta_reader) [status=0] */
 func (r *MetaReader ) DebugLoop ()  { 
     // procedure body with s = void
     C_Reader_TopDebug.Value = MakeInteger(0).Id()
@@ -192,7 +192,7 @@ func E_Reader_debugLoop_meta_reader (r EID) EID {
     return EVOID} 
   
 // starts an inspector  on a list
-/* {1} The go function for: inspect_system(l:list) [status=0] */
+/* The go function for: inspect_system(l:list) [status=0] */
 func F_Reader_inspect_system_list2 (l *ClaireList )  { 
     // procedure body with s = void
     C_Reader_InspectStack.Value = l.Id()
@@ -209,7 +209,7 @@ func E_Reader_inspect_system_list2 (l EID) EID {
   
 // INSPECT   
 // simple main (to be enriched later)
-/* {1} The go function for: simple_main(_CL_obj:void) [status=1] */
+/* The go function for: simple_main(_CL_obj:void) [status=1] */
 func F_Reader_simple_main_void () EID { 
     // eid body s = void
     var Result EID 
@@ -231,7 +231,7 @@ func E_Reader_simple_main_void (_CL_obj EID) EID {
 // *********************************************************************
 // this is the method that the user calls
 //
-/* {1} The go function for: inspect(self:any) [status=1] */
+/* The go function for: inspect(self:any) [status=1] */
 func F_inspect_any (self *ClaireAny ) EID { 
     // eid body s = any
     var Result EID 
@@ -366,7 +366,7 @@ func E_inspect_any (self EID) EID {
   
 // this is the inspect top_level
 //
-/* {1} The go function for: inspect_loop(%read:any,old:list) [status=1] */
+/* The go function for: inspect_loop(%read:any,old:list) [status=1] */
 func F_inspect_loop_any (_Zread *ClaireAny ,old *ClaireList ) EID { 
     // eid body s = void
     var Result EID 
@@ -468,7 +468,7 @@ func E_inspect_loop_any (_Zread EID,old EID) EID {
   
 // get the information bound to the index
 //
-/* {1} The go function for: get_from_integer(self:any,n:integer) [status=1] */
+/* The go function for: get_from_integer(self:any,n:integer) [status=1] */
 func F_get_from_integer_any (self *ClaireAny ,n int) EID { 
     // eid body s = any
     var Result EID 
@@ -519,7 +519,7 @@ func E_get_from_integer_any (self EID,n EID) EID {
 // instrument the code generated from the rules
 // this is the control method to CLAIRE tracer
 // notice that trace(where) activates the call_count
-/* {1} The go function for: iClaire/trace_on(self:any) [status=1] */
+/* The go function for: iClaire/trace_on(self:any) [status=1] */
 func F_trace_on_any (self *ClaireAny ) EID { 
     // eid body s = any
     var Result EID 
@@ -633,7 +633,7 @@ func F_trace_on_any (self *ClaireAny ) EID {
 func E_trace_on_any (self EID) EID { 
     return F_trace_on_any(ANY(self) )} 
   
-/* {1} The go function for: untrace(self:any) [status=1] */
+/* The go function for: untrace(self:any) [status=1] */
 func F_untrace_any (self *ClaireAny ) EID { 
     // eid body s = any
     var Result EID 
@@ -718,7 +718,7 @@ func E_untrace_any (self EID) EID {
 // a filter to restrict the impact of spy
 // we put the special value nil (emply list of demons => OK) to mark that spying
 // should be waken up on properties from l
-/* {1} The go function for: spy(l:listargs) [status=0] */
+/* The go function for: spy(l:listargs) [status=0] */
 func F_spy_listargs2_Reader (l *ClaireList )  { 
     // procedure body with s = void
     { var m *ClaireAny   = Core.F__at_property1(Core.C_spy,C_void).Id()
@@ -733,7 +733,7 @@ func F_spy_listargs2_Reader (l *ClaireList )  {
           _ = g0164
           var g0164_iter *ClaireAny  
           var g0164_support *ClaireSet  
-          g0164_support = C_property.Descendents
+          g0164_support = C_property.Descendants
           for i_it := 0; i_it < g0164_support.Count; i_it++ { 
             g0164_iter = g0164_support.At(i_it)
             g0164 = ToClass(g0164_iter)
@@ -771,7 +771,7 @@ func E_spy_listargs2_Reader (l EID) EID {
     return EVOID} 
   
 // used to trace the trigger of a rule
-/* {1} The go function for: trace_rule(R:relation,s:string,x:any,y:any,u:any,v:any) [status=1] */
+/* The go function for: trace_rule(R:relation,s:string,x:any,y:any,u:any,v:any) [status=1] */
 func F_trace_rule_relation (R *ClaireRelation ,s *ClaireString ,x *ClaireAny ,y *ClaireAny ,u *ClaireAny ,v *ClaireAny ) EID { 
     // eid body s = void
     var Result EID 
@@ -828,7 +828,7 @@ func E_trace_rule_relation (R EID,s EID,x EID,y EID,u EID,v EID) EID {
   
 // stores a set of stopping values
 // this is a cool feature : stop(p, list(a1,a2)) => p(x,y) will stop if x = a1 and y = a2
-/* {1} The go function for: stop(p:property,l:listargs) [status=1] */
+/* The go function for: stop(p:property,l:listargs) [status=1] */
 func F_stop_property (p *ClaireProperty ,l *ClaireList ) EID { 
     // eid body s = any
     var Result EID 
@@ -850,7 +850,7 @@ func E_stop_property (p EID,l EID) EID {
 // *    Part 3: The debugger interface                              *
 // ******************************************************************
 // toggle the debug mode
-/* {1} The go function for: debug(_CL_obj:void) [status=0] */
+/* The go function for: debug(_CL_obj:void) [status=0] */
 func F_debug_void ()  { 
     // procedure body with s = void
     if (ClEnv.Debug_I != -1) { 
@@ -871,7 +871,7 @@ func E_debug_void (_CL_obj EID) EID {
 // this method is called when an error has occured. The value of index
 // is recalled with last_index, so that the actual content of the stack is
 // preserved.
-/* {1} The go function for: call_debug(_CL_obj:void) [status=0] */
+/* The go function for: call_debug(_CL_obj:void) [status=0] */
 func F_call_debug_void () *ClaireAny  { 
     // procedure body with s = any
     var Result *ClaireAny  
@@ -929,7 +929,7 @@ func E_call_debug_void (_CL_obj EID) EID {
 // this method is called when an error has occured. The value of index
 // is recalled with last_index, so that the actual content of the stack is
 // preserved.
-/* {1} The go function for: breakpoint(_CL_obj:void) [status=1] */
+/* The go function for: breakpoint(_CL_obj:void) [status=1] */
 func F_breakpoint_void () EID { 
     // eid body s = void
     var Result EID 
@@ -1058,7 +1058,7 @@ func E_breakpoint_void (_CL_obj EID) EID {
     return F_breakpoint_void( )} 
   
 // the four keyword
-/* {1} The go function for: dn(x:integer) [status=0] */
+/* The go function for: dn(x:integer) [status=0] */
 func F_dn_integer (x int)  { 
     // procedure body with s = void
     for ((INT(ClEnv.EvalStack[ToInteger(C__starcurd_star.Value).Value]) > 0) && 
@@ -1074,7 +1074,7 @@ func E_dn_integer (x EID) EID {
     F_dn_integer(INT(x) )
     return EVOID} 
   
-/* {1} The go function for: up(x:integer) [status=0] */
+/* The go function for: up(x:integer) [status=0] */
 func F_up_integer (x int)  { 
     // procedure body with s = void
     if (x > 0) { 
@@ -1102,7 +1102,7 @@ func E_up_integer (x EID) EID {
     return EVOID} 
   
 // top is the top position in this stack (the last entered message)
-/* {1} The go function for: where(x:integer) [status=1] */
+/* The go function for: where(x:integer) [status=1] */
 func F_where_integer (x int) EID { 
     // eid body s = void
     var Result EID 
@@ -1135,7 +1135,7 @@ func E_where_integer (x EID) EID {
   
 // note for interpretted methods .. they should be pushing their restriction
 // on the stack vs. properties
-/* {1} The go function for: print_debug_info(iClaire/index:integer,stack_level:integer,cur_index:integer) [status=1] */
+/* The go function for: print_debug_info(iClaire/index:integer,stack_level:integer,cur_index:integer) [status=1] */
 func F_print_debug_info_integer (index int,stack_level int,cur_index int) EID { 
     // eid body s = void
     var Result EID 
@@ -1197,7 +1197,7 @@ func E_print_debug_info_integer (index EID,stack_level EID,cur_index EID) EID {
     return F_print_debug_info_integer(INT(index),INT(stack_level),INT(cur_index) )} 
   
 // debug version of the debugger :-)  => use as Reader/Show(n)
-/* {1} The go function for: Show(n:integer) [status=1] */
+/* The go function for: Show(n:integer) [status=1] */
 func F_Show_integer (n int) EID { 
     // eid body s = any
     var Result EID 
@@ -1279,7 +1279,7 @@ func E_Show_integer (n EID) EID {
 // go to next block
 // top is the top position in this stack (the last entered message)
 //
-/* {1} The go function for: block(x:integer) [status=1] */
+/* The go function for: block(x:integer) [status=1] */
 func F_block_integer (x int) EID { 
     // eid body s = void
     var Result EID 
@@ -1399,7 +1399,7 @@ func E_block_integer (x EID) EID {
   
 // computes the list of variables of a lambda, including everything
 //
-/* {1} The go function for: closure_build(self:lambda) [status=0] */
+/* The go function for: closure_build(self:lambda) [status=0] */
 func F_closure_build_lambda (self *ClaireLambda ) *ClaireList  { 
     // procedure body with s = list
     var Result *ClaireList  
@@ -1427,7 +1427,7 @@ func E_closure_build_lambda (self EID) EID {
 // give to each lexical variable its right position in the stack
 // answer with the number of lexical variable
 //
-/* {1} The go function for: closure_build(self:any,lvar:list) [status=0] */
+/* The go function for: closure_build(self:any,lvar:list) [status=0] */
 func F_closure_build_any (self *ClaireAny ,lvar *ClaireList )  { 
     // procedure body with s = void
     if (self.Isa.IsIn(C_Variable) == CTRUE) { 
@@ -1477,7 +1477,7 @@ func E_closure_build_any (self EID,lvar EID) EID {
 // a measure is a float value counter that stores the sum & sum of squares, to 
 // number of experiments
 // simple methods add, mean, stdev
-/* {1} The go function for: close(x:measure) [status=0] */
+/* The go function for: close(x:measure) [status=0] */
 func (x *Measure ) Close () *Measure  { 
     x.MIndex = C_measure.Instances.Length()
     return  x
@@ -1487,7 +1487,7 @@ func (x *Measure ) Close () *Measure  {
 func E_close_measure (x EID) EID { 
     return EID{ToMeasure(OBJ(x)).Close( ).Id(),0}} 
   
-/* {1} The go function for: add(x:measure,f:float) [status=0] */
+/* The go function for: add(x:measure,f:float) [status=0] */
 func (x *Measure ) Add (f float64) *Measure  { 
     x.NumValue = (x.NumValue+1)
     x.SumValue = (x.SumValue+f)
@@ -1499,7 +1499,7 @@ func (x *Measure ) Add (f float64) *Measure  {
 func E_add_measure (x EID,f EID) EID { 
     return EID{ToMeasure(OBJ(x)).Add(FLOAT(f) ).Id(),0}} 
   
-/* {1} The go function for: mean(x:measure) [status=0] */
+/* The go function for: mean(x:measure) [status=0] */
 func (x *Measure ) Mean () float64 { 
     if (x.NumValue == 0) { 
       return  0
@@ -1512,7 +1512,7 @@ func (x *Measure ) Mean () float64 {
 func E_mean_measure (x EID) EID { 
     return EID{C__FLOAT,FVAL(ToMeasure(OBJ(x)).Mean( ))}} 
   
-/* {1} The go function for: stdev(x:measure) [status=0] */
+/* The go function for: stdev(x:measure) [status=0] */
 func (x *Measure ) Stdev () float64 { 
     // procedure body with s = float
     var Result float64 
@@ -1529,7 +1529,7 @@ func (x *Measure ) Stdev () float64 {
 func E_stdev_measure (x EID) EID { 
     return EID{C__FLOAT,FVAL(ToMeasure(OBJ(x)).Stdev( ))}} 
   
-/* {1} The go function for: stdev%(x:measure) [status=0] */
+/* The go function for: stdev%(x:measure) [status=0] */
 func (x *Measure ) Stdev_Z () float64 { 
     return  (x.Stdev()/x.Mean())
     } 
@@ -1538,7 +1538,7 @@ func (x *Measure ) Stdev_Z () float64 {
 func E_stdev_Z_measure (x EID) EID { 
     return EID{C__FLOAT,FVAL(ToMeasure(OBJ(x)).Stdev_Z( ))}} 
   
-/* {1} The go function for: reset(x:measure) [status=0] */
+/* The go function for: reset(x:measure) [status=0] */
 func (x *Measure ) Reset ()  { 
     // procedure body with s = void
     x.SumSquare = 0
@@ -1551,7 +1551,7 @@ func E_reset_measure (x EID) EID {
     ToMeasure(OBJ(x)).Reset( )
     return EVOID} 
   
-/* {1} The go function for: self_print(m:measure) [status=1] */
+/* The go function for: self_print(m:measure) [status=1] */
 func (m *Measure ) SelfPrint () EID { 
     // eid body s = void
     var Result EID 
@@ -1572,7 +1572,7 @@ func E_self_print_measure_Reader (m EID) EID {
 // two simple methods to store and retreive measures
 //   logMeasure(s:string)  : creates a file
 //   load(s:string)        : loads the files, that containts addLog(i,s,ss,n) line
-/* {1} The go function for: logMeasure(s:string) [status=1] */
+/* The go function for: logMeasure(s:string) [status=1] */
 func F_logMeasure_string (s *ClaireString ) EID { 
     // eid body s = void
     var Result EID 
@@ -1592,7 +1592,7 @@ func F_logMeasure_string (s *ClaireString ) EID {
           _ = g0181
           var g0181_iter *ClaireAny  
           var g0181_support *ClaireSet  
-          g0181_support = C_measure.Descendents
+          g0181_support = C_measure.Descendants
           for i_it := 0; i_it < g0181_support.Count; i_it++ { 
             g0181_iter = g0181_support.At(i_it)
             g0181 = ToClass(g0181_iter)
@@ -1640,7 +1640,7 @@ func E_logMeasure_string (s EID) EID {
     return F_logMeasure_string(ToString(OBJ(s)) )} 
   
 // adds a set of measures to a measure object (represented by its index)
-/* {1} The go function for: addLog(i:integer,x:float,y:float,n:float,s:integer) [status=1] */
+/* The go function for: addLog(i:integer,x:float,y:float,n:float,s:integer) [status=1] */
 func F_addLog_integer (i int,x float64,y float64,n float64,s int) EID { 
     // eid body s = void
     var Result EID 

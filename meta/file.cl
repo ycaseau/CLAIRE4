@@ -100,7 +100,7 @@ reader :: meta_reader(space = 202,
 // reads a variable
 //
 extract_variable(self:any) : Variable
- -> (if (case self (Variable get(self.mClaire/pname) != self))
+ -> (if (case self (Variable value(self.mClaire/pname) != self))
         (put(range, self as Variable, extract_type(self.range)),
          self as Variable)
      else let v := Variable(mClaire/pname = extract_symbol(self)) in
@@ -109,7 +109,7 @@ extract_variable(self:any) : Variable
 // create a variable and add it to the lexical environment
 bind!(self:meta_reader,%v:Variable) : list
  -> (put(index, %v, self.index),
-     let value := get(%v.mClaire/pname) in
+     let value := value(%v.mClaire/pname) in
        (put(index, self, self.index + 1),
         if (self.index > self.maxstack) put(maxstack, self, self.index),
         put(%v.mClaire/pname, %v),
@@ -380,7 +380,7 @@ claire/kill(self:object) : any
 
 claire/kill(self:class) : any
  -> (while self.instances kill(self.instances[1]),
-     for x in self.descendents (if (x.superclass = self) kill(x)),
+     for x in self.descendants (if (x.superclass = self) kill(x)),
      kill@object(self))
 
 // our two very special inline methods

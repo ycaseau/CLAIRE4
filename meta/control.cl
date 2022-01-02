@@ -197,7 +197,7 @@ self_print(self:For) : void
 self_eval(self:For) : any
  -> (let x := eval(self.set_arg) in
        (try case x
-         (class for y in x.descendents
+         (class for y in x.descendants
                  for z in y.instances
                    (write_value(self.var, z), eval(self.arg)),
           list for z in x
@@ -230,7 +230,7 @@ self_eval(self:Collect) : any
  -> (let x := eval(self.set_arg),
          res:list := empty_list((if known?(of,self) self.of else {})) in
        (case x
-         (class for y in x.descendents
+         (class for y in x.descendants
                  for z in y.instances
                    (write_value(self.var, z), res :add eval(self.arg)),
           list for y in x
@@ -276,7 +276,7 @@ self_eval(self:Select) : any
  -> (let x := eval(self.set_arg), 
          res:set :=  empty_set((if known?(of,self) self.of else {})) in
        (case x
-         (class for y in x.descendents
+         (class for y in x.descendants
                  for z in y.instances
                    (write_value(self.var, z),
                     if (eval(self.arg) != false) res :add z),
@@ -305,7 +305,7 @@ self_eval(self:Lselect) : any
  -> (let x := eval(self.set_arg),
          res:list := (case x (list empty(x), any list())) in
        (case x
-         (class for y in x.descendents
+         (class for y in x.descendants
                  for z in y.instances
                    (write_value(self.var, z),
                     if (eval(self.arg) != false) res :add z),
@@ -339,7 +339,7 @@ self_eval(self:Exists) : any
          b := self.other,
          res:any := b in
        (case x
-         (class for y in x.descendents
+         (class for y in x.descendants
                  for z in y.instances
                    (write_value(self.var, z),
                     if (eval(self.arg) != false)

@@ -188,7 +188,7 @@ c_code(self:Call) : any -> c_code_call(self,void)
         else if (s % OPT.to_remove            // v2.4.12 c_interface is special
                 | (s = c_interface & length(l) = 2 &
                    not(get_module(s) % OPT.legal_modules))) nil
-        else if known?(d) d
+        else if known?(d) d                  // direct access case - THIS IS UGLY ! very old style, should be replaced ....
         else if (m % method) c_inline(m, l, c_srange(m))
         else if (s % {=, !=} & known?(daccess(l[1], true)))
            c_code_hold(l[1].args[1] as property, l[1].args[2], l[2], s = =)
@@ -262,6 +262,8 @@ c_code(self:Call) : any -> c_code_call(self,void)
                             arg = c_code(l[2], psort(domain!(xs))),
                             test = false)
                else unknown),
+       Call_method2 (if (self.arg.selector = get) daccess(Call(get,self.args),b)
+                     else unknown),   // v4.0 should work on optimized call
        any unknown) ]
 
 c_type(self:Call_slot) : type -> self.selector.range

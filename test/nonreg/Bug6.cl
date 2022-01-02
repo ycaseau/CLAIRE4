@@ -131,7 +131,7 @@ A3 <: A2(y:integer)
   (o.x := 234,
    o.y := 123,
    check("conflict",o.x = 234),
-   check("forward",A3 % A1.descendents)))
+   check("forward",A3 % A1.descendants)))
 
 // tiny problem :-)
 [tinyfoo() -> let x:integer := 1 in (if ((x := 2) != 3) printf("jhgjh") ) ]

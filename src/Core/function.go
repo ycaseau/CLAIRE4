@@ -1,5 +1,5 @@
 /***** CLAIRE Compilation of file /Users/ycaseau/Dropbox/src/clairev4.03/src/meta/function.cl 
-         [version 4.0.03 / safety 5] Wednesday 12-29-2021 08:34:14 *****/
+         [version 4.0.04 / safety 5] Saturday 01-01-2022 16:47:18 *****/
 
 package Core
 import (_ "fmt"
@@ -35,7 +35,7 @@ import (_ "fmt"
 // print :: property() - defined in Kernel
 // buffered print
 // new in v3.3.26: unbounded recursion is supported :-)
-/* {1} The go function for: print_in_string(_CL_obj:void) [status=0] */
+/* The go function for: print_in_string(_CL_obj:void) [status=0] */
 func F_print_in_string_void ()  { 
     // procedure body with s = void
     { var n int  = (C_pretty.Cprevious+1)
@@ -66,7 +66,7 @@ func E_print_in_string_void (_CL_obj EID) EID {
     F_print_in_string_void( )
     return EVOID} 
   
-/* {1} The go function for: end_of_string(_CL_obj:void) [status=1] */
+/* The go function for: end_of_string(_CL_obj:void) [status=1] */
 func F_end_of_string_void () EID { 
     // eid body s = string
     var Result EID 
@@ -94,7 +94,7 @@ func F_end_of_string_void () EID {
 func E_end_of_string_void (_CL_obj EID) EID { 
     return F_end_of_string_void( )} 
   
-/* {1} The go function for: mClaire/buffer_length(_CL_obj:void) [status=0] */
+/* The go function for: mClaire/buffer_length(_CL_obj:void) [status=0] */
 func F_buffer_length_void () int { 
     return  C_pretty.Cpretty.Length()
     } 
@@ -103,7 +103,7 @@ func F_buffer_length_void () int {
 func E_buffer_length_void (_CL_obj EID) EID { 
     return EID{C__INT,IVAL(F_buffer_length_void( ))}} 
   
-/* {1} The go function for: mClaire/buffer_set_length(i:integer) [status=0] */
+/* The go function for: mClaire/buffer_set_length(i:integer) [status=0] */
 func F_buffer_set_length_integer (i int)  { 
     // procedure body with s = void
     C_pretty.Cpretty.SetLength(i)
@@ -116,7 +116,7 @@ func E_buffer_set_length_integer (i EID) EID {
   
 // a method for calling the printer without issuing a message
 // here we assume that self_print is always defined as a function
-/* {1} The go function for: apply_self_print(self:any) [status=1] */
+/* The go function for: apply_self_print(self:any) [status=1] */
 func F_apply_self_print_any (self *ClaireAny ) EID { 
     // eid body s = void
     var Result EID 
@@ -173,7 +173,7 @@ func E_apply_self_print_any (self EID) EID {
     return F_apply_self_print_any(ANY(self) )} 
   
 // some basic definitions
-/* {1} The go function for: self_print(self:any) [status=1] */
+/* The go function for: self_print(self:any) [status=1] */
 func F_self_print_any_Core (self *ClaireAny ) EID { 
     // eid body s = void
     var Result EID 
@@ -243,7 +243,7 @@ func F_self_print_any_Core (self *ClaireAny ) EID {
 func E_self_print_any_Core (self EID) EID { 
     return F_self_print_any_Core(ANY(self) )} 
   
-/* {1} The go function for: self_print(self:boolean) [status=0] */
+/* The go function for: self_print(self:boolean) [status=0] */
 func F_self_print_boolean_Core (self *ClaireBoolean )  { 
     // procedure body with s = void
     if (self == CTRUE) { 
@@ -258,7 +258,7 @@ func E_self_print_boolean_Core (self EID) EID {
     F_self_print_boolean_Core(ToBoolean(OBJ(self)) )
     return EVOID} 
   
-/* {1} The go function for: self_print(self:function) [status=0] */
+/* The go function for: self_print(self:function) [status=0] */
 func F_self_print_function_Core (self *ClaireFunction )  { 
     // procedure body with s = void
     PRINC("#'")
@@ -273,7 +273,7 @@ func E_self_print_function_Core (self EID) EID {
   
 // prints the name of a restriction. If we have a close property and if a
 // short-cut is possible, we use it.
-/* {1} The go function for: self_print(self:restriction) [status=1] */
+/* The go function for: self_print(self:restriction) [status=1] */
 func F_self_print_restriction_Core (self *ClaireRestriction ) EID { 
     // eid body s = void
     var Result EID 
@@ -325,7 +325,7 @@ func E_self_print_restriction_Core (self EID) EID {
     return F_self_print_restriction_Core(ToRestriction(OBJ(self)) )} 
   
 // we are too far
-/* {1} The go function for: print(x:any) [status=1] */
+/* The go function for: print(x:any) [status=1] */
 func F_print_any (x *ClaireAny ) EID { 
     // eid body s = void
     var Result EID 
@@ -401,7 +401,7 @@ func E_print_any (x EID) EID {
     return F_print_any(ANY(x) )} 
   
 // short_enough = we expect that what we want to print is short enough (more that 10 chars to the width)
-/* {1} The go function for: short_enough(self:integer) [status=0] */
+/* The go function for: short_enough(self:integer) [status=0] */
 func F_short_enough_integer (self int) *ClaireBoolean  { 
     if (self < C_pretty.Width) {return CTRUE
     } else {return CFALSE}} 
@@ -420,7 +420,7 @@ func E_short_enough_integer (self EID) EID {
 // v3.2.12: use a condition that is coherent with ClReflect.cl : a slot defaut value must be placed
 // unless it is a copied_def
 // CLAIRE4 (fix OLD bug): lp is list of p such that o.p := unknown is requested !
-/* {1} The go function for: new_defaults(self:object,lp:list) [status=1] */
+/* The go function for: new_defaults(self:object,lp:list) [status=1] */
 func F_Core_new_defaults_object (self *ClaireObject ,lp *ClaireList ) EID { 
     // eid body s = object
     var Result EID 
@@ -512,7 +512,7 @@ func E_Core_new_defaults_object (self EID,lp EID) EID {
   
 // v3.0.41  obviously
 //-------------------------- ENTITY   --------------------------------------
-/* {1} The go function for: not(self:any) [status=0] */
+/* The go function for: not(self:any) [status=0] */
 func F_not_any (self *ClaireAny ) *ClaireBoolean  { 
     if (self == CTRUE.Id()) { 
       if (CFALSE == CTRUE) {return CTRUE
@@ -529,7 +529,7 @@ func F_not_any (self *ClaireAny ) *ClaireBoolean  {
 func E_not_any (self EID) EID { 
     return EID{F_not_any(ANY(self) ).Id(),0}} 
   
-/* {1} The go function for: !=(self:any,x:any) [status=0] */
+/* The go function for: !=(self:any,x:any) [status=0] */
 func F__I_equal_any (self *ClaireAny ,x *ClaireAny ) *ClaireBoolean  { 
     if (Equal(self,x) == CTRUE) { 
       if (CFALSE == CTRUE) {return CTRUE
@@ -543,7 +543,7 @@ func E__I_equal_any (self EID,x EID) EID {
     return EID{F__I_equal_any(ANY(self),ANY(x) ).Id(),0}} 
   
 // gives the type of any object. This is open_coded.
-/* {1} The go function for: owner(self:any) [status=0] */
+/* The go function for: owner(self:any) [status=0] */
 func F_owner_any (self *ClaireAny ) *ClaireClass  { 
     return  self.Isa
     } 
@@ -553,7 +553,7 @@ func E_owner_any (self EID) EID {
     return EID{F_owner_any(ANY(self) ).Id(),0}} 
   
 // some useful methods
-/* {1} The go function for: known?(self:any) [status=0] */
+/* The go function for: known?(self:any) [status=0] */
 func F_known_ask_any (self *ClaireAny ) *ClaireBoolean  { 
     if (CNULL != self) {return CTRUE
     } else {return CFALSE}} 
@@ -562,7 +562,7 @@ func F_known_ask_any (self *ClaireAny ) *ClaireBoolean  {
 func E_known_ask_any (self EID) EID { 
     return EID{F_known_ask_any(ANY(self) ).Id(),0}} 
   
-/* {1} The go function for: unknown?(self:any) [status=0] */
+/* The go function for: unknown?(self:any) [status=0] */
 func F_unknown_ask_any (self *ClaireAny ) *ClaireBoolean  { 
     if (CNULL == self) {return CTRUE
     } else {return CFALSE}} 
@@ -573,7 +573,7 @@ func E_unknown_ask_any (self EID) EID {
   
 // needed by the compiled code for casts (inserted by ocontrol for dynamic type checks)
 // Claire 4: TODO - add a second order type
-/* {1} The go function for: check_in(self:any,y:type) [status=1] */
+/* The go function for: check_in(self:any,y:type) [status=1] */
 func F_check_in_any (self *ClaireAny ,y *ClaireType ) EID { 
     // eid body s = any
     var Result EID 
@@ -590,7 +590,7 @@ func E_check_in_any (self EID,y EID) EID {
   
 // used to cast dynamically a non-mutable bag to a typed mutable bag
 // claire 4 : aplied to list and sets (bags)
-/* {1} The go function for: check_in(self:bag,c:class,y:type) [status=1] */
+/* The go function for: check_in(self:bag,c:class,y:type) [status=1] */
 func F_check_in_bag (self *ClaireBag ,c *ClaireClass ,y *ClaireType ) EID { 
     // eid body s = bag
     var Result EID 
@@ -648,7 +648,7 @@ func E_check_in_bag (self EID,c EID,y EID) EID {
     return F_check_in_bag(ToBag(OBJ(self)),ToClass(OBJ(c)),ToType(OBJ(y)) )} 
   
 // new in v3.00.48
-/* {1} The go function for: <(self:any,x:any) [status=1] */
+/* The go function for: <(self:any,x:any) [status=1] */
 func F__inf_any (self *ClaireAny ,x *ClaireAny ) EID { 
     // eid body s = boolean
     var Result EID 
@@ -663,7 +663,7 @@ func F__inf_any (self *ClaireAny ,x *ClaireAny ) EID {
 func E__inf_any (self EID,x EID) EID { 
     return F__inf_any(ANY(self),ANY(x) )} 
   
-/* {1} The go function for: >(self:any,x:any) [status=1] */
+/* The go function for: >(self:any,x:any) [status=1] */
 func F__sup_any (self *ClaireAny ,x *ClaireAny ) EID { 
     // eid body s = boolean
     var Result EID 
@@ -681,7 +681,7 @@ func E__sup_any (self EID,x EID) EID {
 // >= is defined as a macro in file.cl
 // unsafe is a pragma : it tells the compiler not to catch a possible error 
 // to add in the documentation
-/* {1} The go function for: unsafe(x:any) [status=0] */
+/* The go function for: unsafe(x:any) [status=0] */
 func F_unsafe_any (x *ClaireAny ) *ClaireAny  { 
     return  x
     } 
@@ -700,7 +700,7 @@ func E_unsafe_any (x EID) EID {
 // open :  open = 3  - default for things (named things can be queried)
 // declares a class as ephemeral: the member set is not maintained
 // v3.2.14 recusively applies to subclasses
-/* {1} The go function for: ephemeral(self:class) [status=1] */
+/* The go function for: ephemeral(self:class) [status=1] */
 func F_ephemeral_class (self *ClaireClass ) EID { 
     // eid body s = any
     var Result EID 
@@ -710,7 +710,7 @@ func F_ephemeral_class (self *ClaireClass ) EID {
       var c_iter *ClaireAny  
       Result= EID{CFALSE.Id(),0}
       var c_support *ClaireSet  
-      c_support = self.Descendents
+      c_support = self.Descendants
       for i_it := 0; i_it < c_support.Count; i_it++ { 
         c_iter = c_support.At(i_it)
         c = ToClass(c_iter)
@@ -741,7 +741,7 @@ func E_ephemeral_class (self EID) EID {
     return F_ephemeral_class(ToClass(OBJ(self)) )} 
   
 // claire4 : opposite of ephemeral(c)
-/* {1} The go function for: instanced(c:class) [status=1] */
+/* The go function for: instanced(c:class) [status=1] */
 func F_instanced_class (c *ClaireClass ) EID { 
     // eid body s = any
     var Result EID 
@@ -767,7 +767,7 @@ func E_instanced_class (c EID) EID {
     return F_instanced_class(ToClass(OBJ(c)) )} 
   
 // declares a class as an abtract class (without instances)
-/* {1} The go function for: abstract(c:class) [status=1] */
+/* The go function for: abstract(c:class) [status=1] */
 func F_abstract_class (c *ClaireClass ) EID { 
     // eid body s = any
     var Result EID 
@@ -797,7 +797,7 @@ func E_abstract_class (c EID) EID {
     return F_abstract_class(ToClass(OBJ(c)) )} 
   
 // declares a class with no subclasses (apply to things)
-/* {1} The go function for: final(c:class) [status=1] */
+/* The go function for: final(c:class) [status=1] */
 func F_final_class (c *ClaireClass ) EID { 
     // eid body s = any
     var Result EID 
@@ -828,7 +828,7 @@ func E_final_class (c EID) EID {
   
 // instantiation with and without a name
 // new! is a method-less property that is managed by the compiler
-/* {1} The go function for: new(self:class) [status=1] */
+/* The go function for: new(self:class) [status=1] */
 func F_new_class1 (self *ClaireClass ) EID { 
     // eid body s = object
     var Result EID 
@@ -854,7 +854,7 @@ func F_new_class1 (self *ClaireClass ) EID {
 func E_new_class1 (self EID) EID { 
     return F_new_class1(ToClass(OBJ(self)) )} 
   
-/* {1} The go function for: new_class1_type */
+/* The go function for: new_class1_type */
 func F_new_class1_type (self *ClaireType ) EID { 
     var Result EID 
     Result = EID{F_glb_class(C_object,F_member_type(self)).Id(),0}
@@ -866,7 +866,7 @@ func E_new_class1_type (self EID) EID {
     return F_new_class1_type(ToType(OBJ(self)))} 
   
 // v3.2.26
-/* {1} The go function for: new(self:class,%nom:symbol) [status=1] */
+/* The go function for: new(self:class,%nom:symbol) [status=1] */
 func F_new_class2 (self *ClaireClass ,_Znom *ClaireSymbol ) EID { 
     // eid body s = thing
     var Result EID 
@@ -892,7 +892,7 @@ func F_new_class2 (self *ClaireClass ,_Znom *ClaireSymbol ) EID {
 func E_new_class2 (self EID,_Znom EID) EID { 
     return F_new_class2(ToClass(OBJ(self)),ToSymbol(OBJ(_Znom)) )} 
   
-/* {1} The go function for: new_class2_type */
+/* The go function for: new_class2_type */
 func F_new_class2_type (self *ClaireType ,_Znom *ClaireType ) EID { 
     var Result EID 
     Result = EID{F_glb_class(C_thing,F_member_type(self)).Id(),0}
@@ -911,7 +911,7 @@ func E_new_class2_type (self EID,_Znom EID) EID {
 //   -> function!(new_thing_class)
 // the smallest super_set of two sets
 // there is always any, so it always returns a class
-/* {1} The go function for: meet(self:class,ens:class) [status=0] */
+/* The go function for: meet(self:class,ens:class) [status=0] */
 func F_meet_class (self *ClaireClass ,ens *ClaireClass ) *ClaireClass  { 
     // procedure body with s = class
     var Result *ClaireClass  
@@ -938,7 +938,7 @@ func E_meet_class (self EID,ens EID) EID {
   
 // fast inclusion method for lattice_sets (lattice order). The argument is
 // either a lattice_set or {}
-/* {1} The go function for: inherit?(self:class,ens:class) [status=0] */
+/* The go function for: inherit?(self:class,ens:class) [status=0] */
 func F_inherit_ask_class (self *ClaireClass ,ens *ClaireClass ) *ClaireBoolean  { 
     // procedure body with s = boolean
     var Result *ClaireBoolean  
@@ -956,7 +956,7 @@ func E_inherit_ask_class (self EID,ens EID) EID {
 //------------- PROPERTY ---------------------------------------------------
 // the two methods to access open(r)
 // an abstract property is extensible and can receive new restrictions
-/* {1} The go function for: abstract(p:property) [status=1] */
+/* The go function for: abstract(p:property) [status=1] */
 func F_abstract_property (p *ClaireProperty ) EID { 
     // eid body s = any
     var Result EID 
@@ -985,7 +985,7 @@ func E_abstract_property (p EID) EID {
   
 // a final property is completely defined and cannot receive a new restriction
 // v3.2.04: the new value 4 will be used to represent (compiled but open)
-/* {1} The go function for: final(r:relation) [status=0] */
+/* The go function for: final(r:relation) [status=0] */
 func F_final_relation (r *ClaireRelation )  { 
     // procedure body with s = void
     if (r.Isa.IsIn(C_property) == CTRUE) { 
@@ -1047,7 +1047,7 @@ func E_final_relation (r EID) EID {
 //------------- MODULES   --------------------------------------------------
 // book-keeping for a module : based on parts/part_of hierarchy
 // propagates uses declaration + register a new associated namespace.
-/* {1} The go function for: close(self:module) [status=0] */
+/* The go function for: close(self:module) [status=0] */
 func F_close_module (self *ClaireModule ) *ClaireModule  { 
     if (self.Id() != C_claire.Id()) { 
       if (self.PartOf.Id() != CNULL) { 
@@ -1079,7 +1079,7 @@ func E_close_module (self EID) EID {
     return EID{F_close_module(ToModule(OBJ(self)) ).Id(),0}} 
   
 // note: dynamic modules are no longer supported
-/* {1} The go function for: get_symbol(self:string) [status=0] */
+/* The go function for: get_symbol(self:string) [status=0] */
 func F_get_symbol_string (self *ClaireString ) *ClaireAny  { 
     return  F_get_symbol_module(C_claire,self)
     } 
@@ -1096,7 +1096,7 @@ func E_get_symbol_string (self EID) EID {
 //put_stack(self:integer,x:any) : any -> put_stack(self, x)
 //push!(self:meta_system,x:any) : void -> push!(self, x)
 //stat() : void -> function!(claire_stat)
-/* {1} The go function for: gensym(self:void) [status=0] */
+/* The go function for: gensym(self:void) [status=0] */
 func F_gensym_void () *ClaireSymbol  { 
     return  F_gensym_string(MakeString("g"))
     } 
@@ -1106,7 +1106,7 @@ func E_gensym_void (self EID) EID {
     return EID{F_gensym_void( ).Id(),0}} 
   
 // world management
-/* {1} The go function for: store(l:list,n:integer,y:any) [status=1] */
+/* The go function for: store(l:list,n:integer,y:any) [status=1] */
 func F_store_list4 (l *ClaireList ,n int,y *ClaireAny ) EID { 
     // eid body s = any
     var Result EID 
@@ -1122,7 +1122,7 @@ func F_store_list4 (l *ClaireList ,n int,y *ClaireAny ) EID {
 func E_store_list4 (l EID,n EID,y EID) EID { 
     return F_store_list4(ToList(OBJ(l)),INT(n),ANY(y) )} 
   
-/* {1} The go function for: store(l:array,n:integer,y:any) [status=1] */
+/* The go function for: store(l:array,n:integer,y:any) [status=1] */
 func F_store_array1 (l *ClaireList ,n int,y *ClaireAny ) EID { 
     // eid body s = any
     var Result EID 
@@ -1138,7 +1138,7 @@ func F_store_array1 (l *ClaireList ,n int,y *ClaireAny ) EID {
 func E_store_array1 (l EID,n EID,y EID) EID { 
     return F_store_array1(ToArray(OBJ(l)),INT(n),ANY(y) )} 
   
-/* {1} The go function for: commit(n:integer) [status=0] */
+/* The go function for: commit(n:integer) [status=0] */
 func F_commit_integer (n int)  { 
     // procedure body with s = void
     for (n < F_world_number()) { 
@@ -1151,7 +1151,7 @@ func E_commit_integer (n EID) EID {
     F_commit_integer(INT(n) )
     return EVOID} 
   
-/* {1} The go function for: backtrack(n:integer) [status=0] */
+/* The go function for: backtrack(n:integer) [status=0] */
 func F_backtrack_integer (n int)  { 
     // procedure body with s = void
     for (n < F_world_number()) { 
@@ -1165,7 +1165,7 @@ func E_backtrack_integer (n EID) EID {
     return EVOID} 
   
 // allows to change the storage class
-/* {1} The go function for: store(l:listargs) [status=0] */
+/* The go function for: store(l:listargs) [status=0] */
 func F_store_listargs (l *ClaireList ) *ClaireAny  { 
     // procedure body with s = any
     var Result *ClaireAny  
@@ -1207,7 +1207,7 @@ func E_store_listargs (l EID) EID {
 //------------------- STRING -----------------------------------------------
 // length(self:string) : integer -> function!(length_string)  -> in Kernel
 // make_function(self:string) : function -> function!(make_function_string)
-/* {1} The go function for: symbol!(self:string) [status=0] */
+/* The go function for: symbol!(self:string) [status=0] */
 func F_symbol_I_string2 (self *ClaireString ) *ClaireSymbol  { 
     return  F_symbol_I_string(self,C_claire)
     } 
@@ -1217,7 +1217,7 @@ func E_symbol_I_string2 (self EID) EID {
     return EID{F_symbol_I_string2(ToString(OBJ(self)) ).Id(),0}} 
   
 // deprecated in claire 4 - do not use a string as a byte buffer
-/* {1} The go function for: nth_get(s:string,n:integer,max:integer) [status=1] */
+/* The go function for: nth_get(s:string,n:integer,max:integer) [status=1] */
 func F_nth_get_string (s *ClaireString ,n int,max int) EID { 
     // eid body s = char
     var Result EID 
@@ -1232,7 +1232,7 @@ func F_nth_get_string (s *ClaireString ,n int,max int) EID {
 func E_nth_get_string (s EID,n EID,max EID) EID { 
     return F_nth_get_string(ToString(OBJ(s)),INT(n),INT(max) )} 
   
-/* {1} The go function for: nth_put(s:string,n:integer,c:char,max:integer) [status=1] */
+/* The go function for: nth_put(s:string,n:integer,c:char,max:integer) [status=1] */
 func F_nth_put_string (s *ClaireString ,n int,c rune,max int) EID { 
     // eid body s = void
     var Result EID 
@@ -1255,7 +1255,7 @@ func E_nth_put_string (s EID,n EID,c EID,max EID) EID {
 // value @ string no longer supported in CLAIRE 4
 //  v3.2.14
 // we keep the externC method name even if it now support go code
-/* {1} The go function for: externC(s:string) [status=1] */
+/* The go function for: externC(s:string) [status=1] */
 func F_externC_string (s *ClaireString ) EID { 
     // eid body s = void
     var Result EID 
@@ -1266,7 +1266,7 @@ func F_externC_string (s *ClaireString ) EID {
 func E_externC_string (s EID) EID { 
     return F_externC_string(ToString(OBJ(s)) )} 
   
-/* {1} The go function for: externC(s:string,c:class) [status=1] */
+/* The go function for: externC(s:string,c:class) [status=1] */
 func F_externC_string2 (s *ClaireString ,c *ClaireClass ) EID { 
     // eid body s = any
     var Result EID 
@@ -1280,7 +1280,7 @@ func F_externC_string2 (s *ClaireString ,c *ClaireClass ) EID {
 func E_externC_string2 (s EID,c EID) EID { 
     return F_externC_string2(ToString(OBJ(s)),ToClass(OBJ(c)) )} 
   
-/* {1} The go function for: externC_string2_type */
+/* The go function for: externC_string2_type */
 func F_externC_string2_type (s *ClaireType ,c *ClaireType ) EID { 
     var Result EID 
     Result = EID{F_member_type(c).Id(),0}
@@ -1292,7 +1292,7 @@ func E_externC_string2_type (s EID,c EID) EID {
     return F_externC_string2_type(ToType(OBJ(s)),ToType(OBJ(c)))} 
   
 //------------------- SYMBOL -----------------------------------------------
-/* {1} The go function for: make_string(self:symbol) [status=1] */
+/* The go function for: make_string(self:symbol) [status=1] */
 func F_make_string_symbol (self *ClaireSymbol ) EID { 
     // eid body s = string
     var Result EID 
@@ -1306,7 +1306,7 @@ func E_make_string_symbol (self EID) EID {
     return F_make_string_symbol(ToSymbol(OBJ(self)) )} 
   
 //princ(self:symbol) : any -> function!(princ_symbol)
-/* {1} The go function for: self_print(self:symbol) [status=1] */
+/* The go function for: self_print(self:symbol) [status=1] */
 func F_self_print_symbol_Core (self *ClaireSymbol ) EID { 
     // eid body s = void
     var Result EID 
@@ -1326,7 +1326,7 @@ func E_self_print_symbol_Core (self EID) EID {
 //c_princ(self:symbol) : any -> function!(c_princ_symbol)
 //gensym(self:string) : symbol -> function!(gensym_string, NEW_ALLOC)
 //--------------------- INTEGER -----------------------------------------
-/* {1} The go function for: +(self:integer,x:integer) [status=0] */
+/* The go function for: +(self:integer,x:integer) [status=0] */
 func F__plus_integer (self int,x int) int { 
     return  (self+x)
     } 
@@ -1335,7 +1335,7 @@ func F__plus_integer (self int,x int) int {
 func E__plus_integer (self EID,x EID) EID { 
     return EID{C__INT,IVAL(F__plus_integer(INT(self),INT(x) ))}} 
   
-/* {1} The go function for: _plus_integer_type */
+/* The go function for: _plus_integer_type */
 func F__plus_integer_type (self *ClaireType ,x *ClaireType ) EID { 
     var Result EID 
     Result = EID{F_abstract_type_operation(C__plus,self,x).Id(),0}
@@ -1346,7 +1346,7 @@ func F__plus_integer_type (self *ClaireType ,x *ClaireType ) EID {
 func E__plus_integer_type (self EID,x EID) EID { 
     return F__plus_integer_type(ToType(OBJ(self)),ToType(OBJ(x)))} 
   
-/* {1} The go function for: -(self:integer,x:integer) [status=0] */
+/* The go function for: -(self:integer,x:integer) [status=0] */
 func F__dash_integer1 (self int,x int) int { 
     return  (self-x)
     } 
@@ -1355,7 +1355,7 @@ func F__dash_integer1 (self int,x int) int {
 func E__dash_integer1 (self EID,x EID) EID { 
     return EID{C__INT,IVAL(F__dash_integer1(INT(self),INT(x) ))}} 
   
-/* {1} The go function for: _dash_integer1_type */
+/* The go function for: _dash_integer1_type */
 func F__dash_integer1_type (self *ClaireType ,x *ClaireType ) EID { 
     var Result EID 
     Result = EID{F_abstract_type_operation(C__dash,self,x).Id(),0}
@@ -1370,7 +1370,7 @@ func E__dash_integer1_type (self EID,x EID) EID {
 //float!(self:integer) : float -> function!(to_float)
 //mod(self:integer,x:integer) : integer -> function!(mod_integer)
 //less_code(n:integer,i:integer) : boolean -> function!(less_code_integer)
-/* {1} The go function for: <<(x:integer,y:integer) [status=0] */
+/* The go function for: <<(x:integer,y:integer) [status=0] */
 func F__inf_inf_integer (x int,y int) int { 
     return  (x << y)
     } 
@@ -1379,7 +1379,7 @@ func F__inf_inf_integer (x int,y int) int {
 func E__inf_inf_integer (x EID,y EID) EID { 
     return EID{C__INT,IVAL(F__inf_inf_integer(INT(x),INT(y) ))}} 
   
-/* {1} The go function for: >>(x:integer,y:integer) [status=0] */
+/* The go function for: >>(x:integer,y:integer) [status=0] */
 func F__sup_sup_integer (x int,y int) int { 
     return  (x >> y)
     } 
@@ -1388,7 +1388,7 @@ func F__sup_sup_integer (x int,y int) int {
 func E__sup_sup_integer (x EID,y EID) EID { 
     return EID{C__INT,IVAL(F__sup_sup_integer(INT(x),INT(y) ))}} 
   
-/* {1} The go function for: and(x:integer,y:integer) [status=0] */
+/* The go function for: and(x:integer,y:integer) [status=0] */
 func F_and_integer (x int,y int) int { 
     return  (x & y)
     } 
@@ -1397,7 +1397,7 @@ func F_and_integer (x int,y int) int {
 func E_and_integer (x EID,y EID) EID { 
     return EID{C__INT,IVAL(F_and_integer(INT(x),INT(y) ))}} 
   
-/* {1} The go function for: or(x:integer,y:integer) [status=0] */
+/* The go function for: or(x:integer,y:integer) [status=0] */
 func F_or_integer (x int,y int) int { 
     return  (x | y)
     } 
@@ -1407,7 +1407,7 @@ func E_or_integer (x EID,y EID) EID {
     return EID{C__INT,IVAL(F_or_integer(INT(x),INT(y) ))}} 
   
 // open-coded
-/* {1} The go function for: <(self:integer,x:integer) [status=0] */
+/* The go function for: <(self:integer,x:integer) [status=0] */
 func F__inf_integer (self int,x int) *ClaireBoolean  { 
     if (self < x) { 
       if (CTRUE == CTRUE) {return CTRUE
@@ -1420,7 +1420,7 @@ func F__inf_integer (self int,x int) *ClaireBoolean  {
 func E__inf_integer (self EID,x EID) EID { 
     return EID{F__inf_integer(INT(self),INT(x) ).Id(),0}} 
   
-/* {1} The go function for: <=(self:integer,x:integer) [status=0] */
+/* The go function for: <=(self:integer,x:integer) [status=0] */
 func F__inf_equal_integer (self int,x int) *ClaireBoolean  { 
     if (self <= x) { 
       if (CTRUE == CTRUE) {return CTRUE
@@ -1433,7 +1433,7 @@ func F__inf_equal_integer (self int,x int) *ClaireBoolean  {
 func E__inf_equal_integer (self EID,x EID) EID { 
     return EID{F__inf_equal_integer(INT(self),INT(x) ).Id(),0}} 
   
-/* {1} The go function for: >(self:integer,x:integer) [status=0] */
+/* The go function for: >(self:integer,x:integer) [status=0] */
 func F__sup_integer (self int,x int) *ClaireBoolean  { 
     if (self > x) { 
       if (CTRUE == CTRUE) {return CTRUE
@@ -1446,7 +1446,7 @@ func F__sup_integer (self int,x int) *ClaireBoolean  {
 func E__sup_integer (self EID,x EID) EID { 
     return EID{F__sup_integer(INT(self),INT(x) ).Id(),0}} 
   
-/* {1} The go function for: nth(self:integer,y:integer) [status=0] */
+/* The go function for: nth(self:integer,y:integer) [status=0] */
 func F_nth_integer (self int,y int) *ClaireBoolean  { 
     if (BitVectorContains(self,y) == CTRUE) { 
       if (CTRUE == CTRUE) {return CTRUE
@@ -1459,7 +1459,7 @@ func F_nth_integer (self int,y int) *ClaireBoolean  {
 func E_nth_integer (self EID,y EID) EID { 
     return EID{F_nth_integer(INT(self),INT(y) ).Id(),0}} 
   
-/* {1} The go function for: abs(x:integer) [status=0] */
+/* The go function for: abs(x:integer) [status=0] */
 func F_abs_integer (x int) int { 
     if (x >= 0) { 
       return  x
@@ -1472,7 +1472,7 @@ func F_abs_integer (x int) int {
 func E_abs_integer (x EID) EID { 
     return EID{C__INT,IVAL(F_abs_integer(INT(x) ))}} 
   
-/* {1} The go function for: random(a:integer,b:integer) [status=0] */
+/* The go function for: random(a:integer,b:integer) [status=0] */
 func F_random_integer2 (a int,b int) int { 
     return  (a+F_random_integer(((b+1)-a)))
     } 
@@ -1482,7 +1482,7 @@ func E_random_integer2 (a EID,b EID) EID {
     return EID{C__INT,IVAL(F_random_integer2(INT(a),INT(b) ))}} 
   
 // used by the logic
-/* {1} The go function for: factor?(x:integer,y:integer) [status=1] */
+/* The go function for: factor?(x:integer,y:integer) [status=1] */
 func F_factor_ask_integer (x int,y int) EID { 
     // eid body s = boolean
     var Result EID 
@@ -1501,7 +1501,7 @@ func F_factor_ask_integer (x int,y int) EID {
 func E_factor_ask_integer (x EID,y EID) EID { 
     return F_factor_ask_integer(INT(x),INT(y) )} 
   
-/* {1} The go function for: divide?(x:integer,y:integer) [status=1] */
+/* The go function for: divide?(x:integer,y:integer) [status=1] */
 func F_divide_ask_integer (x int,y int) EID { 
     // eid body s = boolean
     var Result EID 
@@ -1520,7 +1520,7 @@ func F_divide_ask_integer (x int,y int) EID {
 func E_divide_ask_integer (x EID,y EID) EID { 
     return F_divide_ask_integer(INT(x),INT(y) )} 
   
-/* {1} The go function for: Id(x:any) [status=0] */
+/* The go function for: Id(x:any) [status=0] */
 func F_Id_any (x *ClaireAny ) *ClaireAny  { 
     return  x
     } 
@@ -1529,7 +1529,7 @@ func F_Id_any (x *ClaireAny ) *ClaireAny  {
 func E_Id_any (x EID) EID { 
     return F_Id_any(ANY(x) ).ToEID()} 
   
-/* {1} The go function for: Id_any_type */
+/* The go function for: Id_any_type */
 func F_Id_any_type (x *ClaireType ) EID { 
     var Result EID 
     Result = EID{x.Id(),0}
@@ -1541,7 +1541,7 @@ func E_Id_any_type (x EID) EID {
     return F_Id_any_type(ToType(OBJ(x)))} 
   
 //------------------------ FLOAT ---------------------------------------------
-/* {1} The go function for: +(self:float,x:float) [status=0] */
+/* The go function for: +(self:float,x:float) [status=0] */
 func F__plus_float (self float64,x float64) float64 { 
     return  (self+x)
     } 
@@ -1550,7 +1550,7 @@ func F__plus_float (self float64,x float64) float64 {
 func E__plus_float (self EID,x EID) EID { 
     return EID{C__FLOAT,FVAL(F__plus_float(FLOAT(self),FLOAT(x) ))}} 
   
-/* {1} The go function for: -(self:float,x:float) [status=0] */
+/* The go function for: -(self:float,x:float) [status=0] */
 func F__dash_float (self float64,x float64) float64 { 
     return  (self-x)
     } 
@@ -1559,7 +1559,7 @@ func F__dash_float (self float64,x float64) float64 {
 func E__dash_float (self EID,x EID) EID { 
     return EID{C__FLOAT,FVAL(F__dash_float(FLOAT(self),FLOAT(x) ))}} 
   
-/* {1} The go function for: *(self:float,x:float) [status=0] */
+/* The go function for: *(self:float,x:float) [status=0] */
 func F__star_float (self float64,x float64) float64 { 
     return  (self*x)
     } 
@@ -1568,7 +1568,7 @@ func F__star_float (self float64,x float64) float64 {
 func E__star_float (self EID,x EID) EID { 
     return EID{C__FLOAT,FVAL(F__star_float(FLOAT(self),FLOAT(x) ))}} 
   
-/* {1} The go function for: /(self:float,x:float) [status=0] */
+/* The go function for: /(self:float,x:float) [status=0] */
 func F__7_float (self float64,x float64) float64 { 
     return  (self/x)
     } 
@@ -1582,7 +1582,7 @@ func E__7_float (self EID,x EID) EID {
 // -(self:float,x:float) : float -> (let y:float := (self - x) in y)
 // *(self:float,x:float) : float -> (let y:float := (self * x) in y)
 // /(self:float,x:float) : float -> (let y:float := (self / x) in y)
-/* {1} The go function for: -(self:float) [status=0] */
+/* The go function for: -(self:float) [status=0] */
 func F__dash_float2 (self float64) float64 { 
     return  ((-1)*self)
     } 
@@ -1591,7 +1591,7 @@ func F__dash_float2 (self float64) float64 {
 func E__dash_float2 (self EID) EID { 
     return EID{C__FLOAT,FVAL(F__dash_float2(FLOAT(self) ))}} 
   
-/* {1} The go function for: string!(self:float) [status=1] */
+/* The go function for: string!(self:float) [status=1] */
 func F_string_I_float (self float64) EID { 
     // eid body s = string
     var Result EID 
@@ -1605,7 +1605,7 @@ func E_string_I_float (self EID) EID {
     return F_string_I_float(FLOAT(self) )} 
   
 // v3.3.42
-/* {1} The go function for: abs(x:float) [status=0] */
+/* The go function for: abs(x:float) [status=0] */
 func F_abs_float (x float64) float64 { 
     if (x >= 0) { 
       return  x
@@ -1620,7 +1620,7 @@ func E_abs_float (x EID) EID {
   
 // the pF is my ugly duckling :) -------------------------------------------
 // float print is now standard in v3.4.42 (princ(float_integer)  but this is still a cuter print ...
-/* {1} The go function for: mClaire/printFDigit(x:float,i:integer) [status=1] */
+/* The go function for: mClaire/printFDigit(x:float,i:integer) [status=1] */
 func F_printFDigit_float (x float64,i int) EID { 
     // eid body s = void
     var Result EID 
@@ -1693,7 +1693,7 @@ func E_printFDigit_float (x EID,i EID) EID {
     return F_printFDigit_float(FLOAT(x),INT(i) )} 
   
 // print the first i digits of an integer
-/* {1} The go function for: mClaire/printFDigit(x:integer,i:integer) [status=1] */
+/* The go function for: mClaire/printFDigit(x:integer,i:integer) [status=1] */
 func F_printFDigit_integer (x int,i int) EID { 
     // eid body s = void
     var Result EID 
@@ -1741,7 +1741,7 @@ func E_printFDigit_integer (x EID,i EID) EID {
 // in CLAIRE 4, bag is no longer a concrete data type, hence bag methods must be divided between sets and lists
 // length(self:bag ) : integer -> length(self)  => becomes part of go
 // in CLAIRE 4, we can tell the compiler that the list is a list<object> (optimization purpose)
-/* {1} The go function for: mClaire/nth_object(self:list,n:integer) [status=0] */
+/* The go function for: mClaire/nth_object(self:list,n:integer) [status=0] */
 func F_mClaire_nth_object_list (self *ClaireList ,n int) *ClaireAny  { 
     return  self.ValuesO()[n-1].Id()
     } 
@@ -1753,7 +1753,7 @@ func E_mClaire_nth_object_list (self EID,n EID) EID {
 //
 // nth_get(self:list,x:integer) : any -> nth_get(self, x)
 // new in claire 4: tells the compiler that range check is required + EID optimized
-/* {1} The go function for: nth_write(self:list,i:integer,v:any) [status=1] */
+/* The go function for: nth_write(self:list,i:integer,v:any) [status=1] */
 func F_nth_write_list (self *ClaireList ,i int,v *ClaireAny ) EID { 
     // eid body s = any
     var Result EID 
@@ -1774,7 +1774,7 @@ func E_nth_write_list (self EID,i EID,v EID) EID {
     return F_nth_write_list(ToList(OBJ(self)),INT(i),ANY(v) )} 
   
 // CLAIRE 4 duplication: define min/max for sets first
-/* {1} The go function for: min(f:method,self:set) [status=1] */
+/* The go function for: min(f:method,self:set) [status=1] */
 func F_min_method2 (f *ClaireMethod ,self *ClaireSet ) EID { 
     // eid body s = any
     var Result EID 
@@ -1838,7 +1838,7 @@ func F_min_method2 (f *ClaireMethod ,self *ClaireSet ) EID {
 func E_min_method2 (f EID,self EID) EID { 
     return F_min_method2(ToMethod(OBJ(f)),ToSet(OBJ(self)) )} 
   
-/* {1} The go function for: min_method2_type */
+/* The go function for: min_method2_type */
 func F_min_method2_type (f *ClaireType ,self *ClaireType ) EID { 
     var Result EID 
     Result = EID{F_member_type(self).Id(),0}
@@ -1849,7 +1849,7 @@ func F_min_method2_type (f *ClaireType ,self *ClaireType ) EID {
 func E_min_method2_type (f EID,self EID) EID { 
     return F_min_method2_type(ToType(OBJ(f)),ToType(OBJ(self)))} 
   
-/* {1} The go function for: max(f:method,self:set) [status=1] */
+/* The go function for: max(f:method,self:set) [status=1] */
 func F_max_method2 (f *ClaireMethod ,self *ClaireSet ) EID { 
     // eid body s = any
     var Result EID 
@@ -1929,7 +1929,7 @@ func F_max_method2 (f *ClaireMethod ,self *ClaireSet ) EID {
 func E_max_method2 (f EID,self EID) EID { 
     return F_max_method2(ToMethod(OBJ(f)),ToSet(OBJ(self)) )} 
   
-/* {1} The go function for: max_method2_type */
+/* The go function for: max_method2_type */
 func F_max_method2_type (f *ClaireType ,self *ClaireType ) EID { 
     var Result EID 
     Result = EID{F_member_type(self).Id(),0}
@@ -1941,7 +1941,7 @@ func E_max_method2_type (f EID,self EID) EID {
     return F_max_method2_type(ToType(OBJ(f)),ToType(OBJ(self)))} 
   
 // CLAIRE 4 : optimize for lists
-/* {1} The go function for: min(f:method,self:list) [status=1] */
+/* The go function for: min(f:method,self:list) [status=1] */
 func F_min_method3 (f *ClaireMethod ,self *ClaireList ) EID { 
     // eid body s = any
     var Result EID 
@@ -1991,7 +1991,7 @@ func F_min_method3 (f *ClaireMethod ,self *ClaireList ) EID {
 func E_min_method3 (f EID,self EID) EID { 
     return F_min_method3(ToMethod(OBJ(f)),ToList(OBJ(self)) )} 
   
-/* {1} The go function for: min_method3_type */
+/* The go function for: min_method3_type */
 func F_min_method3_type (f *ClaireType ,self *ClaireType ) EID { 
     var Result EID 
     Result = EID{F_member_type(self).Id(),0}
@@ -2002,7 +2002,7 @@ func F_min_method3_type (f *ClaireType ,self *ClaireType ) EID {
 func E_min_method3_type (f EID,self EID) EID { 
     return F_min_method3_type(ToType(OBJ(f)),ToType(OBJ(self)))} 
   
-/* {1} The go function for: max(f:method,self:list) [status=1] */
+/* The go function for: max(f:method,self:list) [status=1] */
 func F_max_method3 (f *ClaireMethod ,self *ClaireList ) EID { 
     // eid body s = any
     var Result EID 
@@ -2068,7 +2068,7 @@ func F_max_method3 (f *ClaireMethod ,self *ClaireList ) EID {
 func E_max_method3 (f EID,self EID) EID { 
     return F_max_method3(ToMethod(OBJ(f)),ToList(OBJ(self)) )} 
   
-/* {1} The go function for: max_method3_type */
+/* The go function for: max_method3_type */
 func F_max_method3_type (f *ClaireType ,self *ClaireType ) EID { 
     var Result EID 
     Result = EID{F_member_type(self).Id(),0}
@@ -2081,7 +2081,7 @@ func E_max_method3_type (f EID,self EID) EID {
   
 // CLAIRE4 : /+ is native for list
 // new for claire 3.4
-/* {1} The go function for: random(self:list) [status=0] */
+/* The go function for: random(self:list) [status=0] */
 func F_random_list (self *ClaireList ) *ClaireAny  { 
     // procedure body with s = any
     var Result *ClaireAny  
@@ -2094,7 +2094,7 @@ func F_random_list (self *ClaireList ) *ClaireAny  {
 func E_random_list (self EID) EID { 
     return F_random_list(ToList(OBJ(self)) ).ToEID()} 
   
-/* {1} The go function for: random_list_type */
+/* The go function for: random_list_type */
 func F_random_list_type (self *ClaireType ) EID { 
     var Result EID 
     Result = EID{F_member_type(self).Id(),0}
@@ -2107,7 +2107,7 @@ func E_random_list_type (self EID) EID {
   
 //--------- LIST --------------------------------------------------------
 // last element of a list
-/* {1} The go function for: last(self:list) [status=1] */
+/* The go function for: last(self:list) [status=1] */
 func F_last_list (self *ClaireList ) EID { 
     // eid body s = any
     var Result EID 
@@ -2122,7 +2122,7 @@ func F_last_list (self *ClaireList ) EID {
 func E_last_list (self EID) EID { 
     return F_last_list(ToList(OBJ(self)) )} 
   
-/* {1} The go function for: last_list_type */
+/* The go function for: last_list_type */
 func F_last_list_type (self *ClaireType ) EID { 
     var Result EID 
     Result = EID{F_member_type(self).Id(),0}
@@ -2134,7 +2134,7 @@ func E_last_list_type (self EID) EID {
     return F_last_list_type(ToType(OBJ(self)))} 
   
 // remove the last element
-/* {1} The go function for: rmlast(self:list) [status=1] */
+/* The go function for: rmlast(self:list) [status=1] */
 func F_rmlast_list (self *ClaireList ) EID { 
     // eid body s = list
     var Result EID 
@@ -2149,7 +2149,7 @@ func E_rmlast_list (self EID) EID {
     return F_rmlast_list(ToList(OBJ(self)) )} 
   
 // the old LISP method
-/* {1} The go function for: car(self:list) [status=1] */
+/* The go function for: car(self:list) [status=1] */
 func F_car_list (self *ClaireList ) EID { 
     // eid body s = any
     var Result EID 
@@ -2165,7 +2165,7 @@ func E_car_list (self EID) EID {
     return F_car_list(ToList(OBJ(self)) )} 
   
 // this method sorts a list according to an order
-/* {1} The go function for: sort(f:method,self:list) [status=1] */
+/* The go function for: sort(f:method,self:list) [status=1] */
 func F_sort_method (f *ClaireMethod ,self *ClaireList ) EID { 
     // eid body s = list
     var Result EID 
@@ -2181,7 +2181,7 @@ func E_sort_method (f EID,self EID) EID {
   
 // v3.0.38: upgrade the quicksort algorithm with a better pivot selection cf.bag.cpp
 // this is also proposed as a macro: cf. file.cl
-/* {1} The go function for: quicksort(self:list,f:method,n:integer,m:integer) [status=1] */
+/* The go function for: quicksort(self:list,f:method,n:integer,m:integer) [status=1] */
 func F_quicksort_list (self *ClaireList ,f *ClaireMethod ,n int,m int) EID { 
     // eid body s = void
     var Result EID 
@@ -2265,7 +2265,7 @@ func E_quicksort_list (self EID,f EID,n EID,m EID) EID {
       INT(m) )} 
   
 // destructive method that build the powerset
-/* {1} The go function for: build_powerset(self:list) [status=0] */
+/* The go function for: build_powerset(self:list) [status=0] */
 func F_build_powerset_list (self *ClaireList ) *ClaireSet  { 
     // procedure body with s = set
     var Result *ClaireSet  
@@ -2300,7 +2300,7 @@ func E_build_powerset_list (self EID) EID {
   
 // skip 
 // new and useful (v3.1.06) - create a list with n replication of the default value - deprecated
-/* {1} The go function for: make_copy_list(n:integer,d:any) [status=0] */
+/* The go function for: make_copy_list(n:integer,d:any) [status=0] */
 func F_make_copy_list_integer (n int,d *ClaireAny ) *ClaireList  { 
     // procedure body with s = list
     var Result *ClaireList  
@@ -2326,7 +2326,7 @@ func E_make_copy_list_integer (n EID,d EID) EID {
     return EID{F_make_copy_list_integer(INT(n),ANY(d) ).Id(),0}} 
   
 // new version : create a typed list for integer or floats
-/* {1} The go function for: typed_copy_list(t:type,n:integer,d:any) [status=0] */
+/* The go function for: typed_copy_list(t:type,n:integer,d:any) [status=0] */
 func F_typed_copy_list_type (t *ClaireType ,n int,d *ClaireAny ) *ClaireList  { 
     // procedure body with s = list
     var Result *ClaireList  
@@ -2358,7 +2358,7 @@ func E_typed_copy_list_type (t EID,n EID,d EID) EID {
     return EID{F_typed_copy_list_type(ToType(OBJ(t)),INT(n),ANY(d) ).Id(),0}} 
   
 //----------------------  SET  ---------------------------------------------
-/* {1} The go function for: difference(self:set,x:set) [status=0] */
+/* The go function for: difference(self:set,x:set) [status=0] */
 func F_difference_set (self *ClaireSet ,x *ClaireSet ) *ClaireSet  { 
     // procedure body with s = set
     var Result *ClaireSet  
@@ -2387,7 +2387,7 @@ func E_difference_set (self EID,x EID) EID {
   
 //----------------------  TYPE ---------------------------------------------
 //--------- ARRAY --------------------------------------------------------
-/* {1} The go function for: nth=(self:array,x:integer,y:any) [status=1] */
+/* The go function for: nth=(self:array,x:integer,y:any) [status=1] */
 func F_nth_equal_array (self *ClaireList ,x int,y *ClaireAny ) EID { 
     // eid body s = void
     var Result EID 
@@ -2405,7 +2405,7 @@ func F_nth_equal_array (self *ClaireList ,x int,y *ClaireAny ) EID {
 func E_nth_equal_array (self EID,x EID,y EID) EID { 
     return F_nth_equal_array(ToArray(OBJ(self)),INT(x),ANY(y) )} 
   
-/* {1} The go function for: self_print(self:array) [status=1] */
+/* The go function for: self_print(self:array) [status=1] */
 func F_self_print_array_Core (self *ClaireList ) EID { 
     // eid body s = void
     var Result EID 
@@ -2424,7 +2424,7 @@ func E_self_print_array_Core (self EID) EID {
     return F_self_print_array_Core(ToArray(OBJ(self)) )} 
   
 //---------------------- CHAR --------------------------------------------
-/* {1} The go function for: self_print(self:char) [status=0] */
+/* The go function for: self_print(self:char) [status=0] */
 func F_self_print_char_Core (self rune)  { 
     // procedure body with s = void
     PRINC("'")
@@ -2437,7 +2437,7 @@ func E_self_print_char_Core (self EID) EID {
     F_self_print_char_Core(CHAR(self) )
     return EVOID} 
   
-/* {1} The go function for: <=(c1:char,c2:char) [status=0] */
+/* The go function for: <=(c1:char,c2:char) [status=0] */
 func F__inf_equal_char (c1 rune,c2 rune) *ClaireBoolean  { 
     if (int(c1) <= int(c2)) {return CTRUE
     } else {return CFALSE}} 
@@ -2447,7 +2447,7 @@ func E__inf_equal_char (c1 EID,c2 EID) EID {
     return EID{F__inf_equal_char(CHAR(c1),CHAR(c2) ).Id(),0}} 
   
 // --------------------- BOOL -----------------------------------------------
-/* {1} The go function for: random(b:boolean) [status=0] */
+/* The go function for: random(b:boolean) [status=0] */
 func F_random_boolean (b *ClaireBoolean ) *ClaireBoolean  { 
     if (b == CTRUE) { 
       if (F_random_integer(10000) >= 5000) {return CTRUE

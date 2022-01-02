@@ -1,5 +1,5 @@
 /***** CLAIRE Compilation of file /Users/ycaseau/Dropbox/src/clairev4.03/src/meta/define.cl 
-         [version 4.0.03 / safety 5] Wednesday 12-29-2021 08:34:14 *****/
+         [version 4.0.04 / safety 5] Saturday 01-01-2022 16:47:18 *****/
 
 package Language
 import (_ "fmt"
@@ -35,7 +35,7 @@ func import_g0212() {
 // *********************************************************************
 // this is the basic class instantiation
 //
-/* {1} The go function for: self_print(self:Definition) [status=1] */
+/* The go function for: self_print(self:Definition) [status=1] */
 func (self *Definition ) SelfPrint () EID { 
     // eid body s = any
     var Result EID 
@@ -56,7 +56,7 @@ func E_self_print_Definition_Language (self EID) EID {
 // CLAIRE 4: fast definition when no close nor facy slots
 // ------------- named object definition ------------------------------
 //
-/* {1} The go function for: self_print(self:Defobj) [status=1] */
+/* The go function for: self_print(self:Defobj) [status=1] */
 func (self *Defobj ) SelfPrint () EID { 
     // eid body s = void
     var Result EID 
@@ -122,7 +122,7 @@ func E_self_print_Defobj_Language (self EID) EID {
   
 // ------------- class definition ------------------------------------
 //
-/* {1} The go function for: self_print(self:Defclass) [status=1] */
+/* The go function for: self_print(self:Defclass) [status=1] */
 func (self *Defclass ) SelfPrint () EID { 
     // eid body s = void
     var Result EID 
@@ -213,7 +213,7 @@ func E_self_print_Defclass_Language (self EID) EID {
   
 // -------------- method definition ----------------------------------
 //
-/* {1} The go function for: self_print(self:Defmethod) [status=1] */
+/* The go function for: self_print(self:Defmethod) [status=1] */
 func (self *Defmethod ) SelfPrint () EID { 
     // eid body s = void
     var Result EID 
@@ -268,7 +268,7 @@ func E_self_print_Defmethod_Language (self EID) EID {
     return To_Defmethod(OBJ(self)).SelfPrint( )} 
   
 // -------------- array definition -----------------------------------
-/* {1} The go function for: self_print(self:Defarray) [status=1] */
+/* The go function for: self_print(self:Defarray) [status=1] */
 func (self *Defarray ) SelfPrint () EID { 
     // eid body s = void
     var Result EID 
@@ -323,7 +323,7 @@ func E_self_print_Defarray_Language (self EID) EID {
     return To_Defarray(OBJ(self)).SelfPrint( )} 
   
 // -------------- rule definition ------------------------------------
-/* {1} The go function for: self_print(self:Defrule) [status=1] */
+/* The go function for: self_print(self:Defrule) [status=1] */
 func (self *Defrule ) SelfPrint () EID { 
     // eid body s = void
     var Result EID 
@@ -362,7 +362,7 @@ func (self *Defrule ) SelfPrint () EID {
 func E_self_print_Defrule_Language (self EID) EID { 
     return To_Defrule(OBJ(self)).SelfPrint( )} 
   
-/* {1} The go function for: self_print(self:Defvar) [status=1] */
+/* The go function for: self_print(self:Defvar) [status=1] */
 func (self *Defvar ) SelfPrint () EID { 
     // eid body s = void
     var Result EID 
@@ -385,7 +385,7 @@ func E_self_print_Defvar_Language (self EID) EID {
 // *********************************************************************
 // creation of a new object
 //
-/* {1} The go function for: self_eval(self:Definition) [status=1] */
+/* The go function for: self_eval(self:Definition) [status=1] */
 func (self *Definition ) SelfEval () EID { 
     // eid body s = any
     var Result EID 
@@ -426,7 +426,7 @@ func EVAL_Definition (x *ClaireAny) EID {
      return To_Definition(x).SelfEval()} 
   
 // fast definition : no inverse management + no "close" method
-/* {1} The go function for: fast_definition?(c:class) [status=0] */
+/* The go function for: fast_definition?(c:class) [status=0] */
 func F_Language_fast_definition_ask_class (c *ClaireClass ) *ClaireBoolean  { 
     // procedure body with s = boolean
     var Result *ClaireBoolean  
@@ -470,7 +470,7 @@ func E_Language_fast_definition_ask_class (c EID) EID {
     return EID{F_Language_fast_definition_ask_class(ToClass(OBJ(c)) ).Id(),0}} 
   
 // then the evaluation is simpler ! write_fast does the range checking (may return an error) 
-/* {1} The go function for: self_eval(self:DefFast) [status=1] */
+/* The go function for: self_eval(self:DefFast) [status=1] */
 func (self *Language_DefFast ) SelfEval () EID { 
     // eid body s = any
     var Result EID 
@@ -527,7 +527,7 @@ func EVAL_Language_DefFast (x *ClaireAny) EID {
 // the instantiation body is a sequence of words from which the initialization
 // of the object must be built.
 // CLAIRE4 : renamed complete(self:object,%l:list) to new_writes()
-/* {1} The go function for: new_writes(self:object,%l:list) [status=1] */
+/* The go function for: new_writes(self:object,%l:list) [status=1] */
 func F_Language_new_writes_object (self *ClaireObject ,_Zl *ClaireList ) EID { 
     // eid body s = list
     var Result EID 
@@ -602,7 +602,7 @@ func E_Language_new_writes_object (self EID,_Zl EID) EID {
     return F_Language_new_writes_object(ToObject(OBJ(self)),ToList(OBJ(_Zl)) )} 
   
 // creation of a new named object
-/* {1} The go function for: self_eval(self:Defobj) [status=1] */
+/* The go function for: self_eval(self:Defobj) [status=1] */
 func (self *Defobj ) SelfEval () EID { 
     // eid body s = any
     var Result EID 
@@ -665,13 +665,13 @@ func EVAL_Defobj (x *ClaireAny) EID {
   
 // creation of a new named object
 // note that final() is the marker of a forward definition in CLAIRE4
-/* {1} The go function for: self_eval(self:Defclass) [status=1] */
+/* The go function for: self_eval(self:Defclass) [status=1] */
 func (self *Defclass ) SelfEval () EID { 
     // eid body s = any
     var Result EID 
-    if ((C_class.Id() == Core.F_owner_any(self.Ident.Get()).Id()) && 
-        ((ToClass(self.Ident.Get()).Open != ClEnv.Final) || 
-            (self.Arg.Id() != ToClass(self.Ident.Get()).Superclass.Id()))) { 
+    if ((C_class.Id() == Core.F_owner_any(self.Ident.Value()).Id()) && 
+        ((ToClass(self.Ident.Value()).Open != ClEnv.Final) || 
+            (self.Arg.Id() != ToClass(self.Ident.Value()).Superclass.Id()))) { 
       Result = ToException(Core.C_general_error.Make(MakeString("[107] class re-definition is not valid: ~S").Id(),MakeConstantList(self.Id()).Id())).Close()
       } else {
       { var _Zo *ClaireClass  
@@ -859,7 +859,7 @@ func EVAL_Defclass (x *ClaireAny) EID {
      return To_Defclass(x).SelfEval()} 
   
 // we compute the proper default value (reused by compiler) - for int, float, sets and lists
-/* {1} The go function for: getDefault(rt:type,v:any) [status=0] */
+/* The go function for: getDefault(rt:type,v:any) [status=0] */
 func F_Language_getDefault_type (rt *ClaireType ,v *ClaireAny ) *ClaireAny  { 
     if (v == CNULL) { 
       if (rt.Included(ToType(C_integer.Id())) == CTRUE) { 
@@ -884,7 +884,7 @@ func E_Language_getDefault_type (rt EID,v EID) EID {
   
 // method definition
 // v0.01
-/* {1} The go function for: self_eval(self:Defmethod) [status=1] */
+/* The go function for: self_eval(self:Defmethod) [status=1] */
 func (self *Defmethod ) SelfEval () EID { 
     // eid body s = any
     var Result EID 
@@ -1065,7 +1065,7 @@ func EVAL_Defmethod (x *ClaireAny) EID {
   
 // v3.2.24 : -1 : final
 // attach a cute comment if needed ... to a defclass or a defmethod
-/* {1} The go function for: attach_comment(x:any) [status=1] */
+/* The go function for: attach_comment(x:any) [status=1] */
 func F_attach_comment_any (x *ClaireAny ) EID { 
     // eid body s = void
     var Result EID 
@@ -1082,7 +1082,7 @@ func E_attach_comment_any (x EID) EID {
     return F_attach_comment_any(ANY(x) )} 
   
 // returns the list of types AND modifies LDEF
-/* {1} The go function for: iClaire/extract_signature(l:list) [status=1] */
+/* The go function for: iClaire/extract_signature(l:list) [status=1] */
 func F_extract_signature_list (l *ClaireList ) EID { 
     // eid body s = list
     var Result EID 
@@ -1141,7 +1141,7 @@ func E_extract_signature_list (l EID) EID {
 // may be returned. In addition, if the path list is non empty, new type
 // variables may be defined. a syntax error will produce the unknown value
 //
-/* {1} The go function for: iClaire/extract_pattern(x:any,path:list) [status=1] */
+/* The go function for: iClaire/extract_pattern(x:any,path:list) [status=1] */
 func F_extract_pattern_any (x *ClaireAny ,path *ClaireList ) EID { 
     // eid body s = any
     var Result EID 
@@ -1422,7 +1422,7 @@ func E_extract_pattern_any (x EID,path EID) EID {
   return F_extract_pattern_any(ANY(x),ToList(OBJ(path)) )} 
 
 // takes an <exp> that must belong to <type> and returns the CLAIRE type
-/* {0} The go function for: iClaire/extract_type(x:any) [status=1] */
+/* The go function for: iClaire/extract_type(x:any) [status=1] */
 func F_extract_type_any (x *ClaireAny ) EID { 
   // eid body s = type_expression
   var Result EID 
@@ -1447,7 +1447,7 @@ func E_extract_type_any (x EID) EID {
   return F_extract_type_any(ANY(x) )} 
 
 // an item is an integer, a float, a symbol, a string or a type
-/* {0} The go function for: extract_item(x:any,y:any) [status=0] */
+/* The go function for: extract_item(x:any,y:any) [status=0] */
 func F_extract_item_any (x *ClaireAny ,y *ClaireAny ) *ClaireAny  { 
   if (((((C_integer.Id() == x.Isa.Id()) || 
             (C_float.Id() == x.Isa.Id())) || 
@@ -1468,7 +1468,7 @@ func E_extract_item_any (x EID,y EID) EID {
 
 // version for X[...] which is the most complex case - note the extensibility
 // patch.
-/* {0} The go function for: extract_pattern_nth(l:list,path:list) [status=1] */
+/* The go function for: extract_pattern_nth(l:list,path:list) [status=1] */
 func F_extract_pattern_nth_list (l *ClaireList ,path *ClaireList ) EID { 
   // eid body s = any
   var Result EID 
@@ -1659,7 +1659,7 @@ func E_extract_pattern_nth_list (l EID,path EID) EID {
   return F_extract_pattern_nth_list(ToList(OBJ(l)),ToList(OBJ(path)) )} 
 
 // we perform some pre-processing on x[l] at reading time to make evaluation easier
-/* {0} The go function for: iClaire/extract_class_call(self:class,l:list) [status=1] */
+/* The go function for: iClaire/extract_class_call(self:class,l:list) [status=1] */
 func F_extract_class_call_class (self *ClaireClass ,l *ClaireList ) EID { 
   // eid body s = object
   var Result EID 
@@ -1893,7 +1893,7 @@ func E_extract_class_call_class (self EID,l EID) EID {
 // extract the range (type and/or second-order function)
 // lvar is the list of arguments that will serve as second-o. args
 // ldef is the list of extra type variables that are defined in the sig.
-/* {0} The go function for: iClaire/extract_range(x:any,lvar:list,ldef:list) [status=1] */
+/* The go function for: iClaire/extract_range(x:any,lvar:list,ldef:list) [status=1] */
 func F_extract_range_any (x *ClaireAny ,lvar *ClaireList ,ldef *ClaireList ) EID { 
   // eid body s = list
   var Result EID 
@@ -2071,7 +2071,7 @@ func E_extract_range_any (x EID,lvar EID,ldef EID) EID {
   return F_extract_range_any(ANY(x),ToList(OBJ(lvar)),ToList(OBJ(ldef)) )} 
 
 // create a bitvector from a list of flags
-/* {0} The go function for: bit_vector(l:listargs) [status=1] */
+/* The go function for: bit_vector(l:listargs) [status=1] */
 func F_bit_vector_listargs2 (l *ClaireList ) EID { 
   // eid body s = integer
   var Result EID 
@@ -2119,7 +2119,7 @@ func E_bit_vector_listargs2 (l EID) EID {
 // the input is  body | (function!(f) | function!(f,s)) < | body> opt
 // CLAIRE4: status is -1 : unknown, 0: no error, 1: an error may be thrown
 //
-/* {0} The go function for: iClaire/extract_status(x:any) [status=1] */
+/* The go function for: iClaire/extract_status(x:any) [status=1] */
 func F_extract_status_any (x *ClaireAny ) EID { 
   // eid body s = list
   var Result EID 
@@ -2211,7 +2211,7 @@ func E_extract_status_any (x EID) EID {
   return F_extract_status_any(ANY(x) )} 
 
 // new in CLAIRE4 : create a function with a syntactic marker ! for imported
-/* {0} The go function for: imported_function(s:string) [status=0] */
+/* The go function for: imported_function(s:string) [status=0] */
 func F_imported_function_string (s *ClaireString ) *ClaireFunction  { 
   return  F_make_function_string(F_append_string(MakeString("#"),s))
   } 
@@ -2221,7 +2221,7 @@ func E_imported_function_string (s EID) EID {
   return F_imported_function_string(ToString(OBJ(s)) ).ToEID()} 
 
 // cleans a pattern into a type
-/* {0} The go function for: iClaire/type!(x:any) [status=0] */
+/* The go function for: iClaire/type!(x:any) [status=0] */
 func F_type_I_any (x *ClaireAny ) *ClaireType  { 
   // procedure body with s = type
   var Result *ClaireType  
@@ -2286,7 +2286,7 @@ func E_type_I_any (x EID) EID {
 // to do in later versions: use an array if direct indexed access
 // in the meanwhile, arrays of float should be used with care (indexed arrays)
 //
-/* {0} The go function for: self_eval(self:Defarray) [status=1] */
+/* The go function for: self_eval(self:Defarray) [status=1] */
 func (self *Defarray ) SelfEval () EID { 
   // eid body s = any
   var Result EID 
@@ -2687,7 +2687,7 @@ func EVAL_Defarray (x *ClaireAny) EID {
 // ------------------ NEW in v3.2 : definition of rules -----------------------
 //
 // a demon is a lambda with a name and a priority
-/* {0} The go function for: self_print(self:demon) [status=1] */
+/* The go function for: self_print(self:demon) [status=1] */
 func (self *LanguageDemon ) SelfPrint () EID { 
   // eid body s = void
   var Result EID 
@@ -2699,7 +2699,7 @@ func (self *LanguageDemon ) SelfPrint () EID {
 func E_self_print_demon (self EID) EID { 
   return ToLanguageDemon(OBJ(self)).SelfPrint( )} 
 
-/* {0} The go function for: funcall(self:demon,x:any,y:any) [status=1] */
+/* The go function for: funcall(self:demon,x:any,y:any) [status=1] */
 func F_funcall_demon1 (self *LanguageDemon ,x *ClaireAny ,y *ClaireAny ) EID { 
   // eid body s = any
   var Result EID 
@@ -2710,7 +2710,7 @@ func F_funcall_demon1 (self *LanguageDemon ,x *ClaireAny ,y *ClaireAny ) EID {
 func E_funcall_demon1 (self EID,x EID,y EID) EID { 
   return F_funcall_demon1(ToLanguageDemon(OBJ(self)),ANY(x),ANY(y) )} 
 
-/* {0} The go function for: funcall(self:demon,x:any,y:any,z:any) [status=1] */
+/* The go function for: funcall(self:demon,x:any,y:any,z:any) [status=1] */
 func F_funcall_demon2 (self *LanguageDemon ,x *ClaireAny ,y *ClaireAny ,z *ClaireAny ) EID { 
   // eid body s = any
   var Result EID 
@@ -2735,7 +2735,7 @@ func E_funcall_demon2 (self EID,x EID,y EID,z EID) EID {
 // compile(ru) => may compile(r)
 // evaluate a rule definition: create a new demon and, if needed, the if_write 
 // function
-/* {0} The go function for: self_eval(self:Defrule) [status=1] */
+/* The go function for: self_eval(self:Defrule) [status=1] */
 func (self *Defrule ) SelfEval () EID { 
   // eid body s = any
   var Result EID 
@@ -2743,7 +2743,7 @@ func (self *Defrule ) SelfEval () EID {
     Result = Core.F_CALL(C_eval_rule,ARGS(EID{self.Id(),0}))
     } else {
     { var _Zcondition *ClaireAny   = self.Arg
-      { var ru *ClaireAny   = self.Ident.Get()
+      { var ru *ClaireAny   = self.Ident.Value()
         ru.Isa = C_Language_rule_object
         C_Language_rule_object.Instances.AddFast(ru)
         { var g0276 *ClaireTuple  
@@ -2821,7 +2821,7 @@ func EVAL_Defrule (x *ClaireAny) EID {
    return To_Defrule(x).SelfEval()} 
 
 // an eventMethod is a property whose unique (?) restriction is a method
-/* {0} The go function for: eventMethod?(r:relation) [status=0] */
+/* The go function for: eventMethod?(r:relation) [status=0] */
 func F_eventMethod_ask_relation2 (r *ClaireRelation ) *ClaireBoolean  { 
   // procedure body with s = boolean
   var Result *ClaireBoolean  
@@ -2858,7 +2858,7 @@ func E_eventMethod_ask_relation2 (r EID) EID {
 // a filter is R(x) := y | R(x) := (y <- z) | R(x) :add y | P(x,y)
 // R(x) is x.r or A[x]
 // the list of variable is of length 3 when R is mono-valued, whether we use a <- filter or a regular := 
-/* {0} The go function for: make_filter(cond:any) [status=1] */
+/* The go function for: make_filter(cond:any) [status=1] */
 func F_make_filter_any (cond *ClaireAny ) EID { 
   // eid body s = tuple
   var Result EID 
@@ -3181,7 +3181,7 @@ func E_make_filter_any (cond EID) EID {
 
 // create a demon with lvar as list of variables
 // notice that a demon may have 3 args if R is monovalued 
-/* {0} The go function for: make_demon(R:relation,n:symbol,lvar:list[Variable],cond:any,conc:any) [status=1] */
+/* The go function for: make_demon(R:relation,n:symbol,lvar:list[Variable],cond:any,conc:any) [status=1] */
 func F_make_demon_relation (R *ClaireRelation ,n *ClaireSymbol ,lvar *ClaireList ,cond *ClaireAny ,conc *ClaireAny ) EID { 
   // eid body s = demon
   var Result EID 
@@ -3351,7 +3351,7 @@ func E_make_demon_relation (R EID,n EID,lvar EID,cond EID,conc EID) EID {
     ANY(conc) )} 
 
 // cute litle guy : create the read instruction both for a table and a property
-/* {0} The go function for: readCall(R:relation,x:any) [status=0] */
+/* The go function for: readCall(R:relation,x:any) [status=0] */
 func F_readCall_relation (R *ClaireRelation ,x *ClaireAny ) *Call  { 
   // procedure body with s = Call
   var Result *Call  
@@ -3375,7 +3375,7 @@ func E_readCall_relation (R EID,x EID) EID {
   return EID{F_readCall_relation(ToRelation(OBJ(R)),ANY(x) ).Id(),0}} 
 
 // a small brother
-/* {0} The go function for: putCall(R:relation,x:any,y:any) [status=0] */
+/* The go function for: putCall(R:relation,x:any,y:any) [status=0] */
 func F_putCall_relation2 (R *ClaireRelation ,x *ClaireAny ,y *ClaireAny ) *Call  { 
   // procedure body with s = Call
   var Result *Call  
@@ -3399,7 +3399,7 @@ func E_putCall_relation2 (R EID,x EID,y EID) EID {
   return EID{F_putCall_relation2(ToRelation(OBJ(R)),ANY(x),ANY(y) ).Id(),0}} 
 
 // v3.3 : find the range when we read the current value     
-/* {0} The go function for: safeRange(x:relation) [status=0] */
+/* The go function for: safeRange(x:relation) [status=0] */
 func F_safeRange_relation (x *ClaireRelation ) *ClaireType  { 
   // procedure body with s = type
   var Result *ClaireType  
@@ -3459,7 +3459,7 @@ func E_safeRange_relation (x EID) EID {
 // generate an if_write "daemon", only the first time, which uses
 // the list in demons[R]
 // the first step is to make the update (with inverse management)
-/* {0} The go function for: eval_if_write(R:relation) [status=1] */
+/* The go function for: eval_if_write(R:relation) [status=1] */
 func F_eval_if_write_relation (R *ClaireRelation ) EID { 
   // eid body s = void
   var Result EID 
@@ -3645,7 +3645,7 @@ func E_eval_if_write_relation (R EID) EID {
   return F_eval_if_write_relation(ToRelation(OBJ(R)) )} 
 
 // create a restriction (method) that will trigger an event
-/* {0} The go function for: eventMethod(p:property) [status=0] */
+/* The go function for: eventMethod(p:property) [status=0] */
 func F_eventMethod_property (p *ClaireProperty )  { 
   // procedure body with s = void
   { var m *ClaireMethod   = F_add_method_property(p,MakeConstantList(p.Domain.Id(),p.Range.Id()),ToType(C_void.Id()),0,ToFunction(CNULL))
@@ -3670,7 +3670,7 @@ func E_eventMethod_property (p EID) EID {
 // CLAIRE 4 reintroduced JITO : Just-In-Time Optimization
 // we perform an on-the-fly optimization of lambdas through substitution (static calls)
 // Jito(l:lambda) -> apply makeJito to the body (in place substitution)
-/* {0} The go function for: jito(self:any) [status=1] */
+/* The go function for: jito(self:any) [status=1] */
 func F_Language_jito_any (self *ClaireAny ) EID { 
   // eid body s = any
   var Result EID 
@@ -3865,7 +3865,7 @@ func E_Language_jito_any (self EID) EID {
 // Let is special in CLAIRE4 : we implement the implicit typing found in the compiler = to infer
 // the type  from the value (when no range is given)
 // Note : this is doubtful ... 
-/* {0} The go function for: letJito(self:Let) [status=1] */
+/* The go function for: letJito(self:Let) [status=1] */
 func (self *Let ) LetJito () EID { 
   // eid body s = any
   var Result EID 
@@ -3943,7 +3943,7 @@ func E_Language_letJito_Let (self EID) EID {
 //   - the only one match is a compiled method
 //   - the property is static (open = 1, vs extensible) and not too many restrictions
 // note: the 12 hard limit is to avoid spending too much time with self_print or equivalent methods ... it is arbitrary
-/* {0} The go function for: makeJito(self:Call) [status=1] */
+/* The go function for: makeJito(self:Call) [status=1] */
 func (self *Call ) MakeJito () EID { 
   // eid body s = void
   var Result EID 
@@ -4124,7 +4124,7 @@ func E_Language_makeJito_Call (self EID) EID {
 
 // tells if the restriction matches the type list lt : we know that the domain is made of classes
 // only use for a compiled method, to help with debug
-/* {0} The go function for: makeCallMatch(x:restriction,lt:list) [status=0] */
+/* The go function for: makeCallMatch(x:restriction,lt:list) [status=0] */
 func F_Language_makeCallMatch_restriction (x *ClaireRestriction ,lt *ClaireList ) *ClaireBoolean  { 
   // procedure body with s = boolean
   var Result *ClaireBoolean  

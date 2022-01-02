@@ -1,5 +1,5 @@
 /***** CLAIRE Compilation of file /Users/ycaseau/Dropbox/src/clairev4.03/src/meta/method.cl 
-         [version 4.0.03 / safety 5] Wednesday 12-29-2021 08:34:14 *****/
+         [version 4.0.04 / safety 5] Saturday 01-01-2022 16:47:18 *****/
 
 package Core
 import (_ "fmt"
@@ -27,7 +27,7 @@ import (_ "fmt"
 // *********************************************************************
 // catch what was missed in Kernel
 // complete instanciation
-/* {1} The go function for: close(r:slot) [status=0] */
+/* The go function for: close(r:slot) [status=0] */
 func F_close_slot (r *ClaireSlot ) *ClaireSlot  { 
     F_insert_definition_property(r.Selector,ToRestriction(r.Id()))
     return  r
@@ -37,7 +37,7 @@ func F_close_slot (r *ClaireSlot ) *ClaireSlot  {
 func E_close_slot (r EID) EID { 
     return EID{F_close_slot(ToSlot(OBJ(r)) ).Id(),0}} 
   
-/* {1} The go function for: close(r:method) [status=0] */
+/* The go function for: close(r:method) [status=0] */
 func F_close_method (r *ClaireMethod ) *ClaireMethod  { 
     F_insert_definition_property(r.Selector,ToRestriction(r.Id()))
     return  r
@@ -48,7 +48,7 @@ func E_close_method (r EID) EID {
     return EID{F_close_method(ToMethod(OBJ(r)) ).Id(),0}} 
   
 // Claire 4: introduce the capacity to set the comment automatically at compile time
-/* {1} The go function for: attach(r:method,s:string) [status=0] */
+/* The go function for: attach(r:method,s:string) [status=0] */
 func F_attach_method (r *ClaireMethod ,s *ClaireString ) *ClaireMethod  { 
     r.Comment = F_append_string(MakeString("defined in file "),s)
     return  F_close_method(r)
@@ -68,7 +68,7 @@ func E_attach_method (r EID,s EID) EID {
 // it used to be distributed in CLAIRE (so that it was extensible) and each
 // definition was called the behavior of a kind of restriction
 // int? tells us if this is an interpreted message
-/* {1} The go function for: eval_message(self:property,r:object,start:integer,int?:boolean) [status=1] */
+/* The go function for: eval_message(self:property,r:object,start:integer,int?:boolean) [status=1] */
 func F_eval_message_property (self *ClaireProperty ,r *ClaireObject ,start int,int_ask *ClaireBoolean ) EID { 
     // eid body s = any
     var Result EID 
@@ -146,7 +146,7 @@ func E_eval_message_property (self EID,r EID,start EID,int_ask EID) EID {
       INT(start),
       ToBoolean(OBJ(int_ask)) )} 
   
-/* {1} The go function for: noeval_message(self:property,start:integer) [status=1] */
+/* The go function for: noeval_message(self:property,start:integer) [status=1] */
 func F_noeval_message_property2 (self *ClaireProperty ,start int) EID { 
     // eid body s = any
     var Result EID 
@@ -170,7 +170,7 @@ func E_noeval_message_property2 (self EID,start EID) EID {
   
 // a generic method : same as previously but (1) can be called by other methods
 // and (2) takes care of the debugging piece, which implies a slower run (GC)
-/* {1} The go function for: execute(self:method,start:integer,int?:boolean) [status=1] */
+/* The go function for: execute(self:method,start:integer,int?:boolean) [status=1] */
 func F_execute_method (self *ClaireMethod ,start int,int_ask *ClaireBoolean ) EID { 
     // eid body s = any
     var Result EID 
@@ -260,7 +260,7 @@ func E_execute_method (self EID,start EID,int_ask EID) EID {
     return F_execute_method(ToMethod(OBJ(self)),INT(start),ToBoolean(OBJ(int_ask)) )} 
   
 // the evaluator is open coded
-/* {1} The go function for: eval(self:any) [status=1] */
+/* The go function for: eval(self:any) [status=1] */
 func F_eval_any (self *ClaireAny ) EID { 
     // eid body s = any
     var Result EID 
@@ -275,7 +275,7 @@ func E_eval_any (self EID) EID {
 // self_eval(self:object) : any -> self
 // reads an inline definition for a method
 // notice that it does not return an error
-/* {1} The go function for: inlineok?(self:method,s:string) [status=0] */
+/* The go function for: inlineok?(self:method,s:string) [status=0] */
 func F_inlineok_ask_method (self *ClaireMethod ,s *ClaireString ) *ClaireMethod  { 
     { 
       var Unused_H EID 
@@ -314,7 +314,7 @@ func E_inlineok_ask_method (self EID,s EID) EID {
     return EID{F_inlineok_ask_method(ToMethod(OBJ(self)),ToString(OBJ(s)) ).Id(),0}} 
   
 // reads a lambda
-/* {1} The go function for: read_lambda(s:string) [status=1] */
+/* The go function for: read_lambda(s:string) [status=1] */
 func F_read_lambda_string (s *ClaireString ) EID { 
     // eid body s = lambda
     var Result EID 
@@ -354,7 +354,7 @@ func E_read_lambda_string (s EID) EID {
 // *    Part 2: Update methods                                    *
 // ****************************************************************
 //get/put for a slot: should be inline
-/* {1} The go function for: get(s:slot,x:object) [status=0] */
+/* The go function for: get(s:slot,x:object) [status=0] */
 func F_get_slot (s *ClaireSlot ,x *ClaireObject ) *ClaireAny  { 
     return  x.SlotGet(s.Index,s.Srange)
     } 
@@ -363,7 +363,7 @@ func F_get_slot (s *ClaireSlot ,x *ClaireObject ) *ClaireAny  {
 func E_get_slot (s EID,x EID) EID { 
     return F_get_slot(ToSlot(OBJ(s)),ToObject(OBJ(x)) ).ToEID()} 
   
-/* {1} The go function for: put(s:slot,x:object,y:any) [status=0] */
+/* The go function for: put(s:slot,x:object,y:any) [status=0] */
 func F_put_slot (s *ClaireSlot ,x *ClaireObject ,y *ClaireAny ) *ClaireAny  { 
     return  F_store_object(x,
       s.Index,
@@ -378,7 +378,7 @@ func E_put_slot (s EID,x EID,y EID) EID {
   
 // reading a value from a property (unknown is allowed)
 // when unknown is not allowed, we use read which is defined in Kernel
-/* {1} The go function for: get(self:property,x:object) [status=0] */
+/* The go function for: get(self:property,x:object) [status=0] */
 func F_get_property (self *ClaireProperty ,x *ClaireObject ) *ClaireAny  { 
     // procedure body with s = any
     var Result *ClaireAny  
@@ -398,7 +398,7 @@ func E_get_property (self EID,x EID) EID {
     return F_get_property(ToProperty(OBJ(self)),ToObject(OBJ(x)) ).ToEID()} 
   
 // a more general value that is useful for types
-/* {1} The go function for: funcall(self:property,x:any) [status=1] */
+/* The go function for: funcall(self:property,x:any) [status=1] */
 func F_funcall_property (self *ClaireProperty ,x *ClaireAny ) EID { 
     // eid body s = any
     var Result EID 
@@ -422,7 +422,7 @@ func E_funcall_property (self EID,x EID) EID {
     return F_funcall_property(ToProperty(OBJ(self)),ANY(x) )} 
   
 // verifying
-/* {1} The go function for: hold?(self:property,x:object,y:any) [status=0] */
+/* The go function for: hold?(self:property,x:object,y:any) [status=0] */
 func F_hold_ask_property (self *ClaireProperty ,x *ClaireObject ,y *ClaireAny ) *ClaireBoolean  { 
     // procedure body with s = boolean
     var Result *ClaireBoolean  
@@ -454,7 +454,7 @@ func E_hold_ask_property (self EID,x EID,y EID) EID {
 //  if_write = put + put_inverse + propagate  (propagate => if_write)
 //  update = put + put_inverse
 // note in CLAIRE 4: with no inverse/store write_fast, defined in Kernel, works better
-/* {1} The go function for: write(self:property,x:object,y:any) [status=1] */
+/* The go function for: write(self:property,x:object,y:any) [status=1] */
 func F_write_property (self *ClaireProperty ,x *ClaireObject ,y *ClaireAny ) EID { 
     // eid body s = void
     var Result EID 
@@ -491,7 +491,7 @@ func E_write_property (self EID,x EID,y EID) EID {
     return F_write_property(ToProperty(OBJ(self)),ToObject(OBJ(x)),ANY(y) )} 
   
 // the value does not belong to the range: error!
-/* {1} The go function for: range_is_wrong(self:slot,y:any) [status=1] */
+/* The go function for: range_is_wrong(self:slot,y:any) [status=1] */
 func F_range_is_wrong_slot (self *ClaireSlot ,y *ClaireAny ) EID { 
     // eid body s = void
     var Result EID 
@@ -503,7 +503,7 @@ func E_range_is_wrong_slot (self EID,y EID) EID {
     return F_range_is_wrong_slot(ToSlot(OBJ(self)),ANY(y) )} 
   
 // to remove
-/* {1} The go function for: put(p:property,x:object,n:integer,s:class,y:any) [status=1] */
+/* The go function for: put(p:property,x:object,n:integer,s:class,y:any) [status=1] */
 func F_put_property1 (p *ClaireProperty ,x *ClaireObject ,n int,s *ClaireClass ,y *ClaireAny ) EID { 
     // eid body s = void
     var Result EID 
@@ -526,7 +526,7 @@ func E_put_property1 (p EID,x EID,n EID,s EID,y EID) EID {
 // update = put + put_inverse  (complex links) .. it does not trigger the rules (if_write)
 // update uses two satellite methods: update+ and update-
 // CLAIRE 4: inverse management only applies with set multivalued properties
-/* {1} The go function for: mClaire/update(p:property,x:object,n:integer,s:class,y:any) [status=1] */
+/* The go function for: mClaire/update(p:property,x:object,n:integer,s:class,y:any) [status=1] */
 func F_update_property (p *ClaireProperty ,x *ClaireObject ,n int,s *ClaireClass ,y *ClaireAny ) EID { 
     // eid body s = void
     var Result EID 
@@ -614,7 +614,7 @@ func E_update_property (p EID,x EID,n EID,s EID,y EID) EID {
       ANY(y) )} 
   
 // this method checks the correctness of the inverse from a global view.
-/* {1} The go function for: update+(self:relation,x:any,y:any) [status=1] */
+/* The go function for: update+(self:relation,x:any,y:any) [status=1] */
 func F_update_plus_relation (self *ClaireRelation ,x *ClaireAny ,y *ClaireAny ) EID { 
     // eid body s = void
     var Result EID 
@@ -676,7 +676,7 @@ func E_update_plus_relation (self EID,x EID,y EID) EID {
     return F_update_plus_relation(ToRelation(OBJ(self)),ANY(x),ANY(y) )} 
   
 // this methods deletes a value in the inverse of a global_relation
-/* {1} The go function for: update-(r:relation,x:any,y:any) [status=0] */
+/* The go function for: update-(r:relation,x:any,y:any) [status=0] */
 func F_update_dash_relation (r *ClaireRelation ,x *ClaireAny ,y *ClaireAny )  { 
     // procedure body with s = void
     if (r.Isa.IsIn(C_property) == CTRUE) { 
@@ -739,7 +739,7 @@ func E_update_dash_relation (r EID,x EID,y EID) EID {
   
 // this methods adds a value to a multi-slot (used by the compiler)
 // this is the multi-valued equivalent of update - we know self to be multivalued (hence a set in Claire 4)
-/* {1} The go function for: add!(self:property,x:object,n:integer,y:any) [status=1] */
+/* The go function for: add!(self:property,x:object,n:integer,y:any) [status=1] */
 func F_add_I_property (self *ClaireProperty ,x *ClaireObject ,n int,y *ClaireAny ) EID { 
     // eid body s = void
     var Result EID 
@@ -770,7 +770,7 @@ func E_add_I_property (self EID,x EID,n EID,y EID) EID {
 // this methods adds a value to a multi-slot (internal form)
 // this is the multi-valued equivalent of put
 // return true if the set is actually changed (y added to s)
-/* {1} The go function for: add_value!(self:property,x:object,n:integer,s1:set,y:any) [status=0] */
+/* The go function for: add_value!(self:property,x:object,n:integer,s1:set,y:any) [status=0] */
 func F_Core_add_value_I_property (self *ClaireProperty ,x *ClaireObject ,n int,s1 *ClaireSet ,y *ClaireAny ) *ClaireBoolean  { 
     // procedure body with s = boolean
     var Result *ClaireBoolean  
@@ -805,7 +805,7 @@ func E_Core_add_value_I_property (self EID,x EID,n EID,s1 EID,y EID) EID {
       ANY(y) ).Id(),0}} 
   
 // same method with error checking
-/* {1} The go function for: add(self:property,x:object,y:any) [status=1] */
+/* The go function for: add(self:property,x:object,y:any) [status=1] */
 func F_add_property (self *ClaireProperty ,x *ClaireObject ,y *ClaireAny ) EID { 
     // eid body s = void
     var Result EID 
@@ -834,7 +834,7 @@ func E_add_property (self EID,x EID,y EID) EID {
     return F_add_property(ToProperty(OBJ(self)),ToObject(OBJ(x)),ANY(y) )} 
   
 // known ?
-/* {1} The go function for: known?(self:property,x:object) [status=0] */
+/* The go function for: known?(self:property,x:object) [status=0] */
 func F_known_ask_property (self *ClaireProperty ,x *ClaireObject ) *ClaireBoolean  { 
     // procedure body with s = boolean
     var Result *ClaireBoolean  
@@ -853,7 +853,7 @@ func F_known_ask_property (self *ClaireProperty ,x *ClaireObject ) *ClaireBoolea
 func E_known_ask_property (self EID,x EID) EID { 
     return EID{F_known_ask_property(ToProperty(OBJ(self)),ToObject(OBJ(x)) ).Id(),0}} 
   
-/* {1} The go function for: unknown?(self:property,x:object) [status=0] */
+/* The go function for: unknown?(self:property,x:object) [status=0] */
 func F_unknown_ask_property (self *ClaireProperty ,x *ClaireObject ) *ClaireBoolean  { 
     // procedure body with s = boolean
     var Result *ClaireBoolean  
@@ -874,7 +874,7 @@ func E_unknown_ask_property (self EID,x EID) EID {
   
 // delete takes care of the inverse also
 // assumes that self is multivalued -> should check !
-/* {1} The go function for: delete(self:property,x:object,y:any) [status=1] */
+/* The go function for: delete(self:property,x:object,y:any) [status=1] */
 func F_delete_property (self *ClaireProperty ,x *ClaireObject ,y *ClaireAny ) EID { 
     // eid body s = any
     var Result EID 
@@ -917,7 +917,7 @@ func E_delete_property (self EID,x EID,y EID) EID {
   
 // erase is similar for mono-valued properties takes care of the inverse also
 // v3.2.22: take care of multi-valued slot as well
-/* {1} The go function for: erase(self:property,x:object) [status=1] */
+/* The go function for: erase(self:property,x:object) [status=1] */
 func F_erase_property (self *ClaireProperty ,x *ClaireObject ) EID { 
     // eid body s = any
     var Result EID 
@@ -974,7 +974,7 @@ func F_erase_property (self *ClaireProperty ,x *ClaireObject ) EID {
 func E_erase_property (self EID,x EID) EID { 
     return F_erase_property(ToProperty(OBJ(self)),ToObject(OBJ(x)) )} 
   
-/* {1} The go function for: set_range(p:property,c:class,r:type) [status=0] */
+/* The go function for: set_range(p:property,c:class,r:type) [status=0] */
 func F_set_range_property (p *ClaireProperty ,c *ClaireClass ,r *ClaireType )  { 
     // procedure body with s = void
     { var s *ClaireSlot   = ToSlot(F__at_property1(p,c).Id())
@@ -994,7 +994,7 @@ func E_set_range_property (p EID,c EID,r EID) EID {
 //        if (s.srange != any & s.srange != integer)
 //           c.prototype[s.index] := 0))
 // this method allows to bypass the storage mechanism - to be optimized ..
-/* {1} The go function for: put_store(self:property,x:object,y:any,b:boolean) [status=1] */
+/* The go function for: put_store(self:property,x:object,y:any,b:boolean) [status=1] */
 func F_put_store_property2 (self *ClaireProperty ,x *ClaireObject ,y *ClaireAny ,b *ClaireBoolean ) EID { 
     // eid body s = void
     var Result EID 
@@ -1035,7 +1035,7 @@ func E_put_store_property2 (self EID,x EID,y EID,b EID) EID {
 // arguments have precise sorts that match the relation sort
 // the demon does everything: put + inverse + propagation
 // thus write(R,x,y) <=> fastcall(R,x,y) <=> f(x,y)
-/* {1} The go function for: fastcall(r:relation,x:any,y:any) [status=1] */
+/* The go function for: fastcall(r:relation,x:any,y:any) [status=1] */
 func F_fastcall_relation2 (r *ClaireRelation ,x *ClaireAny ,y *ClaireAny ) EID { 
     // eid body s = void
     var Result EID 
@@ -1057,7 +1057,7 @@ func E_fastcall_relation2 (r EID,x EID,y EID) EID {
 // *********************************************************************
 // the dictionarty slot
 // insertion in the definition tree
-/* {1} The go function for: insert_definition(p:property,r:restriction) [status=0] */
+/* The go function for: insert_definition(p:property,r:restriction) [status=0] */
 func F_insert_definition_property (p *ClaireProperty ,r *ClaireRestriction )  { 
     // procedure body with s = void
     p.Definition = F_initialize_restriction1(r,ToTypeExpression(r.Domain.ValuesO()[1-1]).Class_I(),p.Definition)
@@ -1070,7 +1070,7 @@ func E_insert_definition_property (p EID,r EID) EID {
   
 // insert a restriction with class-domain d into a property p
 // claire4 : get rid of dispatcher
-/* {1} The go function for: initialize(x:restriction,d:class,l:list) [status=0] */
+/* The go function for: initialize(x:restriction,d:class,l:list) [status=0] */
 func F_initialize_restriction1 (x *ClaireRestriction ,d *ClaireClass ,l *ClaireList ) *ClaireList  { 
     // procedure body with s = list
     var Result *ClaireList  
@@ -1104,7 +1104,7 @@ func E_initialize_restriction1 (x EID,d EID,l EID) EID {
     return EID{F_initialize_restriction1(ToRestriction(OBJ(x)),ToClass(OBJ(d)),ToList(OBJ(l)) ).Id(),0}} 
   
 // only uniform properties can use the dictionary representation
-/* {1} The go function for: uniform(x:restriction) [status=0] */
+/* The go function for: uniform(x:restriction) [status=0] */
 func F_uniform_restriction (x *ClaireRestriction ) *ClaireBoolean  { 
     // procedure body with s = boolean
     var Result *ClaireBoolean  
@@ -1179,7 +1179,7 @@ func E_uniform_restriction (x EID) EID {
   
 // v3.3.36      
 // v3.0.54 check that a uniform property only uses methods !
-/* {1} The go function for: uniform(p:property) [status=0] */
+/* The go function for: uniform(p:property) [status=0] */
 func F_uniform_property (p *ClaireProperty ) *ClaireBoolean  { 
     // procedure body with s = boolean
     var Result *ClaireBoolean  
@@ -1217,7 +1217,7 @@ func E_uniform_property (p EID) EID {
     return EID{F_uniform_property(ToProperty(OBJ(p)) ).Id(),0}} 
   
 // insert a restriction in a list with the good order
-/* {1} The go function for: initialize(x:restriction,l:list) [status=0] */
+/* The go function for: initialize(x:restriction,l:list) [status=0] */
 func F_initialize_restriction2 (x *ClaireRestriction ,l *ClaireList ) *ClaireList  { 
     // procedure body with s = list
     var Result *ClaireList  
@@ -1259,7 +1259,7 @@ func E_initialize_restriction2 (x EID,l EID) EID {
     return EID{F_initialize_restriction2(ToRestriction(OBJ(x)),ToList(OBJ(l)) ).Id(),0}} 
   
 // definition of dictionary: standart hash-table
-/* {1} The go function for: hashinsert(m:restriction) [status=0] */
+/* The go function for: hashinsert(m:restriction) [status=0] */
 func F_hashinsert_restriction (m *ClaireRestriction ) *ClaireAny  { 
     // procedure body with s = any
     var Result *ClaireAny  
@@ -1270,7 +1270,7 @@ func F_hashinsert_restriction (m *ClaireRestriction ) *ClaireAny  {
         var c2_iter *ClaireAny  
         Result= CFALSE.Id()
         var c2_support *ClaireSet  
-        c2_support = c.Descendents
+        c2_support = c.Descendants
         for i_it := 0; i_it < c2_support.Count; i_it++ { 
           c2_iter = c2_support.At(i_it)
           c2 = ToClass(c2_iter)
@@ -1286,7 +1286,7 @@ func E_hashinsert_restriction (m EID) EID {
   
 // insert into the hash table - since the order is not garanteed when we build the dictionary, we
 // need to check that m is more suited than anything that could be there
-/* {1} The go function for: hashinsert(c:class,m:method) [status=0] */
+/* The go function for: hashinsert(c:class,m:method) [status=0] */
 func F_hashinsert_class (c *ClaireClass ,m *ClaireMethod ) *ClaireAny  { 
     if (c.Dictionary.Id() == CNULL) { 
       c.Dictionary = ToType(C_property.Id()).Map_I(ToType(C_method.Id()))
@@ -1305,7 +1305,7 @@ func E_hashinsert_class (c EID,m EID) EID {
     return F_hashinsert_class(ToClass(OBJ(c)),ToMethod(OBJ(m)) ).ToEID()} 
   
 // read the value in the directory (a method or unknown)
-/* {1} The go function for: hashget(c:class,p:property) [status=0] */
+/* The go function for: hashget(c:class,p:property) [status=0] */
 func F_hashget_class (c *ClaireClass ,p *ClaireProperty ) *ClaireObject  { 
     return  ToObject(F_dict_get_any(c.Dictionary.Id(),p.Id()))
     } 
@@ -1317,7 +1317,7 @@ func E_hashget_class (c EID,p EID) EID {
 // UGLY CAST to remove
 // look if two signature have a non-empty intersection
 // note that the first case with classes is necessary for bootstraping
-/* {1} The go function for: join(x:list,y:list) [status=0] */
+/* The go function for: join(x:list,y:list) [status=0] */
 func F_join_list (x *ClaireList ,y *ClaireList ) *ClaireBoolean  { 
     // procedure body with s = boolean
     var Result *ClaireBoolean  
@@ -1380,7 +1380,7 @@ func E_join_list (x EID,y EID) EID {
 // which are defined in Kernel as functions (Contains and Included)
 // this is the method that matches the compilation pattern 
 // n is the number of args that have been pushed in the stack
-/* {1} The go function for: stack_apply(p:property,n:integer) [status=1] */
+/* The go function for: stack_apply(p:property,n:integer) [status=1] */
 func F_CALL (p *ClaireProperty ,n int) EID { 
     // eid body s = any
     var Result EID 
@@ -1394,7 +1394,7 @@ func E_CALL (p EID,n EID) EID {
     return F_CALL(ToProperty(OBJ(p)),INT(n) )} 
   
 // version where the class of first argument is forced (super)       
-/* {1} The go function for: super_apply(p:property,c:class,n:integer) [status=1] */
+/* The go function for: super_apply(p:property,c:class,n:integer) [status=1] */
 func F_SUPER (p *ClaireProperty ,c *ClaireClass ,n int) EID { 
     // eid body s = any
     var Result EID 
@@ -1409,7 +1409,7 @@ func E_SUPER (p EID,c EID,n EID) EID {
   
 // find the correct restrictions to be applied on a given set
 // This is also optimized because it is very useful (it returns false if none is found)
-/* {1} The go function for: @(self:property,x:class) [status=0] */
+/* The go function for: @(self:property,x:class) [status=0] */
 func F__at_property1 (self *ClaireProperty ,x *ClaireClass ) *ClaireObject  { 
     // procedure body with s = object
     var Result *ClaireObject  
@@ -1448,7 +1448,7 @@ func E__at_property1 (self EID,x EID) EID {
     return EID{F__at_property1(ToProperty(OBJ(self)),ToClass(OBJ(x)) ).Id(),0}} 
   
 // finds a property through its full domain
-/* {1} The go function for: @(self:property,lt:list) [status=0] */
+/* The go function for: @(self:property,lt:list) [status=0] */
 func F__at_property2 (self *ClaireProperty ,lt *ClaireList ) *ClaireObject  { 
     // procedure body with s = object
     var Result *ClaireObject  
@@ -1480,7 +1480,7 @@ func E__at_property2 (self EID,lt EID) EID {
   
 // method's pattern matching : l is non nil, hence last(l) is safe  {called in find_which}
 // we match a list of args in the stack [n ... m] to the list of type_expressions l
-/* {1} The go function for: matching?(l:list,n:integer,m:integer) [status=0] */
+/* The go function for: matching?(l:list,n:integer,m:integer) [status=0] */
 func F_matching_ask_list (l *ClaireList ,n int,m int) *ClaireBoolean  { 
     // procedure body with s = boolean
     var Result *ClaireBoolean  
@@ -1551,7 +1551,7 @@ func E_matching_ask_list (l EID,n EID,m EID) EID {
 // type's pattern matching - almost like % but accepts patterns such as Reference (extended in Optimizer)
 // this is why we pass n (index in stack) as an argument
 // t is the type expression and x is the value
-/* {1} The go function for: vmatch?(t:any,x:any,n:integer) [status=0] */
+/* The go function for: vmatch?(t:any,x:any,n:integer) [status=0] */
 func F_vmatch_ask_any (t *ClaireAny ,x *ClaireAny ,n int) *ClaireBoolean  { 
     // procedure body with s = boolean
     var Result *ClaireBoolean  
@@ -1698,7 +1698,7 @@ func E_vmatch_ask_any (t EID,x EID,n EID) EID {
 // extensibility for type_expressions
 // method's pattern matching based on type expressions (i.e. l2 is another list of type expressions).
 // this is an extension of <=t to   all type expressions
-/* {1} The go function for: tmatch?(l:list,l2:list) [status=0] */
+/* The go function for: tmatch?(l:list,l2:list) [status=0] */
 func F_tmatch_ask_list (l *ClaireList ,l2 *ClaireList ) *ClaireBoolean  { 
     // procedure body with s = boolean
     var Result *ClaireBoolean  
@@ -1739,7 +1739,7 @@ func E_tmatch_ask_list (l EID,l2 EID) EID {
   
 // type_expression pattern matching (t is the variable and t2 the pattern)
 // this is an extension of <=t for the pattern Reference
-/* {1} The go function for: tmatch?(t:any,mClaire/t2:any,l:list) [status=0] */
+/* The go function for: tmatch?(t:any,mClaire/t2:any,l:list) [status=0] */
 func F_tmatch_ask_any (t *ClaireAny ,t2 *ClaireAny ,l *ClaireList ) *ClaireBoolean  { 
     // procedure body with s = boolean
     var Result *ClaireBoolean  
@@ -1782,7 +1782,7 @@ func E_tmatch_ask_any (t EID,t2 EID,l EID) EID {
     return EID{F_tmatch_ask_any(ANY(t),ANY(t2),ToList(OBJ(l)) ).Id(),0}} 
   
 // find the restriction
-/* {1} The go function for: find_which(p:property,n:integer,c:class) [status=0] */
+/* The go function for: find_which(p:property,n:integer,c:class) [status=0] */
 func F_find_which_property (p *ClaireProperty ,n int,c *ClaireClass ) *ClaireObject  { 
     // procedure body with s = object
     var Result *ClaireObject  
@@ -1809,7 +1809,7 @@ func F_find_which_property (p *ClaireProperty ,n int,c *ClaireClass ) *ClaireObj
 func E_find_which_property (p EID,n EID,c EID) EID { 
     return EID{F_find_which_property(ToProperty(OBJ(p)),INT(n),ToClass(OBJ(c)) ).Id(),0}} 
   
-/* {1} The go function for: find_which(l:list,c:class,n:integer,m:integer) [status=0] */
+/* The go function for: find_which(l:list,c:class,n:integer,m:integer) [status=0] */
 func F_find_which_list (l *ClaireList ,c *ClaireClass ,n int,m int) *ClaireObject  { 
     // procedure body with s = object
     var Result *ClaireObject  
@@ -1840,7 +1840,7 @@ func E_find_which_list (l EID,c EID,n EID,m EID) EID {
       INT(m) ).Id(),0}} 
   
 // special version for super
-/* {1} The go function for: find_which(c:class,l:list,n:integer,m:integer) [status=0] */
+/* The go function for: find_which(c:class,l:list,n:integer,m:integer) [status=0] */
 func F_find_which_class (c *ClaireClass ,l *ClaireList ,n int,m int) *ClaireObject  { 
     // procedure body with s = object
     var Result *ClaireObject  

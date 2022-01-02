@@ -1,5 +1,5 @@
 /***** CLAIRE Compilation of file /Users/ycaseau/Dropbox/src/clairev4.03/src/meta/object.cl 
-         [version 4.0.03 / safety 5] Wednesday 12-29-2021 08:34:14 *****/
+         [version 4.0.04 / safety 5] Saturday 01-01-2022 16:47:18 *****/
 
 package Core
 import (_ "fmt"
@@ -25,7 +25,7 @@ import (_ "fmt"
 // *   Part 4: Basics of Exceptions                                    *
 // *********************************************************************
 // release() should produce a version number
-/* {1} The go function for: release(_CL_obj:void) [status=1] */
+/* The go function for: release(_CL_obj:void) [status=1] */
 func F_release_void () EID { 
     // eid body s = any
     var Result EID 
@@ -46,7 +46,7 @@ func E_release_void (_CL_obj EID) EID {
   
 // the about method produces the legal warning, according to the GNU software
 // recommendation
-/* {1} The go function for: about(_CL_obj:void) [status=0] */
+/* The go function for: about(_CL_obj:void) [status=0] */
 func F_about_void () *ClaireAny  { 
     PRINC("CLAIRE v4.")
     F_princ_float(ClEnv.Version)
@@ -68,7 +68,7 @@ func E_about_void (_CL_obj EID) EID {
 // *   Part 1: Ask, debug & trace                                      *
 // *********************************************************************
 // create the list of arguments if needed : allocate on the stack
-/* {1} The go function for: mClaire/get_args(i:integer) [status=0] */
+/* The go function for: mClaire/get_args(i:integer) [status=0] */
 func F_get_args_integer (i int) *ClaireList  { 
     // procedure body with s = list
     var Result *ClaireList  
@@ -86,7 +86,7 @@ func E_get_args_integer (i EID) EID {
     return EID{F_get_args_integer(INT(i) ).Id(),0}} 
   
 // a simple method for a direct call with no argument
-/* {1} The go function for: funcall(self:method,x:any) [status=1] */
+/* The go function for: funcall(self:method,x:any) [status=1] */
 func F_funcall_method1 (self *ClaireMethod ,x *ClaireAny ) EID { 
     // eid body s = any
     var Result EID 
@@ -101,7 +101,7 @@ func E_funcall_method1 (self EID,x EID) EID {
     return F_funcall_method1(ToMethod(OBJ(self)),ANY(x) )} 
   
 // this is a simple method for calling directly a method with one argument
-/* {1} The go function for: funcall(self:method,x:any,y:any) [status=1] */
+/* The go function for: funcall(self:method,x:any,y:any) [status=1] */
 func F_funcall_method2 (self *ClaireMethod ,x *ClaireAny ,y *ClaireAny ) EID { 
     // eid body s = any
     var Result EID 
@@ -117,7 +117,7 @@ func E_funcall_method2 (self EID,x EID,y EID) EID {
     return F_funcall_method2(ToMethod(OBJ(self)),ANY(x),ANY(y) )} 
   
 // this is a simple method for calling directly a method with two arguments
-/* {1} The go function for: funcall(self:method,x:any,y:any,z:any) [status=1] */
+/* The go function for: funcall(self:method,x:any,y:any,z:any) [status=1] */
 func F_funcall_method3 (self *ClaireMethod ,x *ClaireAny ,y *ClaireAny ,z *ClaireAny ) EID { 
     // eid body s = any
     var Result EID 
@@ -137,7 +137,7 @@ func E_funcall_method3 (self EID,x EID,y EID,z EID) EID {
       ANY(z) )} 
   
 // how to apply a property to a list  (the function case is handled in Kernel - primitive go code)
-/* {1} The go function for: call(p:property,l:listargs) [status=1] */
+/* The go function for: call(p:property,l:listargs) [status=1] */
 func F_call_property (p *ClaireProperty ,l *ClaireList ) EID { 
     // eid body s = any
     var Result EID 
@@ -148,7 +148,7 @@ func F_call_property (p *ClaireProperty ,l *ClaireList ) EID {
 func E_call_property (p EID,l EID) EID { 
     return F_call_property(ToProperty(OBJ(p)),ToList(OBJ(l)) )} 
   
-/* {1} The go function for: apply(p:property,l:list) [status=1] */
+/* The go function for: apply(p:property,l:list) [status=1] */
 func F_apply_property (p *ClaireProperty ,l *ClaireList ) EID { 
     // eid body s = any
     var Result EID 
@@ -172,7 +172,7 @@ func F_apply_property (p *ClaireProperty ,l *ClaireList ) EID {
 func E_apply_property (p EID,l EID) EID { 
     return F_apply_property(ToProperty(OBJ(p)),ToList(OBJ(l)) )} 
   
-/* {1} The go function for: apply(m:method,l:list) [status=1] */
+/* The go function for: apply(m:method,l:list) [status=1] */
 func F_apply_method (m *ClaireMethod ,l *ClaireList ) EID { 
     // eid body s = any
     var Result EID 
@@ -199,7 +199,7 @@ func E_apply_method (m EID,l EID) EID {
 // defined in Reader but tested in Core
 // push and pop debug info on the stack
 // this method also does the tracing and the steppping
-/* {1} The go function for: push_debug(prop:property,arity:integer,start:integer) [status=1] */
+/* The go function for: push_debug(prop:property,arity:integer,start:integer) [status=1] */
 func F_push_debug_property (prop *ClaireProperty ,arity int,start int) EID { 
     // eid body s = void
     var Result EID 
@@ -442,7 +442,7 @@ func E_push_debug_property (prop EID,arity EID,start EID) EID {
   
 // value of the previous debug
 // n is 0 for interpreted code and 1 for compiled code
-/* {1} The go function for: pop_debug(self:property,n:integer,val:any) [status=1] */
+/* The go function for: pop_debug(self:property,n:integer,val:any) [status=1] */
 func F_pop_debug_property (self *ClaireProperty ,n int,val *ClaireAny ) EID { 
     // eid body s = void
     var Result EID 
@@ -521,7 +521,7 @@ func E_pop_debug_property (self EID,n EID,val EID) EID {
     return F_pop_debug_property(ToProperty(OBJ(self)),INT(n),ANY(val) )} 
   
 // print a nice indented mark
-/* {1} The go function for: tr_indent(return?:boolean,n:integer) [status=0] */
+/* The go function for: tr_indent(return?:boolean,n:integer) [status=0] */
 func F_tr_indent_boolean (return_ask *ClaireBoolean ,n int)  { 
     // procedure body with s = void
     if (return_ask == CTRUE) { 
@@ -549,7 +549,7 @@ func E_tr_indent_boolean (return_ask EID,n EID) EID {
   
 // CLAIRE4 : because macros do not exist in go
 // #define DB_BIND(m,p,n,l) if (m.it->status == 4) {l push_debug_property(p,n,ClEnv->index - n);}
-/* {1} The go function for: db_bind(m:module,p:property,n:integer) [status=1] */
+/* The go function for: db_bind(m:module,p:property,n:integer) [status=1] */
 func F_Core_db_bind_module (m *ClaireModule ,p *ClaireProperty ,n int) EID { 
     // eid body s = void
     var Result EID 
@@ -565,7 +565,7 @@ func E_Core_db_bind_module (m EID,p EID,n EID) EID {
     return F_Core_db_bind_module(ToModule(OBJ(m)),ToProperty(OBJ(p)),INT(n) )} 
   
 // #define DB_UNBIND(m,p,v) if (m.it->status == 4) pop_debug_property(p,1,v)
-/* {1} The go function for: db_unbind(m:module,p:property,v:any) [status=1] */
+/* The go function for: db_unbind(m:module,p:property,v:any) [status=1] */
 func F_Core_db_unbind_module (m *ClaireModule ,p *ClaireProperty ,v *ClaireAny ) EID { 
     // eid body s = void
     var Result EID 
@@ -584,7 +584,7 @@ func E_Core_db_unbind_module (m EID,p EID,v EID) EID {
 // *   Part 2: Tables                                                  *
 // *********************************************************************
 // finds if objects are identified - unclear if there is any need for this
-/* {1} The go function for: identified?(self:class) [status=0] */
+/* The go function for: identified?(self:class) [status=0] */
 func F_identified_ask_class (self *ClaireClass ) *ClaireBoolean  { 
     if ((self.Id() == C_integer.Id()) || 
         ((self.IsIn(C_object) == CTRUE) || 
@@ -598,7 +598,7 @@ func E_identified_ask_class (self EID) EID {
     return EID{F_identified_ask_class(ToClass(OBJ(self)) ).Id(),0}} 
   
 // true pointer equality in go (used to be C++) => use externC form
-/* {1} The go function for: identical?(x:any,y:any) [status=0] */
+/* The go function for: identical?(x:any,y:any) [status=0] */
 func F_identical_ask_any (x *ClaireAny ,y *ClaireAny ) *ClaireBoolean  { 
     if (ToBoolean(IfThenElse(x == y,CTRUE.Id(),CFALSE.Id())) == CTRUE) {return CTRUE
     } else {return CFALSE}} 
@@ -611,7 +611,7 @@ func E_identical_ask_any (x EID,y EID) EID {
 // equivalent to is! of LAURE
 // this definition should not be placed in the method.cl file
 // (it requires some inheritance conflict processing)
-/* {1} The go function for: put(self:property,x:object,y:any) [status=1] */
+/* The go function for: put(self:property,x:object,y:any) [status=1] */
 func F_put_property2 (self *ClaireProperty ,x *ClaireObject ,y *ClaireAny ) EID { 
     // eid body s = any
     var Result EID 
@@ -635,7 +635,7 @@ func E_put_property2 (self EID,x EID,y EID) EID {
     return F_put_property2(ToProperty(OBJ(self)),ToObject(OBJ(x)),ANY(y) )} 
   
 // v3.2 : same but multi valued
-/* {1} The go function for: add_value(self:property,x:object,y:any) [status=1] */
+/* The go function for: add_value(self:property,x:object,y:any) [status=1] */
 func F_add_value_property3 (self *ClaireProperty ,x *ClaireObject ,y *ClaireAny ) EID { 
     // eid body s = void
     var Result EID 
@@ -668,7 +668,7 @@ func E_add_value_property3 (self EID,x EID,y EID) EID {
 // graph_put(a:table,x:any,y:any) : void -> write in a.graph    
 // access
 // in Claire4 there is always a default hence the unknown check has disapeared
-/* {1} The go function for: nth(a:table,x:any) [status=1] */
+/* The go function for: nth(a:table,x:any) [status=1] */
 func F_nth_table1 (a *ClaireTable ,x *ClaireAny ) EID { 
     // eid body s = any
     var Result EID 
@@ -696,7 +696,7 @@ func F_nth_table1 (a *ClaireTable ,x *ClaireAny ) EID {
 func E_nth_table1 (a EID,x EID) EID { 
     return F_nth_table1(ToTable(OBJ(a)),ANY(x) )} 
   
-/* {1} The go function for: nth_table1_type */
+/* The go function for: nth_table1_type */
 func F_nth_table1_type (a *ClaireType ,x *ClaireType ) EID { 
     var Result EID 
     if (F_unique_ask_type(a) == CTRUE) { 
@@ -720,7 +720,7 @@ func E_nth_table1_type (a EID,x EID) EID {
     return F_nth_table1_type(ToType(OBJ(a)),ToType(OBJ(x)))} 
   
 // get is the same, with no error            
-/* {1} The go function for: get(a:table,x:any) [status=0] */
+/* The go function for: get(a:table,x:any) [status=0] */
 func F_get_table (a *ClaireTable ,x *ClaireAny ) *ClaireAny  { 
     // procedure body with s = any
     var Result *ClaireAny  
@@ -741,7 +741,7 @@ func F_get_table (a *ClaireTable ,x *ClaireAny ) *ClaireAny  {
 func E_get_table (a EID,x EID) EID { 
     return F_get_table(ToTable(OBJ(a)),ANY(x) ).ToEID()} 
   
-/* {1} The go function for: get_table_type */
+/* The go function for: get_table_type */
 func F_get_table_type (a *ClaireType ,x *ClaireType ) EID { 
     var Result EID 
     if (F_unique_ask_type(a) == CTRUE) { 
@@ -765,7 +765,7 @@ func E_get_table_type (a EID,x EID) EID {
     return F_get_table_type(ToType(OBJ(a)),ToType(OBJ(x)))} 
   
 // interface update method for a[x] := y
-/* {1} The go function for: nth=(a:table,x:any,y:any) [status=1] */
+/* The go function for: nth=(a:table,x:any,y:any) [status=1] */
 func F_nth_equal_table1 (a *ClaireTable ,x *ClaireAny ,y *ClaireAny ) EID { 
     // eid body s = void
     var Result EID 
@@ -791,7 +791,7 @@ func E_nth_equal_table1 (a EID,x EID,y EID) EID {
   
 // internal form without checks
 // equivalent of update = put + put_inverse
-/* {1} The go function for: nth_put(a:table,x:any,y:any) [status=1] */
+/* The go function for: nth_put(a:table,x:any,y:any) [status=1] */
 func F_nth_put_table (a *ClaireTable ,x *ClaireAny ,y *ClaireAny ) EID { 
     // eid body s = void
     var Result EID 
@@ -863,7 +863,7 @@ func E_nth_put_table (a EID,x EID,y EID) EID {
   
 // update inverse 
 // put does NOT update the inverse, but handles store ...
-/* {1} The go function for: put(a:table,x:any,y:any) [status=0] */
+/* The go function for: put(a:table,x:any,y:any) [status=0] */
 func F_put_table (a *ClaireTable ,x *ClaireAny ,y *ClaireAny )  { 
     // procedure body with s = void
     { var p *ClaireAny   = a.Params
@@ -890,7 +890,7 @@ func E_put_table (a EID,x EID,y EID) EID {
   
 // takes care of the defeasible part :)
 // adds a value to a multi-valued table: interface method
-/* {1} The go function for: add(a:table,x:any,y:any) [status=1] */
+/* The go function for: add(a:table,x:any,y:any) [status=1] */
 func F_add_table (a *ClaireTable ,x *ClaireAny ,y *ClaireAny ) EID { 
     // eid body s = void
     var Result EID 
@@ -915,7 +915,7 @@ func E_add_table (a EID,x EID,y EID) EID {
     return F_add_table(ToTable(OBJ(a)),ANY(x),ANY(y) )} 
   
 // adds a value to a multi-valued table: internal version without type checks
-/* {1} The go function for: add!(a:table,x:any,y:any) [status=1] */
+/* The go function for: add!(a:table,x:any,y:any) [status=1] */
 func F_add_I_table (a *ClaireTable ,x *ClaireAny ,y *ClaireAny ) EID { 
     // eid body s = void
     var Result EID 
@@ -938,7 +938,7 @@ func E_add_I_table (a EID,x EID,y EID) EID {
   
 // this methods adds a value to a multi-valued table (used by the compiler)
 // s1 is the current value in the table
-/* {1} The go function for: add_value!(self:table,x:any,s1:set,y:any) [status=0] */
+/* The go function for: add_value!(self:table,x:any,s1:set,y:any) [status=0] */
 func F_Core_add_value_I_table (self *ClaireTable ,x *ClaireAny ,s1 *ClaireSet ,y *ClaireAny ) *ClaireBoolean  { 
     // procedure body with s = boolean
     var Result *ClaireBoolean  
@@ -968,7 +968,7 @@ func E_Core_add_value_I_table (self EID,x EID,s1 EID,y EID) EID {
       ANY(y) ).Id(),0}} 
   
 // a direct version (v3.2) that can be used in lieu of add!
-/* {1} The go function for: add_value(self:table,x:any,y:any) [status=0] */
+/* The go function for: add_value(self:table,x:any,y:any) [status=0] */
 func F_add_value_table3 (self *ClaireTable ,x *ClaireAny ,y *ClaireAny )  { 
     // procedure body with s = void
     { var old *ClaireSet   = ToSet(F_get_table(self,x))
@@ -982,7 +982,7 @@ func E_add_value_table3 (self EID,x EID,y EID) EID {
     return EVOID} 
   
 // removes a value from an table (multivalued only)
-/* {1} The go function for: delete(a:table,x:any,y:any) [status=0] */
+/* The go function for: delete(a:table,x:any,y:any) [status=0] */
 func F_delete_table (a *ClaireTable ,x *ClaireAny ,y *ClaireAny ) *ClaireAny  { 
     // procedure body with s = any
     var Result *ClaireAny  
@@ -1016,7 +1016,7 @@ func E_delete_table (a EID,x EID,y EID) EID {
     return F_delete_table(ToTable(OBJ(a)),ANY(x),ANY(y) ).ToEID()} 
   
 // direct access to 2-dim tables
-/* {1} The go function for: nth(a:table,x:any,y:any) [status=1] */
+/* The go function for: nth(a:table,x:any,y:any) [status=1] */
 func F_nth_table2 (a *ClaireTable ,x *ClaireAny ,y *ClaireAny ) EID { 
     // eid body s = any
     var Result EID 
@@ -1041,7 +1041,7 @@ func F_nth_table2 (a *ClaireTable ,x *ClaireAny ,y *ClaireAny ) EID {
 func E_nth_table2 (a EID,x EID,y EID) EID { 
     return F_nth_table2(ToTable(OBJ(a)),ANY(x),ANY(y) )} 
   
-/* {1} The go function for: nth_table2_type */
+/* The go function for: nth_table2_type */
 func F_nth_table2_type (a *ClaireType ,x *ClaireType ,y *ClaireType ) EID { 
     var Result EID 
     if (F_unique_ask_type(a) == CTRUE) { 
@@ -1065,7 +1065,7 @@ func E_nth_table2_type (a EID,x EID,y EID) EID {
     return F_nth_table2_type(ToType(OBJ(a)),ToType(OBJ(x)),ToType(OBJ(y)))} 
   
 // sets a value in a 2-dim table
-/* {1} The go function for: nth=(a:table,x:any,y:any,z:any) [status=1] */
+/* The go function for: nth=(a:table,x:any,y:any,z:any) [status=1] */
 func F_nth_equal_table2 (a *ClaireTable ,x *ClaireAny ,y *ClaireAny ,z *ClaireAny ) EID { 
     // eid body s = void
     var Result EID 
@@ -1105,7 +1105,7 @@ func E_nth_equal_table2 (a EID,x EID,y EID,z EID) EID {
       ANY(z) )} 
   
 // v3.2.16 tuple(a,b) is not list(a,b) !
-/* {1} The go function for: get_index(a:table,x:any) [status=0] */
+/* The go function for: get_index(a:table,x:any) [status=0] */
 func F_get_index_table1 (a *ClaireTable ,x *ClaireAny ) int { 
     // procedure body with s = integer
     var Result int 
@@ -1126,7 +1126,7 @@ func F_get_index_table1 (a *ClaireTable ,x *ClaireAny ) int {
 func E_get_index_table1 (a EID,x EID) EID { 
     return EID{C__INT,IVAL(F_get_index_table1(ToTable(OBJ(a)),ANY(x) ))}} 
   
-/* {1} The go function for: get_index(a:table,x:integer,y:integer) [status=0] */
+/* The go function for: get_index(a:table,x:integer,y:integer) [status=0] */
 func F_get_index_table2 (a *ClaireTable ,x int,y int) int { 
     // procedure body with s = integer
     var Result int 
@@ -1140,7 +1140,7 @@ func E_get_index_table2 (a EID,x EID,y EID) EID {
     return EID{C__INT,IVAL(F_get_index_table2(ToTable(OBJ(a)),INT(x),INT(y) ))}} 
   
 // erase an table means to clean its graph so that it becomes empty.
-/* {1} The go function for: erase(a:table) [status=1] */
+/* The go function for: erase(a:table) [status=1] */
 func F_erase_table (a *ClaireTable ) EID { 
     // eid body s = void
     var Result EID 
@@ -1205,7 +1205,7 @@ func E_erase_table (a EID) EID {
   
 // the general case is waiting for the dictionary method like erase(a.graph as dictionary)
 // new in v3.2.50 a constructor for building a table dynamically
-/* {1} The go function for: make_table(%domain:type,%range:type,%default:any) [status=1] */
+/* The go function for: make_table(%domain:type,%range:type,%default:any) [status=1] */
 func F_make_table_type (_Zdomain *ClaireType ,_Zrange *ClaireType ,_Zdefault *ClaireAny ) EID { 
     // eid body s = table
     var Result EID 
@@ -1229,7 +1229,7 @@ func E_make_table_type (_Zdomain EID,_Zrange EID,_Zdefault EID) EID {
 //   Part 3: Demons & relations for the logic modules                  *
 // *********************************************************************
 // applying a lambda to one argument
-/* {1} The go function for: funcall(self:lambda,x:any) [status=1] */
+/* The go function for: funcall(self:lambda,x:any) [status=1] */
 func F_funcall_lambda1 (self *ClaireLambda ,x *ClaireAny ) EID { 
     // eid body s = any
     var Result EID 
@@ -1256,7 +1256,7 @@ func E_funcall_lambda1 (self EID,x EID) EID {
     return F_funcall_lambda1(ToLambda(OBJ(self)),ANY(x) )} 
   
 // applying a lambda to two argument
-/* {1} The go function for: funcall(self:lambda,x:any,y:any) [status=1] */
+/* The go function for: funcall(self:lambda,x:any,y:any) [status=1] */
 func F_funcall_lambda2 (self *ClaireLambda ,x *ClaireAny ,y *ClaireAny ) EID { 
     // eid body s = any
     var Result EID 
@@ -1284,7 +1284,7 @@ func E_funcall_lambda2 (self EID,x EID,y EID) EID {
     return F_funcall_lambda2(ToLambda(OBJ(self)),ANY(x),ANY(y) )} 
   
 // applying a lambda to two argument
-/* {1} The go function for: funcall(self:lambda,x:any,y:any,z:any) [status=1] */
+/* The go function for: funcall(self:lambda,x:any,y:any,z:any) [status=1] */
 func F_funcall_lambda3 (self *ClaireLambda ,x *ClaireAny ,y *ClaireAny ,z *ClaireAny ) EID { 
     // eid body s = any
     var Result EID 
@@ -1316,7 +1316,7 @@ func E_funcall_lambda3 (self EID,x EID,y EID,z EID) EID {
       ANY(z) )} 
   
 // dealing with inverse
-/* {1} The go function for: check_inverse(%r1:any,%r2:any) [status=1] */
+/* The go function for: check_inverse(%r1:any,%r2:any) [status=1] */
 func F_check_inverse_any (_Zr1 *ClaireAny ,_Zr2 *ClaireAny ) EID { 
     // eid body s = void
     var Result EID 
@@ -1373,7 +1373,7 @@ func E_check_inverse_any (_Zr1 EID,_Zr2 EID) EID {
     return F_check_inverse_any(ANY(_Zr1),ANY(_Zr2) )} 
   
 // very useful
-/* {1} The go function for: invert(r:relation,x:any) [status=1] */
+/* The go function for: invert(r:relation,x:any) [status=1] */
 func F_invert_relation (r *ClaireRelation ,x *ClaireAny ) EID { 
     // eid body s = set
     var Result EID 
@@ -1567,7 +1567,7 @@ func E_invert_relation (r EID,x EID) EID {
     return F_invert_relation(ToRelation(OBJ(r)),ANY(x) )} 
   
 // same: two useful methods that are used often
-/* {1} The go function for: domain!(x:restriction) [status=0] */
+/* The go function for: domain!(x:restriction) [status=0] */
 func F_domain_I_restriction (x *ClaireRestriction ) *ClaireClass  { 
     return  ToTypeExpression(x.Domain.ValuesO()[1-1]).Class_I()
     } 
@@ -1576,7 +1576,7 @@ func F_domain_I_restriction (x *ClaireRestriction ) *ClaireClass  {
 func E_domain_I_restriction (x EID) EID { 
     return EID{F_domain_I_restriction(ToRestriction(OBJ(x)) ).Id(),0}} 
   
-/* {1} The go function for: methods(d:class,r:class) [status=0] */
+/* The go function for: methods(d:class,r:class) [status=0] */
 func F_methods_class (d *ClaireClass ,r *ClaireClass ) *ClaireSet  { 
     // procedure body with s = set
     var Result *ClaireSet  
@@ -1606,7 +1606,7 @@ func E_methods_class (d EID,r EID) EID {
     return EID{F_methods_class(ToClass(OBJ(d)),ToClass(OBJ(r)) ).Id(),0}} 
   
 // sets the reified flag
-/* {1} The go function for: reify(l:listargs) [status=0] */
+/* The go function for: reify(l:listargs) [status=0] */
 func F_reify_listargs (l *ClaireList )  { 
     // procedure body with s = void
     { 
@@ -1637,7 +1637,7 @@ func E_reify_listargs (l EID) EID {
 // args :: property(open = 0)
 // value :: property() - defined in kernel
 // a generic error that is produced by the error(" ....") instruction
-/* {1} The go function for: self_print(self:general_error) [status=1] */
+/* The go function for: self_print(self:general_error) [status=1] */
 func (self *GeneralError ) SelfPrint () EID { 
     // eid body s = void
     var Result EID 
@@ -1654,7 +1654,7 @@ func E_self_print_general_error_Core (self EID) EID {
     return ToGeneralError(OBJ(self)).SelfPrint( )} 
   
 // a read_slot error is produced when an unknown value is found
-/* {1} The go function for: self_print(self:read_slot_error) [status=1] */
+/* The go function for: self_print(self:read_slot_error) [status=1] */
 func (self *ReadSlotError ) SelfPrint () EID { 
     // eid body s = void
     var Result EID 
@@ -1674,7 +1674,7 @@ func E_self_print_read_slot_error_Core (self EID) EID {
     return ToReadSlotError(OBJ(self)).SelfPrint( )} 
   
 // range errors
-/* {1} The go function for: self_print(self:range_error) [status=1] */
+/* The go function for: self_print(self:range_error) [status=1] */
 func (self *RangeError ) SelfPrint () EID { 
     // eid body s = void
     var Result EID 
@@ -1697,7 +1697,7 @@ func E_self_print_range_error_Core (self EID) EID {
     return ToRangeError(OBJ(self)).SelfPrint( )} 
   
 // selector errors
-/* {1} The go function for: self_print(self:selector_error) [status=1] */
+/* The go function for: self_print(self:selector_error) [status=1] */
 func (self *SelectorError ) SelfPrint () EID { 
     // eid body s = void
     var Result EID 
@@ -1731,7 +1731,7 @@ func E_self_print_selector_error_Core (self EID) EID {
     return ToSelectorError(OBJ(self)).SelfPrint( )} 
   
 // produced by a return (usually trapped)
-/* {1} The go function for: self_print(self:return_error) [status=0] */
+/* The go function for: self_print(self:return_error) [status=0] */
 func (self *ReturnError ) SelfPrint ()  { 
     // procedure body with s = void
     PRINC("****[142] return called outside of a loop (for or while).")
@@ -1743,7 +1743,7 @@ func E_self_print_return_error_Core (self EID) EID {
     return EVOID} 
   
 // interpretation of all the error codes
-/* {1} The go function for: self_print(self:system_error) [status=1] */
+/* The go function for: self_print(self:system_error) [status=1] */
 func F_self_print_system_error_Core (self *ClaireSystemError ) EID { 
     // eid body s = void
     var Result EID 
@@ -1846,7 +1846,7 @@ func E_self_print_system_error_Core (self EID) EID {
     return F_self_print_system_error_Core(ToSystemError(OBJ(self)) )} 
   
 // contradictions are nice exceptions
-/* {1} The go function for: self_print(x:contradiction) [status=0] */
+/* The go function for: self_print(x:contradiction) [status=0] */
 func (x *Contradiction ) SelfPrint ()  { 
     // procedure body with s = void
     PRINC("A contradiction has occured.")
@@ -1858,7 +1858,7 @@ func E_self_print_contradiction_Core (x EID) EID {
     return EVOID} 
   
 // the format method is used to print error messages (similar to a printf)
-/* {1} The go function for: format(self:string,larg:list) [status=1] */
+/* The go function for: format(self:string,larg:list) [status=1] */
 func F_format_string (self *ClaireString ,larg *ClaireList ) EID { 
     // eid body s = void
     var Result EID 
@@ -1932,7 +1932,7 @@ func E_format_string (self EID,larg EID) EID {
     return F_format_string(ToString(OBJ(self)),ToList(OBJ(larg)) )} 
   
 // special version that prints in the trace port
-/* {1} The go function for: tformat(self:string,i:integer,l:list) [status=1] */
+/* The go function for: tformat(self:string,i:integer,l:list) [status=1] */
 func F_tformat_string (self *ClaireString ,i int,l *ClaireList ) EID { 
     // eid body s = any
     var Result EID 
@@ -1953,7 +1953,7 @@ func E_tformat_string (self EID,i EID,l EID) EID {
     return F_tformat_string(ToString(OBJ(self)),INT(i),ToList(OBJ(l)) )} 
   
 // printing a bag without ( ) separate between sets and lists in CLAIRE4
-/* {1} The go function for: princ(s:list) [status=1] */
+/* The go function for: princ(s:list) [status=1] */
 func F_princ_list (s *ClaireList ) EID { 
     // eid body s = void
     var Result EID 
@@ -1990,7 +1990,7 @@ func F_princ_list (s *ClaireList ) EID {
 func E_princ_list (s EID) EID { 
     return F_princ_list(ToList(OBJ(s)) )} 
   
-/* {1} The go function for: princ(s:set) [status=1] */
+/* The go function for: princ(s:set) [status=1] */
 func F_princ_set (s *ClaireSet ) EID { 
     // eid body s = void
     var Result EID 
@@ -2029,7 +2029,7 @@ func E_princ_set (s EID) EID {
 // a global variable is a named object with a special evaluation
 // NOTE: we need to refine the scheme for global constants !
 // GV are defeasible
-/* {1} The go function for: close(self:global_variable) [status=1] */
+/* The go function for: close(self:global_variable) [status=1] */
 func (self *GlobalVariable ) Close () EID { 
     // eid body s = global_variable
     var Result EID 
@@ -2054,7 +2054,7 @@ func (self *GlobalVariable ) Close () EID {
 func E_close_global_variable (self EID) EID { 
     return ToGlobalVariable(OBJ(self)).Close( )} 
   
-/* {1} The go function for: self_eval(self:global_variable) [status=0] */
+/* The go function for: self_eval(self:global_variable) [status=0] */
 func (self *GlobalVariable ) SelfEval () EID { 
     // eid body s = any
     var Result EID 
@@ -2072,7 +2072,7 @@ func EVAL_global_variable (x *ClaireAny) EID {
 // -> moved from pretty.cl
 // we create a spcial contraidiction that we shall reuse
 // how to use it
-/* {1} The go function for: contradiction!(_CL_obj:void) [status=1] */
+/* The go function for: contradiction!(_CL_obj:void) [status=1] */
 func F_contradiction_I_void () EID { 
     // eid body s = void
     var Result EID 

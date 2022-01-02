@@ -55,7 +55,7 @@ func BootCore() {
 	C_claire = makeModule1() // needed to create
 	C_slot = makeClass1(new(ClaireClass))    // need for slots list
 	C_list = makeClass1(C_list)    // needed to create proper core lists
-	C_set = makeClass1(C_set)     // descendent is a set
+	C_set = makeClass1(C_set)     // descendant is a set
 	// two special values : NIL and EMPTY
 	CEMPTY = makeNilSet()
 	CNIL = makeNilList()
@@ -73,7 +73,7 @@ func BootCore() {
 	C_void.evaluate = EVAL_object // propagate default through inheritance
 	C_class.Instances.AddFast(C_void.Id())
 	// create empty sets
-	C_void.Descendents = ToType(C_class.Id()).EmptySetObject()    // empty descendent set
+	C_void.Descendants = ToType(C_class.Id()).EmptySetObject()    // empty descendant set
 	CNULL = new(ClaireAny).Is(C_void)                        // create the unknown object
 	C_void.IfWrite = CNULL
 	C_void.Dictionary = ToMapSet(CNULL)
@@ -404,7 +404,7 @@ func (c *ClaireClass) AddSlot(p *ClaireProperty, r *ClaireType, def *ClaireAny) 
 		s.Index = len(ls) + 1
 		s.Srange = c1
 	    // CLAIRE 4 : propagate slots down - used only during the bootstrap
-	    s2 := c.Descendents
+	    s2 := c.Descendants
 		for k := 0; k < s2.Count; k++  {
 			   ToClass(s2.At(k)).Slots.AddFast(s.ToAny())
 			   }
@@ -520,11 +520,11 @@ func instantiateClass(name string, c1 *ClaireClass, c2 *ClaireClass) {
 	c2.Subclass.AddFast(c1.ToAny())
 	c1.Ancestors = ToList(makeListObject(ToType(C_class.Id()), append(copySlice(c2.Ancestors.ValuesO()),
 		c1.ToAny())).Id())
-	// c1.descendents = transitive closure of subclass / inverse of Ancestors
-	c1.Descendents = ToType(C_class.Id()).EmptySetObject() // emptylist
+	// c1.descendants = transitive closure of subclass / inverse of Ancestors
+	c1.Descendants = ToType(C_class.Id()).EmptySetObject() // emptylist
 	// fmt.Printf("makeclass(%s): ancestors: %d\n", name, c1.Ancestors.Length())
 	for _, y := range c1.Ancestors.ValuesO() {
-		ToClass(y).Descendents.AddFast(c1.Id())
+		ToClass(y).Descendants.AddFast(c1.Id())
     }
 	C_class.Instances.AddFast(c1.ToAny())
 	// if (c2->open == ClEnv->ephemeral) c->open = ClEnv->ephemeral;
@@ -794,7 +794,7 @@ func BootSlot() {
 	C_superclass = makeProperty("superclass")
 	C_ancestors = makeProperty("ancestors")
 	C_subclass = makeProperty("subclass")
-	C_descendents = makeProperty("descendents")
+	C_descendants = makeProperty("descendants")
 	C_open = makeProperty("open")
 	C_instances = makeProperty("instances")
 	C_params = makeProperty("params")	
@@ -876,7 +876,7 @@ func BootSlot() {
 	C_class.AddSlot(C_superclass, ToType(C_class.Id()), CNULL)
 	C_class.AddSlot(C_subclass, ToType(C_list.Id()), CNIL.Id())
 	C_class.AddSlot(C_ancestors, ToType(C_list.Id()), CNIL.Id())
-	C_class.AddSlot(C_descendents, ToType(C_set.Id()), CNIL.Id())
+	C_class.AddSlot(C_descendants, ToType(C_set.Id()), CNIL.Id())
 	C_class.AddSlot(C_open, ToType(C_integer.Id()), AnyInteger(1))
 	C_class.AddSlot(C_instances, ToType(C_list.Id()), CNULL)
 	C_class.AddSlot(C_params, ToType(C_list.Id()), CNULL)
@@ -1086,7 +1086,8 @@ func BootMethod() {
 	C_arity = makeKernelProperty("arity")
 	C_set_arity = makeKernelProperty("set_arity")
 	C_slice = makeProperty("slice")
-	C_stat = makeProperty("stat")
+	C_stat = makeProperty("stat")	
+	C_hash = makeProperty("hash")
 	C_file_separator = makeProperty("file_separator")
 	// C_getenv = makeProperty("getenv")
 
@@ -1189,7 +1190,7 @@ func BootMethod() {
 	// C_addFast.AddMethod(Signature(func E_addFast_tuple(l EID, x EID) EID {
 	// C_make_array.AddMethod(...) => in types.cl, to get a 2nd order _expression
 	C_list_I.AddMethod(Signature(C_array.Id(), C_list.Id()), 0, MakeFunction1(E_list_I_array, "list_I_array"))
-	C_array_I.AddMethod(Signature(C_list.Id(), C_array.Id()), 0, MakeFunction1(E_array_I_list, "array_I_list"))
+	// C_array_I.AddMethod(Signature(C_list.Id(), C_array.Id()), 0, MakeFunction1(E_array_I_list, "array_I_list"))
 	C_empty_list.AddMethod(Signature(C_type.Id(), C_list.Id()), 0, MakeFunction1(E_empty_list_type, "empty_list_type"))
 	C_empty_set.AddMethod(Signature(C_type.Id(), C_set.Id()), 0, MakeFunction1(E_empty_set_type, "empty_set_type"))
 
@@ -1262,6 +1263,7 @@ func BootMethod() {
 	C_abort.AddMethod(Signature(C_environment.Id(), C_void.Id()), 0, MakeFunction1(E_abort_system, "abort_system"))
 	C_file_separator.AddMethod(Signature(C_environment.Id(), C_string.Id()), 0, MakeFunction1(E_file_separator, "file_separator"))
 	C_stat.AddMethod(Signature(C_void.Id(), C_void.Id()), 0, MakeFunction1(E_claire_stat, "claire_stat"))
+	C_hash.AddMethod(Signature(C_list.Id(), C_any.Id(), C_integer.Id()), 0, MakeFunction2(E_hash_list, "hash_list"))
 	C_mClaire_restore_state.AddMethod(Signature(C_void.Id(), C_void.Id()), 0, MakeFunction1(E_restore_state_void, "restore_state_void"))
 	C_store.AddMethod(Signature(C_list.Id(), C_integer.Id(), C_any.Id(), C_boolean.Id(), C_any.Id()), 0, MakeFunction4(E_store_list, "store_list"))
 	C_store.AddMethod(Signature(C_array.Id(), C_integer.Id(), C_any.Id(), C_boolean.Id(), C_any.Id()), 0, MakeFunction4(E_store_list, "store_list"))

@@ -9,6 +9,14 @@ Thing <: object(name:string,x:integer,y:integer,prev:any)
                (bt.prev := at, at := bt)),
      time_show() ]
 
+[clf(k:integer)
+  -> time_set(),
+     let at := Thing(name = "obj", x = 0, y = 0) in
+        (for i in (1 .. k)
+            let bt := Thing(x = i, y = i) in
+               (bt.y :+ bt.x)),
+     time_show() ]
+
 [clo0(k:integer)
   -> time_set(),
      let at := Thing(name = "obj", x = 0, y = 0) in
@@ -60,6 +68,8 @@ Thing <: object(name:string,x:integer,y:integer,prev:any)
 [all2() 
   -> princ("clo(10M)"),
      clo(10000000),
+     princ("clf(10M)"),
+     clf(10000000),
      princ("clr(10M)"),
      clr(10000000),
      princ("clw(10M)"),

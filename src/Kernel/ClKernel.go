@@ -554,7 +554,7 @@ type ClaireClass struct {
 	Superclass  *ClaireClass   // super class
 	Subclass    *ClaireSet    // subclasses
 	Ancestors   *ClaireList    // list of Ancestors
-	Descendents *ClaireSet     // descendants
+	Descendants *ClaireSet     // descendants
 	Open        int            // open status for class
 	Instances   *ClaireList    // instance list is only kept when open
 	Params      *ClaireList    // for parameterized classes (subset of slots)
@@ -978,7 +978,7 @@ var C_slots *ClaireProperty
 var C_superclass *ClaireProperty
 var C_ancestors *ClaireProperty
 var C_subclass *ClaireProperty
-var C_descendents *ClaireProperty
+var C_descendants *ClaireProperty
 var C_open *ClaireProperty
 var C_instances *ClaireProperty
 var C_params *ClaireProperty
@@ -1139,6 +1139,7 @@ var C_slice *ClaireProperty
 var C_osname *ClaireProperty
 var C_file_separator *ClaireProperty
 var C_stat *ClaireProperty
+var C_hash *ClaireProperty
 	
 // operations
 var C_add *ClaireOperation

@@ -441,7 +441,7 @@ get_indexed(c:class) : list -> c.slots
 
 
 // OPT.non_identifiable_set: those sets who are identifiable (closure)
-// set<class>{c in class | exists(c2 in c.descendents | c2.ident? = false)})
+// set<class>{c in class | exists(c2 in c.descendants | c2.ident? = false)})
 
 // equality is identity?
 [Compile/identifiable?(self:any) : boolean

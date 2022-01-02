@@ -498,7 +498,7 @@ g_expression(self:Call_method,s:class) : void -> inline_exp(PRODUCER,self,s)
                    g_expression(a1, list),
                    g_expression(a2, integer),
                    g_expression(a3, any)) */
-        else if (m.selector = add_slot & getC(a1) % class)
+        else if (m.selector = add_slot & a1 % class)
            printf("~IF_close_slot(~I.AddSlot(~I,~I,~I))", preCore?(),
                         g_expression(a1,class),
                         g_expression(a2,property),           // property

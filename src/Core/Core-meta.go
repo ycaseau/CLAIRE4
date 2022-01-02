@@ -1,5 +1,5 @@
 /***** CLAIRE Compilation of module Core.cl 
-         [version 4.0.03 / safety 5] Wednesday 12-29-2021 08:34:14 *****/
+         [version 4.0.04 / safety 5] Saturday 01-01-2022 16:47:18 *****/
 
 package Core
 import (_ "fmt"
@@ -238,6 +238,7 @@ var C__backslash *ClaireOperation  /*obj*/
 var C_glb *ClaireOperation  /*obj*/
 var C_Core__inf_equalt *ClaireOperation  /*obj*/
 var C_Core__Zt *ClaireOperation  /*obj*/
+var C_difference *ClaireProperty  // claire/"difference"
 var C_Core_of_extract *ClaireProperty  // Core/"of_extract"
 var C_member *ClaireProperty  // claire/"member"
 var C_get_value *ClaireProperty  // claire/"get_value"
@@ -331,7 +332,6 @@ var C_car *ClaireProperty  // claire/"car"
 var C_sort *ClaireProperty  // claire/"sort"
 var C_Core_quicksort *ClaireProperty  // Core/"quicksort"
 var C_Core_build_powerset *ClaireProperty  // Core/"build_powerset"
-var C_difference *ClaireProperty  // claire/"difference"
 var C_read_lambda *ClaireProperty  // claire/"read_lambda"
 var C_Core_db_bind *ClaireProperty  // Core/"db_bind"
 var C_Core_db_unbind *ClaireProperty  // Core/"db_unbind"
@@ -341,10 +341,11 @@ var It *ClaireModule
 func MetaLoad() { 
   
   It = MakeModule("Core",C_mClaire)
-  It.Comment = MakeString("Compiled on Wednesday 12-29-2021 08:34:14(v4.0.03), lines:2406, warnings:5,safety:5")
+  It.Comment = MakeString("Compiled on Saturday 01-01-2022 16:47:18(v4.0.04), lines:2406, warnings:5,safety:5")
   ClEnv.Module_I = It
   
   // definition of the properties
+  C_difference = MakeProperty("difference",1,C_claire)
   C_Core_of_extract = MakeProperty("of_extract",1,It)
   C_member = MakeProperty("member",1,C_claire)
   C_get_value = MakeProperty("get_value",1,C_claire)
@@ -438,7 +439,6 @@ func MetaLoad() {
   C_sort = MakeProperty("sort",1,C_claire)
   C_Core_quicksort = MakeProperty("quicksort",1,It)
   C_Core_build_powerset = MakeProperty("build_powerset",1,It)
-  C_difference = MakeProperty("difference",1,C_claire)
   C_read_lambda = MakeProperty("read_lambda",1,C_claire)
   C_Core_db_bind = MakeProperty("db_bind",1,It)
   C_Core_db_unbind = MakeProperty("db_unbind",1,It)
@@ -1030,7 +1030,7 @@ func MetaLoad() {
       
       _CL_obj = C_claire_date
       _CL_obj.Range = ToType(C_string.Id())
-      _CL_obj.Value = MakeString("Wednesday 12-29-2021").Id()
+      _CL_obj.Value = MakeString("Saturday 01-01-2022").Id()
       expr = _CL_obj.Close()
       } 
     ErrorCheck(expr)} 
@@ -1571,7 +1571,7 @@ func MetaLoad() {
   
   F_set_range_property(C_subclass,C_class,F_nth_class2(C_set,MakeList(ToType(C_any.Id()),C_of.Id()),MakeConstantList(MakeConstantSet(C_class.Id()).Id())))
   F_set_range_property(C_ancestors,C_class,F_nth_class2(C_list,MakeList(ToType(C_any.Id()),C_of.Id()),MakeConstantList(MakeConstantSet(C_class.Id()).Id())))
-  F_set_range_property(C_descendents,C_class,F_nth_class2(C_set,MakeList(ToType(C_any.Id()),C_of.Id()),MakeConstantList(MakeConstantSet(C_class.Id()).Id())))
+  F_set_range_property(C_descendants,C_class,F_nth_class2(C_set,MakeList(ToType(C_any.Id()),C_of.Id()),MakeConstantList(MakeConstantSet(C_class.Id()).Id())))
   F_set_range_property(C_mClaire_definition,C_property,F_nth_class2(C_list,MakeList(ToType(C_any.Id()),C_of.Id()),MakeConstantList(MakeConstantSet(C_restriction.Id()).Id())))
   F_set_range_property(C_restrictions,C_property,F_nth_class2(C_list,MakeList(ToType(C_any.Id()),C_of.Id()),MakeConstantList(MakeConstantSet(C_restriction.Id()).Id())))
   F_set_range_property(C_domain,C_restriction,F_nth_class2(C_list,MakeList(ToType(C_any.Id()),C_of.Id()),MakeConstantList(MakeConstantSet(C_type_expression.Id()).Id())))

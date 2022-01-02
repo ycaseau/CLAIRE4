@@ -1,5 +1,5 @@
 /***** CLAIRE Compilation of file /Users/ycaseau/Dropbox/src/clairev4.03/src/meta/pretty.cl 
-         [version 4.0.03 / safety 5] Wednesday 12-29-2021 08:34:14 *****/
+         [version 4.0.04 / safety 5] Saturday 01-01-2022 16:47:18 *****/
 
 package Language
 import (_ "fmt"
@@ -27,7 +27,7 @@ func import_g0000() {
 // *  Part 4: Pretty printing                                          *
 // *********************************************************************
 // Instruction <: system_object()  : in Kernel (CLAIRE 4)
-/* {1} The go function for: no_eval(self:Instruction) [status=1] */
+/* The go function for: no_eval(self:Instruction) [status=1] */
 func F_no_eval_Instruction (self *ClaireInstruction ) EID { 
     // eid body s = void
     var Result EID 
@@ -45,7 +45,7 @@ func E_no_eval_Instruction (self EID) EID {
 // An unbound_symbol is created by the reader when a symbol is not bound
 //
 //unbound_symbol <: Basic_instruction(identifier:symbol)
-/* {1} The go function for: self_print(self:unbound_symbol) [status=0] */
+/* The go function for: self_print(self:unbound_symbol) [status=0] */
 func F_self_print_unbound_symbol_Language (self *ClaireUnboundSymbol )  { 
     // procedure body with s = void
     self.Name.Princ()
@@ -57,12 +57,12 @@ func E_self_print_unbound_symbol_Language (self EID) EID {
     F_self_print_unbound_symbol_Language(ToUnboundSymbol(OBJ(self)) )
     return EVOID} 
   
-/* {1} The go function for: self_eval(self:unbound_symbol) [status=1] */
+/* The go function for: self_eval(self:unbound_symbol) [status=1] */
 func F_self_eval_unbound_symbol (self *ClaireUnboundSymbol ) EID { 
     // eid body s = any
     var Result EID 
-    if (Core.F_owner_any(self.Name.Get()).IsIn(C_thing) == CTRUE) { 
-      Result = EVAL(self.Name.Get())
+    if (Core.F_owner_any(self.Name.Value()).IsIn(C_thing) == CTRUE) { 
+      Result = EVAL(self.Name.Value())
       } else {
       Result = ToException(Core.C_general_error.Make(MakeString("[145] the symbol ~A is unbound").Id(),MakeConstantList(self.Name.Id()).Id())).Close()
       } 
@@ -80,7 +80,7 @@ func EVAL_unbound_symbol (x *ClaireAny) EID {
 // Lexical variables --------------------------------------------------
 //
 //
-/* {1} The go function for: self_print(self:Variable) [status=0] */
+/* The go function for: self_print(self:Variable) [status=0] */
 func F_self_print_Variable_Language (self *ClaireVariable )  { 
     // procedure body with s = void
     { var s *ClaireSymbol   = self.Pname
@@ -97,7 +97,7 @@ func E_self_print_Variable_Language (self EID) EID {
     F_self_print_Variable_Language(To_Variable(OBJ(self)) )
     return EVOID} 
   
-/* {1} The go function for: ppvariable(self:Variable) [status=1] */
+/* The go function for: ppvariable(self:Variable) [status=1] */
 func F_ppvariable_Variable (self *ClaireVariable ) EID { 
     // eid body s = void
     var Result EID 
@@ -119,7 +119,7 @@ func F_ppvariable_Variable (self *ClaireVariable ) EID {
 func E_ppvariable_Variable (self EID) EID { 
     return F_ppvariable_Variable(To_Variable(OBJ(self)) )} 
   
-/* {1} The go function for: ppvariable(self:list) [status=1] */
+/* The go function for: ppvariable(self:list) [status=1] */
 func F_ppvariable_list (self *ClaireList ) EID { 
     // eid body s = void
     var Result EID 
@@ -162,7 +162,7 @@ func F_ppvariable_list (self *ClaireList ) EID {
 func E_ppvariable_list (self EID) EID { 
     return F_ppvariable_list(ToList(OBJ(self)) )} 
   
-/* {1} The go function for: self_eval(self:Variable) [status=0] */
+/* The go function for: self_eval(self:Variable) [status=0] */
 func F_self_eval_Variable (self *ClaireVariable ) EID { 
     // eid body s = any
     var Result EID 
@@ -173,7 +173,7 @@ func F_self_eval_Variable (self *ClaireVariable ) EID {
 func E_self_eval_Variable (self EID) EID { 
     return F_self_eval_Variable(To_Variable(OBJ(self)) )} 
   
-/* {1} The go function for: write_value(self:Variable,val:any) [status=1] */
+/* The go function for: write_value(self:Variable,val:any) [status=1] */
 func F_write_value_Variable (self *ClaireVariable ,val *ClaireAny ) EID { 
     // eid body s = any
     var Result EID 
@@ -200,7 +200,7 @@ func E_write_value_Variable (self EID,val EID) EID {
 // this is the definition of a typed variable / Vardef is a syntactic marker
 // in CLAIRE 4, Vardef are transformed in Var at run time
 // this is strange and should be fixed  or understood
-/* {1} The go function for: self_eval(self:Vardef) [status=1] */
+/* The go function for: self_eval(self:Vardef) [status=1] */
 func (self *Vardef ) SelfEval () EID { 
     // eid body s = any
     var Result EID 
@@ -226,7 +226,7 @@ func EVAL_Vardef (x *ClaireAny) EID {
 // a global variable is a named object with a special evaluation
 //
 // self_eval(self:global_variable) : any -> self.value  -> moved to object.cl
-/* {1} The go function for: write_value(self:global_variable,val:any) [status=1] */
+/* The go function for: write_value(self:global_variable,val:any) [status=1] */
 func F_write_value_global_variable (self *Core.GlobalVariable ,val *ClaireAny ) EID { 
     // eid body s = any
     var Result EID 
@@ -262,7 +262,7 @@ func E_write_value_global_variable (self EID,val EID) EID {
 // and a piece of code. Lambda is defined in the "method" file.
 // applying a lambda to a list of arguments
 //
-/* {1} The go function for: apply(self:lambda,%l:list) [status=1] */
+/* The go function for: apply(self:lambda,%l:list) [status=1] */
 func F_apply_lambda (self *ClaireLambda ,_Zl *ClaireList ) EID { 
     // eid body s = any
     var Result EID 
@@ -298,7 +298,7 @@ func F_apply_lambda (self *ClaireLambda ,_Zl *ClaireList ) EID {
 func E_apply_lambda (self EID,_Zl EID) EID { 
     return F_apply_lambda(ToLambda(OBJ(self)),ToList(OBJ(_Zl)) )} 
   
-/* {1} The go function for: call(self:lambda,l:listargs) [status=1] */
+/* The go function for: call(self:lambda,l:listargs) [status=1] */
 func F_call_lambda2 (self *ClaireLambda ,l *ClaireList ) EID { 
     // eid body s = any
     var Result EID 
@@ -310,7 +310,7 @@ func E_call_lambda2 (self EID,l EID) EID {
     return F_call_lambda2(ToLambda(OBJ(self)),ToList(OBJ(l)) )} 
   
 // printing a lambda
-/* {1} The go function for: self_print(self:lambda) [status=1] */
+/* The go function for: self_print(self:lambda) [status=1] */
 func F_self_print_lambda_Language (self *ClaireLambda ) EID { 
     // eid body s = void
     var Result EID 
@@ -333,7 +333,7 @@ func E_self_print_lambda_Language (self EID) EID {
     return F_self_print_lambda_Language(ToLambda(OBJ(self)) )} 
   
 // map is the most famous function on a lambda
-/* {1} The go function for: map(self:lambda,%l:bag) [status=1] */
+/* The go function for: map(self:lambda,%l:bag) [status=1] */
 func F_map_lambda (self *ClaireLambda ,_Zl *ClaireBag ) EID { 
     // eid body s = any
     var Result EID 
@@ -400,7 +400,7 @@ func E_map_lambda (self EID,_Zl EID) EID {
 // however is only used in this file (and also by cfile :-) ):
 //
 // creating a lambda from an instruction and a list of variables
-/* {1} The go function for: iClaire/lambda!(lvar:list,self:any) [status=1] */
+/* The go function for: iClaire/lambda!(lvar:list,self:any) [status=1] */
 func F_lambda_I_list (lvar *ClaireList ,self *ClaireAny ) EID { 
     // eid body s = lambda
     var Result EID 
@@ -446,7 +446,7 @@ func E_lambda_I_list (lvar EID,self EID) EID {
 // The number of variables is kept in the global_variable *variable_index*.
 // On entry, n need not be equal to size(lvar) (see [case ...instruction]).
 //
-/* {1} The go function for: iClaire/lexical_build(self:any,lvar:list,n:integer) [status=1] */
+/* The go function for: iClaire/lexical_build(self:any,lvar:list,n:integer) [status=1] */
 func F_lexical_build_any (self *ClaireAny ,lvar *ClaireList ,n int) EID { 
     // eid body s = any
     var Result EID 
@@ -495,7 +495,7 @@ func F_lexical_build_any (self *ClaireAny ,lvar *ClaireList ,n int) EID {
         }  else if (self.Isa.IsIn(C_Instruction) == CTRUE) { 
         { var g0008 *ClaireInstruction   = To_Instruction(self)
           { var _Ztype *ClaireClass   = g0008.Isa
-            if (C_Instruction_with_var.Descendents.Contain_ask(_Ztype.Id()) == CTRUE) { 
+            if (C_Instruction_with_var.Descendants.Contain_ask(_Ztype.Id()) == CTRUE) { 
               Result = Core.F_put_property2(C_mClaire_index,ToObject(OBJ(Core.F_CALL(C_var,ARGS(EID{g0008.Id(),0})))),MakeInteger(n).Id())
               if !ErrorIn(Result) {
               n = (n+1)
@@ -593,7 +593,7 @@ func F_lexical_build_any (self *ClaireAny ,lvar *ClaireList ,n int) EID {
 func E_lexical_build_any (self EID,lvar EID,n EID) EID { 
     return F_lexical_build_any(ANY(self),ToList(OBJ(lvar)),INT(n) )} 
   
-/* {1} The go function for: iClaire/lexical_change(self:any,lvar:list) [status=1] */
+/* The go function for: iClaire/lexical_change(self:any,lvar:list) [status=1] */
 func F_lexical_change_any (self *ClaireAny ,lvar *ClaireList ) EID { 
     // eid body s = any
     var Result EID 
@@ -641,7 +641,7 @@ func E_lexical_change_any (self EID,lvar EID) EID {
 // close is the basic method called by an instantiation.
 // Once the indexed list is built, we never call it again.
 //
-/* {1} The go function for: close(self:class) [status=0] */
+/* The go function for: close(self:class) [status=0] */
 func F_close_class (self *ClaireClass ) *ClaireClass  { 
     return  self
     } 
@@ -653,7 +653,7 @@ func E_close_class (self EID) EID {
 // Extract the symbol associated with self.
 // This is useful e.g. when using read() (read@port, read@string).
 //
-/* {1} The go function for: iClaire/extract_symbol(self:any) [status=1] */
+/* The go function for: iClaire/extract_symbol(self:any) [status=1] */
 func F_extract_symbol_any (self *ClaireAny ) EID { 
     // eid body s = symbol
     var Result EID 
@@ -697,7 +697,7 @@ func E_extract_symbol_any (self EID) EID {
 // we must be sure that the selector (in a has statement or in a message)
 // is a property.
 //
-/* {1} The go function for: iClaire/make_a_property(self:any) [status=1] */
+/* The go function for: iClaire/make_a_property(self:any) [status=1] */
 func F_make_a_property_any (self *ClaireAny ) EID { 
     // eid body s = property
     var Result EID 
@@ -711,7 +711,7 @@ func F_make_a_property_any (self *ClaireAny ) EID {
         } 
       }  else if (self.Isa.IsIn(C_symbol) == CTRUE) { 
       { var g0022 *ClaireSymbol   = ToSymbol(self)
-        { var x *ClaireAny   = g0022.Get()
+        { var x *ClaireAny   = g0022.Value()
           if (x.Isa.IsIn(C_property) == CTRUE) { 
             { var g0023 *ClaireProperty   = ToProperty(x)
               Result = F_make_a_property_any(g0023.Id())
@@ -757,7 +757,7 @@ func E_make_a_property_any (self EID) EID {
 // if the pretty mode is here ... 
 //    (1) pbreak = true means that we create a new line (whatever the length)
 //    (2) break = false => we generate a much too far exception
-/* {1} The go function for: lbreak(_CL_obj:void) [status=1] */
+/* The go function for: lbreak(_CL_obj:void) [status=1] */
 func F_lbreak_void () EID { 
     // eid body s = any
     var Result EID 
@@ -782,7 +782,7 @@ func F_lbreak_void () EID {
 func E_lbreak_void (_CL_obj EID) EID { 
     return F_lbreak_void( )} 
   
-/* {1} The go function for: put_buffer(_CL_obj:void) [status=1] */
+/* The go function for: put_buffer(_CL_obj:void) [status=1] */
 func F_put_buffer_void () EID { 
     // eid body s = any
     var Result EID 
@@ -803,7 +803,7 @@ func F_put_buffer_void () EID {
 func E_put_buffer_void (_CL_obj EID) EID { 
     return F_put_buffer_void( )} 
   
-/* {1} The go function for: checkfar(_CL_obj:void) [status=1] */
+/* The go function for: checkfar(_CL_obj:void) [status=1] */
 func F_checkfar_void () EID { 
     // eid body s = any
     var Result EID 
@@ -820,7 +820,7 @@ func F_checkfar_void () EID {
 func E_checkfar_void (_CL_obj EID) EID { 
     return F_checkfar_void( )} 
   
-/* {1} The go function for: lbreak(n:integer) [status=1] */
+/* The go function for: lbreak(n:integer) [status=1] */
 func F_lbreak_integer (n int) EID { 
     // eid body s = any
     var Result EID 
@@ -834,7 +834,7 @@ func E_lbreak_integer (n EID) EID {
   
 // indentation
 //
-/* {1} The go function for: indent(limit:integer) [status=0] */
+/* The go function for: indent(limit:integer) [status=0] */
 func F_indent_integer (limit int) *ClaireAny  { 
     // procedure body with s = any
     var Result *ClaireAny  
@@ -852,7 +852,7 @@ func E_indent_integer (limit EID) EID {
     return F_indent_integer(INT(limit) ).ToEID()} 
   
 // sets the current_level
-/* {1} The go function for: set_level(_CL_obj:void) [status=0] */
+/* The go function for: set_level(_CL_obj:void) [status=0] */
 func F_set_level_void ()  { 
     // procedure body with s = void
     Core.C_pretty.Index = (Core.F_buffer_length_void()-1)
@@ -863,7 +863,7 @@ func E_set_level_void (_CL_obj EID) EID {
     F_set_level_void( )
     return EVOID} 
   
-/* {1} The go function for: set_level(n:integer) [status=0] */
+/* The go function for: set_level(n:integer) [status=0] */
 func F_set_level_integer (n int)  { 
     // procedure body with s = void
     F_set_level_void()
@@ -879,7 +879,7 @@ func E_set_level_integer (n EID) EID {
 // pbreak = true means that we will print step by step; false => try to add to current place
 // if impossible of if pbreak = false, we will switch to printl
 // the tricky part is that this method can generate a too far error
-/* {1} The go function for: printbox(self:list,start:integer,finish:integer,s:string) [status=1] */
+/* The go function for: printbox(self:list,start:integer,finish:integer,s:string) [status=1] */
 func F_Language_printbox_list1 (self *ClaireList ,start int,finish int,s *ClaireString ) EID { 
     // eid body s = any
     var Result EID 
@@ -1014,7 +1014,7 @@ func E_Language_printbox_list1 (self EID,start EID,finish EID,s EID) EID {
   
 // default value of arguments
 //
-/* {1} The go function for: printbox(self:list) [status=1] */
+/* The go function for: printbox(self:list) [status=1] */
 func F_Language_printbox_list2 (self *ClaireList ) EID { 
     // eid body s = any
     var Result EID 
@@ -1025,7 +1025,7 @@ func F_Language_printbox_list2 (self *ClaireList ) EID {
 func E_Language_printbox_list2 (self EID) EID { 
     return F_Language_printbox_list2(ToList(OBJ(self)) )} 
   
-/* {1} The go function for: printbox(self:list,s:string) [status=1] */
+/* The go function for: printbox(self:list,s:string) [status=1] */
 func F_Language_printbox_list3 (self *ClaireList ,s *ClaireString ) EID { 
     // eid body s = any
     var Result EID 
@@ -1037,7 +1037,7 @@ func E_Language_printbox_list3 (self EID,s EID) EID {
     return F_Language_printbox_list3(ToList(OBJ(self)),ToString(OBJ(s)) )} 
   
 // this is a tricky method : first try to print without pretty (box) 
-/* {1} The go function for: printl(self:list,s:string) [status=1] */
+/* The go function for: printl(self:list,s:string) [status=1] */
 func F_printl_list (self *ClaireList ,s *ClaireString ) EID { 
     // eid body s = void
     var Result EID 
@@ -1120,7 +1120,7 @@ func E_printl_list (self EID,s EID) EID {
     return F_printl_list(ToList(OBJ(self)),ToString(OBJ(s)) )} 
   
 // print bounded prints a bounded expression using ( and )
-/* {1} The go function for: printexp(self:any,comp:boolean) [status=1] */
+/* The go function for: printexp(self:any,comp:boolean) [status=1] */
 func F_printexp_any (self *ClaireAny ,comp *ClaireBoolean ) EID { 
     // eid body s = void
     var Result EID 
@@ -1225,7 +1225,7 @@ func E_printexp_any (self EID,comp EID) EID {
     return F_printexp_any(ANY(self),ToBoolean(OBJ(comp)) )} 
   
 // pretty print is using the buffered print (into a string)
-/* {1} The go function for: pretty_print(self:any) [status=1] */
+/* The go function for: pretty_print(self:any) [status=1] */
 func F_pretty_print_any (self *ClaireAny ) EID { 
     // eid body s = void
     var Result EID 
@@ -1254,7 +1254,7 @@ func E_pretty_print_any (self EID) EID {
     return F_pretty_print_any(ANY(self) )} 
   
 // self_print uses the default boxing
-/* {1} The go function for: self_print(self:list) [status=1] */
+/* The go function for: self_print(self:list) [status=1] */
 func F_self_print_list_Language (self *ClaireList ) EID { 
     // eid body s = void
     var Result EID 
@@ -1283,7 +1283,7 @@ func F_self_print_list_Language (self *ClaireList ) EID {
 func E_self_print_list_Language (self EID) EID { 
     return F_self_print_list_Language(ToList(OBJ(self)) )} 
   
-/* {1} The go function for: self_print(self:set) [status=1] */
+/* The go function for: self_print(self:set) [status=1] */
 func F_self_print_set_Language (self *ClaireSet ) EID { 
     // eid body s = void
     var Result EID 
@@ -1317,7 +1317,7 @@ func E_self_print_set_Language (self EID) EID {
     return F_self_print_set_Language(ToSet(OBJ(self)) )} 
   
 // to remove !
-/* {1} The go function for: self_print(self:tuple) [status=1] */
+/* The go function for: self_print(self:tuple) [status=1] */
 func F_self_print_tuple_Language (self *ClaireTuple ) EID { 
     // eid body s = void
     var Result EID 
@@ -1334,7 +1334,7 @@ func E_self_print_tuple_Language (self EID) EID {
     return F_self_print_tuple_Language(ToTuple(OBJ(self)) )} 
   
 // a map_set 
-/* {1} The go function for: self_print(self:map_set) [status=1] */
+/* The go function for: self_print(self:map_set) [status=1] */
 func F_self_print_map_set (self *ClaireMapSet ) EID { 
     // eid body s = void
     var Result EID 
@@ -1354,7 +1354,7 @@ func E_self_print_map_set (self EID) EID {
     return F_self_print_map_set(ToMapSet(OBJ(self)) )} 
   
 // a pair
-/* {1} The go function for: self_print(x:pair) [status=1] */
+/* The go function for: self_print(x:pair) [status=1] */
 func F_self_print_pair (x *ClairePair ) EID { 
     // eid body s = void
     var Result EID 
@@ -1376,7 +1376,7 @@ func E_self_print_pair (x EID) EID {
 // it is used to check the type safety of the gerenated code in the Generate module and it is used
 // in call.cl to produce OFTO (on-the-fly optimization) => see readcall
 // s_type =  static type, or stupid_type  (we should remove stupid_t)
-/* {1} The go function for: static_type(self:any) [status=1] */
+/* The go function for: static_type(self:any) [status=1] */
 func F_static_type_any (self *ClaireAny ) EID { 
     // eid body s = class
     var Result EID 
@@ -1549,7 +1549,7 @@ func E_static_type_any (self EID) EID {
     return F_static_type_any(ANY(self) )} 
   
 // second order pattern for a very common case l[i] where l:list<X>
-/* {1} The go function for: static_type_nth(x:any) [status=1] */
+/* The go function for: static_type_nth(x:any) [status=1] */
 func F_Language_static_type_nth_any (x *ClaireAny ) EID { 
     // eid body s = class
     var Result EID 

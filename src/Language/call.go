@@ -1,5 +1,5 @@
 /***** CLAIRE Compilation of file /Users/ycaseau/Dropbox/src/clairev4.03/src/meta/call.cl 
-         [version 4.0.03 / safety 5] Wednesday 12-29-2021 08:34:14 *****/
+         [version 4.0.04 / safety 5] Saturday 01-01-2022 16:47:18 *****/
 
 package Language
 import (_ "fmt"
@@ -37,7 +37,7 @@ func import_g0064() {
 // Note that a Call* is a Call, but the * is a reader's note that allows precedence combining
 // These are special (x op y) Calls that can be combined !
 // syntactic mark: slot call (x.s)
-/* {1} The go function for: self_print(self:Call) [status=1] */
+/* The go function for: self_print(self:Call) [status=1] */
 func (self *Call ) SelfPrint () EID { 
     // eid body s = void
     var Result EID 
@@ -291,7 +291,7 @@ func (self *Call ) SelfPrint () EID {
 func E_self_print_Call_Language (self EID) EID { 
     return To_Call(OBJ(self)).SelfPrint( )} 
   
-/* {1} The go function for: self_print(self:Call+) [status=1] */
+/* The go function for: self_print(self:Call+) [status=1] */
 func (self *Call_plus ) SelfPrint () EID { 
     // eid body s = void
     var Result EID 
@@ -309,7 +309,7 @@ func (self *Call_plus ) SelfPrint () EID {
 func E_self_print_Call_plus_Language (self EID) EID { 
     return To_Call_plus(OBJ(self)).SelfPrint( )} 
   
-/* {1} The go function for: self_eval(self:Call) [status=1] */
+/* The go function for: self_eval(self:Call) [status=1] */
 func (self *Call ) SelfEval () EID { 
     // eid body s = any
     var Result EID 
@@ -393,7 +393,7 @@ func EVAL_Call (x *ClaireAny) EID {
      return To_Call(x).SelfEval()} 
   
 // read slot : 
-/* {1} The go function for: self_eval(self:Call+) [status=1] */
+/* The go function for: self_eval(self:Call+) [status=1] */
 func (self *Call_plus ) SelfEval () EID { 
     // eid body s = any
     var Result EID 
@@ -415,7 +415,7 @@ func EVAL_Call_plus (x *ClaireAny) EID {
      return To_Call_plus(x).SelfEval()} 
   
 // dumb : we need to repeat
-/* {1} The go function for: self_eval(self:Call*) [status=1] */
+/* The go function for: self_eval(self:Call*) [status=1] */
 func (self *Call_star ) SelfEval () EID { 
     // eid body s = any
     var Result EID 
@@ -499,7 +499,7 @@ func EVAL_Call_star (x *ClaireAny) EID {
      return To_Call_star(x).SelfEval()} 
   
 // recursive printing of bicall
-/* {1} The go function for: printe(self:any,s:property) [status=1] */
+/* The go function for: printe(self:any,s:property) [status=1] */
 func F_printe_any (self *ClaireAny ,s *ClaireProperty ) EID { 
     // eid body s = void
     var Result EID 
@@ -533,7 +533,7 @@ func E_printe_any (self EID,s EID) EID {
   
 // tells if the sugar :op can be used
 // x(x2) = o(a:x(x2), y) =>  x(x2) :o y
-/* {1} The go function for: sugar?(x:any,x2:any,o:any,a:any) [status=0] */
+/* The go function for: sugar?(x:any,x2:any,o:any,a:any) [status=0] */
 func F_sugar_ask_any (x *ClaireAny ,x2 *ClaireAny ,o *ClaireAny ,a *ClaireAny ) *ClaireBoolean  { 
     // procedure body with s = boolean
     var Result *ClaireBoolean  
@@ -572,7 +572,7 @@ func E_sugar_ask_any (x EID,x2 EID,o EID,a EID) EID {
 // <-(var V, arg E) where V is a variable (and therefore NOT a global_variable)
 //
 // the var slot is filled with a real variable later.
-/* {1} The go function for: self_print(self:Assign) [status=1] */
+/* The go function for: self_print(self:Assign) [status=1] */
 func (self *Assign ) SelfPrint () EID { 
     // eid body s = void
     var Result EID 
@@ -640,7 +640,7 @@ func (self *Assign ) SelfPrint () EID {
 func E_self_print_Assign_Language (self EID) EID { 
     return To_Assign(OBJ(self)).SelfPrint( )} 
   
-/* {1} The go function for: self_eval(self:Assign) [status=1] */
+/* The go function for: self_eval(self:Assign) [status=1] */
 func (self *Assign ) SelfEval () EID { 
     // eid body s = any
     var Result EID 
@@ -663,7 +663,7 @@ func EVAL_Assign (x *ClaireAny) EID {
   
 // global variables
 //
-/* {1} The go function for: self_print(self:Gassign) [status=1] */
+/* The go function for: self_print(self:Gassign) [status=1] */
 func (self *Gassign ) SelfPrint () EID { 
     // eid body s = void
     var Result EID 
@@ -731,7 +731,7 @@ func (self *Gassign ) SelfPrint () EID {
 func E_self_print_Gassign_Language (self EID) EID { 
     return To_Gassign(OBJ(self)).SelfPrint( )} 
   
-/* {1} The go function for: self_eval(self:Gassign) [status=1] */
+/* The go function for: self_eval(self:Gassign) [status=1] */
 func (self *Gassign ) SelfEval () EID { 
     // eid body s = any
     var Result EID 
@@ -759,7 +759,7 @@ func EVAL_Gassign (x *ClaireAny) EID {
 //--------------- BOOLEAN OPERATIONS ---------------------------------
 // "and" is strictly boolean and is based on short-circuit evaluation.
 //
-/* {1} The go function for: self_print(self:And) [status=1] */
+/* The go function for: self_print(self:And) [status=1] */
 func (self *And ) SelfPrint () EID { 
     // eid body s = void
     var Result EID 
@@ -775,7 +775,7 @@ func (self *And ) SelfPrint () EID {
 func E_self_print_And_Language (self EID) EID { 
     return To_And(OBJ(self)).SelfPrint( )} 
   
-/* {1} The go function for: self_eval(self:And) [status=1] */
+/* The go function for: self_eval(self:And) [status=1] */
 func (self *And ) SelfEval () EID { 
     // eid body s = any
     var Result EID 
@@ -845,7 +845,7 @@ func EVAL_And (x *ClaireAny) EID {
   
 // or expression
 //
-/* {1} The go function for: self_print(self:Or) [status=1] */
+/* The go function for: self_print(self:Or) [status=1] */
 func (self *Or ) SelfPrint () EID { 
     // eid body s = void
     var Result EID 
@@ -861,7 +861,7 @@ func (self *Or ) SelfPrint () EID {
 func E_self_print_Or_Language (self EID) EID { 
     return To_Or(OBJ(self)).SelfPrint( )} 
   
-/* {1} The go function for: self_eval(self:Or) [status=1] */
+/* The go function for: self_eval(self:Or) [status=1] */
 func (self *Or ) SelfEval () EID { 
     // eid body s = any
     var Result EID 
@@ -926,7 +926,7 @@ func EVAL_Or (x *ClaireAny) EID {
   
 // ----------------- an anti-evaluator ---------------------------------
 //
-/* {1} The go function for: self_print(self:Quote) [status=1] */
+/* The go function for: self_print(self:Quote) [status=1] */
 func (self *Quote ) SelfPrint () EID { 
     // eid body s = void
     var Result EID 
@@ -942,7 +942,7 @@ func (self *Quote ) SelfPrint () EID {
 func E_self_print_Quote_Language (self EID) EID { 
     return To_Quote(OBJ(self)).SelfPrint( )} 
   
-/* {1} The go function for: self_eval(self:Quote) [status=0] */
+/* The go function for: self_eval(self:Quote) [status=0] */
 func (self *Quote ) SelfEval () EID { 
     // eid body s = any
     var Result EID 
@@ -967,7 +967,7 @@ func EVAL_Quote (x *ClaireAny) EID {
 // This is how a call to a compiled method can be compiled.
 // We use the C external function
 //
-/* {1} The go function for: self_print(self:Call_method) [status=1] */
+/* The go function for: self_print(self:Call_method) [status=1] */
 func (self *CallMethod ) SelfPrint () EID { 
     // eid body s = void
     var Result EID 
@@ -985,7 +985,7 @@ func (self *CallMethod ) SelfPrint () EID {
 func E_self_print_Call_method_Language (self EID) EID { 
     return To_CallMethod(OBJ(self)).SelfPrint( )} 
   
-/* {1} The go function for: self_eval(self:Call_method) [status=1] */
+/* The go function for: self_eval(self:Call_method) [status=1] */
 func (self *CallMethod ) SelfEval () EID { 
     // eid body s = any
     var Result EID 
@@ -1031,7 +1031,7 @@ func EVAL_Call_method (x *ClaireAny) EID {
      return To_CallMethod(x).SelfEval()} 
   
 // same thing with one only argument: we do not use the stack
-/* {1} The go function for: self_eval(self:Call_method1) [status=1] */
+/* The go function for: self_eval(self:Call_method1) [status=1] */
 func (self *CallMethod1 ) SelfEval () EID { 
     // eid body s = any
     var Result EID 
@@ -1057,7 +1057,7 @@ func EVAL_Call_method1 (x *ClaireAny) EID {
      return To_CallMethod1(x).SelfEval()} 
   
 // same thing with two arguments
-/* {1} The go function for: self_eval(self:Call_method2) [status=1] */
+/* The go function for: self_eval(self:Call_method2) [status=1] */
 func (self *CallMethod2 ) SelfEval () EID { 
     // eid body s = any
     var Result EID 
@@ -1087,7 +1087,7 @@ func EVAL_Call_method2 (x *ClaireAny) EID {
      return To_CallMethod2(x).SelfEval()} 
   
 // same thing with two arguments
-/* {1} The go function for: self_eval(self:Call_method3) [status=1] */
+/* The go function for: self_eval(self:Call_method3) [status=1] */
 func (self *Language_CallMethod3 ) SelfEval () EID { 
     // eid body s = any
     var Result EID 
@@ -1122,7 +1122,7 @@ func EVAL_Language_Call_method3 (x *ClaireAny) EID {
   
 // an instruction to read a slot
 //
-/* {1} The go function for: self_print(self:Call_slot) [status=1] */
+/* The go function for: self_print(self:Call_slot) [status=1] */
 func (self *CallSlot ) SelfPrint () EID { 
     // eid body s = void
     var Result EID 
@@ -1140,7 +1140,7 @@ func (self *CallSlot ) SelfPrint () EID {
 func E_self_print_Call_slot_Language (self EID) EID { 
     return To_CallSlot(OBJ(self)).SelfPrint( )} 
   
-/* {1} The go function for: self_eval(self:Call_slot) [status=1] */
+/* The go function for: self_eval(self:Call_slot) [status=1] */
 func (self *CallSlot ) SelfEval () EID { 
     // eid body s = any
     var Result EID 
@@ -1167,7 +1167,7 @@ func EVAL_Call_slot (x *ClaireAny) EID {
 // selector is an exp with type array, arg is an exp with type integer, and test
 // contains the inferred member_type of the array
 //
-/* {1} The go function for: self_print(self:Call_array) [status=1] */
+/* The go function for: self_print(self:Call_array) [status=1] */
 func (self *CallArray ) SelfPrint () EID { 
     // eid body s = void
     var Result EID 
@@ -1185,7 +1185,7 @@ func (self *CallArray ) SelfPrint () EID {
 func E_self_print_Call_array_Language (self EID) EID { 
     return To_CallArray(OBJ(self)).SelfPrint( )} 
   
-/* {1} The go function for: self_eval(self:Call_array) [status=1] */
+/* The go function for: self_eval(self:Call_array) [status=1] */
 func (self *CallArray ) SelfEval () EID { 
     // eid body s = any
     var Result EID 
@@ -1218,7 +1218,7 @@ func EVAL_Call_array (x *ClaireAny) EID {
   
 // an instruction to read a table
 //
-/* {1} The go function for: self_print(self:Call_table) [status=1] */
+/* The go function for: self_print(self:Call_table) [status=1] */
 func (self *CallTable ) SelfPrint () EID { 
     // eid body s = void
     var Result EID 
@@ -1236,7 +1236,7 @@ func (self *CallTable ) SelfPrint () EID {
 func E_self_print_Call_table_Language (self EID) EID { 
     return To_CallTable(OBJ(self)).SelfPrint( )} 
   
-/* {1} The go function for: self_eval(self:Call_table) [status=1] */
+/* The go function for: self_eval(self:Call_table) [status=1] */
 func (self *CallTable ) SelfEval () EID { 
     // eid body s = any
     var Result EID 
@@ -1276,7 +1276,7 @@ func EVAL_Call_table (x *ClaireAny) EID {
 // the structure is complex: see ocall.cl
 // self.var is the writable container (call_slot, call_array, call_table)
 // R(x)
-/* {1} The go function for: self_print(self:Update) [status=1] */
+/* The go function for: self_print(self:Update) [status=1] */
 func (self *Update ) SelfPrint () EID { 
     // eid body s = void
     var Result EID 
@@ -1297,7 +1297,7 @@ func (self *Update ) SelfPrint () EID {
 func E_self_print_Update_Language (self EID) EID { 
     return To_Update(OBJ(self)).SelfPrint( )} 
   
-/* {1} The go function for: self_eval(self:Update) [status=1] */
+/* The go function for: self_eval(self:Update) [status=1] */
 func (self *Update ) SelfEval () EID { 
     // eid body s = any
     var Result EID 
@@ -1365,7 +1365,7 @@ func EVAL_Update (x *ClaireAny) EID {
 // However we require that the receiver be in the specified abstract_class.
 // The form of the super is: SELECTOR@ABSTRACT_CLASS(RECEIVER , ...)
 //
-/* {1} The go function for: self_print(self:Super) [status=1] */
+/* The go function for: self_print(self:Super) [status=1] */
 func (self *Super ) SelfPrint () EID { 
     // eid body s = void
     var Result EID 
@@ -1403,7 +1403,7 @@ func (self *Super ) SelfPrint () EID {
 func E_self_print_Super_Language (self EID) EID { 
     return To_Super(OBJ(self)).SelfPrint( )} 
   
-/* {1} The go function for: self_eval(self:Super) [status=1] */
+/* The go function for: self_eval(self:Super) [status=1] */
 func (self *Super ) SelfEval () EID { 
     // eid body s = any
     var Result EID 
@@ -1455,7 +1455,7 @@ func EVAL_Super (x *ClaireAny) EID {
 //--------------- comments ------------------------------------------
 // the cast is the new form of simple super
 //
-/* {1} The go function for: self_print(x:Cast) [status=1] */
+/* The go function for: self_print(x:Cast) [status=1] */
 func (x *Cast ) SelfPrint () EID { 
     // eid body s = void
     var Result EID 
@@ -1473,7 +1473,7 @@ func (x *Cast ) SelfPrint () EID {
 func E_self_print_Cast_Language (x EID) EID { 
     return To_Cast(OBJ(x)).SelfPrint( )} 
   
-/* {1} The go function for: self_eval(self:Cast) [status=1] */
+/* The go function for: self_eval(self:Cast) [status=1] */
 func (self *Cast ) SelfEval () EID { 
     // eid body s = any
     var Result EID 
@@ -1525,7 +1525,7 @@ func EVAL_Cast (x *ClaireAny) EID {
 // return_error is an exception that is handled by the "for" family
 // of structures
 //
-/* {1} The go function for: self_print(self:Return) [status=1] */
+/* The go function for: self_print(self:Return) [status=1] */
 func (self *Return ) SelfPrint () EID { 
     // eid body s = void
     var Result EID 
@@ -1543,7 +1543,7 @@ func (self *Return ) SelfPrint () EID {
 func E_self_print_Return_Language (self EID) EID { 
     return To_Return(OBJ(self)).SelfPrint( )} 
   
-/* {1} The go function for: self_eval(self:Return) [status=1] */
+/* The go function for: self_eval(self:Return) [status=1] */
 func (self *Return ) SelfEval () EID { 
     // eid body s = error
     var Result EID 
@@ -1578,7 +1578,7 @@ func EVAL_Return (x *ClaireAny) EID {
 // *       Part 4: Miscellaneous on instructions                  *
 // ****************************************************************
 // substitute any variable with same name as x with the value val
-/* {1} The go function for: substitution(self:any,x:Variable,val:any) [status=0] */
+/* The go function for: substitution(self:any,x:Variable,val:any) [status=0] */
 func F_substitution_any (self *ClaireAny ,x *ClaireVariable ,val *ClaireAny ) *ClaireAny  { 
     // procedure body with s = any
     var Result *ClaireAny  
@@ -1643,7 +1643,7 @@ func E_substitution_any (self EID,x EID,val EID) EID {
     return F_substitution_any(ANY(self),To_Variable(OBJ(x)),ANY(val) ).ToEID()} 
   
 // count the number of occurrences of x
-/* {1} The go function for: occurrence(self:any,x:Variable) [status=0] */
+/* The go function for: occurrence(self:any,x:Variable) [status=0] */
 func F_occurrence_any (self *ClaireAny ,x *ClaireVariable ) int { 
     // procedure body with s = integer
     var Result int 
@@ -1704,7 +1704,7 @@ func E_occurrence_any (self EID,x EID) EID {
     return EID{C__INT,IVAL(F_occurrence_any(ANY(self),To_Variable(OBJ(x)) ))}} 
   
 // new version in CLAIRE4 : see if the variable is changed
-/* {1} The go function for: occurchange(self:any,x:Variable) [status=0] */
+/* The go function for: occurchange(self:any,x:Variable) [status=0] */
 func F_occurchange_any (self *ClaireAny ,x *ClaireVariable ) *ClaireBoolean  { 
     // procedure body with s = boolean
     var Result *ClaireBoolean  
@@ -1765,7 +1765,7 @@ func E_occurchange_any (self EID,x EID) EID {
   
 // a variant in CLAIRE 4 that assumes that variable have reveived their lexical bind (index)
 // it also does not count the variable itself in an assign
-/* {1} The go function for: occurexact(self:any,x:Variable) [status=0] */
+/* The go function for: occurexact(self:any,x:Variable) [status=0] */
 func F_Language_occurexact_any (self *ClaireAny ,x *ClaireVariable ) int { 
     // procedure body with s = integer
     var Result int 
@@ -1826,7 +1826,7 @@ func E_Language_occurexact_any (self EID,x EID) EID {
   
 // makes a (deep) copy of the instruction self
 //
-/* {1} The go function for: instruction_copy(self:any) [status=0] */
+/* The go function for: instruction_copy(self:any) [status=0] */
 func F_instruction_copy_any (self *ClaireAny ) *ClaireAny  { 
     // procedure body with s = any
     var Result *ClaireAny  

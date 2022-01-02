@@ -427,7 +427,7 @@ uniform(p:property) : boolean
 [hashinsert(m:restriction) : any
  -> // if (verbose() = 4) //[0] hashinsert(~S) // m,
     let c := (domain!(m) as class) in
-       for c2 in c.descendents hashinsert(c2, (m as method)) ]
+       for c2 in c.descendants hashinsert(c2, (m as method)) ]
 
 // insert into the hash table - since the order is not garanteed when we build the dictionary, we
 // need to check that m is more suited than anything that could be there

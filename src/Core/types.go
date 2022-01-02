@@ -1,5 +1,5 @@
 /***** CLAIRE Compilation of file /Users/ycaseau/Dropbox/src/clairev4.03/src/meta/types.cl 
-         [version 4.0.03 / safety 5] Wednesday 12-29-2021 08:34:14 *****/
+         [version 4.0.04 / safety 5] Saturday 01-01-2022 16:47:18 *****/
 
 package Core
 import (_ "fmt"
@@ -28,7 +28,7 @@ import (_ "fmt"
 // *   Part 1: Common Set Methods                                      *
 // *********************************************************************
 // ----------------------- useful methods ------------------------------
-/* {1} The go function for: finite?(self:type) [status=0] */
+/* The go function for: finite?(self:type) [status=0] */
 func F_finite_ask_type (self *ClaireType ) *ClaireBoolean  { 
     // procedure body with s = boolean
     var Result *ClaireBoolean  
@@ -122,7 +122,7 @@ func E_finite_ask_type (self EID) EID {
   
 // making a set from an abstract_set  (CLAIRE 4 : bag is not longer a concrete type)
 // this is a list since order matters in enumeration
-/* {1} The go function for: enumerate(self:any) [status=1] */
+/* The go function for: enumerate(self:any) [status=1] */
 func F_enumerate_any (self *ClaireAny ) EID { 
     // eid body s = list
     var Result EID 
@@ -146,7 +146,7 @@ func F_enumerate_any (self *ClaireAny ) EID {
             _ = c
             var c_iter *ClaireAny  
             var c_support *ClaireSet  
-            c_support = g0132.Descendents
+            c_support = g0132.Descendants
             for i_it := 0; i_it < c_support.Count; i_it++ { 
               c_iter = c_support.At(i_it)
               c = ToClass(c_iter)
@@ -186,7 +186,7 @@ func E_enumerate_any (self EID) EID {
     return F_enumerate_any(ANY(self) )} 
   
 // =type? is an operation (equality on types)
-/* {1} The go function for: =type?(self:type,ens:type) [status=0] */
+/* The go function for: =type?(self:type,ens:type) [status=0] */
 func F__equaltype_ask_any (self *ClaireType ,ens *ClaireType ) *ClaireBoolean  { 
     if ((self.Included(ens) == CTRUE) && 
         (ens.Included(self) == CTRUE)) {return CTRUE
@@ -197,7 +197,7 @@ func E__equaltype_ask_any (self EID,ens EID) EID {
     return EID{F__equaltype_ask_any(ToType(OBJ(self)),ToType(OBJ(ens)) ).Id(),0}} 
   
 // finds the sort associated to a type
-/* {1} The go function for: sort!(x:type) [status=0] */
+/* The go function for: sort!(x:type) [status=0] */
 func F_sort_I_type (x *ClaireType ) *ClaireClass  { 
     // procedure body with s = class
     var Result *ClaireClass  
@@ -215,7 +215,7 @@ func E_sort_I_type (x EID) EID {
     return EID{F_sort_I_type(ToType(OBJ(x)) ).Id(),0}} 
   
 // the membership for classes
-/* {1} The go function for: %(self:any,ens:class) [status=0] */
+/* The go function for: %(self:any,ens:class) [status=0] */
 func F__Z_any1 (self *ClaireAny ,ens *ClaireClass ) *ClaireBoolean  { 
     if (self.Isa.IsIn(ens) == CTRUE) { 
       if (CTRUE == CTRUE) {return CTRUE
@@ -233,7 +233,7 @@ func E__Z_any1 (self EID,ens EID) EID {
 // replaces belong_to + member? in claire 3 => works on everything, collections and integer as well :)
 // see belong_exp in gexp.cl to see how it is used + open-conding patterns
 // note that belong may create an error => heavier => optimize with %t when possible 
-/* {1} The go function for: belong(x:any,y:any) [status=1] */
+/* The go function for: belong(x:any,y:any) [status=1] */
 func F_BELONG (x *ClaireAny ,y *ClaireAny ) EID { 
     // eid body s = boolean
     var Result EID 
@@ -372,7 +372,7 @@ func E_BELONG (x EID,y EID) EID {
   
 // x % y is a short cut 
 // CLAIRE4 : cannot be a macro (too early)
-/* {1} The go function for: %(x:any,y:any) [status=1] */
+/* The go function for: %(x:any,y:any) [status=1] */
 func F_belong_to (x *ClaireAny ,y *ClaireAny ) EID { 
     // eid body s = boolean
     var Result EID 
@@ -396,7 +396,7 @@ func E_belong_to (x EID,y EID) EID {
 // of diustributivity was a lousy bug)
 // DU Axiom is necessary to make <= and ^ easier to define
 // This is achieved in the U method
-/* {1} The go function for: self_print(self:Union) [status=1] */
+/* The go function for: self_print(self:Union) [status=1] */
 func F_self_print_Union_Core (self *ClaireUnion ) EID { 
     // eid body s = void
     var Result EID 
@@ -415,7 +415,7 @@ func F_self_print_Union_Core (self *ClaireUnion ) EID {
 func E_self_print_Union_Core (self EID) EID { 
     return F_self_print_Union_Core(To_Union(OBJ(self)) )} 
   
-/* {1} The go function for: finite?(self:Union) [status=0] */
+/* The go function for: finite?(self:Union) [status=0] */
 func F_finite_ask_Union (self *ClaireUnion ) *ClaireBoolean  { 
     if ((ToBoolean(OBJ(F_CALL(C_finite_ask,ARGS(EID{self.T1.Id(),0})))) == CTRUE) && 
         (ToBoolean(OBJ(F_CALL(C_finite_ask,ARGS(EID{self.T2.Id(),0})))) == CTRUE)) {return CTRUE
@@ -426,7 +426,7 @@ func E_finite_ask_Union (self EID) EID {
     return EID{F_finite_ask_Union(To_Union(OBJ(self)) ).Id(),0}} 
   
 // Intervals of integers ----------
-/* {1} The go function for: self_print(self:Interval) [status=1] */
+/* The go function for: self_print(self:Interval) [status=1] */
 func F_self_print_Interval_Core (self *ClaireInterval ) EID { 
     // eid body s = void
     var Result EID 
@@ -445,7 +445,7 @@ func F_self_print_Interval_Core (self *ClaireInterval ) EID {
 func E_self_print_Interval_Core (self EID) EID { 
     return F_self_print_Interval_Core(To_Interval(OBJ(self)) )} 
   
-/* {1} The go function for: finite?(self:Interval) [status=0] */
+/* The go function for: finite?(self:Interval) [status=0] */
 func F_finite_ask_Interval (self *ClaireInterval ) *ClaireBoolean  { 
     if (CTRUE == CTRUE) {return CTRUE
     } else {return CFALSE}} 
@@ -455,7 +455,7 @@ func E_finite_ask_Interval (self EID) EID {
     return EID{F_finite_ask_Interval(To_Interval(OBJ(self)) ).Id(),0}} 
   
 // true constructor
-/* {1} The go function for: --(x:integer,y:integer) [status=1] */
+/* The go function for: --(x:integer,y:integer) [status=1] */
 func F__dash_dash_integer (x int,y int) EID { 
     // eid body s = Interval
     var Result EID 
@@ -471,7 +471,7 @@ func E__dash_dash_integer (x EID,y EID) EID {
     return F__dash_dash_integer(INT(x),INT(y) )} 
   
 // Parameterized class. -------------------------------------------
-/* {1} The go function for: self_print(self:Param) [status=1] */
+/* The go function for: self_print(self:Param) [status=1] */
 func F_self_print_Param_Core (self *ClaireParam ) EID { 
     // eid body s = void
     var Result EID 
@@ -544,7 +544,7 @@ func F_self_print_Param_Core (self *ClaireParam ) EID {
 func E_self_print_Param_Core (self EID) EID { 
     return F_self_print_Param_Core(To_Param(OBJ(self)) )} 
   
-/* {1} The go function for: finite?(self:Param) [status=0] */
+/* The go function for: finite?(self:Param) [status=0] */
 func F_finite_ask_Param (self *ClaireParam ) *ClaireBoolean  { 
     if (F_finite_ask_type(ToType(self.Arg.Id())) == CTRUE) {return CTRUE
     } else {return CFALSE}} 
@@ -558,7 +558,7 @@ func E_finite_ask_Param (self EID) EID {
 // for closure purposes, we add an arg Y -> Y inter st[X]
 // Y can be any type class, but we forbid parametrisation on such classes !
 // thus we can ensure that Y is a class
-/* {1} The go function for: self_print(self:subtype) [status=1] */
+/* The go function for: self_print(self:subtype) [status=1] */
 func F_self_print_subtype_Core (self *ClaireSubtype ) EID { 
     // eid body s = void
     var Result EID 
@@ -586,7 +586,7 @@ func E_self_print_subtype_Core (self EID) EID {
     return F_self_print_subtype_Core(ToSubtype(OBJ(self)) )} 
   
 // v3.2
-/* {1} The go function for: finite?(self:subtype) [status=0] */
+/* The go function for: finite?(self:subtype) [status=0] */
 func F_finite_ask_subtype (self *ClaireSubtype ) *ClaireBoolean  { 
     if ((self.Arg.Id() == C_set.Id()) && 
         (ToBoolean(OBJ(F_CALL(C_finite_ask,ARGS(EID{self.T1.Id(),0})))) == CTRUE)) {return CTRUE
@@ -599,7 +599,7 @@ func E_finite_ask_subtype (self EID) EID {
 // creates a subtype, with some normalization
 // v3.2 list[t] -> subtype 
 // v4.0 => no error
-/* {1} The go function for: nth(self:class,x:type) [status=0] */
+/* The go function for: nth(self:class,x:type) [status=0] */
 func F_nth_class1 (self *ClaireClass ,x *ClaireType ) *ClaireType  { 
     // procedure body with s = type
     var Result *ClaireType  
@@ -638,7 +638,7 @@ func E_nth_class1 (self EID,x EID) EID {
 // create a Param with a list of parameters (constant properties) l1 and a list
 // of types l2
 // v4.0 => no error
-/* {1} The go function for: nth(self:class,l1:list,l2:list) [status=0] */
+/* The go function for: nth(self:class,l1:list,l2:list) [status=0] */
 func F_nth_class2 (self *ClaireClass ,l1 *ClaireList ,l2 *ClaireList ) *ClaireType  { 
     // procedure body with s = type
     var Result *ClaireType  
@@ -665,7 +665,7 @@ func E_nth_class2 (self EID,l1 EID,l2 EID) EID {
     return EID{F_nth_class2(ToClass(OBJ(self)),ToList(OBJ(l1)),ToList(OBJ(l2)) ).Id(),0}} 
   
 // create a Param of the stack[X] kind
-/* {1} The go function for: param!(self:class,tx:type) [status=0] */
+/* The go function for: param!(self:class,tx:type) [status=0] */
 func F_param_I_class (self *ClaireClass ,tx *ClaireType ) *ClaireType  { 
     // procedure body with s = type
     var Result *ClaireType  
@@ -682,7 +682,7 @@ func E_param_I_class (self EID,tx EID) EID {
     return EID{F_param_I_class(ToClass(OBJ(self)),ToType(OBJ(tx)) ).Id(),0}} 
   
 // create the t[] param
-/* {1} The go function for: nth(self:type) [status=0] */
+/* The go function for: nth(self:type) [status=0] */
 func F_nth_type (self *ClaireType ) *ClaireType  { 
     // procedure body with s = type
     var Result *ClaireType  
@@ -699,7 +699,7 @@ func E_nth_type (self EID) EID {
     return EID{F_nth_type(ToType(OBJ(self)) ).Id(),0}} 
   
 // tuple are types
-/* {1} The go function for: finite?(self:tuple) [status=0] */
+/* The go function for: finite?(self:tuple) [status=0] */
 func F_finite_ask_tuple (self *ClaireTuple ) *ClaireBoolean  { 
     // procedure body with s = boolean
     var Result *ClaireBoolean  
@@ -733,7 +733,7 @@ func E_finite_ask_tuple (self EID) EID {
 // a property is applied to the referred type
 // if arg = true, the reference is the singleton containing the ref. value
 // arg is set to true when we copy a reference in define.cl (unclear why)
-/* {1} The go function for: self_print(self:Reference) [status=1] */
+/* The go function for: self_print(self:Reference) [status=1] */
 func F_self_print_Reference_Core (self *ClaireReference ) EID { 
     // eid body s = void
     var Result EID 
@@ -751,7 +751,7 @@ func F_self_print_Reference_Core (self *ClaireReference ) EID {
 func E_self_print_Reference_Core (self EID) EID { 
     return F_self_print_Reference_Core(To_Reference(OBJ(self)) )} 
   
-/* {1} The go function for: get(self:Reference,y:any) [status=0] */
+/* The go function for: get(self:Reference,y:any) [status=0] */
 func F_get_Reference (self *ClaireReference ,y *ClaireAny ) *ClaireAny  { 
     // procedure body with s = any
     var Result *ClaireAny  
@@ -773,7 +773,7 @@ func E_get_Reference (self EID,y EID) EID {
     return F_get_Reference(To_Reference(OBJ(self)),ANY(y) ).ToEID()} 
   
 // we need a constructor
-/* {1} The go function for: Reference!(l:list,n:integer) [status=0] */
+/* The go function for: Reference!(l:list,n:integer) [status=0] */
 func F_Reference_I_list (l *ClaireList ,n int) *ClaireReference  { 
     // procedure body with s = Reference
     var Result *ClaireReference  
@@ -789,7 +789,7 @@ func E_Reference_I_list (l EID,n EID) EID {
     return EID{F_Reference_I_list(ToList(OBJ(l)),INT(n) ).Id(),0}} 
   
 // apply a reference to a type (l is args(self), passed for disambiguation)
-/* {1} The go function for: @(self:Reference,l:list,y:any) [status=0] */
+/* The go function for: @(self:Reference,l:list,y:any) [status=0] */
 func F__at_Reference (self *ClaireReference ,l *ClaireList ,y *ClaireAny ) *ClaireAny  { 
     
     { var i int  = 1
@@ -811,7 +811,7 @@ func E__at_Reference (self EID,l EID,y EID) EID {
 // new in v3.0.5 = use an interface method for type enumeration
 // the default strategy is extensible: we look if there exists
 // a proper definition that could be interpreted !
-/* {1} The go function for: set!(x:collection) [status=1] */
+/* The go function for: set!(x:collection) [status=1] */
 func F_set_I_collection (x *ClaireCollection ) EID { 
     // eid body s = set
     var Result EID 
@@ -828,7 +828,7 @@ func F_set_I_collection (x *ClaireCollection ) EID {
 func E_set_I_collection (x EID) EID { 
     return F_set_I_collection(ToCollection(OBJ(x)) )} 
   
-/* {1} The go function for: size(x:collection) [status=1] */
+/* The go function for: size(x:collection) [status=1] */
 func F_size_collection (x *ClaireCollection ) EID { 
     // eid body s = integer
     var Result EID 
@@ -856,7 +856,7 @@ func E_size_collection (x EID) EID {
 // v3.2.34  -> makes the API simpler
 // (interface(size))
 // set is needed for recursive def
-/* {1} The go function for: set!(x:set) [status=0] */
+/* The go function for: set!(x:set) [status=0] */
 func F_set_I_set (x *ClaireSet ) *ClaireSet  { 
     return  x
     } 
@@ -866,7 +866,7 @@ func E_set_I_set (x EID) EID {
     return EID{F_set_I_set(ToSet(OBJ(x)) ).Id(),0}} 
   
 // set is needed for recursive def
-/* {1} The go function for: size(x:list) [status=0] */
+/* The go function for: size(x:list) [status=0] */
 func F_size_list2_Core (x *ClaireList ) int { 
     return  x.Set_I().Size()
     } 
@@ -876,7 +876,7 @@ func E_size_list2_Core (x EID) EID {
     return EID{C__INT,IVAL(F_size_list2_Core(ToList(OBJ(x)) ))}} 
   
 // class  -> return a read-only list  (v3.2)
-/* {1} The go function for: set!(x:class) [status=1] */
+/* The go function for: set!(x:class) [status=1] */
 func F_set_I_class (x *ClaireClass ) EID { 
     // eid body s = set
     var Result EID 
@@ -887,7 +887,7 @@ func F_set_I_class (x *ClaireClass ) EID {
         var c_iter *ClaireAny  
         Result= EID{CFALSE.Id(),0}
         var c_support *ClaireSet  
-        c_support = x.Descendents
+        c_support = x.Descendants
         for i_it := 0; i_it < c_support.Count; i_it++ { 
           c_iter = c_support.At(i_it)
           c = ToClass(c_iter)
@@ -916,7 +916,7 @@ func F_set_I_class (x *ClaireClass ) EID {
 func E_set_I_class (x EID) EID { 
     return F_set_I_class(ToClass(OBJ(x)) )} 
   
-/* {1} The go function for: size(self:class) [status=0] */
+/* The go function for: size(self:class) [status=0] */
 func F_size_class (self *ClaireClass ) int { 
     // procedure body with s = integer
     var Result int 
@@ -926,7 +926,7 @@ func F_size_class (self *ClaireClass ) int {
         _ = x
         var x_iter *ClaireAny  
         var x_support *ClaireSet  
-        x_support = self.Descendents
+        x_support = self.Descendants
         for i_it := 0; i_it < x_support.Count; i_it++ { 
           x_iter = x_support.At(i_it)
           x = ToClass(x_iter)
@@ -942,7 +942,7 @@ func E_size_class (self EID) EID {
     return EID{C__INT,IVAL(F_size_class(ToClass(OBJ(self)) ))}} 
   
 // Union
-/* {1} The go function for: set!(x:Union) [status=1] */
+/* The go function for: set!(x:Union) [status=1] */
 func F_set_I_Union (x *ClaireUnion ) EID { 
     // eid body s = set
     var Result EID 
@@ -969,7 +969,7 @@ func F_set_I_Union (x *ClaireUnion ) EID {
 func E_set_I_Union (x EID) EID { 
     return F_set_I_Union(To_Union(OBJ(x)) )} 
   
-/* {1} The go function for: size(x:Union) [status=1] */
+/* The go function for: size(x:Union) [status=1] */
 func F_size_Union (x *ClaireUnion ) EID { 
     // eid body s = integer
     var Result EID 
@@ -1010,7 +1010,7 @@ func E_size_Union (x EID) EID {
     return F_size_Union(To_Union(OBJ(x)) )} 
   
 // interval
-/* {1} The go function for: set!(x:Interval) [status=0] */
+/* The go function for: set!(x:Interval) [status=0] */
 func F_set_I_Interval (x *ClaireInterval ) *ClaireSet  { 
     return  ToSet(F_sequence_integer(x.Arg1,x.Arg2).Id())
     } 
@@ -1019,7 +1019,7 @@ func F_set_I_Interval (x *ClaireInterval ) *ClaireSet  {
 func E_set_I_Interval (x EID) EID { 
     return EID{F_set_I_Interval(To_Interval(OBJ(x)) ).Id(),0}} 
   
-/* {1} The go function for: size(self:Interval) [status=0] */
+/* The go function for: size(self:Interval) [status=0] */
 func F_size_Interval (self *ClaireInterval ) int { 
     return  ((self.Arg2+1)-self.Arg1)
     } 
@@ -1029,7 +1029,7 @@ func E_size_Interval (self EID) EID {
     return EID{C__INT,IVAL(F_size_Interval(To_Interval(OBJ(self)) ))}} 
   
 // param
-/* {1} The go function for: set!(x:Param) [status=1] */
+/* The go function for: set!(x:Param) [status=1] */
 func F_set_I_Param (x *ClaireParam ) EID { 
     // eid body s = set
     var Result EID 
@@ -1062,7 +1062,7 @@ func F_set_I_Param (x *ClaireParam ) EID {
 func E_set_I_Param (x EID) EID { 
     return F_set_I_Param(To_Param(OBJ(x)) )} 
   
-/* {1} The go function for: size(x:Param) [status=1] */
+/* The go function for: size(x:Param) [status=1] */
 func F_size_Param (x *ClaireParam ) EID { 
     // eid body s = integer
     var Result EID 
@@ -1082,7 +1082,7 @@ func E_size_Param (x EID) EID {
     return F_size_Param(To_Param(OBJ(x)) )} 
   
 // subtype
-/* {1} The go function for: set!(x:subtype) [status=1] */
+/* The go function for: set!(x:subtype) [status=1] */
 func F_set_I_subtype (x *ClaireSubtype ) EID { 
     // eid body s = set
     var Result EID 
@@ -1113,7 +1113,7 @@ func F_set_I_subtype (x *ClaireSubtype ) EID {
 func E_set_I_subtype (x EID) EID { 
     return F_set_I_subtype(ToSubtype(OBJ(x)) )} 
   
-/* {1} The go function for: size(x:subtype) [status=1] */
+/* The go function for: size(x:subtype) [status=1] */
 func F_size_subtype (x *ClaireSubtype ) EID { 
     // eid body s = integer
     var Result EID 
@@ -1137,7 +1137,7 @@ func E_size_subtype (x EID) EID {
     return F_size_subtype(ToSubtype(OBJ(x)) )} 
   
 // tuple
-/* {1} The go function for: set!(x:tuple) [status=1] */
+/* The go function for: set!(x:tuple) [status=1] */
 func F_set_I_tuple (x *ClaireTuple ) EID { 
     // eid body s = set
     var Result EID 
@@ -1235,7 +1235,7 @@ func F_set_I_tuple (x *ClaireTuple ) EID {
 func E_set_I_tuple (x EID) EID { 
     return F_set_I_tuple(ToTuple(OBJ(x)) )} 
   
-/* {1} The go function for: size(l:tuple) [status=1] */
+/* The go function for: size(l:tuple) [status=1] */
 func F_size_tuple (l *ClaireTuple ) EID { 
     // eid body s = integer
     var Result EID 
@@ -1300,7 +1300,7 @@ func E_size_tuple (l EID) EID {
 // reduction is done by enumeration if needed during the type subsumption
 // union is left-associative: A U B U C is represented by (A U B) U C  => never(t2(x:Union) % union)
 // a union of intervals is ALWAYS disjoint
-/* {1} The go function for: U(x:type,y:type) [status=0] */
+/* The go function for: U(x:type,y:type) [status=0] */
 func F_U_type (x *ClaireType ,y *ClaireType ) *ClaireType  { 
     // procedure body with s = type
     var Result *ClaireType  
@@ -1418,7 +1418,7 @@ func E_U_type (x EID,y EID) EID {
     return EID{F_U_type(ToType(OBJ(x)),ToType(OBJ(y)) ).Id(),0}} 
   
 // the Interval construction method has a smart second-order type  - fix on v3.1.06
-/* {1} The go function for: ..(x:integer,y:integer) [status=0] */
+/* The go function for: ..(x:integer,y:integer) [status=0] */
 func F__dot_dot_integer (x int,y int) *ClaireType  { 
     // procedure body with s = type
     var Result *ClaireType  
@@ -1433,7 +1433,7 @@ func F__dot_dot_integer (x int,y int) *ClaireType  {
 func E__dot_dot_integer (x EID,y EID) EID { 
     return EID{F__dot_dot_integer(INT(x),INT(y) ).Id(),0}} 
   
-/* {1} The go function for: _dot_dot_integer_type */
+/* The go function for: _dot_dot_integer_type */
 func F__dot_dot_integer_type (x *ClaireType ,y *ClaireType ) EID { 
     var Result EID 
     var g0170I *ClaireBoolean  
@@ -1517,7 +1517,7 @@ func E__dot_dot_integer_type (x EID,y EID) EID {
     return F__dot_dot_integer_type(ToType(OBJ(x)),ToType(OBJ(y)))} 
   
 // exception
-/* {1} The go function for: but(s:any,x:any) [status=1] */
+/* The go function for: but(s:any,x:any) [status=1] */
 func F_but_any (s *ClaireAny ,x *ClaireAny ) EID { 
     // eid body s = any
     var Result EID 
@@ -1563,7 +1563,7 @@ func F_but_any (s *ClaireAny ,x *ClaireAny ) EID {
 func E_but_any (s EID,x EID) EID { 
     return F_but_any(ANY(s),ANY(x) )} 
   
-/* {1} The go function for: but_any_type */
+/* The go function for: but_any_type */
 func F_but_any_type (s *ClaireType ,x *ClaireType ) EID { 
     var Result EID 
     if (x.Included(ToType(C_list.Id())) == CTRUE) { 
@@ -1581,7 +1581,7 @@ func E_but_any_type (s EID,x EID) EID {
     return F_but_any_type(ToType(OBJ(s)),ToType(OBJ(x)))} 
   
 // a set difference (extended to types, with implicit enumeration)
-/* {1} The go function for: \(x:type,y:type) [status=1] */
+/* The go function for: \(x:type,y:type) [status=1] */
 func F__backslash_type (x *ClaireType ,y *ClaireType ) EID { 
     // eid body s = set
     var Result EID 
@@ -1621,7 +1621,7 @@ func E__backslash_type (x EID,y EID) EID {
 // glb operation ---------------------------------------------------
 // gbl is the extension of the lattice operator ^ for types to type_expressions
 // new in v3.0.60: we reintroduce a glb method
-/* {1} The go function for: glb(x:set,y:type) [status=0] */
+/* The go function for: glb(x:set,y:type) [status=0] */
 func F_glb_set (x *ClaireSet ,y *ClaireType ) *ClaireSet  { 
     // procedure body with s = set
     var Result *ClaireSet  
@@ -1648,7 +1648,7 @@ func F_glb_set (x *ClaireSet ,y *ClaireType ) *ClaireSet  {
 func E_glb_set (x EID,y EID) EID { 
     return EID{F_glb_set(ToSet(OBJ(x)),ToType(OBJ(y)) ).Id(),0}} 
   
-/* {1} The go function for: glb(x:Union,y:type) [status=0] */
+/* The go function for: glb(x:Union,y:type) [status=0] */
 func F_glb_Union (x *ClaireUnion ,y *ClaireType ) *ClaireType  { 
     return  F_U_type(ToType(OBJ(F_CALL(ToProperty(C_glb.Id()),ARGS(EID{x.T1.Id(),0},EID{y.Id(),0})))),ToType(OBJ(F_CALL(ToProperty(C_glb.Id()),ARGS(EID{x.T2.Id(),0},EID{y.Id(),0})))))
     } 
@@ -1657,7 +1657,7 @@ func F_glb_Union (x *ClaireUnion ,y *ClaireType ) *ClaireType  {
 func E_glb_Union (x EID,y EID) EID { 
     return EID{F_glb_Union(To_Union(OBJ(x)),ToType(OBJ(y)) ).Id(),0}} 
   
-/* {1} The go function for: glb(x:Interval,y:type) [status=0] */
+/* The go function for: glb(x:Interval,y:type) [status=0] */
 func F_glb_Interval (x *ClaireInterval ,y *ClaireType ) *ClaireType  { 
     // procedure body with s = type
     var Result *ClaireType  
@@ -1700,7 +1700,7 @@ func F_glb_Interval (x *ClaireInterval ,y *ClaireType ) *ClaireType  {
 func E_glb_Interval (x EID,y EID) EID { 
     return EID{F_glb_Interval(To_Interval(OBJ(x)),ToType(OBJ(y)) ).Id(),0}} 
   
-/* {1} The go function for: glb(x:class,y:type) [status=0] */
+/* The go function for: glb(x:class,y:type) [status=0] */
 func F_glb_class (x *ClaireClass ,y *ClaireType ) *ClaireType  { 
     // procedure body with s = type
     var Result *ClaireType  
@@ -1752,7 +1752,7 @@ func F_glb_class (x *ClaireClass ,y *ClaireType ) *ClaireType  {
 func E_glb_class (x EID,y EID) EID { 
     return EID{F_glb_class(ToClass(OBJ(x)),ToType(OBJ(y)) ).Id(),0}} 
   
-/* {1} The go function for: glb(x:Param,y:type) [status=0] */
+/* The go function for: glb(x:Param,y:type) [status=0] */
 func F_glb_Param (x *ClaireParam ,y *ClaireType ) *ClaireType  { 
     // procedure body with s = type
     var Result *ClaireType  
@@ -1820,7 +1820,7 @@ func E_glb_Param (x EID,y EID) EID {
   
 // notice that a param whose class is a type must use of (only parameter allowed!)
 // the result is a subtype
-/* {1} The go function for: glb(x:subtype,y:type) [status=0] */
+/* The go function for: glb(x:subtype,y:type) [status=0] */
 func F_glb_subtype (x *ClaireSubtype ,y *ClaireType ) *ClaireType  { 
     // procedure body with s = type
     var Result *ClaireType  
@@ -1864,7 +1864,7 @@ func E_glb_subtype (x EID,y EID) EID {
     return EID{F_glb_subtype(ToSubtype(OBJ(x)),ToType(OBJ(y)) ).Id(),0}} 
   
 // set, Interval, list
-/* {1} The go function for: glb(x:tuple,y:type) [status=0] */
+/* The go function for: glb(x:tuple,y:type) [status=0] */
 func F_glb_tuple (x *ClaireTuple ,y *ClaireType ) *ClaireType  { 
     // procedure body with s = type
     var Result *ClaireType  
@@ -1914,7 +1914,7 @@ func E_glb_tuple (x EID,y EID) EID {
     return EID{F_glb_tuple(ToTuple(OBJ(x)),ToType(OBJ(y)) ).Id(),0}} 
   
 // a reference is seen as "any"
-/* {1} The go function for: glb(x:Reference,y:type) [status=0] */
+/* The go function for: glb(x:Reference,y:type) [status=0] */
 func F_glb_Reference (x *ClaireReference ,y *ClaireType ) *ClaireType  { 
     return  y
     } 
@@ -1924,7 +1924,7 @@ func E_glb_Reference (x EID,y EID) EID {
     return EID{F_glb_Reference(To_Reference(OBJ(x)),ToType(OBJ(y)) ).Id(),0}} 
   
 // this will be greatly simplified in a few minutes !
-/* {1} The go function for: ^(x:type,y:type) [status=0] */
+/* The go function for: ^(x:type,y:type) [status=0] */
 func F__exp_type (x *ClaireType ,y *ClaireType ) *ClaireType  { 
     return  ToType(OBJ(F_CALL(ToProperty(C_glb.Id()),ARGS(EID{x.Id(),0},EID{y.Id(),0}))))
     } 
@@ -1934,7 +1934,7 @@ func E__exp_type (x EID,y EID) EID {
     return EID{F__exp_type(ToType(OBJ(x)),ToType(OBJ(y)) ).Id(),0}} 
   
 // the old lattice_glb
-/* {1} The go function for: join(x:class,y:class) [status=0] */
+/* The go function for: join(x:class,y:class) [status=0] */
 func F_join_class (x *ClaireClass ,y *ClaireClass ) *ClaireType  { 
     // procedure body with s = type
     var Result *ClaireType  
@@ -1962,7 +1962,7 @@ func E_join_class (x EID,y EID) EID {
     return EID{F_join_class(ToClass(OBJ(x)),ToClass(OBJ(y)) ).Id(),0}} 
   
 // for lists
-/* {1} The go function for: ^(x:list,y:list) [status=0] */
+/* The go function for: ^(x:list,y:list) [status=0] */
 func F__exp_list (x *ClaireList ,y *ClaireList ) *ClaireList  { 
     // procedure body with s = list
     var Result *ClaireList  
@@ -1996,7 +1996,7 @@ func E__exp_list (x EID,y EID) EID {
     return EID{F__exp_list(ToList(OBJ(x)),ToList(OBJ(y)) ).Id(),0}} 
   
 // a combined union
-/* {1} The go function for: Uall(l:list) [status=0] */
+/* The go function for: Uall(l:list) [status=0] */
 func F_Uall_list (l *ClaireList ) *ClaireType  { 
     // procedure body with s = type
     var Result *ClaireType  
@@ -2025,7 +2025,7 @@ func E_Uall_list (l EID) EID {
 // if we create new types they will be used as patterns, not concrete types.
 // hand-made
 // v4 open coded (link to Included kernel method)
-/* {1} The go function for: <=t(s:type,y:type) [status=0] */
+/* The go function for: <=t(s:type,y:type) [status=0] */
 func F__inf_equalt_type (s *ClaireType ,y *ClaireType ) *ClaireBoolean  { 
     if (s.Included(y) == CTRUE) {return CTRUE
     } else {return CFALSE}} 
@@ -2035,7 +2035,7 @@ func E__inf_equalt_type (s EID,y EID) EID {
     return EID{F__inf_equalt_type(ToType(OBJ(s)),ToType(OBJ(y)) ).Id(),0}} 
   
 // default order for types
-/* {1} The go function for: <=(x:type_expression,y:type_expression) [status=1] */
+/* The go function for: <=(x:type_expression,y:type_expression) [status=1] */
 func F__inf_equal_type_expression (x *ClaireTypeExpression ,y *ClaireTypeExpression ) EID { 
     // eid body s = boolean
     var Result EID 
@@ -2111,7 +2111,7 @@ func E__inf_equal_type_expression (x EID,y EID) EID {
 // membership for types
 // hand-made
 // v4 open coded (link to Contains kernel method)
-/* {1} The go function for: %t(x:any,y:type) [status=0] */
+/* The go function for: %t(x:any,y:type) [status=0] */
 func F_Core__Zt_any (x *ClaireAny ,y *ClaireType ) *ClaireBoolean  { 
     if (y.Contains(x) == CTRUE) {return CTRUE
     } else {return CFALSE}} 
@@ -2121,7 +2121,7 @@ func E_Core__Zt_any (x EID,y EID) EID {
     return EID{F_Core__Zt_any(ANY(x),ToType(OBJ(y)) ).Id(),0}} 
   
 // extensibility for type_expression is through less?, that always returns a value (hence no error returned)
-/* {1} The go function for: less?(x:type_expression,y:type_expression) [status=0] */
+/* The go function for: less?(x:type_expression,y:type_expression) [status=0] */
 func F_less_ask_type_expression (x *ClaireTypeExpression ,y *ClaireTypeExpression ) *ClaireBoolean  { 
     if (CFALSE == CTRUE) {return CTRUE
     } else {return CFALSE}} 
@@ -2136,7 +2136,7 @@ func E_less_ask_type_expression (x EID,y EID) EID {
 // --------------------- extract tuple type information -------------
 // extract a member type, that is a valid type for all members (z) of instances of
 // the type x.This is much simpler in v3.0
-/* {1} The go function for: member(x:type) [status=0] */
+/* The go function for: member(x:type) [status=0] */
 func F_member_type (x *ClaireType ) *ClaireType  { 
     // procedure body with s = type
     var Result *ClaireType  
@@ -2205,7 +2205,7 @@ func E_member_type (x EID) EID {
   
 // a simpler version (projection on bag subtypes)
 // dumb code because it is used early in the bootstrap
-/* {1} The go function for: of_extract(x:type) [status=0] */
+/* The go function for: of_extract(x:type) [status=0] */
 func F_of_extract_type (x *ClaireType ) *ClaireType  { 
     // procedure body with s = type
     var Result *ClaireType  
@@ -2241,7 +2241,7 @@ func E_of_extract_type (x EID) EID {
     return EID{F_of_extract_type(ToType(OBJ(x)) ).Id(),0}} 
   
 // useful type functions for the compiler
-/* {1} The go function for: unique?(x:type) [status=0] */
+/* The go function for: unique?(x:type) [status=0] */
 func F_unique_ask_type (x *ClaireType ) *ClaireBoolean  { 
     // procedure body with s = boolean
     var Result *ClaireBoolean  
@@ -2263,7 +2263,7 @@ func E_unique_ask_type (x EID) EID {
     return EID{F_unique_ask_type(ToType(OBJ(x)) ).Id(),0}} 
   
 // returns the unique element of the type
-/* {1} The go function for: the(x:type) [status=1] */
+/* The go function for: the(x:type) [status=1] */
 func F_the_type (x *ClaireType ) EID { 
     // eid body s = any
     var Result EID 
@@ -2292,7 +2292,7 @@ func E_the_type (x EID) EID {
   
 // bitvector made easy
 // v0.01: should not use set[0 .. 29] => burden on caller is too heavy
-/* {1} The go function for: integer!(s:set[integer]) [status=1] */
+/* The go function for: integer!(s:set[integer]) [status=1] */
 func F_integer_I_set (s *ClaireSet ) EID { 
     // eid body s = integer
     var Result EID 
@@ -2345,7 +2345,7 @@ func F_integer_I_set (s *ClaireSet ) EID {
 func E_integer_I_set (s EID) EID { 
     return F_integer_I_set(ToSet(OBJ(s)) )} 
   
-/* {1} The go function for: make_set(x:integer) [status=0] */
+/* The go function for: make_set(x:integer) [status=0] */
 func F_make_set_integer (x int) *ClaireSet  { 
     // procedure body with s = set
     var Result *ClaireSet  
@@ -2369,7 +2369,7 @@ func E_make_set_integer (x EID) EID {
     return EID{F_make_set_integer(INT(x) ).Id(),0}} 
   
 // asbtract coercion of a set into an interval
-/* {1} The go function for: abstract_type(xt1:set) [status=0] */
+/* The go function for: abstract_type(xt1:set) [status=0] */
 func F_abstract_type_set (xt1 *ClaireSet ) *ClaireType  { 
     // procedure body with s = type
     var Result *ClaireType  
@@ -2411,7 +2411,7 @@ func E_abstract_type_set (xt1 EID) EID {
     return EID{F_abstract_type_set(ToSet(OBJ(xt1)) ).Id(),0}} 
   
 // abstract interpretation of integer arithmetique
-/* {1} The go function for: abstract_type(p:operation,xt1:type,xt2:type) [status=0] */
+/* The go function for: abstract_type(p:operation,xt1:type,xt2:type) [status=0] */
 func F_abstract_type_operation (p *ClaireOperation ,xt1 *ClaireType ,xt2 *ClaireType ) *ClaireType  { 
     // procedure body with s = type
     var Result *ClaireType  
@@ -2466,7 +2466,7 @@ func E_abstract_type_operation (p EID,xt1 EID,xt2 EID) EID {
   
 // we create some types that we need
 // a useful second ortder type
-/* {1} The go function for: first_arg_type(x:type,y:type) [status=0] */
+/* The go function for: first_arg_type(x:type,y:type) [status=0] */
 func F_first_arg_type_type (x *ClaireType ,y *ClaireType ) *ClaireType  { 
     return  x
     } 
@@ -2475,7 +2475,7 @@ func F_first_arg_type_type (x *ClaireType ,y *ClaireType ) *ClaireType  {
 func E_first_arg_type_type (x EID,y EID) EID { 
     return EID{F_first_arg_type_type(ToType(OBJ(x)),ToType(OBJ(y)) ).Id(),0}} 
   
-/* {1} The go function for: first_arg_type(x:type,y:type,z:type) [status=0] */
+/* The go function for: first_arg_type(x:type,y:type,z:type) [status=0] */
 func F_first_arg_type_type2 (x *ClaireType ,y *ClaireType ,z *ClaireType ) *ClaireType  { 
     return  x
     } 
@@ -2484,7 +2484,7 @@ func F_first_arg_type_type2 (x *ClaireType ,y *ClaireType ,z *ClaireType ) *Clai
 func E_first_arg_type_type2 (x EID,y EID,z EID) EID { 
     return EID{F_first_arg_type_type2(ToType(OBJ(x)),ToType(OBJ(y)),ToType(OBJ(z)) ).Id(),0}} 
   
-/* {1} The go function for: second_arg_type(x:type,y:type) [status=0] */
+/* The go function for: second_arg_type(x:type,y:type) [status=0] */
 func F_second_arg_type_type (x *ClaireType ,y *ClaireType ) *ClaireType  { 
     return  y
     } 
@@ -2493,7 +2493,7 @@ func F_second_arg_type_type (x *ClaireType ,y *ClaireType ) *ClaireType  {
 func E_second_arg_type_type (x EID,y EID) EID { 
     return EID{F_second_arg_type_type(ToType(OBJ(x)),ToType(OBJ(y)) ).Id(),0}} 
   
-/* {1} The go function for: meet_arg_types(x:type,y:type) [status=0] */
+/* The go function for: meet_arg_types(x:type,y:type) [status=0] */
 func F_meet_arg_types_type (x *ClaireType ,y *ClaireType ) *ClaireType  { 
     return  F_U_type(x,y)
     } 
@@ -2502,7 +2502,7 @@ func F_meet_arg_types_type (x *ClaireType ,y *ClaireType ) *ClaireType  {
 func E_meet_arg_types_type (x EID,y EID) EID { 
     return EID{F_meet_arg_types_type(ToType(OBJ(x)),ToType(OBJ(y)) ).Id(),0}} 
   
-/* {1} The go function for: first_member_type(x:type,y:type) [status=0] */
+/* The go function for: first_member_type(x:type,y:type) [status=0] */
 func F_first_member_type_type (x *ClaireType ,y *ClaireType ) *ClaireType  { 
     return  F_member_type(x)
     } 
@@ -2513,7 +2513,7 @@ func E_first_member_type_type (x EID,y EID) EID {
   
 // v3.3.10
 // nth@bag (list / set) is now in Kernel (CLAIRE4)
-/* {1} The go function for: nth_arg_type(x:type,y:type) [status=1] */
+/* The go function for: nth_arg_type(x:type,y:type) [status=1] */
 func F_Core_nth_arg_type_type (x *ClaireType ,y *ClaireType ) EID { 
     // eid body s = type
     var Result EID 
@@ -2538,7 +2538,7 @@ func E_Core_nth_arg_type_type (x EID,y EID) EID {
     return F_Core_nth_arg_type_type(ToType(OBJ(x)),ToType(OBJ(y)) )} 
   
 // we place here all methods that require second order types !!!!
-/* {1} The go function for: nth_get(a:array,n:integer) [status=0] */
+/* The go function for: nth_get(a:array,n:integer) [status=0] */
 func F_nth_get_array (a *ClaireList ,n int) *ClaireAny  { 
     return  ToList(a.Id()).At(n-1)
     } 
@@ -2547,7 +2547,7 @@ func F_nth_get_array (a *ClaireList ,n int) *ClaireAny  {
 func E_nth_get_array (a EID,n EID) EID { 
     return F_nth_get_array(ToArray(OBJ(a)),INT(n) ).ToEID()} 
   
-/* {1} The go function for: nth_get_array_type */
+/* The go function for: nth_get_array_type */
 func F_nth_get_array_type (a *ClaireType ,n *ClaireType ) EID { 
     var Result EID 
     Result = EID{F_member_type(a).Id(),0}
@@ -2559,7 +2559,7 @@ func E_nth_get_array_type (a EID,n EID) EID {
     return F_nth_get_array_type(ToType(OBJ(a)),ToType(OBJ(n)))} 
   
 // managed by cross-compiler ?
-/* {1} The go function for: nth(self:array,x:integer) [status=1] */
+/* The go function for: nth(self:array,x:integer) [status=1] */
 func F_nth_array (self *ClaireList ,x int) EID { 
     // eid body s = any
     var Result EID 
@@ -2575,7 +2575,7 @@ func F_nth_array (self *ClaireList ,x int) EID {
 func E_nth_array (self EID,x EID) EID { 
     return F_nth_array(ToArray(OBJ(self)),INT(x) )} 
   
-/* {1} The go function for: nth_array_type */
+/* The go function for: nth_array_type */
 func F_nth_array_type (self *ClaireType ,x *ClaireType ) EID { 
     var Result EID 
     Result = EID{F_member_type(self).Id(),0}
@@ -2586,7 +2586,7 @@ func F_nth_array_type (self *ClaireType ,x *ClaireType ) EID {
 func E_nth_array_type (self EID,x EID) EID { 
     return F_nth_array_type(ToType(OBJ(self)),ToType(OBJ(x)))} 
   
-/* {1} The go function for: make_array_integer_type */
+/* The go function for: make_array_integer_type */
 func F_make_array_integer_type (i *ClaireType ,t *ClaireType ,v *ClaireType ) EID { 
     var Result EID 
     if (F_unique_ask_type(t) == CTRUE) { 
@@ -2609,7 +2609,7 @@ func F_make_array_integer_type (i *ClaireType ,t *ClaireType ,v *ClaireType ) EI
 func E_make_array_integer_type (i EID,t EID,v EID) EID { 
     return F_make_array_integer_type(ToType(OBJ(i)),ToType(OBJ(t)),ToType(OBJ(v)))} 
   
-/* {1} The go function for: make_list(n:integer,t:type,x:any) [status=0] */
+/* The go function for: make_list(n:integer,t:type,x:any) [status=0] */
 func F_make_list_integer2 (n int,t *ClaireType ,x *ClaireAny ) *ClaireList  { 
     return  ToList(F_make_list_integer(n,x).Cast_I(t).Id())
     } 
@@ -2618,7 +2618,7 @@ func F_make_list_integer2 (n int,t *ClaireType ,x *ClaireAny ) *ClaireList  {
 func E_make_list_integer2 (n EID,t EID,x EID) EID { 
     return EID{F_make_list_integer2(INT(n),ToType(OBJ(t)),ANY(x) ).Id(),0}} 
   
-/* {1} The go function for: make_list_integer2_type */
+/* The go function for: make_list_integer2_type */
 func F_make_list_integer2_type (n *ClaireType ,t *ClaireType ,x *ClaireType ) EID { 
     var Result EID 
     if (F_unique_ask_type(t) == CTRUE) { 
@@ -2641,7 +2641,7 @@ func F_make_list_integer2_type (n *ClaireType ,t *ClaireType ,x *ClaireType ) EI
 func E_make_list_integer2_type (n EID,t EID,x EID) EID { 
     return F_make_list_integer2_type(ToType(OBJ(n)),ToType(OBJ(t)),ToType(OBJ(x)))} 
   
-/* {1} The go function for: make_set(self:array[of:(any)]) [status=0] */
+/* The go function for: make_set(self:array[of:(any)]) [status=0] */
 func F_make_set_array (self *ClaireList ) *ClaireSet  { 
     return  F_list_I_array(self).Set_I()
     } 
@@ -2650,7 +2650,7 @@ func F_make_set_array (self *ClaireList ) *ClaireSet  {
 func E_make_set_array (self EID) EID { 
     return EID{F_make_set_array(ToArray(OBJ(self)) ).Id(),0}} 
   
-/* {1} The go function for: make_set_array_type */
+/* The go function for: make_set_array_type */
 func F_make_set_array_type (self *ClaireType ) EID { 
     var Result EID 
     if (F_member_type(self.At(C_of)).Id() == C_any.Id()) { 
@@ -2667,7 +2667,7 @@ func E_make_set_array_type (self EID) EID {
   
 // these four functions are defined in Core with Kernel functions because we want to
 // add second order types
-/* {1} The go function for: list_I_array_type */
+/* The go function for: list_I_array_type */
 func F_list_I_array_type (a *ClaireType ) EID { 
     var Result EID 
     if (F_member_type(a.At(C_of)).Id() == C_any.Id()) { 
@@ -2682,7 +2682,7 @@ func F_list_I_array_type (a *ClaireType ) EID {
 func E_list_I_array_type (a EID) EID { 
     return F_list_I_array_type(ToType(OBJ(a)))} 
   
-/* {1} The go function for: array_I_list_type */
+/* The go function for: array_I_list_type */
 func F_array_I_list_type (a *ClaireType ) EID { 
     var Result EID 
     if (F_member_type(a.At(C_of)).Id() == C_any.Id()) { 
@@ -2698,7 +2698,7 @@ func E_array_I_list_type (a EID) EID {
     return F_array_I_list_type(ToType(OBJ(a)))} 
   
 // v3.0.72
-/* {1} The go function for: set_I_list_type */
+/* The go function for: set_I_list_type */
 func F_set_I_list_type (l *ClaireType ) EID { 
     var Result EID 
     if (F_member_type(l.At(C_of)).Id() == C_any.Id()) { 
@@ -2713,7 +2713,7 @@ func F_set_I_list_type (l *ClaireType ) EID {
 func E_set_I_list_type (l EID) EID { 
     return F_set_I_list_type(ToType(OBJ(l)))} 
   
-/* {1} The go function for: list_I_set_type */
+/* The go function for: list_I_set_type */
 func F_list_I_set_type (l *ClaireType ) EID { 
     var Result EID 
     if (F_member_type(l.At(C_of)).Id() == C_any.Id()) { 
@@ -2729,7 +2729,7 @@ func E_list_I_set_type (l EID) EID {
     return F_list_I_set_type(ToType(OBJ(l)))} 
   
 // get the type from class if a constant
-/* {1} The go function for: thing_type_class(x:type,y:type) [status=0] */
+/* The go function for: thing_type_class(x:type,y:type) [status=0] */
 func F_Core_thing_type_class_type2 (x *ClaireType ,y *ClaireType ) *ClaireType  { 
     return  F_glb_class(C_thing,F_member_type(x))
     } 
@@ -2738,7 +2738,7 @@ func F_Core_thing_type_class_type2 (x *ClaireType ,y *ClaireType ) *ClaireType  
 func E_Core_thing_type_class_type2 (x EID,y EID) EID { 
     return EID{F_Core_thing_type_class_type2(ToType(OBJ(x)),ToType(OBJ(y)) ).Id(),0}} 
   
-/* {1} The go function for: object_type_class(x:type) [status=0] */
+/* The go function for: object_type_class(x:type) [status=0] */
 func F_Core_object_type_class_type (x *ClaireType ) *ClaireType  { 
     return  F_glb_class(C_object,F_member_type(x))
     } 

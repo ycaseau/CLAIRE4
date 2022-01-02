@@ -1,5 +1,5 @@
 /***** CLAIRE Compilation of file /Users/ycaseau/Dropbox/src/clairev4.03/src/compile/goexp.cl 
-         [version 4.0.04 / safety 5] Wednesday 12-29-2021 08:55:19 *****/
+         [version 4.0.04 / safety 5] Saturday 01-01-2022 16:47:21 *****/
 
 package Generate
 import (_ "fmt"
@@ -2303,7 +2303,7 @@ func F_Generate_inline_exp_go_producer4 (c *GenerateGoProducer ,self *Language.C
               Result = EVOID
               }}}
               }  else if ((m.Selector.Id() == C_add_slot.Id()) && 
-                (C_class.Id() == Core.F_owner_any(F_Generate_getC_any(a1)).Id())) { 
+                (C_class.Id() == a1.Isa.Id())) { 
               F_Generate_preCore_ask_void()
               PRINC("F_close_slot(")
               Result = Core.F_CALL(C_Generate_g_expression,ARGS(a1.ToEID(),EID{C_class.Id(),0}))

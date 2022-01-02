@@ -33,7 +33,7 @@ iClaire/index :: mClaire/index
 self_print(self:unbound_symbol) : void
    -> printf("~A", self.name)
 self_eval(self:unbound_symbol) : any
-   -> (if (get(self.name) % thing)  eval(get(self.name))
+   -> (if (value(self.name) % thing)  eval(value(self.name))
        else error("[145] the symbol ~A is unbound",  self.name))
 
 // A lexical variable is defined by a "Let" or inside a method's definition
@@ -164,7 +164,7 @@ lexical_build(self:any,lvar:list,n:integer) : any
                         (put(selector, self, call),
                          put(args, self, s cons self.args))),
              Instruction let %type:class := self.isa in
-                           (if (%type % Instruction_with_var.descendents)
+                           (if (%type % Instruction_with_var.descendants)
                                (put(index, self.var, n),
                                 n := n + 1,
                                 if (n > *variable_index*)
@@ -219,7 +219,7 @@ make_a_property(self:any) : property
  -> (case self
       (global_variable make_a_property(value(self)),
        property self,
-       symbol let x := get(self) in
+       symbol let x := value(self) in
                (case x (property make_a_property(x),
                         global_variable  make_a_property(value(x)),
                         any  let p := (mClaire/new!(property, self) as property) in

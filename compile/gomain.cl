@@ -47,6 +47,7 @@
     printf("        -f <filename>  : load <filename>             \n"),
     printf("        -n : do not load the init file               \n"),
     printf("        -m <module> : load <module>                  \n"),
+    printf("        -mx <module> : load <module> and launch main()  \n"),
     printf("        -v <int> : sets the verbosity level       \n"),
     printf("        -S <flag> : sets the global variable <flag> to true  \n"),
     printf("        -o <name> : sets the name of the executable  \n"),
@@ -55,9 +56,12 @@
     printf("        -D : debug mode                              \n"),
     printf("        -safe : safe mode                            \n"),
     printf("        -O : optimizing mode                         \n"),
+    printf("        -O2 : super optimizing mode  (no bound checks)      \n"),
     printf("        -cm <module>: compiles a module -> executable        \n"),
     printf("        -cc <module>: compiles a module -> target go files      \n"),
-    printf("        -cx <module> : generates system file associated to a module \n"),
+    printf("        -cx <module> : compiles a module & launch main() \n"),
+    printf("         -sf <module> : generates system file associated to a module \n"),
+    printf("         -sx <module> : generates system file that includes main() \n"),
     exit(0) ]
 
 

@@ -1,5 +1,5 @@
 /***** CLAIRE Compilation of file /Users/ycaseau/Dropbox/src/clairev4.03/src/meta/read.cl 
-         [version 4.0.03 / safety 5] Wednesday 12-29-2021 08:34:14 *****/
+         [version 4.0.04 / safety 5] Saturday 01-01-2022 16:47:18 *****/
 
 package Reader
 import (_ "fmt"
@@ -38,7 +38,7 @@ func import_g0000() {
 // global definitions
 // *arrow*:boolean :: false
 // here we define the basic keywords
-/* {1} The go function for: keyword?(x:any) [status=0] */
+/* The go function for: keyword?(x:any) [status=0] */
 func F_keyword_ask_any (x *ClaireAny ) *ClaireBoolean  { 
     if (x.Isa.IsIn(C_reserved_keyword) == CTRUE) {return CTRUE
     } else {return CFALSE}} 
@@ -58,7 +58,7 @@ func E_keyword_ask_any (x EID) EID {
 // these are the two low level functions found in the Kernel - with a direct import pattern :)
 // for old historical reasons, the reader code uses integers and the macro pattern #/a
 // we could re-write everything using char now that char are natives (rune)
-/* {1} The go function for: next(r:meta_reader) [status=0] */
+/* The go function for: next(r:meta_reader) [status=0] */
 func (r *MetaReader ) Next ()  { 
     // procedure body with s = void
     r.Fromp.GetNext()
@@ -69,7 +69,7 @@ func E_next_meta_reader (r EID) EID {
     ToMetaReader(OBJ(r)).Next( )
     return EVOID} 
   
-/* {1} The go function for: firstc(r:meta_reader) [status=0] */
+/* The go function for: firstc(r:meta_reader) [status=0] */
 func (r *MetaReader ) Firstc () int { 
     return  r.Fromp.CharInt()
     } 
@@ -79,7 +79,7 @@ func E_firstc_meta_reader (r EID) EID {
     return EID{C__INT,IVAL(ToMetaReader(OBJ(r)).Firstc( ))}} 
   
 // when to stop
-/* {1} The go function for: stop?(n:integer) [status=0] */
+/* The go function for: stop?(n:integer) [status=0] */
 func F_stop_ask_integer (n int) *ClaireAny  { 
     return  MakeBoolean((n == 44) || (n == 41) || (n == 93) || (n == 125)).Id()
     } 
@@ -90,7 +90,7 @@ func E_stop_ask_integer (n EID) EID {
   
 // read the next unit (definition, block or expression)
 //
-/* {1} The go function for: nextunit(r:meta_reader) [status=1] */
+/* The go function for: nextunit(r:meta_reader) [status=1] */
 func (r *MetaReader ) Nextunit () EID { 
     // eid body s = any
     var Result EID 
@@ -349,7 +349,7 @@ func E_nextunit_meta_reader (r EID) EID {
 // by testing stop?(first(r))
 // Note: it actually reads a fragment
 //
-/* {1} The go function for: nexts(r:meta_reader,e:keyword) [status=1] */
+/* The go function for: nexts(r:meta_reader,e:keyword) [status=1] */
 func (r *MetaReader ) Nexts (e *ClaireKeyword ) EID { 
     // eid body s = any
     var Result EID 
@@ -424,7 +424,7 @@ func E_nexts_meta_reader (r EID,e EID) EID {
   
 // loops until the right expression is built (ends with e ',', '}' or ')')
 // x is the first expression that was read
-/* {1} The go function for: loopexp(r:meta_reader,x:any,e:keyword,loop:boolean) [status=1] */
+/* The go function for: loopexp(r:meta_reader,x:any,e:keyword,loop:boolean) [status=1] */
 func (r *MetaReader ) Loopexp (x *ClaireAny ,e *ClaireKeyword ,loop *ClaireBoolean ) EID { 
     // eid body s = any
     var Result EID 
@@ -627,7 +627,7 @@ func E_loopexp_meta_reader (r EID,x EID,e EID,loop EID) EID {
       ToBoolean(OBJ(loop)) )} 
   
 // this is the special form for x :op y - new in v3.3.32
-/* {1} The go function for: extended_operator(p:property,x:any,y:any) [status=1] */
+/* The go function for: extended_operator(p:property,x:any,y:any) [status=1] */
 func F_extended_operator_property (p *ClaireProperty ,x *ClaireAny ,y *ClaireAny ) EID { 
     // eid body s = any
     var Result EID 
@@ -724,7 +724,7 @@ func E_extended_operator_property (p EID,x EID,y EID) EID {
 // **********************************************************************
 // reading the next compact expression - comments are ignored but they can
 // be attached to the last read expression
-/* {1} The go function for: nexte(r:meta_reader) [status=1] */
+/* The go function for: nexte(r:meta_reader) [status=1] */
 func (r *MetaReader ) Nexte () EID { 
     // eid body s = any
     var Result EID 
@@ -749,7 +749,7 @@ func E_nexte_meta_reader (r EID) EID {
 // v3.3
 // reading the next compact expression/ same
 //
-/* {1} The go function for: nextexp(r:meta_reader,str:boolean) [status=1] */
+/* The go function for: nextexp(r:meta_reader,str:boolean) [status=1] */
 func (r *MetaReader ) Nextexp (str *ClaireBoolean ) EID { 
     // eid body s = any
     var Result EID 
@@ -967,7 +967,7 @@ func E_nextexp_meta_reader (r EID,str EID) EID {
     return ToMetaReader(OBJ(r)).Nextexp(ToBoolean(OBJ(str)) )} 
   
 // extended in CLAIRE4: reads the x[y] patterns
-/* {1} The go function for: readbracket(r:meta_reader,x:any) [status=1] */
+/* The go function for: readbracket(r:meta_reader,x:any) [status=1] */
 func (r *MetaReader ) Readbracket (x *ClaireAny ) EID { 
     // eid body s = any
     var Result EID 
@@ -993,7 +993,7 @@ func E_Reader_readbracket_meta_reader (r EID,x EID) EID {
     return ToMetaReader(OBJ(r)).Readbracket(ANY(x) )} 
   
 // new in CLAIRE4: reads map<t1,t2>(pairs*)
-/* {1} The go function for: readmap(r:meta_reader) [status=1] */
+/* The go function for: readmap(r:meta_reader) [status=1] */
 func (r *MetaReader ) Readmap () EID { 
     // eid body s = Map
     var Result EID 
@@ -1125,7 +1125,7 @@ func E_Reader_readmap_meta_reader (r EID) EID {
     return ToMetaReader(OBJ(r)).Readmap( )} 
   
 // returns to the original form from which the Vardef was created (name -> symbol)
-/* {1} The go function for: revVar(x:Vardef) [status=0] */
+/* The go function for: revVar(x:Vardef) [status=0] */
 func F_Reader_revVar_Vardef (x *Language.Vardef ) *ClaireAny  { 
     // procedure body with s = any
     var Result *ClaireAny  
@@ -1149,7 +1149,7 @@ func E_Reader_revVar_Vardef (x EID) EID {
   
 // reads a compact expression that starts with an ident
 //
-/* {1} The go function for: nexti(r:meta_reader,val:any) [status=1] */
+/* The go function for: nexti(r:meta_reader,val:any) [status=1] */
 func (r *MetaReader ) Nexti (val *ClaireAny ) EID { 
     // eid body s = any
     var Result EID 
@@ -1451,7 +1451,7 @@ func E_nexti_meta_reader (r EID,val EID) EID {
   
 // we have read the escape character #
 //
-/* {1} The go function for: read_escape(r:meta_reader) [status=1] */
+/* The go function for: read_escape(r:meta_reader) [status=1] */
 func (r *MetaReader ) ReadEscape () EID { 
     // eid body s = any
     var Result EID 
@@ -1505,7 +1505,7 @@ func E_read_escape_meta_reader (r EID) EID {
 // in CLAIRE4: we record the use of classes from other modules, to trigger the do_import pragma
 // note : this is not enough, hence the pragma may need to be setup manually
 // we could add explicit casts ...
-/* {1} The go function for: nextvariable(r:meta_reader,val:any) [status=1] */
+/* The go function for: nextvariable(r:meta_reader,val:any) [status=1] */
 func (r *MetaReader ) Nextvariable (val *ClaireAny ) EID { 
     // eid body s = any
     var Result EID 
@@ -1549,7 +1549,7 @@ func E_nextvariable_meta_reader (r EID,val EID) EID {
   
 // reads an expression, then the exact keyword e
 //
-/* {1} The go function for: nexts!(r:meta_reader,e:keyword) [status=1] */
+/* The go function for: nexts!(r:meta_reader,e:keyword) [status=1] */
 func F_nexts_I_meta_reader1 (r *MetaReader ,e *ClaireKeyword ) EID { 
     // eid body s = any
     var Result EID 
@@ -1574,7 +1574,7 @@ func E_nexts_I_meta_reader1 (r EID,e EID) EID {
   
 // reads an expression, then the exact keyword e
 //
-/* {1} The go function for: nexte!(r:meta_reader,e:keyword) [status=1] */
+/* The go function for: nexte!(r:meta_reader,e:keyword) [status=1] */
 func (r *MetaReader ) Nexte_I (e *ClaireKeyword ) EID { 
     // eid body s = any
     var Result EID 
@@ -1613,7 +1613,7 @@ func E_nexte_I_meta_reader (r EID,e EID) EID {
     return ToMetaReader(OBJ(r)).Nexte_I(ToKeyword(OBJ(e)) )} 
   
 // ... exact separator
-/* {1} The go function for: nexts!(r:meta_reader,e:integer) [status=1] */
+/* The go function for: nexts!(r:meta_reader,e:integer) [status=1] */
 func F_nexts_I_meta_reader2 (r *MetaReader ,e int) EID { 
     // eid body s = any
     var Result EID 
@@ -1639,7 +1639,7 @@ func E_nexts_I_meta_reader2 (r EID,e EID) EID {
   
 // ... keyword e or separator n. DOES NOT SKIP the last character
 //
-/* {1} The go function for: nexts!(r:meta_reader,e:keyword,n:integer) [status=1] */
+/* The go function for: nexts!(r:meta_reader,e:keyword,n:integer) [status=1] */
 func F_nexts_I_meta_reader3 (r *MetaReader ,e *ClaireKeyword ,n int) EID { 
     // eid body s = any
     var Result EID 
@@ -1665,7 +1665,7 @@ func E_nexts_I_meta_reader3 (r EID,e EID,n EID) EID {
   
 // checks if s is an extended comment
 //
-/* {1} The go function for: extended_comment?(r:meta_reader,s:string) [status=0] */
+/* The go function for: extended_comment?(r:meta_reader,s:string) [status=0] */
 func (r *MetaReader ) ExtendedComment_ask (s *ClaireString ) *ClaireBoolean  { 
     // procedure body with s = boolean
     var Result *ClaireBoolean  
@@ -1700,7 +1700,7 @@ func E_extended_comment_ask_meta_reader (r EID,s EID) EID {
   
 // produce the equivalent extended comment
 //
-/* {1} The go function for: extended_comment!(r:meta_reader,s:string) [status=1] */
+/* The go function for: extended_comment!(r:meta_reader,s:string) [status=1] */
 func (r *MetaReader ) ExtendedComment_I (s *ClaireString ) EID { 
     // eid body s = any
     var Result EID 

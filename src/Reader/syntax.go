@@ -1,5 +1,5 @@
 /***** CLAIRE Compilation of file /Users/ycaseau/Dropbox/src/clairev4.03/src/meta/syntax.cl 
-         [version 4.0.03 / safety 5] Wednesday 12-29-2021 08:34:14 *****/
+         [version 4.0.04 / safety 5] Saturday 01-01-2022 16:47:18 *****/
 
 package Reader
 import (_ "fmt"
@@ -36,7 +36,7 @@ func import_g0039() {
 // **********************************************************************
 // who is an operation?
 //
-/* {1} The go function for: operation?(y:any) [status=0] */
+/* The go function for: operation?(y:any) [status=0] */
 func F_operation_ask_any (y *ClaireAny ) *ClaireBoolean  { 
     if ((y == C_as.Id()) || 
         ((y == C_L__equal.Id()) || 
@@ -52,7 +52,7 @@ func E_operation_ask_any (y EID) EID {
   
 // produce an expression from an operation
 // apply precedence rules ((x1 op x2) y  z) -> x1 op (x2 y z)
-/* {1} The go function for: combine(x:any,y:any,z:any) [status=1] */
+/* The go function for: combine(x:any,y:any,z:any) [status=1] */
 func F_combine_any (x *ClaireAny ,y *ClaireAny ,z *ClaireAny ) EID { 
     // eid body s = any
     var Result EID 
@@ -96,7 +96,7 @@ func E_combine_any (x EID,y EID,z EID) EID {
   
 // produces x op=y z
 // replace r(x) :add y with add(r,x,y) for multivalued or defeasible .. also with delete
-/* {1} The go function for: combine!(x:any,y:any,z:any) [status=1] */
+/* The go function for: combine!(x:any,y:any,z:any) [status=1] */
 func F_combine_I_any (x *ClaireAny ,y *ClaireAny ,z *ClaireAny ) EID { 
     // eid body s = any
     var Result EID 
@@ -365,7 +365,7 @@ func E_combine_I_any (x EID,y EID,z EID) EID {
 // Call* says that combining is OK
 // allows to treats Calls, Assigns, Gassign in an homogeneous way
 // return false if the pattern is not (x OP y) and OP otherwise
-/* {1} The go function for: operation!(x:any) [status=0] */
+/* The go function for: operation!(x:any) [status=0] */
 func F_operation_I_any (x *ClaireAny ) *ClaireAny  { 
     // procedure body with s = any
     var Result *ClaireAny  
@@ -402,7 +402,7 @@ func E_operation_I_any (x EID) EID {
     return F_operation_I_any(ANY(x) ).ToEID()} 
   
 // extract the two operands from an expression x such that operation!(x) != false
-/* {1} The go function for: operand!(x:any,n:integer) [status=1] */
+/* The go function for: operand!(x:any,n:integer) [status=1] */
 func F_operand_I_any (x *ClaireAny ,n int) EID { 
     // eid body s = any
     var Result EID 
@@ -509,7 +509,7 @@ func E_operand_I_any (x EID,n EID) EID {
   
 // precedence
 //
-/* {1} The go function for: precedence!(y:any) [status=0] */
+/* The go function for: precedence!(y:any) [status=0] */
 func F_precedence_I_any (y *ClaireAny ) int { 
     if (y == C_as.Id()) { 
       return  0
@@ -531,7 +531,7 @@ func E_precedence_I_any (y EID) EID {
 // **********************************************************************
 // *   Part 2: read control structures                                  *
 // **********************************************************************
-/* {1} The go function for: nextstruct(r:meta_reader,%first:keyword,e:keyword) [status=1] */
+/* The go function for: nextstruct(r:meta_reader,%first:keyword,e:keyword) [status=1] */
 func (r *MetaReader ) Nextstruct (_Zfirst *ClaireKeyword ,e *ClaireKeyword ) EID { 
     // eid body s = any
     var Result EID 
@@ -707,7 +707,7 @@ func E_nextstruct_meta_reader (r EID,_Zfirst EID,e EID) EID {
   
 // reads a let expression
 //
-/* {1} The go function for: readlet(r:meta_reader,e:keyword) [status=1] */
+/* The go function for: readlet(r:meta_reader,e:keyword) [status=1] */
 func (r *MetaReader ) Readlet (e *ClaireKeyword ) EID { 
     // eid body s = any
     var Result EID 
@@ -924,7 +924,7 @@ func E_readlet_meta_reader (r EID,e EID) EID {
   
 // recursive construction of the tail of a Let*
 //
-/* {1} The go function for: readlet*(r:meta_reader,l:list,n:integer,e:keyword) [status=1] */
+/* The go function for: readlet*(r:meta_reader,l:list,n:integer,e:keyword) [status=1] */
 func (r *MetaReader ) Readlet_star (l *ClaireList ,n int,e *ClaireKeyword ) EID { 
     // eid body s = any
     var Result EID 
@@ -979,7 +979,7 @@ func E_readlet_star_meta_reader (r EID,l EID,n EID,e EID) EID {
   
 // reads a when expression
 //
-/* {1} The go function for: readwhen(r:meta_reader,e:keyword) [status=1] */
+/* The go function for: readwhen(r:meta_reader,e:keyword) [status=1] */
 func (r *MetaReader ) Readwhen (e *ClaireKeyword ) EID { 
     // eid body s = any
     var Result EID 
@@ -1055,7 +1055,7 @@ func E_readwhen_meta_reader (r EID,e EID) EID {
   
 // read an if
 //
-/* {1} The go function for: readif(r:meta_reader,e:integer) [status=1] */
+/* The go function for: readif(r:meta_reader,e:integer) [status=1] */
 func (r *MetaReader ) Readif (e int) EID { 
     // eid body s = any
     var Result EID 
@@ -1111,7 +1111,7 @@ func E_readif_meta_reader (r EID,e EID) EID {
   
 // reads a member_of
 //
-/* {1} The go function for: readcase(r:meta_reader,e:keyword) [status=1] */
+/* The go function for: readcase(r:meta_reader,e:keyword) [status=1] */
 func (r *MetaReader ) Readcase (e *ClaireKeyword ) EID { 
     // eid body s = any
     var Result EID 
@@ -1265,7 +1265,7 @@ func E_readcase_meta_reader (r EID,e EID) EID {
   
 // if the expression begins with "{"
 //
-/* {1} The go function for: readset(r:meta_reader,%a1:any) [status=1] */
+/* The go function for: readset(r:meta_reader,%a1:any) [status=1] */
 func (r *MetaReader ) Readset (_Za1 *ClaireAny ) EID { 
     // eid body s = any
     var Result EID 
@@ -1517,7 +1517,7 @@ func (r *MetaReader ) Readset (_Za1 *ClaireAny ) EID {
 func E_readset_meta_reader (r EID,_Za1 EID) EID { 
     return ToMetaReader(OBJ(r)).Readset(ANY(_Za1) )} 
   
-/* {1} The go function for: dereference(x:any) [status=1] */
+/* The go function for: dereference(x:any) [status=1] */
 func F_dereference_any (x *ClaireAny ) EID { 
     // eid body s = any
     var Result EID 
@@ -1540,7 +1540,7 @@ func E_dereference_any (x EID) EID {
   
 // reads a sequence of exp. Must end with a e = ) | ] | }
 //
-/* {1} The go function for: nextseq(r:meta_reader,e:integer) [status=1] */
+/* The go function for: nextseq(r:meta_reader,e:integer) [status=1] */
 func (r *MetaReader ) Nextseq (e int) EID { 
     // eid body s = any
     var Result EID 
@@ -1588,7 +1588,7 @@ func E_nextseq_meta_reader (r EID,e EID) EID {
   
 // read the next block: a sequence of exp. Must end with a e = ) | ] | }
 //
-/* {1} The go function for: readblock(r:meta_reader,x:any,e:integer) [status=1] */
+/* The go function for: readblock(r:meta_reader,x:any,e:integer) [status=1] */
 func (r *MetaReader ) Readblock (x *ClaireAny ,e int) EID { 
     // eid body s = any
     var Result EID 
@@ -1700,7 +1700,7 @@ func E_readblock_meta_reader (r EID,x EID,e EID) EID {
     return ToMetaReader(OBJ(r)).Readblock(ANY(x),INT(e) )} 
   
 // variant in CLAIRE4 when e = ), which can also read a lambda
-/* {1} The go function for: readList(r:meta_reader,x:any) [status=1] */
+/* The go function for: readList(r:meta_reader,x:any) [status=1] */
 func (r *MetaReader ) ReadList (x *ClaireAny ) EID { 
     // eid body s = any
     var Result EID 
@@ -1725,7 +1725,7 @@ func E_Reader_readList_meta_reader (r EID,x EID) EID {
     return ToMetaReader(OBJ(r)).ReadList(ANY(x) )} 
   
 // create the lambda
-/* {1} The go function for: readlambda(r:meta_reader,l:any) [status=1] */
+/* The go function for: readlambda(r:meta_reader,l:any) [status=1] */
 func (r *MetaReader ) Readlambda (l *ClaireAny ) EID { 
     // eid body s = any
     var Result EID 
@@ -1924,7 +1924,7 @@ func (r *MetaReader ) Readlambda (l *ClaireAny ) EID {
 func E_Reader_readlambda_meta_reader (r EID,l EID) EID { 
     return ToMetaReader(OBJ(r)).Readlambda(ANY(l) )} 
   
-/* {1} The go function for: Do!(x:any,y:any) [status=1] */
+/* The go function for: Do!(x:any,y:any) [status=1] */
 func F_Do_I_any (x *ClaireAny ,y *ClaireAny ) EID { 
     // eid body s = any
     var Result EID 
@@ -1960,7 +1960,7 @@ func E_Do_I_any (x EID,y EID) EID {
     return F_Do_I_any(ANY(x),ANY(y) )} 
   
 // extract the type from a list<X> expression
-/* {1} The go function for: extract_of_type(x:Call) [status=1] */
+/* The go function for: extract_of_type(x:Call) [status=1] */
 func F_extract_of_type_Call (x *Language.Call ) EID { 
     // eid body s = type
     var Result EID 
@@ -2001,7 +2001,7 @@ func E_extract_of_type_Call (x EID) EID {
 // this is a cool trick when operating in debug mode: we store the last evaluated
 // call so we can tell very simply which last call triggered the error
 //
-/* {1} The go function for: DBregister(c:Call) [status=1] */
+/* The go function for: DBregister(c:Call) [status=1] */
 func F_DBregister_Call (c *Language.Call ) EID { 
     // eid body s = Call
     var Result EID 
@@ -2038,7 +2038,7 @@ func F_DBregister_Call (c *Language.Call ) EID {
 func E_DBregister_Call (c EID) EID { 
     return F_DBregister_Call(Language.To_Call(OBJ(c)) )} 
   
-/* {1} The go function for: Call!(p:property,l:list) [status=1] */
+/* The go function for: Call!(p:property,l:list) [status=1] */
 func F_Call_I_property (p *ClaireProperty ,l *ClaireList ) EID { 
     // eid body s = Call
     var Result EID 
@@ -2060,7 +2060,7 @@ func E_Call_I_property (p EID,l EID) EID {
 // x is the first token that we have read x(...)
 // there are many special case (x is not a propery) then the regular case
 // t is a type when x was read as (p@t)
-/* {1} The go function for: readcall(r:meta_reader,x:any,t:any) [status=1] */
+/* The go function for: readcall(r:meta_reader,x:any,t:any) [status=1] */
 func (r *MetaReader ) Readcall (x *ClaireAny ,t *ClaireAny ) EID { 
     // eid body s = any
     var Result EID 
@@ -2489,7 +2489,7 @@ func E_readcall_meta_reader (r EID,x EID,t EID) EID {
 // **********************************************************************
 // reads a definition (CLAIRE2 syntax)   - x and y are two expressions that have been read
 //
-/* {1} The go function for: nextdefinition(r:meta_reader,x:any,y:any,old?:boolean) [status=1] */
+/* The go function for: nextdefinition(r:meta_reader,x:any,y:any,old?:boolean) [status=1] */
 func (r *MetaReader ) Nextdefinition (x *ClaireAny ,y *ClaireAny ,old_ask *ClaireBoolean ) EID { 
     // eid body s = any
     var Result EID 
@@ -2695,7 +2695,7 @@ func E_nextdefinition_meta_reader (r EID,x EID,y EID,old_ask EID) EID {
       ANY(y),
       ToBoolean(OBJ(old_ask)) )} 
   
-/* {1} The go function for: nextmethod(r:meta_reader,x:any,y:any,table?:boolean,old?:boolean,inl?:boolean) [status=1] */
+/* The go function for: nextmethod(r:meta_reader,x:any,y:any,table?:boolean,old?:boolean,inl?:boolean) [status=1] */
 func (r *MetaReader ) Nextmethod (x *ClaireAny ,y *ClaireAny ,table_ask *ClaireBoolean ,old_ask *ClaireBoolean ,inl_ask *ClaireBoolean ) EID { 
     // eid body s = any
     var Result EID 
@@ -2783,7 +2783,7 @@ func E_nextmethod_meta_reader (r EID,x EID,y EID,table_ask EID,old_ask EID,inl_a
   
 // reads an instantiation
 //
-/* {1} The go function for: nextinst(r:meta_reader,x:any) [status=1] */
+/* The go function for: nextinst(r:meta_reader,x:any) [status=1] */
 func (r *MetaReader ) Nextinst (x *ClaireAny ) EID { 
     // eid body s = any
     var Result EID 
@@ -3034,7 +3034,7 @@ func E_nextinst_meta_reader (r EID,x EID) EID {
   
 // reads a class Definition of the form C(p:t | p:t = v *)
 // new in v2.5
-/* {1} The go function for: nextDefclass(r:meta_reader,x:any,old?:boolean) [status=1] */
+/* The go function for: nextDefclass(r:meta_reader,x:any,old?:boolean) [status=1] */
 func (r *MetaReader ) NextDefclass (x *ClaireAny ,old_ask *ClaireBoolean ) EID { 
     // eid body s = Defclass
     var Result EID 

@@ -1059,6 +1059,8 @@ func KEY(x EID) string {
 }
 
 
+// generic hash function ... to be done later
+
 
 // API functions ------------------------------------------------------------
 
@@ -1220,6 +1222,38 @@ func E_graph_init_table(a EID) EID {
 	ToTable(OBJ(a)).GraphInit()
 	return EVOID
 }
+
+// generic hash : useful feature borrowed from CLAIRE 3.5
+// private method
+func hash_modulo(x *ClaireAny, n int) int {
+	// fmt.Printf("hash %s (ident=%s)\n",x.Prt(),x.Isa.Ident_ask.Prt())
+	if (x.Isa == C_integer) { return (ToInteger(x).Value % n)
+	} else if (x.Isa == C_float) { return (int(FVAL(ToFloat(x).Value)) % n)
+	} else if (x.Isa == C_char) { return (int(ToChar(x).Value) % n)
+	} else if (x.Isa == C_string) {
+		m := F_length_string(ToString(x))
+		var v int = 0
+		if (m > 10) {m = 10}
+		i := 1
+	    for _, r := range ToString(x).Value {
+			if i > m {break}
+			v += ((int)(r) % n)}
+		return (v % n)
+    }  else if (x.Isa == C_list) {
+		m := ToList(x).Length()
+		var v int = 0
+		if (m > 10) {m = 10}
+		for i := 0; i < m; i++ {v += hash_modulo(ToList(x).At(i),n)}
+		return (v % n)    
+    // to be continued ! (sets)
+	} else if x.Isa.Ident_ask == CTRUE {
+		return ((int(x.ui64()) >> 8) % n)                 // shift by 8 to avoid alignment constraints
+    }  else {return ((int(x.Isa.ui64()) >> 8) % n)} 
+	}
+
+func (l *ClaireList) Hash(x *ClaireAny) int {return hash_modulo(x,l.Length())}
+func E_hash_list(l EID, x EID) EID {return EID{C__INT,IVAL(ToList(OBJ(l)).Hash(ANY(x)))}}
+
 
 // +---------------------------------------------------------------------------+
 // |  Part 5: Reader functions                                                 |
@@ -1408,7 +1442,7 @@ func (p *ClairePort) ReadThing(app *ClaireModule, cur rune, def *ClaireModule) E
 		if s.Id() == PRIVATE.Id() {
 			return p.ReadThing(app,cx, ToModule(CNULL))
 		} else if s == CNULL {return Cerror(29, mname.Id(), CNULL)
-		} else if m := ToSymbol(s).Get(); m.Isa != C_module {
+		} else if m := ToSymbol(s).Value(); m.Isa != C_module {
 					return Cerror(29, s, CNULL)
 		} else {
 			return p.ReadThing(ToModule(m), cx, def)

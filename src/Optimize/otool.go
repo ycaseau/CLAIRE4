@@ -1,5 +1,5 @@
 /***** CLAIRE Compilation of file /Users/ycaseau/Dropbox/src/clairev4.03/src/compile/otool.cl 
-         [version 4.0.03 / safety 5] Wednesday 12-29-2021 08:34:17 *****/
+         [version 4.0.04 / safety 5] Saturday 01-01-2022 16:47:21 *****/
 
 package Optimize
 import (_ "fmt"
@@ -40,7 +40,7 @@ func import_g0096() {
 // this is a same-sort (object) casting from one class to another because of the
 // stupidity of the target type system
 // its use is linked to stupid_t(x)
-/* {1} The go function for: self_print(self:Compile/C_cast) [status=1] */
+/* The go function for: self_print(self:Compile/C_cast) [status=1] */
 func (self *Compile_CCast ) SelfPrint () EID { 
     // eid body s = void
     var Result EID 
@@ -59,7 +59,7 @@ func (self *Compile_CCast ) SelfPrint () EID {
 func E_self_print_C_cast (self EID) EID { 
     return To_Compile_CCast(OBJ(self)).SelfPrint( )} 
   
-/* {1} The go function for: Compile/c_gc?(self:Compile/C_cast) [status=0] */
+/* The go function for: Compile/c_gc?(self:Compile/C_cast) [status=0] */
 func (self *Compile_CCast ) CGc_ask () *ClaireBoolean  { 
     if (To_Compile_CCast(self.Arg).CGc_ask() == CTRUE) {return CTRUE
     } else {return CFALSE}} 
@@ -68,7 +68,7 @@ func (self *Compile_CCast ) CGc_ask () *ClaireBoolean  {
 func E_Compile_c_gc_ask_C_cast (self EID) EID { 
     return EID{To_Compile_CCast(OBJ(self)).CGc_ask( ).Id(),0}} 
   
-/* {1} The go function for: c_type(self:Compile/C_cast) [status=0] */
+/* The go function for: c_type(self:Compile/C_cast) [status=0] */
 func (self *Compile_CCast ) CType () *ClaireType  { 
     return  ToType(self.SetArg.Id())
     } 
@@ -78,7 +78,7 @@ func E_c_type_C_cast (self EID) EID {
     return EID{To_Compile_CCast(OBJ(self)).CType( ).Id(),0}} 
   
 // v3.0 : better safe
-/* {1} The go function for: c_code(self:Compile/C_cast,s:class) [status=1] */
+/* The go function for: c_code(self:Compile/C_cast,s:class) [status=1] */
 func F_c_code_C_cast (self *Compile_CCast ,s *ClaireClass ) EID { 
     // eid body s = any
     var Result EID 
@@ -113,7 +113,7 @@ func E_c_code_C_cast (self EID,s EID) EID {
   
 // we need a new type to express powerful Iterate rules
 // Note: Patterns require the compiler !
-/* {1} The go function for: self_print(self:Pattern) [status=1] */
+/* The go function for: self_print(self:Pattern) [status=1] */
 func (self *ClairePattern ) SelfPrint () EID { 
     // eid body s = void
     var Result EID 
@@ -131,7 +131,7 @@ func (self *ClairePattern ) SelfPrint () EID {
 func E_self_print_Pattern (self EID) EID { 
     return To_ClairePattern(OBJ(self)).SelfPrint( )} 
   
-/* {1} The go function for: %(x:any,y:Pattern) [status=1] */
+/* The go function for: %(x:any,y:Pattern) [status=1] */
 func F__Z_any3 (x *ClaireAny ,y *ClairePattern ) EID { 
     // eid body s = boolean
     var Result EID 
@@ -190,7 +190,7 @@ func E__Z_any3 (x EID,y EID) EID {
     return F__Z_any3(ANY(x),To_ClairePattern(OBJ(y)) )} 
   
 // this is very lazy, we could do better
-/* {1} The go function for: glb(x:Pattern,y:type_expression) [status=1] */
+/* The go function for: glb(x:Pattern,y:type_expression) [status=1] */
 func (x *ClairePattern ) Glb (y *ClaireTypeExpression ) *ClaireTypeExpression  { 
     // procedure body with s = type_expression
     var Result *ClaireTypeExpression  
@@ -216,7 +216,7 @@ func E_glb_Pattern (x EID,y EID) EID {
     return EID{To_ClairePattern(OBJ(x)).Glb(ToTypeExpression(OBJ(y)) ).Id(),0}} 
   
 // extension of <= for Patterns
-/* {1} The go function for: less?(x:Pattern,y:type_expression) [status=0] */
+/* The go function for: less?(x:Pattern,y:type_expression) [status=0] */
 func F_less_ask_Pattern (x *ClairePattern ,y *ClaireTypeExpression ) *ClaireBoolean  { 
     // procedure body with s = boolean
     var Result *ClaireBoolean  
@@ -262,7 +262,7 @@ func F_less_ask_Pattern (x *ClairePattern ,y *ClaireTypeExpression ) *ClaireBool
 func E_less_ask_Pattern (x EID,y EID) EID { 
     return EID{F_less_ask_Pattern(To_ClairePattern(OBJ(x)),ToTypeExpression(OBJ(y)) ).Id(),0}} 
   
-/* {1} The go function for: less?(x:type_expression,y:Pattern) [status=1] */
+/* The go function for: less?(x:type_expression,y:Pattern) [status=1] */
 func F_less_ask_type_expression2 (x *ClaireTypeExpression ,y *ClairePattern ) EID { 
     // eid body s = boolean
     var Result EID 
@@ -357,7 +357,7 @@ func E_less_ask_type_expression2 (x EID,y EID) EID {
     return F_less_ask_type_expression2(ToTypeExpression(OBJ(x)),To_ClairePattern(OBJ(y)) )} 
   
 // v0.03 must return a type
-/* {1} The go function for: nth(p:property,x:tuple) [status=0] */
+/* The go function for: nth(p:property,x:tuple) [status=0] */
 func F_nth_property (p *ClaireProperty ,x *ClaireTuple ) *ClairePattern  { 
     // procedure body with s = Pattern
     var Result *ClairePattern  
@@ -376,7 +376,7 @@ func E_nth_property (p EID,x EID) EID {
 // *    Part 2: Optimizer Warnings                                  *
 // ******************************************************************
 // unified warning
-/* {1} The go function for: Compile/warn(_CL_obj:void) [status=0] */
+/* The go function for: Compile/warn(_CL_obj:void) [status=0] */
 func F_Compile_warn_void ()  { 
     // procedure body with s = void
     C_compiler.NWarnings = (C_compiler.NWarnings+1)
@@ -392,7 +392,7 @@ func E_Compile_warn_void (_CL_obj EID) EID {
     F_Compile_warn_void( )
     return EVOID} 
   
-/* {1} The go function for: Compile/Cerror(s:string,l:listargs) [status=1] */
+/* The go function for: Compile/Cerror(s:string,l:listargs) [status=1] */
 func F_Compile_Cerror_string (s *ClaireString ,l *ClaireList ) EID { 
     // eid body s = void
     var Result EID 
@@ -415,7 +415,7 @@ func E_Compile_Cerror_string (s EID,l EID) EID {
     return F_Compile_Cerror_string(ToString(OBJ(s)),ToList(OBJ(l)) )} 
   
 // a note
-/* {1} The go function for: Compile/notice(_CL_obj:void) [status=0] */
+/* The go function for: Compile/notice(_CL_obj:void) [status=0] */
 func F_Compile_notice_void ()  { 
     // procedure body with s = void
     C_compiler.NNotes = (C_compiler.NNotes+1)
@@ -432,7 +432,7 @@ func E_Compile_notice_void (_CL_obj EID) EID {
     return EVOID} 
   
 // Warning : compiling is impossible, wrong selector
-/* {1} The go function for: c_warn(self:Call,%type:any) [status=1] */
+/* The go function for: c_warn(self:Call,%type:any) [status=1] */
 func F_Optimize_c_warn_Call (self *Language.Call ,_Ztype *ClaireAny ) EID { 
     // eid body s = any
     var Result EID 
@@ -487,7 +487,7 @@ func F_Optimize_c_warn_Call (self *Language.Call ,_Ztype *ClaireAny ) EID {
 func E_Optimize_c_warn_Call (self EID,_Ztype EID) EID { 
     return F_Optimize_c_warn_Call(Language.To_Call(OBJ(self)),ANY(_Ztype) )} 
   
-/* {1} The go function for: c_warn(self:Super,%type:any) [status=1] */
+/* The go function for: c_warn(self:Super,%type:any) [status=1] */
 func F_Optimize_c_warn_Super (self *Language.Super ,_Ztype *ClaireAny ) EID { 
     // eid body s = any
     var Result EID 
@@ -528,7 +528,7 @@ func E_Optimize_c_warn_Super (self EID,_Ztype EID) EID {
   
 // a message cannot be compiled into efficient code
 // here the property does not allow the compilation and we want to see it
-/* {1} The go function for: c_warn(self:property,l:list,%type:list) [status=1] */
+/* The go function for: c_warn(self:property,l:list,%type:list) [status=1] */
 func F_Optimize_c_warn_property (self *ClaireProperty ,l *ClaireList ,_Ztype *ClaireList ) EID { 
     // eid body s = any
     var Result EID 
@@ -547,7 +547,7 @@ func E_Optimize_c_warn_property (self EID,l EID,_Ztype EID) EID {
 // a variable should not be abused ! Either it is a true error or it is
 // simply dangerous. The result is the value to be used (either x or
 // ckeck_in(x,range(oself))
-/* {1} The go function for: c_warn(self:Variable,x:any,y:type) [status=1] */
+/* The go function for: c_warn(self:Variable,x:any,y:type) [status=1] */
 func F_Optimize_c_warn_Variable (self *ClaireVariable ,x *ClaireAny ,y *ClaireType ) EID { 
     // eid body s = any
     var Result EID 
@@ -625,7 +625,7 @@ func E_Optimize_c_warn_Variable (self EID,x EID,y EID) EID {
 // e.g.: (any U class) = class stored as an OID
 // tests if two sorts are similar
 // the compiler.overflow? test
-/* {1} The go function for: Compile/sort=(c:class,c2:class) [status=0] */
+/* The go function for: Compile/sort=(c:class,c2:class) [status=0] */
 func F_Compile_sort_equal_class (c *ClaireClass ,c2 *ClaireClass ) *ClaireAny  { 
     if (c.IsIn(C_object) == CTRUE) { 
       return  c2.IsIn(C_object).Id()
@@ -643,7 +643,7 @@ func E_Compile_sort_equal_class (c EID,c2 EID) EID {
     return F_Compile_sort_equal_class(ToClass(OBJ(c)),ToClass(OBJ(c2)) ).ToEID()} 
   
 // give the "precise sort", i.e., a class under object is a sort
-/* {1} The go function for: Compile/psort(x:any) [status=0] */
+/* The go function for: Compile/psort(x:any) [status=0] */
 func F_Compile_psort_any (x *ClaireAny ) *ClaireClass  { 
     // procedure body with s = class
     var Result *ClaireClass  
@@ -662,7 +662,7 @@ func E_Compile_psort_any (x EID) EID {
   
 // gives the "optimizer sort", which is one of
 // any, object, float, X <= import,
-/* {1} The go function for: Compile/osort(x:any) [status=0] */
+/* The go function for: Compile/osort(x:any) [status=0] */
 func F_Compile_osort_any (x *ClaireAny ) *ClaireClass  { 
     return  ToTypeExpression(x).Class_I().Sort_I()
     } 
@@ -671,7 +671,7 @@ func F_Compile_osort_any (x *ClaireAny ) *ClaireClass  {
 func E_Compile_osort_any (x EID) EID { 
     return EID{F_Compile_osort_any(ANY(x) ).Id(),0}} 
   
-/* {1} The go function for: sort(x:Variable) [status=0] */
+/* The go function for: sort(x:Variable) [status=0] */
 func F_sort_Variable (x *ClaireVariable ) *ClaireClass  { 
     // procedure body with s = class
     var Result *ClaireClass  
@@ -698,7 +698,7 @@ func E_sort_Variable (x EID) EID {
   
 // this is a very stupid type inference that mimicks the go compiler - defined in pretty.cl with CLAIRE4
 // it returns a class
-/* {1} The go function for: Compile/stupid_t(self:any) [status=1] */
+/* The go function for: Compile/stupid_t(self:any) [status=1] */
 func F_Compile_stupid_t_any1 (self *ClaireAny ) EID { 
     // eid body s = class
     var Result EID 
@@ -710,7 +710,7 @@ func E_Compile_stupid_t_any1 (self EID) EID {
     return F_Compile_stupid_t_any1(ANY(self) )} 
   
 // comparison
-/* {1} The go function for: Compile/stupid_t(self:any,x:any) [status=1] */
+/* The go function for: Compile/stupid_t(self:any,x:any) [status=1] */
 func F_Compile_stupid_t_any2 (self *ClaireAny ,x *ClaireAny ) EID { 
     // eid body s = boolean
     var Result EID 
@@ -739,7 +739,7 @@ func E_Compile_stupid_t_any2 (self EID,x EID) EID {
   
 // an extended type is of the kind (t U {unknown})
 // CLAIRE4: got rid of optUnion
-/* {1} The go function for: extended?(self:type) [status=1] */
+/* The go function for: extended?(self:type) [status=1] */
 func F_Optimize_extended_ask_type (self *ClaireType ) EID { 
     // eid body s = boolean
     var Result EID 
@@ -799,7 +799,7 @@ func E_Optimize_extended_ask_type (self EID) EID {
 // creates an extended type (v0.02) that can be checked easily 
 // CLAIRE4: we removed the syntactic marker optUnion for (X U {unknown})
 // used in ocall and ocontrol
-/* {1} The go function for: extends(x:type) [status=0] */
+/* The go function for: extends(x:type) [status=0] */
 func F_Optimize_extends_type (x *ClaireType ) *ClaireType  { 
     // procedure body with s = type
     var Result *ClaireType  
@@ -816,7 +816,7 @@ func E_Optimize_extends_type (x EID) EID {
   
 // a sort abstraction is the special union any U t, which is known to represent t by
 // the type system (used for variables only) but tells the compiler that the sort is any
-/* {1} The go function for: sort_abstract!(x:type) [status=0] */
+/* The go function for: sort_abstract!(x:type) [status=0] */
 func F_Optimize_sort_abstract_I_type (x *ClaireType ) *ClaireType  { 
     // procedure body with s = type
     var Result *ClaireType  
@@ -838,7 +838,7 @@ func E_Optimize_sort_abstract_I_type (x EID) EID {
     return EID{F_Optimize_sort_abstract_I_type(ToType(OBJ(x)) ).Id(),0}} 
   
 // v3.00.05
-/* {1} The go function for: sort_abstract?(x:type) [status=0] */
+/* The go function for: sort_abstract?(x:type) [status=0] */
 func F_Optimize_sort_abstract_ask_type (x *ClaireType ) *ClaireBoolean  { 
     // procedure body with s = boolean
     var Result *ClaireBoolean  
@@ -857,7 +857,7 @@ func E_Optimize_sort_abstract_ask_type (x EID) EID {
   
 // since we introduce some fuzziness with types (any U t), we need a way to get
 // the precise type t back
-/* {1} The go function for: ptype(x:type) [status=0] */
+/* The go function for: ptype(x:type) [status=0] */
 func F_Optimize_ptype_type (x *ClaireType ) *ClaireType  { 
     // procedure body with s = type
     var Result *ClaireType  
@@ -879,7 +879,7 @@ func E_Optimize_ptype_type (x EID) EID {
     return EID{F_Optimize_ptype_type(ToType(OBJ(x)) ).Id(),0}} 
   
 // v3.1.06: member -> always apply to a ptype
-/* {1} The go function for: pmember(x:type) [status=0] */
+/* The go function for: pmember(x:type) [status=0] */
 func F_Optimize_pmember_type (x *ClaireType ) *ClaireType  { 
     return  Core.F_member_type(F_Optimize_ptype_type(x))
     } 
@@ -890,7 +890,7 @@ func E_Optimize_pmember_type (x EID) EID {
   
 // transform an instruction representing a set into an instruction
 // representing an enumeration
-/* {1} The go function for: enumerate_code(self:any,%t:type) [status=1] */
+/* The go function for: enumerate_code(self:any,%t:type) [status=1] */
 func F_Optimize_enumerate_code_any (self *ClaireAny ,_Zt *ClaireType ) EID { 
     // eid body s = any
     var Result EID 
@@ -915,7 +915,7 @@ func E_Optimize_enumerate_code_any (self EID,_Zt EID) EID {
 // the collection structure. Note that except for the case of float arrays, the
 // sort of the collection is assumed to be any or integer (thus we "correct" the
 // type inference with sort_abstract)
-/* {1} The go function for: range_infers_for(self:Variable,y:type,ts:type) [status=0] */
+/* The go function for: range_infers_for(self:Variable,y:type,ts:type) [status=0] */
 func F_Optimize_range_infers_for_Variable (self *ClaireVariable ,y *ClaireType ,ts *ClaireType ) *ClaireAny  { 
     // procedure body with s = any
     var Result *ClaireAny  
@@ -958,7 +958,7 @@ func E_Optimize_range_infers_for_Variable (self EID,y EID,ts EID) EID {
 //  (//[5] protect original sort with ~S // sort_abstract!(self.range),
 //   put(range, self, sort_abstract!(self.range))) ]
 // variable range inference, how to guess a type from the value ...
-/* {1} The go function for: range_infers(self:Variable,y:type) [status=1] */
+/* The go function for: range_infers(self:Variable,y:type) [status=1] */
 func F_Optimize_range_infers_Variable (self *ClaireVariable ,y *ClaireType ) EID { 
     // eid body s = any
     var Result EID 
@@ -1017,7 +1017,7 @@ func E_Optimize_range_infers_Variable (self EID,y EID) EID {
 // temporary range inference for case, which may use a special form:
 // {any U type} to represent the change of sort
 // {} U (c U t) to represent a change of psort
-/* {1} The go function for: range_sets(self:any,y:type) [status=0] */
+/* The go function for: range_sets(self:any,y:type) [status=0] */
 func F_Optimize_range_sets_any (self *ClaireAny ,y *ClaireType )  { 
     // procedure body with s = void
     if (self.Isa.IsIn(C_Variable) == CTRUE) { 
@@ -1034,7 +1034,7 @@ func E_Optimize_range_sets_any (self EID,y EID) EID {
   
 //
 // the srange of a method = class!(range)
-/* {1} The go function for: c_srange(m:method) [status=1] */
+/* The go function for: c_srange(m:method) [status=1] */
 func F_Optimize_c_srange_method (m *ClaireMethod ) EID { 
     // eid body s = class
     var Result EID 
@@ -1047,7 +1047,7 @@ func E_Optimize_c_srange_method (m EID) EID {
   
 // v3.3 some of the global variables are compiled with a native var approach
 // we require the range to be safe, no backtrack & local global var
-/* {1} The go function for: Compile/nativeVar?(x:global_variable) [status=0] */
+/* The go function for: Compile/nativeVar?(x:global_variable) [status=0] */
 func F_Compile_nativeVar_ask_global_variable (x *Core.GlobalVariable ) *ClaireBoolean  { 
     if ((C_compiler.Optimize_ask == CTRUE) && 
         ((x.Store_ask.Id() == CFALSE.Id()) && 
@@ -1060,7 +1060,7 @@ func E_Compile_nativeVar_ask_global_variable (x EID) EID {
   
 // v3.3 finds the possible return type of a block (within a loop)
 // it returns a class for the time being ...
-/* {1} The go function for: Compile/return_type(self:any) [status=1] */
+/* The go function for: Compile/return_type(self:any) [status=1] */
 func F_Compile_return_type_any (self *ClaireAny ) EID { 
     // eid body s = type
     var Result EID 
@@ -1183,7 +1183,7 @@ func E_Compile_return_type_any (self EID) EID {
 //
 // creates the functional code that produce the code by evaluation
 // note this is expensive -> we should encourage the use of global variables
-/* {1} The go function for: c_code(self:((type_operator U Reference) U Pattern),s:class) [status=1] */
+/* The go function for: c_code(self:((type_operator U Reference) U Pattern),s:class) [status=1] */
 func F_c_code_type_expression (self *ClaireTypeExpression ,s *ClaireClass ) EID { 
     // eid body s = any
     var Result EID 
@@ -1203,7 +1203,7 @@ func E_c_code_type_expression (self EID,s EID) EID {
     return F_c_code_type_expression(ToTypeExpression(OBJ(self)),ToClass(OBJ(s)) )} 
   
 // to check - seems OK for 3.2 !
-/* {1} The go function for: Compile/self_code(self:subtype) [status=1] */
+/* The go function for: Compile/self_code(self:subtype) [status=1] */
 func F_Compile_self_code_subtype (self *ClaireSubtype ) EID { 
     // eid body s = any
     var Result EID 
@@ -1243,7 +1243,7 @@ func E_Compile_self_code_subtype (self EID) EID {
     return F_Compile_self_code_subtype(ToSubtype(OBJ(self)) )} 
   
 // create a Param. Optimized in v3.2.28 for list<X>
-/* {1} The go function for: Compile/self_code(self:Param) [status=1] */
+/* The go function for: Compile/self_code(self:Param) [status=1] */
 func F_Compile_self_code_Param (self *ClaireParam ) EID { 
     // eid body s = any
     var Result EID 
@@ -1342,7 +1342,7 @@ func F_Compile_self_code_Param (self *ClaireParam ) EID {
 func E_Compile_self_code_Param (self EID) EID { 
     return F_Compile_self_code_Param(To_Param(OBJ(self)) )} 
   
-/* {1} The go function for: Compile/self_code(self:Union) [status=1] */
+/* The go function for: Compile/self_code(self:Union) [status=1] */
 func F_Compile_self_code_Union (self *ClaireUnion ) EID { 
     // eid body s = any
     var Result EID 
@@ -1386,7 +1386,7 @@ func F_Compile_self_code_Union (self *ClaireUnion ) EID {
 func E_Compile_self_code_Union (self EID) EID { 
     return F_Compile_self_code_Union(To_Union(OBJ(self)) )} 
   
-/* {1} The go function for: Compile/self_code(self:Interval) [status=0] */
+/* The go function for: Compile/self_code(self:Interval) [status=0] */
 func F_Compile_self_code_Interval (self *ClaireInterval ) *ClaireAny  { 
     // procedure body with s = any
     var Result *ClaireAny  
@@ -1401,7 +1401,7 @@ func F_Compile_self_code_Interval (self *ClaireInterval ) *ClaireAny  {
 func E_Compile_self_code_Interval (self EID) EID { 
     return F_Compile_self_code_Interval(To_Interval(OBJ(self)) ).ToEID()} 
   
-/* {1} The go function for: Compile/self_code(self:Reference) [status=0] */
+/* The go function for: Compile/self_code(self:Reference) [status=0] */
 func F_Compile_self_code_Reference (self *ClaireReference ) *ClaireAny  { 
     // procedure body with s = any
     var Result *ClaireAny  
@@ -1417,7 +1417,7 @@ func E_Compile_self_code_Reference (self EID) EID {
     return F_Compile_self_code_Reference(To_Reference(OBJ(self)) ).ToEID()} 
   
 // compilation of a Pattern
-/* {1} The go function for: Compile/self_code(self:Pattern) [status=0] */
+/* The go function for: Compile/self_code(self:Pattern) [status=0] */
 func (self *ClairePattern ) SelfCode () *ClaireAny  { 
     // procedure body with s = any
     var Result *ClaireAny  
@@ -1452,7 +1452,7 @@ func E_Compile_self_code_Pattern (self EID) EID {
   
 //-------------- membership compiling -------------------------------
 // membership to a class : for final and closed classes => x.isa = c !
-/* {1} The go function for: member_code(self:class,x:any) [status=1] */
+/* The go function for: member_code(self:class,x:any) [status=1] */
 func F_Optimize_member_code_class (self *ClaireClass ,x *ClaireAny ) EID { 
     // eid body s = any
     var Result EID 
@@ -1528,7 +1528,7 @@ func F_Optimize_member_code_class (self *ClaireClass ,x *ClaireAny ) EID {
 func E_Optimize_member_code_class (self EID,x EID) EID { 
     return F_Optimize_member_code_class(ToClass(OBJ(self)),ANY(x) )} 
   
-/* {1} The go function for: member_code(self:type_operator,x:any) [status=1] */
+/* The go function for: member_code(self:type_operator,x:any) [status=1] */
 func F_Optimize_member_code_type_operator (self *ClaireTypeOperator ,x *ClaireAny ) EID { 
     // eid body s = any
     var Result EID 
@@ -1572,7 +1572,7 @@ func F_Optimize_member_code_type_operator (self *ClaireTypeOperator ,x *ClaireAn
 func E_Optimize_member_code_type_operator (self EID,x EID) EID { 
     return F_Optimize_member_code_type_operator(ToTypeOperator(OBJ(self)),ANY(x) )} 
   
-/* {1} The go function for: member_code(self:Union,x:any) [status=1] */
+/* The go function for: member_code(self:Union,x:any) [status=1] */
 func F_Optimize_member_code_Union (self *ClaireUnion ,x *ClaireAny ) EID { 
     // eid body s = any
     var Result EID 
@@ -1615,7 +1615,7 @@ func F_Optimize_member_code_Union (self *ClaireUnion ,x *ClaireAny ) EID {
 func E_Optimize_member_code_Union (self EID,x EID) EID { 
     return F_Optimize_member_code_Union(To_Union(OBJ(self)),ANY(x) )} 
   
-/* {1} The go function for: member_code(self:Interval,x:any) [status=1] */
+/* The go function for: member_code(self:Interval,x:any) [status=1] */
 func F_Optimize_member_code_Interval (self *ClaireInterval ,x *ClaireAny ) EID { 
     // eid body s = any
     var Result EID 
@@ -1652,7 +1652,7 @@ func F_Optimize_member_code_Interval (self *ClaireInterval ,x *ClaireAny ) EID {
 func E_Optimize_member_code_Interval (self EID,x EID) EID { 
     return F_Optimize_member_code_Interval(To_Interval(OBJ(self)),ANY(x) )} 
   
-/* {1} The go function for: member_code(self:Param,x:any) [status=1] */
+/* The go function for: member_code(self:Param,x:any) [status=1] */
 func F_Optimize_member_code_Param (self *ClaireParam ,x *ClaireAny ) EID { 
     // eid body s = any
     var Result EID 
@@ -1722,7 +1722,7 @@ func E_Optimize_member_code_Param (self EID,x EID) EID {
     return F_Optimize_member_code_Param(To_Param(OBJ(self)),ANY(x) )} 
   
 // v3.3.14: specialized code for tuple
-/* {1} The go function for: member_code(self:tuple,x:any) [status=1] */
+/* The go function for: member_code(self:tuple,x:any) [status=1] */
 func F_Optimize_member_code_tuple (self *ClaireTuple ,x *ClaireAny ) EID { 
     // eid body s = any
     var Result EID 
@@ -1770,7 +1770,7 @@ func F_Optimize_member_code_tuple (self *ClaireTuple ,x *ClaireAny ) EID {
 func E_Optimize_member_code_tuple (self EID,x EID) EID { 
     return F_Optimize_member_code_tuple(ToTuple(OBJ(self)),ANY(x) )} 
   
-/* {1} The go function for: member_code(self:any,x:any) [status=1] */
+/* The go function for: member_code(self:any,x:any) [status=1] */
 func F_Optimize_member_code_any (self *ClaireAny ,x *ClaireAny ) EID { 
     // eid body s = any
     var Result EID 
@@ -1844,7 +1844,7 @@ func E_Optimize_member_code_any (self EID,x EID) EID {
     return F_Optimize_member_code_any(ANY(self),ANY(x) )} 
   
 // membership optimization though inline definition of %
-/* {1} The go function for: %(x:any,y:any) [status=1] */
+/* The go function for: %(x:any,y:any) [status=1] */
 func F__Z_any4 (x *ClaireAny ,y *ClaireAny ) EID { 
     // eid body s = boolean
     var Result EID 
@@ -1891,7 +1891,7 @@ func F__Z_any4 (x *ClaireAny ,y *ClaireAny ) EID {
 func E__Z_any4 (x EID,y EID) EID { 
     return F__Z_any4(ANY(x),ANY(y) )} 
   
-/* {1} The go function for: %(x:any,y:any) [status=1] */
+/* The go function for: %(x:any,y:any) [status=1] */
 func F__Z_any5 (x *ClaireAny ,y *ClaireAny ) EID { 
     // eid body s = boolean
     var Result EID 
@@ -1942,7 +1942,7 @@ func E__Z_any5 (x EID,y EID) EID {
 // *    Part 4: Miscellaneous                                       *
 // ******************************************************************
 // ------- variables ------------------------------------------------
-/* {1} The go function for: Compile/Variable!(s:symbol,n:integer,t:any) [status=0] */
+/* The go function for: Compile/Variable!(s:symbol,n:integer,t:any) [status=0] */
 func F_Compile_Variable_I_symbol (s *ClaireSymbol ,n int,t *ClaireAny ) *ClaireVariable  { 
     // procedure body with s = Variable
     var Result *ClaireVariable  
@@ -1968,7 +1968,7 @@ func F_Compile_Variable_I_symbol (s *ClaireSymbol ,n int,t *ClaireAny ) *ClaireV
 func E_Compile_Variable_I_symbol (s EID,n EID,t EID) EID { 
     return EID{F_Compile_Variable_I_symbol(ToSymbol(OBJ(s)),INT(n),ANY(t) ).Id(),0}} 
   
-/* {1} The go function for: Compile/get_indexed(c:class) [status=0] */
+/* The go function for: Compile/get_indexed(c:class) [status=0] */
 func F_Compile_get_indexed_class (c *ClaireClass ) *ClaireList  { 
     return  c.Slots
     } 
@@ -1979,7 +1979,7 @@ func E_Compile_get_indexed_class (c EID) EID {
   
 // simple C operations that can be duplicated at no cost {+, -, /, *}
 // tells if an expression is a go simply designated object
-/* {1} The go function for: Compile/designated?(self:any) [status=1] */
+/* The go function for: Compile/designated?(self:any) [status=1] */
 func F_Compile_designated_ask_any (self *ClaireAny ) EID { 
     // eid body s = boolean
     var Result EID 
@@ -2158,9 +2158,9 @@ func E_Compile_designated_ask_any (self EID) EID {
     return F_Compile_designated_ask_any(ANY(self) )} 
   
 // OPT.non_identifiable_set: those sets who are identifiable (closure)
-// set<class>{c in class | exists(c2 in c.descendents | c2.ident? = false)})
+// set<class>{c in class | exists(c2 in c.descendants | c2.ident? = false)})
 // equality is identity?
-/* {1} The go function for: Compile/identifiable?(self:any) [status=1] */
+/* The go function for: Compile/identifiable?(self:any) [status=1] */
 func F_Compile_identifiable_ask_any (self *ClaireAny ) EID { 
     // eid body s = boolean
     var Result EID 
@@ -2205,7 +2205,7 @@ func E_Compile_identifiable_ask_any (self EID) EID {
   
 // inlinning ---------------------------------------------------------
 // macro expansion of method self with argument list l
-/* {1} The go function for: c_inline(self:method,l:list,s:class) [status=1] */
+/* The go function for: c_inline(self:method,l:list,s:class) [status=1] */
 func F_Optimize_c_inline_method1 (self *ClaireMethod ,l *ClaireList ,s *ClaireClass ) EID { 
     // eid body s = any
     var Result EID 
@@ -2228,7 +2228,7 @@ func E_Optimize_c_inline_method1 (self EID,l EID,s EID) EID {
 // apply the body of a macro definition
 // notice that the name of the inner variables is changed except the second variable
 // of iterate macros    
-/* {1} The go function for: c_inline(self:method,l:list) [status=1] */
+/* The go function for: c_inline(self:method,l:list) [status=1] */
 func F_Optimize_c_inline_method2 (self *ClaireMethod ,l *ClaireList ) EID { 
     // eid body s = any
     var Result EID 
@@ -2293,7 +2293,7 @@ func E_Optimize_c_inline_method2 (self EID,l EID) EID {
     return F_Optimize_c_inline_method2(ToMethod(OBJ(self)),ToList(OBJ(l)) )} 
   
 // returns the macro expanded code if a macro is involved and nil otherwise
-/* {1} The go function for: c_inline_arg?(self:any) [status=1] */
+/* The go function for: c_inline_arg?(self:any) [status=1] */
 func F_Optimize_c_inline_arg_ask_any (self *ClaireAny ) EID { 
     // eid body s = any
     var Result EID 
@@ -2388,7 +2388,7 @@ func E_Optimize_c_inline_arg_ask_any (self EID) EID {
 // substitute any variable with same name as x with the value val. val is an expression
 // when the special form eval() is found, it is "evaluated"
 // NEW: in v3.0.5 -> eval(x,C) evals only if x is actually a C
-/* {1} The go function for: c_substitution(self:any,lx:list[Variable],val:list,eval?:boolean) [status=1] */
+/* The go function for: c_substitution(self:any,lx:list[Variable],val:list,eval?:boolean) [status=1] */
 func F_Optimize_c_substitution_any (self *ClaireAny ,lx *ClaireList ,val *ClaireList ,eval_ask *ClaireBoolean ) EID { 
     // eid body s = any
     var Result EID 
@@ -2587,7 +2587,7 @@ func E_Optimize_c_substitution_any (self EID,lx EID,val EID,eval_ask EID) EID {
       ToBoolean(OBJ(eval_ask)) )} 
   
 // needed
-/* {1} The go function for: eval(x:any,y:class) [status=1] */
+/* The go function for: eval(x:any,y:class) [status=1] */
 func F_eval_any2 (x *ClaireAny ,y *ClaireClass ) EID { 
     // eid body s = any
     var Result EID 
@@ -2599,7 +2599,7 @@ func E_eval_any2 (x EID,y EID) EID {
     return F_eval_any2(ANY(x),ToClass(OBJ(y)) )} 
   
 // returns the list of bound variables in a piece of code
-/* {1} The go function for: bound_variables(self:any) [status=1] */
+/* The go function for: bound_variables(self:any) [status=1] */
 func F_Optimize_bound_variables_any (self *ClaireAny ) EID { 
     // eid body s = list
     var Result EID 
@@ -2687,7 +2687,7 @@ func E_Optimize_bound_variables_any (self EID) EID {
     return F_Optimize_bound_variables_any(ANY(self) )} 
   
 // we must recognize true boolean ! coercion
-/* {1} The go function for: c_boolean(x:any) [status=1] */
+/* The go function for: c_boolean(x:any) [status=1] */
 func F_Optimize_c_boolean_any (x *ClaireAny ) EID { 
     // eid body s = any
     var Result EID 

@@ -1,7 +1,7 @@
 //+-------------------------------------------------------------+
 //| CLAIRE                                                      |
 //| odefine.cl                                                  |
-//| Copyright (C) 1994 - 2013 Yves Caseau. All Rights Reserved  |
+//| Copyright (C) 1994 - 2022 Yves Caseau. All Rights Reserved  |
 //| cf. copyright info in file object.cl: about()               |
 //+-------------------------------------------------------------+
 
@@ -130,7 +130,7 @@ c_code(self:Definition,s:class) : any
  -> let ins?:boolean := ((c.open = 3 | c.open = 1) & not(lp)), // PATCH!  (lp non nil <=> thing => c.instances taken care of)
         r := list<any>{ (let p := x.args[1], y := x.args[2],
                              s := (p @ c), special? := (p.open = 0 & s % slot) in
-                       (lp :add p,
+                       (lp :add! p,
                         Call((if special? put else write),
                                   list(p, self,
                                     (if (not(special?) | c_type(y) <= s.range) y
@@ -152,7 +152,7 @@ c_code(self:Definition,s:class) : any
 
 // creation of a new named object
 c_code(self:Defobj,s:class) : any
- -> let %c := self.arg, o := get(self.Language/ident),
+ -> let %c := self.arg, o := value(self.Language/ident),
         %v := (if (known?(o) & not(o % global_variable)) o
                else Variable!(*name*, (OPT.max_vars :+ 1, 0), %c)),
         %y1 := Call(object!, list(self.Language/ident, %c)),
@@ -170,7 +170,7 @@ c_code(self:Defobj,s:class) : any
 
 // creation of a new named object
 [c_code(self:Defclass,s:class) : any
- -> let  %name := self.Language/ident, o := get(%name),
+ -> let  %name := self.Language/ident, o := value(%name),
          %create := (if known?(o) Call(class!, list(%name, self.arg))
                      else error("[internal] cannot compile unknown class ~S",%name)),
          %x := Do( %create cons
@@ -374,7 +374,7 @@ compile_lambda(self:string,l:lambda,m:any) : any
 // how to compile an table definition
 [c_code(self:Defarray) : any
  -> let a := (self.arg as Call).args,
-        %a := get(extract_symbol(a[1])),
+        %a := value(extract_symbol(a[1])),
         %v := (case %a (table %a, any error("[internal] the table ~S is unknown", a[1]))),
         s := %a.domain,
         e := (let l := cdr(a),
@@ -553,7 +553,7 @@ Compile/lexical_num(self:any,n:integer) : void
  -> (case self
       (Call lexical_num(self.args, n),
        Instruction let %type:class := self.isa in
-          (if (%type % Instruction_with_var.descendents)
+          (if (%type % Instruction_with_var.descendants)
                 (put(index, self.var, n),
                  n := n + 1,
                  if (n > *variable_index*) *variable_index* := n),
@@ -568,7 +568,7 @@ c_type(self:Defrule) : type -> any
               
 // compile a rule definition
 c_code(self:Defrule,s:class) : any
- -> let ru := get(self.iClaire/ident), l := list<any>() in
+ -> let ru := value(self.iClaire/ident), l := list<any>() in
        (//[5] compile a rule ~S // ru,
         for r in Language/relations[ru] 
             (if not(Language/eventMethod?(r)) Tighten(r)),   // ensures better code generation  

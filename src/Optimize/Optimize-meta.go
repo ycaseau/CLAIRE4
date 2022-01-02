@@ -1,5 +1,5 @@
 /***** CLAIRE Compilation of module Optimize.cl 
-         [version 4.0.03 / safety 5] Wednesday 12-29-2021 08:34:17 *****/
+         [version 4.0.04 / safety 5] Saturday 01-01-2022 16:47:21 *****/
 
 package Optimize
 import (_ "fmt"
@@ -11,7 +11,7 @@ import (_ "fmt"
 )
 
 //-------- dumb function to prevent import errors --------
-func import_g0324() { 
+func import_g0325() { 
     _ = Core.It
     _ = Language.It
     _ = Reader.It
@@ -222,6 +222,21 @@ var C_PENIBLE *Core.GlobalVariable
 var C_Compile__starname_star *Core.GlobalVariable 
 var C_Optimize__staradd_method2_star *Core.GlobalVariable 
 var C_Optimize__equalsig_ask *ClaireOperation  /*obj*/
+var C_Optimize_use_range *ClaireProperty  // Optimize/"use_range"
+var C_Optimize_inline_optimize_ask *ClaireProperty  // Optimize/"inline_optimize?"
+var C_Optimize_daccess *ClaireProperty  // Optimize/"daccess"
+var C_Optimize_c_code_write *ClaireProperty  // Optimize/"c_code_write"
+var C_Optimize_c_code_hold *ClaireProperty  // Optimize/"c_code_hold"
+var C_Optimize_Produce_erase *ClaireProperty  // Optimize/"Produce_erase"
+var C_Optimize_c_code_add *ClaireProperty  // Optimize/"c_code_add"
+var C_Optimize_c_code_add_bag *ClaireProperty  // Optimize/"c_code_add_bag"
+var C_Optimize_c_code_delete *ClaireProperty  // Optimize/"c_code_delete"
+var C_Optimize_c_code_table *ClaireProperty  // Optimize/"c_code_table"
+var C_Optimize_c_code_array *ClaireProperty  // Optimize/"c_code_array"
+var C_Optimize_c_code_nth *ClaireProperty  // Optimize/"c_code_nth"
+var C_Optimize_c_code_belong *ClaireProperty  // Optimize/"c_code_belong"
+var C_Optimize_c_code_not *ClaireProperty  // Optimize/"c_code_not"
+var C_Optimize_Update_ask *ClaireProperty  // Optimize/"Update?"
 var C_safety *ClaireProperty  // claire/"safety"
 var C_home *ClaireProperty  // claire/"home"
 var C_Compile_instructions *ClaireProperty  // Compile/"instructions"
@@ -301,21 +316,6 @@ var C_Optimize_c_inline_ask *ClaireProperty  // Optimize/"c_inline?"
 var C_Optimize_c_boolean *ClaireProperty  // Optimize/"c_boolean"
 var C_findr *ClaireProperty  // claire/"findr"
 var C_dmatch_ask *ClaireProperty  // claire/"dmatch?"
-var C_Optimize_use_range *ClaireProperty  // Optimize/"use_range"
-var C_Optimize_inline_optimize_ask *ClaireProperty  // Optimize/"inline_optimize?"
-var C_Optimize_daccess *ClaireProperty  // Optimize/"daccess"
-var C_Optimize_c_code_write *ClaireProperty  // Optimize/"c_code_write"
-var C_Optimize_c_code_hold *ClaireProperty  // Optimize/"c_code_hold"
-var C_Optimize_Produce_erase *ClaireProperty  // Optimize/"Produce_erase"
-var C_Optimize_c_code_add *ClaireProperty  // Optimize/"c_code_add"
-var C_Optimize_c_code_add_bag *ClaireProperty  // Optimize/"c_code_add_bag"
-var C_Optimize_c_code_delete *ClaireProperty  // Optimize/"c_code_delete"
-var C_Optimize_c_code_table *ClaireProperty  // Optimize/"c_code_table"
-var C_Optimize_c_code_array *ClaireProperty  // Optimize/"c_code_array"
-var C_Optimize_c_code_nth *ClaireProperty  // Optimize/"c_code_nth"
-var C_Optimize_c_code_belong *ClaireProperty  // Optimize/"c_code_belong"
-var C_Optimize_c_code_not *ClaireProperty  // Optimize/"c_code_not"
-var C_Optimize_Update_ask *ClaireProperty  // Optimize/"Update?"
 var C_Optimize_Call_method_I *ClaireProperty  // Optimize/"Call_method!"
 var C_Optimize_nth_type_check *ClaireProperty  // Optimize/"nth_type_check"
 var C_Optimize_extendedTest_ask *ClaireProperty  // Optimize/"extendedTest?"
@@ -352,10 +352,25 @@ var C_Compile *ClaireModule
 func MetaLoad() { 
   
   It = MakeModule("Optimize",C_Compile)
-  It.Comment = MakeString("Compiled on Wednesday 12-29-2021 08:34:17(v4.0.03), lines:3009, warnings:1,safety:5")
+  It.Comment = MakeString("Compiled on Saturday 01-01-2022 16:47:21(v4.0.04), lines:3011, warnings:1,safety:5")
   ClEnv.Module_I = It
   
   // definition of the properties
+  C_Optimize_use_range = MakeProperty("use_range",1,It)
+  C_Optimize_inline_optimize_ask = MakeProperty("inline_optimize?",1,It)
+  C_Optimize_daccess = MakeProperty("daccess",1,It)
+  C_Optimize_c_code_write = MakeProperty("c_code_write",1,It)
+  C_Optimize_c_code_hold = MakeProperty("c_code_hold",1,It)
+  C_Optimize_Produce_erase = MakeProperty("Produce_erase",1,It)
+  C_Optimize_c_code_add = MakeProperty("c_code_add",1,It)
+  C_Optimize_c_code_add_bag = MakeProperty("c_code_add_bag",1,It)
+  C_Optimize_c_code_delete = MakeProperty("c_code_delete",1,It)
+  C_Optimize_c_code_table = MakeProperty("c_code_table",1,It)
+  C_Optimize_c_code_array = MakeProperty("c_code_array",1,It)
+  C_Optimize_c_code_nth = MakeProperty("c_code_nth",1,It)
+  C_Optimize_c_code_belong = MakeProperty("c_code_belong",1,It)
+  C_Optimize_c_code_not = MakeProperty("c_code_not",1,It)
+  C_Optimize_Update_ask = MakeProperty("Update?",1,It)
   C_safety = MakeProperty("safety",2,C_claire)
   C_home = MakeProperty("home",1,C_claire)
   C_Compile_instructions = MakeProperty("instructions",2,C_Compile)
@@ -435,21 +450,6 @@ func MetaLoad() {
   C_Optimize_c_boolean = MakeProperty("c_boolean",1,It)
   C_findr = MakeProperty("findr",1,C_claire)
   C_dmatch_ask = MakeProperty("dmatch?",1,C_claire)
-  C_Optimize_use_range = MakeProperty("use_range",1,It)
-  C_Optimize_inline_optimize_ask = MakeProperty("inline_optimize?",1,It)
-  C_Optimize_daccess = MakeProperty("daccess",1,It)
-  C_Optimize_c_code_write = MakeProperty("c_code_write",1,It)
-  C_Optimize_c_code_hold = MakeProperty("c_code_hold",1,It)
-  C_Optimize_Produce_erase = MakeProperty("Produce_erase",1,It)
-  C_Optimize_c_code_add = MakeProperty("c_code_add",1,It)
-  C_Optimize_c_code_add_bag = MakeProperty("c_code_add_bag",1,It)
-  C_Optimize_c_code_delete = MakeProperty("c_code_delete",1,It)
-  C_Optimize_c_code_table = MakeProperty("c_code_table",1,It)
-  C_Optimize_c_code_array = MakeProperty("c_code_array",1,It)
-  C_Optimize_c_code_nth = MakeProperty("c_code_nth",1,It)
-  C_Optimize_c_code_belong = MakeProperty("c_code_belong",1,It)
-  C_Optimize_c_code_not = MakeProperty("c_code_not",1,It)
-  C_Optimize_Update_ask = MakeProperty("Update?",1,It)
   C_Optimize_Call_method_I = MakeProperty("Call_method!",1,It)
   C_Optimize_nth_type_check = MakeProperty("nth_type_check",1,It)
   C_Optimize_extendedTest_ask = MakeProperty("extendedTest?",1,It)
@@ -636,7 +636,7 @@ func MetaLoad() {
   C_compiler = ToOptimizeMetaCompiler(new(OptimizeMetaCompiler).IsNamed(C_Optimize_meta_compiler,MakeSymbol("compiler",C_claire)))
   C_compiler.External = MakeString("go")
   C_compiler.Env = MakeString("MacOS")
-  C_compiler.Version = MakeFloat(0.03).Id()
+  C_compiler.Version = MakeFloat(0.04).Id()
   C_compiler.Source = MakeString("")
   C_compiler.Libraries = MakeList(ToType(C_string.Id()),MakeString("Kernel").Id())
   
@@ -1107,84 +1107,84 @@ func MetaLoad() {
   
   _ = Core.F_attach_method(C_Optimize_open_message.AddMethod(Signature(C_property.Id(),C_list.Id(),Language.C_Call.Id()),1,MakeFunction2(E_Optimize_open_message_property,"Optimize_open_message_property")),MakeString("ocall.cl:244"))
   
-  _ = Core.F_attach_method(C_Optimize_daccess.AddMethod(Signature(C_any.Id(),C_boolean.Id(),C_any.Id()),1,MakeFunction2(E_Optimize_daccess_any,"Optimize_daccess_any")),MakeString("ocall.cl:265"))
+  _ = Core.F_attach_method(C_Optimize_daccess.AddMethod(Signature(C_any.Id(),C_boolean.Id(),C_any.Id()),1,MakeFunction2(E_Optimize_daccess_any,"Optimize_daccess_any")),MakeString("ocall.cl:267"))
   
-  _ = Core.F_attach_method(C_c_type.AddMethod(Signature(Language.C_Call_slot.Id(),C_type.Id()),0,MakeFunction1(E_c_type_Call_slot,"c_type_Call_slot")),MakeString("ocall.cl:267"))
+  _ = Core.F_attach_method(C_c_type.AddMethod(Signature(Language.C_Call_slot.Id(),C_type.Id()),0,MakeFunction1(E_c_type_Call_slot,"c_type_Call_slot")),MakeString("ocall.cl:269"))
   
-  _ = Core.F_attach_method(C_c_type.AddMethod(Signature(Language.C_Call_table.Id(),C_type.Id()),0,MakeFunction1(E_c_type_Call_table,"c_type_Call_table")),MakeString("ocall.cl:268"))
+  _ = Core.F_attach_method(C_c_type.AddMethod(Signature(Language.C_Call_table.Id(),C_type.Id()),0,MakeFunction1(E_c_type_Call_table,"c_type_Call_table")),MakeString("ocall.cl:270"))
   
-  _ = Core.F_attach_method(C_c_type.AddMethod(Signature(Language.C_Call_array.Id(),C_type.Id()),0,MakeFunction1(E_c_type_Call_array,"c_type_Call_array")),MakeString("ocall.cl:269"))
+  _ = Core.F_attach_method(C_c_type.AddMethod(Signature(Language.C_Call_array.Id(),C_type.Id()),0,MakeFunction1(E_c_type_Call_array,"c_type_Call_array")),MakeString("ocall.cl:271"))
   
-  _ = Core.F_attach_method(C_Optimize_c_code_write.AddMethod(Signature(Language.C_Call.Id(),C_any.Id()),1,MakeFunction1(E_Optimize_c_code_write_Call,"Optimize_c_code_write_Call")),MakeString("ocall.cl:305"))
+  _ = Core.F_attach_method(C_Optimize_c_code_write.AddMethod(Signature(Language.C_Call.Id(),C_any.Id()),1,MakeFunction1(E_Optimize_c_code_write_Call,"Optimize_c_code_write_Call")),MakeString("ocall.cl:307"))
   
   _ = Core.F_attach_method(C_Optimize_c_code_hold.AddMethod(Signature(C_property.Id(),
     C_any.Id(),
     C_any.Id(),
     C_boolean.Id(),
-    C_any.Id()),1,MakeFunction4(E_Optimize_c_code_hold_property,"Optimize_c_code_hold_property")),MakeString("ocall.cl:321"))
+    C_any.Id()),1,MakeFunction4(E_Optimize_c_code_hold_property,"Optimize_c_code_hold_property")),MakeString("ocall.cl:323"))
   
-  _ = Core.F_attach_method(C_Optimize_c_code_add.AddMethod(Signature(Language.C_Call.Id(),C_any.Id()),1,MakeFunction1(E_Optimize_c_code_add_Call,"Optimize_c_code_add_Call")),MakeString("ocall.cl:348"))
+  _ = Core.F_attach_method(C_Optimize_c_code_add.AddMethod(Signature(Language.C_Call.Id(),C_any.Id()),1,MakeFunction1(E_Optimize_c_code_add_Call,"Optimize_c_code_add_Call")),MakeString("ocall.cl:350"))
   
-  _ = Core.F_attach_method(C_Optimize_c_code_add_bag.AddMethod(Signature(Language.C_Call.Id(),C_any.Id()),1,MakeFunction1(E_Optimize_c_code_add_bag_Call,"Optimize_c_code_add_bag_Call")),MakeString("ocall.cl:364"))
+  _ = Core.F_attach_method(C_Optimize_c_code_add_bag.AddMethod(Signature(Language.C_Call.Id(),C_any.Id()),1,MakeFunction1(E_Optimize_c_code_add_bag_Call,"Optimize_c_code_add_bag_Call")),MakeString("ocall.cl:366"))
   
-  _ = Core.F_attach_method(C_Optimize_c_code_delete.AddMethod(Signature(Language.C_Call.Id(),C_any.Id()),1,MakeFunction1(E_Optimize_c_code_delete_Call,"Optimize_c_code_delete_Call")),MakeString("ocall.cl:379"))
+  _ = Core.F_attach_method(C_Optimize_c_code_delete.AddMethod(Signature(Language.C_Call.Id(),C_any.Id()),1,MakeFunction1(E_Optimize_c_code_delete_Call,"Optimize_c_code_delete_Call")),MakeString("ocall.cl:381"))
   
-  _ = Core.F_attach_method(C_Optimize_c_code_not.AddMethod(Signature(Language.C_Select.Id(),C_any.Id()),1,MakeFunction1(E_Optimize_c_code_not_Select,"Optimize_c_code_not_Select")),MakeString("ocall.cl:385"))
+  _ = Core.F_attach_method(C_Optimize_c_code_not.AddMethod(Signature(Language.C_Select.Id(),C_any.Id()),1,MakeFunction1(E_Optimize_c_code_not_Select,"Optimize_c_code_not_Select")),MakeString("ocall.cl:387"))
   
-  _ = Core.F_attach_method(C_Optimize_c_code_belong.AddMethod(Signature(Language.C_Call.Id(),C_any.Id()),1,MakeFunction1(E_Optimize_c_code_belong_Call,"Optimize_c_code_belong_Call")),MakeString("ocall.cl:403"))
+  _ = Core.F_attach_method(C_Optimize_c_code_belong.AddMethod(Signature(Language.C_Call.Id(),C_any.Id()),1,MakeFunction1(E_Optimize_c_code_belong_Call,"Optimize_c_code_belong_Call")),MakeString("ocall.cl:405"))
   
-  _ = Core.F_attach_method(C_Optimize_c_code_nth.AddMethod(Signature(Language.C_Call.Id(),C_any.Id()),1,MakeFunction1(E_Optimize_c_code_nth_Call,"Optimize_c_code_nth_Call")),MakeString("ocall.cl:432"))
+  _ = Core.F_attach_method(C_Optimize_c_code_nth.AddMethod(Signature(Language.C_Call.Id(),C_any.Id()),1,MakeFunction1(E_Optimize_c_code_nth_Call,"Optimize_c_code_nth_Call")),MakeString("ocall.cl:434"))
   
-  _ = Core.F_attach_method(C_Optimize_c_code_table.AddMethod(Signature(Language.C_Call.Id(),C_any.Id()),1,MakeFunction1(E_Optimize_c_code_table_Call,"Optimize_c_code_table_Call")),MakeString("ocall.cl:458"))
+  _ = Core.F_attach_method(C_Optimize_c_code_table.AddMethod(Signature(Language.C_Call.Id(),C_any.Id()),1,MakeFunction1(E_Optimize_c_code_table_Call,"Optimize_c_code_table_Call")),MakeString("ocall.cl:460"))
   
-  _ = Core.F_attach_method(C_Optimize_c_code_array.AddMethod(Signature(Language.C_Call.Id(),C_any.Id()),1,MakeFunction1(E_Optimize_c_code_array_Call,"Optimize_c_code_array_Call")),MakeString("ocall.cl:476"))
+  _ = Core.F_attach_method(C_Optimize_c_code_array.AddMethod(Signature(Language.C_Call.Id(),C_any.Id()),1,MakeFunction1(E_Optimize_c_code_array_Call,"Optimize_c_code_array_Call")),MakeString("ocall.cl:478"))
   
   _ = Core.F_attach_method(C_Optimize_Update_ask.AddMethod(Signature(C_relation.Id(),
     C_any.Id(),
     C_any.Id(),
-    C_boolean.Id()),1,MakeFunction3(E_Optimize_Update_ask_relation1,"Optimize_Update?_relation1")),MakeString("ocall.cl:487"))
+    C_boolean.Id()),1,MakeFunction3(E_Optimize_Update_ask_relation1,"Optimize_Update?_relation1")),MakeString("ocall.cl:489"))
   
-  _ = Core.F_attach_method(C_Optimize_Update_ask.AddMethod(Signature(C_relation.Id(),C_relation.Id(),C_boolean.Id()),0,MakeFunction2(E_Optimize_Update_ask_relation2,"Optimize_Update?_relation2")),MakeString("ocall.cl:491"))
+  _ = Core.F_attach_method(C_Optimize_Update_ask.AddMethod(Signature(C_relation.Id(),C_relation.Id(),C_boolean.Id()),0,MakeFunction2(E_Optimize_Update_ask_relation2,"Optimize_Update?_relation2")),MakeString("ocall.cl:493"))
   
-  _ = Core.F_attach_method(C_c_type.AddMethod(Signature(Language.C_Update.Id(),C_type.Id()),0,MakeFunction1(E_c_type_Update,"c_type_Update")),MakeString("ocall.cl:494"))
+  _ = Core.F_attach_method(C_c_type.AddMethod(Signature(Language.C_Update.Id(),C_type.Id()),0,MakeFunction1(E_c_type_Update,"c_type_Update")),MakeString("ocall.cl:496"))
   
-  _ = Core.F_attach_method(C_Compile_update_write_ask.AddMethod(Signature(Language.C_Update.Id(),C_boolean.Id()),0,MakeFunction1(E_Compile_update_write_ask_Update,"Compile_update_write?_Update")),MakeString("ocall.cl:499"))
+  _ = Core.F_attach_method(C_Compile_update_write_ask.AddMethod(Signature(Language.C_Update.Id(),C_boolean.Id()),0,MakeFunction1(E_Compile_update_write_ask_Update,"Compile_update_write?_Update")),MakeString("ocall.cl:501"))
   
   _ = Core.F_attach_method(C_Optimize_c_code_method.AddMethod(Signature(C_method.Id(),
     C_list.Id(),
     C_list.Id(),
-    C_any.Id()),1,MakeFunction3(E_Optimize_c_code_method_method1,"Optimize_c_code_method_method1")),MakeString("ocall.cl:508"))
+    C_any.Id()),1,MakeFunction3(E_Optimize_c_code_method_method1,"Optimize_c_code_method_method1")),MakeString("ocall.cl:510"))
   
   _ = Core.F_attach_method(C_Optimize_c_code_method.AddMethod(Signature(C_method.Id(),
     C_list.Id(),
     C_list.Id(),
     C_class.Id(),
-    C_any.Id()),1,MakeFunction4(E_Optimize_c_code_method_method2,"Optimize_c_code_method_method2")),MakeString("ocall.cl:521"))
+    C_any.Id()),1,MakeFunction4(E_Optimize_c_code_method_method2,"Optimize_c_code_method_method2")),MakeString("ocall.cl:523"))
   
-  _ = Core.F_attach_method(C_Optimize_Call_method_I.AddMethod(Signature(C_method.Id(),C_list.Id(),C_any.Id()),0,MakeFunction2(E_Optimize_Call_method_I_method,"Optimize_Call_method!_method")),MakeString("ocall.cl:529"))
+  _ = Core.F_attach_method(C_Optimize_Call_method_I.AddMethod(Signature(C_method.Id(),C_list.Id(),C_any.Id()),0,MakeFunction2(E_Optimize_Call_method_I_method,"Optimize_Call_method!_method")),MakeString("ocall.cl:531"))
   
-  _ = Core.F_attach_method(C_c_type.AddMethod(Signature(Language.C_Call_method.Id(),C_type.Id()),1,MakeFunction1(E_c_type_Call_method,"c_type_Call_method")),MakeString("ocall.cl:535"))
+  _ = Core.F_attach_method(C_c_type.AddMethod(Signature(Language.C_Call_method.Id(),C_type.Id()),1,MakeFunction1(E_c_type_Call_method,"c_type_Call_method")),MakeString("ocall.cl:537"))
   
-  _ = Core.F_attach_method(C_c_code.AddMethod(Signature(Language.C_Call_method.Id(),C_any.Id()),1,MakeFunction1(E_c_code_Call_method,"c_code_Call_method")),MakeString("ocall.cl:541"))
+  _ = Core.F_attach_method(C_c_code.AddMethod(Signature(Language.C_Call_method.Id(),C_any.Id()),1,MakeFunction1(E_c_code_Call_method,"c_code_Call_method")),MakeString("ocall.cl:543"))
   
   C_Compile_functional_I = MakeProperty("functional!",3,C_Compile)
   C_Compile_functional_I.Open = 3
   
   
-  _ = Core.F_attach_method(C_Compile_functional_I.AddMethod(Signature(C_method.Id(),C_function.Id()),1,MakeFunction1(E_Compile_functional_I_method,"Compile_functional!_method")),MakeString("ocall.cl:549"))
+  _ = Core.F_attach_method(C_Compile_functional_I.AddMethod(Signature(C_method.Id(),C_function.Id()),1,MakeFunction1(E_Compile_functional_I_method,"Compile_functional!_method")),MakeString("ocall.cl:551"))
   
   _ = Core.F_inlineok_ask_method(
   Core.F_attach_method(C_Optimize_nth_type_check.AddMethod(Signature(C_type.Id(),
     C_type.Id(),
     C_type.Id(),
-    C_any.Id()),0,MakeFunction3(E_Optimize_nth_type_check_type,"Optimize_nth_type_check_type")),MakeString("ocall.cl:555")),
+    C_any.Id()),0,MakeFunction3(E_Optimize_nth_type_check_type,"Optimize_nth_type_check_type")),MakeString("ocall.cl:557")),
   MakeString("lambda[(tl:type,ti:type,tx:type),(if not(tx <= member(tl)) (Compile/warn(), trace(1, \"unsafe update on bag: type ~S into ~S [252]\\n\", tx, tl)) else false, tx)]"))
   
   ToMethod(Core.F__at_property1(C_nth_equal,C_list).Id()).Typing = C_Optimize_nth_type_check.Id()
   
-  _ = Core.F_attach_method(C_Optimize_c_inline_ask.AddMethod(Signature(C_method.Id(),C_list.Id(),C_boolean.Id()),1,MakeFunction2(E_Optimize_c_inline_ask_method,"Optimize_c_inline?_method")),MakeString("ocall.cl:570"))
+  _ = Core.F_attach_method(C_Optimize_c_inline_ask.AddMethod(Signature(C_method.Id(),C_list.Id(),C_boolean.Id()),1,MakeFunction2(E_Optimize_c_inline_ask_method,"Optimize_c_inline?_method")),MakeString("ocall.cl:572"))
   
-  _ = Core.F_attach_method(C_Optimize_inline_optimize_ask.AddMethod(Signature(Language.C_Call.Id(),C_any.Id()),1,MakeFunction1(E_Optimize_inline_optimize_ask_Call,"Optimize_inline_optimize?_Call")),MakeString("ocall.cl:579"))
+  _ = Core.F_attach_method(C_Optimize_inline_optimize_ask.AddMethod(Signature(Language.C_Call.Id(),C_any.Id()),1,MakeFunction1(E_Optimize_inline_optimize_ask_Call,"Optimize_inline_optimize?_Call")),MakeString("ocall.cl:581"))
   
   _ = Core.F_attach_method(C_c_type.AddMethod(Signature(Language.C_Assign.Id(),C_type.Id()),1,MakeFunction1(E_c_type_Assign,"c_type_Assign")),MakeString("ocontrol.cl:24"))
   
@@ -1362,7 +1362,7 @@ func MetaLoad() {
     C_Variable.Id(),
     C_any.Id(),
     C_any.Id()),0,MakeFunction3(E_Iterate_class,"Iterate_class")),MakeString("ocontrol.cl:698")),
-  MakeString("lambda[(x:class,v:Variable,e:any),for %v_1 in x.descendents let %v_2 := (for v in %v_1.instances e) in (if %v_2 break(%v_2) else false)]"))
+  MakeString("lambda[(x:class,v:Variable,e:any),for %v_1 in x.descendants let %v_2 := (for v in %v_1.instances e) in (if %v_2 break(%v_2) else false)]"))
   
   _ = Core.F_inlineok_ask_method(
   Core.F_attach_method(Language.C_Iterate.AddMethod(Signature(F_nth_property(ToProperty(C__dot_dot.Id()),MakeTuple(C_integer.Id(),C_integer.Id())).Id(),

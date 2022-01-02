@@ -1,5 +1,5 @@
 /***** CLAIRE Compilation of module Generate.cl 
-         [version 4.0.04 / safety 5] Wednesday 12-29-2021 08:55:19 *****/
+         [version 4.0.04 / safety 5] Saturday 01-01-2022 16:47:21 *****/
 
 package Generate
 import (_ "fmt"
@@ -108,7 +108,6 @@ var C_Generate_open_operators *ClaireProperty  // Generate/"open_operators"
 var C_Generate_div_operators *ClaireProperty  // Generate/"div_operators"
 var C_Generate_extension *ClaireProperty  // Generate/"extension"
 var C_Generate_interfaces *ClaireProperty  // Generate/"interfaces"
-var C_Generate_stat *ClaireProperty  // Generate/"stat"
 var C_Generate_current *ClaireProperty  // Generate/"current"
 var C_Generate_bad_names *ClaireProperty  // Generate/"bad_names"
 var C_Generate_good_names *ClaireProperty  // Generate/"good_names"
@@ -280,7 +279,7 @@ var It *ClaireModule
 func MetaLoad() { 
   
   It = MakeModule("Generate",Optimize.C_Compile)
-  It.Comment = MakeString("Compiled on Wednesday 12-29-2021 08:55:19(v4.0.04), lines:3533, warnings:2,safety:5")
+  It.Comment = MakeString("Compiled on Saturday 01-01-2022 16:47:21(v4.0.04), lines:3537, warnings:2,safety:5")
   ClEnv.Module_I = It
   
   // definition of the properties
@@ -289,7 +288,6 @@ func MetaLoad() {
   C_Generate_div_operators = MakeProperty("div_operators",2,It)
   C_Generate_extension = MakeProperty("extension",2,It)
   C_Generate_interfaces = MakeProperty("interfaces",2,It)
-  C_Generate_stat = MakeProperty("stat",2,It)
   C_Generate_current = MakeProperty("current",2,It)
   C_Generate_bad_names = MakeProperty("bad_names",2,It)
   C_Generate_good_names = MakeProperty("good_names",2,It)
@@ -993,7 +991,7 @@ func MetaLoad() {
   Core.F_close_slot(C_Generate_code_producer.AddSlot(C_Generate_extension,ToType(C_string.Id()),CNULL))
   Core.F_close_slot(C_Generate_code_producer.AddSlot(C_comment,ToType(C_string.Id()),CNULL))
   Core.F_close_slot(C_Generate_code_producer.AddSlot(C_Generate_interfaces,ToType(C_list.Id()),ToType(C_any.Id()).EmptyList().Id()))
-  Core.F_close_slot(C_Generate_code_producer.AddSlot(C_Generate_stat,ToType(C_integer.Id()),MakeInteger(0).Id()))
+  Core.F_close_slot(C_Generate_code_producer.AddSlot(C_stat,ToType(C_integer.Id()),MakeInteger(0).Id()))
   
   C_Generate_go_producer = MakeClass("go_producer",C_Generate_code_producer,It)
   Core.F_close_slot(C_Generate_go_producer.AddSlot(C_Generate_current,ToType(C_module.Id()),CNULL))
@@ -1949,27 +1947,27 @@ func MetaLoad() {
   
   _ = Core.F_attach_method(C_Generate_string2module.AddMethod(Signature(C_string.Id(),C_module.Id()),1,MakeFunction1(E_Generate_string2module_string,"Generate_string2module_string")),MakeString("gomain.cl:36"))
   
-  _ = Core.F_attach_method(C_Generate_printHelp.AddMethod(Signature(C_void.Id(),C_void.Id()),0,MakeFunction1(E_Generate_printHelp_void,"Generate_printHelp_void")),MakeString("gomain.cl:61"))
+  _ = Core.F_attach_method(C_Generate_printHelp.AddMethod(Signature(C_void.Id(),C_void.Id()),0,MakeFunction1(E_Generate_printHelp_void,"Generate_printHelp_void")),MakeString("gomain.cl:65"))
   
-  _ = Core.F_attach_method(C_Generate_complex_main.AddMethod(Signature(C_void.Id(),C_void.Id()),1,MakeFunction1(E_Generate_complex_main_void,"Generate_complex_main_void")),MakeString("gomain.cl:154"))
+  _ = Core.F_attach_method(C_Generate_complex_main.AddMethod(Signature(C_void.Id(),C_void.Id()),1,MakeFunction1(E_Generate_complex_main_void,"Generate_complex_main_void")),MakeString("gomain.cl:158"))
   
   _ = Core.F_attach_method(C_system_file.AddMethod(Signature(C_module.Id(),
     C_string.Id(),
     C_boolean.Id(),
-    C_void.Id()),1,MakeFunction3(E_system_file_module,"system_file_module")),MakeString("gomain.cl:184"))
+    C_void.Id()),1,MakeFunction3(E_system_file_module,"system_file_module")),MakeString("gomain.cl:188"))
   
-  _ = Core.F_attach_method(C_Generate_system_imports.AddMethod(Signature(C_module.Id(),C_void.Id()),1,MakeFunction1(E_Generate_system_imports_module,"Generate_system_imports_module")),MakeString("gomain.cl:193"))
+  _ = Core.F_attach_method(C_Generate_system_imports.AddMethod(Signature(C_module.Id(),C_void.Id()),1,MakeFunction1(E_Generate_system_imports_module,"Generate_system_imports_module")),MakeString("gomain.cl:197"))
   
-  _ = Core.F_attach_method(C_Generate_load_function.AddMethod(Signature(C_module.Id(),C_list.Id(),C_void.Id()),1,MakeFunction2(E_Generate_load_function_module,"Generate_load_function_module")),MakeString("gomain.cl:227"))
+  _ = Core.F_attach_method(C_Generate_load_function.AddMethod(Signature(C_module.Id(),C_list.Id(),C_void.Id()),1,MakeFunction2(E_Generate_load_function_module,"Generate_load_function_module")),MakeString("gomain.cl:231"))
   
   _ = Core.F_attach_method(C_Generate_main_function.AddMethod(Signature(C_module.Id(),
     Core.F_nth_class1(C_list,ToType(C_module.Id())).Id(),
     C_boolean.Id(),
-    C_void.Id()),0,MakeFunction3(E_Generate_main_function_module,"Generate_main_function_module")),MakeString("gomain.cl:256"))
+    C_void.Id()),0,MakeFunction3(E_Generate_main_function_module,"Generate_main_function_module")),MakeString("gomain.cl:260"))
   
-  _ = Core.F_attach_method(C_Generate_compile_dir.AddMethod(Signature(C_module.Id(),C_void.Id()),0,MakeFunction1(E_Generate_compile_dir_module,"Generate_compile_dir_module")),MakeString("gomain.cl:267"))
+  _ = Core.F_attach_method(C_Generate_compile_dir.AddMethod(Signature(C_module.Id(),C_void.Id()),0,MakeFunction1(E_Generate_compile_dir_module,"Generate_compile_dir_module")),MakeString("gomain.cl:271"))
   
-  _ = Core.F_attach_method(C_Generate_compile_exe.AddMethod(Signature(C_string.Id(),C_void.Id()),0,MakeFunction1(E_Generate_compile_exe_string,"Generate_compile_exe_string")),MakeString("gomain.cl:273"))
+  _ = Core.F_attach_method(C_Generate_compile_exe.AddMethod(Signature(C_string.Id(),C_void.Id()),0,MakeFunction1(E_Generate_compile_exe_string,"Generate_compile_exe_string")),MakeString("gomain.cl:277"))
   
   } 
 

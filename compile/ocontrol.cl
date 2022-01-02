@@ -694,7 +694,7 @@ iterate(x:array,v:Variable,e:any) : any
        while (%i <= %max) let v := %a[%i] in (e, %i :+ 1))
 
 Iterate(x:class,v:Variable,e:any) : any
- => (for %v_1 in x.descendents
+ => (for %v_1 in x.descendants
        let %v_2 := (for v in %v_1.instances e) in (if %v_2 break(%v_2)))
 
 Iterate(x:..[tuple(integer, integer)],v:Variable,e:any) : any

@@ -133,9 +133,14 @@ bu14 :: module( uses = list(Reader), source = *bsrc*,
 bu15 :: module( uses = list(Reader), source = *bsrc*,
                 made_of = list("bstub", "bug15"))
 
-// sudoku example : need to put in the doc - good example of rules & branch
+// sudoku example : shown in the tutorial - good example of rules & branch
 bu16 :: module( uses = list(Reader), source = *bsrc*,
                 made_of = list("bstub", "sudoku"))
+
+// other examples from rge claire manual : need to put in the doc - good example of rules & branch
+bu17 :: module( uses = list(Reader), source = *bsrc*,
+                made_of = list("bstub", "manual"))
+
 
 
 // ***************************************************************************

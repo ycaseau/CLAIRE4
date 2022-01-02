@@ -1,5 +1,5 @@
 /***** CLAIRE Compilation of file /Users/ycaseau/Dropbox/src/clairev4.03/src/meta/file.cl 
-         [version 4.0.03 / safety 5] Wednesday 12-29-2021 08:34:14 *****/
+         [version 4.0.04 / safety 5] Saturday 01-01-2022 16:47:18 *****/
 
 package Reader
 import (_ "fmt"
@@ -36,7 +36,7 @@ func import_g0126() {
 // **********************************************************************
 // useful gadgets
 //
-/* {1} The go function for: self_eval(self:delimiter) [status=1] */
+/* The go function for: self_eval(self:delimiter) [status=1] */
 func (self *Delimiter ) SelfEval () EID { 
     // eid body s = void
     var Result EID 
@@ -59,7 +59,7 @@ func EVAL_delimiter (x *ClaireAny) EID {
 // a small usefull function
 // note that these char cannot be written using #/_, it would be nicer with native chars
 // CLAIRE4: added 160 which is an ' ' after a '|' produced by the Mac
-/* {1} The go function for: useless_c(r:integer) [status=0] */
+/* The go function for: useless_c(r:integer) [status=0] */
 func F_useless_c_integer (r int) *ClaireBoolean  { 
     if (r == 10) { 
       ClEnv.NLine = (ClEnv.NLine+1)
@@ -77,7 +77,7 @@ func E_useless_c_integer (r EID) EID {
     return EID{F_useless_c_integer(INT(r) ).Id(),0}} 
   
 // take care of PC format (10 + 13)
-/* {1} The go function for: skipc(self:meta_reader) [status=0] */
+/* The go function for: skipc(self:meta_reader) [status=0] */
 func (self *MetaReader ) Skipc () int { 
     for (F_useless_c_integer(self.Firstc()) == CTRUE) { 
       { var b *ClaireBoolean   = Equal(MakeInteger(self.Firstc()).Id(),MakeInteger(10).Id())
@@ -96,7 +96,7 @@ func E_skipc_meta_reader (self EID) EID {
     return EID{C__INT,IVAL(ToMetaReader(OBJ(self)).Skipc( ))}} 
   
 // look for a meaningful termination char such as ) or ]
-/* {1} The go function for: skipc!(r:meta_reader) [status=1] */
+/* The go function for: skipc!(r:meta_reader) [status=1] */
 func (r *MetaReader ) Skipc_I () EID { 
     // eid body s = integer
     var Result EID 
@@ -136,7 +136,7 @@ func (r *MetaReader ) Skipc_I () EID {
 func E_skipc_I_meta_reader (r EID) EID { 
     return ToMetaReader(OBJ(r)).Skipc_I( )} 
   
-/* {1} The go function for: cnext(self:meta_reader) [status=0] */
+/* The go function for: cnext(self:meta_reader) [status=0] */
 func (self *MetaReader ) Cnext () *MetaReader  { 
     self.Next()
     return  self
@@ -146,7 +146,7 @@ func (self *MetaReader ) Cnext () *MetaReader  {
 func E_cnext_meta_reader (self EID) EID { 
     return EID{ToMetaReader(OBJ(self)).Cnext( ).Id(),0}} 
   
-/* {1} The go function for: findeol(self:meta_reader) [status=0] */
+/* The go function for: findeol(self:meta_reader) [status=0] */
 func (self *MetaReader ) Findeol () *ClaireBoolean  { 
     // procedure body with s = boolean
     var Result *ClaireBoolean  
@@ -177,7 +177,7 @@ func E_findeol_meta_reader (self EID) EID {
   
 // safety checking
 //
-/* {1} The go function for: checkno(r:meta_reader,n:integer,y:any) [status=1] */
+/* The go function for: checkno(r:meta_reader,n:integer,y:any) [status=1] */
 func (r *MetaReader ) Checkno (n int,y *ClaireAny ) EID { 
     // eid body s = any
     var Result EID 
@@ -194,7 +194,7 @@ func E_checkno_meta_reader (r EID,n EID,y EID) EID {
   
 // reads a keyword inside a control structure (used in Reader + OFTO)
 //
-/* {1} The go function for: verify(t:any,x:any,y:any) [status=1] */
+/* The go function for: verify(t:any,x:any,y:any) [status=1] */
 func F_verify_any (t *ClaireAny ,x *ClaireAny ,y *ClaireAny ) EID { 
     // eid body s = any
     var Result EID 
@@ -218,7 +218,7 @@ func E_verify_any (t EID,x EID,y EID) EID {
   
 // prints a syntax error
 //
-/* {1} The go function for: Serror(s:string,la:list) [status=1] */
+/* The go function for: Serror(s:string,la:list) [status=1] */
 func F_Serror_string (s *ClaireString ,la *ClaireList ) EID { 
     // eid body s = void
     var Result EID 
@@ -238,14 +238,14 @@ func E_Serror_string (s EID,la EID) EID {
 // variable handling -------------------------------------------------
 // reads a variable
 //
-/* {1} The go function for: extract_variable(self:any) [status=1] */
+/* The go function for: extract_variable(self:any) [status=1] */
 func F_extract_variable_any (self *ClaireAny ) EID { 
     // eid body s = Variable
     var Result EID 
     var g0131I *ClaireBoolean  
     if (self.Isa.IsIn(C_Variable) == CTRUE) { 
       { var g0130 *ClaireVariable   = To_Variable(self)
-        g0131I = Core.F__I_equal_any(g0130.Pname.Get(),g0130.Id())
+        g0131I = Core.F__I_equal_any(g0130.Pname.Value(),g0130.Id())
         } 
       } else {
       g0131I = CFALSE
@@ -303,12 +303,12 @@ func E_extract_variable_any (self EID) EID {
     return F_extract_variable_any(ANY(self) )} 
   
 // create a variable and add it to the lexical environment
-/* {1} The go function for: bind!(self:meta_reader,%v:Variable) [status=0] */
+/* The go function for: bind!(self:meta_reader,%v:Variable) [status=0] */
 func (self *MetaReader ) Bind_I (_Zv *ClaireVariable ) *ClaireList  { 
     // procedure body with s = list
     var Result *ClaireList  
     _Zv.Index = self.Index
-    { var value *ClaireAny   = _Zv.Pname.Get()
+    { var value *ClaireAny   = _Zv.Pname.Value()
       self.Index = (self.Index+1)
       if (self.Index > self.Maxstack) { 
         self.Maxstack = self.Index
@@ -324,7 +324,7 @@ func E_bind_I_meta_reader (self EID,_Zv EID) EID {
   
 // remove a variable from the lexical environment
 //
-/* {1} The go function for: unbind!(self:meta_reader,%first:list) [status=0] */
+/* The go function for: unbind!(self:meta_reader,%first:list) [status=0] */
 func (self *MetaReader ) Unbind_I (_Zfirst *ClaireList ) *ClaireAny  { 
     // procedure body with s = any
     var Result *ClaireAny  
@@ -341,7 +341,7 @@ func E_unbind_I_meta_reader (self EID,_Zfirst EID) EID {
 // declaration of the CLAIRE standard ports ----------------------------
 // we create global variables - however they exists as properties of system => redundant ?
 //
-/* {1} The go function for: /(s:string,s2:string) [status=0] */
+/* The go function for: /(s:string,s2:string) [status=0] */
 func F__7_string (s *ClaireString ,s2 *ClaireString ) *ClaireString  { 
     return  F_append_string(F_append_string(s,ToString(C__starfs_star.Value)),s2)
     } 
@@ -355,7 +355,7 @@ func E__7_string (s EID,s2 EID) EID {
 // flush(self:port) : any -> function!(flush_port)
 // this function is called by the main and restores the reader in a good shape. Also
 // closes the input port to free the associated file ! <yc>
-/* {1} The go function for: mClaire/restore_state(self:meta_reader) [status=0] */
+/* The go function for: mClaire/restore_state(self:meta_reader) [status=0] */
 func (self *MetaReader ) RestoreState ()  { 
     // procedure body with s = void
     if (Equal(self.Fromp.Id(),C_stdin.Value) != CTRUE) { 
@@ -377,7 +377,7 @@ func E_restore_state_meta_reader (self EID) EID {
 // *********************************************************************
 // sload is the interactive version (when b = true).
 //
-/* {1} The go function for: load_file(self:string,b:boolean) [status=1] */
+/* The go function for: load_file(self:string,b:boolean) [status=1] */
 func F_load_file_string (self *ClaireString ,b *ClaireBoolean ) EID { 
     // eid body s = any
     var Result EID 
@@ -539,7 +539,7 @@ func E_load_file_string (self EID,b EID) EID {
   
 // the simple load
 //
-/* {1} The go function for: load(self:string) [status=1] */
+/* The go function for: load(self:string) [status=1] */
 func F_load_string (self *ClaireString ) EID { 
     // eid body s = any
     var Result EID 
@@ -550,7 +550,7 @@ func F_load_string (self *ClaireString ) EID {
 func E_load_string (self EID) EID { 
     return F_load_string(ToString(OBJ(self)) )} 
   
-/* {1} The go function for: sload(self:string) [status=1] */
+/* The go function for: sload(self:string) [status=1] */
 func F_sload_string (self *ClaireString ) EID { 
     // eid body s = any
     var Result EID 
@@ -563,7 +563,7 @@ func E_sload_string (self EID) EID {
   
 // loading a module into the system.
 // The correct package is open and each file is loaded.
-/* {1} The go function for: load_file(self:module,b:boolean) [status=1] */
+/* The go function for: load_file(self:module,b:boolean) [status=1] */
 func F_load_file_module (self *ClaireModule ,b *ClaireBoolean ) EID { 
     // eid body s = void
     var Result EID 
@@ -625,7 +625,7 @@ func E_load_file_module (self EID,b EID) EID {
   
 // the simple load
 //
-/* {1} The go function for: load(self:module) [status=1] */
+/* The go function for: load(self:module) [status=1] */
 func F_load_module (self *ClaireModule ) EID { 
     // eid body s = any
     var Result EID 
@@ -653,7 +653,7 @@ func F_load_module (self *ClaireModule ) EID {
 func E_load_module (self EID) EID { 
     return F_load_module(ToModule(OBJ(self)) )} 
   
-/* {1} The go function for: sload(self:module) [status=1] */
+/* The go function for: sload(self:module) [status=1] */
 func F_sload_module (self *ClaireModule ) EID { 
     // eid body s = any
     var Result EID 
@@ -686,7 +686,7 @@ func E_sload_module (self EID) EID {
 // list of modules that we know will be in the result. result represent
 // the current list of ordered modules
 //
-/* {1} The go function for: add_modules(self:module,l:set,result:list) [status=0] */
+/* The go function for: add_modules(self:module,l:set,result:list) [status=0] */
 func F_add_modules_module (self *ClaireModule ,l *ClaireSet ,result *ClaireList ) *ClaireList  { 
     if (result.Memq(self.Id()) == CTRUE) { 
       return  result
@@ -734,7 +734,7 @@ func E_add_modules_module (self EID,l EID,result EID) EID {
 // this methods takes a list of modules that must be loaded and returns
 // a list of modules that are necessary for the definition
 //
-/* {1} The go function for: add_modules(self:list) [status=0] */
+/* The go function for: add_modules(self:list) [status=0] */
 func F_add_modules_list (self *ClaireList ) *ClaireList  { 
     // procedure body with s = list
     var Result *ClaireList  
@@ -759,7 +759,7 @@ func E_add_modules_list (self EID) EID {
     return EID{F_add_modules_list(ToList(OBJ(self)) ).Id(),0}} 
   
 // load a file of expressions (quite useful)
-/* {1} The go function for: eload(self:string) [status=1] */
+/* The go function for: eload(self:string) [status=1] */
 func F_eload_string (self *ClaireString ) EID { 
     // eid body s = any
     var Result EID 
@@ -865,7 +865,7 @@ func E_eload_string (self EID) EID {
 // This method reads from a CLAIRE port (self).
 // We first check if self is the current reading port.
 // the last character read (and not used) is in last(reader)
-/* {1} The go function for: readblock(p:port) [status=1] */
+/* The go function for: readblock(p:port) [status=1] */
 func F_readblock_port (p *ClairePort ) EID { 
     // eid body s = any
     var Result EID 
@@ -903,7 +903,7 @@ func E_readblock_port (p EID) EID {
     return F_readblock_port(ToPort(OBJ(p)) )} 
   
 // read reads a closed expression
-/* {1} The go function for: read(p:port) [status=1] */
+/* The go function for: read(p:port) [status=1] */
 func F_read_port (p *ClairePort ) EID { 
     // eid body s = any
     var Result EID 
@@ -945,7 +945,7 @@ func E_read_port (p EID) EID {
     return F_read_port(ToPort(OBJ(p)) )} 
   
 // read into a string
-/* {1} The go function for: read(self:string) [status=1] */
+/* The go function for: read(self:string) [status=1] */
 func F_read_string (self *ClaireString ) EID { 
     // eid body s = any
     var Result EID 
@@ -994,7 +994,7 @@ func E_read_string (self EID) EID {
   
 // used by the top level
 // calls the debugger
-/* {1} The go function for: debug_if_possible(_CL_obj:void) [status=1] */
+/* The go function for: debug_if_possible(_CL_obj:void) [status=1] */
 func F_debug_if_possible_void () EID { 
     // eid body s = any
     var Result EID 
@@ -1013,7 +1013,7 @@ func E_debug_if_possible_void (_CL_obj EID) EID {
 // modify the stack and make debugging impossible).
 // here we assume that self_print is always defined and is always a compiled
 // function
-/* {1} The go function for: print_exception(_CL_obj:void) [status=0] */
+/* The go function for: print_exception(_CL_obj:void) [status=0] */
 func F_print_exception_void () *ClaireAny  { 
     // procedure body with s = any
     var Result *ClaireAny  
@@ -1054,7 +1054,7 @@ func E_print_exception_void (_CL_obj EID) EID {
 //
 // this method is the basic method called for show(..)
 //
-/* {1} The go function for: show(self:any) [status=1] */
+/* The go function for: show(self:any) [status=1] */
 func F_show_any (self *ClaireAny ) EID { 
     // eid body s = any
     var Result EID 
@@ -1109,7 +1109,7 @@ func E_show_any (self EID) EID {
 // This is the good version of kill, the nasty one is dangerous ....
 // these restrictions of kill explain the dependencies among objects
 //
-/* {1} The go function for: kill(self:object) [status=0] */
+/* The go function for: kill(self:object) [status=0] */
 func F_kill_object (self *ClaireObject ) *ClaireAny  { 
     if (self.Isa.IsIn(C_thing) == CTRUE) { 
       { var g0137 *ClaireThing   = ToThing(self.Id())
@@ -1124,7 +1124,7 @@ func F_kill_object (self *ClaireObject ) *ClaireAny  {
 func E_kill_object (self EID) EID { 
     return F_kill_object(ToObject(OBJ(self)) ).ToEID()} 
   
-/* {1} The go function for: kill(self:class) [status=0] */
+/* The go function for: kill(self:class) [status=0] */
 func F_kill_class (self *ClaireClass ) *ClaireAny  { 
     for (self.Instances.Length() != 0) { 
       Core.F_CALL(C_kill,ARGS(self.Instances.At(1-1).ToEID()))
@@ -1134,7 +1134,7 @@ func F_kill_class (self *ClaireClass ) *ClaireAny  {
       _ = x
       var x_iter *ClaireAny  
       var x_support *ClaireSet  
-      x_support = self.Descendents
+      x_support = self.Descendants
       for i_it := 0; i_it < x_support.Count; i_it++ { 
         x_iter = x_support.At(i_it)
         x = ToClass(x_iter)
@@ -1151,7 +1151,7 @@ func E_kill_class (self EID) EID {
     return F_kill_class(ToClass(OBJ(self)) ).ToEID()} 
   
 // our two very special inline methods
-/* {1} The go function for: min(x:integer,y:integer) [status=0] */
+/* The go function for: min(x:integer,y:integer) [status=0] */
 func F_min_integer (x int,y int) int { 
     if (x <= y) { 
       return  x
@@ -1164,7 +1164,7 @@ func F_min_integer (x int,y int) int {
 func E_min_integer (x EID,y EID) EID { 
     return EID{C__INT,IVAL(F_min_integer(INT(x),INT(y) ))}} 
   
-/* {1} The go function for: max(x:integer,y:integer) [status=0] */
+/* The go function for: max(x:integer,y:integer) [status=0] */
 func F_max_integer (x int,y int) int { 
     if (x <= y) { 
       return  y
@@ -1177,7 +1177,7 @@ func F_max_integer (x int,y int) int {
 func E_max_integer (x EID,y EID) EID { 
     return EID{C__INT,IVAL(F_max_integer(INT(x),INT(y) ))}} 
   
-/* {1} The go function for: min(x:float,y:float) [status=0] */
+/* The go function for: min(x:float,y:float) [status=0] */
 func F_min_float (x float64,y float64) float64 { 
     if (x <= y) { 
       return  x
@@ -1190,7 +1190,7 @@ func F_min_float (x float64,y float64) float64 {
 func E_min_float (x EID,y EID) EID { 
     return EID{C__FLOAT,FVAL(F_min_float(FLOAT(x),FLOAT(y) ))}} 
   
-/* {1} The go function for: max(x:float,y:float) [status=0] */
+/* The go function for: max(x:float,y:float) [status=0] */
 func F_max_float (x float64,y float64) float64 { 
     if (x <= y) { 
       return  y
@@ -1203,7 +1203,7 @@ func F_max_float (x float64,y float64) float64 {
 func E_max_float (x EID,y EID) EID { 
     return EID{C__FLOAT,FVAL(F_max_float(FLOAT(x),FLOAT(y) ))}} 
   
-/* {1} The go function for: min(x:any,y:any) [status=1] */
+/* The go function for: min(x:any,y:any) [status=1] */
 func F_min_any (x *ClaireAny ,y *ClaireAny ) EID { 
     // eid body s = any
     var Result EID 
@@ -1216,7 +1216,7 @@ func F_min_any (x *ClaireAny ,y *ClaireAny ) EID {
 func E_min_any (x EID,y EID) EID { 
     return F_min_any(ANY(x),ANY(y) )} 
   
-/* {1} The go function for: max(x:any,y:any) [status=1] */
+/* The go function for: max(x:any,y:any) [status=1] */
 func F_max_any (x *ClaireAny ,y *ClaireAny ) EID { 
     // eid body s = any
     var Result EID 
@@ -1230,7 +1230,7 @@ func E_max_any (x EID,y EID) EID {
     return F_max_any(ANY(x),ANY(y) )} 
   
 // check if the value if known?
-/* {1} The go function for: known?(a:table,x:any) [status=0] */
+/* The go function for: known?(a:table,x:any) [status=0] */
 func F_known_ask_table (a *ClaireTable ,x *ClaireAny ) *ClaireBoolean  { 
     if (Core.F_get_table(a,x) != CNULL) {return CTRUE
     } else {return CFALSE}} 
@@ -1239,7 +1239,7 @@ func F_known_ask_table (a *ClaireTable ,x *ClaireAny ) *ClaireBoolean  {
 func E_known_ask_table (a EID,x EID) EID { 
     return EID{F_known_ask_table(ToTable(OBJ(a)),ANY(x) ).Id(),0}} 
   
-/* {1} The go function for: unknown?(a:table,x:any) [status=0] */
+/* The go function for: unknown?(a:table,x:any) [status=0] */
 func F_unknown_ask_table (a *ClaireTable ,x *ClaireAny ) *ClaireBoolean  { 
     if (Core.F_get_table(a,x) == CNULL) {return CTRUE
     } else {return CFALSE}} 
@@ -1248,7 +1248,7 @@ func F_unknown_ask_table (a *ClaireTable ,x *ClaireAny ) *ClaireBoolean  {
 func E_unknown_ask_table (a EID,x EID) EID { 
     return EID{F_unknown_ask_table(ToTable(OBJ(a)),ANY(x) ).Id(),0}} 
   
-/* {1} The go function for: float!(self:string) [status=1] */
+/* The go function for: float!(self:string) [status=1] */
 func F_float_I_string (self *ClaireString ) EID { 
     // eid body s = float
     var Result EID 
@@ -1278,7 +1278,7 @@ func E_float_I_string (self EID) EID {
     return F_float_I_string(ToString(OBJ(self)) )} 
   
 // v3.00.46 a new macro
-/* {1} The go function for: >=(self:any,x:any) [status=1] */
+/* The go function for: >=(self:any,x:any) [status=1] */
 func F__sup_equal_any (self *ClaireAny ,x *ClaireAny ) *ClaireBoolean  { 
     if (ToBoolean(OBJ(Core.F_CALL(ToProperty(C__inf_equal.Id()),ARGS(x.ToEID(),self.ToEID())))) == CTRUE) {return CTRUE
     } else {return CFALSE}} 
@@ -1288,7 +1288,7 @@ func E__sup_equal_any (self EID,x EID) EID {
     return EID{F__sup_equal_any(ANY(self),ANY(x) ).Id(),0}} 
   
 // v3.3.42 add macros to use float & integers easily
-/* {1} The go function for: +(x:integer,y:float) [status=0] */
+/* The go function for: +(x:integer,y:float) [status=0] */
 func F__plus_integer2 (x int,y float64) float64 { 
     return  (F_to_float(x)+y)
     } 
@@ -1297,7 +1297,7 @@ func F__plus_integer2 (x int,y float64) float64 {
 func E__plus_integer2 (x EID,y EID) EID { 
     return EID{C__FLOAT,FVAL(F__plus_integer2(INT(x),FLOAT(y) ))}} 
   
-/* {1} The go function for: *(x:integer,y:float) [status=0] */
+/* The go function for: *(x:integer,y:float) [status=0] */
 func F__star_integer2 (x int,y float64) float64 { 
     return  (F_to_float(x)*y)
     } 
@@ -1306,7 +1306,7 @@ func F__star_integer2 (x int,y float64) float64 {
 func E__star_integer2 (x EID,y EID) EID { 
     return EID{C__FLOAT,FVAL(F__star_integer2(INT(x),FLOAT(y) ))}} 
   
-/* {1} The go function for: /(x:integer,y:float) [status=0] */
+/* The go function for: /(x:integer,y:float) [status=0] */
 func F__7_integer2 (x int,y float64) float64 { 
     return  (F_to_float(x)/y)
     } 
@@ -1315,7 +1315,7 @@ func F__7_integer2 (x int,y float64) float64 {
 func E__7_integer2 (x EID,y EID) EID { 
     return EID{C__FLOAT,FVAL(F__7_integer2(INT(x),FLOAT(y) ))}} 
   
-/* {1} The go function for: -(x:integer,y:float) [status=0] */
+/* The go function for: -(x:integer,y:float) [status=0] */
 func F__dash_integer3 (x int,y float64) float64 { 
     return  (F_to_float(x)-y)
     } 
@@ -1324,7 +1324,7 @@ func F__dash_integer3 (x int,y float64) float64 {
 func E__dash_integer3 (x EID,y EID) EID { 
     return EID{C__FLOAT,FVAL(F__dash_integer3(INT(x),FLOAT(y) ))}} 
   
-/* {1} The go function for: +(x:float,y:integer) [status=0] */
+/* The go function for: +(x:float,y:integer) [status=0] */
 func F__plus_float2 (x float64,y int) float64 { 
     return  (x+F_to_float(y))
     } 
@@ -1333,7 +1333,7 @@ func F__plus_float2 (x float64,y int) float64 {
 func E__plus_float2 (x EID,y EID) EID { 
     return EID{C__FLOAT,FVAL(F__plus_float2(FLOAT(x),INT(y) ))}} 
   
-/* {1} The go function for: *(x:float,y:integer) [status=0] */
+/* The go function for: *(x:float,y:integer) [status=0] */
 func F__star_float2 (x float64,y int) float64 { 
     return  (x*F_to_float(y))
     } 
@@ -1342,7 +1342,7 @@ func F__star_float2 (x float64,y int) float64 {
 func E__star_float2 (x EID,y EID) EID { 
     return EID{C__FLOAT,FVAL(F__star_float2(FLOAT(x),INT(y) ))}} 
   
-/* {1} The go function for: /(x:float,y:integer) [status=0] */
+/* The go function for: /(x:float,y:integer) [status=0] */
 func F__7_float2 (x float64,y int) float64 { 
     return  (x/F_to_float(y))
     } 
@@ -1351,7 +1351,7 @@ func F__7_float2 (x float64,y int) float64 {
 func E__7_float2 (x EID,y EID) EID { 
     return EID{C__FLOAT,FVAL(F__7_float2(FLOAT(x),INT(y) ))}} 
   
-/* {1} The go function for: -(x:float,y:integer) [status=0] */
+/* The go function for: -(x:float,y:integer) [status=0] */
 func F__dash_float3 (x float64,y int) float64 { 
     return  (x-F_to_float(y))
     } 
@@ -1361,7 +1361,7 @@ func E__dash_float3 (x EID,y EID) EID {
     return EID{C__FLOAT,FVAL(F__dash_float3(FLOAT(x),INT(y) ))}} 
   
 // v3.4 a useful macro
-/* {1} The go function for: sqr(x:integer) [status=0] */
+/* The go function for: sqr(x:integer) [status=0] */
 func F_sqr_integer (x int) int { 
     return  (x*x)
     } 
@@ -1370,7 +1370,7 @@ func F_sqr_integer (x int) int {
 func E_sqr_integer (x EID) EID { 
     return EID{C__INT,IVAL(F_sqr_integer(INT(x) ))}} 
   
-/* {1} The go function for: sqr(x:float) [status=0] */
+/* The go function for: sqr(x:float) [status=0] */
 func F_sqr_float (x float64) float64 { 
     return  (x*x)
     } 

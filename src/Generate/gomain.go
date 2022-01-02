@@ -1,5 +1,5 @@
 /***** CLAIRE Compilation of file /Users/ycaseau/Dropbox/src/clairev4.03/src/compile/gomain.cl 
-         [version 4.0.04 / safety 5] Wednesday 12-29-2021 08:55:19 *****/
+         [version 4.0.04 / safety 5] Saturday 01-01-2022 16:47:21 *****/
 
 package Generate
 import (_ "fmt"
@@ -88,6 +88,7 @@ func F_Generate_printHelp_void ()  {
     PRINC("        -f <filename>  : load <filename>             \n")
     PRINC("        -n : do not load the init file               \n")
     PRINC("        -m <module> : load <module>                  \n")
+    PRINC("        -mx <module> : load <module> and launch main()  \n")
     PRINC("        -v <int> : sets the verbosity level       \n")
     PRINC("        -S <flag> : sets the global variable <flag> to true  \n")
     PRINC("        -o <name> : sets the name of the executable  \n")
@@ -96,9 +97,12 @@ func F_Generate_printHelp_void ()  {
     PRINC("        -D : debug mode                              \n")
     PRINC("        -safe : safe mode                            \n")
     PRINC("        -O : optimizing mode                         \n")
+    PRINC("        -O2 : super optimizing mode  (no bound checks)      \n")
     PRINC("        -cm <module>: compiles a module -> executable        \n")
     PRINC("        -cc <module>: compiles a module -> target go files      \n")
-    PRINC("        -cx <module> : generates system file associated to a module \n")
+    PRINC("        -cx <module> : compiles a module & launch main() \n")
+    PRINC("         -sf <module> : generates system file associated to a module \n")
+    PRINC("         -sx <module> : generates system file that includes main() \n")
     F_CL_exit(0)
     } 
   

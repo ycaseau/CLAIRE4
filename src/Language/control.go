@@ -1,5 +1,5 @@
 /***** CLAIRE Compilation of file /Users/ycaseau/Dropbox/src/clairev4.03/src/meta/control.cl 
-         [version 4.0.03 / safety 5] Wednesday 12-29-2021 08:34:14 *****/
+         [version 4.0.04 / safety 5] Saturday 01-01-2022 16:47:18 *****/
 
 package Language
 import (_ "fmt"
@@ -29,7 +29,7 @@ func import_g0124() {
 // *     Part 1: If, Do, Let                                           *
 // *********************************************************************
 //--------------- the IF --------------------------------------------
-/* {1} The go function for: self_print(self:If) [status=1] */
+/* The go function for: self_print(self:If) [status=1] */
 func (self *If ) SelfPrint () EID { 
     // eid body s = void
     var Result EID 
@@ -47,7 +47,7 @@ func (self *If ) SelfPrint () EID {
 func E_self_print_If_Language (self EID) EID { 
     return To_If(OBJ(self)).SelfPrint( )} 
   
-/* {1} The go function for: printstat(self:If) [status=1] */
+/* The go function for: printstat(self:If) [status=1] */
 func (self *If ) Printstat () EID { 
     // eid body s = void
     var Result EID 
@@ -72,7 +72,7 @@ func (self *If ) Printstat () EID {
 func E_printstat_If (self EID) EID { 
     return To_If(OBJ(self)).Printstat( )} 
   
-/* {1} The go function for: printif(self:any) [status=1] */
+/* The go function for: printif(self:any) [status=1] */
 func F_printif_any (self *ClaireAny ) EID { 
     // eid body s = void
     var Result EID 
@@ -115,7 +115,7 @@ func F_printif_any (self *ClaireAny ) EID {
 func E_printif_any (self EID) EID { 
     return F_printif_any(ANY(self) )} 
   
-/* {1} The go function for: printelse(self:If) [status=1] */
+/* The go function for: printelse(self:If) [status=1] */
 func (self *If ) Printelse () EID { 
     // eid body s = void
     var Result EID 
@@ -174,7 +174,7 @@ func E_printelse_If (self EID) EID {
 // notice that the eval(test) is not a boolean thus the compiler will add
 // something
 // TODO: check that is is not too slow (may use a constant for _oid_(true))
-/* {1} The go function for: self_eval(self:If) [status=1] */
+/* The go function for: self_eval(self:If) [status=1] */
 func (self *If ) SelfEval () EID { 
     // eid body s = any
     var Result EID 
@@ -206,7 +206,7 @@ func EVAL_If (x *ClaireAny) EID {
      return To_If(x).SelfEval()} 
   
 //--------------------- block structure------------------------------
-/* {1} The go function for: self_print(self:Do) [status=1] */
+/* The go function for: self_print(self:Do) [status=1] */
 func (self *Do ) SelfPrint () EID { 
     // eid body s = void
     var Result EID 
@@ -231,7 +231,7 @@ func (self *Do ) SelfPrint () EID {
 func E_self_print_Do_Language (self EID) EID { 
     return To_Do(OBJ(self)).SelfPrint( )} 
   
-/* {1} The go function for: printdo(l:list,clo:boolean) [status=1] */
+/* The go function for: printdo(l:list,clo:boolean) [status=1] */
 func F_printdo_list (l *ClaireList ,clo *ClaireBoolean ) EID { 
     // eid body s = void
     var Result EID 
@@ -288,7 +288,7 @@ func F_printdo_list (l *ClaireList ,clo *ClaireBoolean ) EID {
 func E_printdo_list (l EID,clo EID) EID { 
     return F_printdo_list(ToList(OBJ(l)),ToBoolean(OBJ(clo)) )} 
   
-/* {1} The go function for: printblock(x:any) [status=1] */
+/* The go function for: printblock(x:any) [status=1] */
 func F_printblock_any (x *ClaireAny ) EID { 
     // eid body s = void
     var Result EID 
@@ -310,7 +310,7 @@ func E_printblock_any (x EID) EID {
     return F_printblock_any(ANY(x) )} 
   
 // use res:EID pragma when compiled with CLAIRE4, res:any for CLAIRE3
-/* {1} The go function for: self_eval(self:Do) [status=1] */
+/* The go function for: self_eval(self:Do) [status=1] */
 func (self *Do ) SelfEval () EID { 
     // eid body s = any
     var Result EID 
@@ -351,7 +351,7 @@ func EVAL_Do (x *ClaireAny) EID {
      return To_Do(x).SelfEval()} 
   
 // ----------------- lexical variable definition -----------------------
-/* {1} The go function for: self_print(self:Let) [status=1] */
+/* The go function for: self_print(self:Let) [status=1] */
 func (self *Let ) SelfPrint () EID { 
     // eid body s = void
     var Result EID 
@@ -385,7 +385,7 @@ func (self *Let ) SelfPrint () EID {
 func E_self_print_Let_Language (self EID) EID { 
     return To_Let(OBJ(self)).SelfPrint( )} 
   
-/* {1} The go function for: printbody(self:Let) [status=1] */
+/* The go function for: printbody(self:Let) [status=1] */
 func (self *Let ) Printbody () EID { 
     // eid body s = void
     var Result EID 
@@ -424,7 +424,7 @@ func (self *Let ) Printbody () EID {
 func E_printbody_Let (self EID) EID { 
     return To_Let(OBJ(self)).Printbody( )} 
   
-/* {1} The go function for: self_eval(self:Let) [status=1] */
+/* The go function for: self_eval(self:Let) [status=1] */
 func (self *Let ) SelfEval () EID { 
     // eid body s = any
     var Result EID 
@@ -452,7 +452,7 @@ func EVAL_Let (x *ClaireAny) EID {
   
 // a when is a special Let that filters out the unknown value !
 //
-/* {1} The go function for: self_print(self:When) [status=1] */
+/* The go function for: self_print(self:When) [status=1] */
 func (self *When ) SelfPrint () EID { 
     // eid body s = void
     var Result EID 
@@ -504,7 +504,7 @@ func (self *When ) SelfPrint () EID {
 func E_self_print_When_Language (self EID) EID { 
     return To_When(OBJ(self)).SelfPrint( )} 
   
-/* {1} The go function for: self_eval(self:When) [status=1] */
+/* The go function for: self_eval(self:When) [status=1] */
 func (self *When ) SelfEval () EID { 
     // eid body s = any
     var Result EID 
@@ -544,7 +544,7 @@ func EVAL_When (x *ClaireAny) EID {
 //note: the Let* is also used for multi-assignments
 // Let*(v,f(),(v1 := v[1], v2 := v[2], ...))   <=>  (v1,v2,...vn) := f()
 //
-/* {1} The go function for: self_print(self:Let+) [status=1] */
+/* The go function for: self_print(self:Let+) [status=1] */
 func (self *Let_plus ) SelfPrint () EID { 
     // eid body s = void
     var Result EID 
@@ -583,7 +583,7 @@ func (self *Let_plus ) SelfPrint () EID {
 func E_self_print_Let_plus_Language (self EID) EID { 
     return To_Let_plus(OBJ(self)).SelfPrint( )} 
   
-/* {1} The go function for: self_print(self:Let*) [status=1] */
+/* The go function for: self_print(self:Let*) [status=1] */
 func (self *Let_star ) SelfPrint () EID { 
     // eid body s = void
     var Result EID 
@@ -690,7 +690,7 @@ func E_self_print_Let_star_Language (self EID) EID {
 // *********************************************************************
 // for is the simplest evaluation loop
 //
-/* {1} The go function for: self_print(self:For) [status=1] */
+/* The go function for: self_print(self:For) [status=1] */
 func (self *For ) SelfPrint () EID { 
     // eid body s = void
     var Result EID 
@@ -738,7 +738,7 @@ func (self *For ) SelfPrint () EID {
 func E_self_print_For_Language (self EID) EID { 
     return To_For(OBJ(self)).SelfPrint( )} 
   
-/* {1} The go function for: self_eval(self:For) [status=1] */
+/* The go function for: self_eval(self:For) [status=1] */
 func (self *For ) SelfEval () EID { 
     // eid body s = any
     var Result EID 
@@ -759,7 +759,7 @@ func (self *For ) SelfEval () EID {
               var y_iter *ClaireAny  
               Result= EID{CFALSE.Id(),0}
               var y_support *ClaireSet  
-              y_support = g0144.Descendents
+              y_support = g0144.Descendants
               for i_it := 0; i_it < y_support.Count; i_it++ { 
                 y_iter = y_support.At(i_it)
                 y = ToClass(y_iter)
@@ -937,7 +937,7 @@ func EVAL_For (x *ClaireAny) EID {
   
 // [collect VAR in SET_EXPR, ...] is the same as a "for", but returns the list of values
 //
-/* {1} The go function for: self_print(self:Collect) [status=1] */
+/* The go function for: self_print(self:Collect) [status=1] */
 func (self *Collect ) SelfPrint () EID { 
     // eid body s = void
     var Result EID 
@@ -976,7 +976,7 @@ func E_self_print_Collect_Language (self EID) EID {
     return To_Collect(OBJ(self)).SelfPrint( )} 
   
 // list image : preserve the order for lists and intervals (v4)
-/* {1} The go function for: self_eval(self:Collect) [status=1] */
+/* The go function for: self_eval(self:Collect) [status=1] */
 func (self *Collect ) SelfEval () EID { 
     // eid body s = any
     var Result EID 
@@ -1003,7 +1003,7 @@ func (self *Collect ) SelfEval () EID {
               var y_iter *ClaireAny  
               Result= EID{CFALSE.Id(),0}
               var y_support *ClaireSet  
-              y_support = g0154.Descendents
+              y_support = g0154.Descendants
               for i_it := 0; i_it < y_support.Count; i_it++ { 
                 y_iter = y_support.At(i_it)
                 y = ToClass(y_iter)
@@ -1191,7 +1191,7 @@ func EVAL_Collect (x *ClaireAny) EID {
   
 // this is a set image version, that produces a set
 //
-/* {1} The go function for: self_print(self:Image) [status=1] */
+/* The go function for: self_print(self:Image) [status=1] */
 func (self *Image ) SelfPrint () EID { 
     // eid body s = void
     var Result EID 
@@ -1229,7 +1229,7 @@ func (self *Image ) SelfPrint () EID {
 func E_self_print_Image_Language (self EID) EID { 
     return To_Image(OBJ(self)).SelfPrint( )} 
   
-/* {1} The go function for: self_eval(self:Image) [status=1] */
+/* The go function for: self_eval(self:Image) [status=1] */
 func (self *Image ) SelfEval () EID { 
     // eid body s = any
     var Result EID 
@@ -1307,7 +1307,7 @@ func EVAL_Image (x *ClaireAny) EID {
 // [select VAR in SET_EXPR, ...] is the same as a "for" but returns the subset of
 //  members that produce a true value
 //
-/* {1} The go function for: self_print(self:Select) [status=1] */
+/* The go function for: self_print(self:Select) [status=1] */
 func (self *Select ) SelfPrint () EID { 
     // eid body s = void
     var Result EID 
@@ -1354,7 +1354,7 @@ func (self *Select ) SelfPrint () EID {
 func E_self_print_Select_Language (self EID) EID { 
     return To_Select(OBJ(self)).SelfPrint( )} 
   
-/* {1} The go function for: self_eval(self:Select) [status=1] */
+/* The go function for: self_eval(self:Select) [status=1] */
 func (self *Select ) SelfEval () EID { 
     // eid body s = any
     var Result EID 
@@ -1381,7 +1381,7 @@ func (self *Select ) SelfEval () EID {
               var y_iter *ClaireAny  
               Result= EID{CFALSE.Id(),0}
               var y_support *ClaireSet  
-              y_support = g0161.Descendents
+              y_support = g0161.Descendants
               for i_it := 0; i_it < y_support.Count; i_it++ { 
                 y_iter = y_support.At(i_it)
                 y = ToClass(y_iter)
@@ -1555,7 +1555,7 @@ func EVAL_Select (x *ClaireAny) EID {
 // [select VAR in SET_EXPR, ...] is the same as a "for" but returns the subset of
 //  members that produce a true value
 //
-/* {1} The go function for: self_print(self:Lselect) [status=1] */
+/* The go function for: self_print(self:Lselect) [status=1] */
 func (self *Lselect ) SelfPrint () EID { 
     // eid body s = void
     var Result EID 
@@ -1602,7 +1602,7 @@ func (self *Lselect ) SelfPrint () EID {
 func E_self_print_Lselect_Language (self EID) EID { 
     return To_Lselect(OBJ(self)).SelfPrint( )} 
   
-/* {1} The go function for: self_eval(self:Lselect) [status=1] */
+/* The go function for: self_eval(self:Lselect) [status=1] */
 func (self *Lselect ) SelfEval () EID { 
     // eid body s = any
     var Result EID 
@@ -1628,7 +1628,7 @@ func (self *Lselect ) SelfEval () EID {
               var y_iter *ClaireAny  
               Result= EID{CFALSE.Id(),0}
               var y_support *ClaireSet  
-              y_support = g0171.Descendents
+              y_support = g0171.Descendants
               for i_it := 0; i_it < y_support.Count; i_it++ { 
                 y_iter = y_support.At(i_it)
                 y = ToClass(y_iter)
@@ -1792,7 +1792,7 @@ func EVAL_Lselect (x *ClaireAny) EID {
   
 // Exists is an iteration that checks a condition
 // other = true => forall,  other = false => exists, other = unknown => some
-/* {1} The go function for: self_print(self:Exists) [status=1] */
+/* The go function for: self_print(self:Exists) [status=1] */
 func (self *Exists ) SelfPrint () EID { 
     // eid body s = void
     var Result EID 
@@ -1858,7 +1858,7 @@ func (self *Exists ) SelfPrint () EID {
 func E_self_print_Exists_Language (self EID) EID { 
     return To_Exists(OBJ(self)).SelfPrint( )} 
   
-/* {1} The go function for: self_eval(self:Exists) [status=1] */
+/* The go function for: self_eval(self:Exists) [status=1] */
 func (self *Exists ) SelfEval () EID { 
     // eid body s = any
     var Result EID 
@@ -1878,7 +1878,7 @@ func (self *Exists ) SelfEval () EID {
                 var y_iter *ClaireAny  
                 Result= EID{CFALSE.Id(),0}
                 var y_support *ClaireSet  
-                y_support = g0176.Descendents
+                y_support = g0176.Descendants
                 for i_it := 0; i_it < y_support.Count; i_it++ { 
                   y_iter = y_support.At(i_it)
                   y = ToClass(y_iter)
@@ -2028,7 +2028,7 @@ func EVAL_Exists (x *ClaireAny) EID {
 // *     Part 3: other control structures                              *
 // *********************************************************************
 // ----------------- case  --------------------------------------
-/* {1} The go function for: self_print(self:Case) [status=1] */
+/* The go function for: self_print(self:Case) [status=1] */
 func (self *Case ) SelfPrint () EID { 
     // eid body s = void
     var Result EID 
@@ -2127,7 +2127,7 @@ func (self *Case ) SelfPrint () EID {
 func E_self_print_Case_Language (self EID) EID { 
     return To_Case(OBJ(self)).SelfPrint( )} 
   
-/* {1} The go function for: self_eval(self:Case) [status=1] */
+/* The go function for: self_eval(self:Case) [status=1] */
 func (self *Case ) SelfEval () EID { 
     // eid body s = any
     var Result EID 
@@ -2219,7 +2219,7 @@ func EVAL_Case (x *ClaireAny) EID {
   
 // ------------------ WHILE  and UNTIL  -----------------------------
 // the "other" while is until, where the first test is skipped
-/* {1} The go function for: self_print(self:While) [status=1] */
+/* The go function for: self_print(self:While) [status=1] */
 func (self *While ) SelfPrint () EID { 
     // eid body s = void
     var Result EID 
@@ -2254,7 +2254,7 @@ func E_self_print_While_Language (self EID) EID {
     return To_While(OBJ(self)).SelfPrint( )} 
   
 // other = true => self means  repeat self.arg until self.test = true
-/* {1} The go function for: self_eval(self:While) [status=1] */
+/* The go function for: self_eval(self:While) [status=1] */
 func (self *While ) SelfEval () EID { 
     // eid body s = any
     var Result EID 
@@ -2378,7 +2378,7 @@ func EVAL_While (x *ClaireAny) EID {
 // This is the control structure associated with these errors. Its real
 // semantics is defined in the C compiler file
 //
-/* {1} The go function for: self_print(self:Handle) [status=1] */
+/* The go function for: self_print(self:Handle) [status=1] */
 func (self *ClaireHandle ) SelfPrint () EID { 
     // eid body s = void
     var Result EID 
@@ -2422,7 +2422,7 @@ func E_self_print_Handle_Language (self EID) EID {
 // CLAIRE 4 VERSION, because catch x => x is a constant class
 // notice that return_error should be called return_exception since they travel through intepreted
 // not a problem at compile time since return_exceptions are handled with break(x)
-/* {1} The go function for: self_eval(self:Handle) [status=1] */
+/* The go function for: self_eval(self:Handle) [status=1] */
 func (self *ClaireHandle ) SelfEval () EID { 
     // eid body s = any
     var Result EID 
@@ -2460,7 +2460,7 @@ func EVAL_Handle (x *ClaireAny) EID {
 // *     Part 4: the constructs                                         *
 // *********************************************************************
 // v3.2.16   constructor for arrays
-/* {1} The go function for: self_print(self:Construct) [status=1] */
+/* The go function for: self_print(self:Construct) [status=1] */
 func (self *Construct ) SelfPrint () EID { 
     // eid body s = void
     var Result EID 
@@ -2552,7 +2552,7 @@ func E_self_print_Construct_Language (self EID) EID {
 // constructors: how to create a list, a set, a tuple or an array
 // note that the constructor is typed
 // CLAIRE4: must build the list with the proper type from the begining, so that Srange is correct
-/* {1} The go function for: self_eval(self:List) [status=1] */
+/* The go function for: self_eval(self:List) [status=1] */
 func (self *List ) SelfEval () EID { 
     // eid body s = any
     var Result EID 
@@ -2632,7 +2632,7 @@ func EVAL_List (x *ClaireAny) EID {
      return To_List(x).SelfEval()} 
   
 // here we use the CLAIRE 3 style of post-typing with a cast! 
-/* {1} The go function for: self_eval(self:Set) [status=1] */
+/* The go function for: self_eval(self:Set) [status=1] */
 func (self *Set ) SelfEval () EID { 
     // eid body s = any
     var Result EID 
@@ -2714,7 +2714,7 @@ func EVAL_Set (x *ClaireAny) EID {
      return To_Set(x).SelfEval()} 
   
 //
-/* {1} The go function for: self_eval(self:Tuple) [status=1] */
+/* The go function for: self_eval(self:Tuple) [status=1] */
 func (self *Tuple ) SelfEval () EID { 
     // eid body s = any
     var Result EID 
@@ -2755,7 +2755,7 @@ func EVAL_Tuple (x *ClaireAny) EID {
      return To_Tuple(x).SelfEval()} 
   
 // same as creating a list (same constraints since same underlying structure)
-/* {1} The go function for: self_eval(self:Array) [status=1] */
+/* The go function for: self_eval(self:Array) [status=1] */
 func (self *Array ) SelfEval () EID { 
     // eid body s = any
     var Result EID 
@@ -2835,7 +2835,7 @@ func EVAL_Array (x *ClaireAny) EID {
      return To_Array(x).SelfEval()} 
   
 // create a map from a list of pairs
-/* {1} The go function for: self_eval(self:Map) [status=1] */
+/* The go function for: self_eval(self:Map) [status=1] */
 func (self *Map ) SelfEval () EID { 
     // eid body s = map_set
     var Result EID 
@@ -2882,7 +2882,7 @@ func EVAL_Map (x *ClaireAny) EID {
 // it is an advanced feature for those who want to expand the language. This
 // makes CLAIRE a nice framework for DSL
 //
-/* {1} The go function for: self_eval(self:Macro) [status=1] */
+/* The go function for: self_eval(self:Macro) [status=1] */
 func (self *Macro ) SelfEval () EID { 
     // eid body s = any
     var Result EID 
@@ -2906,7 +2906,7 @@ func EVAL_Macro (x *ClaireAny) EID {
      return To_Macro(x).SelfEval()} 
   
 // error produces an exception of type general_error
-/* {1} The go function for: self_eval(self:Error) [status=1] */
+/* The go function for: self_eval(self:Error) [status=1] */
 func (self *Error ) SelfEval () EID { 
     // eid body s = error
     var Result EID 
@@ -2984,7 +2984,7 @@ func EVAL_Error (x *ClaireAny) EID {
 // this is the basic tool for printing in CLAIRE. A complex statement
 // is macroexpanded into basic printing instructions
 //
-/* {1} The go function for: self_eval(self:Printf) [status=1] */
+/* The go function for: self_eval(self:Printf) [status=1] */
 func (self *Printf ) SelfEval () EID { 
     // eid body s = any
     var Result EID 
@@ -3207,7 +3207,7 @@ func EVAL_Printf (x *ClaireAny) EID {
 // If trace_output() is known, use it, else use current output.
 // defined in inspect.cl
 // CLAIRE4: self_eval is defined once for all, hence exteneded
-/* {1} The go function for: self_eval(self:Trace) [status=1] */
+/* The go function for: self_eval(self:Trace) [status=1] */
 func (self *Trace ) SelfEval () EID { 
     // eid body s = any
     var Result EID 
@@ -3321,7 +3321,7 @@ func EVAL_Trace (x *ClaireAny) EID {
   
 // assert is refined in trace.la
 //
-/* {1} The go function for: self_eval(self:Assert) [status=1] */
+/* The go function for: self_eval(self:Assert) [status=1] */
 func (self *Assert ) SelfEval () EID { 
     // eid body s = any
     var Result EID 
@@ -3406,7 +3406,7 @@ func E_self_eval_Assert (self EID) EID {
 func EVAL_Assert (x *ClaireAny) EID { 
      return To_Assert(x).SelfEval()} 
   
-/* {1} The go function for: self_eval(self:Branch) [status=1] */
+/* The go function for: self_eval(self:Branch) [status=1] */
 func (self *Branch ) SelfEval () EID { 
     // eid body s = any
     var Result EID 

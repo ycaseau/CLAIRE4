@@ -1,5 +1,5 @@
 /***** CLAIRE Compilation of module Language.cl 
-         [version 4.0.03 / safety 5] Wednesday 12-29-2021 08:34:14 *****/
+         [version 4.0.04 / safety 5] Saturday 01-01-2022 16:47:18 *****/
 
 package Language
 import (_ "fmt"
@@ -1255,25 +1255,6 @@ var C_Language_rule_object *ClaireClass  /*obj*/
 var C_Language_relations *ClaireTable  /*obj*/
 var C_Language_last_rule *ClaireTable  /*obj*/
 var C_eval_rule *ClaireProperty  /*obj*/
-var C_Language_readCall *ClaireProperty  // Language/"readCall"
-var C_Language_eventMethod *ClaireProperty  // Language/"eventMethod"
-var C_Language_eventMethod_ask *ClaireProperty  // Language/"eventMethod?"
-var C_Language_putCall *ClaireProperty  // Language/"putCall"
-var C_Language_safeRange *ClaireProperty  // Language/"safeRange"
-var C_imported_function *ClaireProperty  // claire/"imported_function"
-var C_occurchange *ClaireProperty  // claire/"occurchange"
-var C_Language_getDefault *ClaireProperty  // Language/"getDefault"
-var C_Language_fast_definition_ask *ClaireProperty  // Language/"fast_definition?"
-var C_static_type *ClaireProperty  // claire/"static_type"
-var C_Language_static_type_nth *ClaireProperty  // Language/"static_type_nth"
-var C_Language_jito *ClaireProperty  // Language/"jito"
-var C_Language_makeJito *ClaireProperty  // Language/"makeJito"
-var C_Language_letJito *ClaireProperty  // Language/"letJito"
-var C_Language_makeCallMatch *ClaireProperty  // Language/"makeCallMatch"
-var C_Language_new_writes *ClaireProperty  // Language/"new_writes"
-var C_Language_occurexact *ClaireProperty  // Language/"occurexact"
-var C_Language_wrong *ClaireProperty  // Language/"wrong"
-var C_map *ClaireProperty  // claire/"map"
 var C_Language_no_eval *ClaireProperty  // Language/"no_eval"
 var C_Language_ppvariable *ClaireProperty  // Language/"ppvariable"
 var C_Language_write_value *ClaireProperty  // Language/"write_value"
@@ -1322,35 +1303,35 @@ var C_Language_priority *ClaireProperty  // Language/"priority"
 var C_Language_make_filter *ClaireProperty  // Language/"make_filter"
 var C_Language_make_demon *ClaireProperty  // Language/"make_demon"
 var C_Language_eval_if_write *ClaireProperty  // Language/"eval_if_write"
+var C_Language_readCall *ClaireProperty  // Language/"readCall"
+var C_Language_eventMethod *ClaireProperty  // Language/"eventMethod"
+var C_Language_eventMethod_ask *ClaireProperty  // Language/"eventMethod?"
+var C_Language_putCall *ClaireProperty  // Language/"putCall"
+var C_Language_safeRange *ClaireProperty  // Language/"safeRange"
+var C_imported_function *ClaireProperty  // claire/"imported_function"
+var C_occurchange *ClaireProperty  // claire/"occurchange"
+var C_Language_getDefault *ClaireProperty  // Language/"getDefault"
+var C_Language_fast_definition_ask *ClaireProperty  // Language/"fast_definition?"
+var C_static_type *ClaireProperty  // claire/"static_type"
+var C_Language_static_type_nth *ClaireProperty  // Language/"static_type_nth"
+var C_Language_jito *ClaireProperty  // Language/"jito"
+var C_Language_makeJito *ClaireProperty  // Language/"makeJito"
+var C_Language_letJito *ClaireProperty  // Language/"letJito"
+var C_Language_makeCallMatch *ClaireProperty  // Language/"makeCallMatch"
+var C_Language_new_writes *ClaireProperty  // Language/"new_writes"
+var C_Language_occurexact *ClaireProperty  // Language/"occurexact"
+var C_Language_wrong *ClaireProperty  // Language/"wrong"
+var C_map *ClaireProperty  // claire/"map"
 var It *ClaireModule
 var C_iClaire *ClaireModule 
 // definition of the meta-model for module Language 
 func MetaLoad() { 
   
   It = MakeModule("Language",C_iClaire)
-  It.Comment = MakeString("Compiled on Wednesday 12-29-2021 08:34:14(v4.0.03), lines:2214, warnings:1,safety:5")
+  It.Comment = MakeString("Compiled on Saturday 01-01-2022 16:47:18(v4.0.04), lines:2214, warnings:1,safety:5")
   ClEnv.Module_I = It
   
   // definition of the properties
-  C_Language_readCall = MakeProperty("readCall",1,It)
-  C_Language_eventMethod = MakeProperty("eventMethod",1,It)
-  C_Language_eventMethod_ask = MakeProperty("eventMethod?",1,It)
-  C_Language_putCall = MakeProperty("putCall",1,It)
-  C_Language_safeRange = MakeProperty("safeRange",1,It)
-  C_imported_function = MakeProperty("imported_function",1,C_claire)
-  C_occurchange = MakeProperty("occurchange",1,C_claire)
-  C_Language_getDefault = MakeProperty("getDefault",1,It)
-  C_Language_fast_definition_ask = MakeProperty("fast_definition?",1,It)
-  C_static_type = MakeProperty("static_type",1,C_claire)
-  C_Language_static_type_nth = MakeProperty("static_type_nth",1,It)
-  C_Language_jito = MakeProperty("jito",1,It)
-  C_Language_makeJito = MakeProperty("makeJito",1,It)
-  C_Language_letJito = MakeProperty("letJito",1,It)
-  C_Language_makeCallMatch = MakeProperty("makeCallMatch",1,It)
-  C_Language_new_writes = MakeProperty("new_writes",1,It)
-  C_Language_occurexact = MakeProperty("occurexact",1,It)
-  C_Language_wrong = MakeProperty("wrong",2,It)
-  C_map = MakeProperty("map",1,C_claire)
   C_Language_no_eval = MakeProperty("no_eval",1,It)
   C_Language_ppvariable = MakeProperty("ppvariable",1,It)
   C_Language_write_value = MakeProperty("write_value",1,It)
@@ -1399,6 +1380,25 @@ func MetaLoad() {
   C_Language_make_filter = MakeProperty("make_filter",1,It)
   C_Language_make_demon = MakeProperty("make_demon",1,It)
   C_Language_eval_if_write = MakeProperty("eval_if_write",1,It)
+  C_Language_readCall = MakeProperty("readCall",1,It)
+  C_Language_eventMethod = MakeProperty("eventMethod",1,It)
+  C_Language_eventMethod_ask = MakeProperty("eventMethod?",1,It)
+  C_Language_putCall = MakeProperty("putCall",1,It)
+  C_Language_safeRange = MakeProperty("safeRange",1,It)
+  C_imported_function = MakeProperty("imported_function",1,C_claire)
+  C_occurchange = MakeProperty("occurchange",1,C_claire)
+  C_Language_getDefault = MakeProperty("getDefault",1,It)
+  C_Language_fast_definition_ask = MakeProperty("fast_definition?",1,It)
+  C_static_type = MakeProperty("static_type",1,C_claire)
+  C_Language_static_type_nth = MakeProperty("static_type_nth",1,It)
+  C_Language_jito = MakeProperty("jito",1,It)
+  C_Language_makeJito = MakeProperty("makeJito",1,It)
+  C_Language_letJito = MakeProperty("letJito",1,It)
+  C_Language_makeCallMatch = MakeProperty("makeCallMatch",1,It)
+  C_Language_new_writes = MakeProperty("new_writes",1,It)
+  C_Language_occurexact = MakeProperty("occurexact",1,It)
+  C_Language_wrong = MakeProperty("wrong",2,It)
+  C_map = MakeProperty("map",1,C_claire)
   
   // instructions from module sources
   C_Basic_instruction = MakeClass("Basic_instruction",C_Instruction,C_claire)
@@ -2198,7 +2198,7 @@ func MetaLoad() {
     _ = x
     var x_iter *ClaireAny  
     var x_support *ClaireSet  
-    x_support = C_Instruction.Descendents
+    x_support = C_Instruction.Descendants
     for i_it := 0; i_it < x_support.Count; i_it++ { 
       x_iter = x_support.At(i_it)
       x = ToClass(x_iter)

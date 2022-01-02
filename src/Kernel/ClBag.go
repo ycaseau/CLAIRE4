@@ -647,7 +647,7 @@ func E_add_list(x EID, y EID) EID {
 			} else {
 				return Cerror(17, ANY(y), l.of.Id())
 			}
-		} else if l.of.Id() == CEMPTY.Id() || l.of.Contains(ANY(y)) == CTRUE {
+		} else if l.of.Contains(ANY(y)) == CTRUE {
 			F_add_listInteger(l.toInteger(), ToInteger(OBJ(y)).Value)
 		} else {
 			return Cerror(17, ANY(y), l.of.Id())
@@ -659,13 +659,13 @@ func E_add_list(x EID, y EID) EID {
 			} else {
 				return Cerror(17, ANY(y), l.of.Id())
 			}
-		} else if l.of.Id() == CEMPTY.Id() || l.of.Contains(ANY(y)) == CTRUE {
+		} else if l.of.Contains(ANY(y)) == CTRUE {
 			F_add_listFloat(l.toFloat(), ToFloat(OBJ(y)).Value)
 		} else {
 			return Cerror(17, ANY(y), l.of.Id())
 		}
 	} else {
-		if l.of.Id() == CEMPTY.Id() || l.of.Contains(ANY(y)) == CTRUE {
+		if l.of.Contains(ANY(y)) == CTRUE {
 			F_add_listObject(l.toObject(), ANY(y))
 		} else {
 			return Cerror(17, ANY(y), l.of.Id())
@@ -1306,7 +1306,10 @@ func (s *ClaireSet) AddInsertObject(val *ClaireAny, i int, n int) *ClaireSet {
 
 // the sort KEY
 // Note : this could be made faster for string at the expense of other objects but hashing(adress) strings is tricky
-func SKEY(x *ClaireAny) uint64 {if x.Isa.Ident_ask == CTRUE {return x.ui64()} else {return x.Isa.ui64()}}
+func SKEY(x *ClaireAny) uint64 {
+	if x.Isa.Ident_ask == CTRUE {return x.ui64()
+	} else {return x.Isa.ui64()}
+}
 
 // ----------------- Membership  ---------
 

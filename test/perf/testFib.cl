@@ -74,5 +74,5 @@ all() ->
 [main() -> 
   //[0] test fib ----- //,
   all(),
-  exit(1) ]
+  exit(0) ]
 

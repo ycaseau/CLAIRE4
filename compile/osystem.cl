@@ -184,7 +184,7 @@ claire/OPT :: meta_OPT(
     simple_operations = set<property>(+, -, /, *),                      // v3.3
     non_identifiable_set =
                     Id(set<class>{c in ((class but integer) but float) | 
-                                   exists(c2 in c.descendents | c2.ident? = false)}))
+                                   exists(c2 in c.descendants | c2.ident? = false)}))
 
 
 // pragma for the compiler  => MOVED TO LANGUAGE in CLAIRE 4

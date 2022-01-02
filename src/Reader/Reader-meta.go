@@ -1,5 +1,5 @@
 /***** CLAIRE Compilation of module Reader.cl 
-         [version 4.0.03 / safety 5] Wednesday 12-29-2021 08:34:14 *****/
+         [version 4.0.04 / safety 5] Saturday 01-01-2022 16:47:19 *****/
 
 package Reader
 import (_ "fmt"
@@ -282,7 +282,7 @@ var It *ClaireModule
 func MetaLoad() { 
   
   It = MakeModule("Reader",Language.C_iClaire)
-  It.Comment = MakeString("Compiled on Wednesday 12-29-2021 08:34:14(v4.0.03), lines:1782, warnings:3,safety:5")
+  It.Comment = MakeString("Compiled on Saturday 01-01-2022 16:47:19(v4.0.04), lines:1782, warnings:3,safety:5")
   ClEnv.Module_I = It
   
   // definition of the properties

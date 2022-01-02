@@ -565,6 +565,7 @@ func (s *ClaireSymbol) Put(x *ClaireAny) *ClaireAny {
 func E_put_symbol(s EID, x EID) EID { return EID{ToSymbol(OBJ(s)).Put(ANY(x)).Id(), 0} }
 
 // return the value : unknown if unknown ?  (used to be called get_symbol)
+// deprecated => use value @ symbol ! kept only because it helps to move from 3.5 to 4.0
 func (s *ClaireSymbol) Get() *ClaireAny {
 	if s.value == nil {
 		return CNULL
@@ -573,7 +574,7 @@ func (s *ClaireSymbol) Get() *ClaireAny {
 	}
 }
 
-func E_get_symbol(s EID) EID { return EID{ToSymbol(OBJ(s)).Get().Id(), 0} }
+func E_get_symbol(s EID) EID { return EID{ToSymbol(OBJ(s)).Get().Id(), 0} } 
 
 // concatenate two symbols, or a symbol and a string or a symbol and an integer
 // the result is a symbol in the module of the first symbol

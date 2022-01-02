@@ -1,5 +1,5 @@
 /***** CLAIRE Compilation of file /Users/ycaseau/Dropbox/src/clairev4.03/src/compile/osystem.cl 
-         [version 4.0.03 / safety 5] Wednesday 12-29-2021 08:34:17 *****/
+         [version 4.0.04 / safety 5] Saturday 01-01-2022 16:47:21 *****/
 
 package Optimize
 import (_ "fmt"
@@ -47,7 +47,7 @@ func import_g0000() {
 // Compile/index :: Kernel/index   (1) should not be needed (inherited by iClaire)
 // Compile/typing :: Kernel/typing
 // where to find the CLAIRE libraries
-/* {1} The go function for: home(_CL_obj:void) [status=0] */
+/* The go function for: home(_CL_obj:void) [status=0] */
 func F_home_void () *ClaireString  { 
     return  F_getenv_string(MakeString("CLAIRE_HOME"))
     } 
@@ -99,7 +99,7 @@ func E_home_void (_CL_obj EID) EID {
 // OPT contains all the parameters for the optimizer
 // pragma for the compiler  => MOVED TO LANGUAGE in CLAIRE 4
 // this pragma tells to compile with full safety (include arithmetic checks)
-/* {1} The go function for: safe(x:any) [status=0] */
+/* The go function for: safe(x:any) [status=0] */
 func F_safe_any (x *ClaireAny ) *ClaireAny  { 
     return  x
     } 
@@ -108,7 +108,7 @@ func F_safe_any (x *ClaireAny ) *ClaireAny  {
 func E_safe_any (x EID) EID { 
     return F_safe_any(ANY(x) ).ToEID()} 
   
-/* {1} The go function for: safe_any_type */
+/* The go function for: safe_any_type */
 func F_safe_any_type (x *ClaireType ) EID { 
     var Result EID 
     Result = EID{x.Id(),0}
@@ -123,7 +123,7 @@ func E_safe_any_type (x EID) EID {
 // *    Part 2: The defaults for c_type, c_code and c_sort          *
 // ******************************************************************
 // basic type inference
-/* {1} The go function for: c_type(self:any) [status=1] */
+/* The go function for: c_type(self:any) [status=1] */
 func F_c_type_any (self *ClaireAny ) EID { 
     // eid body s = type
     var Result EID 
@@ -262,7 +262,7 @@ func E_c_type_any (self EID) EID {
     return F_c_type_any(ANY(self) )} 
   
 // compile into a sort and checks strict type matching (naive/stupid)
-/* {1} The go function for: Compile/c_strict_code(x:any,s:class) [status=1] */
+/* The go function for: Compile/c_strict_code(x:any,s:class) [status=1] */
 func F_Compile_c_strict_code_any (x *ClaireAny ,s *ClaireClass ) EID { 
     // eid body s = any
     var Result EID 
@@ -282,7 +282,7 @@ func E_Compile_c_strict_code_any (x EID,s EID) EID {
     return F_Compile_c_strict_code_any(ANY(x),ToClass(OBJ(s)) )} 
   
 // CLAIRE 4: introduce C_cast so that psort(x) is what is expected (s)
-/* {1} The go function for: Compile/c_strict_check(x:any,s:class) [status=1] */
+/* The go function for: Compile/c_strict_check(x:any,s:class) [status=1] */
 func F_Compile_c_strict_check_any (x *ClaireAny ,s *ClaireClass ) EID { 
     // eid body s = any
     var Result EID 
@@ -344,7 +344,7 @@ func E_Compile_c_strict_check_any (x EID,s EID) EID {
 // note: we need s to be the precise sort for C++
 // the is the default version that uses c_code(x)/ c_sort(x)
 // in CLAIRE 4, we do not generate conversion at optim time
-/* {1} The go function for: c_code(x:any,s:class) [status=1] */
+/* The go function for: c_code(x:any,s:class) [status=1] */
 func F_c_code_any1 (x *ClaireAny ,s *ClaireClass ) EID { 
     // eid body s = any
     var Result EID 
@@ -408,7 +408,7 @@ func E_c_code_any1 (x EID,s EID) EID {
 // basic code generation
 // c_code without a sort parameter means that we do not care about the resulting sort,
 // which will be checked later on using c_sort
-/* {1} The go function for: c_code(self:any) [status=1] */
+/* The go function for: c_code(self:any) [status=1] */
 func F_c_code_any2 (self *ClaireAny ) EID { 
     // eid body s = any
     var Result EID 
@@ -490,7 +490,7 @@ func E_c_code_any2 (self EID) EID {
     return F_c_code_any2(ANY(self) )} 
   
 // suggestion for claire4 : get rid of c_sort
-/* {1} The go function for: get_sort(self:any) [status=1] */
+/* The go function for: get_sort(self:any) [status=1] */
 func F_Optimize_get_sort_any (self *ClaireAny ) EID { 
     // eid body s = class
     var Result EID 
@@ -504,7 +504,7 @@ func E_Optimize_get_sort_any (self EID) EID {
 // gives the sort of a compiled expression (does not apply to instructions that
 // have a direct c_code(x,s)
 // v2.4.9: special type => special sorts !!!
-/* {1} The go function for: Compile/c_sort(self:any) [status=1] */
+/* The go function for: Compile/c_sort(self:any) [status=1] */
 func F_Compile_c_sort_any (self *ClaireAny ) EID { 
     // eid body s = class
     var Result EID 
@@ -696,7 +696,7 @@ func E_Compile_c_sort_any (self EID) EID {
   
 // for the special compiler properties, we need to tell the sort of the optimized
 // form
-/* {1} The go function for: selector_psort(self:Call) [status=0] */
+/* The go function for: selector_psort(self:Call) [status=0] */
 func F_Optimize_selector_psort_Call (self *Language.Call ) *ClaireClass  { 
     // procedure body with s = class
     var Result *ClaireClass  
@@ -727,7 +727,7 @@ func E_Optimize_selector_psort_Call (self EID) EID {
 // NEW in claire 4, because error handling is mananaged by the compiler
 // tells if an expression can throw an exception, based on can_throw?(p or m)
 // debug loop
-/* {1} The go function for: Compile/g_throw(self:any) [status=1] */
+/* The go function for: Compile/g_throw(self:any) [status=1] */
 func F_Compile_g_throw_any (self *ClaireAny ) EID { 
     // eid body s = boolean
     var Result EID 
@@ -749,7 +749,7 @@ func F_Compile_g_throw_any (self *ClaireAny ) EID {
 func E_Compile_g_throw_any (self EID) EID { 
     return F_Compile_g_throw_any(ANY(self) )} 
   
-/* {1} The go function for: g_throw1(self:any) [status=1] */
+/* The go function for: g_throw1(self:any) [status=1] */
 func F_Optimize_g_throw1_any (self *ClaireAny ) EID { 
     // eid body s = boolean
     var Result EID 
@@ -1242,7 +1242,7 @@ func E_Optimize_g_throw1_any (self EID) EID {
 //    - class!(...) can raise an error in interpreted mode nut not at compile time
 //    - division by non-zero integer constant is OK
 //    - etc (extensible)   ... hopefully go will support exceptions one day so I can get rid of this junk :)
-/* {1} The go function for: notOpt(self:Call_method) [status=1] */
+/* The go function for: notOpt(self:Call_method) [status=1] */
 func F_Optimize_notOpt_Call_method (self *Language.CallMethod ) EID { 
     // eid body s = boolean
     var Result EID 
@@ -1307,7 +1307,7 @@ func E_Optimize_notOpt_Call_method (self EID) EID {
   
 //regular case !
 // can_throw is based on restrictions analysis ... unless it is open => could always return an error
-/* {1} The go function for: Compile/can_throw?(p:property) [status=1] */
+/* The go function for: Compile/can_throw?(p:property) [status=1] */
 func F_Compile_can_throw_ask_property (p *ClaireProperty ) EID { 
     // eid body s = boolean
     var Result EID 
@@ -1394,7 +1394,7 @@ func E_Compile_can_throw_ask_property (p EID) EID {
 // access to status ... -1 means that it was never computed 
 // Force*Throw is used to adjust for cross-compiling with a status change
 // the reference to safety is here to ensure cross-compilation mode
-/* {1} The go function for: Compile/can_throw?(m:method) [status=1] */
+/* The go function for: Compile/can_throw?(m:method) [status=1] */
 func F_Compile_can_throw_ask_method (m *ClaireMethod ) EID { 
     // eid body s = boolean
     var Result EID 
@@ -1419,7 +1419,7 @@ func E_Compile_can_throw_ask_method (m EID) EID {
   
 // debug handle
 // here we recursively call g_throw on the body => forced re-compute of status(m) (status!(m) in CLAIRE3)
-/* {1} The go function for: Compile/can_throw!(m:method) [status=1] */
+/* The go function for: Compile/can_throw!(m:method) [status=1] */
 func F_Compile_can_throw_I_method (m *ClaireMethod ) EID { 
     // eid body s = boolean
     var Result EID 
@@ -1464,7 +1464,7 @@ func E_Compile_can_throw_I_method (m EID) EID {
 
 // read can_throw from the status, not influenced by exceptions (for code generation)
 // however, for a new method, compute the status
-/* {0} The go function for: Compile/can_throw_status(m:method) [status=1] */
+/* The go function for: Compile/can_throw_status(m:method) [status=1] */
 func F_Compile_can_throw_status_method (m *ClaireMethod ) EID { 
   // eid body s = boolean
   var Result EID 
@@ -1483,7 +1483,7 @@ func E_Compile_can_throw_status_method (m EID) EID {
   return F_Compile_can_throw_status_method(ToMethod(OBJ(m)) )} 
 
 // useful #2: provoke a recomputation of status
-/* {0} The go function for: s_throw(m:method) [status=1] */
+/* The go function for: s_throw(m:method) [status=1] */
 func F_s_throw_method (m *ClaireMethod ) EID { 
   // eid body s = void
   var Result EID 
@@ -1521,7 +1521,7 @@ func E_s_throw_method (m EID) EID {
 // ******************************************************************
 // check that the module is allowed and otherwise complain because of x;
 // this should raise an error, it simply returns false if there is a problem
-/* {0} The go function for: legal?(self:module,x:any) [status=0] */
+/* The go function for: legal?(self:module,x:any) [status=0] */
 func F_Optimize_legal_ask_module (self *ClaireModule ,x *ClaireAny ) *ClaireBoolean  { 
   // procedure body with s = boolean
   var Result *ClaireBoolean  
@@ -1566,7 +1566,7 @@ func F_Optimize_legal_ask_module (self *ClaireModule ,x *ClaireAny ) *ClaireBool
 func E_Optimize_legal_ask_module (self EID,x EID) EID { 
   return EID{F_Optimize_legal_ask_module(ToModule(OBJ(self)),ANY(x) ).Id(),0}} 
 
-/* {0} The go function for: legal?(self:environment,x:any) [status=0] */
+/* The go function for: legal?(self:environment,x:any) [status=0] */
 func F_Optimize_legal_ask_environment (self *ClaireEnvironment ,x *ClaireAny ) *ClaireAny  { 
   return  CTRUE.Id()
   } 
@@ -1577,7 +1577,7 @@ func E_Optimize_legal_ask_environment (self EID,x EID) EID {
 
 // A named object is used, thus it must be declared if it belongs to the
 // current module - returns true if OK
-/* {0} The go function for: c_register(self:(thing U class)) [status=0] */
+/* The go function for: c_register(self:(thing U class)) [status=0] */
 func F_Optimize_c_register_object (self *ClaireObject ) *ClaireAny  { 
   // procedure body with s = any
   var Result *ClaireAny  
@@ -1595,7 +1595,7 @@ func E_Optimize_c_register_object (self EID) EID {
   return F_Optimize_c_register_object(ToObject(OBJ(self)) ).ToEID()} 
 
 // looks if a property may be implicit and then add it in the right list
-/* {0} The go function for: c_register(self:property) [status=0] */
+/* The go function for: c_register(self:property) [status=0] */
 func F_Optimize_c_register_property (self *ClaireProperty ) *ClaireAny  { 
   // procedure body with s = any
   var Result *ClaireAny  
@@ -1616,7 +1616,7 @@ func E_Optimize_c_register_property (self EID) EID {
   return F_Optimize_c_register_property(ToProperty(OBJ(self)) ).ToEID()} 
 
 // declare the property as used and check if a property may allocate
-/* {0} The go function for: selector_register(self:property) [status=0] */
+/* The go function for: selector_register(self:property) [status=0] */
 func F_Optimize_selector_register_property (self *ClaireProperty ) *ClaireAny  { 
   F_Optimize_c_register_property(self)
   return  self.Id()
@@ -1628,7 +1628,7 @@ func E_Optimize_selector_register_property (self EID) EID {
 
 // this method looks if the open slot is less than 1 or can be set to 1
 // v3.3.48 note - weaken the open semantic to get a better c_status
-/* {0} The go function for: stable?(self:relation) [status=0] */
+/* The go function for: stable?(self:relation) [status=0] */
 func F_Optimize_stable_ask_relation (self *ClaireRelation ) *ClaireBoolean  { 
   { var m *ClaireAny   = F_Compile_get_module_object(ToObject(self.Id()))
     _ = m
@@ -1647,7 +1647,7 @@ func E_Optimize_stable_ask_relation (self EID) EID {
 // v3.2.04
 // returns the module (i.e. the compilation unit, not the namespace) in which self is
 // defined
-/* {0} The go function for: Compile/get_module(self:(thing U class)) [status=0] */
+/* The go function for: Compile/get_module(self:(thing U class)) [status=0] */
 func F_Compile_get_module_object (self *ClaireObject ) *ClaireAny  { 
   return  ToSymbol(OBJ(Core.F_CALL(C_name,ARGS(EID{self.Id(),0})))).Defined().Id()
   } 
@@ -1658,7 +1658,7 @@ func E_Compile_get_module_object (self EID) EID {
 
 //      (while (m.loaded = 0) m := m.part_of, m) ]
 // allows to optimize the access
-/* {0} The go function for: known!(l:listargs) [status=0] */
+/* The go function for: known!(l:listargs) [status=0] */
 func F_known_I_listargs (l *ClaireList ) *ClaireAny  { 
   // procedure body with s = any
   var Result *ClaireAny  

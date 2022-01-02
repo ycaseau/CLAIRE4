@@ -242,7 +242,7 @@ claire/unsafe(x:any) : any -> x
 // declares a class as ephemeral: the member set is not maintained
 // v3.2.14 recusively applies to subclasses
 ephemeral(self:class) : any
-  -> (for c in self.descendents
+  -> (for c in self.descendants
        (if c.instances error("[187] cannot declare ~S as ephemeral because of ~S has instances",self,c)
         else put(open, c, system.default)))
 

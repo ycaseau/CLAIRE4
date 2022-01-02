@@ -44,7 +44,7 @@ claire/-- :: operation(precedence = precedence(..))
        set list!(self),
        array list!(self),
        class let l := list<object>() in
-               (for c  in self.descendents  l := l /+ c.instances, l),
+               (for c  in self.descendants  l := l /+ c.instances, l),
        Interval --!(self.arg1,self.arg2),
        integer list!(make_set(self)),
        collection list!(set!(self)),        // TODO : change to list!(self)
@@ -231,7 +231,7 @@ size(x:list) : integer -> size(set!(x))
 // class  -> return a read-only list  (v3.2)
 set!(x:class) : set
   -> let rep := list() in
-       (for c in x.descendents
+       (for c in x.descendants
           (if (inherit?(c,primitive) & c != boolean)
               error("[178] cannot enumerate ~S",c)
            else rep := rep /+ c.instances),
@@ -239,7 +239,7 @@ set!(x:class) : set
 
 size(self:class) : integer
   -> let n:integer := 0 in
-        (for x in self.descendents n :+ length(x.instances), n)
+        (for x in self.descendants n :+ length(x.instances), n)
 
 
 // Union
@@ -562,7 +562,7 @@ claire/make_set(x:integer) : set -> {i in (0 .. 29) | x[i]}
 // we create some types that we need
 (set_range(subclass, class, set<class>),
  set_range(ancestors, class, list<class>),
- set_range(descendents, class, set<class>),
+ set_range(descendants, class, set<class>),
  set_range(definition, property, list<restriction>),
  set_range(restrictions, property, list<restriction>),
  set_range(domain,restriction,list<type_expression>),

@@ -167,9 +167,9 @@ self_eval(self:Defobj) : any
 // creation of a new named object
 // note that final() is the marker of a forward definition in CLAIRE4
 self_eval(self:Defclass) : any
- -> (if (get(self.ident) % class &
-                ( (get(self.ident) as class).open != final() |    // new in v2.5
-                  self.arg != (get(self.ident) as class).superclass))
+ -> (if (value(self.ident) % class &
+                ( (value(self.ident) as class).open != final() |    // new in v2.5
+                  self.arg != (value(self.ident) as class).superclass))
         error("[107] class re-definition is not valid: ~S",self)
      else let %o := class!(self.ident, self.arg) in
        (for x in self.args
@@ -535,7 +535,7 @@ eval_rule :: property(open = 3)
 self_eval(self:Defrule) : any 
  -> (if (self.args[1] != system) eval_rule(self)   // hook for ClaireRules engine
      else let %condition := self.arg,
-              ru := get(self.iClaire/ident) in        // name of the rule
+              ru := value(self.iClaire/ident) in        // name of the rule
        (put(isa, ru, rule_object), 
         add!(rule_object.instances,ru),
         let (R,lvar) := make_filter(%condition) in
@@ -766,5 +766,5 @@ makeCallMatch(x:restriction,lt:list) : boolean
  method.open := final(), 
  slot.open := final(), 
  boolean.open := -1,
- for x in Instruction.descendents (x.open := default()))  // instuctions are ephemeral
+ for x in Instruction.descendants (x.open := default()))  // instuctions are ephemeral
 

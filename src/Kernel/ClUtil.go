@@ -894,7 +894,7 @@ func E_mod_integer(n EID, m EID) EID { return F_mod_integer(INT(n), INT(m)) }
 // this is not enough for 64 bits integer !!
 func F__exp_integer(n int, m int) EID {
 	a := float64(n)
-	b := float64(n)
+	b := float64(m)
 	c := math.Pow(a, b)
 	if c < CLMINFLOAT || c > CLMAXFLOAT {
 		return Cerror(40, MakeInteger(n).Id(), MakeInteger(m).Id())
