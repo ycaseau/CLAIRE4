@@ -2,7 +2,7 @@
 // microCLAIRE                                              CLAIRE 4
 // golang microClaire Kernel - started on June 21st, 2020
 //
-//  Copyright (C) 2020 Yves Caseau. All Rights Reserved.
+//  Copyright (C) 2020-2022 Yves Caseau. All Rights Reserved.
 //  Redistribution and use in source and binary forms are permitted
 //  provided that source distribution retains this entire copyright
 //  notice and comments.
@@ -33,9 +33,10 @@ import (
 // |  Table of contents                                                        |
 // |  Part 1: Description of EID (Entity IDs)                                  |
 // |  Part 2: description of Claire Objects & Imported (Struct)                |
-// |  Part 3: Dummy Classes for instanciation / get/ set                       |
-// |  Part 4: unsafe utilities (optimized code for speed)                      |
-/// +---------------------------------------------------------------------------+
+// |  Part 3: Global variables (named objects)                                 |
+// |  Part 4: Dummy Classes for instanciation / get/ set                       |
+// |  Part 5: unsafe utilities (optimized code for speed)                      |
+/// +--------------------------------------------------------------------------+
 
 // Entities only exist in the OID forms (128 bits)
 // Any = Int + Float + *ClaireAny + list (*Vector<OID>) + set(*Set<OID>)
@@ -136,8 +137,19 @@ type eFunc func(*ClaireAny) EID
 func (p *ClaireAny) ui64() uint64    { return (uint64)(uintptr(unsafe.Pointer(p))) }
 // func (p *ClaireAny) any() *ClaireAny { return p } // deprecated => Id()
 
-// usefull utility get the pointer as a uintptr
-// func (x *ClaireAny) Uip() uintptr { return uintptr(unsafe.Pointer(x)) }
+// generic convert to proper EID  (the conversion into one of 3 EID type is done dynamically)
+func (x *ClaireAny) ToEID() EID {
+	c := x.Isa
+	if c == C_integer {
+		return EID{C__INT, IVAL(ToInteger(x).Value)}
+	} else if c == C_float {
+		return EID{C__FLOAT, FVAL(ToFloat(x).Value)}
+	} else if c == C_char {
+		return EID{C__CHAR, CVAL(ToChar(x).Value)}
+	} else {
+		return EID{x, 0}
+	}
+}
 
 // +---------------------------------------------------------------------------+
 // |  Part 2: description of Claire Objects & Entities                         |
@@ -152,19 +164,6 @@ type ClaireAny struct {
 func (p *ClaireAny) ToAny() *ClaireAny { return p } // this is the new syntax
 func (p *ClaireAny) Id() *ClaireAny    { return p } // this is the new syntax
 
-// generic convert to proper EID  (the conversion into one of 3 EID type is done dynamically)
-func (x *ClaireAny) ToEID() EID {
-	c := x.Isa
-	if c == C_integer {
-		return EID{C__INT, IVAL(ToInteger(x).Value)}
-	} else if c == C_float {
-		return EID{C__FLOAT, FVAL(ToFloat(x).Value)}
-	} else if c == C_char {
-		return EID{C__CHAR, CVAL(ToChar(x).Value)}
-	} else {
-		return EID{x, 0}
-	}
-}
 
 // ======================================= IMPORTED ==================================================
 // imported is a root for objects that are defined with golang code (but with isa slot) ---------------
@@ -888,6 +887,9 @@ type ClairePair struct {
 
 func ToPair(x *ClaireAny) *ClairePair { return (*ClairePair)(unsafe.Pointer(x)) }
 
+// +---------------------------------------------------------------------------+
+// |  Part 3: Global variables (named objects)                                 |
+// +---------------------------------------------------------------------------+
 
 // some global variables
 var claireStdout *ClairePort
@@ -1164,7 +1166,7 @@ var C_mod *ClaireOperation
 var C_cons *ClaireOperation
 
 // +---------------------------------------------------------------------------+
-// |  Part 3: Dummy Classes for instanciation / get/ set                       |
+// |  Part 4: Dummy Classes for instanciation / get/ set                       |
 // +---------------------------------------------------------------------------+
 
 // THIS IS CRITICAL : WE CANNOT FOOL GOLAND COMPILER WITH POINTERS WHEN DOING A SET
@@ -1397,7 +1399,7 @@ func (x *ClaireObject) SetObj(i int, y *ClaireAny) {
 		((*ClaireDummy6)(unsafe.Pointer(x))).a25 = y
 	} else if i == 26 {
 		((*ClaireDummy6)(unsafe.Pointer(x))).a26 = y
-	} else if i == 26 {
+	} else if i == 27 {
 		((*ClaireDummy6)(unsafe.Pointer(x))).a27 = y
 	} else if i == 28 {
 		((*ClaireDummy6)(unsafe.Pointer(x))).a28 = y
@@ -1433,7 +1435,7 @@ func (x *ClaireObject) SetFloat(i int, y float64) {
 }
 
 // +---------------------------------------------------------------------------+
-// |  Part 4: unsafe utilities (optimized code for speed)                      |
+// |  Part 5: unsafe utilities (optimized code for speed)                      |
 // +---------------------------------------------------------------------------+
 
 // class inclusion : c <= c2  <=>   c.ancestor = (void ... c2.....) with c2 in position n - 1 (len ancestors)

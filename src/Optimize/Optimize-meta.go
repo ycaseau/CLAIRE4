@@ -1,5 +1,5 @@
 /***** CLAIRE Compilation of module Optimize.cl 
-         [version 4.0.04 / safety 5] Saturday 01-01-2022 16:47:21 *****/
+         [version 4.0.04 / safety 5] Sunday 03-13-2022 07:28:45 *****/
 
 package Optimize
 import (_ "fmt"
@@ -11,7 +11,7 @@ import (_ "fmt"
 )
 
 //-------- dumb function to prevent import errors --------
-func import_g0325() { 
+func import_g0329() { 
     _ = Core.It
     _ = Language.It
     _ = Reader.It
@@ -222,6 +222,40 @@ var C_PENIBLE *Core.GlobalVariable
 var C_Compile__starname_star *Core.GlobalVariable 
 var C_Optimize__staradd_method2_star *Core.GlobalVariable 
 var C_Optimize__equalsig_ask *ClaireOperation  /*obj*/
+var C_Compile_can_throw_status *ClaireProperty  // Compile/"can_throw_status"
+var C_s_throw *ClaireProperty  // claire/"s_throw"
+var C_Optimize_legal_ask *ClaireProperty  // Optimize/"legal?"
+var C_Optimize_selector_register *ClaireProperty  // Optimize/"selector_register"
+var C_Optimize_stable_ask *ClaireProperty  // Optimize/"stable?"
+var C_Compile_c_gc_ask *ClaireProperty  // Compile/"c_gc?"
+var C_Compile_notice *ClaireProperty  // Compile/"notice"
+var C_Optimize_c_warn *ClaireProperty  // Optimize/"c_warn"
+var C_Optimize_open_message *ClaireProperty  // Optimize/"open_message"
+var C_Compile_stupid_t *ClaireProperty  // Compile/"stupid_t"
+var C_Optimize_extended_ask *ClaireProperty  // Optimize/"extended?"
+var C_Optimize_extends *ClaireProperty  // Optimize/"extends"
+var C_Optimize_sort_abstract_I *ClaireProperty  // Optimize/"sort_abstract!"
+var C_Optimize_notOpt *ClaireProperty  // Optimize/"notOpt"
+var C_Compile_update_write_ask *ClaireProperty  // Compile/"update_write?"
+var C_Optimize_sort_abstract_ask *ClaireProperty  // Optimize/"sort_abstract?"
+var C_Optimize_pmember *ClaireProperty  // Optimize/"pmember"
+var C_Optimize_enumerate_code *ClaireProperty  // Optimize/"enumerate_code"
+var C_Optimize_c_code_method *ClaireProperty  // Optimize/"c_code_method"
+var C_Optimize_range_infers_for *ClaireProperty  // Optimize/"range_infers_for"
+var C_Optimize_range_infers *ClaireProperty  // Optimize/"range_infers"
+var C_Optimize_range_sets *ClaireProperty  // Optimize/"range_sets"
+var C_Compile_return_type *ClaireProperty  // Compile/"return_type"
+var C_Compile_Variable_I *ClaireProperty  // Compile/"Variable!"
+var C_Compile_identifiable_ask *ClaireProperty  // Compile/"identifiable?"
+var C_Optimize_c_inline *ClaireProperty  // Optimize/"c_inline"
+var C_Optimize_bound_variables *ClaireProperty  // Optimize/"bound_variables"
+var C_Optimize_c_substitution *ClaireProperty  // Optimize/"c_substitution"
+var C_Optimize_c_inline_arg_ask *ClaireProperty  // Optimize/"c_inline_arg?"
+var C_Optimize_restriction_I *ClaireProperty  // Optimize/"restriction!"
+var C_Optimize_c_inline_ask *ClaireProperty  // Optimize/"c_inline?"
+var C_Optimize_c_boolean *ClaireProperty  // Optimize/"c_boolean"
+var C_findr *ClaireProperty  // claire/"findr"
+var C_dmatch_ask *ClaireProperty  // claire/"dmatch?"
 var C_Optimize_use_range *ClaireProperty  // Optimize/"use_range"
 var C_Optimize_inline_optimize_ask *ClaireProperty  // Optimize/"inline_optimize?"
 var C_Optimize_daccess *ClaireProperty  // Optimize/"daccess"
@@ -237,6 +271,9 @@ var C_Optimize_c_code_nth *ClaireProperty  // Optimize/"c_code_nth"
 var C_Optimize_c_code_belong *ClaireProperty  // Optimize/"c_code_belong"
 var C_Optimize_c_code_not *ClaireProperty  // Optimize/"c_code_not"
 var C_Optimize_Update_ask *ClaireProperty  // Optimize/"Update?"
+var C_Optimize_Call_method_I *ClaireProperty  // Optimize/"Call_method!"
+var C_Optimize_nth_type_check *ClaireProperty  // Optimize/"nth_type_check"
+var C_Optimize_extendedTest_ask *ClaireProperty  // Optimize/"extendedTest?"
 var C_safety *ClaireProperty  // claire/"safety"
 var C_home *ClaireProperty  // claire/"home"
 var C_Compile_instructions *ClaireProperty  // Compile/"instructions"
@@ -282,43 +319,6 @@ var C_Optimize_get_sort *ClaireProperty  // Optimize/"get_sort"
 var C_Optimize_selector_psort *ClaireProperty  // Optimize/"selector_psort"
 var C_Optimize_c_srange *ClaireProperty  // Optimize/"c_srange"
 var C_Optimize_g_throw1 *ClaireProperty  // Optimize/"g_throw1"
-var C_Optimize_notOpt *ClaireProperty  // Optimize/"notOpt"
-var C_Compile_update_write_ask *ClaireProperty  // Compile/"update_write?"
-var C_Compile_can_throw_status *ClaireProperty  // Compile/"can_throw_status"
-var C_s_throw *ClaireProperty  // claire/"s_throw"
-var C_Optimize_legal_ask *ClaireProperty  // Optimize/"legal?"
-var C_Optimize_selector_register *ClaireProperty  // Optimize/"selector_register"
-var C_Optimize_stable_ask *ClaireProperty  // Optimize/"stable?"
-var C_Compile_c_gc_ask *ClaireProperty  // Compile/"c_gc?"
-var C_Compile_notice *ClaireProperty  // Compile/"notice"
-var C_Optimize_c_warn *ClaireProperty  // Optimize/"c_warn"
-var C_Optimize_open_message *ClaireProperty  // Optimize/"open_message"
-var C_Compile_stupid_t *ClaireProperty  // Compile/"stupid_t"
-var C_Optimize_extended_ask *ClaireProperty  // Optimize/"extended?"
-var C_Optimize_extends *ClaireProperty  // Optimize/"extends"
-var C_Optimize_sort_abstract_I *ClaireProperty  // Optimize/"sort_abstract!"
-var C_Optimize_sort_abstract_ask *ClaireProperty  // Optimize/"sort_abstract?"
-var C_Optimize_pmember *ClaireProperty  // Optimize/"pmember"
-var C_Optimize_enumerate_code *ClaireProperty  // Optimize/"enumerate_code"
-var C_Optimize_c_code_method *ClaireProperty  // Optimize/"c_code_method"
-var C_Optimize_range_infers_for *ClaireProperty  // Optimize/"range_infers_for"
-var C_Optimize_range_infers *ClaireProperty  // Optimize/"range_infers"
-var C_Optimize_range_sets *ClaireProperty  // Optimize/"range_sets"
-var C_Compile_return_type *ClaireProperty  // Compile/"return_type"
-var C_Compile_Variable_I *ClaireProperty  // Compile/"Variable!"
-var C_Compile_identifiable_ask *ClaireProperty  // Compile/"identifiable?"
-var C_Optimize_c_inline *ClaireProperty  // Optimize/"c_inline"
-var C_Optimize_bound_variables *ClaireProperty  // Optimize/"bound_variables"
-var C_Optimize_c_substitution *ClaireProperty  // Optimize/"c_substitution"
-var C_Optimize_c_inline_arg_ask *ClaireProperty  // Optimize/"c_inline_arg?"
-var C_Optimize_restriction_I *ClaireProperty  // Optimize/"restriction!"
-var C_Optimize_c_inline_ask *ClaireProperty  // Optimize/"c_inline?"
-var C_Optimize_c_boolean *ClaireProperty  // Optimize/"c_boolean"
-var C_findr *ClaireProperty  // claire/"findr"
-var C_dmatch_ask *ClaireProperty  // claire/"dmatch?"
-var C_Optimize_Call_method_I *ClaireProperty  // Optimize/"Call_method!"
-var C_Optimize_nth_type_check *ClaireProperty  // Optimize/"nth_type_check"
-var C_Optimize_extendedTest_ask *ClaireProperty  // Optimize/"extendedTest?"
 var C_Optimize_case_branch *ClaireProperty  // Optimize/"case_branch"
 var C_Optimize_case_substitution *ClaireProperty  // Optimize/"case_substitution"
 var C_Optimize_infers_from *ClaireProperty  // Optimize/"infers_from"
@@ -345,6 +345,7 @@ var C_Optimize_compile_if_write *ClaireProperty  // Optimize/"compile_if_write"
 var C_Optimize_demon_function *ClaireProperty  // Optimize/"demon_function"
 var C_Optimize_compileEventMethod *ClaireProperty  // Optimize/"compileEventMethod"
 var C_Optimize_demon_substitution *ClaireProperty  // Optimize/"demon_substitution"
+var C_Compile_Do_I *ClaireProperty  // Compile/"Do!"
 var C_env *ClaireProperty  // claire/"env"
 var It *ClaireModule
 var C_Compile *ClaireModule 
@@ -352,10 +353,44 @@ var C_Compile *ClaireModule
 func MetaLoad() { 
   
   It = MakeModule("Optimize",C_Compile)
-  It.Comment = MakeString("Compiled on Saturday 01-01-2022 16:47:21(v4.0.04), lines:3011, warnings:1,safety:5")
+  It.Comment = MakeString("Compiled on Sunday 03-13-2022 07:28:45(v4.0.04), lines:3017, warnings:1,safety:5")
   ClEnv.Module_I = It
   
   // definition of the properties
+  C_Compile_can_throw_status = MakeProperty("can_throw_status",1,C_Compile)
+  C_s_throw = MakeProperty("s_throw",1,C_claire)
+  C_Optimize_legal_ask = MakeProperty("legal?",1,It)
+  C_Optimize_selector_register = MakeProperty("selector_register",1,It)
+  C_Optimize_stable_ask = MakeProperty("stable?",1,It)
+  C_Compile_c_gc_ask = MakeProperty("c_gc?",1,C_Compile)
+  C_Compile_notice = MakeProperty("notice",1,C_Compile)
+  C_Optimize_c_warn = MakeProperty("c_warn",1,It)
+  C_Optimize_open_message = MakeProperty("open_message",1,It)
+  C_Compile_stupid_t = MakeProperty("stupid_t",1,C_Compile)
+  C_Optimize_extended_ask = MakeProperty("extended?",1,It)
+  C_Optimize_extends = MakeProperty("extends",1,It)
+  C_Optimize_sort_abstract_I = MakeProperty("sort_abstract!",1,It)
+  C_Optimize_notOpt = MakeProperty("notOpt",1,It)
+  C_Compile_update_write_ask = MakeProperty("update_write?",1,C_Compile)
+  C_Optimize_sort_abstract_ask = MakeProperty("sort_abstract?",1,It)
+  C_Optimize_pmember = MakeProperty("pmember",1,It)
+  C_Optimize_enumerate_code = MakeProperty("enumerate_code",1,It)
+  C_Optimize_c_code_method = MakeProperty("c_code_method",1,It)
+  C_Optimize_range_infers_for = MakeProperty("range_infers_for",1,It)
+  C_Optimize_range_infers = MakeProperty("range_infers",1,It)
+  C_Optimize_range_sets = MakeProperty("range_sets",1,It)
+  C_Compile_return_type = MakeProperty("return_type",1,C_Compile)
+  C_Compile_Variable_I = MakeProperty("Variable!",1,C_Compile)
+  C_Compile_identifiable_ask = MakeProperty("identifiable?",1,C_Compile)
+  C_Optimize_c_inline = MakeProperty("c_inline",1,It)
+  C_Optimize_bound_variables = MakeProperty("bound_variables",1,It)
+  C_Optimize_c_substitution = MakeProperty("c_substitution",1,It)
+  C_Optimize_c_inline_arg_ask = MakeProperty("c_inline_arg?",1,It)
+  C_Optimize_restriction_I = MakeProperty("restriction!",1,It)
+  C_Optimize_c_inline_ask = MakeProperty("c_inline?",1,It)
+  C_Optimize_c_boolean = MakeProperty("c_boolean",1,It)
+  C_findr = MakeProperty("findr",1,C_claire)
+  C_dmatch_ask = MakeProperty("dmatch?",1,C_claire)
   C_Optimize_use_range = MakeProperty("use_range",1,It)
   C_Optimize_inline_optimize_ask = MakeProperty("inline_optimize?",1,It)
   C_Optimize_daccess = MakeProperty("daccess",1,It)
@@ -371,6 +406,9 @@ func MetaLoad() {
   C_Optimize_c_code_belong = MakeProperty("c_code_belong",1,It)
   C_Optimize_c_code_not = MakeProperty("c_code_not",1,It)
   C_Optimize_Update_ask = MakeProperty("Update?",1,It)
+  C_Optimize_Call_method_I = MakeProperty("Call_method!",1,It)
+  C_Optimize_nth_type_check = MakeProperty("nth_type_check",1,It)
+  C_Optimize_extendedTest_ask = MakeProperty("extendedTest?",1,It)
   C_safety = MakeProperty("safety",2,C_claire)
   C_home = MakeProperty("home",1,C_claire)
   C_Compile_instructions = MakeProperty("instructions",2,C_Compile)
@@ -416,43 +454,6 @@ func MetaLoad() {
   C_Optimize_selector_psort = MakeProperty("selector_psort",1,It)
   C_Optimize_c_srange = MakeProperty("c_srange",1,It)
   C_Optimize_g_throw1 = MakeProperty("g_throw1",1,It)
-  C_Optimize_notOpt = MakeProperty("notOpt",1,It)
-  C_Compile_update_write_ask = MakeProperty("update_write?",1,C_Compile)
-  C_Compile_can_throw_status = MakeProperty("can_throw_status",1,C_Compile)
-  C_s_throw = MakeProperty("s_throw",1,C_claire)
-  C_Optimize_legal_ask = MakeProperty("legal?",1,It)
-  C_Optimize_selector_register = MakeProperty("selector_register",1,It)
-  C_Optimize_stable_ask = MakeProperty("stable?",1,It)
-  C_Compile_c_gc_ask = MakeProperty("c_gc?",1,C_Compile)
-  C_Compile_notice = MakeProperty("notice",1,C_Compile)
-  C_Optimize_c_warn = MakeProperty("c_warn",1,It)
-  C_Optimize_open_message = MakeProperty("open_message",1,It)
-  C_Compile_stupid_t = MakeProperty("stupid_t",1,C_Compile)
-  C_Optimize_extended_ask = MakeProperty("extended?",1,It)
-  C_Optimize_extends = MakeProperty("extends",1,It)
-  C_Optimize_sort_abstract_I = MakeProperty("sort_abstract!",1,It)
-  C_Optimize_sort_abstract_ask = MakeProperty("sort_abstract?",1,It)
-  C_Optimize_pmember = MakeProperty("pmember",1,It)
-  C_Optimize_enumerate_code = MakeProperty("enumerate_code",1,It)
-  C_Optimize_c_code_method = MakeProperty("c_code_method",1,It)
-  C_Optimize_range_infers_for = MakeProperty("range_infers_for",1,It)
-  C_Optimize_range_infers = MakeProperty("range_infers",1,It)
-  C_Optimize_range_sets = MakeProperty("range_sets",1,It)
-  C_Compile_return_type = MakeProperty("return_type",1,C_Compile)
-  C_Compile_Variable_I = MakeProperty("Variable!",1,C_Compile)
-  C_Compile_identifiable_ask = MakeProperty("identifiable?",1,C_Compile)
-  C_Optimize_c_inline = MakeProperty("c_inline",1,It)
-  C_Optimize_bound_variables = MakeProperty("bound_variables",1,It)
-  C_Optimize_c_substitution = MakeProperty("c_substitution",1,It)
-  C_Optimize_c_inline_arg_ask = MakeProperty("c_inline_arg?",1,It)
-  C_Optimize_restriction_I = MakeProperty("restriction!",1,It)
-  C_Optimize_c_inline_ask = MakeProperty("c_inline?",1,It)
-  C_Optimize_c_boolean = MakeProperty("c_boolean",1,It)
-  C_findr = MakeProperty("findr",1,C_claire)
-  C_dmatch_ask = MakeProperty("dmatch?",1,C_claire)
-  C_Optimize_Call_method_I = MakeProperty("Call_method!",1,It)
-  C_Optimize_nth_type_check = MakeProperty("nth_type_check",1,It)
-  C_Optimize_extendedTest_ask = MakeProperty("extendedTest?",1,It)
   C_Optimize_case_branch = MakeProperty("case_branch",1,It)
   C_Optimize_case_substitution = MakeProperty("case_substitution",1,It)
   C_Optimize_infers_from = MakeProperty("infers_from",1,It)
@@ -479,6 +480,7 @@ func MetaLoad() {
   C_Optimize_demon_function = MakeProperty("demon_function",1,It)
   C_Optimize_compileEventMethod = MakeProperty("compileEventMethod",1,It)
   C_Optimize_demon_substitution = MakeProperty("demon_substitution",1,It)
+  C_Compile_Do_I = MakeProperty("Do!",1,C_Compile)
   C_env = MakeProperty("env",2,C_claire)
   
   // instructions from module sources
@@ -1075,6 +1077,8 @@ func MetaLoad() {
   
   _ = Core.F_attach_method(C_Optimize_c_boolean.AddMethod(Signature(C_any.Id(),C_any.Id()),1,MakeFunction1(E_Optimize_c_boolean_any,"Optimize_c_boolean_any")),MakeString("otool.cl:544"))
   
+  _ = Core.F_attach_method(C_Compile_Do_I.AddMethod(Signature(C_list.Id(),C_any.Id()),0,MakeFunction1(E_Compile_Do_I_list,"Compile_Do!_list")),MakeString("otool.cl:548"))
+  
   C_Optimize_ambiguous = ToKeyword(new(ClaireKeyword).IsNamed(C_keyword,MakeSymbol("ambiguous",It)))
   
   
@@ -1446,19 +1450,19 @@ func MetaLoad() {
     C_list.Id(),
     C_any.Id()),1,MakeFunction4(E_Optimize_analyze_I_class,"Optimize_analyze!_class")),MakeString("odefine.cl:151"))
   
-  _ = Core.F_attach_method(C_c_code.AddMethod(Signature(Language.C_Defobj.Id(),C_class.Id(),C_any.Id()),1,MakeFunction2(E_c_code_Defobj,"c_code_Defobj")),MakeString("odefine.cl:169"))
+  _ = Core.F_attach_method(C_c_code.AddMethod(Signature(Language.C_Defobj.Id(),C_class.Id(),C_any.Id()),1,MakeFunction2(E_c_code_Defobj,"c_code_Defobj")),MakeString("odefine.cl:173"))
   
-  _ = Core.F_attach_method(C_c_code.AddMethod(Signature(Language.C_Defclass.Id(),C_class.Id(),C_any.Id()),1,MakeFunction2(E_c_code_Defclass,"c_code_Defclass")),MakeString("odefine.cl:188"))
+  _ = Core.F_attach_method(C_c_code.AddMethod(Signature(Language.C_Defclass.Id(),C_class.Id(),C_any.Id()),1,MakeFunction2(E_c_code_Defclass,"c_code_Defclass")),MakeString("odefine.cl:192"))
   
-  _ = Core.F_attach_method(C_c_type.AddMethod(Signature(Language.C_Defmethod.Id(),C_type.Id()),0,MakeFunction1(E_c_type_Defmethod,"c_type_Defmethod")),MakeString("odefine.cl:194"))
+  _ = Core.F_attach_method(C_c_type.AddMethod(Signature(Language.C_Defmethod.Id(),C_type.Id()),0,MakeFunction1(E_c_type_Defmethod,"c_type_Defmethod")),MakeString("odefine.cl:198"))
   
-  _ = Core.F_attach_method(C_c_code.AddMethod(Signature(Language.C_Defmethod.Id(),C_any.Id()),1,MakeFunction1(E_c_code_Defmethod,"c_code_Defmethod")),MakeString("odefine.cl:233"))
+  _ = Core.F_attach_method(C_c_code.AddMethod(Signature(Language.C_Defmethod.Id(),C_any.Id()),1,MakeFunction1(E_c_code_Defmethod,"c_code_Defmethod")),MakeString("odefine.cl:237"))
   
-  _ = Core.F_attach_method(C_Optimize_type_extension.AddMethod(Signature(C_string.Id(),C_string.Id()),0,MakeFunction1(E_Optimize_type_extension_string,"Optimize_type_extension_string")),MakeString("odefine.cl:239"))
+  _ = Core.F_attach_method(C_Optimize_type_extension.AddMethod(Signature(C_string.Id(),C_string.Id()),0,MakeFunction1(E_Optimize_type_extension_string,"Optimize_type_extension_string")),MakeString("odefine.cl:243"))
   
-  _ = Core.F_attach_method(C_Optimize_sort_pattern_ask.AddMethod(Signature(C_list.Id(),C_any.Id(),C_boolean.Id()),1,MakeFunction2(E_Optimize_sort_pattern_ask_list,"Optimize_sort_pattern?_list")),MakeString("odefine.cl:249"))
+  _ = Core.F_attach_method(C_Optimize_sort_pattern_ask.AddMethod(Signature(C_list.Id(),C_any.Id(),C_boolean.Id()),1,MakeFunction2(E_Optimize_sort_pattern_ask_list,"Optimize_sort_pattern?_list")),MakeString("odefine.cl:253"))
   
-  _ = Core.F_attach_method(C_Optimize_sort_code.AddMethod(Signature(Language.C_Defmethod.Id(),C_list.Id(),C_any.Id()),1,MakeFunction2(E_Optimize_sort_code_Defmethod,"Optimize_sort_code_Defmethod")),MakeString("odefine.cl:294"))
+  _ = Core.F_attach_method(C_Optimize_sort_code.AddMethod(Signature(Language.C_Defmethod.Id(),C_list.Id(),C_any.Id()),1,MakeFunction2(E_Optimize_sort_code_Defmethod,"Optimize_sort_code_Defmethod")),MakeString("odefine.cl:298"))
   
   _ = Core.F_attach_method(C_add_method.AddMethod(Signature(C_property.Id(),
     C_list.Id(),
@@ -1466,7 +1470,7 @@ func MetaLoad() {
     C_integer.Id(),
     C_function.Id(),
     C_method.Id(),
-    C_method.Id()),0,MakeFunction6(E_add_method_property2,"add_method_property2")),MakeString("odefine.cl:301"))
+    C_method.Id()),0,MakeFunction6(E_add_method_property2,"add_method_property2")),MakeString("odefine.cl:305"))
   
   { 
     var expr EID 
@@ -1485,72 +1489,72 @@ func MetaLoad() {
     C_any.Id(),
     C_any.Id(),
     C_function.Id(),
-    C_any.Id()),1,MakeFunction5(E_Optimize_add_method_I_method,"Optimize_add_method!_method")),MakeString("odefine.cl:316"))
+    C_any.Id()),1,MakeFunction5(E_Optimize_add_method_I_method,"Optimize_add_method!_method")),MakeString("odefine.cl:320"))
   
-  _ = Core.F_attach_method(C_Optimize_extract_signature_I.AddMethod(Signature(C_list.Id(),C_list.Id()),1,MakeFunction1(E_Optimize_extract_signature_I_list,"Optimize_extract_signature!_list")),MakeString("odefine.cl:332"))
+  _ = Core.F_attach_method(C_Optimize_extract_signature_I.AddMethod(Signature(C_list.Id(),C_list.Id()),1,MakeFunction1(E_Optimize_extract_signature_I_list,"Optimize_extract_signature!_list")),MakeString("odefine.cl:336"))
   
   C_Optimize__equalsig_ask = ToOperation(new(ClaireOperation).IsNamed(C_operation,MakeSymbol("=sig?",It)))
   
   
-  _ = Core.F_attach_method(C_Optimize__equalsig_ask.AddMethod(Signature(C_list.Id(),C_list.Id(),C_boolean.Id()),0,MakeFunction2(E_Optimize__equalsig_ask_list,"Optimize_=sig?_list")),MakeString("odefine.cl:336"))
+  _ = Core.F_attach_method(C_Optimize__equalsig_ask.AddMethod(Signature(C_list.Id(),C_list.Id(),C_boolean.Id()),0,MakeFunction2(E_Optimize__equalsig_ask_list,"Optimize_=sig?_list")),MakeString("odefine.cl:340"))
   
   _ = Core.F_attach_method(C_Compile_function_name.AddMethod(Signature(C_property.Id(),
     C_list.Id(),
     C_any.Id(),
-    C_string.Id()),0,MakeFunction3(E_Compile_function_name_property1,"Compile_function_name_property1")),MakeString("odefine.cl:355"))
+    C_string.Id()),0,MakeFunction3(E_Compile_function_name_property1,"Compile_function_name_property1")),MakeString("odefine.cl:359"))
   
   _ = Core.F_attach_method(C_Compile_compile_lambda.AddMethod(Signature(C_string.Id(),
     C_lambda.Id(),
     C_any.Id(),
-    C_any.Id()),1,MakeFunction3(E_Compile_compile_lambda_string,"Compile_compile_lambda_string")),MakeString("odefine.cl:372"))
+    C_any.Id()),1,MakeFunction3(E_Compile_compile_lambda_string,"Compile_compile_lambda_string")),MakeString("odefine.cl:376"))
   
-  _ = Core.F_attach_method(C_c_code.AddMethod(Signature(Language.C_Defarray.Id(),C_any.Id()),1,MakeFunction1(E_c_code_Defarray,"c_code_Defarray")),MakeString("odefine.cl:420"))
+  _ = Core.F_attach_method(C_c_code.AddMethod(Signature(Language.C_Defarray.Id(),C_any.Id()),1,MakeFunction1(E_c_code_Defarray,"c_code_Defarray")),MakeString("odefine.cl:424"))
   
-  _ = Core.F_attach_method(C_Compile_compute_if_write_inverse.AddMethod(Signature(C_relation.Id(),C_void.Id()),1,MakeFunction1(E_Compile_compute_if_write_inverse_relation,"Compile_compute_if_write_inverse_relation")),MakeString("odefine.cl:454"))
+  _ = Core.F_attach_method(C_Compile_compute_if_write_inverse.AddMethod(Signature(C_relation.Id(),C_void.Id()),1,MakeFunction1(E_Compile_compute_if_write_inverse_relation,"Compile_compute_if_write_inverse_relation")),MakeString("odefine.cl:458"))
   
-  _ = Core.F_attach_method(C_Compile_compute_set_write.AddMethod(Signature(C_relation.Id(),C_any.Id()),1,MakeFunction1(E_Compile_compute_set_write_relation,"Compile_compute_set_write_relation")),MakeString("odefine.cl:470"))
+  _ = Core.F_attach_method(C_Compile_compute_set_write.AddMethod(Signature(C_relation.Id(),C_any.Id()),1,MakeFunction1(E_Compile_compute_set_write_relation,"Compile_compute_set_write_relation")),MakeString("odefine.cl:474"))
   
   _ = Core.F_attach_method(C_Optimize_Produce_put.AddMethod(Signature(C_property.Id(),
     C_Variable.Id(),
     C_any.Id(),
-    C_any.Id()),1,MakeFunction3(E_Optimize_Produce_put_property,"Optimize_Produce_put_property")),MakeString("odefine.cl:482"))
+    C_any.Id()),1,MakeFunction3(E_Optimize_Produce_put_property,"Optimize_Produce_put_property")),MakeString("odefine.cl:486"))
   
-  _ = Core.F_attach_method(C_Optimize_Produce_erase.AddMethod(Signature(C_property.Id(),C_Variable.Id(),C_any.Id()),1,MakeFunction2(E_Optimize_Produce_erase_property,"Optimize_Produce_erase_property")),MakeString("odefine.cl:495"))
+  _ = Core.F_attach_method(C_Optimize_Produce_erase.AddMethod(Signature(C_property.Id(),C_Variable.Id(),C_any.Id()),1,MakeFunction2(E_Optimize_Produce_erase_property,"Optimize_Produce_erase_property")),MakeString("odefine.cl:499"))
   
   _ = Core.F_attach_method(C_Optimize_Produce_put.AddMethod(Signature(C_table.Id(),
     C_Variable.Id(),
     C_any.Id(),
-    C_any.Id()),0,MakeFunction3(E_Optimize_Produce_put_table,"Optimize_Produce_put_table")),MakeString("odefine.cl:504"))
+    C_any.Id()),0,MakeFunction3(E_Optimize_Produce_put_table,"Optimize_Produce_put_table")),MakeString("odefine.cl:508"))
   
-  _ = Core.F_attach_method(C_Optimize_Produce_get.AddMethod(Signature(C_relation.Id(),C_Variable.Id(),C_any.Id()),1,MakeFunction2(E_Optimize_Produce_get_relation,"Optimize_Produce_get_relation")),MakeString("odefine.cl:515"))
+  _ = Core.F_attach_method(C_Optimize_Produce_get.AddMethod(Signature(C_relation.Id(),C_Variable.Id(),C_any.Id()),1,MakeFunction2(E_Optimize_Produce_get_relation,"Optimize_Produce_get_relation")),MakeString("odefine.cl:519"))
   
   _ = Core.F_attach_method(C_Optimize_Produce_remove.AddMethod(Signature(C_property.Id(),
     C_Variable.Id(),
     C_any.Id(),
-    C_any.Id()),1,MakeFunction3(E_Optimize_Produce_remove_property,"Optimize_Produce_remove_property")),MakeString("odefine.cl:525"))
+    C_any.Id()),1,MakeFunction3(E_Optimize_Produce_remove_property,"Optimize_Produce_remove_property")),MakeString("odefine.cl:529"))
   
   _ = Core.F_attach_method(C_Optimize_Produce_remove.AddMethod(Signature(C_table.Id(),
     C_Variable.Id(),
     C_any.Id(),
-    C_any.Id()),0,MakeFunction3(E_Optimize_Produce_remove_table,"Optimize_Produce_remove_table")),MakeString("odefine.cl:531"))
+    C_any.Id()),0,MakeFunction3(E_Optimize_Produce_remove_table,"Optimize_Produce_remove_table")),MakeString("odefine.cl:535"))
   
-  _ = Core.F_attach_method(C_Optimize_Tighten.AddMethod(Signature(C_relation.Id(),C_void.Id()),0,MakeFunction1(E_Optimize_Tighten_relation,"Optimize_Tighten_relation")),MakeString("odefine.cl:545"))
+  _ = Core.F_attach_method(C_Optimize_Tighten.AddMethod(Signature(C_relation.Id(),C_void.Id()),0,MakeFunction1(E_Optimize_Tighten_relation,"Optimize_Tighten_relation")),MakeString("odefine.cl:549"))
   
-  _ = Core.F_attach_method(C_Compile_Tighten_I.AddMethod(Signature(C_relation.Id(),C_void.Id()),0,MakeFunction1(E_Compile_Tighten_I_relation,"Compile_Tighten!_relation")),MakeString("odefine.cl:547"))
+  _ = Core.F_attach_method(C_Compile_Tighten_I.AddMethod(Signature(C_relation.Id(),C_void.Id()),0,MakeFunction1(E_Compile_Tighten_I_relation,"Compile_Tighten!_relation")),MakeString("odefine.cl:551"))
   
-  _ = Core.F_attach_method(C_Compile_lexical_num.AddMethod(Signature(C_any.Id(),C_integer.Id(),C_void.Id()),1,MakeFunction2(E_Compile_lexical_num_any,"Compile_lexical_num_any")),MakeString("odefine.cl:562"))
+  _ = Core.F_attach_method(C_Compile_lexical_num.AddMethod(Signature(C_any.Id(),C_integer.Id(),C_void.Id()),1,MakeFunction2(E_Compile_lexical_num_any,"Compile_lexical_num_any")),MakeString("odefine.cl:566"))
   
-  _ = Core.F_attach_method(C_c_type.AddMethod(Signature(Language.C_Defrule.Id(),C_type.Id()),0,MakeFunction1(E_c_type_Defrule,"c_type_Defrule")),MakeString("odefine.cl:567"))
+  _ = Core.F_attach_method(C_c_type.AddMethod(Signature(Language.C_Defrule.Id(),C_type.Id()),0,MakeFunction1(E_c_type_Defrule,"c_type_Defrule")),MakeString("odefine.cl:571"))
   
-  _ = Core.F_attach_method(C_c_code.AddMethod(Signature(Language.C_Defrule.Id(),C_class.Id(),C_any.Id()),1,MakeFunction2(E_c_code_Defrule,"c_code_Defrule")),MakeString("odefine.cl:587"))
+  _ = Core.F_attach_method(C_c_code.AddMethod(Signature(Language.C_Defrule.Id(),C_class.Id(),C_any.Id()),1,MakeFunction2(E_c_code_Defrule,"c_code_Defrule")),MakeString("odefine.cl:591"))
   
-  _ = Core.F_attach_method(C_Optimize_compile_if_write.AddMethod(Signature(C_relation.Id(),C_void.Id()),1,MakeFunction1(E_Optimize_compile_if_write_relation,"Optimize_compile_if_write_relation")),MakeString("odefine.cl:616"))
+  _ = Core.F_attach_method(C_Optimize_compile_if_write.AddMethod(Signature(C_relation.Id(),C_void.Id()),1,MakeFunction1(E_Optimize_compile_if_write_relation,"Optimize_compile_if_write_relation")),MakeString("odefine.cl:620"))
   
-  _ = Core.F_attach_method(C_Optimize_demon_substitution.AddMethod(Signature(Language.C_Language_demon.Id(),C_list.Id(),C_any.Id()),0,MakeFunction2(E_Optimize_demon_substitution_demon,"Optimize_demon_substitution_demon")),MakeString("odefine.cl:621"))
+  _ = Core.F_attach_method(C_Optimize_demon_substitution.AddMethod(Signature(Language.C_Language_demon.Id(),C_list.Id(),C_any.Id()),0,MakeFunction2(E_Optimize_demon_substitution_demon,"Optimize_demon_substitution_demon")),MakeString("odefine.cl:625"))
   
-  _ = Core.F_attach_method(C_Optimize_demon_function.AddMethod(Signature(C_string.Id(),C_function.Id()),0,MakeFunction1(E_Optimize_demon_function_string,"Optimize_demon_function_string")),MakeString("odefine.cl:627"))
+  _ = Core.F_attach_method(C_Optimize_demon_function.AddMethod(Signature(C_string.Id(),C_function.Id()),0,MakeFunction1(E_Optimize_demon_function_string,"Optimize_demon_function_string")),MakeString("odefine.cl:631"))
   
-  _ = Core.F_attach_method(C_Optimize_compileEventMethod.AddMethod(Signature(C_property.Id(),C_any.Id()),1,MakeFunction1(E_Optimize_compileEventMethod_property,"Optimize_compileEventMethod_property")),MakeString("odefine.cl:633"))
+  _ = Core.F_attach_method(C_Optimize_compileEventMethod.AddMethod(Signature(C_property.Id(),C_any.Id()),1,MakeFunction1(E_Optimize_compileEventMethod_property,"Optimize_compileEventMethod_property")),MakeString("odefine.cl:637"))
   
   } 
 

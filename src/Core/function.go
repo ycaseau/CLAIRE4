@@ -1,5 +1,5 @@
 /***** CLAIRE Compilation of file /Users/ycaseau/Dropbox/src/clairev4.03/src/meta/function.cl 
-         [version 4.0.04 / safety 5] Saturday 01-01-2022 16:47:18 *****/
+         [version 4.0.04 / safety 5] Sunday 03-13-2022 07:28:42 *****/
 
 package Core
 import (_ "fmt"
@@ -263,7 +263,6 @@ func F_self_print_function_Core (self *ClaireFunction )  {
     // procedure body with s = void
     PRINC("#'")
     F_princ_string(F_string_I_function(self))
-    PRINC("")
     } 
   
 // The EID go function for: self_print @ function (throw: false) 
@@ -310,10 +309,6 @@ func F_self_print_restriction_Core (self *ClaireRestriction ) EID {
                 } 
               Result = F_print_any(arg_1.Id())
               } 
-            if !ErrorIn(Result) {
-            PRINC("")
-            Result = EVOID
-            }
             } 
           } 
         } 
@@ -403,8 +398,8 @@ func E_print_any (x EID) EID {
 // short_enough = we expect that what we want to print is short enough (more that 10 chars to the width)
 /* The go function for: short_enough(self:integer) [status=0] */
 func F_short_enough_integer (self int) *ClaireBoolean  { 
-    if (self < C_pretty.Width) {return CTRUE
-    } else {return CFALSE}} 
+    return  F__inf_integer(self,C_pretty.Width)
+    } 
   
 // The EID go function for: short_enough @ integer (throw: false) 
 func E_short_enough_integer (self EID) EID { 
@@ -515,14 +510,14 @@ func E_Core_new_defaults_object (self EID,lp EID) EID {
 /* The go function for: not(self:any) [status=0] */
 func F_not_any (self *ClaireAny ) *ClaireBoolean  { 
     if (self == CTRUE.Id()) { 
-      if (CFALSE == CTRUE) {return CTRUE
-      } else {return CFALSE}}  else if (self == CFALSE.Id()) { 
-      if (CTRUE == CTRUE) {return CTRUE
-      } else {return CFALSE}}  else if (F_boolean_I_any(self).Id() != CTRUE.Id()) { 
-      if (CTRUE == CTRUE) {return CTRUE
-      } else {return CFALSE}} else {
-      if (CFALSE == CTRUE) {return CTRUE
-      } else {return CFALSE}} 
+      return  CFALSE
+      }  else if (self == CFALSE.Id()) { 
+      return  CTRUE
+      }  else if (F_boolean_I_any(self).Id() != CTRUE.Id()) { 
+      return  CTRUE
+      } else {
+      return  CFALSE
+      } 
     } 
   
 // The EID go function for: not @ any (throw: false) 
@@ -532,10 +527,10 @@ func E_not_any (self EID) EID {
 /* The go function for: !=(self:any,x:any) [status=0] */
 func F__I_equal_any (self *ClaireAny ,x *ClaireAny ) *ClaireBoolean  { 
     if (Equal(self,x) == CTRUE) { 
-      if (CFALSE == CTRUE) {return CTRUE
-      } else {return CFALSE}} else {
-      if (CTRUE == CTRUE) {return CTRUE
-      } else {return CFALSE}} 
+      return  CFALSE
+      } else {
+      return  CTRUE
+      } 
     } 
   
 // The EID go function for: != @ any (throw: false) 
@@ -555,8 +550,8 @@ func E_owner_any (self EID) EID {
 // some useful methods
 /* The go function for: known?(self:any) [status=0] */
 func F_known_ask_any (self *ClaireAny ) *ClaireBoolean  { 
-    if (CNULL != self) {return CTRUE
-    } else {return CFALSE}} 
+    return  F__I_equal_any(CNULL,self)
+    } 
   
 // The EID go function for: known? @ any (throw: false) 
 func E_known_ask_any (self EID) EID { 
@@ -564,8 +559,8 @@ func E_known_ask_any (self EID) EID {
   
 /* The go function for: unknown?(self:any) [status=0] */
 func F_unknown_ask_any (self *ClaireAny ) *ClaireBoolean  { 
-    if (CNULL == self) {return CTRUE
-    } else {return CFALSE}} 
+    return  Equal(CNULL,self)
+    } 
   
 // The EID go function for: unknown? @ any (throw: false) 
 func E_unknown_ask_any (self EID) EID { 
@@ -1068,6 +1063,8 @@ func F_close_module (self *ClaireModule ) *ClaireModule  {
               } 
             } 
           } 
+        } else {
+        F_tformat_string(MakeString("---- note: ~S is a root module !\n"),3,MakeConstantList(self.Id()))
         } 
       } 
     self.Namespace()
@@ -1313,10 +1310,6 @@ func F_self_print_symbol_Core (self *ClaireSymbol ) EID {
     self.Module_I().Name.Princ()
     PRINC("/")
     Result = F_print_any((self.String_I()).Id())
-    if !ErrorIn(Result) {
-    PRINC("")
-    Result = EVOID
-    }
     return Result} 
   
 // The EID go function for: self_print @ symbol (throw: true) 
@@ -1410,10 +1403,10 @@ func E_or_integer (x EID,y EID) EID {
 /* The go function for: <(self:integer,x:integer) [status=0] */
 func F__inf_integer (self int,x int) *ClaireBoolean  { 
     if (self < x) { 
-      if (CTRUE == CTRUE) {return CTRUE
-      } else {return CFALSE}} else {
-      if (CFALSE == CTRUE) {return CTRUE
-      } else {return CFALSE}} 
+      return  CTRUE
+      } else {
+      return  CFALSE
+      } 
     } 
   
 // The EID go function for: < @ integer (throw: false) 
@@ -1423,10 +1416,10 @@ func E__inf_integer (self EID,x EID) EID {
 /* The go function for: <=(self:integer,x:integer) [status=0] */
 func F__inf_equal_integer (self int,x int) *ClaireBoolean  { 
     if (self <= x) { 
-      if (CTRUE == CTRUE) {return CTRUE
-      } else {return CFALSE}} else {
-      if (CFALSE == CTRUE) {return CTRUE
-      } else {return CFALSE}} 
+      return  CTRUE
+      } else {
+      return  CFALSE
+      } 
     } 
   
 // The EID go function for: <= @ integer (throw: false) 
@@ -1436,10 +1429,10 @@ func E__inf_equal_integer (self EID,x EID) EID {
 /* The go function for: >(self:integer,x:integer) [status=0] */
 func F__sup_integer (self int,x int) *ClaireBoolean  { 
     if (self > x) { 
-      if (CTRUE == CTRUE) {return CTRUE
-      } else {return CFALSE}} else {
-      if (CFALSE == CTRUE) {return CTRUE
-      } else {return CFALSE}} 
+      return  CTRUE
+      } else {
+      return  CFALSE
+      } 
     } 
   
 // The EID go function for: > @ integer (throw: false) 
@@ -1449,10 +1442,10 @@ func E__sup_integer (self EID,x EID) EID {
 /* The go function for: nth(self:integer,y:integer) [status=0] */
 func F_nth_integer (self int,y int) *ClaireBoolean  { 
     if (BitVectorContains(self,y) == CTRUE) { 
-      if (CTRUE == CTRUE) {return CTRUE
-      } else {return CFALSE}} else {
-      if (CFALSE == CTRUE) {return CTRUE
-      } else {return CFALSE}} 
+      return  CTRUE
+      } else {
+      return  CFALSE
+      } 
     } 
   
 // The EID go function for: nth @ integer (throw: false) 
@@ -1679,10 +1672,7 @@ func F_printFDigit_float (x float64,i int) EID {
           Result = F_printFDigit_integer(arg_10,i)
           }
           } 
-        if !ErrorIn(Result) {
-        PRINC("")
-        Result = EVOID
-        }}
+        }
         }
         } 
       } 
@@ -2387,24 +2377,7 @@ func E_difference_set (self EID,x EID) EID {
   
 //----------------------  TYPE ---------------------------------------------
 //--------- ARRAY --------------------------------------------------------
-/* The go function for: nth=(self:array,x:integer,y:any) [status=1] */
-func F_nth_equal_array (self *ClaireList ,x int,y *ClaireAny ) EID { 
-    // eid body s = void
-    var Result EID 
-    if (ToList(self.Id()).Of().Contains(y) != CTRUE) { 
-      Result = ToException(C_general_error.Make(MakeString("type mismatch for array update ~S, ~S").Id(),MakeConstantList(y,self.Id()).Id())).Close()
-      }  else if ((x > 0) && 
-        (x <= self.Length())) { 
-      Result = self.NthPut(x,y).ToEID()
-      } else {
-      Result = ToException(C_general_error.Make(MakeString("nth[~S] out of scope for ~S").Id(),MakeConstantList(MakeInteger(x).Id(),self.Id()).Id())).Close()
-      } 
-    return Result} 
-  
-// The EID go function for: nth= @ array (throw: true) 
-func E_nth_equal_array (self EID,x EID,y EID) EID { 
-    return F_nth_equal_array(ToArray(OBJ(self)),INT(x),ANY(y) )} 
-  
+//
 /* The go function for: self_print(self:array) [status=1] */
 func F_self_print_array_Core (self *ClaireList ) EID { 
     // eid body s = void
@@ -2439,8 +2412,8 @@ func E_self_print_char_Core (self EID) EID {
   
 /* The go function for: <=(c1:char,c2:char) [status=0] */
 func F__inf_equal_char (c1 rune,c2 rune) *ClaireBoolean  { 
-    if (int(c1) <= int(c2)) {return CTRUE
-    } else {return CFALSE}} 
+    return  F__inf_equal_integer(int(c1),int(c2))
+    } 
   
 // The EID go function for: <= @ char (throw: false) 
 func E__inf_equal_char (c1 EID,c2 EID) EID { 
@@ -2450,10 +2423,10 @@ func E__inf_equal_char (c1 EID,c2 EID) EID {
 /* The go function for: random(b:boolean) [status=0] */
 func F_random_boolean (b *ClaireBoolean ) *ClaireBoolean  { 
     if (b == CTRUE) { 
-      if (F_random_integer(10000) >= 5000) {return CTRUE
-      } else {return CFALSE}} else {
-      if (CFALSE == CTRUE) {return CTRUE
-      } else {return CFALSE}} 
+      return  F__sup_equal_integer(F_random_integer(10000),5000)
+      } else {
+      return  CFALSE
+      } 
     } 
   
 // The EID go function for: random @ boolean (throw: false) 

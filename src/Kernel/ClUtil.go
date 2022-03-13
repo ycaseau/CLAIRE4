@@ -2,7 +2,7 @@
 // microCLAIRE                                              CLAIRE 4
 // golang microClaire Kernel - started on June 21st, 2020
 //
-//  Copyright (C) 2020-2021 Yves Caseau. All Rights Reserved.
+//  Copyright (C) 2020-2022 Yves Caseau. All Rights Reserved.
 //  Redistribution and use in source and binary forms are permitted
 //  provided that source distribution retains this entire copyright
 //  notice and comments.
@@ -928,37 +928,6 @@ func F_times_integer(n int, m int) EID {
 
 func E_times_integer(n EID, m EID) EID { return F_times_integer(INT(n), INT(m)) }
 
-// the classical order comparisons for two ingteger
-/*func F__inf_integer(n int, m int) *ClaireBoolean {
-	if n < m {
-		return CTRUE
-	} else {
-		return CFALSE
-	}
-}
-func E__inf_integer(self EID, x EID) EID { return EID{F__inf_integer(INT(self), INT(x)).Id(), 0} }
-
-func F__inf_equal_integer(n int, m int) *ClaireBoolean {
-	if n <= m {
-		return CTRUE
-	} else {
-		return CFALSE
-	}
-}
-func E__inf_equal_integer(self EID, x EID) EID {
-	return EID{F__inf_equal_integer(INT(self), INT(x)).Id(), 0}
-}
-
-func F__sup_integer(n int, m int) *ClaireBoolean {
-	if n > m {
-		return CTRUE
-	} else {
-		return CFALSE
-	}
-}
-func E__sup_integer(self EID, x EID) EID { return EID{F__sup_integer(INT(self), INT(x)).Id(), 0} }
-*/
-
 func F__sup_equal_integer(n int, m int) *ClaireBoolean {
 	if n >= m {
 		return CTRUE
@@ -982,7 +951,7 @@ func BitVectorContains(s int, x int) *ClaireBoolean {
 }
 
 // +---------------------------------------------------------------------------+
-// |  Part 6: Float                                                            |
+// |  Part 4: Float                                                            |
 // +---------------------------------------------------------------------------+
 
 // regular princ with the proper precision

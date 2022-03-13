@@ -1,5 +1,5 @@
 /***** CLAIRE Compilation of file /Users/ycaseau/Dropbox/src/clairev4.03/src/meta/syntax.cl 
-         [version 4.0.04 / safety 5] Saturday 01-01-2022 16:47:18 *****/
+         [version 4.0.04 / safety 5] Sunday 03-13-2022 07:28:42 *****/
 
 package Reader
 import (_ "fmt"
@@ -38,13 +38,13 @@ func import_g0039() {
 //
 /* The go function for: operation?(y:any) [status=0] */
 func F_operation_ask_any (y *ClaireAny ) *ClaireBoolean  { 
-    if ((y == C_as.Id()) || 
-        ((y == C_L__equal.Id()) || 
-          ((y.Isa.IsIn(C_operation) == CTRUE) || 
-            ((Equal(y,C_OR.Value) == CTRUE) || 
-              ((y == C__Z.Id()) || 
-                (y == C_add.Id())))))) {return CTRUE
-    } else {return CFALSE}} 
+    return  MakeBoolean((y == C_as.Id()) || 
+    (y == C_L__equal.Id()) || 
+    (y.Isa.IsIn(C_operation) == CTRUE) || 
+    (Equal(y,C_OR.Value) == CTRUE) || 
+    (y == C__Z.Id()) || 
+    (y == C_add.Id()))
+    } 
   
 // The EID go function for: operation? @ any (throw: false) 
 func E_operation_ask_any (y EID) EID { 
@@ -2602,7 +2602,7 @@ func (r *MetaReader ) Nextdefinition (x *ClaireAny ,y *ClaireAny ,old_ask *Clair
       }  else if ((Equal(y,C_arrow.Value) == CTRUE) || 
         (y == C__equal_sup.Id())) { 
       r.LastArrow = Equal(y,C__equal_sup.Id())
-      
+      Core.F_tformat_string(MakeString("---- note: ~S - method's range is assumed to be void \n"),3,MakeConstantList(x))
       Result = r.Nextmethod(x,
         C_void.Id(),
         CFALSE,

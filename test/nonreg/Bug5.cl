@@ -243,6 +243,10 @@ BB:float := 0.0
 (testR())
 
 // test lambdas with CLAIRE4 syntax -------------------------------------------------------
+LL :: (x:integer){x + 1}
+
+(//[0] --- here is (x){x + 1} : 12 -> ~A ----- // funcall(LL,12),
+ show(LL))
 
 [testLambda()
   -> let l1 := (x:integer,y:integer){x + y},

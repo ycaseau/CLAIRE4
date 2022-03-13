@@ -38,7 +38,8 @@
 
 
 all() ->
- (princ("tsta(10000) "), tsta(10000),
+ (princ("tsta(2000) "), tsta(2000),
+  princ("tsta(10000) "), tsta(10000),
   princ("tstm(100000) "), tstm(100000))
 
 

@@ -697,6 +697,7 @@ eventMethod(p:property) : void
                       jito(s),
                       jito(self.arg),
                       if o? put(range,v,unknown)),
+       While (jito(self.test), jito(self.arg)),
        Construct (trace(3,"-- Construct jito: ~S\n",self),
                   jito(self.args)),
        Exists (jito(self.iClaire/set_arg), jito(self.arg), jito(self.other)),

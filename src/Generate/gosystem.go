@@ -1,5 +1,5 @@
 /***** CLAIRE Compilation of file /Users/ycaseau/Dropbox/src/clairev4.03/src/compile/gosystem.cl 
-         [version 4.0.04 / safety 5] Saturday 01-01-2022 16:47:21 *****/
+         [version 4.0.04 / safety 5] Sunday 03-13-2022 07:28:45 *****/
 
 package Generate
 import (_ "fmt"
@@ -407,7 +407,7 @@ func (p *GenerateGoProducer ) Compile (m *ClaireModule ) EID {
     Optimize.C_compiler.NDynamic = 0
     Optimize.C_compiler.NMetheids = 0
     { var l1 *ClaireBag   = ToBag(F_Generate_parents_list(Reader.F_add_modules_list(MakeConstantList(m.Id()))).Id())
-      
+      Core.F_tformat_string(MakeString("==========  START GO COMPILING (~S) with ~S ================ \n"),3,MakeConstantList(m.Id(),l1.Id()))
       { 
         var va_arg1 *Optimize.OptimizeMetaOPT  
         var va_arg2 *ClaireSet  
@@ -734,7 +734,6 @@ func F_Generate_dumb_import_module (m *ClaireModule )  {
         Core.F_gensym_void().Princ()
         PRINC("() ")
         F_Generate_new_block_void()
-        PRINC("")
         { 
           var x *ClaireAny  
           _ = x
@@ -748,7 +747,6 @@ func F_Generate_dumb_import_module (m *ClaireModule )  {
               F_Generate_cap_short_symbol(ToSymbol(OBJ(Core.F_CALL(C_name,ARGS(x.ToEID())))))
               PRINC(".It")
               F_Generate_breakline_void()
-              PRINC("")
               } 
             } 
           } 
@@ -882,7 +880,7 @@ func E_Generate_clean_duplicates_list (l EID) EID {
 func (p *GenerateGoProducer ) GenClasses (m *ClaireModule ) EID { 
     // eid body s = void
     var Result EID 
-    
+    Core.F_tformat_string(MakeString("===== generate classes for ~S ==== \n"),3,MakeConstantList(m.Id()))
     { 
       var c *ClaireAny  
       _ = c
@@ -1008,7 +1006,6 @@ func (p *GenerateGoProducer ) GenClassDef (c *ClaireClass ) EID {
           F_Generate_cap_short_symbol(y.Selector.Name)
           PRINC(" ")
           F_Generate_interface_I_class(y.Range.Class_I())
-          PRINC("")
           F_Generate_breakline_void()
           } 
         }
@@ -1016,7 +1013,6 @@ func (p *GenerateGoProducer ) GenClassDef (c *ClaireClass ) EID {
       } 
     if !ErrorIn(Result) {
     F_Generate_close_block_void()
-    PRINC("")
     Result = EVOID
     }
     return Result} 
@@ -1049,9 +1045,8 @@ func E_Generate_gen_cast_function_go_producer (p EID,c EID) EID {
 // TODO : to complete with the proper test
 /* The go function for: construct_class?(c:class) [status=0] */
 func F_Generate_construct_class_ask_class (c *ClaireClass ) *ClaireBoolean  { 
-    if ((ToType(c.Id()).Included(ToType(C_object.Id())) == CTRUE) && 
-        (c.Slots.Length() <= 5)) {return CTRUE
-    } else {return CFALSE}} 
+    return  MakeBoolean((ToType(c.Id()).Included(ToType(C_object.Id())) == CTRUE) && (c.Slots.Length() <= 5))
+    } 
   
 // The EID go function for: construct_class? @ class (throw: false) 
 func E_Generate_construct_class_ask_class (c EID) EID { 
@@ -1099,7 +1094,6 @@ func (p *GenerateGoProducer ) GenConstruct (c *ClaireClass ) EID {
           F_iClaire_ident_symbol(y.Selector.Name)
           PRINC(" ")
           F_Generate_interface_I_class(y.Range.Class_I())
-          PRINC("")
           }
           } 
         } 
@@ -1108,7 +1102,6 @@ func (p *GenerateGoProducer ) GenConstruct (c *ClaireClass ) EID {
       F_Generate_go_class_class(c)
       PRINC(" ")
       F_Generate_new_block_string(MakeString("make"))
-      PRINC("")
       Result = EVOID
       }
       if !ErrorIn(Result) {
@@ -1118,11 +1111,9 @@ func (p *GenerateGoProducer ) GenConstruct (c *ClaireClass ) EID {
       F_Generate_go_class_class(c)
       PRINC(")")
       F_Generate_breakline_void()
-      PRINC("")
       PRINC("o.Isa = ")
       F_Generate_class_ident_class(c)
       F_Generate_breakline_void()
-      PRINC("")
       { 
         var y *ClaireSlot  
         _ = y
@@ -1159,7 +1150,6 @@ func (p *GenerateGoProducer ) GenConstruct (c *ClaireClass ) EID {
           F_iClaire_ident_symbol(y.Selector.Name)
           F_Generate_cast_post_class(y.Range.Class_I(),F_Generate_rootSlot_slot(y).Range.Class_I())
           F_Generate_breakline_void()
-          PRINC("")
           }
           }}
           } 
@@ -1168,7 +1158,6 @@ func (p *GenerateGoProducer ) GenConstruct (c *ClaireClass ) EID {
       PRINC("return o ")
       F_Generate_breakline_void()
       F_Generate_close_block_string(MakeString("make"))
-      PRINC("")
       Result = EVOID
       }}
       } 
@@ -1184,7 +1173,7 @@ func E_Generate_gen_construct_go_producer (p EID,c EID) EID {
 func (p *GenerateGoProducer ) GenObjects (m *ClaireModule ) EID { 
     // eid body s = void
     var Result EID 
-    
+    Core.F_tformat_string(MakeString("===== generate objects for ~S [graph : ~S] ==== \n"),3,MakeConstantList(m.Id(),Optimize.C_OPT.Properties.Contain_ask(C_mClaire_graph.Id()).Id()))
     { 
       var x *ClaireAny  
       _ = x
@@ -1207,7 +1196,6 @@ func (p *GenerateGoProducer ) GenObjects (m *ClaireModule ) EID {
                 } 
               F_Generate_interface_I_class(arg_1)
               } 
-            PRINC("")
             } 
           } else {
           PRINC("var ")
@@ -1303,8 +1291,6 @@ func (p *GenerateGoProducer ) GenObjects (m *ClaireModule ) EID {
           if ErrorIn(loop_2) {Result = loop_2
           break
           } else {
-          PRINC("")
-          loop_2 = EVOID
           }
           if ErrorIn(loop_2) {Result = loop_2
           break
@@ -1323,7 +1309,6 @@ func (p *GenerateGoProducer ) GenObjects (m *ClaireModule ) EID {
     F_Generate_breakline_void()
     PRINC("var It *ClaireModule")
     F_Generate_breakline_void()
-    PRINC("")
     { var m1 *ClaireModule   = m
       { var m2 *ClaireModule   = m.PartOf
         for ((m2.Id() != C_claire.Id()) && 
@@ -1366,20 +1351,17 @@ func E_Generate_getRange_global_variable (x EID) EID {
 func (p *GenerateGoProducer ) GenMetaLoad (m *ClaireModule ) EID { 
     // eid body s = void
     var Result EID 
-    
+    Core.F_tformat_string(MakeString("===== generate meta_load function for ~S ==== \n"),3,MakeConstantList(m.Id()))
     PRINC("// definition of the meta-model for module ")
     Result = Core.F_print_any(m.Id())
     if !ErrorIn(Result) {
     PRINC(" ")
-    F_Generate_breakline_void()
-    PRINC("")
-    Result = EVOID
+    Result = F_Generate_breakline_void().ToEID()
     }
     if !ErrorIn(Result) {
     PRINC("func MetaLoad() ")
     F_Generate_new_block_void()
     F_Generate_breakline_void()
-    PRINC("")
     Result = p.GenModule(m,m)
     if !ErrorIn(Result) {
     F_Generate_breakline_void()
@@ -1406,8 +1388,6 @@ func (p *GenerateGoProducer ) GenMetaLoad (m *ClaireModule ) EID {
           if ErrorIn(loop_1) {Result = loop_1
           break
           } else {
-          PRINC("")
-          loop_1 = EVOID
           }
           } else {
           loop_1 = EID{CFALSE.Id(),0}
@@ -1445,8 +1425,6 @@ func (p *GenerateGoProducer ) GenMetaLoad (m *ClaireModule ) EID {
             if ErrorIn(loop_2) {Result = loop_2
             break
             } else {
-            PRINC("")
-            loop_2 = EVOID
             }
             } else {
             var g0014I *ClaireBoolean  
@@ -1464,9 +1442,7 @@ func (p *GenerateGoProducer ) GenMetaLoad (m *ClaireModule ) EID {
                 break
                 } else {
                 PRINC(" */")
-                F_Generate_breakline_void()
-                PRINC("")
-                loop_2 = EVOID
+                loop_2 = F_Generate_breakline_void().ToEID()
                 }
                 } else {
                 loop_2 = EID{CFALSE.Id(),0}
@@ -1516,9 +1492,7 @@ func (p *GenerateGoProducer ) GenMetaLoad (m *ClaireModule ) EID {
                 if ErrorIn(loop_2) {Result = loop_2
                 break
                 } else {
-                F_Generate_breakline_void()
-                PRINC("")
-                loop_2 = EVOID
+                loop_2 = F_Generate_breakline_void().ToEID()
                 }
                 } else {
                 loop_2 = F_Generate_statement_any(i,C_void,MakeString("Niet"),CFALSE.Id())
@@ -1554,7 +1528,6 @@ func (p *GenerateGoProducer ) GenModule (m *ClaireModule ,_Zpackage *ClaireModul
       PRINC("It")
       } else {
       F_Generate_go_var_symbol(m.Name)
-      PRINC("")
       } 
     PRINC(" = MakeModule(")
     Result = Core.F_print_any((m.Name.String_I()).Id())
@@ -1563,9 +1536,7 @@ func (p *GenerateGoProducer ) GenModule (m *ClaireModule ,_Zpackage *ClaireModul
     Result = F_Generate_g_expression_module(m.PartOf,C_module)
     if !ErrorIn(Result) {
     PRINC(")")
-    F_Generate_breakline_void()
-    PRINC("")
-    Result = EVOID
+    Result = F_Generate_breakline_void().ToEID()
     }}
     if !ErrorIn(Result) {
     { var s *ClaireString  
@@ -1640,9 +1611,7 @@ func (p *GenerateGoProducer ) GenModule (m *ClaireModule ,_Zpackage *ClaireModul
       Result = Core.F_print_any((s).Id())
       if !ErrorIn(Result) {
       PRINC(")")
-      F_Generate_breakline_void()
-      PRINC("")
-      Result = EVOID
+      Result = F_Generate_breakline_void().ToEID()
       }
       }
       } 
@@ -1650,12 +1619,9 @@ func (p *GenerateGoProducer ) GenModule (m *ClaireModule ,_Zpackage *ClaireModul
     if (Optimize.C_compiler.Debug_ask.Memq(m.Id()) == CTRUE) { 
       PRINC("It.Status = 4")
       F_Generate_breakline_void()
-      PRINC("")
       } 
     PRINC("ClEnv.Module_I = It")
-    F_Generate_breakline_void()
-    PRINC("")
-    Result = EVOID
+    Result = F_Generate_breakline_void().ToEID()
     }}
     return Result} 
   
@@ -1703,7 +1669,6 @@ func (c *GenerateGoProducer ) Declare (p *ClaireProperty ) EID {
     if (p.Isa.IsIn(C_operation) == CTRUE) { 
       PRINC(",")
       F_princ_integer(ToOperation(p.Id()).Precedence)
-      PRINC("")
       } 
     PRINC(")")
     Result = EVOID
@@ -1833,8 +1798,6 @@ func (p *GenerateGoProducer ) GenFile (f1 *ClaireString ,f2 *ClaireString ) EID 
                   if ErrorIn(loop_4) {Result = loop_4
                   break
                   } else {
-                  PRINC("")
-                  loop_4 = EVOID
                   }
                   if ErrorIn(loop_4) {Result = loop_4
                   break
@@ -1954,7 +1917,7 @@ func (p *GenerateGoProducer ) MakeLambdaFunction (self *ClaireLambda ,_Znom *Cla
       if ErrorIn(try_1) {Result = try_1
       } else {
       _Zbody = ANY(try_1)
-      
+      Core.F_tformat_string(MakeString("===== generate an EID function from a lambda for ~A \n"),3,MakeConstantList((_Znom).Id()))
       Optimize.C_OPT.Outfile.UseAsOutput()
       Result = ToGenerateGoProducer(Optimize.C_PRODUCER.Value).GenerateFunctionStart(self,
         Optimize.C_EID,
@@ -1967,9 +1930,7 @@ func (p *GenerateGoProducer ) MakeLambdaFunction (self *ClaireLambda ,_Znom *Cla
         Result = Core.F_CALL(C_print,ARGS(self.Body.ToEID()))
         if !ErrorIn(Result) {
         PRINC(" */")
-        F_Generate_breakline_void()
-        PRINC("")
-        Result = EVOID
+        Result = F_Generate_breakline_void().ToEID()
         }
         } else {
         Result = EID{CFALSE.Id(),0}
@@ -2203,9 +2164,7 @@ func (p *GenerateGoProducer ) MakeGoFunction (self *ClaireLambda ,_Znom *ClaireS
                 Result = Core.F_CALL(C_print,ARGS(_Zbody.ToEID()))
                 if !ErrorIn(Result) {
                 PRINC(" ")
-                F_Generate_breakline_void()
-                PRINC("")
-                Result = EVOID
+                Result = F_Generate_breakline_void().ToEID()
                 }}
                 } else {
                 Result = EID{CFALSE.Id(),0}
@@ -2261,14 +2220,13 @@ func (p *GenerateGoProducer ) MakeGoFunction (self *ClaireLambda ,_Znom *ClaireS
                 if (p.Debug_ask == CTRUE) { 
                   PRINC("// use function body compiling ")
                   F_Generate_breakline_void()
-                  PRINC("")
                   } 
                 Result = Core.F_CALL(C_Generate_function_body,ARGS(_Zbody.ToEID(),EID{s.Id(),0}))
                 } 
               }
               }}
               } else {
-              
+              Core.F_tformat_string(MakeString("--- EID function generation (can throw = ~S) \n"),3,MakeConstantList(throw_ask.Id()))
               throw_ask = CTRUE
               Optimize.C_compiler.NMetheids = (Optimize.C_compiler.NMetheids+1)
               Result = ToGenerateGoProducer(Optimize.C_PRODUCER.Value).GenerateFunctionStart(self,
@@ -2368,6 +2326,7 @@ func E_Generate_simple_body_ask_any (self EID) EID {
   
 // generic case (g_func is true)
 // simpler case that we apply for Do, Ifs and functional expressions
+// however is c_type(exp) is void we need to return CNULL
 /* The go function for: function_body(self:any,s:class) [status=1] */
 func F_Generate_function_body_any (self *ClaireAny ,s *ClaireClass ) EID { 
     // eid body s = void
@@ -2375,25 +2334,54 @@ func F_Generate_function_body_any (self *ClaireAny ,s *ClaireClass ) EID {
     { var _Zret *ClaireString   = ToString(IfThenElse((s.Id() != C_void.Id()),
         MakeString("return ").Id(),
         MakeString("").Id()))
-      if (s.Id() == C_boolean.Id()) { 
-        PRINC("if ")
-        Result = Core.F_CALL(Optimize.C_Compile_bool_exp,ARGS(self.ToEID(),EID{CTRUE.Id(),0}))
-        if !ErrorIn(Result) {
-        PRINC(" {return CTRUE")
-        F_Generate_breakline_void()
-        PRINC("} else {return CFALSE}")
-        Result = EVOID
+      var g0028I *ClaireBoolean  
+      var try_1 EID 
+      { 
+        var v_and3 *ClaireBoolean  
+        
+        var try_2 EID 
+        { var arg_3 *ClaireType  
+          var try_4 EID 
+          try_4 = Core.F_CALL(Optimize.C_c_type,ARGS(self.ToEID()))
+          if ErrorIn(try_4) {try_2 = try_4
+          } else {
+          arg_3 = ToType(OBJ(try_4))
+          try_2 = EID{Equal(arg_3.Id(),C_void.Id()).Id(),0}
+          }
+          } 
+        if ErrorIn(try_2) {try_1 = try_2
+        } else {
+        v_and3 = ToBoolean(OBJ(try_2))
+        if (v_and3 == CFALSE) {try_1 = EID{CFALSE.Id(),0}
+        } else { 
+          v_and3 = Core.F__I_equal_any(s.Id(),C_void.Id())
+          if (v_and3 == CFALSE) {try_1 = EID{CFALSE.Id(),0}
+          } else { 
+            try_1 = EID{CTRUE.Id(),0}} 
+          } 
         }
+        } 
+      if ErrorIn(try_1) {Result = try_1
+      } else {
+      g0028I = ToBoolean(OBJ(try_1))
+      if (g0028I == CTRUE) { 
+        Result = Core.F_CALL(C_Generate_g_expression,ARGS(self.ToEID(),EID{C_void.Id(),0}))
+        if !ErrorIn(Result) {
+        F_Generate_breakline_void()
+        PRINC("return ")
+        Result = F_Generate_g_expression_any(CNULL,s)
+        if !ErrorIn(Result) {
+        Result = F_Generate_breakline_void().ToEID()
+        }}
         } else {
         F_princ_string(_Zret)
         PRINC(" ")
         Result = Core.F_CALL(C_Generate_g_expression,ARGS(self.ToEID(),EID{s.Id(),0}))
         if !ErrorIn(Result) {
-        F_Generate_breakline_void()
-        PRINC("")
-        Result = EVOID
+        Result = F_Generate_breakline_void().ToEID()
         }
         } 
+      }
       } 
     return Result} 
   
@@ -2411,7 +2399,6 @@ func F_Generate_function_body_If (self *Language.If ,s *ClaireClass ) EID {
     if !ErrorIn(Result) {
     PRINC(" ")
     F_Generate_new_block_string(MakeString("body If"))
-    PRINC("")
     Result = EVOID
     }
     if !ErrorIn(Result) {
@@ -2424,12 +2411,8 @@ func F_Generate_function_body_If (self *Language.If ,s *ClaireClass ) EID {
       F_Generate_finish_block_void()
       PRINC(" else ")
       Result = Core.F_CALL(C_Generate_function_body,ARGS(self.Other.ToEID(),EID{s.Id(),0}))
-      if !ErrorIn(Result) {
-      PRINC("")
-      Result = EVOID
-      }
       } else {
-      var g0028I *ClaireBoolean  
+      var g0029I *ClaireBoolean  
       var try_1 EID 
       { 
         var v_or3 *ClaireBoolean  
@@ -2458,14 +2441,13 @@ func F_Generate_function_body_If (self *Language.If ,s *ClaireClass ) EID {
         } 
       if ErrorIn(try_1) {Result = try_1
       } else {
-      g0028I = ToBoolean(OBJ(try_1))
-      if (g0028I == CTRUE) { 
+      g0029I = ToBoolean(OBJ(try_1))
+      if (g0029I == CTRUE) { 
         PRINC("} else {")
         F_Generate_breakline_void()
         Result = Core.F_CALL(C_Generate_function_body,ARGS(self.Other.ToEID(),EID{s.Id(),0}))
         if !ErrorIn(Result) {
         F_Generate_close_block_string(MakeString("body If"))
-        PRINC("")
         Result = EVOID
         }
         } else {
@@ -2537,9 +2519,7 @@ func F_Generate_procedure_body_method (m *ClaireMethod ,_Zl *ClaireLambda ,_Zbod
     PRINC("// procedure body with s = ")
     Result = Core.F_print_any(s.Id())
     if !ErrorIn(Result) {
-    F_Generate_breakline_void()
-    PRINC("")
-    Result = EVOID
+    Result = F_Generate_breakline_void().ToEID()
     }
     if !ErrorIn(Result) {
     if (s.Id() != C_void.Id()) { 
@@ -2600,9 +2580,7 @@ func F_Generate_eid_body_method (m *ClaireMethod ,_Zbody *ClaireAny ,typeOK *Cla
     PRINC("// eid body s = ")
     Result = Core.F_print_any(s.Id())
     if !ErrorIn(Result) {
-    F_Generate_breakline_void()
-    PRINC("")
-    Result = EVOID
+    Result = F_Generate_breakline_void().ToEID()
     }
     if !ErrorIn(Result) {
     F_Generate_var_declaration_string(MakeString("Result"),Optimize.C_EID,1)
@@ -2678,10 +2656,6 @@ func F_Generate_generate_eid_function_lambda (self *ClaireLambda ,m *ClaireMetho
           } else {
           PRINC("return ")
           Result = F_Generate_print_EID_call_method(m,lv,_Zsig,throw_ask)
-          if !ErrorIn(Result) {
-          PRINC("")
-          Result = EVOID
-          }
           } 
         if !ErrorIn(Result) {
         F_Generate_close_block_void()
@@ -2719,9 +2693,9 @@ func F_Generate_generate_eid_dual_lambda (self *ClaireLambda ,_Znom *ClaireStrin
         F_c_princ_string(_Znom)
         PRINC("(")
         { var n int  = 1
-          { var g0029 int  = lv.Length()
+          { var g0030 int  = lv.Length()
             Result= EID{CFALSE.Id(),0}
-            for (n <= g0029) { 
+            for (n <= g0030) { 
               var loop_1 EID 
               _ = loop_1
               { 
@@ -2794,9 +2768,9 @@ func F_Generate_print_EID_call_method (m *ClaireMethod ,l *ClaireList ,_Zsig *Cl
             F_Generate_goMethod_method(m)
             PRINC("(")
             { var n int  = 2
-              { var g0032 int  = l.Length()
+              { var g0033 int  = l.Length()
                 Result= EID{CFALSE.Id(),0}
-                for (n <= g0032) { 
+                for (n <= g0033) { 
                   var loop_2 EID 
                   _ = loop_2
                   { 
@@ -2823,9 +2797,9 @@ func F_Generate_print_EID_call_method (m *ClaireMethod ,l *ClaireList ,_Zsig *Cl
               l = CNIL
               } 
             { var n int  = 1
-              { var g0033 int  = l.Length()
+              { var g0034 int  = l.Length()
                 Result= EID{CFALSE.Id(),0}
-                for (n <= g0033) { 
+                for (n <= g0034) { 
                   var loop_3 EID 
                   _ = loop_3
                   { 
@@ -3042,10 +3016,10 @@ func F_Generate_need_debug_ask_any (m *ClaireAny ) *ClaireBoolean  {
     // procedure body with s = boolean
     var Result *ClaireBoolean  
     if (C_method.Id() == m.Isa.Id()) { 
-      { var g0034 *ClaireMethod   = ToMethod(m)
-        { var p *ClaireProperty   = g0034.Selector
-          Result = MakeBoolean((Optimize.C_compiler.Debug_ask.Memq(g0034.Module_I.Id()) == CTRUE) && 
-          (g0034.Module_I.Id() != C_claire.Id()) && 
+      { var g0035 *ClaireMethod   = ToMethod(m)
+        { var p *ClaireProperty   = g0035.Selector
+          Result = MakeBoolean((Optimize.C_compiler.Debug_ask.Memq(g0035.Module_I.Id()) == CTRUE) && 
+          (g0035.Module_I.Id() != C_claire.Id()) && 
           (p.Id() != Core.C_self_eval.Id()) && 
           (p.Id() != Core.C_execute.Id()) && 
           (p.Id() != Core.C_eval_message.Id()) && 
@@ -3110,12 +3084,6 @@ func (c *GenerateGoProducer ) DebugIntro (self *ClaireLambda ,x *ClaireMethod ) 
               if ErrorIn(loop_1) {Result = loop_1
               break
               } else {
-              PRINC("")
-              loop_1 = EVOID
-              }
-              if ErrorIn(loop_1) {Result = loop_1
-              break
-              } else {
               n = (n+1)
               }
               }
@@ -3124,9 +3092,7 @@ func (c *GenerateGoProducer ) DebugIntro (self *ClaireLambda ,x *ClaireMethod ) 
           } 
         if !ErrorIn(Result) {
         PRINC("));")
-        F_Generate_breakline_void()
-        PRINC("")
-        Result = EVOID
+        Result = F_Generate_breakline_void().ToEID()
         }}}
         } 
       } 
@@ -3161,9 +3127,7 @@ func (p *GenerateGoProducer ) ReturnResult (s *ClaireClass ,x *ClaireMethod ,_Zr
         } 
       if !ErrorIn(Result) {
       PRINC(")")
-      F_Generate_breakline_void()
-      PRINC("")
-      Result = EVOID
+      Result = F_Generate_breakline_void().ToEID()
       }}}
       } else {
       Result = EID{CFALSE.Id(),0}
@@ -3172,7 +3136,6 @@ func (p *GenerateGoProducer ) ReturnResult (s *ClaireClass ,x *ClaireMethod ,_Zr
     if (s.Id() != C_void.Id()) { 
       PRINC("return ")
       F_princ_string(_Zres)
-      PRINC("")
       Result = EVOID
       } else {
       Result = EID{CFALSE.Id(),0}
@@ -3202,8 +3165,8 @@ func E_c_princ_function (self EID) EID {
 func F_Generate_import_princ_string (s *ClaireString )  { 
     // procedure body with s = void
     { var i int  = 1
-      { var g0037 int  = F_length_string(s)
-        for (i <= g0037) { 
+      { var g0038 int  = F_length_string(s)
+        for (i <= g0038) { 
           if ((i > 1) || 
               (s.At(i) != '#')) { 
             F_c_princ_char(s.At(i))

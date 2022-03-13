@@ -170,13 +170,15 @@ g_expression(self:symbol,s:class) : void
              cast_post(s2,s)))  ]
 
 // global_variables are CLAIRE objects
+// v4.0.4 : handle optimized variables (nativeVarG)
 [g_expression(self:global_variable,s:class) : void 
   ->  if (s = EID) to_eid(PRODUCER,self,object) 
       else if (self.range = {} & (self.value % integer | self.value % float | self.value = nil))
           g_expression(self.value,s)            // global constant inlining
-      else (object_prefix(any,s),
+      else let s2 := (if nativeVar?(self) getRange(self) else any) in
+           (cast_prefix(s2,s),
             globalVar(PRODUCER,self),
-            object_post(any,s)) ]
+            cast_post(s2,s)) ]
 
 // builds a set
 g_expression(self:Set,s:class) : void 
@@ -224,11 +226,11 @@ g_expression(self:list,s:class) : void
 // new in CLAIRE 4 !! compilation of lambda is OK but requires the reader (similar to macros)
 g_expression(self:lambda,s:class) : void
  -> (Optimize/legal?(Reader,self),
-     printf("~ICore.F_read_lambda(MakeString(\"lambda[(~I),~S]\"))~I",
-          cast_prefix(lambda,s),
+     printf("~ICore.F_read_lambda_string(MakeString(\"lambda[(~I),~S]\"))~I",
+          eid_prefix(s),
           Language/ppvariable(self.vars), 
           self.body,
-          cast_post(lambda,s)))
+          eid_post(s)))
 
 //**********************************************************************
 //*          Part 2: expression for messages                         *

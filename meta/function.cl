@@ -196,6 +196,7 @@ not(self:any) : boolean
       else if (self = false) true
       else if not(self) true         // catch special cases : empty list
       else false)
+      
 !=(self:any,x:any) : boolean -> (if (self = x) false else true)
 
 // gives the type of any object. This is open_coded.
@@ -606,10 +607,11 @@ difference(self:set,x:set) : set -> { y in self | not(contain?(x, y))}
 
 //--------- ARRAY --------------------------------------------------------
 
+/* defined in Kernel in v4.0.5
 nth=(self:array,x:integer,y:any) : void
  -> (if not(y % of(self)) error("type mismatch for array update ~S, ~S",y,self)
      else if (x > 0 & x <= length(self)) nth_put(self,x,y)
-     else error("nth[~S] out of scope for ~S", x, self))
+     else error("nth[~S] out of scope for ~S", x, self)) */
 
 self_print(self:array) : void -> printf("array<~S>[~A]",of(self),length(self))
  

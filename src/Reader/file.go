@@ -1,5 +1,5 @@
 /***** CLAIRE Compilation of file /Users/ycaseau/Dropbox/src/clairev4.03/src/meta/file.cl 
-         [version 4.0.04 / safety 5] Saturday 01-01-2022 16:47:18 *****/
+         [version 4.0.04 / safety 5] Sunday 03-13-2022 07:28:42 *****/
 
 package Reader
 import (_ "fmt"
@@ -64,13 +64,13 @@ func F_useless_c_integer (r int) *ClaireBoolean  {
     if (r == 10) { 
       ClEnv.NLine = (ClEnv.NLine+1)
       } 
-    if ((r == C_reader.Space) || 
-        ((r == 10) || 
-          ((r == 13) || 
-            ((r == 32) || 
-              ((r == 160) || 
-                (r == C_reader.Tab)))))) {return CTRUE
-    } else {return CFALSE}} 
+    return  MakeBoolean((r == C_reader.Space) || 
+    (r == 10) || 
+    (r == 13) || 
+    (r == 32) || 
+    (r == 160) || 
+    (r == C_reader.Tab))
+    } 
   
 // The EID go function for: useless_c @ integer (throw: false) 
 func E_useless_c_integer (r EID) EID { 
@@ -1232,8 +1232,8 @@ func E_max_any (x EID,y EID) EID {
 // check if the value if known?
 /* The go function for: known?(a:table,x:any) [status=0] */
 func F_known_ask_table (a *ClaireTable ,x *ClaireAny ) *ClaireBoolean  { 
-    if (Core.F_get_table(a,x) != CNULL) {return CTRUE
-    } else {return CFALSE}} 
+    return  Core.F__I_equal_any(Core.F_get_table(a,x),CNULL)
+    } 
   
 // The EID go function for: known? @ table (throw: false) 
 func E_known_ask_table (a EID,x EID) EID { 
@@ -1241,8 +1241,8 @@ func E_known_ask_table (a EID,x EID) EID {
   
 /* The go function for: unknown?(a:table,x:any) [status=0] */
 func F_unknown_ask_table (a *ClaireTable ,x *ClaireAny ) *ClaireBoolean  { 
-    if (Core.F_get_table(a,x) == CNULL) {return CTRUE
-    } else {return CFALSE}} 
+    return  Equal(Core.F_get_table(a,x),CNULL)
+    } 
   
 // The EID go function for: unknown? @ table (throw: false) 
 func E_unknown_ask_table (a EID,x EID) EID { 
@@ -1280,8 +1280,8 @@ func E_float_I_string (self EID) EID {
 // v3.00.46 a new macro
 /* The go function for: >=(self:any,x:any) [status=1] */
 func F__sup_equal_any (self *ClaireAny ,x *ClaireAny ) *ClaireBoolean  { 
-    if (ToBoolean(OBJ(Core.F_CALL(ToProperty(C__inf_equal.Id()),ARGS(x.ToEID(),self.ToEID())))) == CTRUE) {return CTRUE
-    } else {return CFALSE}} 
+    return  ToBoolean(OBJ(Core.F_CALL(ToProperty(C__inf_equal.Id()),ARGS(x.ToEID(),self.ToEID()))))
+    } 
   
 // The EID go function for: >= @ any (throw: false) 
 func E__sup_equal_any (self EID,x EID) EID { 

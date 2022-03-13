@@ -656,11 +656,17 @@ parents(self:list) : list
 // generic case (g_func is true)
 
 // simpler case that we apply for Do, Ifs and functional expressions
+// however is c_type(exp) is void we need to return CNULL
 [function_body(self:any,s:class) : void
   -> let %ret := (if (s != void) "return " else "") in
-       (if (s = boolean)
-         printf("if ~I {return CTRUE~I} else {return CFALSE}",bool_exp(self,true),breakline())
-        else printf("~A ~I~I", %ret, g_expression(self,s),breakline())) ]
+//       (if (s = boolean)        // this is an old optimization that is USELESS in CLAIRE4
+//         printf("if ~I {return CTRUE~I} else {return CFALSE}",bool_exp(self,true),breakline())
+//        else printf("~A ~I~I", %ret, g_expression(self,s),breakline())) ]
+     (if (c_type(self) = void & s != void)
+         printf("~I~Ireturn ~I~I",
+                 g_expression(self,void), breakline(),
+                 g_expression(unknown,s), breakline())
+      else printf("~A ~I~I", %ret, g_expression(self,s),breakline())) ]
 
 // generate nice code for If function (inspired from g_statement@If)
 [function_body(self:If, s:class) : void

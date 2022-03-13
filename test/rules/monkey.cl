@@ -231,7 +231,7 @@ goal-5 :: goal(action = catch_a, concerned_with = grape)
 // x 100
 [do_test()  : void
   -> time_set(),
-     for x in (1 .. 100) // 100000)
+     for x in (1 .. 100000)     // 100 interpreted, 100000 compiled
        (goals(cheetah) :add goal-1,
         //[TRACE] do I have the banana?  //,
         goals(cheetah) :add goal-2,

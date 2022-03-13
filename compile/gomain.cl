@@ -267,13 +267,13 @@
 // create a directory for the module (if it does not exist)
 [compile_dir(m:module): void
  -> let s := "mkdir -p src" / capitalize(string!(m.name)) in 
-     (//[0] ask shell : ~S // s,
+     (//[5] ask shell : ~S // s,
       shell(s))]
 
 // create the go
 [compile_exe(%out:string): void
  -> let s := "go build src" / %out /+ ".go" in 
-     (//[0] ask shell : ~S // s,
+     (//[5] ask shell : ~S // s,
       shell(s))]
 
 

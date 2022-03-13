@@ -27,7 +27,7 @@ foo(n:integer) : integer
 testSort(N:integer) 
  -> let lst := make_array(N,float,0.0) in 
    	(time_set(),
-   	 for k in (1 .. 10)
+   	 for k in (1 .. 100)
         (for i in (1 .. N) lst[i] := random(1.0),
          qsort(lst,1,N)),
      time_show())
@@ -68,8 +68,8 @@ all() ->
    g(35),
    princ("fib(35.0)"),
    tfab(35.0),
-   princ("10 x quicksort(5000)"),
-   testSort(5000))
+   princ("100 x quicksort(10000)"),
+   testSort(10000))
 
 [main() -> 
   //[0] test fib ----- //,

@@ -1,5 +1,5 @@
 /***** CLAIRE Compilation of file /Users/ycaseau/Dropbox/src/clairev4.03/src/meta/read.cl 
-         [version 4.0.04 / safety 5] Saturday 01-01-2022 16:47:18 *****/
+         [version 4.0.04 / safety 5] Sunday 03-13-2022 07:28:42 *****/
 
 package Reader
 import (_ "fmt"
@@ -40,8 +40,8 @@ func import_g0000() {
 // here we define the basic keywords
 /* The go function for: keyword?(x:any) [status=0] */
 func F_keyword_ask_any (x *ClaireAny ) *ClaireBoolean  { 
-    if (x.Isa.IsIn(C_reserved_keyword) == CTRUE) {return CTRUE
-    } else {return CFALSE}} 
+    return  x.Isa.IsIn(C_reserved_keyword)
+    } 
   
 // The EID go function for: keyword? @ any (throw: false) 
 func E_keyword_ask_any (x EID) EID { 

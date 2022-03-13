@@ -283,6 +283,8 @@ unfold_eid(ldef:list,self:any,s:class, v:any,err:boolean,loop:any) : void
 // AXIOM if err is true, we require that e = any
 [g_statement(self:Let,e:class,v:string,err:boolean,loop:any) : void
   -> if let_eid?(self) g_eid_stat(self,e,v,err,loop)
+     else if (self.arg = self.var & e = void)        // stupid case where             
+         statement(self.value,e,v,loop)              // self.var is not needed !                          
      else let ns := c_string(PRODUCER,self.var.mClaire/pname) in
       (if (ns[1] = 'C' & ns[2] = '%') self.var.mClaire/pname := gensym(),     // used in Iterate (C% variables are expanded): ocontrol.cl
        let v2 := c_string(PRODUCER,self.var),  x := self.value,
@@ -295,7 +297,7 @@ unfold_eid(ldef:list,self:any,s:class, v:any,err:boolean,loop:any) : void
                if (Language/occurexact(self.arg, self.var) < 1)          // avoid unused variable error (1 safe, 0 optimized)
                   (// THIS SHOULD BE A PROPER WARNING ==============
                    //[5] >>>>>>>>  variable ~S declared but unused  // v2,          
-                   printf("_ = ~A~I", v2,breakline())),                    
+                   printf("_ = ~A~I", v2,breakline())),
                if  try? g_try(x,v2,ev,v,false)                           // if the value may be an error => start if chain
                else if not(f) statement(x, ev, v2,loop),
                statement(self.arg, e, v, loop),                          // calling statement is crictical for reintrant pattern :)
@@ -452,20 +454,22 @@ unfold_eid(ldef:list,self:any,s:class, v:any,err:boolean,loop:any) : void
    
 // This is the global variable assignment - global variables exist in go so this is pretty simple
 // note that the tricky part is the store management
+// v4.0.4 : if nativeVar, we need to produce the go object, not an any  (any is now replaced by %srange)
 [g_statement(self:Gassign,s:class,v:string,err:boolean,loop:any) : void
-   ->  let %var := self.var, x := self.arg  in
+   ->  let %var := self.var, x := self.arg, 
+           %range := (if nativeVar?(%var) getRange(%var) else any)  in
            (if (g_func(x) & s = void & not(%var.Kernel/store?))    // simple case
-               printf("~I = ~I~I", globalVar(PRODUCER,%var), g_expression(x,any), breakline())
+               printf("~I = ~I~I", globalVar(PRODUCER,%var), g_expression(x,%range), breakline())   
             else let v2 := genvar("v_gassign"), try? := g_throw(x) in
-              (if (not(try?) & (s = any)) v2 := v        // save intermediate the variable
-               else var_declaration(v2,any,1),
-               if try? g_try(x,v2,any,v,false)
-               else statement(x,any,v2,loop),
+              (if (not(try?) & (s = any & %range = any)) v2 := v        // save intermediate the variable
+               else var_declaration(v2,%range,1),
+               if try? g_try(x,v2,%range,v,false)
+               else statement(x,%range,v2,loop),
                if self.var.Kernel/store?  
                    printf("~I.StoreObj(3,~I,CTRUE)~I", thing_ident(%var), c_princ(v2),breakline())
                else printf("~I = ~I~I", globalVar(PRODUCER,%var), c_princ(v2),breakline()),
                if (s != void & v != v2) 
-                   printf("~I = ~I~I",c_princ(v),use_variable(v2,s,any),breakline()),
+                   printf("~I = ~I~I",c_princ(v),use_variable(v2,s,%range),breakline()),
                if try? close_block()))]
 
 

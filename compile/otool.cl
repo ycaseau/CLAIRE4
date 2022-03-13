@@ -543,7 +543,9 @@ get_indexed(c:class) : list -> c.slots
         else if (tx <= list) c_code(Call(!=,list(Call(length,list(x)),0)))
         else c_code(Call(boolean!,list(x)))) ]
 
-
+// this should have been created long ago
+Compile/Do!(l:list) : any
+  -> (if (length(l) = 1) l[1] else Do(args = l))
 
 
 

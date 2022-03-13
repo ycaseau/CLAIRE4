@@ -2,7 +2,7 @@
 // microCLAIRE                                              CLAIRE 4
 // golang microClaire Kernel - started on June 21st, 2020
 //
-//  Copyright (C) 2020-2021 Yves Caseau. All Rights Reserved.
+//  Copyright (C) 2020-2022 Yves Caseau. All Rights Reserved.
 //  Redistribution and use in source and binary forms are permitted
 //  provided that source distribution retains this entire copyright
 //  notice and comments.
@@ -23,8 +23,6 @@
 // ClairePorts are the most specific piece of this file : buffered for better performance
 
 package Kernel
-
-// with internet : Humains augmentés et environnement augmenté(s) - bug.
 
 import (
 	"bufio"
@@ -48,10 +46,6 @@ import (
 // exported vars
 var C_char_I *ClaireProperty
 
-// add the bootstrap part for lists, sets, tuples and array
-func BootString() {
-	fmt.Println("-------------- Boot String ------------------------")
-}
 
 // +---------------------------------------------------------------------------+
 // |  Part 1: Char objects (Runes)                                             |

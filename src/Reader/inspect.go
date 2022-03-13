@@ -1,5 +1,5 @@
 /***** CLAIRE Compilation of file /Users/ycaseau/Dropbox/src/clairev4.03/src/meta/inspect.cl 
-         [version 4.0.04 / safety 5] Saturday 01-01-2022 16:47:18 *****/
+         [version 4.0.04 / safety 5] Sunday 03-13-2022 07:28:42 *****/
 
 package Reader
 import (_ "fmt"
@@ -984,8 +984,6 @@ func F_breakpoint_void () EID {
                         if ErrorIn(loop_3) {Result = loop_3
                         break
                         } else {
-                        PRINC("")
-                        loop_3 = EVOID
                         }
                         if ErrorIn(loop_3) {Result = loop_3
                         break
@@ -1171,8 +1169,6 @@ func F_print_debug_info_integer (index int,stack_level int,cur_index int) EID {
                 if ErrorIn(loop_1) {Result = loop_1
                 break
                 } else {
-                PRINC("")
-                loop_1 = EVOID
                 }
                 if ErrorIn(loop_1) {Result = loop_1
                 break
@@ -1586,7 +1582,6 @@ func F_logMeasure_string (s *ClaireString ) EID {
         p.UseAsOutput()
         PRINC("// log file produced on ")
         F_princ_string(F_date_I_integer(1))
-        PRINC("")
         { 
           var g0181 *ClaireClass  
           _ = g0181

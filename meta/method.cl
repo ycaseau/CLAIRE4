@@ -150,7 +150,7 @@ eval(self:any) : any -> eval(self)
      catch any unsafe(trace(0,"---- WARNING: inline definition of ~S is wrong\n", self)),
      self ]
 
-// reads a lambda
+// reads a lambda - may return an error
 [claire/read_lambda(s:string) : lambda
  -> try let p := read, l := call(p, s) in
           (case l (lambda l, any error("compiled lambda error with ~S (not a lambda!)",s)))

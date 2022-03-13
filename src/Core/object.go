@@ -1,5 +1,5 @@
 /***** CLAIRE Compilation of file /Users/ycaseau/Dropbox/src/clairev4.03/src/meta/object.cl 
-         [version 4.0.04 / safety 5] Saturday 01-01-2022 16:47:18 *****/
+         [version 4.0.04 / safety 5] Sunday 03-13-2022 07:28:42 *****/
 
 package Core
 import (_ "fmt"
@@ -215,10 +215,7 @@ func F_push_debug_property (prop *ClaireProperty ,arity int,start int) EID {
             if !ErrorIn(Result) {
             PRINC("(")
             Result = F_CALL(C_print,ARGS(ClEnv.EvalStack[start]))
-            if !ErrorIn(Result) {
-            PRINC("")
-            Result = EVOID
-            }}
+            }
             if !ErrorIn(Result) {
             { var j int  = (start+1)
               Result= EID{CFALSE.Id(),0}
@@ -231,8 +228,6 @@ func F_push_debug_property (prop *ClaireProperty ,arity int,start int) EID {
                 if ErrorIn(loop_1) {Result = loop_1
                 break
                 } else {
-                PRINC("")
-                loop_1 = EVOID
                 }
                 if ErrorIn(loop_1) {Result = loop_1
                 break
@@ -586,12 +581,8 @@ func E_Core_db_unbind_module (m EID,p EID,v EID) EID {
 // finds if objects are identified - unclear if there is any need for this
 /* The go function for: identified?(self:class) [status=0] */
 func F_identified_ask_class (self *ClaireClass ) *ClaireBoolean  { 
-    if ((self.Id() == C_integer.Id()) || 
-        ((self.IsIn(C_object) == CTRUE) || 
-          ((self.Id() == C_symbol.Id()) || 
-            ((self.Id() == C_boolean.Id()) || 
-              (self.Id() == C_char.Id()))))) {return CTRUE
-    } else {return CFALSE}} 
+    return  MakeBoolean((self.Id() == C_integer.Id()) || (self.IsIn(C_object) == CTRUE) || (self.Id() == C_symbol.Id()) || (self.Id() == C_boolean.Id()) || (self.Id() == C_char.Id()))
+    } 
   
 // The EID go function for: identified? @ class (throw: false) 
 func E_identified_ask_class (self EID) EID { 
@@ -600,8 +591,8 @@ func E_identified_ask_class (self EID) EID {
 // true pointer equality in go (used to be C++) => use externC form
 /* The go function for: identical?(x:any,y:any) [status=0] */
 func F_identical_ask_any (x *ClaireAny ,y *ClaireAny ) *ClaireBoolean  { 
-    if (ToBoolean(IfThenElse(x == y,CTRUE.Id(),CFALSE.Id())) == CTRUE) {return CTRUE
-    } else {return CFALSE}} 
+    return  ToBoolean(IfThenElse(x == y,CTRUE.Id(),CFALSE.Id()))
+    } 
   
 // The EID go function for: identical? @ any (throw: false) 
 func E_identical_ask_any (x EID,y EID) EID { 

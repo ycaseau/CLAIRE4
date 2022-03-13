@@ -1,8 +1,8 @@
 (printf("Hello CLAIRE4, this is our init.cl file\n"))
 
 // Mac version
-*where* :: "/Users/ycaseau/claire/v4.0/go4"                      // where the init file is
-*output* :: "/Users/ycaseau/claire/v4.0/go4/src"
+*where* :: "/Users/ycaseau/claire/v4.0/go"                      // where the init file is
+*output* :: "/Users/ycaseau/claire/v4.0/go/src"
 *meta* :: "/Users/ycaseau/Dropbox/src/clairev4.03/src/meta"            // source files on dropbox (v2)
 *compile* :: "/Users/ycaseau/Dropbox/src/clairev4.03/src/compile"      // source files on dropbox (v2)
 *bsrc* :: "/Users/ycaseau/claire/v4.0/test/nonreg"
@@ -10,15 +10,12 @@
 *rsrc* :: "/Users/ycaseau/claire/v4.0/test/rules"
 
 // these are the global variables expected by the compiler
-RELEASE:float :: 0.04    // December 24th, 2021 
+RELEASE:float :: 0.05    // version of March 6th, 2022
+
 
 // ***************************************************************************
 // *    Part 1: Modules & compiler environment                               *
 // ***************************************************************************
-
-// meta files are now the "official" github directory
-// (for m in {Core,Language,Reader} source(m) := *meta*,
-//  for m in {Optimize,Generate} source(m) := *compile*)
 
 
 // where we want to generate the go code
@@ -164,6 +161,9 @@ mMonkey :: module( uses = list(Reader), source = *rsrc*,
 mZebra :: module( uses = list(Reader), source = *rsrc*,
                   made_of = list("zebra"))
 
+// airline - WIP (old CLAIRE 2 example)
+mAirline :: module( uses = list(Reader), source = *rsrc*,
+                  made_of = list("Airline"))
 
 // these are the old non-regression tests files (refreshed in July 2021)
 (printf("Done. \n"))

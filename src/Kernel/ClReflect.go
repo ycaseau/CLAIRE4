@@ -2,7 +2,7 @@
 // microCLAIRE                                              CLAIRE 4
 // golang microClaire Kernel - started on June 21st, 2020
 //
-//  Copyright (C) 2020 Yves Caseau. All Rights Reserved.
+//  Copyright (C) 2020-2022 Yves Caseau. All Rights Reserved.
 //  Redistribution and use in source and binary forms are permitted
 //  provided that source distribution retains this entire copyright
 //  notice and comments.
@@ -30,8 +30,8 @@ import (
 // |  Part 1: reflexive description of Claire Objects & Entities  (bootstrap)  |
 // |  Part 2: Property methods                                                 |
 // |  Part 3: Class & Types methods                                            |
-// |  Part 4: Utilities (print,p...)                                           |
-// |  Part 5: Integer & Float                                                  |
+// |  Part 4: Slots and Methods for classes                                    |
+// |  Part 5: Read & Write                                                     |
 // +---------------------------------------------------------------------------+
 
 // +---------------------------------------------------------------------------+
@@ -1167,9 +1167,11 @@ func BootMethod() {
 	C__7_plus.AddMethod(Signature(C_list.Id(), C_list.Id(), C_list.Id()), 0, MakeFunction2(E_append_list, "append_list"))
 	C_nth.AddMethod(Signature(C_list.Id(), C_integer.Id(), C_any.Id()), 1, MakeFunction2(E_nth_list, "nth_list"))
 	C_nth.AddMethod(Signature(C_tuple.Id(), C_integer.Id(), C_any.Id()), 1, MakeFunction2(E_nth_list, "nth_list"))
+	C_nth.AddMethod(Signature(C_array.Id(), C_integer.Id(), C_any.Id()), 1, MakeFunction2(E_nth_list, "nth_list"))   // v4.0.5
 	C_nth_plus.AddMethod(Signature(C_list.Id(), C_integer.Id(), C_any.Id(), C_list.Id()), 1, MakeFunction3(E_nth_plus_list, "nth_plus_list"))
 	C_nth_dash.AddMethod(Signature(C_list.Id(), C_integer.Id(), C_list.Id()), 1, MakeFunction2(E_nth_dash_list, "nth_dash_list"))
 	C_nth_equal.AddMethod(Signature(C_list.Id(), C_integer.Id(), C_any.Id(),C_any.Id()), 1, MakeFunction3(E_nth_equal_list, "nth_equal_list"))
+	C_nth_equal.AddMethod(Signature(C_array.Id(), C_integer.Id(), C_any.Id(),C_any.Id()), 1, MakeFunction3(E_nth_equal_list, "nth_equal_list"))  // v4.0.5
 	C_skip.AddMethod(Signature(C_list.Id(), C_integer.Id(), C_list.Id()), 0, MakeFunction2(E_skip_list, "skip_list"))
 	C_shrink.AddMethod(Signature(C_list.Id(), C_integer.Id(), C_list.Id()), 0, MakeFunction2(E_shrink_list, "shrink_list"))
 	C_slice.AddMethod(Signature(C_list.Id(), C_integer.Id(), C_integer.Id(), C_list.Id()), 0, MakeFunction3(E_slice_list, "slice_list"))
@@ -1211,7 +1213,7 @@ func BootMethod() {
 	C_get.AddMethod(Signature(C_string.Id(), C_char.Id(), C_integer.Id()), 0, MakeFunction2(E_get_string, "get_string"))
 	C__inf_equal.AddMethod(Signature(C_string.Id(), C_string.Id(), C_boolean.Id()), 0, MakeFunction2(E_less_string, "_less_string"))
 	C_included.AddMethod(Signature(C_string.Id(), C_string.Id(), C_boolean.Id(), C_integer.Id()), 0, MakeFunction3(E_included_string, "included_string"))
-	C_nth.AddMethod(Signature(C_string.Id(), C_integer.Id(), C_char.Id()), 1, MakeFunction2(E_nth_string, "E_nth_string"))
+	C_nth.AddMethod(Signature(C_string.Id(), C_integer.Id(), C_char.Id()), 1, MakeFunction2(E_nth_string, "nth_string"))
 	C_nth_equal.AddMethod(Signature(C_string.Id(), C_integer.Id(), C_char.Id(), C_void.Id()), 0, MakeFunction3(E_nth_set_string, "nth_set_string"))
 	C_string_I.AddMethod(Signature(C_integer.Id(), C_string.Id()), 0, MakeFunction1(E_string_I_integer, "string_I_integer"))
 	C_make_string.AddMethod(Signature(C_integer.Id(), C_char.Id(), C_string.Id()), 0, MakeFunction2(E_make_string_integer, "make_string_integer"))
@@ -1325,6 +1327,10 @@ func BootMethod() {
 	// fmt.Println("============= End Boot Method ===========================")
 
 }
+
+// +---------------------------------------------------------------------------+
+// |  Part 5: Read & Write                                                     |
+// +---------------------------------------------------------------------------+
 
 // reflective slot access (use n: index and s : srange)
 func (p *ClaireObject) SlotGet(n int, s *ClaireClass) *ClaireAny {

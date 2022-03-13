@@ -1,5 +1,5 @@
 // ==================================================================
-// golang experiments Phase 2 - Copyright (C) Yves Caseau
+// golang experiments Phase 2 - Copyright (C) Yves Caseau, 2020-22
 // started on June 21st, 2020
 // clEnv.go
 // ==================================================================

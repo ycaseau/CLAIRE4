@@ -580,11 +580,12 @@ nth_arg_type(x:type,y:type) : type
 
 // we place here all methods that require second order types !!!!
 nth_get(a:array,n:integer) : type[member(a)] -> nth_get(a,n)                    // managed by cross-compiler ?
+/* v4.0.5 defined in Kernel
 nth(self:array,x:integer) : type[member(self)]
  -> (if (x > 0 & x <= length(self)) nth_get(self,x)
-     else error("[180] nth[~S] out of scope for ~S", x, self))
+     else error("[180] nth[~S] out of scope for ~S", x, self)) */
 make_array(i:integer,t:type,v:any) : type[ (if unique?(t) (the(t))[] else array)]
- -> function!(make_array_integer,NEW_ALLOC)
+ -> function!(make_array_integer)
  
 make_list(n:integer,t:type,x:any) : type[ (if unique?(t) list[the(t)] else list)]
   -> (cast!(make_list(n,x),t) as list) 
@@ -618,6 +619,7 @@ list!(l:set<X>) : type[(if (X = any) list else list<X>)]
  put(Kernel/typing, (new! @ list(class)), object_type_class),
  (nth_get @ array).Kernel/typing := first_member_type,
  (nth @ list).Kernel/typing := nth_arg_type, 
+ (nth @ array).Kernel/typing := nth_arg_type,     // v4.0.5
  (nth @ set).Kernel/typing := nth_arg_type,
  for r in nth+.restrictions (r as method).Kernel/typing := first_arg_type,
  for r in add.restrictions

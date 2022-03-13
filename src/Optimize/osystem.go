@@ -1,5 +1,5 @@
 /***** CLAIRE Compilation of file /Users/ycaseau/Dropbox/src/clairev4.03/src/compile/osystem.cl 
-         [version 4.0.04 / safety 5] Saturday 01-01-2022 16:47:21 *****/
+         [version 4.0.04 / safety 5] Sunday 03-13-2022 07:28:45 *****/
 
 package Optimize
 import (_ "fmt"
@@ -1636,9 +1636,8 @@ func F_Optimize_stable_ask_relation (self *ClaireRelation ) *ClaireBoolean  {
       self.Open = 1
       } 
     } 
-  if ((self.Open <= 1) || 
-      (self.Open == 4)) {return CTRUE
-  } else {return CFALSE}} 
+  return  MakeBoolean((self.Open <= 1) || (self.Open == 4))
+  } 
 
 // The EID go function for: stable? @ relation (throw: false) 
 func E_Optimize_stable_ask_relation (self EID) EID { 

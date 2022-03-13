@@ -99,7 +99,7 @@ c_code(self:Definition,s:class) : any
         else c_code(Let(var = %v,
                         value = Cast(arg = c_code(Call(mClaire/new!, list(%c)), object),
                                      set_arg = %c),
-                        arg = Do(args = analyze!(%c, %v, self.args, list()))),
+                        arg = Do!(analyze!(%c, %v, self.args, list()))),
                     s)))
 
 // tells if a "total instantiation" is appropriate (for exceptions)
@@ -151,21 +151,25 @@ c_code(self:Definition,s:class) : any
         r) ]
 
 // creation of a new named object
+// CLAIRE4 : native variable need a specific 
 c_code(self:Defobj,s:class) : any
- -> let %c := self.arg, o := value(self.Language/ident),
-        %v := (if (known?(o) & not(o % global_variable)) o
-               else Variable!(*name*, (OPT.max_vars :+ 1, 0), %c)),
-        %y1 := Call(object!, list(self.Language/ident, %c)),
-        %y2 := analyze!(%c, %v, self.args, list(name)),
-        %x:any := (if not(%v % Variable) Do(%y1 cons %y2)
-                   else  Let(var = %v, value = %y1, arg = Do(%y2))) in
-       (//[5] compile defobj(~S) -> ~S // self, o,
+ -> let %c := self.arg, o := value(self.Language/ident), %x:any := unknown in
+      (if (case o (global_variable nativeVar?(o)))
+          let %val := unknown in
+             (for c in self.args (if (case c (Call (c.selector = = & c.args[1] = value))) %val := c.args[2]),
+              %x :=  Gassign(var = o, arg = c_code(%val,class!(c_type(o)))))
+       else let  %v := (if (known?(o) & not(o % global_variable)) o
+                        else Variable!(*name*, (OPT.max_vars :+ 1, 0), %c)),
+                 %y1 := Call(object!, list(self.Language/ident, %c)),
+                 %y2 := analyze!(%c, %v, self.args, list(name)) in
+              (%x := (if not(%v % Variable) Do(%y1 cons %y2)
+                      else  Let(var = %v, value = %y1, arg = Do!(%y2))),
+               %x := c_code(%x, s)),
+        //[5] compile defobj(~S) -> ~S // self, o,
         if (%c.open <= 0) error("[105] cannot instantiate ~S", %c),          // v3.2.44
         if known?(o)
-           (if not(o % OPT.objects)
-               (OPT.objects :add o, c_register(o)))
+           (if not(o % OPT.objects) (OPT.objects :add o, c_register(o)))
         else (warn(),trace(2, "~S is unknown [265]\n", self.Language/ident)),
-        %x := c_code(%x, s),
         %x)
 
 // creation of a new named object
@@ -438,7 +442,7 @@ Compile/compute_if_write_inverse(R:relation) : void
             l1 :add Produce_put(R.inverse,y,x),
           R.if_write := lambda!(list(x,y),
                                 If(test = Call(not, list(Call(%, list(y,Produce_get(R,x))))),
-                                   arg = Do(l1))))
+                                   arg = Do!(l1))))
       else (//generate an if_write demon that does the put
             l1 := list<any>(Produce_put(R,x,y)),
             if known?(inverse,R)
@@ -449,7 +453,7 @@ Compile/compute_if_write_inverse(R:relation) : void
                                   Let(var = z,
                                       value = Produce_get(R,x),
                                       arg = If(test = Call(!=,list(y,z)),
-                                      arg = Do(l1))))),
+                                      arg = Do!(l1))))),
       let dn := string!(R.name) /+ "_write" in
           (Compile/compile_lambda(dn, R.if_write, void)))
 
@@ -467,7 +471,7 @@ Compile/compute_set_write(R:relation) : any
       l1 :add For(var = z, set_arg = y,
                   arg = Produce_put(R,x,z)),
       let dn := string!(R.name) /+ "_set_write" in
-          Compile/compile_lambda(dn, lambda!(list(x,y),Do(l1)), void))
+          Compile/compile_lambda(dn, lambda!(list(x,y),Do!(l1)), void))
 
 // generate a simple put for a property => generate a case to make sure
 // that we get the fastest possible code
@@ -584,7 +588,7 @@ c_code(self:Defrule,s:class) : any
         for r in Language/relations[ru]
           (if Language/eventMethod?(r)
               l :add compileEventMethod(r as property)),
-        c_code(Do(l), s))
+        c_code(Do!(l), s))
       
 // produce a beautiful if_write demon from all the claire demons created by each rule that applies to R
 [compile_if_write(R:relation) : void
@@ -605,7 +609,7 @@ c_code(self:Defrule,s:class) : any
          (if not(R.multivalued?) l1 :add Produce_remove(R.inverse,lvar[3],lvar[1]),
           l1 :add Produce_put(R.inverse,lvar[2],lvar[1])),
        R.if_write := lambda!( list(lvar[1],lvar[2]),
-         (if Language/eventMethod?(R) Do(l2)
+         (if Language/eventMethod?(R) Do!(l2)
           else if R.multivalued?
              If(test = Call(not,
                             list(Call(%,list(lvar[2],Language/readCall(R,lvar[1]))))),

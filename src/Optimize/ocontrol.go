@@ -1,5 +1,5 @@
 /***** CLAIRE Compilation of file /Users/ycaseau/Dropbox/src/clairev4.03/src/compile/ocontrol.cl 
-         [version 4.0.04 / safety 5] Saturday 01-01-2022 16:47:21 *****/
+         [version 4.0.04 / safety 5] Sunday 03-13-2022 07:28:45 *****/
 
 package Optimize
 import (_ "fmt"
@@ -955,7 +955,7 @@ func F_c_code_Trace (self *Language.Trace ) EID {
                       if ErrorIn(try_7) {v_or7_H = try_7
                       } else {
                       arg_6 = ANY(try_7)
-                      v_or7_H = EID{Core.F__inf_equal_integer(ToInteger(arg_6).Value,Reader.F_max_integer(2,ClEnv.Verbose)).Id(),0}
+                      v_or7_H = EID{Core.F__inf_equal_integer(ToInteger(arg_6).Value,Reader.F_max_integer(3,ClEnv.Verbose)).Id(),0}
                       }
                       } 
                     if ErrorIn(v_or7_H){ 
@@ -1342,7 +1342,7 @@ func F_c_code_Printf (self *Language.Printf ) EID {
                   } 
                 }
                 if !ErrorIn(Result) {
-                if (F_boolean_I_any((s).Id()) == CTRUE) { 
+                if (F_length_string(s) > 0) { 
                   { var arg_11 *Language.Call  
                     { var _CL_obj *Language.Call   = Language.To_Call(new(Language.Call).Is(Language.C_Call))
                       _CL_obj.Selector = C_princ
@@ -4005,7 +4005,7 @@ func F_iterate_array (x *ClaireList ,v *ClaireVariable ,e *ClaireAny ) EID {
             { var v *ClaireAny  
               _ = v
               var try_2 EID 
-              try_2 = Core.F_nth_array(_Za,_Zi)
+              try_2 = _Za.Nth(_Zi)
               if ErrorIn(try_2) {loop_1 = try_2
               } else {
               v = ANY(try_2)

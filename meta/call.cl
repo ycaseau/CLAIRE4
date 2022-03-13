@@ -105,7 +105,8 @@ self_eval(self:Call*) : any
 printe(self:any,s:property) : void
  -> (if (case self
           (Call (self.selector % operation & length(self.args) = 2)))
-        (if true printf("(~S)", self) else printexp(self, true))
+         printf("(~S)", self)
+        // previous code (if true printf("(~S)", self) else printexp(self, true))
      else printexp(self, true))
 
 // tells if the sugar :op can be used

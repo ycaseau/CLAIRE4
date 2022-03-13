@@ -1,5 +1,5 @@
 /***** CLAIRE Compilation of file /Users/ycaseau/Dropbox/src/clairev4.03/src/meta/control.cl 
-         [version 4.0.04 / safety 5] Saturday 01-01-2022 16:47:18 *****/
+         [version 4.0.04 / safety 5] Sunday 03-13-2022 07:28:42 *****/
 
 package Language
 import (_ "fmt"
@@ -62,10 +62,7 @@ func (self *If ) Printstat () EID {
     if !ErrorIn(Result) {
     Core.C_pretty.Index = (Core.C_pretty.Index-3)
     Result = self.Printelse()
-    if !ErrorIn(Result) {
-    PRINC("")
-    Result = EVOID
-    }}}
+    }}
     return Result} 
   
 // The EID go function for: printstat @ If (throw: true) 
@@ -133,10 +130,7 @@ func (self *If ) Printelse () EID {
           if !ErrorIn(Result) {
           Core.C_pretty.Index = (Core.C_pretty.Index-3)
           Result = g0130.Printelse()
-          if !ErrorIn(Result) {
-          PRINC("")
-          Result = EVOID
-          }}}}
+          }}}
           } 
         }  else if (Equal(e,CNIL.Id()) != CTRUE) { 
         { var _Zl int  = Core.C_pretty.Index
@@ -146,10 +140,7 @@ func (self *If ) Printelse () EID {
           PRINC("else ")
           F_set_level_integer(1)
           Result = Core.F_CALL(C_print,ARGS(e.ToEID()))
-          if !ErrorIn(Result) {
-          PRINC("")
-          Result = EVOID
-          }}
+          }
           if !ErrorIn(Result) {
           { 
             var va_arg1 *Core.PrettyPrinter  
@@ -364,10 +355,7 @@ func (self *Let ) SelfPrint () EID {
       Result = F_printexp_any(self.Value,CFALSE)
       if !ErrorIn(Result) {
       Result = self.Printbody()
-      if !ErrorIn(Result) {
-      PRINC("")
-      Result = EVOID
-      }}}
+      }}
       if !ErrorIn(Result) {
       { 
         var va_arg1 *Core.PrettyPrinter  
@@ -402,20 +390,14 @@ func (self *Let ) Printbody () EID {
           if !ErrorIn(Result) {
           Core.C_pretty.Index = (Core.C_pretty.Index-4)
           Result = g0138.Printbody()
-          if !ErrorIn(Result) {
-          PRINC("")
-          Result = EVOID
-          }}}}
+          }}}
           } 
         } else {
         PRINC(" in ")
         Result = F_lbreak_integer(2)
         if !ErrorIn(Result) {
         Result = Core.F_CALL(C_print,ARGS(a.ToEID()))
-        if !ErrorIn(Result) {
-        PRINC("")
-        Result = EVOID
-        }}
+        }
         } 
       } 
     return Result} 
@@ -468,10 +450,7 @@ func (self *When ) SelfPrint () EID {
       Result = F_lbreak_integer(2)
       if !ErrorIn(Result) {
       Result = Core.F_CALL(C_print,ARGS(self.Arg.ToEID()))
-      if !ErrorIn(Result) {
-      PRINC("")
-      Result = EVOID
-      }}}}
+      }}}
       if !ErrorIn(Result) {
       if (self.Other != CNULL) { 
         PRINC(" ")
@@ -480,10 +459,7 @@ func (self *When ) SelfPrint () EID {
         PRINC("else ")
         F_set_level_integer(1)
         Result = Core.F_CALL(C_print,ARGS(self.Other.ToEID()))
-        if !ErrorIn(Result) {
-        PRINC("")
-        Result = EVOID
-        }}
+        }
         } else {
         Result = EID{CFALSE.Id(),0}
         } 
@@ -561,10 +537,7 @@ func (self *Let_plus ) SelfPrint () EID {
         Result = F_lbreak_integer(2)
         if !ErrorIn(Result) {
         Result = Core.F_CALL(C_print,ARGS(To_Let(l.At(2-1)).Value.ToEID()))
-        if !ErrorIn(Result) {
-        PRINC("")
-        Result = EVOID
-        }}}}
+        }}}
         if !ErrorIn(Result) {
         { 
           var va_arg1 *Core.PrettyPrinter  
@@ -626,10 +599,7 @@ func (self *Let_star ) SelfPrint () EID {
           Result = F_printexp_any(self.Value,CFALSE)
           if !ErrorIn(Result) {
           Result = To_Let(l).Printbody()
-          if !ErrorIn(Result) {
-          PRINC("")
-          Result = EVOID
-          }}}
+          }}
           } else {
           PRINC("(")
           { var _Zf *ClaireBoolean   = CTRUE
@@ -662,10 +632,7 @@ func (self *Let_star ) SelfPrint () EID {
           if !ErrorIn(Result) {
           PRINC(") := ")
           Result = F_printexp_any(self.Value,CFALSE)
-          if !ErrorIn(Result) {
-          PRINC("")
-          Result = EVOID
-          }}
+          }
           } 
         if !ErrorIn(Result) {
         { 
@@ -728,10 +695,7 @@ func (self *For ) SelfPrint () EID {
       Result = EID{C__INT,IVAL(va_arg2)}
       } 
     }}
-    if !ErrorIn(Result) {
-    PRINC("")
-    Result = EVOID
-    }}}
+    }}
     return Result} 
   
 // The EID go function for: self_print @ For (throw: true) 
@@ -2079,8 +2043,6 @@ func (self *Case ) SelfPrint () EID {
               if ErrorIn(loop_1) {Result = loop_1
               break
               } else {
-              PRINC("")
-              loop_1 = EVOID
               }
               } else {
               loop_1 = EID{CFALSE.Id(),0}
@@ -2092,8 +2054,6 @@ func (self *Case ) SelfPrint () EID {
             if ErrorIn(loop_1) {Result = loop_1
             break
             } else {
-            PRINC("")
-            loop_1 = EVOID
             }}}
             if ErrorIn(loop_1) {Result = loop_1
             break
@@ -2233,10 +2193,7 @@ func (self *While ) SelfPrint () EID {
     Result = F_lbreak_integer(2)
     if !ErrorIn(Result) {
     Result = Core.F_CALL(C_print,ARGS(self.Arg.ToEID()))
-    if !ErrorIn(Result) {
-    PRINC("")
-    Result = EVOID
-    }}}
+    }}
     if !ErrorIn(Result) {
     { 
       var va_arg1 *Core.PrettyPrinter  
@@ -2393,10 +2350,7 @@ func (self *ClaireHandle ) SelfPrint () EID {
     if !ErrorIn(Result) {
     PRINC(" ")
     Result = Core.F_CALL(C_print,ARGS(self.Other.ToEID()))
-    if !ErrorIn(Result) {
-    PRINC("")
-    Result = EVOID
-    }}}}
+    }}}
     if !ErrorIn(Result) {
     { 
       var va_arg1 *Core.PrettyPrinter  

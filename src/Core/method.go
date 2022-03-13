@@ -1,5 +1,5 @@
 /***** CLAIRE Compilation of file /Users/ycaseau/Dropbox/src/clairev4.03/src/meta/method.cl 
-         [version 4.0.04 / safety 5] Saturday 01-01-2022 16:47:18 *****/
+         [version 4.0.04 / safety 5] Sunday 03-13-2022 07:28:42 *****/
 
 package Core
 import (_ "fmt"
@@ -313,7 +313,7 @@ func F_inlineok_ask_method (self *ClaireMethod ,s *ClaireString ) *ClaireMethod 
 func E_inlineok_ask_method (self EID,s EID) EID { 
     return EID{F_inlineok_ask_method(ToMethod(OBJ(self)),ToString(OBJ(s)) ).Id(),0}} 
   
-// reads a lambda
+// reads a lambda - may return an error
 /* The go function for: read_lambda(s:string) [status=1] */
 func F_read_lambda_string (s *ClaireString ) EID { 
     // eid body s = lambda

@@ -75,6 +75,7 @@ GO_PRODUCER :: go_producer(
  // a list of interface
  Generate/interfaces = list(integer, "int", char, "rune", string, "string", float, "float64 "),
  kernel_methods = list<any>(// empty @ set, class! @ type, copy @ set, length @ bag,
+                             nth @ list, nth @ tuple,        // needed for compiling with low optimization
                              @ @ type,"At", array! @ list, // size @ set, empty @ bag, 
                              list! @ set, set! @ list, tuple! @ list,    // defined in Core (2nd order type)
                              list! @ tuple, /+ @ list,"Append", << @ list, "Skip")
@@ -198,7 +199,7 @@ c_string(c:go_producer, self:symbol) : string
 // range = {} for global constant
 [globalVar(c:go_producer,x:global_variable) : void
   ->  thing_ident(x),
-      princ(".Value") ]
+      if not(nativeVar?(x))  princ(".Value") ]         // do not forget optimized (native) global variables
 
 // the go expression that represents a global variable, as a string (reused for Gassign)
 

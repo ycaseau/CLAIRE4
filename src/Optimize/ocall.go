@@ -1,5 +1,5 @@
 /***** CLAIRE Compilation of file /Users/ycaseau/Dropbox/src/clairev4.03/src/compile/ocall.cl 
-         [version 4.0.04 / safety 5] Saturday 01-01-2022 16:47:21 *****/
+         [version 4.0.04 / safety 5] Sunday 03-13-2022 07:28:45 *****/
 
 package Optimize
 import (_ "fmt"
@@ -1059,10 +1059,10 @@ func F_Optimize_c_code_call_Call (self *Language.Call ,sx *ClaireClass ) EID {
                                         }
                                         } 
                                       } else {
-                                      
+                                      Core.F_tformat_string(MakeString("---- note: ... unsafe access to unknown slot: ~S \n"),3,MakeConstantList(self.Id()))
                                       if (C_compiler.Optimize_ask == CTRUE) { 
                                         F_Compile_notice_void()
-                                        
+                                        Core.F_tformat_string(MakeString("poorly optimized slot access: ~S\n"),3,MakeConstantList(self.Id()))
                                         } 
                                       Result = F_Optimize_c_warn_property(s,l,_Ztype)
                                       } 
@@ -1614,7 +1614,27 @@ func F_Optimize_c_code_write_Call (self *Language.Call ) EID {
                       } else {
                       _Ztype = ToList(OBJ(try_21))
                       { var z *ClaireAny   = F_Optimize_restriction_I_property(ss,_Ztype,CTRUE)
-                        
+                        { var arg_23 *ClaireList  
+                          var try_24 EID 
+                          { 
+                            var v_bag_arg *ClaireAny  
+                            try_24= EID{ToType(CEMPTY.Id()).EmptyList().Id(),0}
+                            ToList(OBJ(try_24)).AddFast(self.Id())
+                            var try_25 EID 
+                            try_25 = Core.F_CALL(C_c_type,ARGS(x.ToEID()))
+                            if ErrorIn(try_25) {try_24 = try_25
+                            } else {
+                            v_bag_arg = ANY(try_25)
+                            ToList(OBJ(try_24)).AddFast(v_bag_arg)
+                            ToList(OBJ(try_24)).AddFast(yt.Id())}
+                            } 
+                          if ErrorIn(try_24) {Result = try_24
+                          } else {
+                          arg_23 = ToList(OBJ(try_24))
+                          Result = Core.F_tformat_string(MakeString("---- note: ~S is poorly typed (~S,~S) \n"),3,arg_23)
+                          }
+                          } 
+                        if !ErrorIn(Result) {
                         if (C_method.Id() == z.Isa.Id()) { 
                           { var g0198 *ClaireMethod   = ToMethod(z)
                             Result = F_Optimize_c_code_method_method1(g0198,self.Args,_Ztype)
@@ -1622,6 +1642,7 @@ func F_Optimize_c_code_write_Call (self *Language.Call ) EID {
                           } else {
                           Result = F_Optimize_c_warn_Call(self,_Ztype.Id())
                           } 
+                        }
                         } 
                       }
                       } 
@@ -2026,7 +2047,7 @@ func F_Optimize_c_code_add_Call (self *Language.Call ) EID {
                   } else {
                   if (C_compiler.Optimize_ask == CTRUE) { 
                     F_Compile_notice_void()
-                    
+                    Core.F_tformat_string(MakeString("poorly typed update: ~S\n"),3,MakeConstantList(self.Id()))
                     } 
                   { var arg_18 *ClaireList  
                     var try_19 EID 
@@ -2830,7 +2851,7 @@ func F_Optimize_c_code_nth_Call (self *Language.Call ) EID {
                           ((t.Included(ToType(C_array.Id())) == CTRUE) || 
                               (t.Included(ToType(C_table.Id())) == CTRUE))) { 
                         F_Compile_notice_void()
-                        
+                        Core.F_tformat_string(MakeString("poorly typed call: ~S\n"),3,MakeConstantList(self.Id()))
                         } 
                       { var arg_37 *ClaireList  
                         var try_38 EID 
@@ -3076,7 +3097,7 @@ func F_Optimize_c_code_table_Call (self *Language.Call ) EID {
                         (p.IfWrite == CNULL))) { 
                   if (C_compiler.Optimize_ask == CTRUE) { 
                     F_Compile_notice_void()
-                    
+                    Core.F_tformat_string(MakeString("poorly typed update: ~S\n"),3,MakeConstantList(self.Id()))
                     } 
                   Result = F_Optimize_c_code_method_method1(ToMethod(Core.F__at_property1(C_put,C_table).Id()),self.Args,MakeConstantList(C_table.Id(),C_any.Id(),C_any.Id()))
                   } else {
@@ -3219,7 +3240,7 @@ func F_Optimize_c_code_array_Call (self *Language.Call ) EID {
                       } else {
                       if (C_compiler.Optimize_ask == CTRUE) { 
                         F_Compile_notice_void()
-                        
+                        Core.F_tformat_string(MakeString("poorly typed update: ~S\n"),3,MakeConstantList(self.Id()))
                         } 
                       Result = F_Optimize_c_code_method_method1(ToMethod(Core.F__at_property1(ToProperty(IfThenElse((typeok == CTRUE),
                         C_nth_put.Id(),
@@ -3380,10 +3401,8 @@ func E_Optimize_Update_ask_relation1 (p EID,x EID,y EID) EID {
 // we do not use an Update form for add
 /* The go function for: Update?(p:relation,s:relation) [status=0] */
 func F_Optimize_Update_ask_relation2 (p *ClaireRelation ,s *ClaireRelation ) *ClaireBoolean  { 
-    if ((p.IfWrite != CNULL) && 
-        ((p.IfWrite.Isa.IsIn(C_list) != CTRUE) && 
-          (s.Id() == C_add.Id()))) {return CTRUE
-    } else {return CFALSE}} 
+    return  MakeBoolean((p.IfWrite != CNULL) && (p.IfWrite.Isa.IsIn(C_list) != CTRUE) && (s.Id() == C_add.Id()))
+    } 
   
 // The EID go function for: Update? @ list<type_expression>(relation, relation) (throw: false) 
 func E_Optimize_Update_ask_relation2 (p EID,s EID) EID { 
@@ -3552,7 +3571,7 @@ func F_Optimize_c_code_method_method2 (self *ClaireMethod ,l *ClaireList ,_Ztype
       } else {
       if (C_compiler.Optimize_ask == CTRUE) { 
         F_Compile_notice_void()
-        
+        Core.F_tformat_string(MakeString("poorly typed update: ~S\n"),3,MakeConstantList(self.Id()))
         } 
       Result = F_Optimize_open_message_property(self.Selector,l)
       } 

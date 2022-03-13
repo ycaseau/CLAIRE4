@@ -31,7 +31,7 @@ seed:integer :: 0
 
 // a consumer
 [eatPair() : integer
- -> let (p1,p2) := getPair() in
+ -> let (p1,p2) := getPair() in      // direct assign to tuple component pattern
          let c := 12 in (p1 + p2)]
 
 [testPair()

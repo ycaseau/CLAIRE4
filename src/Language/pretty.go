@@ -1,5 +1,5 @@
 /***** CLAIRE Compilation of file /Users/ycaseau/Dropbox/src/clairev4.03/src/meta/pretty.cl 
-         [version 4.0.04 / safety 5] Saturday 01-01-2022 16:47:18 *****/
+         [version 4.0.04 / safety 5] Sunday 03-13-2022 07:28:42 *****/
 
 package Language
 import (_ "fmt"
@@ -49,7 +49,6 @@ func E_no_eval_Instruction (self EID) EID {
 func F_self_print_unbound_symbol_Language (self *ClaireUnboundSymbol )  { 
     // procedure body with s = void
     self.Name.Princ()
-    PRINC("")
     } 
   
 // The EID go function for: self_print @ unbound_symbol (throw: false) 
@@ -105,10 +104,6 @@ func F_ppvariable_Variable (self *ClaireVariable ) EID {
       self.Pname.Princ()
       PRINC(":")
       Result = F_printexp_any(self.Range.Id(),CFALSE)
-      if !ErrorIn(Result) {
-      PRINC("")
-      Result = EVOID
-      }
       } else {
       self.Pname.Princ()
       Result = EVOID

@@ -102,5 +102,5 @@ COMError <: exception(diag:string)
   -> try raiseCOMError(3,3)
      catch COMError nil ]
 
- (testOK())
+(testOK())
 

@@ -1,5 +1,5 @@
 /***** CLAIRE Compilation of file /Users/ycaseau/Dropbox/src/clairev4.03/src/meta/call.cl 
-         [version 4.0.04 / safety 5] Saturday 01-01-2022 16:47:18 *****/
+         [version 4.0.04 / safety 5] Sunday 03-13-2022 07:28:42 *****/
 
 package Language
 import (_ "fmt"
@@ -56,10 +56,7 @@ func (self *Call ) SelfPrint () EID {
             Result = F_lbreak_void()
             if !ErrorIn(Result) {
             Result = F_printe_any(_Za.At(2-1),_Zs)
-            if !ErrorIn(Result) {
-            PRINC("")
-            Result = EVOID
-            }}}}
+            }}}
             }  else if (_Zs.Id() == C_nth.Id()) { 
             if (_Za.Length() == 3) { 
               Result = F_printexp_any(_Za.At(1-1),CFALSE)
@@ -117,10 +114,7 @@ func (self *Call ) SelfPrint () EID {
                   Result = F_lbreak_integer(2)
                   if !ErrorIn(Result) {
                   Result = Core.F_CALL(C_print,ARGS(_Za.At(4-1).ToEID()))
-                  if !ErrorIn(Result) {
-                  PRINC("")
-                  Result = EVOID
-                  }}}}}
+                  }}}}
                   } else {
                   var g0070I *ClaireBoolean  
                   { var arg_1 *ClaireAny  
@@ -146,10 +140,7 @@ func (self *Call ) SelfPrint () EID {
                     Result = F_lbreak_integer(2)
                     if !ErrorIn(Result) {
                     Result = Core.F_CALL(C_print,ARGS(ToList(OBJ(Core.F_CALL(C_args,ARGS(a.ToEID())))).At(2-1).ToEID()))
-                    if !ErrorIn(Result) {
-                    PRINC("")
-                    Result = EVOID
-                    }}}}}
+                    }}}}
                     } else {
                     Result = Core.F_CALL(C_print,ARGS(_Za.At(1-1).ToEID()))
                     if !ErrorIn(Result) {
@@ -160,10 +151,7 @@ func (self *Call ) SelfPrint () EID {
                     Result = F_lbreak_integer(2)
                     if !ErrorIn(Result) {
                     Result = Core.F_CALL(C_print,ARGS(a.ToEID()))
-                    if !ErrorIn(Result) {
-                    PRINC("")
-                    Result = EVOID
-                    }}}}
+                    }}}
                     } 
                   } 
                 } 
@@ -203,10 +191,7 @@ func (self *Call ) SelfPrint () EID {
                   Result = F_lbreak_integer(2)
                   if !ErrorIn(Result) {
                   Result = Core.F_CALL(C_print,ARGS(ToList(OBJ(Core.F_CALL(C_args,ARGS(a.ToEID())))).At(2-1).ToEID()))
-                  if !ErrorIn(Result) {
-                  PRINC("")
-                  Result = EVOID
-                  }}}}}
+                  }}}}
                   } else {
                   Result = Core.F_CALL(C_print,ARGS(_Za.At(1-1).ToEID()))
                   if !ErrorIn(Result) {
@@ -217,10 +202,7 @@ func (self *Call ) SelfPrint () EID {
                   Result = F_lbreak_integer(2)
                   if !ErrorIn(Result) {
                   Result = Core.F_CALL(C_print,ARGS(_Za.At(3-1).ToEID()))
-                  if !ErrorIn(Result) {
-                  PRINC("")
-                  Result = EVOID
-                  }}}}
+                  }}}
                   } 
                 } 
               } 
@@ -235,10 +217,7 @@ func (self *Call ) SelfPrint () EID {
             Result = F_lbreak_integer(2)
             if !ErrorIn(Result) {
             Result = Core.F_CALL(C_print,ARGS(_Za.At(3-1).ToEID()))
-            if !ErrorIn(Result) {
-            PRINC("")
-            Result = EVOID
-            }}}}
+            }}}
             }  else if ((_Zs.Id() == C_delete.Id()) && 
               (_Za.At(1-1).Isa.IsIn(C_property) == CTRUE)) { 
             Result = Core.F_CALL(C_print,ARGS(_Za.At(1-1).ToEID()))
@@ -250,10 +229,7 @@ func (self *Call ) SelfPrint () EID {
             Result = F_lbreak_integer(2)
             if !ErrorIn(Result) {
             Result = Core.F_CALL(C_print,ARGS(_Za.At(3-1).ToEID()))
-            if !ErrorIn(Result) {
-            PRINC("")
-            Result = EVOID
-            }}}}
+            }}}
             }  else if ((_Za.At(1-1) == ClEnv.Id()) && 
               (_Za.Length() == 1)) { 
             Result = Core.F_print_any(_Zs.Id())
@@ -299,10 +275,7 @@ func (self *Call_plus ) SelfPrint () EID {
     if !ErrorIn(Result) {
     PRINC(".")
     Result = Core.F_print_any(self.Selector.Id())
-    if !ErrorIn(Result) {
-    PRINC("")
-    Result = EVOID
-    }}
+    }
     return Result} 
   
 // The EID go function for: self_print @ Call+ (throw: true) 
@@ -512,16 +485,12 @@ func F_printe_any (self *ClaireAny ,s *ClaireProperty ) EID {
       g0073I = CFALSE
       } 
     if (g0073I == CTRUE) { 
-      if (CTRUE == CTRUE) { 
-        PRINC("(")
-        Result = Core.F_CALL(C_print,ARGS(self.ToEID()))
-        if !ErrorIn(Result) {
-        PRINC(")")
-        Result = EVOID
-        }
-        } else {
-        Result = F_printexp_any(self,CTRUE)
-        } 
+      PRINC("(")
+      Result = Core.F_CALL(C_print,ARGS(self.ToEID()))
+      if !ErrorIn(Result) {
+      PRINC(")")
+      Result = EVOID
+      }
       } else {
       Result = F_printexp_any(self,CTRUE)
       } 
@@ -606,10 +575,7 @@ func (self *Assign ) SelfPrint () EID {
           Result = F_lbreak_integer(2)
           if !ErrorIn(Result) {
           Result = F_printexp_any(ToList(OBJ(Core.F_CALL(C_args,ARGS(a.ToEID())))).At(2-1),CTRUE)
-          if !ErrorIn(Result) {
-          PRINC("")
-          Result = EVOID
-          }}}}
+          }}}
           } else {
           Result = Core.F_CALL(C_print,ARGS(self.ClaireVar.ToEID()))
           if !ErrorIn(Result) {
@@ -617,10 +583,7 @@ func (self *Assign ) SelfPrint () EID {
           Result = F_lbreak_integer(2)
           if !ErrorIn(Result) {
           Result = F_printexp_any(a,CTRUE)
-          if !ErrorIn(Result) {
-          PRINC("")
-          Result = EVOID
-          }}}
+          }}
           } 
         if !ErrorIn(Result) {
         { 
@@ -697,10 +660,7 @@ func (self *Gassign ) SelfPrint () EID {
           Result = F_lbreak_integer(2)
           if !ErrorIn(Result) {
           Result = Core.F_CALL(C_print,ARGS(ToList(OBJ(Core.F_CALL(C_args,ARGS(a.ToEID())))).At(2-1).ToEID()))
-          if !ErrorIn(Result) {
-          PRINC("")
-          Result = EVOID
-          }}}}
+          }}}
           } else {
           Result = Core.F_print_any(self.ClaireVar.Id())
           if !ErrorIn(Result) {
@@ -708,10 +668,7 @@ func (self *Gassign ) SelfPrint () EID {
           Result = F_lbreak_integer(2)
           if !ErrorIn(Result) {
           Result = Core.F_CALL(C_print,ARGS(a.ToEID()))
-          if !ErrorIn(Result) {
-          PRINC("")
-          Result = EVOID
-          }}}
+          }}
           } 
         if !ErrorIn(Result) {
         { 
@@ -1201,7 +1158,7 @@ func (self *CallArray ) SelfEval () EID {
         if ErrorIn(try_4) {Result = try_4
         } else {
         arg_2 = ANY(try_4)
-        Result = Core.F_nth_array(ToArray(arg_1),ToInteger(arg_2).Value)
+        Result = ToArray(arg_1).Nth(ToInteger(arg_2).Value)
         }
         } 
       }
@@ -1287,10 +1244,7 @@ func (self *Update ) SelfPrint () EID {
     if !ErrorIn(Result) {
     PRINC(") := ")
     Result = Core.F_CALL(C_print,ARGS(self.Value.ToEID()))
-    if !ErrorIn(Result) {
-    PRINC("")
-    Result = EVOID
-    }}}
+    }}
     return Result} 
   
 // The EID go function for: self_print @ Update (throw: true) 
@@ -1463,10 +1417,7 @@ func (x *Cast ) SelfPrint () EID {
     if !ErrorIn(Result) {
     PRINC(" as ")
     Result = F_printexp_any(x.SetArg.Id(),CFALSE)
-    if !ErrorIn(Result) {
-    PRINC("")
-    Result = EVOID
-    }}
+    }
     return Result} 
   
 // The EID go function for: self_print @ Cast (throw: true) 

@@ -1,5 +1,5 @@
 /***** CLAIRE Compilation of file /Users/ycaseau/Dropbox/src/clairev4.03/src/compile/otool.cl 
-         [version 4.0.04 / safety 5] Saturday 01-01-2022 16:47:21 *****/
+         [version 4.0.04 / safety 5] Sunday 03-13-2022 07:28:45 *****/
 
 package Optimize
 import (_ "fmt"
@@ -61,8 +61,8 @@ func E_self_print_C_cast (self EID) EID {
   
 /* The go function for: Compile/c_gc?(self:Compile/C_cast) [status=0] */
 func (self *Compile_CCast ) CGc_ask () *ClaireBoolean  { 
-    if (To_Compile_CCast(self.Arg).CGc_ask() == CTRUE) {return CTRUE
-    } else {return CFALSE}} 
+    return  To_Compile_CCast(self.Arg).CGc_ask()
+    } 
   
 // The EID go function for: Compile/c_gc? @ Compile/C_cast (throw: false) 
 func E_Compile_c_gc_ask_C_cast (self EID) EID { 
@@ -472,7 +472,7 @@ func F_Optimize_c_warn_Call (self *Language.Call ,_Ztype *ClaireAny ) EID {
           Result = Core.F_tformat_string(MakeString("wrongly typed message ~S (~S) [256]\n"),1,MakeConstantList(self.Id(),_Ztype))
           }  else if (C_compiler.Optimize_ask == CTRUE) { 
           F_Compile_notice_void()
-          Result = EID{CFALSE.Id(),0}
+          Result = Core.F_tformat_string(MakeString("poorly typed message ~S [~S]\n"),3,MakeConstantList(self.Id(),_Ztype))
           } else {
           Result = EID{CFALSE.Id(),0}
           } 
@@ -499,7 +499,7 @@ func F_Optimize_c_warn_Super (self *Language.Super ,_Ztype *ClaireAny ) EID {
         Result = Core.F_tformat_string(MakeString("the property ~S is undefined [255]\n"),1,MakeConstantList(s.Id()))
         }  else if ((C_OPT.Ignore.Contain_ask(s.Id()) != CTRUE) && 
           (s.Open <= 1)) { 
-        Result = EID{CFALSE.Id(),0}
+        Result = Core.F_tformat_string(MakeString("---- note: wrongly typed message ~S [~S]\n"),3,MakeConstantList(self.Id(),_Ztype))
         } else {
         Result = EID{CFALSE.Id(),0}
         } 
@@ -901,7 +901,7 @@ func F_Optimize_enumerate_code_any (self *ClaireAny ,_Zt *ClaireType ) EID {
       } else {
       if (C_compiler.Optimize_ask == CTRUE) { 
         F_Compile_notice_void()
-        
+        Core.F_tformat_string(MakeString("explicit enmeration of ~S\n"),3,MakeConstantList(self))
         } 
       Result = F_Optimize_c_code_method_method1(ToMethod(Core.F__at_property1(Core.C_Core_enumerate,C_any).Id()),MakeConstantList(self),MakeConstantList(_Zt.Id()))
       } 
@@ -1049,10 +1049,8 @@ func E_Optimize_c_srange_method (m EID) EID {
 // we require the range to be safe, no backtrack & local global var
 /* The go function for: Compile/nativeVar?(x:global_variable) [status=0] */
 func F_Compile_nativeVar_ask_global_variable (x *Core.GlobalVariable ) *ClaireBoolean  { 
-    if ((C_compiler.Optimize_ask == CTRUE) && 
-        ((x.Store_ask.Id() == CFALSE.Id()) && 
-          (x.Name.Module_I().Id() == x.Name.Defined().Id()))) {return CTRUE
-    } else {return CFALSE}} 
+    return  MakeBoolean((C_compiler.Optimize_ask == CTRUE) && (x.Store_ask.Id() == CFALSE.Id()) && (x.Name.Module_I().Id() == x.Name.Defined().Id()))
+    } 
   
 // The EID go function for: Compile/nativeVar? @ global_variable (throw: false) 
 func E_Compile_nativeVar_ask_global_variable (x EID) EID { 
@@ -2822,4 +2820,23 @@ func F_Optimize_c_boolean_any (x *ClaireAny ) EID {
 // The EID go function for: c_boolean @ any (throw: true) 
 func E_Optimize_c_boolean_any (x EID) EID { 
     return F_Optimize_c_boolean_any(ANY(x) )} 
+  
+// this should have been created long ago
+/* The go function for: Compile/Do!(l:list) [status=0] */
+func F_Compile_Do_I_list (l *ClaireList ) *ClaireAny  { 
+    // procedure body with s = any
+    var Result *ClaireAny  
+    if (l.Length() == 1) { 
+      Result = l.At(1-1)
+      } else {
+      { var _CL_obj *Language.Do   = Language.To_Do(new(Language.Do).Is(Language.C_Do))
+        _CL_obj.Args = l
+        Result = _CL_obj.Id()
+        } 
+      } 
+    return Result} 
+  
+// The EID go function for: Compile/Do! @ list (throw: false) 
+func E_Compile_Do_I_list (l EID) EID { 
+    return F_Compile_Do_I_list(ToList(OBJ(l)) ).ToEID()} 
   

@@ -261,7 +261,6 @@ MONTHS :: (1 .. 12)
 // a bug from FXJ ? with v3.3.2
 // INTERPRETED :: not(Id(compiler.active?))
 
-
 (testOK())
 
 

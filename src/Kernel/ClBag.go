@@ -1,6 +1,6 @@
 // ==================================================================
 // golang experiments Phase 2 - Copyright (C) Yves Caseau
-// started on June 21st, 2020-2021
+// started on June 21st, 2020-2022
 // clBag.go
 // ==================================================================
 
@@ -468,7 +468,7 @@ func E_nth_put_list(l EID, i EID, y EID) EID {
 
 // this is the version that performs check
 // moved from Core to Kernel
-func (l *ClaireList) NthEqual(i int, y *ClaireAny) EID {
+func (l *ClaireList) Nth_equal(i int, y *ClaireAny) EID {
 	if i <= 0 || i > l.Length() {
 		return Cerror(41, MakeInteger(i).Id(), l.Id())
 	}

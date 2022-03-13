@@ -1,5 +1,5 @@
 /***** CLAIRE Compilation of file /Users/ycaseau/Dropbox/src/clairev4.03/src/meta/define.cl 
-         [version 4.0.04 / safety 5] Saturday 01-01-2022 16:47:18 *****/
+         [version 4.0.04 / safety 5] Sunday 03-13-2022 07:28:42 *****/
 
 package Language
 import (_ "fmt"
@@ -87,18 +87,11 @@ func (self *Defobj ) SelfPrint () EID {
             if !ErrorIn(Result) {
             PRINC(" := ")
             Result = F_printexp_any(v,CFALSE)
-            if !ErrorIn(Result) {
-            PRINC("")
-            Result = EVOID
-            }}
+            }
             } else {
             self.Ident.Princ()
             PRINC(" :: ")
             Result = F_printexp_any(v,CFALSE)
-            if !ErrorIn(Result) {
-            PRINC("")
-            Result = EVOID
-            }
             } 
           } 
         } 
@@ -175,8 +168,6 @@ func (self *Defclass ) SelfPrint () EID {
                   if ErrorIn(loop_1) {Result = loop_1
                   break
                   } else {
-                  PRINC("")
-                  loop_1 = EVOID
                   }}
                   } 
                 if ErrorIn(loop_1) {Result = loop_1
@@ -370,10 +361,7 @@ func (self *Defvar ) SelfPrint () EID {
     if !ErrorIn(Result) {
     PRINC(" := ")
     Result = F_printexp_any(self.Arg,CFALSE)
-    if !ErrorIn(Result) {
-    PRINC("")
-    Result = EVOID
-    }}
+    }
     return Result} 
   
 // The EID go function for: self_print @ Defvar (throw: true) 
@@ -3784,10 +3772,29 @@ func F_Language_jito_any (self *ClaireAny ) EID {
                   o_ask = CTRUE} 
                 } 
               } 
-            
+            { var arg_2 *ClaireList  
+              var try_3 EID 
+              { 
+                var v_bag_arg *ClaireAny  
+                try_3= EID{ToType(CEMPTY.Id()).EmptyList().Id(),0}
+                ToList(OBJ(try_3)).AddFast(g0312.Id())
+                var try_4 EID 
+                try_4 = F_static_type_any(g0312.SetArg)
+                if ErrorIn(try_4) {try_3 = try_4
+                } else {
+                v_bag_arg = ANY(try_4)
+                ToList(OBJ(try_3)).AddFast(v_bag_arg)}
+                } 
+              if ErrorIn(try_3) {Result = try_3
+              } else {
+              arg_2 = ToList(OBJ(try_3))
+              Result = Core.F_tformat_string(MakeString("-- Iteration jito: ~S (~S)\n"),3,arg_2)
+              }
+              } 
+            if !ErrorIn(Result) {
             if (o_ask == CTRUE) { 
               v.Range = ToType(C_integer.Id())
-              
+              Core.F_tformat_string(MakeString("-- jito:put range ~S as integer\n"),3,MakeConstantList(v.Id()))
               } 
             Result = F_Language_jito_any(s)
             if !ErrorIn(Result) {
@@ -3805,45 +3812,52 @@ func F_Language_jito_any (self *ClaireAny ) EID {
               } else {
               Result = EID{CFALSE.Id(),0}
               } 
-            }}
+            }}}
             } 
           } 
         } 
       } 
+    }  else if (self.Isa.IsIn(C_While) == CTRUE) { 
+    { var g0314 *While   = To_While(self)
+      Result = F_Language_jito_any(g0314.Test)
+      if !ErrorIn(Result) {
+      Result = F_Language_jito_any(g0314.Arg)
+      }
+      } 
     }  else if (self.Isa.IsIn(C_Construct) == CTRUE) { 
-    { var g0314 *Construct   = To_Construct(self)
-      
-      Result = F_Language_jito_any(g0314.Args.Id())
+    { var g0315 *Construct   = To_Construct(self)
+      Core.F_tformat_string(MakeString("-- Construct jito: ~S\n"),3,MakeConstantList(g0315.Id()))
+      Result = F_Language_jito_any(g0315.Args.Id())
       } 
     }  else if (self.Isa.IsIn(C_Exists) == CTRUE) { 
-    { var g0315 *Exists   = To_Exists(self)
-      Result = F_Language_jito_any(g0315.SetArg)
-      if !ErrorIn(Result) {
-      Result = F_Language_jito_any(g0315.Arg)
-      if !ErrorIn(Result) {
-      Result = F_Language_jito_any(g0315.Other)
-      }}
-      } 
-    }  else if (self.Isa.IsIn(C_Handle) == CTRUE) { 
-    { var g0316 *ClaireHandle   = To_ClaireHandle(self)
-      if (C_class.Id() != g0316.Test.Isa.Id()) { 
-        Result = ToException(Core.C_general_error.Make(MakeString("syntax: [try %S] must use a class").Id(),MakeConstantList(g0316.Test).Id())).Close()
-        } else {
-        Result = EID{CFALSE.Id(),0}
-        } 
+    { var g0316 *Exists   = To_Exists(self)
+      Result = F_Language_jito_any(g0316.SetArg)
       if !ErrorIn(Result) {
       Result = F_Language_jito_any(g0316.Arg)
       if !ErrorIn(Result) {
       Result = F_Language_jito_any(g0316.Other)
       }}
       } 
+    }  else if (self.Isa.IsIn(C_Handle) == CTRUE) { 
+    { var g0317 *ClaireHandle   = To_ClaireHandle(self)
+      if (C_class.Id() != g0317.Test.Isa.Id()) { 
+        Result = ToException(Core.C_general_error.Make(MakeString("syntax: [try %S] must use a class").Id(),MakeConstantList(g0317.Test).Id())).Close()
+        } else {
+        Result = EID{CFALSE.Id(),0}
+        } 
+      if !ErrorIn(Result) {
+      Result = F_Language_jito_any(g0317.Arg)
+      if !ErrorIn(Result) {
+      Result = F_Language_jito_any(g0317.Other)
+      }}
+      } 
     }  else if (self.Isa.IsIn(C_Definition) == CTRUE) { 
-    { var g0317 *Definition   = To_Definition(self)
-      if (F_Language_fast_definition_ask_class(g0317.Arg) == CTRUE) { 
+    { var g0318 *Definition   = To_Definition(self)
+      if (F_Language_fast_definition_ask_class(g0318.Arg) == CTRUE) { 
         { 
           var va_arg1 *ClaireAny  
           var va_arg2 *ClaireClass  
-          va_arg1 = g0317.Id()
+          va_arg1 = g0318.Id()
           va_arg2 = C_Language_DefFast
           va_arg1.Isa = va_arg2
           Result = EID{va_arg2.Id(),0}
@@ -3872,7 +3886,7 @@ func (self *Let ) LetJito () EID {
   { var v *ClaireVariable   = self.ClaireVar
     { var x *ClaireAny   = self.Value
       { var untyped *ClaireBoolean   = MakeBoolean((v.Range.Id() == CNULL))
-        
+        Core.F_tformat_string(MakeString("Let Jito with var ~S => ~S\n"),3,MakeConstantList(v.Id(),untyped.Id()))
         if (untyped == CTRUE) { 
           if (x.Isa.IsIn(C_List) == CTRUE) { 
             { var t *ClaireType   = ToType(OBJ(Core.F_CALL(C_of,ARGS(x.ToEID()))))
@@ -3905,7 +3919,7 @@ func (self *Let ) LetJito () EID {
               } 
             } 
           if !ErrorIn(Result) {
-          Result = EID{CFALSE.Id(),0}
+          Result = Core.F_tformat_string(MakeString("--- let Jito ~S:~S (~S)\n"),3,MakeConstantList(v.Id(),v.Range.Id(),x))
           }
           } else {
           Result = EID{CFALSE.Id(),0}
@@ -3953,40 +3967,40 @@ func (self *Call ) MakeJito () EID {
     { var larg *ClaireList   = self.Args
       { var n int  = larg.Length()
         { var m *ClaireAny   = CNULL
-          var g0323I *ClaireBoolean  
+          var g0324I *ClaireBoolean  
           { 
             var v_and5 *ClaireBoolean  
             
             v_and5 = Equal(p.Id(),Core.C_write.Id())
-            if (v_and5 == CFALSE) {g0323I = CFALSE
+            if (v_and5 == CFALSE) {g0324I = CFALSE
             } else { 
               { var p2 *ClaireAny   = self.Args.At(1-1)
                 if (p2.Isa.IsIn(C_property) == CTRUE) { 
-                  { var g0319 *ClaireProperty   = ToProperty(p2)
-                    v_and5 = MakeBoolean((g0319.Inverse.Id() == CNULL) && (g0319.Store_ask != CTRUE) && (g0319.IfWrite == CNULL))
+                  { var g0320 *ClaireProperty   = ToProperty(p2)
+                    v_and5 = MakeBoolean((g0320.Inverse.Id() == CNULL) && (g0320.Store_ask != CTRUE) && (g0320.IfWrite == CNULL))
                     } 
                   } else {
                   v_and5 = CFALSE
                   } 
                 } 
-              if (v_and5 == CFALSE) {g0323I = CFALSE
+              if (v_and5 == CFALSE) {g0324I = CFALSE
               } else { 
-                g0323I = CTRUE} 
+                g0324I = CTRUE} 
               } 
             } 
-          if (g0323I == CTRUE) { 
+          if (g0324I == CTRUE) { 
             p = C_write_fast
             self.Selector = C_write_fast
             } 
-          var g0324I *ClaireBoolean  
+          var g0325I *ClaireBoolean  
           { 
             var v_and5 *ClaireBoolean  
             
             v_and5 = Core.F__inf_equal_integer(p.Open,1)
-            if (v_and5 == CFALSE) {g0324I = CFALSE
+            if (v_and5 == CFALSE) {g0325I = CFALSE
             } else { 
               v_and5 = Core.F__inf_equal_integer(p.Restrictions.Length(),12)
-              if (v_and5 == CFALSE) {g0324I = CFALSE
+              if (v_and5 == CFALSE) {g0325I = CFALSE
               } else { 
                 { var arg_1 *ClaireAny  
                   { 
@@ -3996,7 +4010,7 @@ func (self *Call ) MakeJito () EID {
                     arg_1= CFALSE.Id()
                     for _,x_iter = range(p.Restrictions.ValuesO()){ 
                       x = ToRestriction(x_iter)
-                      var g0325I *ClaireBoolean  
+                      var g0326I *ClaireBoolean  
                       { var arg_2 *ClaireBoolean  
                         { var arg_3 *ClaireAny  
                           { 
@@ -4014,9 +4028,9 @@ func (self *Call ) MakeJito () EID {
                             } 
                           arg_2 = Core.F_not_any(arg_3)
                           } 
-                        g0325I = arg_2.Not
+                        g0326I = arg_2.Not
                         } 
-                      if (g0325I == CTRUE) { 
+                      if (g0326I == CTRUE) { 
                         arg_1 = CTRUE.Id()
                         break
                         } 
@@ -4024,13 +4038,13 @@ func (self *Call ) MakeJito () EID {
                     } 
                   v_and5 = Core.F_not_any(arg_1)
                   } 
-                if (v_and5 == CFALSE) {g0324I = CFALSE
+                if (v_and5 == CFALSE) {g0325I = CFALSE
                 } else { 
-                  g0324I = CTRUE} 
+                  g0325I = CTRUE} 
                 } 
               } 
             } 
-          if (g0324I == CTRUE) { 
+          if (g0325I == CTRUE) { 
             { var lt *ClaireList  
               var try_4 EID 
               { 
@@ -4054,7 +4068,7 @@ func (self *Call ) MakeJito () EID {
               if ErrorIn(try_4) {Result = try_4
               } else {
               lt = ToList(OBJ(try_4))
-              
+              Core.F_tformat_string(MakeString("-- call jito: ~S : ~S\n"),3,MakeConstantList(self.Id(),lt.Id()))
               { 
                 var x *ClaireRestriction  
                 _ = x
@@ -4075,15 +4089,15 @@ func (self *Call ) MakeJito () EID {
             Result = EID{CFALSE.Id(),0}
             } 
           if !ErrorIn(Result) {
-          var g0326I *ClaireBoolean  
+          var g0327I *ClaireBoolean  
           if (C_method.Id() == m.Isa.Id()) { 
-            { var g0321 *ClaireMethod   = ToMethod(m)
-              g0326I = MakeBoolean((g0321.Functional.Id() == CNULL)).Not
+            { var g0322 *ClaireMethod   = ToMethod(m)
+              g0327I = MakeBoolean((g0322.Functional.Id() == CNULL)).Not
               } 
             } else {
-            g0326I = CFALSE
+            g0327I = CFALSE
             } 
-          if (g0326I == CTRUE) { 
+          if (g0327I == CTRUE) { 
             { 
               var va_arg1 *ClaireAny  
               var va_arg2 *ClaireClass  
@@ -4138,9 +4152,9 @@ func F_Language_makeCallMatch_restriction (x *ClaireRestriction ,lt *ClaireList 
         } else { 
           { var arg_1 *ClaireAny  
             { var i int  = 1
-              { var g0327 int  = n
+              { var g0328 int  = n
                 arg_1= CFALSE.Id()
-                for (i <= g0327) { 
+                for (i <= g0328) { 
                   if (ToType(lt.At(i-1)).Included(ToType(ld.ValuesO()[i-1])) != CTRUE) { 
                     arg_1 = CTRUE.Id()
                     break

@@ -1,5 +1,5 @@
 /***** CLAIRE Compilation of file /Users/ycaseau/Dropbox/src/clairev4.03/src/meta/types.cl 
-         [version 4.0.04 / safety 5] Saturday 01-01-2022 16:47:18 *****/
+         [version 4.0.04 / safety 5] Sunday 03-13-2022 07:28:42 *****/
 
 package Core
 import (_ "fmt"
@@ -188,9 +188,8 @@ func E_enumerate_any (self EID) EID {
 // =type? is an operation (equality on types)
 /* The go function for: =type?(self:type,ens:type) [status=0] */
 func F__equaltype_ask_any (self *ClaireType ,ens *ClaireType ) *ClaireBoolean  { 
-    if ((self.Included(ens) == CTRUE) && 
-        (ens.Included(self) == CTRUE)) {return CTRUE
-    } else {return CFALSE}} 
+    return  MakeBoolean((self.Included(ens) == CTRUE) && (ens.Included(self) == CTRUE))
+    } 
   
 // The EID go function for: =type? @ type (throw: false) 
 func E__equaltype_ask_any (self EID,ens EID) EID { 
@@ -218,10 +217,10 @@ func E_sort_I_type (x EID) EID {
 /* The go function for: %(self:any,ens:class) [status=0] */
 func F__Z_any1 (self *ClaireAny ,ens *ClaireClass ) *ClaireBoolean  { 
     if (self.Isa.IsIn(ens) == CTRUE) { 
-      if (CTRUE == CTRUE) {return CTRUE
-      } else {return CFALSE}} else {
-      if (CFALSE == CTRUE) {return CTRUE
-      } else {return CFALSE}} 
+      return  CTRUE
+      } else {
+      return  CFALSE
+      } 
     } 
   
 // The EID go function for: % @ list<type_expression>(any, class) (throw: false) 
@@ -417,9 +416,8 @@ func E_self_print_Union_Core (self EID) EID {
   
 /* The go function for: finite?(self:Union) [status=0] */
 func F_finite_ask_Union (self *ClaireUnion ) *ClaireBoolean  { 
-    if ((ToBoolean(OBJ(F_CALL(C_finite_ask,ARGS(EID{self.T1.Id(),0})))) == CTRUE) && 
-        (ToBoolean(OBJ(F_CALL(C_finite_ask,ARGS(EID{self.T2.Id(),0})))) == CTRUE)) {return CTRUE
-    } else {return CFALSE}} 
+    return  MakeBoolean((ToBoolean(OBJ(F_CALL(C_finite_ask,ARGS(EID{self.T1.Id(),0})))) == CTRUE) && (ToBoolean(OBJ(F_CALL(C_finite_ask,ARGS(EID{self.T2.Id(),0})))) == CTRUE))
+    } 
   
 // The EID go function for: finite? @ Union (throw: false) 
 func E_finite_ask_Union (self EID) EID { 
@@ -447,8 +445,8 @@ func E_self_print_Interval_Core (self EID) EID {
   
 /* The go function for: finite?(self:Interval) [status=0] */
 func F_finite_ask_Interval (self *ClaireInterval ) *ClaireBoolean  { 
-    if (CTRUE == CTRUE) {return CTRUE
-    } else {return CFALSE}} 
+    return  CTRUE
+    } 
   
 // The EID go function for: finite? @ Interval (throw: false) 
 func E_finite_ask_Interval (self EID) EID { 
@@ -546,8 +544,8 @@ func E_self_print_Param_Core (self EID) EID {
   
 /* The go function for: finite?(self:Param) [status=0] */
 func F_finite_ask_Param (self *ClaireParam ) *ClaireBoolean  { 
-    if (F_finite_ask_type(ToType(self.Arg.Id())) == CTRUE) {return CTRUE
-    } else {return CFALSE}} 
+    return  F_finite_ask_type(ToType(self.Arg.Id()))
+    } 
   
 // The EID go function for: finite? @ Param (throw: false) 
 func E_finite_ask_Param (self EID) EID { 
@@ -588,9 +586,8 @@ func E_self_print_subtype_Core (self EID) EID {
 // v3.2
 /* The go function for: finite?(self:subtype) [status=0] */
 func F_finite_ask_subtype (self *ClaireSubtype ) *ClaireBoolean  { 
-    if ((self.Arg.Id() == C_set.Id()) && 
-        (ToBoolean(OBJ(F_CALL(C_finite_ask,ARGS(EID{self.T1.Id(),0})))) == CTRUE)) {return CTRUE
-    } else {return CFALSE}} 
+    return  MakeBoolean((self.Arg.Id() == C_set.Id()) && (ToBoolean(OBJ(F_CALL(C_finite_ask,ARGS(EID{self.T1.Id(),0})))) == CTRUE))
+    } 
   
 // The EID go function for: finite? @ subtype (throw: false) 
 func E_finite_ask_subtype (self EID) EID { 
@@ -2027,8 +2024,8 @@ func E_Uall_list (l EID) EID {
 // v4 open coded (link to Included kernel method)
 /* The go function for: <=t(s:type,y:type) [status=0] */
 func F__inf_equalt_type (s *ClaireType ,y *ClaireType ) *ClaireBoolean  { 
-    if (s.Included(y) == CTRUE) {return CTRUE
-    } else {return CFALSE}} 
+    return  s.Included(y)
+    } 
   
 // The EID go function for: <=t @ type (throw: false) 
 func E__inf_equalt_type (s EID,y EID) EID { 
@@ -2113,8 +2110,8 @@ func E__inf_equal_type_expression (x EID,y EID) EID {
 // v4 open coded (link to Contains kernel method)
 /* The go function for: %t(x:any,y:type) [status=0] */
 func F_Core__Zt_any (x *ClaireAny ,y *ClaireType ) *ClaireBoolean  { 
-    if (y.Contains(x) == CTRUE) {return CTRUE
-    } else {return CFALSE}} 
+    return  y.Contains(x)
+    } 
   
 // The EID go function for: %t @ any (throw: false) 
 func E_Core__Zt_any (x EID,y EID) EID { 
@@ -2123,8 +2120,8 @@ func E_Core__Zt_any (x EID,y EID) EID {
 // extensibility for type_expression is through less?, that always returns a value (hence no error returned)
 /* The go function for: less?(x:type_expression,y:type_expression) [status=0] */
 func F_less_ask_type_expression (x *ClaireTypeExpression ,y *ClaireTypeExpression ) *ClaireBoolean  { 
-    if (CFALSE == CTRUE) {return CTRUE
-    } else {return CFALSE}} 
+    return  CFALSE
+    } 
   
 // The EID go function for: less? @ list<type_expression>(type_expression, type_expression) (throw: false) 
 func E_less_ask_type_expression (x EID,y EID) EID { 
@@ -2559,33 +2556,7 @@ func E_nth_get_array_type (a EID,n EID) EID {
     return F_nth_get_array_type(ToType(OBJ(a)),ToType(OBJ(n)))} 
   
 // managed by cross-compiler ?
-/* The go function for: nth(self:array,x:integer) [status=1] */
-func F_nth_array (self *ClaireList ,x int) EID { 
-    // eid body s = any
-    var Result EID 
-    if ((x > 0) && 
-        (x <= self.Length())) { 
-      Result = ToList(self.Id()).At(x-1).ToEID()
-      } else {
-      Result = ToException(C_general_error.Make(MakeString("[180] nth[~S] out of scope for ~S").Id(),MakeConstantList(MakeInteger(x).Id(),self.Id()).Id())).Close()
-      } 
-    return Result} 
-  
-// The EID go function for: nth @ array (throw: true) 
-func E_nth_array (self EID,x EID) EID { 
-    return F_nth_array(ToArray(OBJ(self)),INT(x) )} 
-  
-/* The go function for: nth_array_type */
-func F_nth_array_type (self *ClaireType ,x *ClaireType ) EID { 
-    var Result EID 
-    Result = EID{F_member_type(self).Id(),0}
-    return Result} 
-  
-  
-// The dual EID go function for: "nth_array_type" 
-func E_nth_array_type (self EID,x EID) EID { 
-    return F_nth_array_type(ToType(OBJ(self)),ToType(OBJ(x)))} 
-  
+//
 /* The go function for: make_array_integer_type */
 func F_make_array_integer_type (i *ClaireType ,t *ClaireType ,v *ClaireType ) EID { 
     var Result EID 

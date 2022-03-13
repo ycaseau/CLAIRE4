@@ -1,5 +1,5 @@
 /***** CLAIRE Compilation of file /Users/ycaseau/Dropbox/src/clairev4.03/src/compile/gomain.cl 
-         [version 4.0.04 / safety 5] Saturday 01-01-2022 16:47:21 *****/
+         [version 4.0.04 / safety 5] Sunday 03-13-2022 07:28:45 *****/
 
 package Generate
 import (_ "fmt"
@@ -11,7 +11,7 @@ import (_ "fmt"
 )
 
 //-------- dumb function to prevent import errors --------
-func import_g0203() { 
+func import_g0204() { 
     _ = Core.It
     _ = Language.It
     _ = Reader.It
@@ -62,8 +62,8 @@ func F_Generate_string2module_string (s *ClaireString ) EID {
     var Result EID 
     { var m *ClaireAny   = F_value_string(s)
       if (m.Isa.IsIn(C_module) == CTRUE) { 
-        { var g0204 *ClaireModule   = ToModule(m)
-          Result = EID{g0204.Id(),0}
+        { var g0205 *ClaireModule   = ToModule(m)
+          Result = EID{g0205.Id(),0}
           } 
         } else {
         Result = ToException(Core.C_general_error.Make(MakeString("~A is not a module").Id(),MakeConstantList((s).Id()).Id())).Close()
@@ -629,16 +629,12 @@ func F_Generate_load_function_module (m *ClaireModule ,l_necessary *ClaireList )
       } 
     PRINC("\n//load function : create and load modules")
     F_Generate_breakline_void()
-    PRINC("")
     PRINC("func Load() ")
     F_Generate_new_block_void()
-    PRINC("")
     PRINC("It := C_claire")
     F_Generate_breakline_void()
-    PRINC("")
     PRINC("//module definitions ")
     F_Generate_breakline_void()
-    PRINC("")
     { 
       var x *ClaireAny  
       _ = x
@@ -709,9 +705,7 @@ func F_Generate_load_function_module (m *ClaireModule ,l_necessary *ClaireList )
           break
           } else {
           PRINC(")")
-          F_Generate_breakline_void()
-          PRINC("")
-          loop_1 = EVOID
+          loop_1 = F_Generate_breakline_void().ToEID()
           }}}}}}
           } else {
           loop_1 = EID{CFALSE.Id(),0}
@@ -726,7 +720,6 @@ func F_Generate_load_function_module (m *ClaireModule ,l_necessary *ClaireList )
     F_Generate_breakline_void()
     PRINC("// module load ")
     F_Generate_breakline_void()
-    PRINC("")
     { 
       var x *ClaireAny  
       _ = x
@@ -740,7 +733,6 @@ func F_Generate_load_function_module (m *ClaireModule ,l_necessary *ClaireList )
           Core.F_CALL(Language.C_iClaire_ident,ARGS(Core.F_CALL(C_name,ARGS(x.ToEID()))))
           PRINC(".MetaLoad()")
           F_Generate_breakline_void()
-          PRINC("")
           } 
         } 
       } 
@@ -786,18 +778,14 @@ func F_Generate_load_function_module (m *ClaireModule ,l_necessary *ClaireList )
           if ErrorIn(loop_8) {Result = loop_8
           break
           } else {
-          F_Generate_breakline_void()
-          PRINC("")
-          loop_8 = EVOID
+          loop_8 = F_Generate_breakline_void().ToEID()
           }
           if ErrorIn(loop_8) {Result = loop_8
           break
           } else {
           Core.F_CALL(Language.C_iClaire_ident,ARGS(Core.F_CALL(C_name,ARGS(x.ToEID()))))
           PRINC(".it->status = 2;")
-          F_Generate_breakline_void()
-          PRINC("")
-          loop_8 = EVOID
+          loop_8 = F_Generate_breakline_void().ToEID()
           }
           } else {
           loop_8 = EID{CFALSE.Id(),0}
@@ -813,9 +801,7 @@ func F_Generate_load_function_module (m *ClaireModule ,l_necessary *ClaireList )
     Result = F_Generate_g_expression_module(m,C_module)
     if !ErrorIn(Result) {
     PRINC("; ")
-    F_Generate_breakline_void()
-    PRINC("")
-    Result = EVOID
+    Result = F_Generate_breakline_void().ToEID()
     }
     if !ErrorIn(Result) {
     F_Generate_close_block_void()
@@ -835,10 +821,8 @@ func F_Generate_main_function_module (m *ClaireModule ,l_used *ClaireList ,_Zmai
     PRINC("\n// the main function \n")
     PRINC("func main() ")
     F_Generate_new_block_void()
-    PRINC("")
     PRINC("MemoryFlags()")
     F_Generate_breakline_void()
-    PRINC("")
     if (Optimize.C_OPT.Profile_ask == CTRUE) { 
       PRINC("// instruction for GO profiling - to be used with go tool pprof <m.prof>\n")
       F_Generate_new_block_void()
@@ -846,7 +830,6 @@ func F_Generate_main_function_module (m *ClaireModule ,l_used *ClaireList ,_Zmai
       F_princ_string(m.Name.String_I())
       PRINC(".prof\")")
       F_Generate_breakline_void()
-      PRINC("")
       PRINC("if err == nil ")
       F_Generate_new_block_void()
       PRINC("pprof.StartCPUProfile(f)")
@@ -857,18 +840,14 @@ func F_Generate_main_function_module (m *ClaireModule ,l_used *ClaireList ,_Zmai
       } 
     PRINC("Bootstrap()")
     F_Generate_breakline_void()
-    PRINC("")
     PRINC("Load()")
     F_Generate_breakline_void()
-    PRINC("")
     if (ToBoolean(l_used.Contain_ask(F_value_string(MakeString("Generate"))).Id()) == CTRUE) { 
       PRINC("ClEnv.Module_I = C_claire")
       F_Generate_breakline_void()
-      PRINC("")
       } 
     PRINC("Reader.C_reader.Fromp = ClEnv.Cin")
     F_Generate_breakline_void()
-    PRINC("")
     if (_Zmain == CTRUE) { 
       PRINC("Core.F_CALL(Core.C_main,ARGS(EID{ClEnv.Id(),0}))")
       }  else if (ToBoolean(l_used.Contain_ask(F_value_string(MakeString("Generate"))).Id()) == CTRUE) { 
@@ -893,7 +872,7 @@ func E_Generate_main_function_module (m EID,l_used EID,_Zmain EID) EID {
 func F_Generate_compile_dir_module (m *ClaireModule )  { 
     // procedure body with s = void
     { var s *ClaireString   = Reader.F__7_string(MakeString("mkdir -p src"),F_Generate_capitalize_string(m.Name.String_I()))
-      Core.F_tformat_string(MakeString("ask shell : ~S \n"),0,MakeConstantList((s).Id()))
+      
       F_claire_shell(s)
       } 
     } 
@@ -908,7 +887,7 @@ func E_Generate_compile_dir_module (m EID) EID {
 func F_Generate_compile_exe_string (_Zout *ClaireString )  { 
     // procedure body with s = void
     { var s *ClaireString   = F_append_string(Reader.F__7_string(MakeString("go build src"),_Zout),MakeString(".go"))
-      Core.F_tformat_string(MakeString("ask shell : ~S \n"),0,MakeConstantList((s).Id()))
+      
       F_claire_shell(s)
       } 
     } 

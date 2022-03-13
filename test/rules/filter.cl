@@ -83,6 +83,7 @@ do_test0() : void
 
 // performance test
 // N = 1000000 -> 500ms => 20 MIPS (million inference per second)
+// CLAIRE4: (delta = 40ms) => 250 MIPS
 main() : void ->
   (printf("Talarian filter test with ~S frames\n",N),
    printf("without rules\n"),

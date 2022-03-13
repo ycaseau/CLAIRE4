@@ -159,7 +159,7 @@ c_code(self:Call_function2) : any
        (if (length(a) = 1 & c_type(a[1]) <= integer)
           c_code(Call(write,list(verbose,system,a[1])))
         else if (length(a) > 1 & a[2] % string &
-                 (compiler.debug? | (try eval(a[1]) <= max(2,system.verbose) catch any true)))
+                 (compiler.debug? | (try eval(a[1]) <= max(3,system.verbose) catch any true)))
            let %c := Call(Core/tformat,
                           list(a[2], a[1], List(args = (copy(a) << 2)))) in
              c_code((if not(a[1] % integer)
@@ -215,7 +215,7 @@ c_type(self:Printf) : type -> any
                         else if ('I' = m) l[i]),
                      s := substring(s, n + 2, 1000),
                      n := get(s, '~')),
-                if s r :add Call(princ, list(s)),
+                if (length(s) > 0) r :add Call(princ, list(s)),
                 c_code(Do(r), any))) ]
 
 

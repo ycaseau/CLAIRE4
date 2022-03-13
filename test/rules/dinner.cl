@@ -6,7 +6,7 @@
 // this looks like a piece of ... :-(
 
 DEBUG :: 5
-N :: 32
+N :: 1000 // 32
 NUP :: (N + 1)
 
 Guest <: object(male?:boolean = true,
@@ -281,7 +281,7 @@ if (n > 4) (
 //   N = 128 : #firings = 4254, CPU = 531ms, ips = 8011
 
 main() : void 
-  -> (//[0] runs the dinner problem with N = // N,
+  -> (//[0] runs the dinner problem with N = ~A // N,
       do_test(),
       exit(0))
 
