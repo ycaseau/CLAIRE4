@@ -437,16 +437,16 @@ g_expression(self:Call_method,s:class) : void -> inline_exp(PRODUCER,self,s)
                  (m.selector = mClaire/nth_object))    // special case where we know the support (s1) of list a1
            let s1 := (if (m.selector = mClaire/nth_object) object 
                       else type_sort(g_member(a1))) in   // object or integer or float => type for values in list(a1); known by go compiler so no cast is necessary  
-              printf("~I~I.~I[~I-1]~I", cast_prefix(s1,s),
+              printf("~I~I.~I[~I]~I", cast_prefix(s1,s),
                      g_expression(a1,list), 
                      valuesSlot(g_member(a1)),
-                     g_expression(a2, integer), 
+                     at_index(a2), 
                      cast_post(s1,s))
         else if (((m = *nth_list* | m = *nth_tuple*) & compiler.safety >= 3) | 
                  (m = *nth_1_list* |  m = *nth_1_tuple* | m = *nth_1_array* ))     // use the .At method
-             printf("~I~I.At(~I-1)~I", cast_prefix(any,s),
+             printf("~I~I.At(~I)~I", cast_prefix(any,s),
                      g_expression(a1,list), 
-                     g_expression(a2, integer), 
+                     at_index(a2),                       // new in v4.0.6 
                      cast_post(any,s))
         else if (p = add! & domain!(m) <= bag)
            let sbag := (if (domain!(m) = set) set else list), %type := g_member(a1) in
@@ -483,9 +483,8 @@ g_expression(self:Call_method,s:class) : void -> inline_exp(PRODUCER,self,s)
 [inline_exp(c:go_producer,self:Call_method,s:class) : void
  -> let m := self.arg, a1 := self.args[1], a2 := self.args[2], a3 := self.args[3] in
        (if (m = *nth=_list* & compiler.safety >= 3 & g_member(a1) != any & s = void)
-           printf("~I.~I[~I-1]=~I", g_expression(a1,list),
-                  valuesSlot(g_member(a1)),
-                  g_expression(a2, integer), g_expression(a3, g_member(a1)),g_member(a1))
+           printf("~I.~I[~I]=~I", g_expression(a1,list),
+                  valuesSlot(g_member(a1)), at_index(a2), g_expression(a3, g_expected(g_member(a1))))
         else if (m = *nth_put_list* | m = *nth_put_array* | (compiler.safety >= 3 & m = *nth=_list*))
          printf("~I~I.NthPut(~I,~I)~I", cast_prefix(any,s), g_expression(a1,array),
                   g_expression(a2, integer), 
@@ -673,8 +672,8 @@ g_expression(self:Generate/C_cast,s:class) : void
          sm := g_member(self.selector) in
        (cast_prefix(sa,s),
         if (sm != any)
-            printf("~I.~I[~I - 1]",g_expression(self.selector, list), valuesSlot(sm), g_expression(self.arg, integer))
-        else printf("~I.At(~I - 1)",g_expression(self.selector, list), g_expression(self.arg, integer)),
+            printf("~I.~I[~I]",g_expression(self.selector, list), valuesSlot(sm), at_index(self.arg))
+        else printf("~I.At(~I)",g_expression(self.selector, list), at_index(self.arg)),
         cast_post(sa,s)) ]
 
 
@@ -702,7 +701,8 @@ sign_or(self:boolean) : void -> (if self princ("||") else princ("&&"))
 
 // default solution
 [bool_exp(self:any,pos?:boolean) : void 
-  -> printf("(~I ~I CTRUE)", g_expression(self, boolean), sign_equal(pos?)) ]
+  -> if (self = true) princ("true")    // v4.0.
+     else printf("(~I ~I CTRUE)", g_expression(self, boolean), sign_equal(pos?)) ]
 
 // strange : not clear why we should see a C_cast here
 [bool_exp(self:C_cast,pos?:boolean) : void 

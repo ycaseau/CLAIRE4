@@ -1,5 +1,5 @@
-/***** CLAIRE Compilation of file /Users/ycaseau/Dropbox/src/clairev4.03/src/meta/function.cl 
-         [version 4.0.04 / safety 5] Sunday 03-13-2022 07:28:42 *****/
+/***** CLAIRE Compilation of file /Users/ycaseau/Dropbox/src/clairev4.05/src/meta/function.cl 
+         [version 4.0.06 / safety 5] Monday 06-06-2022 08:16:30 *****/
 
 package Core
 import (_ "fmt"
@@ -37,15 +37,14 @@ import (_ "fmt"
 // new in v3.3.26: unbounded recursion is supported :-)
 /* The go function for: print_in_string(_CL_obj:void) [status=0] */
 func F_print_in_string_void ()  { 
-    // procedure body with s = void
-    { var n int  = (C_pretty.Cprevious+1)
-      { var p1 *ClairePort  
+    { var n int = (C_pretty.Cprevious+1)
+      { var p1 *ClairePort
         if (n < C_pretty.Cpstack.Length()) { 
           p1 = ToPort(C_pretty.Cpstack.At((n+1)-1))
           } else {
           p1 = F_port_I_void()
           } 
-        { var p2 *ClairePort   = p1.UseAsOutput()
+        { var p2 *ClairePort = p1.UseAsOutput()
           C_pretty.Cprevious = n
           C_pretty.Cpretty = p1
           if (Equal(C_pretty.Cpstack.Id(),CNIL.Id()) == CTRUE) { 
@@ -68,17 +67,16 @@ func E_print_in_string_void (_CL_obj EID) EID {
   
 /* The go function for: end_of_string(_CL_obj:void) [status=1] */
 func F_end_of_string_void () EID { 
-    // eid body s = string
-    var Result EID 
+    var Result EID
     if (C_pretty.Cprevious == 0) { 
       Result = ToException(C_general_error.Make(MakeString("[123] unbalanced use of print-in-string").Id(),CNIL.Id())).Close()
       } else {
       Result = EID{CFALSE.Id(),0}
       } 
     if !ErrorIn(Result) {
-    { var n int  = C_pretty.Cprevious
-      { var s *ClaireString   = C_pretty.Cpretty.String_I()
-        { var p *ClairePort   = ToPort(C_pretty.Cpstack.At(n-1))
+    { var n int = C_pretty.Cprevious
+      { var s *ClaireString = C_pretty.Cpretty.String_I()
+        { var p *ClairePort = ToPort(C_pretty.Cpstack.At(n-1))
           C_pretty.Cpretty.SetLength(0)
           p.UseAsOutput()
           C_pretty.Cpretty = p
@@ -105,7 +103,6 @@ func E_buffer_length_void (_CL_obj EID) EID {
   
 /* The go function for: mClaire/buffer_set_length(i:integer) [status=0] */
 func F_buffer_set_length_integer (i int)  { 
-    // procedure body with s = void
     C_pretty.Cpretty.SetLength(i)
     } 
   
@@ -117,33 +114,32 @@ func E_buffer_set_length_integer (i EID) EID {
 // a method for calling the printer without issuing a message
 // here we assume that self_print is always defined as a function
 /* The go function for: apply_self_print(self:any) [status=1] */
-func F_apply_self_print_any (self *ClaireAny ) EID { 
-    // eid body s = void
-    var Result EID 
+func F_apply_self_print_any (self *ClaireAny) EID { 
+    var Result EID
     if (self == CNULL) { 
       PRINC("unknown")
       Result = EVOID
       }  else if (self.Isa.IsIn(C_thing) == CTRUE) { 
-      { var g0096 *ClaireThing   = ToThing(self)
+      { var g0096 *ClaireThing = ToThing(self)
         g0096.Name.Princ()
         Result = EVOID
         } 
       }  else if (C_class.Id() == self.Isa.Id()) { 
-      { var g0097 *ClaireClass   = ToClass(self)
+      { var g0097 *ClaireClass = ToClass(self)
         g0097.Name.Princ()
         Result = EVOID
         } 
       }  else if (C_integer.Id() == self.Isa.Id()) { 
-      { var g0098 int  = ToInteger(self).Value
+      { var g0098 int = ToInteger(self).Value
         F_princ_integer(g0098)
         Result = EVOID
         } 
       }  else if (C_string.Id() == self.Isa.Id()) { 
-      { var g0099 *ClaireString   = ToString(self)
+      { var g0099 *ClaireString = ToString(self)
         Result = F_CALL(C_self_print,ARGS(EID{(g0099).Id(),0}))
         } 
       } else {
-      { var _Zprop *ClaireMethod   = ToMethod(F__at_property1(C_self_print,self.Isa).Id())
+      { var _Zprop *ClaireMethod = ToMethod(F__at_property1(C_self_print,self.Isa).Id())
         if ((F_boolean_I_any(_Zprop.Id()) == CTRUE) && 
             (_Zprop.Functional.Id() != CNULL)) { 
           Result = F_funcall1(_Zprop.Functional,self)
@@ -174,28 +170,27 @@ func E_apply_self_print_any (self EID) EID {
   
 // some basic definitions
 /* The go function for: self_print(self:any) [status=1] */
-func F_self_print_any_Core (self *ClaireAny ) EID { 
-    // eid body s = void
-    var Result EID 
+func F_self_print_any_Core (self *ClaireAny) EID { 
+    var Result EID
     if (self == CNULL) { 
       PRINC("unknown")
       Result = EVOID
       } else {
-      { var c *ClaireClass   = self.Isa
-        { var n int  = c.Params.Length()
+      { var c *ClaireClass = self.Isa
+        { var n int = c.Params.Length()
           if (n > 0) { 
             Result = F_print_any(c.Id())
             if !ErrorIn(Result) {
             PRINC("(")
-            { var i int  = 1
-              { var g0101 int  = n
+            { var i int = 1
+              { var g0101 int = n
                 Result= EID{CFALSE.Id(),0}
                 for (i <= g0101) { 
-                  var loop_1 EID 
+                  var loop_1 EID
                   _ = loop_1
                   { 
-                  { var arg_2 *ClaireAny  
-                    var try_3 EID 
+                  { var arg_2 *ClaireAny
+                    var try_3 EID
                     try_3 = F_CALL(C_get,ARGS(c.Params.At(i-1).ToEID(),self.ToEID()))
                     if ErrorIn(try_3) {loop_1 = try_3
                     } else {
@@ -244,8 +239,7 @@ func E_self_print_any_Core (self EID) EID {
     return F_self_print_any_Core(ANY(self) )} 
   
 /* The go function for: self_print(self:boolean) [status=0] */
-func F_self_print_boolean_Core (self *ClaireBoolean )  { 
-    // procedure body with s = void
+func F_self_print_boolean_Core (self *ClaireBoolean)  { 
     if (self == CTRUE) { 
       PRINC("true")
       } else {
@@ -259,8 +253,7 @@ func E_self_print_boolean_Core (self EID) EID {
     return EVOID} 
   
 /* The go function for: self_print(self:function) [status=0] */
-func F_self_print_function_Core (self *ClaireFunction )  { 
-    // procedure body with s = void
+func F_self_print_function_Core (self *ClaireFunction)  { 
     PRINC("#'")
     F_princ_string(F_string_I_function(self))
     } 
@@ -273,9 +266,8 @@ func E_self_print_function_Core (self EID) EID {
 // prints the name of a restriction. If we have a close property and if a
 // short-cut is possible, we use it.
 /* The go function for: self_print(self:restriction) [status=1] */
-func F_self_print_restriction_Core (self *ClaireRestriction ) EID { 
-    // eid body s = void
-    var Result EID 
+func F_self_print_restriction_Core (self *ClaireRestriction) EID { 
+    var Result EID
     if ((self.Selector.Id() == CNULL) || 
         (self.Domain.Id() == CNULL)) { 
       PRINC("<")
@@ -285,13 +277,13 @@ func F_self_print_restriction_Core (self *ClaireRestriction ) EID {
       Result = EVOID
       }
       } else {
-      { var p *ClaireProperty   = self.Selector
-        { var n int  = 0
-          { var c *ClaireClass   = F_domain_I_restriction(self)
+      { var p *ClaireProperty = self.Selector
+        { var n int = 0
+          { var c *ClaireClass = F_domain_I_restriction(self)
             { 
-              var r *ClaireRestriction  
+              var r *ClaireRestriction
               _ = r
-              var r_iter *ClaireAny  
+              var r_iter *ClaireAny
               for _,r_iter = range(p.Restrictions.ValuesO()){ 
                 r = ToRestriction(r_iter)
                 if (F_domain_I_restriction(r).Id() == c.Id()) { 
@@ -301,7 +293,7 @@ func F_self_print_restriction_Core (self *ClaireRestriction ) EID {
               } 
             p.Name.Princ()
             PRINC(" @ ")
-            { var arg_1 *ClaireType  
+            { var arg_1 *ClaireType
               if (n == 1) { 
                 arg_1 = ToType(c.Id())
                 } else {
@@ -321,14 +313,13 @@ func E_self_print_restriction_Core (self EID) EID {
   
 // we are too far
 /* The go function for: print(x:any) [status=1] */
-func F_print_any (x *ClaireAny ) EID { 
-    // eid body s = void
-    var Result EID 
-    { var _Zl int  = C_pretty.Index
+func F_print_any (x *ClaireAny) EID { 
+    var Result EID
+    { var _Zl int = C_pretty.Index
       if ((C_pretty.Pbreak == CTRUE) && 
           (C_pretty.Pprint == CTRUE)) { 
-        { var b_index int  = F_buffer_length_void()
-          { var missed *ClaireBoolean   = CFALSE
+        { var b_index int = F_buffer_length_void()
+          { var missed *ClaireBoolean = CFALSE
             if (F_short_enough_integer((b_index+10)) != CTRUE) { 
               C_pretty.Pprint = CFALSE
               C_pretty.Pbreak = CFALSE
@@ -336,8 +327,8 @@ func F_print_any (x *ClaireAny ) EID {
               if !ErrorIn(Result) {
               C_pretty.Pbreak = CTRUE
               { 
-                var va_arg1 *PrettyPrinter  
-                var va_arg2 *ClaireBoolean  
+                var va_arg1 *PrettyPrinter
+                var va_arg2 *ClaireBoolean
                 va_arg1 = C_pretty
                 va_arg2 = CTRUE
                 va_arg1.Pprint = va_arg2
@@ -352,8 +343,8 @@ func F_print_any (x *ClaireAny ) EID {
                 Result = F_apply_self_print_any(x)
                 if !ErrorIn(Result) {
                 { 
-                  var va_arg1 *PrettyPrinter  
-                  var va_arg2 *ClaireBoolean  
+                  var va_arg1 *PrettyPrinter
+                  var va_arg2 *ClaireBoolean
                   va_arg1 = C_pretty
                   va_arg2 = CTRUE
                   va_arg1.Pbreak = va_arg2
@@ -397,7 +388,7 @@ func E_print_any (x EID) EID {
   
 // short_enough = we expect that what we want to print is short enough (more that 10 chars to the width)
 /* The go function for: short_enough(self:integer) [status=0] */
-func F_short_enough_integer (self int) *ClaireBoolean  { 
+func F_short_enough_integer (self int) *ClaireBoolean { 
     return  F__inf_integer(self,C_pretty.Width)
     } 
   
@@ -416,23 +407,22 @@ func E_short_enough_integer (self EID) EID {
 // unless it is a copied_def
 // CLAIRE4 (fix OLD bug): lp is list of p such that o.p := unknown is requested !
 /* The go function for: new_defaults(self:object,lp:list) [status=1] */
-func F_Core_new_defaults_object (self *ClaireObject ,lp *ClaireList ) EID { 
-    // eid body s = object
-    var Result EID 
+func F_Core_new_defaults_object (self *ClaireObject,lp *ClaireList) EID { 
+    var Result EID
     { 
-      var s *ClaireSlot  
+      var s *ClaireSlot
       _ = s
-      var s_iter *ClaireAny  
+      var s_iter *ClaireAny
       Result= EID{CFALSE.Id(),0}
       for _,s_iter = range(self.Isa.Slots.ValuesO()){ 
         s = ToSlot(s_iter)
-        var loop_1 EID 
+        var loop_1 EID
         _ = loop_1
-        { var p *ClaireProperty   = s.Selector
-          { var s2 *ClaireClass   = s.Srange
-            { var d *ClaireAny   = s.Default
+        { var p *ClaireProperty = s.Selector
+          { var s2 *ClaireClass = s.Srange
+            { var d *ClaireAny = s.Default
               if (d != CNULL) { 
-                { var v *ClaireAny   = self.SlotGet(s.Index,s.Srange)
+                { var v *ClaireAny = self.SlotGet(s.Index,s.Srange)
                   if ((v == CNULL) && 
                       (lp.Memq(p.Id()) == CTRUE)) { 
                     loop_1 = EID{CNIL.Id(),0}
@@ -448,11 +438,11 @@ func F_Core_new_defaults_object (self *ClaireObject ,lp *ClaireList ) EID {
                     }  else if (Equal(d,v) == CTRUE) { 
                     if (p.Multivalued_ask == CTRUE) { 
                       { 
-                        var y *ClaireAny  
+                        var y *ClaireAny
                         _ = y
                         loop_1= EID{CFALSE.Id(),0}
-                        var y_support *ClaireList  
-                        var try_2 EID 
+                        var y_support *ClaireList
+                        var try_2 EID
                         try_2 = F_enumerate_any(d)
                         if ErrorIn(try_2) {loop_1 = try_2
                         } else {
@@ -460,7 +450,7 @@ func F_Core_new_defaults_object (self *ClaireObject ,lp *ClaireList ) EID {
                         y_len := y_support.Length()
                         for i_it := 0; i_it < y_len; i_it++ { 
                           y = y_support.At(i_it)
-                          var loop_3 EID 
+                          var loop_3 EID
                           _ = loop_3
                           loop_3 = F_update_plus_relation(ToRelation(p.Id()),self.Id(),y)
                           if ErrorIn(loop_3) {loop_1 = loop_3
@@ -489,9 +479,9 @@ func F_Core_new_defaults_object (self *ClaireObject ,lp *ClaireList ) EID {
         } 
       } 
     if !ErrorIn(Result) {
-    { var m *ClaireAny   = F__at_property1(C_close,self.Id().Isa).Id()
+    { var m *ClaireAny = F__at_property1(C_close,self.Id().Isa).Id()
       if (C_method.Id() == m.Isa.Id()) { 
-        { var g0102 *ClaireMethod   = ToMethod(m)
+        { var g0102 *ClaireMethod = ToMethod(m)
           Result = F_funcall_method1(g0102,self.Id())
           } 
         } else {
@@ -508,7 +498,7 @@ func E_Core_new_defaults_object (self EID,lp EID) EID {
 // v3.0.41  obviously
 //-------------------------- ENTITY   --------------------------------------
 /* The go function for: not(self:any) [status=0] */
-func F_not_any (self *ClaireAny ) *ClaireBoolean  { 
+func F_not_any (self *ClaireAny) *ClaireBoolean { 
     if (self == CTRUE.Id()) { 
       return  CFALSE
       }  else if (self == CFALSE.Id()) { 
@@ -525,7 +515,7 @@ func E_not_any (self EID) EID {
     return EID{F_not_any(ANY(self) ).Id(),0}} 
   
 /* The go function for: !=(self:any,x:any) [status=0] */
-func F__I_equal_any (self *ClaireAny ,x *ClaireAny ) *ClaireBoolean  { 
+func F__I_equal_any (self *ClaireAny,x *ClaireAny) *ClaireBoolean { 
     if (Equal(self,x) == CTRUE) { 
       return  CFALSE
       } else {
@@ -539,7 +529,7 @@ func E__I_equal_any (self EID,x EID) EID {
   
 // gives the type of any object. This is open_coded.
 /* The go function for: owner(self:any) [status=0] */
-func F_owner_any (self *ClaireAny ) *ClaireClass  { 
+func F_owner_any (self *ClaireAny) *ClaireClass { 
     return  self.Isa
     } 
   
@@ -549,7 +539,7 @@ func E_owner_any (self EID) EID {
   
 // some useful methods
 /* The go function for: known?(self:any) [status=0] */
-func F_known_ask_any (self *ClaireAny ) *ClaireBoolean  { 
+func F_known_ask_any (self *ClaireAny) *ClaireBoolean { 
     return  F__I_equal_any(CNULL,self)
     } 
   
@@ -558,7 +548,7 @@ func E_known_ask_any (self EID) EID {
     return EID{F_known_ask_any(ANY(self) ).Id(),0}} 
   
 /* The go function for: unknown?(self:any) [status=0] */
-func F_unknown_ask_any (self *ClaireAny ) *ClaireBoolean  { 
+func F_unknown_ask_any (self *ClaireAny) *ClaireBoolean { 
     return  Equal(CNULL,self)
     } 
   
@@ -569,9 +559,8 @@ func E_unknown_ask_any (self EID) EID {
 // needed by the compiled code for casts (inserted by ocontrol for dynamic type checks)
 // Claire 4: TODO - add a second order type
 /* The go function for: check_in(self:any,y:type) [status=1] */
-func F_check_in_any (self *ClaireAny ,y *ClaireType ) EID { 
-    // eid body s = any
-    var Result EID 
+func F_check_in_any (self *ClaireAny,y *ClaireType) EID { 
+    var Result EID
     if (y.Contains(self) == CTRUE) { 
       Result = self.ToEID()
       } else {
@@ -586,18 +575,17 @@ func E_check_in_any (self EID,y EID) EID {
 // used to cast dynamically a non-mutable bag to a typed mutable bag
 // claire 4 : aplied to list and sets (bags)
 /* The go function for: check_in(self:bag,c:class,y:type) [status=1] */
-func F_check_in_bag (self *ClaireBag ,c *ClaireClass ,y *ClaireType ) EID { 
-    // eid body s = bag
-    var Result EID 
-    { var OK *ClaireBoolean  
+func F_check_in_bag (self *ClaireBag,c *ClaireClass,y *ClaireType) EID { 
+    var Result EID
+    { var OK *ClaireBoolean
       if (self.Isa.IsIn(C_list) == CTRUE) { 
-        { var g0104 *ClaireList   = ToList(self.Id())
-          { var arg_1 *ClaireAny  
+        { var g0104 *ClaireList = ToList(self.Id())
+          { var arg_1 *ClaireAny
             { 
-              var z *ClaireAny  
+              var z *ClaireAny
               _ = z
               arg_1= CFALSE.Id()
-              var z_support *ClaireList  
+              var z_support *ClaireList
               z_support = g0104
               z_len := z_support.Length()
               for i_it := 0; i_it < z_len; i_it++ { 
@@ -612,12 +600,12 @@ func F_check_in_bag (self *ClaireBag ,c *ClaireClass ,y *ClaireType ) EID {
             } 
           } 
         } else {
-        { var arg_2 *ClaireAny  
+        { var arg_2 *ClaireAny
           { 
-            var z *ClaireAny  
+            var z *ClaireAny
             _ = z
             arg_2= CFALSE.Id()
-            var z_support *ClaireSet  
+            var z_support *ClaireSet
             z_support = ToSet(self.Id())
             for i_it := 0; i_it < z_support.Count; i_it++ { 
               z = z_support.At(i_it)
@@ -644,9 +632,8 @@ func E_check_in_bag (self EID,c EID,y EID) EID {
   
 // new in v3.00.48
 /* The go function for: <(self:any,x:any) [status=1] */
-func F__inf_any (self *ClaireAny ,x *ClaireAny ) EID { 
-    // eid body s = boolean
-    var Result EID 
+func F__inf_any (self *ClaireAny,x *ClaireAny) EID { 
+    var Result EID
     if (Equal(self,x) == CTRUE) { 
       Result = EID{CFALSE.Id(),0}
       } else {
@@ -659,9 +646,8 @@ func E__inf_any (self EID,x EID) EID {
     return F__inf_any(ANY(self),ANY(x) )} 
   
 /* The go function for: >(self:any,x:any) [status=1] */
-func F__sup_any (self *ClaireAny ,x *ClaireAny ) EID { 
-    // eid body s = boolean
-    var Result EID 
+func F__sup_any (self *ClaireAny,x *ClaireAny) EID { 
+    var Result EID
     if (Equal(self,x) == CTRUE) { 
       Result = EID{CFALSE.Id(),0}
       } else {
@@ -677,7 +663,7 @@ func E__sup_any (self EID,x EID) EID {
 // unsafe is a pragma : it tells the compiler not to catch a possible error 
 // to add in the documentation
 /* The go function for: unsafe(x:any) [status=0] */
-func F_unsafe_any (x *ClaireAny ) *ClaireAny  { 
+func F_unsafe_any (x *ClaireAny) *ClaireAny { 
     return  x
     } 
   
@@ -696,27 +682,26 @@ func E_unsafe_any (x EID) EID {
 // declares a class as ephemeral: the member set is not maintained
 // v3.2.14 recusively applies to subclasses
 /* The go function for: ephemeral(self:class) [status=1] */
-func F_ephemeral_class (self *ClaireClass ) EID { 
-    // eid body s = any
-    var Result EID 
+func F_ephemeral_class (self *ClaireClass) EID { 
+    var Result EID
     { 
-      var c *ClaireClass  
+      var c *ClaireClass
       _ = c
-      var c_iter *ClaireAny  
+      var c_iter *ClaireAny
       Result= EID{CFALSE.Id(),0}
-      var c_support *ClaireSet  
+      var c_support *ClaireSet
       c_support = self.Descendants
       for i_it := 0; i_it < c_support.Count; i_it++ { 
         c_iter = c_support.At(i_it)
         c = ToClass(c_iter)
-        var loop_1 EID 
+        var loop_1 EID
         _ = loop_1
         if (c.Instances.Length() != 0) { 
           loop_1 = ToException(C_general_error.Make(MakeString("[187] cannot declare ~S as ephemeral because of ~S has instances").Id(),MakeConstantList(self.Id(),c.Id()).Id())).Close()
           } else {
           { 
-            var va_arg1 *ClaireClass  
-            var va_arg2 int 
+            var va_arg1 *ClaireClass
+            var va_arg2 int
             va_arg1 = c
             va_arg2 = ClEnv.Default
             va_arg1.Open = va_arg2
@@ -737,15 +722,14 @@ func E_ephemeral_class (self EID) EID {
   
 // claire4 : opposite of ephemeral(c)
 /* The go function for: instanced(c:class) [status=1] */
-func F_instanced_class (c *ClaireClass ) EID { 
-    // eid body s = any
-    var Result EID 
-    { var n int  = c.Open
+func F_instanced_class (c *ClaireClass) EID { 
+    var Result EID
+    { var n int = c.Open
       if ((n == ClEnv.Default) || 
           (n == ClEnv.Open)) { 
         { 
-          var va_arg1 *ClaireClass  
-          var va_arg2 int 
+          var va_arg1 *ClaireClass
+          var va_arg2 int
           va_arg1 = c
           va_arg2 = ClEnv.Open
           va_arg1.Open = va_arg2
@@ -763,18 +747,17 @@ func E_instanced_class (c EID) EID {
   
 // declares a class as an abtract class (without instances)
 /* The go function for: abstract(c:class) [status=1] */
-func F_abstract_class (c *ClaireClass ) EID { 
-    // eid body s = any
-    var Result EID 
-    { var n int  = c.Open
+func F_abstract_class (c *ClaireClass) EID { 
+    var Result EID
+    { var n int = c.Open
       if (n == ClEnv.Close) { 
         Result = ToException(C_general_error.Make(MakeString("[125] closed classes cannot be abstract").Id(),CNIL.Id())).Close()
         }  else if (c.Instances.Length() != 0) { 
         Result = ToException(C_general_error.Make(MakeString("[125] instanced classes cannot be abstract").Id(),CNIL.Id())).Close()
         } else {
         { 
-          var va_arg1 *ClaireClass  
-          var va_arg2 int 
+          var va_arg1 *ClaireClass
+          var va_arg2 int
           va_arg1 = c
           va_arg2 = ClEnv.ABSTRACT
           va_arg1.Open = va_arg2
@@ -793,18 +776,17 @@ func E_abstract_class (c EID) EID {
   
 // declares a class with no subclasses (apply to things)
 /* The go function for: final(c:class) [status=1] */
-func F_final_class (c *ClaireClass ) EID { 
-    // eid body s = any
-    var Result EID 
-    { var n int  = c.Open
+func F_final_class (c *ClaireClass) EID { 
+    var Result EID
+    { var n int = c.Open
       if (n == ClEnv.Default) { 
         Result = ToException(C_general_error.Make(MakeString("[125] ephemetral classes cannot be final").Id(),CNIL.Id())).Close()
         }  else if (c.Subclass.Size() != 0) { 
         Result = ToException(C_general_error.Make(MakeString("[125] a class with subclasses cannot be final").Id(),CNIL.Id())).Close()
         } else {
         { 
-          var va_arg1 *ClaireClass  
-          var va_arg2 int 
+          var va_arg1 *ClaireClass
+          var va_arg2 int
           va_arg1 = c
           va_arg2 = ClEnv.Final
           va_arg1.Open = va_arg2
@@ -824,11 +806,10 @@ func E_final_class (c EID) EID {
 // instantiation with and without a name
 // new! is a method-less property that is managed by the compiler
 /* The go function for: new(self:class) [status=1] */
-func F_new_class1 (self *ClaireClass ) EID { 
-    // eid body s = object
-    var Result EID 
-    { var o *ClaireObject  
-      var try_1 EID 
+func F_new_class1 (self *ClaireClass) EID { 
+    var Result EID
+    { var o *ClaireObject
+      var try_1 EID
       if (self.Open <= 0) { 
         try_1 = ToException(C_general_error.Make(MakeString("[105] cannot instantiate ~S").Id(),MakeConstantList(self.Id()).Id())).Close()
         } else {
@@ -850,8 +831,8 @@ func E_new_class1 (self EID) EID {
     return F_new_class1(ToClass(OBJ(self)) )} 
   
 /* The go function for: new_class1_type */
-func F_new_class1_type (self *ClaireType ) EID { 
-    var Result EID 
+func F_new_class1_type (self *ClaireType) EID { 
+    var Result EID
     Result = EID{F_glb_class(C_object,F_member_type(self)).Id(),0}
     return Result} 
   
@@ -862,11 +843,10 @@ func E_new_class1_type (self EID) EID {
   
 // v3.2.26
 /* The go function for: new(self:class,%nom:symbol) [status=1] */
-func F_new_class2 (self *ClaireClass ,_Znom *ClaireSymbol ) EID { 
-    // eid body s = thing
-    var Result EID 
-    { var o *ClaireThing  
-      var try_1 EID 
+func F_new_class2 (self *ClaireClass,_Znom *ClaireSymbol) EID { 
+    var Result EID
+    { var o *ClaireThing
+      var try_1 EID
       if (self.Open <= 0) { 
         try_1 = ToException(C_general_error.Make(MakeString("[105] cannot instantiate ~S").Id(),MakeConstantList(self.Id()).Id())).Close()
         } else {
@@ -888,8 +868,8 @@ func E_new_class2 (self EID,_Znom EID) EID {
     return F_new_class2(ToClass(OBJ(self)),ToSymbol(OBJ(_Znom)) )} 
   
 /* The go function for: new_class2_type */
-func F_new_class2_type (self *ClaireType ,_Znom *ClaireType ) EID { 
-    var Result EID 
+func F_new_class2_type (self *ClaireType,_Znom *ClaireType) EID { 
+    var Result EID
     Result = EID{F_glb_class(C_thing,F_member_type(self)).Id(),0}
     return Result} 
   
@@ -907,12 +887,11 @@ func E_new_class2_type (self EID,_Znom EID) EID {
 // the smallest super_set of two sets
 // there is always any, so it always returns a class
 /* The go function for: meet(self:class,ens:class) [status=0] */
-func F_meet_class (self *ClaireClass ,ens *ClaireClass ) *ClaireClass  { 
-    // procedure body with s = class
-    var Result *ClaireClass  
-    { var l1 *ClaireList   = self.Ancestors
-      { var l2 *ClaireList   = ens.Ancestors
-        { var m int 
+func F_meet_class (self *ClaireClass,ens *ClaireClass) *ClaireClass { 
+    var Result *ClaireClass
+    { var l1 *ClaireList = self.Ancestors
+      { var l2 *ClaireList = ens.Ancestors
+        { var m int
           if (l1.Length() < l2.Length()) { 
             m = l1.Length()
             } else {
@@ -934,11 +913,10 @@ func E_meet_class (self EID,ens EID) EID {
 // fast inclusion method for lattice_sets (lattice order). The argument is
 // either a lattice_set or {}
 /* The go function for: inherit?(self:class,ens:class) [status=0] */
-func F_inherit_ask_class (self *ClaireClass ,ens *ClaireClass ) *ClaireBoolean  { 
-    // procedure body with s = boolean
-    var Result *ClaireBoolean  
-    { var l *ClaireList   = self.Ancestors
-      { var n int  = ens.Ancestors.Length()
+func F_inherit_ask_class (self *ClaireClass,ens *ClaireClass) *ClaireBoolean { 
+    var Result *ClaireBoolean
+    { var l *ClaireList = self.Ancestors
+      { var n int = ens.Ancestors.Length()
         Result = MakeBoolean((n <= l.Length()) && (l.ValuesO()[n-1] == ens.Id()))
         } 
       } 
@@ -952,16 +930,15 @@ func E_inherit_ask_class (self EID,ens EID) EID {
 // the two methods to access open(r)
 // an abstract property is extensible and can receive new restrictions
 /* The go function for: abstract(p:property) [status=1] */
-func F_abstract_property (p *ClaireProperty ) EID { 
-    // eid body s = any
-    var Result EID 
-    { var n int  = p.Open
+func F_abstract_property (p *ClaireProperty) EID { 
+    var Result EID
+    { var n int = p.Open
       if (n < 2) { 
         Result = ToException(C_general_error.Make(MakeString("[127] ~S can no longer become abstract").Id(),MakeConstantList(p.Id()).Id())).Close()
         } else {
         { 
-          var va_arg1 *ClaireRelation  
-          var va_arg2 int 
+          var va_arg1 *ClaireRelation
+          var va_arg2 int
           va_arg1 = ToRelation(p.Id())
           va_arg2 = 3
           va_arg1.Open = va_arg2
@@ -981,26 +958,25 @@ func E_abstract_property (p EID) EID {
 // a final property is completely defined and cannot receive a new restriction
 // v3.2.04: the new value 4 will be used to represent (compiled but open)
 /* The go function for: final(r:relation) [status=0] */
-func F_final_relation (r *ClaireRelation )  { 
-    // procedure body with s = void
+func F_final_relation (r *ClaireRelation)  { 
     if (r.Isa.IsIn(C_property) == CTRUE) { 
-      { var g0106 *ClaireProperty   = ToProperty(r.Id())
+      { var g0106 *ClaireProperty = ToProperty(r.Id())
         if (g0106.Open <= 2) { 
           g0106.Open = 1
           { 
-            var va_arg1 *ClaireRelation  
-            var va_arg2 *ClaireType  
+            var va_arg1 *ClaireRelation
+            var va_arg2 *ClaireType
             va_arg1 = ToRelation(g0106.Id())
-            { var arg_1 *ClaireList  
+            { var arg_1 *ClaireList
               { 
-                var v_list7 *ClaireList  
-                var x *ClaireRestriction  
-                var v_local7 *ClaireAny  
+                var v_list7 *ClaireList
+                var x *ClaireRestriction
+                var v_local7 *ClaireAny
                 v_list7 = g0106.Restrictions
                 arg_1 = CreateList(ToType(CEMPTY.Id()),v_list7.Length())
                 for CLcount := 0; CLcount < v_list7.Length(); CLcount++{ 
                   x = ToRestriction(v_list7.At(CLcount))
-                  v_local7 = x.Domain.ValuesO()[1-1]
+                  v_local7 = x.Domain.ValuesO()[0]
                   arg_1.PutAt(CLcount,v_local7)
                   } 
                 } 
@@ -1009,14 +985,14 @@ func F_final_relation (r *ClaireRelation )  {
             va_arg1.Domain = va_arg2
             } 
           { 
-            var va_arg1 *ClaireRelation  
-            var va_arg2 *ClaireType  
+            var va_arg1 *ClaireRelation
+            var va_arg2 *ClaireType
             va_arg1 = ToRelation(g0106.Id())
-            { var arg_2 *ClaireList  
+            { var arg_2 *ClaireList
               { 
-                var v_list7 *ClaireList  
-                var x *ClaireRestriction  
-                var v_local7 *ClaireAny  
+                var v_list7 *ClaireList
+                var x *ClaireRestriction
+                var v_local7 *ClaireAny
                 v_list7 = g0106.Restrictions
                 arg_2 = CreateList(ToType(CEMPTY.Id()),v_list7.Length())
                 for CLcount := 0; CLcount < v_list7.Length(); CLcount++{ 
@@ -1043,15 +1019,15 @@ func E_final_relation (r EID) EID {
 // book-keeping for a module : based on parts/part_of hierarchy
 // propagates uses declaration + register a new associated namespace.
 /* The go function for: close(self:module) [status=0] */
-func F_close_module (self *ClaireModule ) *ClaireModule  { 
+func F_close_module (self *ClaireModule) *ClaireModule { 
     if (self.Id() != C_claire.Id()) { 
       if (self.PartOf.Id() != CNULL) { 
-        { var sup *ClaireModule   = self.PartOf
+        { var sup *ClaireModule = self.PartOf
           sup.Parts = sup.Parts.AddFast(self.Id())
           { 
-            var x *ClaireAny  
+            var x *ClaireAny
             _ = x
-            var x_support *ClaireList  
+            var x_support *ClaireList
             x_support = sup.Uses
             x_len := x_support.Length()
             for i_it := 0; i_it < x_len; i_it++ { 
@@ -1077,7 +1053,7 @@ func E_close_module (self EID) EID {
   
 // note: dynamic modules are no longer supported
 /* The go function for: get_symbol(self:string) [status=0] */
-func F_get_symbol_string (self *ClaireString ) *ClaireAny  { 
+func F_get_symbol_string (self *ClaireString) *ClaireAny { 
     return  F_get_symbol_module(C_claire,self)
     } 
   
@@ -1094,7 +1070,7 @@ func E_get_symbol_string (self EID) EID {
 //push!(self:meta_system,x:any) : void -> push!(self, x)
 //stat() : void -> function!(claire_stat)
 /* The go function for: gensym(self:void) [status=0] */
-func F_gensym_void () *ClaireSymbol  { 
+func F_gensym_void () *ClaireSymbol { 
     return  F_gensym_string(MakeString("g"))
     } 
   
@@ -1104,9 +1080,8 @@ func E_gensym_void (self EID) EID {
   
 // world management
 /* The go function for: store(l:list,n:integer,y:any) [status=1] */
-func F_store_list4 (l *ClaireList ,n int,y *ClaireAny ) EID { 
-    // eid body s = any
-    var Result EID 
+func F_store_list4 (l *ClaireList,n int,y *ClaireAny) EID { 
+    var Result EID
     if ((n < 1) || 
         (n > l.Length())) { 
       Result = ToException(C_general_error.Make(MakeString("store @ list: ~S out of bounds for ~S").Id(),MakeConstantList(MakeInteger(n).Id(),l.Id()).Id())).Close()
@@ -1120,9 +1095,8 @@ func E_store_list4 (l EID,n EID,y EID) EID {
     return F_store_list4(ToList(OBJ(l)),INT(n),ANY(y) )} 
   
 /* The go function for: store(l:array,n:integer,y:any) [status=1] */
-func F_store_array1 (l *ClaireList ,n int,y *ClaireAny ) EID { 
-    // eid body s = any
-    var Result EID 
+func F_store_array1 (l *ClaireList,n int,y *ClaireAny) EID { 
+    var Result EID
     if ((n < 1) || 
         (n > l.Length())) { 
       Result = ToException(C_general_error.Make(MakeString("store @ array: ~S out of bounds for ~S").Id(),MakeConstantList(MakeInteger(n).Id(),l.Id()).Id())).Close()
@@ -1137,7 +1111,6 @@ func E_store_array1 (l EID,n EID,y EID) EID {
   
 /* The go function for: commit(n:integer) [status=0] */
 func F_commit_integer (n int)  { 
-    // procedure body with s = void
     for (n < F_world_number()) { 
       F_world_remove()
       } 
@@ -1150,7 +1123,6 @@ func E_commit_integer (n EID) EID {
   
 /* The go function for: backtrack(n:integer) [status=0] */
 func F_backtrack_integer (n int)  { 
-    // procedure body with s = void
     for (n < F_world_number()) { 
       F_world_pop()
       } 
@@ -1163,27 +1135,26 @@ func E_backtrack_integer (n EID) EID {
   
 // allows to change the storage class
 /* The go function for: store(l:listargs) [status=0] */
-func F_store_listargs (l *ClaireList ) *ClaireAny  { 
-    // procedure body with s = any
-    var Result *ClaireAny  
+func F_store_listargs (l *ClaireList) *ClaireAny { 
+    var Result *ClaireAny
     { 
-      var r *ClaireAny  
+      var r *ClaireAny
       _ = r
       Result= CFALSE.Id()
-      var r_support *ClaireList  
+      var r_support *ClaireList
       r_support = ToList(l.Id())
       r_len := r_support.Length()
       for i_it := 0; i_it < r_len; i_it++ { 
         r = r_support.At(i_it)
         if (r.Isa.IsIn(C_relation) == CTRUE) { 
-          { var g0109 *ClaireRelation   = ToRelation(r)
+          { var g0109 *ClaireRelation = ToRelation(r)
             g0109.Store_ask = CTRUE
             } 
           }  else if (C_string.Id() == r.Isa.Id()) { 
-          { var g0110 *ClaireString   = ToString(r)
-            { var v *ClaireAny   = F_value_string(g0110)
+          { var g0110 *ClaireString = ToString(r)
+            { var v *ClaireAny = F_value_string(g0110)
               if (v.Isa.IsIn(C_global_variable) == CTRUE) { 
-                { var g0111 *GlobalVariable   = ToGlobalVariable(v)
+                { var g0111 *GlobalVariable = ToGlobalVariable(v)
                   g0111.Store_ask = CTRUE
                   } 
                 } 
@@ -1205,7 +1176,7 @@ func E_store_listargs (l EID) EID {
 // length(self:string) : integer -> function!(length_string)  -> in Kernel
 // make_function(self:string) : function -> function!(make_function_string)
 /* The go function for: symbol!(self:string) [status=0] */
-func F_symbol_I_string2 (self *ClaireString ) *ClaireSymbol  { 
+func F_symbol_I_string2 (self *ClaireString) *ClaireSymbol { 
     return  F_symbol_I_string(self,C_claire)
     } 
   
@@ -1215,9 +1186,8 @@ func E_symbol_I_string2 (self EID) EID {
   
 // deprecated in claire 4 - do not use a string as a byte buffer
 /* The go function for: nth_get(s:string,n:integer,max:integer) [status=1] */
-func F_nth_get_string (s *ClaireString ,n int,max int) EID { 
-    // eid body s = char
-    var Result EID 
+func F_nth_get_string (s *ClaireString,n int,max int) EID { 
+    var Result EID
     if (n <= max) { 
       Result = EID{C__CHAR,CVAL(s.At(n))}
       } else {
@@ -1230,9 +1200,8 @@ func E_nth_get_string (s EID,n EID,max EID) EID {
     return F_nth_get_string(ToString(OBJ(s)),INT(n),INT(max) )} 
   
 /* The go function for: nth_put(s:string,n:integer,c:char,max:integer) [status=1] */
-func F_nth_put_string (s *ClaireString ,n int,c rune,max int) EID { 
-    // eid body s = void
-    var Result EID 
+func F_nth_put_string (s *ClaireString,n int,c rune,max int) EID { 
+    var Result EID
     if (n <= max) { 
       F_nth_set_string(s,n,c)
       Result = EVOID
@@ -1253,9 +1222,8 @@ func E_nth_put_string (s EID,n EID,c EID,max EID) EID {
 //  v3.2.14
 // we keep the externC method name even if it now support go code
 /* The go function for: externC(s:string) [status=1] */
-func F_externC_string (s *ClaireString ) EID { 
-    // eid body s = void
-    var Result EID 
+func F_externC_string (s *ClaireString) EID { 
+    var Result EID
     Result = ToException(C_general_error.Make(MakeString("cannot execute Go code: ~A").Id(),MakeConstantList((s).Id()).Id())).Close()
     return Result} 
   
@@ -1264,9 +1232,8 @@ func E_externC_string (s EID) EID {
     return F_externC_string(ToString(OBJ(s)) )} 
   
 /* The go function for: externC(s:string,c:class) [status=1] */
-func F_externC_string2 (s *ClaireString ,c *ClaireClass ) EID { 
-    // eid body s = any
-    var Result EID 
+func F_externC_string2 (s *ClaireString,c *ClaireClass) EID { 
+    var Result EID
     Result = ToException(C_general_error.Make(MakeString("cannot execute ~A").Id(),MakeConstantList((s).Id()).Id())).Close()
     if !ErrorIn(Result) {
     Result = EID{CNULL,0}
@@ -1278,8 +1245,8 @@ func E_externC_string2 (s EID,c EID) EID {
     return F_externC_string2(ToString(OBJ(s)),ToClass(OBJ(c)) )} 
   
 /* The go function for: externC_string2_type */
-func F_externC_string2_type (s *ClaireType ,c *ClaireType ) EID { 
-    var Result EID 
+func F_externC_string2_type (s *ClaireType,c *ClaireType) EID { 
+    var Result EID
     Result = EID{F_member_type(c).Id(),0}
     return Result} 
   
@@ -1288,11 +1255,35 @@ func F_externC_string2_type (s *ClaireType ,c *ClaireType ) EID {
 func E_externC_string2_type (s EID,c EID) EID { 
     return F_externC_string2_type(ToType(OBJ(s)),ToType(OBJ(c)))} 
   
+// new in claire 4 - print with a constant number of char = truncate or extends
+/* The go function for: princ(s:string,n:integer) [status=0] */
+func F_princ_string3 (s *ClaireString,n int)  { 
+    { var m int = F_length_string(s)
+      if (m > n) { 
+        F_princ_string(F_substring_string(s,1,n))
+        } else {
+        F_princ_string(s)
+        { var i int = (m+1)
+          { var g0112 int = n
+            for (i <= g0112) { 
+              F_princ_char(' ')
+              i = (i+1)
+              } 
+            } 
+          } 
+        } 
+      } 
+    } 
+  
+// The EID go function for: princ @ list<type_expression>(string, integer) (throw: false) 
+func E_princ_string3 (s EID,n EID) EID { 
+    F_princ_string3(ToString(OBJ(s)),INT(n) )
+    return EVOID} 
+  
 //------------------- SYMBOL -----------------------------------------------
 /* The go function for: make_string(self:symbol) [status=1] */
-func F_make_string_symbol (self *ClaireSymbol ) EID { 
-    // eid body s = string
-    var Result EID 
+func F_make_string_symbol (self *ClaireSymbol) EID { 
+    var Result EID
     F_print_in_string_void()
     self.Princ()
     Result = F_end_of_string_void()
@@ -1304,9 +1295,8 @@ func E_make_string_symbol (self EID) EID {
   
 //princ(self:symbol) : any -> function!(princ_symbol)
 /* The go function for: self_print(self:symbol) [status=1] */
-func F_self_print_symbol_Core (self *ClaireSymbol ) EID { 
-    // eid body s = void
-    var Result EID 
+func F_self_print_symbol_Core (self *ClaireSymbol) EID { 
+    var Result EID
     self.Module_I().Name.Princ()
     PRINC("/")
     Result = F_print_any((self.String_I()).Id())
@@ -1329,8 +1319,8 @@ func E__plus_integer (self EID,x EID) EID {
     return EID{C__INT,IVAL(F__plus_integer(INT(self),INT(x) ))}} 
   
 /* The go function for: _plus_integer_type */
-func F__plus_integer_type (self *ClaireType ,x *ClaireType ) EID { 
-    var Result EID 
+func F__plus_integer_type (self *ClaireType,x *ClaireType) EID { 
+    var Result EID
     Result = EID{F_abstract_type_operation(C__plus,self,x).Id(),0}
     return Result} 
   
@@ -1349,8 +1339,8 @@ func E__dash_integer1 (self EID,x EID) EID {
     return EID{C__INT,IVAL(F__dash_integer1(INT(self),INT(x) ))}} 
   
 /* The go function for: _dash_integer1_type */
-func F__dash_integer1_type (self *ClaireType ,x *ClaireType ) EID { 
-    var Result EID 
+func F__dash_integer1_type (self *ClaireType,x *ClaireType) EID { 
+    var Result EID
     Result = EID{F_abstract_type_operation(C__dash,self,x).Id(),0}
     return Result} 
   
@@ -1362,7 +1352,8 @@ func E__dash_integer1_type (self EID,x EID) EID {
 //-(self:integer) : integer -> function!(ch_sign)
 //float!(self:integer) : float -> function!(to_float)
 //mod(self:integer,x:integer) : integer -> function!(mod_integer)
-//less_code(n:integer,i:integer) : boolean -> function!(less_code_integer)
+// exit(self:integer) : void -> function!(CL_exit)
+// less_code(n:integer,i:integer) : boolean -> function!(less_code_integer)
 /* The go function for: <<(x:integer,y:integer) [status=0] */
 func F__inf_inf_integer (x int,y int) int { 
     return  (x << y)
@@ -1401,7 +1392,7 @@ func E_or_integer (x EID,y EID) EID {
   
 // open-coded
 /* The go function for: <(self:integer,x:integer) [status=0] */
-func F__inf_integer (self int,x int) *ClaireBoolean  { 
+func F__inf_integer (self int,x int) *ClaireBoolean { 
     if (self < x) { 
       return  CTRUE
       } else {
@@ -1414,7 +1405,7 @@ func E__inf_integer (self EID,x EID) EID {
     return EID{F__inf_integer(INT(self),INT(x) ).Id(),0}} 
   
 /* The go function for: <=(self:integer,x:integer) [status=0] */
-func F__inf_equal_integer (self int,x int) *ClaireBoolean  { 
+func F__inf_equal_integer (self int,x int) *ClaireBoolean { 
     if (self <= x) { 
       return  CTRUE
       } else {
@@ -1427,7 +1418,7 @@ func E__inf_equal_integer (self EID,x EID) EID {
     return EID{F__inf_equal_integer(INT(self),INT(x) ).Id(),0}} 
   
 /* The go function for: >(self:integer,x:integer) [status=0] */
-func F__sup_integer (self int,x int) *ClaireBoolean  { 
+func F__sup_integer (self int,x int) *ClaireBoolean { 
     if (self > x) { 
       return  CTRUE
       } else {
@@ -1440,7 +1431,7 @@ func E__sup_integer (self EID,x EID) EID {
     return EID{F__sup_integer(INT(self),INT(x) ).Id(),0}} 
   
 /* The go function for: nth(self:integer,y:integer) [status=0] */
-func F_nth_integer (self int,y int) *ClaireBoolean  { 
+func F_nth_integer (self int,y int) *ClaireBoolean { 
     if (BitVectorContains(self,y) == CTRUE) { 
       return  CTRUE
       } else {
@@ -1477,10 +1468,9 @@ func E_random_integer2 (a EID,b EID) EID {
 // used by the logic
 /* The go function for: factor?(x:integer,y:integer) [status=1] */
 func F_factor_ask_integer (x int,y int) EID { 
-    // eid body s = boolean
-    var Result EID 
-    { var arg_1 int 
-      var try_2 EID 
+    var Result EID
+    { var arg_1 int
+      var try_2 EID
       try_2 = EID{C__INT,IVAL((x%y))}
       if ErrorIn(try_2) {Result = try_2
       } else {
@@ -1496,10 +1486,9 @@ func E_factor_ask_integer (x EID,y EID) EID {
   
 /* The go function for: divide?(x:integer,y:integer) [status=1] */
 func F_divide_ask_integer (x int,y int) EID { 
-    // eid body s = boolean
-    var Result EID 
-    { var arg_1 int 
-      var try_2 EID 
+    var Result EID
+    { var arg_1 int
+      var try_2 EID
       try_2 = EID{C__INT,IVAL((y%x))}
       if ErrorIn(try_2) {Result = try_2
       } else {
@@ -1514,7 +1503,7 @@ func E_divide_ask_integer (x EID,y EID) EID {
     return F_divide_ask_integer(INT(x),INT(y) )} 
   
 /* The go function for: Id(x:any) [status=0] */
-func F_Id_any (x *ClaireAny ) *ClaireAny  { 
+func F_Id_any (x *ClaireAny) *ClaireAny { 
     return  x
     } 
   
@@ -1523,8 +1512,8 @@ func E_Id_any (x EID) EID {
     return F_Id_any(ANY(x) ).ToEID()} 
   
 /* The go function for: Id_any_type */
-func F_Id_any_type (x *ClaireType ) EID { 
-    var Result EID 
+func F_Id_any_type (x *ClaireType) EID { 
+    var Result EID
     Result = EID{x.Id(),0}
     return Result} 
   
@@ -1586,8 +1575,7 @@ func E__dash_float2 (self EID) EID {
   
 /* The go function for: string!(self:float) [status=1] */
 func F_string_I_float (self float64) EID { 
-    // eid body s = string
-    var Result EID 
+    var Result EID
     F_print_in_string_void()
     F_princ_float(self)
     Result = F_end_of_string_void()
@@ -1615,20 +1603,19 @@ func E_abs_float (x EID) EID {
 // float print is now standard in v3.4.42 (princ(float_integer)  but this is still a cuter print ...
 /* The go function for: mClaire/printFDigit(x:float,i:integer) [status=1] */
 func F_printFDigit_float (x float64,i int) EID { 
-    // eid body s = void
-    var Result EID 
+    var Result EID
     if (x < 0) { 
       PRINC("-")
       Result = F_printFDigit_float((-x),i)
       } else {
-      { var frac float64 
-        var try_1 EID 
-        { var arg_2 float64 
-          var try_3 EID 
-          { var arg_4 float64 
-            var try_5 EID 
-            { var arg_6 int 
-              var try_7 EID 
+      { var frac float64
+        var try_1 EID
+        { var arg_2 float64
+          var try_3 EID
+          { var arg_4 float64
+            var try_5 EID
+            { var arg_6 int
+              var try_7 EID
               try_7 = F_integer_I_float((x+1e-10))
               if ErrorIn(try_7) {try_5 = try_7
               } else {
@@ -1651,8 +1638,8 @@ func F_printFDigit_float (x float64,i int) EID {
         if ErrorIn(try_1) {Result = try_1
         } else {
         frac = FLOAT(try_1)
-        { var arg_8 int 
-          var try_9 EID 
+        { var arg_8 int
+          var try_9 EID
           try_9 = F_integer_I_float((x+1e-10))
           if ErrorIn(try_9) {Result = try_9
           } else {
@@ -1663,8 +1650,8 @@ func F_printFDigit_float (x float64,i int) EID {
           } 
         if !ErrorIn(Result) {
         PRINC(".")
-        { var arg_10 int 
-          var try_11 EID 
+        { var arg_10 int
+          var try_11 EID
           try_11 = F_integer_I_float((frac*F__exp_float(10,F_to_float(i))))
           if ErrorIn(try_11) {Result = try_11
           } else {
@@ -1685,25 +1672,24 @@ func E_printFDigit_float (x EID,i EID) EID {
 // print the first i digits of an integer
 /* The go function for: mClaire/printFDigit(x:integer,i:integer) [status=1] */
 func F_printFDigit_integer (x int,i int) EID { 
-    // eid body s = void
-    var Result EID 
+    var Result EID
     if (i > 0) { 
-      { var f int 
-        var try_1 EID 
+      { var f int
+        var try_1 EID
         try_1 = F__exp_integer(10,(i-1))
         if ErrorIn(try_1) {Result = try_1
         } else {
         f = INT(try_1)
-        { var d int 
-          var try_2 EID 
+        { var d int
+          var try_2 EID
           try_2 = EID{C__INT,IVAL((x/f))}
           if ErrorIn(try_2) {Result = try_2
           } else {
           d = INT(try_2)
           F_princ_integer(d)
           if (i > 1) { 
-            { var arg_3 int 
-              var try_4 EID 
+            { var arg_3 int
+              var try_4 EID
               try_4 = EID{C__INT,IVAL((x%f))}
               if ErrorIn(try_4) {Result = try_4
               } else {
@@ -1732,7 +1718,7 @@ func E_printFDigit_integer (x EID,i EID) EID {
 // length(self:bag ) : integer -> length(self)  => becomes part of go
 // in CLAIRE 4, we can tell the compiler that the list is a list<object> (optimization purpose)
 /* The go function for: mClaire/nth_object(self:list,n:integer) [status=0] */
-func F_mClaire_nth_object_list (self *ClaireList ,n int) *ClaireAny  { 
+func F_mClaire_nth_object_list (self *ClaireList,n int) *ClaireAny { 
     return  self.ValuesO()[n-1].Id()
     } 
   
@@ -1744,13 +1730,12 @@ func E_mClaire_nth_object_list (self EID,n EID) EID {
 // nth_get(self:list,x:integer) : any -> nth_get(self, x)
 // new in claire 4: tells the compiler that range check is required + EID optimized
 /* The go function for: nth_write(self:list,i:integer,v:any) [status=1] */
-func F_nth_write_list (self *ClaireList ,i int,v *ClaireAny ) EID { 
-    // eid body s = any
-    var Result EID 
+func F_nth_write_list (self *ClaireList,i int,v *ClaireAny) EID { 
+    var Result EID
     if (self.Of().Contains(v) == CTRUE) { 
       Result = ToArray(self.Id()).NthPut(i,v).ToEID()
       } else {
-      { var _CL_obj *ClaireSystemError   = ToSystemError(new(ClaireSystemError).Is(C_system_error))
+      { var _CL_obj *ClaireSystemError = ToSystemError(new(ClaireSystemError).Is(C_system_error))
         _CL_obj.Index = 17
         _CL_obj.Arg = v
         _CL_obj.Value = self.Of().Id()
@@ -1765,122 +1750,30 @@ func E_nth_write_list (self EID,i EID,v EID) EID {
   
 // CLAIRE 4 duplication: define min/max for sets first
 /* The go function for: min(f:method,self:set) [status=1] */
-func F_min_method2 (f *ClaireMethod ,self *ClaireSet ) EID { 
-    // eid body s = any
-    var Result EID 
+func F_min_method2 (f *ClaireMethod,self *ClaireSet) EID { 
+    var Result EID
     if (self.Size() != 0) { 
-      { var x *ClaireAny   = CNULL
+      { var x *ClaireAny = CNULL
         { 
-          var y *ClaireAny  
+          var y *ClaireAny
           _ = y
           Result= EID{CFALSE.Id(),0}
-          var y_support *ClaireSet  
+          var y_support *ClaireSet
           y_support = self
           for i_it := 0; i_it < y_support.Count; i_it++ { 
             y = y_support.At(i_it)
-            var loop_1 EID 
+            var loop_1 EID
             _ = loop_1
-            var g0112I *ClaireBoolean  
-            var try_2 EID 
+            var g0113I *ClaireBoolean
+            var try_2 EID
             { 
-              var v_or6 *ClaireBoolean  
+              var v_or6 *ClaireBoolean
               
               v_or6 = Equal(x,CNULL)
               if (v_or6 == CTRUE) {try_2 = EID{CTRUE.Id(),0}
               } else { 
-                var try_3 EID 
+                var try_3 EID
                 try_3 = F_funcall_method2(f,y,x)
-                if ErrorIn(try_3) {try_2 = try_3
-                } else {
-                v_or6 = ToBoolean(OBJ(try_3))
-                if (v_or6 == CTRUE) {try_2 = EID{CTRUE.Id(),0}
-                } else { 
-                  try_2 = EID{CFALSE.Id(),0}} 
-                } 
-              }
-              } 
-            if ErrorIn(try_2) {loop_1 = try_2
-            } else {
-            g0112I = ToBoolean(OBJ(try_2))
-            if (g0112I == CTRUE) { 
-              x = y
-              loop_1 = x.ToEID()
-              } else {
-              loop_1 = EID{CFALSE.Id(),0}
-              } 
-            }
-            if ErrorIn(loop_1) {Result = loop_1
-            break
-            } else {
-            }
-            } 
-          } 
-        if !ErrorIn(Result) {
-        Result = x.ToEID()
-        }
-        } 
-      } else {
-      Result = ToException(C_general_error.Make(MakeString("[183] min of empty set is undefined").Id(),CNIL.Id())).Close()
-      } 
-    return Result} 
-  
-// The EID go function for: min @ list<type_expression>(method, set) (throw: true) 
-func E_min_method2 (f EID,self EID) EID { 
-    return F_min_method2(ToMethod(OBJ(f)),ToSet(OBJ(self)) )} 
-  
-/* The go function for: min_method2_type */
-func F_min_method2_type (f *ClaireType ,self *ClaireType ) EID { 
-    var Result EID 
-    Result = EID{F_member_type(self).Id(),0}
-    return Result} 
-  
-  
-// The dual EID go function for: "min_method2_type" 
-func E_min_method2_type (f EID,self EID) EID { 
-    return F_min_method2_type(ToType(OBJ(f)),ToType(OBJ(self)))} 
-  
-/* The go function for: max(f:method,self:set) [status=1] */
-func F_max_method2 (f *ClaireMethod ,self *ClaireSet ) EID { 
-    // eid body s = any
-    var Result EID 
-    if (self.Size() != 0) { 
-      { var x *ClaireAny   = CNULL
-        { 
-          var y *ClaireAny  
-          _ = y
-          Result= EID{CFALSE.Id(),0}
-          var y_support *ClaireSet  
-          y_support = self
-          for i_it := 0; i_it < y_support.Count; i_it++ { 
-            y = y_support.At(i_it)
-            var loop_1 EID 
-            _ = loop_1
-            var g0113I *ClaireBoolean  
-            var try_2 EID 
-            { 
-              var v_or6 *ClaireBoolean  
-              
-              v_or6 = Equal(x,CNULL)
-              if (v_or6 == CTRUE) {try_2 = EID{CTRUE.Id(),0}
-              } else { 
-                var try_3 EID 
-                { var arg_4 *ClaireBoolean  
-                  var try_5 EID 
-                  { var arg_6 *ClaireAny  
-                    var try_7 EID 
-                    try_7 = F_funcall_method2(f,y,x)
-                    if ErrorIn(try_7) {try_5 = try_7
-                    } else {
-                    arg_6 = ANY(try_7)
-                    try_5 = EID{F_boolean_I_any(arg_6).Id(),0}
-                    }
-                    } 
-                  if ErrorIn(try_5) {try_3 = try_5
-                  } else {
-                  arg_4 = ToBoolean(OBJ(try_5))
-                  try_3 = EID{F__I_equal_any(arg_4.Id(),CTRUE.Id()).Id(),0}
-                  }
-                  } 
                 if ErrorIn(try_3) {try_2 = try_3
                 } else {
                 v_or6 = ToBoolean(OBJ(try_3))
@@ -1911,6 +1804,96 @@ func F_max_method2 (f *ClaireMethod ,self *ClaireSet ) EID {
         }
         } 
       } else {
+      Result = ToException(C_general_error.Make(MakeString("[183] min of empty set is undefined").Id(),CNIL.Id())).Close()
+      } 
+    return Result} 
+  
+// The EID go function for: min @ list<type_expression>(method, set) (throw: true) 
+func E_min_method2 (f EID,self EID) EID { 
+    return F_min_method2(ToMethod(OBJ(f)),ToSet(OBJ(self)) )} 
+  
+/* The go function for: min_method2_type */
+func F_min_method2_type (f *ClaireType,self *ClaireType) EID { 
+    var Result EID
+    Result = EID{F_member_type(self).Id(),0}
+    return Result} 
+  
+  
+// The dual EID go function for: "min_method2_type" 
+func E_min_method2_type (f EID,self EID) EID { 
+    return F_min_method2_type(ToType(OBJ(f)),ToType(OBJ(self)))} 
+  
+/* The go function for: max(f:method,self:set) [status=1] */
+func F_max_method2 (f *ClaireMethod,self *ClaireSet) EID { 
+    var Result EID
+    if (self.Size() != 0) { 
+      { var x *ClaireAny = CNULL
+        { 
+          var y *ClaireAny
+          _ = y
+          Result= EID{CFALSE.Id(),0}
+          var y_support *ClaireSet
+          y_support = self
+          for i_it := 0; i_it < y_support.Count; i_it++ { 
+            y = y_support.At(i_it)
+            var loop_1 EID
+            _ = loop_1
+            var g0114I *ClaireBoolean
+            var try_2 EID
+            { 
+              var v_or6 *ClaireBoolean
+              
+              v_or6 = Equal(x,CNULL)
+              if (v_or6 == CTRUE) {try_2 = EID{CTRUE.Id(),0}
+              } else { 
+                var try_3 EID
+                { var arg_4 *ClaireBoolean
+                  var try_5 EID
+                  { var arg_6 *ClaireAny
+                    var try_7 EID
+                    try_7 = F_funcall_method2(f,y,x)
+                    if ErrorIn(try_7) {try_5 = try_7
+                    } else {
+                    arg_6 = ANY(try_7)
+                    try_5 = EID{F_boolean_I_any(arg_6).Id(),0}
+                    }
+                    } 
+                  if ErrorIn(try_5) {try_3 = try_5
+                  } else {
+                  arg_4 = ToBoolean(OBJ(try_5))
+                  try_3 = EID{F__I_equal_any(arg_4.Id(),CTRUE.Id()).Id(),0}
+                  }
+                  } 
+                if ErrorIn(try_3) {try_2 = try_3
+                } else {
+                v_or6 = ToBoolean(OBJ(try_3))
+                if (v_or6 == CTRUE) {try_2 = EID{CTRUE.Id(),0}
+                } else { 
+                  try_2 = EID{CFALSE.Id(),0}} 
+                } 
+              }
+              } 
+            if ErrorIn(try_2) {loop_1 = try_2
+            } else {
+            g0114I = ToBoolean(OBJ(try_2))
+            if (g0114I == CTRUE) { 
+              x = y
+              loop_1 = x.ToEID()
+              } else {
+              loop_1 = EID{CFALSE.Id(),0}
+              } 
+            }
+            if ErrorIn(loop_1) {Result = loop_1
+            break
+            } else {
+            }
+            } 
+          } 
+        if !ErrorIn(Result) {
+        Result = x.ToEID()
+        }
+        } 
+      } else {
       Result = ToException(C_general_error.Make(MakeString("[183] max of empty set is undefined").Id(),CNIL.Id())).Close()
       } 
     return Result} 
@@ -1920,8 +1903,8 @@ func E_max_method2 (f EID,self EID) EID {
     return F_max_method2(ToMethod(OBJ(f)),ToSet(OBJ(self)) )} 
   
 /* The go function for: max_method2_type */
-func F_max_method2_type (f *ClaireType ,self *ClaireType ) EID { 
-    var Result EID 
+func F_max_method2_type (f *ClaireType,self *ClaireType) EID { 
+    var Result EID
     Result = EID{F_member_type(self).Id(),0}
     return Result} 
   
@@ -1932,26 +1915,25 @@ func E_max_method2_type (f EID,self EID) EID {
   
 // CLAIRE 4 : optimize for lists
 /* The go function for: min(f:method,self:list) [status=1] */
-func F_min_method3 (f *ClaireMethod ,self *ClaireList ) EID { 
-    // eid body s = any
-    var Result EID 
-    { var n int  = self.Length()
+func F_min_method3 (f *ClaireMethod,self *ClaireList) EID { 
+    var Result EID
+    { var n int = self.Length()
       if (n != 0) { 
-        { var x *ClaireAny   = self.At(1-1)
-          { var i int  = 2
-            { var g0114 int  = n
+        { var x *ClaireAny = self.At(0)
+          { var i int = 2
+            { var g0115 int = n
               Result= EID{CFALSE.Id(),0}
-              for (i <= g0114) { 
-                var loop_1 EID 
+              for (i <= g0115) { 
+                var loop_1 EID
                 _ = loop_1
                 { 
-                var g0115I *ClaireBoolean  
-                var try_2 EID 
+                var g0116I *ClaireBoolean
+                var try_2 EID
                 try_2 = F_funcall_method2(f,self.At(i-1),x)
                 if ErrorIn(try_2) {loop_1 = try_2
                 } else {
-                g0115I = ToBoolean(OBJ(try_2))
-                if (g0115I == CTRUE) { 
+                g0116I = ToBoolean(OBJ(try_2))
+                if (g0116I == CTRUE) { 
                   x = self.At(i-1)
                   loop_1 = x.ToEID()
                   } else {
@@ -1982,8 +1964,8 @@ func E_min_method3 (f EID,self EID) EID {
     return F_min_method3(ToMethod(OBJ(f)),ToList(OBJ(self)) )} 
   
 /* The go function for: min_method3_type */
-func F_min_method3_type (f *ClaireType ,self *ClaireType ) EID { 
-    var Result EID 
+func F_min_method3_type (f *ClaireType,self *ClaireType) EID { 
+    var Result EID
     Result = EID{F_member_type(self).Id(),0}
     return Result} 
   
@@ -1993,25 +1975,24 @@ func E_min_method3_type (f EID,self EID) EID {
     return F_min_method3_type(ToType(OBJ(f)),ToType(OBJ(self)))} 
   
 /* The go function for: max(f:method,self:list) [status=1] */
-func F_max_method3 (f *ClaireMethod ,self *ClaireList ) EID { 
-    // eid body s = any
-    var Result EID 
-    { var n int  = self.Length()
+func F_max_method3 (f *ClaireMethod,self *ClaireList) EID { 
+    var Result EID
+    { var n int = self.Length()
       if (n != 0) { 
-        { var x *ClaireAny   = self.At(1-1)
-          { var i int  = 2
-            { var g0116 int  = n
+        { var x *ClaireAny = self.At(0)
+          { var i int = 2
+            { var g0117 int = n
               Result= EID{CFALSE.Id(),0}
-              for (i <= g0116) { 
-                var loop_1 EID 
+              for (i <= g0117) { 
+                var loop_1 EID
                 _ = loop_1
                 { 
-                var g0117I *ClaireBoolean  
-                var try_2 EID 
-                { var arg_3 *ClaireBoolean  
-                  var try_4 EID 
-                  { var arg_5 *ClaireAny  
-                    var try_6 EID 
+                var g0118I *ClaireBoolean
+                var try_2 EID
+                { var arg_3 *ClaireBoolean
+                  var try_4 EID
+                  { var arg_5 *ClaireAny
+                    var try_6 EID
                     try_6 = F_funcall_method2(f,self.At(i-1),x)
                     if ErrorIn(try_6) {try_4 = try_6
                     } else {
@@ -2027,8 +2008,8 @@ func F_max_method3 (f *ClaireMethod ,self *ClaireList ) EID {
                   } 
                 if ErrorIn(try_2) {loop_1 = try_2
                 } else {
-                g0117I = ToBoolean(OBJ(try_2))
-                if (g0117I == CTRUE) { 
+                g0118I = ToBoolean(OBJ(try_2))
+                if (g0118I == CTRUE) { 
                   x = self.At(i-1)
                   loop_1 = x.ToEID()
                   } else {
@@ -2059,8 +2040,8 @@ func E_max_method3 (f EID,self EID) EID {
     return F_max_method3(ToMethod(OBJ(f)),ToList(OBJ(self)) )} 
   
 /* The go function for: max_method3_type */
-func F_max_method3_type (f *ClaireType ,self *ClaireType ) EID { 
-    var Result EID 
+func F_max_method3_type (f *ClaireType,self *ClaireType) EID { 
+    var Result EID
     Result = EID{F_member_type(self).Id(),0}
     return Result} 
   
@@ -2072,10 +2053,9 @@ func E_max_method3_type (f EID,self EID) EID {
 // CLAIRE4 : /+ is native for list
 // new for claire 3.4
 /* The go function for: random(self:list) [status=0] */
-func F_random_list (self *ClaireList ) *ClaireAny  { 
-    // procedure body with s = any
-    var Result *ClaireAny  
-    { var n int  = self.Length()
+func F_random_list (self *ClaireList) *ClaireAny { 
+    var Result *ClaireAny
+    { var n int = self.Length()
       Result = self.At((1+F_random_integer(n))-1)
       } 
     return Result} 
@@ -2085,8 +2065,8 @@ func E_random_list (self EID) EID {
     return F_random_list(ToList(OBJ(self)) ).ToEID()} 
   
 /* The go function for: random_list_type */
-func F_random_list_type (self *ClaireType ) EID { 
-    var Result EID 
+func F_random_list_type (self *ClaireType) EID { 
+    var Result EID
     Result = EID{F_member_type(self).Id(),0}
     return Result} 
   
@@ -2098,9 +2078,8 @@ func E_random_list_type (self EID) EID {
 //--------- LIST --------------------------------------------------------
 // last element of a list
 /* The go function for: last(self:list) [status=1] */
-func F_last_list (self *ClaireList ) EID { 
-    // eid body s = any
-    var Result EID 
+func F_last_list (self *ClaireList) EID { 
+    var Result EID
     if (self.Length() > 0) { 
       Result = self.At(self.Length()-1).ToEID()
       } else {
@@ -2113,8 +2092,8 @@ func E_last_list (self EID) EID {
     return F_last_list(ToList(OBJ(self)) )} 
   
 /* The go function for: last_list_type */
-func F_last_list_type (self *ClaireType ) EID { 
-    var Result EID 
+func F_last_list_type (self *ClaireType) EID { 
+    var Result EID
     Result = EID{F_member_type(self).Id(),0}
     return Result} 
   
@@ -2125,9 +2104,8 @@ func E_last_list_type (self EID) EID {
   
 // remove the last element
 /* The go function for: rmlast(self:list) [status=1] */
-func F_rmlast_list (self *ClaireList ) EID { 
-    // eid body s = list
-    var Result EID 
+func F_rmlast_list (self *ClaireList) EID { 
+    var Result EID
     Result = self.Nth_dash(self.Length())
     if !ErrorIn(Result) {
     Result = EID{self.Id(),0}
@@ -2140,11 +2118,10 @@ func E_rmlast_list (self EID) EID {
   
 // the old LISP method
 /* The go function for: car(self:list) [status=1] */
-func F_car_list (self *ClaireList ) EID { 
-    // eid body s = any
-    var Result EID 
+func F_car_list (self *ClaireList) EID { 
+    var Result EID
     if (self.Length() > 0) { 
-      Result = self.At(1-1).ToEID()
+      Result = self.At(0).ToEID()
       } else {
       Result = ToException(C_general_error.Make(MakeString("[41] car(nil) is undefined").Id(),CNIL.Id())).Close()
       } 
@@ -2156,9 +2133,8 @@ func E_car_list (self EID) EID {
   
 // this method sorts a list according to an order
 /* The go function for: sort(f:method,self:list) [status=1] */
-func F_sort_method (f *ClaireMethod ,self *ClaireList ) EID { 
-    // eid body s = list
-    var Result EID 
+func F_sort_method (f *ClaireMethod,self *ClaireList) EID { 
+    var Result EID
     Result = F_quicksort_list(self,f,1,self.Length())
     if !ErrorIn(Result) {
     Result = EID{self.Id(),0}
@@ -2172,19 +2148,18 @@ func E_sort_method (f EID,self EID) EID {
 // v3.0.38: upgrade the quicksort algorithm with a better pivot selection cf.bag.cpp
 // this is also proposed as a macro: cf. file.cl
 /* The go function for: quicksort(self:list,f:method,n:integer,m:integer) [status=1] */
-func F_quicksort_list (self *ClaireList ,f *ClaireMethod ,n int,m int) EID { 
-    // eid body s = void
-    var Result EID 
+func F_quicksort_list (self *ClaireList,f *ClaireMethod,n int,m int) EID { 
+    var Result EID
     if (m > n) { 
-      { var x *ClaireAny   = self.At(n-1)
+      { var x *ClaireAny = self.At(n-1)
         if (m == (n+1)) { 
-          var g0119I *ClaireBoolean  
-          var try_1 EID 
+          var g0120I *ClaireBoolean
+          var try_1 EID
           try_1 = F_funcall_method2(f,self.At(m-1),x)
           if ErrorIn(try_1) {Result = try_1
           } else {
-          g0119I = ToBoolean(OBJ(try_1))
-          if (g0119I == CTRUE) { 
+          g0120I = ToBoolean(OBJ(try_1))
+          if (g0120I == CTRUE) { 
             ToArray(self.Id()).NthPut(n,self.At(m-1))
             Result = ToArray(self.Id()).NthPut(m,x).ToEID()
             } else {
@@ -2192,26 +2167,26 @@ func F_quicksort_list (self *ClaireList ,f *ClaireMethod ,n int,m int) EID {
             } 
           }
           } else {
-          { var p int  = ((m+n)>>1)
-            { var q int  = n
+          { var p int = ((m+n)>>1)
+            { var q int = n
               x = self.At(p-1)
               if (p != n) { 
                 ToArray(self.Id()).NthPut(p,self.At(n-1))
                 } 
-              { var p int  = (n+1)
-                { var g0118 int  = m
+              { var p int = (n+1)
+                { var g0119 int = m
                   Result= EID{CFALSE.Id(),0}
-                  for (p <= g0118) { 
-                    var loop_2 EID 
+                  for (p <= g0119) { 
+                    var loop_2 EID
                     _ = loop_2
                     { 
-                    var g0120I *ClaireBoolean  
-                    var try_3 EID 
+                    var g0121I *ClaireBoolean
+                    var try_3 EID
                     try_3 = F_funcall_method2(f,self.At(p-1),x)
                     if ErrorIn(try_3) {loop_2 = try_3
                     } else {
-                    g0120I = ToBoolean(OBJ(try_3))
-                    if (g0120I == CTRUE) { 
+                    g0121I = ToBoolean(OBJ(try_3))
+                    if (g0121I == CTRUE) { 
                       ToArray(self.Id()).NthPut(n,self.At(p-1))
                       n = (n+1)
                       if (p > n) { 
@@ -2256,18 +2231,17 @@ func E_quicksort_list (self EID,f EID,n EID,m EID) EID {
   
 // destructive method that build the powerset
 /* The go function for: build_powerset(self:list) [status=0] */
-func F_build_powerset_list (self *ClaireList ) *ClaireSet  { 
-    // procedure body with s = set
-    var Result *ClaireSet  
+func F_build_powerset_list (self *ClaireList) *ClaireSet { 
+    var Result *ClaireSet
     if (self.Length() != 0) { 
-      { var x *ClaireAny   = self.At(1-1)
-        { var l1 *ClaireSet   = F_build_powerset_list(self.Skip(1))
-          { var l2 *ClaireSet   = l1
+      { var x *ClaireAny = self.At(0)
+        { var l1 *ClaireSet = F_build_powerset_list(self.Skip(1))
+          { var l2 *ClaireSet = l1
             { 
-              var y *ClaireSet  
+              var y *ClaireSet
               _ = y
-              var y_iter *ClaireAny  
-              var y_support *ClaireSet  
+              var y_iter *ClaireAny
+              var y_support *ClaireSet
               y_support = l1
               for i_it := 0; i_it < y_support.Count; i_it++ { 
                 y_iter = y_support.At(i_it)
@@ -2291,16 +2265,15 @@ func E_build_powerset_list (self EID) EID {
 // skip 
 // new and useful (v3.1.06) - create a list with n replication of the default value - deprecated
 /* The go function for: make_copy_list(n:integer,d:any) [status=0] */
-func F_make_copy_list_integer (n int,d *ClaireAny ) *ClaireList  { 
-    // procedure body with s = list
-    var Result *ClaireList  
-    { var l *ClaireList   = F_make_list_integer(n,d)
+func F_make_copy_list_integer (n int,d *ClaireAny) *ClaireList { 
+    var Result *ClaireList
+    { var l *ClaireList = F_make_list_integer(n,d)
       if (d.Isa.IsIn(C_list) == CTRUE) { 
-        { var g0121 *ClaireList   = ToList(d)
-          { var i int  = 1
-            { var g0122 int  = n
-              for (i <= g0122) { 
-                ToArray(l.Id()).NthPut(i,g0121.Copy().Id())
+        { var g0122 *ClaireList = ToList(d)
+          { var i int = 1
+            { var g0123 int = n
+              for (i <= g0123) { 
+                ToArray(l.Id()).NthPut(i,g0122.Copy().Id())
                 i = (i+1)
                 } 
               } 
@@ -2317,21 +2290,20 @@ func E_make_copy_list_integer (n EID,d EID) EID {
   
 // new version : create a typed list for integer or floats
 /* The go function for: typed_copy_list(t:type,n:integer,d:any) [status=0] */
-func F_typed_copy_list_type (t *ClaireType ,n int,d *ClaireAny ) *ClaireList  { 
-    // procedure body with s = list
-    var Result *ClaireList  
+func F_typed_copy_list_type (t *ClaireType,n int,d *ClaireAny) *ClaireList { 
+    var Result *ClaireList
     if (t.Included(ToType(C_integer.Id())) == CTRUE) { 
       Result = F_make_list_integer2(n,ToType(C_integer.Id()),d)
       }  else if (t.Included(ToType(C_float.Id())) == CTRUE) { 
       Result = F_make_list_integer2(n,ToType(C_float.Id()),d)
       } else {
-      { var l *ClaireList   = F_make_list_integer(n,d)
+      { var l *ClaireList = F_make_list_integer(n,d)
         if (d.Isa.IsIn(C_bag) == CTRUE) { 
-          { var g0123 *ClaireBag   = ToBag(d)
-            { var i int  = 1
-              { var g0124 int  = n
-                for (i <= g0124) { 
-                  ToArray(l.Id()).NthPut(i,ANY(F_CALL(C_copy,ARGS(EID{g0123.Id(),0}))))
+          { var g0124 *ClaireBag = ToBag(d)
+            { var i int = 1
+              { var g0125 int = n
+                for (i <= g0125) { 
+                  ToArray(l.Id()).NthPut(i,ANY(F_CALL(C_copy,ARGS(EID{g0124.Id(),0}))))
                   i = (i+1)
                   } 
                 } 
@@ -2349,15 +2321,14 @@ func E_typed_copy_list_type (t EID,n EID,d EID) EID {
   
 //----------------------  SET  ---------------------------------------------
 /* The go function for: difference(self:set,x:set) [status=0] */
-func F_difference_set (self *ClaireSet ,x *ClaireSet ) *ClaireSet  { 
-    // procedure body with s = set
-    var Result *ClaireSet  
-    { var y_in *ClaireSet   = self
-      { var y_out *ClaireSet   = y_in.Empty()
+func F_difference_set (self *ClaireSet,x *ClaireSet) *ClaireSet { 
+    var Result *ClaireSet
+    { var y_in *ClaireSet = self
+      { var y_out *ClaireSet = y_in.Empty()
         { 
-          var y *ClaireAny  
+          var y *ClaireAny
           _ = y
-          var y_support *ClaireSet  
+          var y_support *ClaireSet
           y_support = y_in
           for i_it := 0; i_it < y_support.Count; i_it++ { 
             y = y_support.At(i_it)
@@ -2379,9 +2350,8 @@ func E_difference_set (self EID,x EID) EID {
 //--------- ARRAY --------------------------------------------------------
 //
 /* The go function for: self_print(self:array) [status=1] */
-func F_self_print_array_Core (self *ClaireList ) EID { 
-    // eid body s = void
-    var Result EID 
+func F_self_print_array_Core (self *ClaireList) EID { 
+    var Result EID
     PRINC("array<")
     Result = F_print_any(ToList(self.Id()).Of().Id())
     if !ErrorIn(Result) {
@@ -2399,7 +2369,6 @@ func E_self_print_array_Core (self EID) EID {
 //---------------------- CHAR --------------------------------------------
 /* The go function for: self_print(self:char) [status=0] */
 func F_self_print_char_Core (self rune)  { 
-    // procedure body with s = void
     PRINC("'")
     F_princ_char(self)
     PRINC("'")
@@ -2411,7 +2380,7 @@ func E_self_print_char_Core (self EID) EID {
     return EVOID} 
   
 /* The go function for: <=(c1:char,c2:char) [status=0] */
-func F__inf_equal_char (c1 rune,c2 rune) *ClaireBoolean  { 
+func F__inf_equal_char (c1 rune,c2 rune) *ClaireBoolean { 
     return  F__inf_equal_integer(int(c1),int(c2))
     } 
   
@@ -2421,7 +2390,7 @@ func E__inf_equal_char (c1 EID,c2 EID) EID {
   
 // --------------------- BOOL -----------------------------------------------
 /* The go function for: random(b:boolean) [status=0] */
-func F_random_boolean (b *ClaireBoolean ) *ClaireBoolean  { 
+func F_random_boolean (b *ClaireBoolean) *ClaireBoolean { 
     if (b == CTRUE) { 
       return  F__sup_equal_integer(F_random_integer(10000),5000)
       } else {

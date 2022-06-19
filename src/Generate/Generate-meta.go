@@ -1,5 +1,5 @@
 /***** CLAIRE Compilation of module Generate.cl 
-         [version 4.0.04 / safety 5] Sunday 03-13-2022 07:28:45 *****/
+         [version 4.0.06 / safety 5] Monday 06-06-2022 08:16:34 *****/
 
 package Generate
 import (_ "fmt"
@@ -12,7 +12,7 @@ import (_ "fmt"
 )
 
 //-------- dumb function to prevent import errors --------
-func import_g0209() { 
+func import_g0211() { 
     _ = Core.It
     _ = Language.It
     _ = Reader.It
@@ -23,13 +23,13 @@ func import_g0209() {
 // class file for Generate/code_producer in module Generate 
 type GenerateCodeProducer struct { 
    Optimize.CompileProducer
-   OpenComparators *ClaireList 
-  OpenOperators *ClaireList 
-  DivOperators *ClaireList 
-  Body *ClaireAny 
-  Extension *ClaireString 
-  Comment *ClaireString 
-  Interfaces *ClaireList 
+   OpenComparators *ClaireList
+  OpenOperators *ClaireList
+  DivOperators *ClaireList
+  Body *ClaireAny
+  Extension *ClaireString
+  Comment *ClaireString
+  Interfaces *ClaireList
   Stat int
   } 
 
@@ -39,250 +39,360 @@ func ToGenerateCodeProducer(x *ClaireAny) *GenerateCodeProducer {return (*Genera
 // class file for Generate/go_producer in module Generate 
 type GenerateGoProducer struct { 
    GenerateCodeProducer
-   Current *ClaireModule 
-  BadNames *ClaireList 
-  GoodNames *ClaireList 
-  KernelMethods *ClaireList 
-  Source *ClaireString 
-  Debug_ask *ClaireBoolean 
+   Current *ClaireModule
+  BadNames *ClaireList
+  GoodNames *ClaireList
+  KernelMethods *ClaireList
+  Source *ClaireString
+  Debug_ask *ClaireBoolean
   Varsym int
   } 
 
 // automatic cast function
 func ToGenerateGoProducer(x *ClaireAny) *GenerateGoProducer {return (*GenerateGoProducer)(unsafe.Pointer(x))}
 
-var C_Generate__star_ask_interval_star *Core.GlobalVariable 
-var C_Generate__star_dash_dash_integer_star *Core.GlobalVariable 
-var C_Generate__star_plus_integer_star *Core.GlobalVariable 
-var C_Generate__starnth_integer_star *Core.GlobalVariable 
-var C_Generate__starnth_list_star *Core.GlobalVariable 
-var C_Generate__starnth_tuple_star *Core.GlobalVariable 
-var C_Generate__starnth_1_list_star *Core.GlobalVariable 
-var C_Generate__starnth_1_tuple_star *Core.GlobalVariable 
-var C_Generate__starnth_1_array_star *Core.GlobalVariable 
-var C_Generate__starnth_string_star *Core.GlobalVariable 
-var C_Generate__starnth_1_string_star *Core.GlobalVariable 
-var C_Generate__starnth_equal_list_star *Core.GlobalVariable 
-var C_Generate__starnth_put_list_star *Core.GlobalVariable 
-var C_Generate__starmake_list_star *Core.GlobalVariable 
-var C_Generate__starnot_star *Core.GlobalVariable 
-var C_Generate__starknown_star *Core.GlobalVariable 
-var C_Generate__starunknown_star *Core.GlobalVariable 
-var C_Generate__starnot_equal_star *Core.GlobalVariable 
-var C_Generate__starequal_star *Core.GlobalVariable 
-var C_Generate__starbelong_star *Core.GlobalVariable 
-var C_Generate__starcontain_list_star *Core.GlobalVariable 
-var C_Generate__starcontain_set_star *Core.GlobalVariable 
-var C_Generate__starlength_array_star *Core.GlobalVariable 
-var C_Generate__starlength_bag_star *Core.GlobalVariable 
-var C_Generate__starclose_exception_star *Core.GlobalVariable 
-var C_Generate__starnew_class1_star *Core.GlobalVariable 
-var C_Generate__starnew_class2_star *Core.GlobalVariable 
-var C_Generate__starslot_get_star *Core.GlobalVariable 
-var C_Generate__starmap_star *Core.GlobalVariable 
-var C_Generate__starof_bag_star *Core.GlobalVariable 
-var C_Generate__starof_array_star *Core.GlobalVariable 
-var C_Generate__starcopy_list_star *Core.GlobalVariable 
-var C_Generate__starcopy_set_star *Core.GlobalVariable 
-var C_Generate__starempty_set_star *Core.GlobalVariable 
-var C_Generate__starnth_put_array_star *Core.GlobalVariable 
-var C_Generate__star_Zt_star *Core.GlobalVariable 
-var C_Generate__starlesst_star *Core.GlobalVariable 
-var C_Generate__starincluded_star *Core.GlobalVariable 
-var C_Generate__starstack_apply_star *Core.GlobalVariable 
-var C_Generate__starsuper_apply_star *Core.GlobalVariable 
-var C_Generate__starprinc_string_star *Core.GlobalVariable 
-var C_Generate__starinherit_star *Core.GlobalVariable 
-var C_Generate__starwrite_value_star *Core.GlobalVariable 
-var C_Generate__starread_property_star *Core.GlobalVariable 
-var C_Generate_code_producer *ClaireClass  /*obj*/
-var C_Generate_go_producer *ClaireClass  /*obj*/
-var C_Generate_EIDSET *Core.GlobalVariable 
-var C_BadMethods *Core.GlobalVariable 
-var C_ABODY *Core.GlobalVariable 
-var C_Generate_GO_PRODUCER *GenerateGoProducer  /*obj*/
-var C_Generate__starlength_string_star *Core.GlobalVariable 
-var C_Generate__starset_I_list_star *Core.GlobalVariable 
-var C_Generate_open_comparators *ClaireProperty  // Generate/"open_comparators"
-var C_Generate_open_operators *ClaireProperty  // Generate/"open_operators"
-var C_Generate_div_operators *ClaireProperty  // Generate/"div_operators"
-var C_Generate_extension *ClaireProperty  // Generate/"extension"
-var C_Generate_interfaces *ClaireProperty  // Generate/"interfaces"
-var C_Generate_current *ClaireProperty  // Generate/"current"
-var C_Generate_bad_names *ClaireProperty  // Generate/"bad_names"
-var C_Generate_good_names *ClaireProperty  // Generate/"good_names"
-var C_Generate_kernel_methods *ClaireProperty  // Generate/"kernel_methods"
-var C_Generate_varsym *ClaireProperty  // Generate/"varsym"
-var C_Generate_indent_c *ClaireProperty  // Generate/"indent_c"
-var C_Generate_breakline *ClaireProperty  // Generate/"breakline"
-var C_Generate_new_block *ClaireProperty  // Generate/"new_block"
-var C_Generate_let_block *ClaireProperty  // Generate/"let_block"
-var C_Generate_close_block *ClaireProperty  // Generate/"close_block"
-var C_Generate_finish_block *ClaireProperty  // Generate/"finish_block"
-var C_g_test *ClaireProperty  // claire/"g_test"
-var C_Generate_g_func *ClaireProperty  // Generate/"g_func"
-var C_Generate_g_expression *ClaireProperty  // Generate/"g_expression"
-var C_Generate_statement *ClaireProperty  // Generate/"statement"
-var C_Generate_gtop *ClaireProperty  // Generate/"gtop"
-var C_Generate_make_go_function *ClaireProperty  // Generate/"make_go_function"
-var C_compile *ClaireProperty  // claire/"compile"
-var C_Generate_parents *ClaireProperty  // Generate/"parents"
-var C_Generate_gen_files *ClaireProperty  // Generate/"gen_files"
-var C_Generate_gen_mod_file *ClaireProperty  // Generate/"gen_mod_file"
-var C_Generate_gen_file *ClaireProperty  // Generate/"gen_file"
-var C_Generate_start_file *ClaireProperty  // Generate/"start_file"
-var C_Generate_gen_classes *ClaireProperty  // Generate/"gen_classes"
-var C_Generate_gen_objects *ClaireProperty  // Generate/"gen_objects"
-var C_Generate_gen_meta_load *ClaireProperty  // Generate/"gen_meta_load"
-var C_Generate_namespace_I *ClaireProperty  // Generate/"namespace!"
-var C_Generate_import_declaration *ClaireProperty  // Generate/"import_declaration"
-var C_Generate_dumb_import *ClaireProperty  // Generate/"dumb_import"
-var C_Generate_needed_modules *ClaireProperty  // Generate/"needed_modules"
-var C_Generate_cap_short *ClaireProperty  // Generate/"cap_short"
-var C_Generate_representative *ClaireProperty  // Generate/"representative"
-var C_Generate_clean_duplicates *ClaireProperty  // Generate/"clean_duplicates"
-var C_Generate_gen_class_def *ClaireProperty  // Generate/"gen_class_def"
-var C_Generate_gen_cast_function *ClaireProperty  // Generate/"gen_cast_function"
-var C_Generate_construct_class_ask *ClaireProperty  // Generate/"construct_class?"
-var C_Generate_gen_construct *ClaireProperty  // Generate/"gen_construct"
-var C_Generate_rootSlot *ClaireProperty  // Generate/"rootSlot"
-var C_Generate_go_class *ClaireProperty  // Generate/"go_class"
-var C_Generate_interface_I *ClaireProperty  // Generate/"interface!"
-var C_Generate_cast_class *ClaireProperty  // Generate/"cast_class"
-var C_Generate_add_underscore *ClaireProperty  // Generate/"add_underscore"
-var C_Generate_class_ident *ClaireProperty  // Generate/"class_ident"
-var C_Generate_cast_prefix *ClaireProperty  // Generate/"cast_prefix"
-var C_Generate_cast_post *ClaireProperty  // Generate/"cast_post"
-var C_Generate_go_var *ClaireProperty  // Generate/"go_var"
-var C_Generate_getRange *ClaireProperty  // Generate/"getRange"
-var C_Generate_thing_ident *ClaireProperty  // Generate/"thing_ident"
-var C_Generate_gen_module *ClaireProperty  // Generate/"gen_module"
-var C_Generate_declare *ClaireProperty  // Generate/"declare"
-var C_Generate_var_declaration *ClaireProperty  // Generate/"var_declaration"
-var C_Generate_g_statement *ClaireProperty  // Generate/"g_statement"
-var C_Generate_simple_func_ask *ClaireProperty  // Generate/"simple_func?"
-var C_Generate_get_made *ClaireProperty  // Generate/"get_made"
-var C_Generate_fileName *ClaireProperty  // Generate/"fileName"
-var C_Generate_make_lambda_function *ClaireProperty  // Generate/"make_lambda_function"
-var C_Generate_generate_function_start *ClaireProperty  // Generate/"generate_function_start"
-var C_Generate_eid_body *ClaireProperty  // Generate/"eid_body"
-var C_Generate_generate_eid_dual *ClaireProperty  // Generate/"generate_eid_dual"
-var C_Generate_goMethod_ask *ClaireProperty  // Generate/"goMethod?"
-var C_Generate_goVariable *ClaireProperty  // Generate/"goVariable"
-var C_Generate_goMethod *ClaireProperty  // Generate/"goMethod"
-var C_Generate_goVariables *ClaireProperty  // Generate/"goVariables"
-var C_Generate_goFunction *ClaireProperty  // Generate/"goFunction"
-var C_Generate_check_range *ClaireProperty  // Generate/"check_range"
-var C_Generate_simple_body_ask *ClaireProperty  // Generate/"simple_body?"
-var C_Generate_need_debug_ask *ClaireProperty  // Generate/"need_debug?"
-var C_Generate_procedure_body *ClaireProperty  // Generate/"procedure_body"
-var C_Generate_function_body *ClaireProperty  // Generate/"function_body"
-var C_Generate_generate_eid_function *ClaireProperty  // Generate/"generate_eid_function"
-var C_Generate_generate_eval_function *ClaireProperty  // Generate/"generate_eval_function"
-var C_Generate_debug_intro *ClaireProperty  // Generate/"debug_intro"
-var C_Generate_return_result *ClaireProperty  // Generate/"return_result"
-var C_Generate_go_signature *ClaireProperty  // Generate/"go_signature"
-var C_Generate_goEIDFunctionName *ClaireProperty  // Generate/"goEIDFunctionName"
-var C_Generate_goEIDVariables *ClaireProperty  // Generate/"goEIDVariables"
-var C_Generate_print_EID_call *ClaireProperty  // Generate/"print_EID_call"
-var C_Generate_external_EID_arg *ClaireProperty  // Generate/"external_EID_arg"
-var C_Generate_eid_prefix *ClaireProperty  // Generate/"eid_prefix"
-var C_Generate_eid_post *ClaireProperty  // Generate/"eid_post"
-var C_Generate_to_eid *ClaireProperty  // Generate/"to_eid"
-var C_Generate_build_Variable *ClaireProperty  // Generate/"build_Variable"
-var C_Generate_import_princ *ClaireProperty  // Generate/"import_princ"
-var C_Generate_genvar *ClaireProperty  // Generate/"genvar"
-var C_Generate_c_string *ClaireProperty  // Generate/"c_string"
-var C_Generate_cap_ident *ClaireProperty  // Generate/"cap_ident"
-var C_Generate_capitalized_ident *ClaireProperty  // Generate/"capitalized_ident"
-var C_Generate_capitalize *ClaireProperty  // Generate/"capitalize"
-var C_Generate_symbol_ident *ClaireProperty  // Generate/"symbol_ident"
-var C_Generate_globalVar *ClaireProperty  // Generate/"globalVar"
-var C_Generate_type_sort *ClaireProperty  // Generate/"type_sort"
-var C_Generate_g_sort *ClaireProperty  // Generate/"g_sort"
-var C_Generate_valuesSlot *ClaireProperty  // Generate/"valuesSlot"
-var C_imported_function_ask *ClaireProperty  // claire/"imported_function?"
-var C_Generate_arg_match *ClaireProperty  // Generate/"arg_match"
-var C_dMethod_ask *ClaireProperty  // claire/"dMethod?"
-var C_Generate_at *ClaireProperty  // Generate/"at"
-var C_Generate_getFunctionName *ClaireProperty  // Generate/"getFunctionName"
-var C_Generate_preCore_ask *ClaireProperty  // Generate/"preCore?"
-var C_Generate_goEIDFunction *ClaireProperty  // Generate/"goEIDFunction"
-var C_Generate_goEvalFunction *ClaireProperty  // Generate/"goEvalFunction"
-var C_Generate_retreive_method *ClaireProperty  // Generate/"retreive_method"
-var C_Generate_retreive_list *ClaireProperty  // Generate/"retreive_list"
-var C_Generate_to_cl *ClaireProperty  // Generate/"to_cl"
-var C_Generate_from_eid *ClaireProperty  // Generate/"from_eid"
-var C_Generate_integer_prefix *ClaireProperty  // Generate/"integer_prefix"
-var C_Generate_float_prefix *ClaireProperty  // Generate/"float_prefix"
-var C_Generate_char_prefix *ClaireProperty  // Generate/"char_prefix"
-var C_Generate_string_prefix *ClaireProperty  // Generate/"string_prefix"
-var C_Generate_string_post *ClaireProperty  // Generate/"string_post"
-var C_Generate_native_post *ClaireProperty  // Generate/"native_post"
-var C_Generate_object_prefix *ClaireProperty  // Generate/"object_prefix"
-var C_Generate_object_post *ClaireProperty  // Generate/"object_post"
-var C_Generate_equal_exp *ClaireProperty  // Generate/"equal_exp"
-var C_Generate_sign_equal *ClaireProperty  // Generate/"sign_equal"
-var C_Generate_char_exp_ask *ClaireProperty  // Generate/"char_exp?"
-var C_Generate_c_member *ClaireProperty  // Generate/"c_member"
-var C_Generate_bag_expression *ClaireProperty  // Generate/"bag_expression"
-var C_Generate_args_list *ClaireProperty  // Generate/"args_list"
-var C_Generate_constant_ask *ClaireProperty  // Generate/"constant?"
-var C_Generate_go_range *ClaireProperty  // Generate/"go_range"
-var C_Generate_full_signature *ClaireProperty  // Generate/"full_signature"
-var C_Generate_signature_I *ClaireProperty  // Generate/"signature!"
-var C_Generate_g_member *ClaireProperty  // Generate/"g_member"
-var C_Generate_cast_Values *ClaireProperty  // Generate/"cast_Values"
-var C_Generate_check_var *ClaireProperty  // Generate/"check_var"
-var C_Generate_use_variable *ClaireProperty  // Generate/"use_variable"
-var C_Generate_g_clean *ClaireProperty  // Generate/"g_clean"
-var C_Generate_inline_exp *ClaireProperty  // Generate/"inline_exp"
-var C_Generate_bounded_expression *ClaireProperty  // Generate/"bounded_expression"
-var C_Generate_eid_provide_ask *ClaireProperty  // Generate/"eid_provide?"
-var C_Generate_print_external_call *ClaireProperty  // Generate/"print_external_call"
-var C_Generate_belong_exp *ClaireProperty  // Generate/"belong_exp"
-var C_Generate_external_casted_arg *ClaireProperty  // Generate/"external_casted_arg"
-var C_Generate_g_table_index *ClaireProperty  // Generate/"g_table_index"
-var C_Generate_sign_or *ClaireProperty  // Generate/"sign_or"
-var C_Generate_unfold_args *ClaireProperty  // Generate/"unfold_args"
-var C_Generate_unfold_arg *ClaireProperty  // Generate/"unfold_arg"
-var C_Generate_unfold_use *ClaireProperty  // Generate/"unfold_use"
-var C_Generate_eid_require_ask *ClaireProperty  // Generate/"eid_require?"
-var C_Generate_unfold_eid *ClaireProperty  // Generate/"unfold_eid"
-var C_Generate_g_try *ClaireProperty  // Generate/"g_try"
-var C_Generate_close_try *ClaireProperty  // Generate/"close_try"
-var C_Generate_error_wrap *ClaireProperty  // Generate/"error_wrap"
-var C_Generate_g_try_void *ClaireProperty  // Generate/"g_try_void"
-var C_Generate_do_statement *ClaireProperty  // Generate/"do_statement"
-var C_Generate_eid_expression *ClaireProperty  // Generate/"eid_expression"
-var C_Generate_stat_exp *ClaireProperty  // Generate/"stat_exp"
-var C_Generate_let_eid_ask *ClaireProperty  // Generate/"let_eid?"
-var C_Generate_g_eid_stat *ClaireProperty  // Generate/"g_eid_stat"
-var C_Generate_bag_class *ClaireProperty  // Generate/"bag_class"
-var C_Generate_iteration_statement *ClaireProperty  // Generate/"iteration_statement"
-var C_Generate_inline_stat *ClaireProperty  // Generate/"inline_stat"
-var C_Generate_update_statement *ClaireProperty  // Generate/"update_statement"
-var C_Generate_need_shortcut *ClaireProperty  // Generate/"need_shortcut"
-var C_Generate_external_I *ClaireProperty  // Generate/"external!"
-var C_Generate_string2module *ClaireProperty  // Generate/"string2module"
-var C_Generate_printHelp *ClaireProperty  // Generate/"printHelp"
-var C_Generate_complex_main *ClaireProperty  // Generate/"complex_main"
-var C_system_file *ClaireProperty  // claire/"system_file"
-var C_Generate_compile_dir *ClaireProperty  // Generate/"compile_dir"
-var C_Generate_compile_exe *ClaireProperty  // Generate/"compile_exe"
-var C_Generate_system_imports *ClaireProperty  // Generate/"system_imports"
-var C_Generate_load_function *ClaireProperty  // Generate/"load_function"
-var C_Generate_main_function *ClaireProperty  // Generate/"main_function"
+var C_Generate__star_ask_interval_star *Core.GlobalVariable
+var C_Generate__star_dash_dash_integer_star *Core.GlobalVariable
+var C_Generate__star_plus_integer_star *Core.GlobalVariable
+var C_Generate__starnth_integer_star *Core.GlobalVariable
+var C_Generate__starnth_list_star *Core.GlobalVariable
+var C_Generate__starnth_tuple_star *Core.GlobalVariable
+var C_Generate__starnth_1_list_star *Core.GlobalVariable
+var C_Generate__starnth_1_tuple_star *Core.GlobalVariable
+var C_Generate__starnth_1_array_star *Core.GlobalVariable
+var C_Generate__starnth_string_star *Core.GlobalVariable
+var C_Generate__starnth_1_string_star *Core.GlobalVariable
+var C_Generate__starnth_equal_list_star *Core.GlobalVariable
+var C_Generate__starnth_put_list_star *Core.GlobalVariable
+var C_Generate__starmake_list_star *Core.GlobalVariable
+var C_Generate__starnot_star *Core.GlobalVariable
+var C_Generate__starknown_star *Core.GlobalVariable
+var C_Generate__starunknown_star *Core.GlobalVariable
+var C_Generate__starnot_equal_star *Core.GlobalVariable
+var C_Generate__starequal_star *Core.GlobalVariable
+var C_Generate__starbelong_star *Core.GlobalVariable
+var C_Generate__starcontain_list_star *Core.GlobalVariable
+var C_Generate__starcontain_set_star *Core.GlobalVariable
+var C_Generate__starlength_array_star *Core.GlobalVariable
+var C_Generate__starlength_bag_star *Core.GlobalVariable
+var C_Generate__starclose_exception_star *Core.GlobalVariable
+var C_Generate__starnew_class1_star *Core.GlobalVariable
+var C_Generate__starnew_class2_star *Core.GlobalVariable
+var C_Generate__starslot_get_star *Core.GlobalVariable
+var C_Generate__starmap_star *Core.GlobalVariable
+var C_Generate__starof_bag_star *Core.GlobalVariable
+var C_Generate__starof_array_star *Core.GlobalVariable
+var C_Generate__starcopy_list_star *Core.GlobalVariable
+var C_Generate__starcopy_set_star *Core.GlobalVariable
+var C_Generate__starempty_set_star *Core.GlobalVariable
+var C_Generate__starnth_put_array_star *Core.GlobalVariable
+var C_Generate__star_Zt_star *Core.GlobalVariable
+var C_Generate__starlesst_star *Core.GlobalVariable
+var C_Generate__starincluded_star *Core.GlobalVariable
+var C_Generate__starstack_apply_star *Core.GlobalVariable
+var C_Generate__starsuper_apply_star *Core.GlobalVariable
+var C_Generate__starprinc_string_star *Core.GlobalVariable
+var C_Generate__starinherit_star *Core.GlobalVariable
+var C_Generate__starwrite_value_star *Core.GlobalVariable
+var C_Generate__starread_property_star *Core.GlobalVariable
+var C_Generate_code_producer *ClaireClass /*obj*/
+var C_Generate_go_producer *ClaireClass /*obj*/
+var C_Generate_EIDSET *Core.GlobalVariable
+var C_BadMethods *Core.GlobalVariable
+var C_ABODY *Core.GlobalVariable
+var C_Generate_GO_PRODUCER *GenerateGoProducer /*obj*/
+var C_Generate__starlength_string_star *Core.GlobalVariable
+var C_Generate__starset_I_list_star *Core.GlobalVariable
+var C_Generate_arg_match *ClaireProperty // Generate/"arg_match"
+var C_dMethod_ask *ClaireProperty // claire/"dMethod?"
+var C_Generate_at *ClaireProperty // Generate/"at"
+var C_Generate_getFunctionName *ClaireProperty // Generate/"getFunctionName"
+var C_Generate_preCore_ask *ClaireProperty // Generate/"preCore?"
+var C_Generate_goEIDFunction *ClaireProperty // Generate/"goEIDFunction"
+var C_Generate_goEvalFunction *ClaireProperty // Generate/"goEvalFunction"
+var C_Generate_retreive_method *ClaireProperty // Generate/"retreive_method"
+var C_Generate_retreive_list *ClaireProperty // Generate/"retreive_list"
+var C_Generate_to_cl *ClaireProperty // Generate/"to_cl"
+var C_Generate_from_eid *ClaireProperty // Generate/"from_eid"
+var C_Generate_integer_prefix *ClaireProperty // Generate/"integer_prefix"
+var C_Generate_float_prefix *ClaireProperty // Generate/"float_prefix"
+var C_Generate_char_prefix *ClaireProperty // Generate/"char_prefix"
+var C_Generate_string_prefix *ClaireProperty // Generate/"string_prefix"
+var C_Generate_string_post *ClaireProperty // Generate/"string_post"
+var C_Generate_native_post *ClaireProperty // Generate/"native_post"
+var C_Generate_object_prefix *ClaireProperty // Generate/"object_prefix"
+var C_Generate_object_post *ClaireProperty // Generate/"object_post"
+var C_Generate_equal_exp *ClaireProperty // Generate/"equal_exp"
+var C_Generate_sign_equal *ClaireProperty // Generate/"sign_equal"
+var C_Generate_char_exp_ask *ClaireProperty // Generate/"char_exp?"
+var C_Generate_c_member *ClaireProperty // Generate/"c_member"
+var C_Generate_bag_expression *ClaireProperty // Generate/"bag_expression"
+var C_Generate_args_list *ClaireProperty // Generate/"args_list"
+var C_Generate_constant_ask *ClaireProperty // Generate/"constant?"
+var C_Generate_go_range *ClaireProperty // Generate/"go_range"
+var C_Generate_full_signature *ClaireProperty // Generate/"full_signature"
+var C_Generate_signature_I *ClaireProperty // Generate/"signature!"
+var C_Generate_g_member *ClaireProperty // Generate/"g_member"
+var C_Generate_check_var *ClaireProperty // Generate/"check_var"
+var C_Generate_use_variable *ClaireProperty // Generate/"use_variable"
+var C_Generate_g_clean *ClaireProperty // Generate/"g_clean"
+var C_Generate_inline_exp *ClaireProperty // Generate/"inline_exp"
+var C_Generate_bounded_expression *ClaireProperty // Generate/"bounded_expression"
+var C_Generate_eid_provide_ask *ClaireProperty // Generate/"eid_provide?"
+var C_Generate_print_external_call *ClaireProperty // Generate/"print_external_call"
+var C_Generate_belong_exp *ClaireProperty // Generate/"belong_exp"
+var C_Generate_external_casted_arg *ClaireProperty // Generate/"external_casted_arg"
+var C_Generate_g_table_index *ClaireProperty // Generate/"g_table_index"
+var C_Generate_sign_or *ClaireProperty // Generate/"sign_or"
+var C_Generate_unfold_args *ClaireProperty // Generate/"unfold_args"
+var C_Generate_unfold_arg *ClaireProperty // Generate/"unfold_arg"
+var C_Generate_unfold_use *ClaireProperty // Generate/"unfold_use"
+var C_Generate_eid_require_ask *ClaireProperty // Generate/"eid_require?"
+var C_Generate_unfold_eid *ClaireProperty // Generate/"unfold_eid"
+var C_Generate_g_try *ClaireProperty // Generate/"g_try"
+var C_Generate_close_try *ClaireProperty // Generate/"close_try"
+var C_Generate_error_wrap *ClaireProperty // Generate/"error_wrap"
+var C_Generate_g_try_void *ClaireProperty // Generate/"g_try_void"
+var C_Generate_do_statement *ClaireProperty // Generate/"do_statement"
+var C_Generate_eid_expression *ClaireProperty // Generate/"eid_expression"
+var C_Generate_stat_exp *ClaireProperty // Generate/"stat_exp"
+var C_Generate_let_eid_ask *ClaireProperty // Generate/"let_eid?"
+var C_Generate_g_eid_stat *ClaireProperty // Generate/"g_eid_stat"
+var C_Generate_bag_class *ClaireProperty // Generate/"bag_class"
+var C_Generate_iteration_statement *ClaireProperty // Generate/"iteration_statement"
+var C_Generate_inline_stat *ClaireProperty // Generate/"inline_stat"
+var C_Generate_update_statement *ClaireProperty // Generate/"update_statement"
+var C_Generate_need_shortcut *ClaireProperty // Generate/"need_shortcut"
+var C_Generate_external_I *ClaireProperty // Generate/"external!"
+var C_Generate_string2module *ClaireProperty // Generate/"string2module"
+var C_Generate_printHelp *ClaireProperty // Generate/"printHelp"
+var C_Generate_gen_module *ClaireProperty // Generate/"gen_module"
+var C_Generate_declare *ClaireProperty // Generate/"declare"
+var C_Generate_var_declaration *ClaireProperty // Generate/"var_declaration"
+var C_Generate_g_statement *ClaireProperty // Generate/"g_statement"
+var C_Generate_simple_func_ask *ClaireProperty // Generate/"simple_func?"
+var C_Generate_get_made *ClaireProperty // Generate/"get_made"
+var C_Generate_fileName *ClaireProperty // Generate/"fileName"
+var C_Generate_make_lambda_function *ClaireProperty // Generate/"make_lambda_function"
+var C_Generate_generate_function_start *ClaireProperty // Generate/"generate_function_start"
+var C_Generate_eid_body *ClaireProperty // Generate/"eid_body"
+var C_Generate_generate_eid_dual *ClaireProperty // Generate/"generate_eid_dual"
+var C_Generate_goMethod_ask *ClaireProperty // Generate/"goMethod?"
+var C_Generate_goVariable *ClaireProperty // Generate/"goVariable"
+var C_Generate_goMethod *ClaireProperty // Generate/"goMethod"
+var C_Generate_goVariables *ClaireProperty // Generate/"goVariables"
+var C_Generate_goFunction *ClaireProperty // Generate/"goFunction"
+var C_Generate_check_range *ClaireProperty // Generate/"check_range"
+var C_Generate_simple_body_ask *ClaireProperty // Generate/"simple_body?"
+var C_Generate_need_debug_ask *ClaireProperty // Generate/"need_debug?"
+var C_Generate_procedure_body *ClaireProperty // Generate/"procedure_body"
+var C_Generate_function_body *ClaireProperty // Generate/"function_body"
+var C_Generate_generate_eid_function *ClaireProperty // Generate/"generate_eid_function"
+var C_Generate_generate_eval_function *ClaireProperty // Generate/"generate_eval_function"
+var C_Generate_debug_intro *ClaireProperty // Generate/"debug_intro"
+var C_Generate_return_result *ClaireProperty // Generate/"return_result"
+var C_Generate_go_signature *ClaireProperty // Generate/"go_signature"
+var C_Generate_goEIDFunctionName *ClaireProperty // Generate/"goEIDFunctionName"
+var C_Generate_goEIDVariables *ClaireProperty // Generate/"goEIDVariables"
+var C_Generate_print_EID_call *ClaireProperty // Generate/"print_EID_call"
+var C_Generate_external_EID_arg *ClaireProperty // Generate/"external_EID_arg"
+var C_Generate_eid_prefix *ClaireProperty // Generate/"eid_prefix"
+var C_Generate_eid_post *ClaireProperty // Generate/"eid_post"
+var C_Generate_to_eid *ClaireProperty // Generate/"to_eid"
+var C_Generate_build_Variable *ClaireProperty // Generate/"build_Variable"
+var C_Generate_import_princ *ClaireProperty // Generate/"import_princ"
+var C_Generate_genvar *ClaireProperty // Generate/"genvar"
+var C_Generate_c_string *ClaireProperty // Generate/"c_string"
+var C_Generate_cap_ident *ClaireProperty // Generate/"cap_ident"
+var C_Generate_capitalized_ident *ClaireProperty // Generate/"capitalized_ident"
+var C_Generate_capitalize *ClaireProperty // Generate/"capitalize"
+var C_Generate_symbol_ident *ClaireProperty // Generate/"symbol_ident"
+var C_Generate_globalVar *ClaireProperty // Generate/"globalVar"
+var C_Generate_type_sort *ClaireProperty // Generate/"type_sort"
+var C_Generate_g_sort *ClaireProperty // Generate/"g_sort"
+var C_Generate_valuesSlot *ClaireProperty // Generate/"valuesSlot"
+var C_imported_function_ask *ClaireProperty // claire/"imported_function?"
+var C_Generate_open_comparators *ClaireProperty // Generate/"open_comparators"
+var C_Generate_open_operators *ClaireProperty // Generate/"open_operators"
+var C_Generate_div_operators *ClaireProperty // Generate/"div_operators"
+var C_Generate_extension *ClaireProperty // Generate/"extension"
+var C_Generate_interfaces *ClaireProperty // Generate/"interfaces"
+var C_Generate_current *ClaireProperty // Generate/"current"
+var C_Generate_bad_names *ClaireProperty // Generate/"bad_names"
+var C_Generate_good_names *ClaireProperty // Generate/"good_names"
+var C_Generate_kernel_methods *ClaireProperty // Generate/"kernel_methods"
+var C_Generate_varsym *ClaireProperty // Generate/"varsym"
+var C_Generate_indent_c *ClaireProperty // Generate/"indent_c"
+var C_Generate_breakline *ClaireProperty // Generate/"breakline"
+var C_Generate_new_block *ClaireProperty // Generate/"new_block"
+var C_Generate_let_block *ClaireProperty // Generate/"let_block"
+var C_Generate_close_block *ClaireProperty // Generate/"close_block"
+var C_Generate_finish_block *ClaireProperty // Generate/"finish_block"
+var C_g_test *ClaireProperty // claire/"g_test"
+var C_Generate_g_func *ClaireProperty // Generate/"g_func"
+var C_Generate_g_expression *ClaireProperty // Generate/"g_expression"
+var C_Generate_statement *ClaireProperty // Generate/"statement"
+var C_Generate_gtop *ClaireProperty // Generate/"gtop"
+var C_Generate_make_go_function *ClaireProperty // Generate/"make_go_function"
+var C_compile *ClaireProperty // claire/"compile"
+var C_Generate_parents *ClaireProperty // Generate/"parents"
+var C_Generate_gen_files *ClaireProperty // Generate/"gen_files"
+var C_Generate_gen_mod_file *ClaireProperty // Generate/"gen_mod_file"
+var C_Generate_gen_file *ClaireProperty // Generate/"gen_file"
+var C_Generate_start_file *ClaireProperty // Generate/"start_file"
+var C_Generate_gen_classes *ClaireProperty // Generate/"gen_classes"
+var C_Generate_gen_objects *ClaireProperty // Generate/"gen_objects"
+var C_Generate_gen_meta_load *ClaireProperty // Generate/"gen_meta_load"
+var C_Generate_namespace_I *ClaireProperty // Generate/"namespace!"
+var C_Generate_import_declaration *ClaireProperty // Generate/"import_declaration"
+var C_Generate_dumb_import *ClaireProperty // Generate/"dumb_import"
+var C_Generate_needed_modules *ClaireProperty // Generate/"needed_modules"
+var C_Generate_cap_short *ClaireProperty // Generate/"cap_short"
+var C_Generate_representative *ClaireProperty // Generate/"representative"
+var C_Generate_clean_duplicates *ClaireProperty // Generate/"clean_duplicates"
+var C_Generate_gen_class_def *ClaireProperty // Generate/"gen_class_def"
+var C_Generate_gen_cast_function *ClaireProperty // Generate/"gen_cast_function"
+var C_Generate_construct_class_ask *ClaireProperty // Generate/"construct_class?"
+var C_Generate_gen_construct *ClaireProperty // Generate/"gen_construct"
+var C_Generate_rootSlot *ClaireProperty // Generate/"rootSlot"
+var C_Generate_go_class *ClaireProperty // Generate/"go_class"
+var C_Generate_interface_I *ClaireProperty // Generate/"interface!"
+var C_Generate_cast_class *ClaireProperty // Generate/"cast_class"
+var C_Generate_add_underscore *ClaireProperty // Generate/"add_underscore"
+var C_Generate_class_ident *ClaireProperty // Generate/"class_ident"
+var C_Generate_cast_prefix *ClaireProperty // Generate/"cast_prefix"
+var C_Generate_cast_post *ClaireProperty // Generate/"cast_post"
+var C_Generate_go_var *ClaireProperty // Generate/"go_var"
+var C_Generate_getRange *ClaireProperty // Generate/"getRange"
+var C_Generate_thing_ident *ClaireProperty // Generate/"thing_ident"
+var C_Generate_complex_main *ClaireProperty // Generate/"complex_main"
+var C_system_file *ClaireProperty // claire/"system_file"
+var C_Generate_compile_dir *ClaireProperty // Generate/"compile_dir"
+var C_Generate_compile_exe *ClaireProperty // Generate/"compile_exe"
+var C_Generate_system_imports *ClaireProperty // Generate/"system_imports"
+var C_Generate_load_function *ClaireProperty // Generate/"load_function"
+var C_Generate_main_function *ClaireProperty // Generate/"main_function"
+var C_at_index *ClaireProperty // claire/"at_index"
+var C_Generate_g_expected *ClaireProperty // Generate/"g_expected"
 var It *ClaireModule
 
 // definition of the meta-model for module Generate 
 func MetaLoad() { 
   
   It = MakeModule("Generate",Optimize.C_Compile)
-  It.Comment = MakeString("Compiled on Sunday 03-13-2022 07:28:45(v4.0.04), lines:3550, warnings:2,safety:5")
+  It.Comment = MakeString("Compiled on Monday 06-06-2022 08:16:34(v4.0.06), lines:3557, warnings:1,safety:5")
   ClEnv.Module_I = It
   
   // definition of the properties
+  C_Generate_arg_match = MakeProperty("arg_match",1,It)
+  C_dMethod_ask = MakeProperty("dMethod?",1,C_claire)
+  C_Generate_at = MakeProperty("at",1,It)
+  C_Generate_getFunctionName = MakeProperty("getFunctionName",1,It)
+  C_Generate_preCore_ask = MakeProperty("preCore?",1,It)
+  C_Generate_goEIDFunction = MakeProperty("goEIDFunction",1,It)
+  C_Generate_goEvalFunction = MakeProperty("goEvalFunction",1,It)
+  C_Generate_retreive_method = MakeProperty("retreive_method",1,It)
+  C_Generate_retreive_list = MakeProperty("retreive_list",1,It)
+  C_Generate_to_cl = MakeProperty("to_cl",1,It)
+  C_Generate_from_eid = MakeProperty("from_eid",1,It)
+  C_Generate_integer_prefix = MakeProperty("integer_prefix",1,It)
+  C_Generate_float_prefix = MakeProperty("float_prefix",1,It)
+  C_Generate_char_prefix = MakeProperty("char_prefix",1,It)
+  C_Generate_string_prefix = MakeProperty("string_prefix",1,It)
+  C_Generate_string_post = MakeProperty("string_post",1,It)
+  C_Generate_native_post = MakeProperty("native_post",1,It)
+  C_Generate_object_prefix = MakeProperty("object_prefix",1,It)
+  C_Generate_object_post = MakeProperty("object_post",1,It)
+  C_Generate_equal_exp = MakeProperty("equal_exp",1,It)
+  C_Generate_sign_equal = MakeProperty("sign_equal",1,It)
+  C_Generate_char_exp_ask = MakeProperty("char_exp?",1,It)
+  C_Generate_c_member = MakeProperty("c_member",1,It)
+  C_Generate_bag_expression = MakeProperty("bag_expression",1,It)
+  C_Generate_args_list = MakeProperty("args_list",1,It)
+  C_Generate_constant_ask = MakeProperty("constant?",1,It)
+  C_Generate_go_range = MakeProperty("go_range",1,It)
+  C_Generate_full_signature = MakeProperty("full_signature",1,It)
+  C_Generate_signature_I = MakeProperty("signature!",1,It)
+  C_Generate_g_member = MakeProperty("g_member",1,It)
+  C_Generate_check_var = MakeProperty("check_var",1,It)
+  C_Generate_use_variable = MakeProperty("use_variable",1,It)
+  C_Generate_g_clean = MakeProperty("g_clean",1,It)
+  C_Generate_inline_exp = MakeProperty("inline_exp",1,It)
+  C_Generate_bounded_expression = MakeProperty("bounded_expression",1,It)
+  C_Generate_eid_provide_ask = MakeProperty("eid_provide?",1,It)
+  C_Generate_print_external_call = MakeProperty("print_external_call",1,It)
+  C_Generate_belong_exp = MakeProperty("belong_exp",1,It)
+  C_Generate_external_casted_arg = MakeProperty("external_casted_arg",1,It)
+  C_Generate_g_table_index = MakeProperty("g_table_index",1,It)
+  C_Generate_sign_or = MakeProperty("sign_or",1,It)
+  C_Generate_unfold_args = MakeProperty("unfold_args",1,It)
+  C_Generate_unfold_arg = MakeProperty("unfold_arg",1,It)
+  C_Generate_unfold_use = MakeProperty("unfold_use",1,It)
+  C_Generate_eid_require_ask = MakeProperty("eid_require?",1,It)
+  C_Generate_unfold_eid = MakeProperty("unfold_eid",1,It)
+  C_Generate_g_try = MakeProperty("g_try",1,It)
+  C_Generate_close_try = MakeProperty("close_try",1,It)
+  C_Generate_error_wrap = MakeProperty("error_wrap",1,It)
+  C_Generate_g_try_void = MakeProperty("g_try_void",1,It)
+  C_Generate_do_statement = MakeProperty("do_statement",1,It)
+  C_Generate_eid_expression = MakeProperty("eid_expression",1,It)
+  C_Generate_stat_exp = MakeProperty("stat_exp",1,It)
+  C_Generate_let_eid_ask = MakeProperty("let_eid?",1,It)
+  C_Generate_g_eid_stat = MakeProperty("g_eid_stat",1,It)
+  C_Generate_bag_class = MakeProperty("bag_class",1,It)
+  C_Generate_iteration_statement = MakeProperty("iteration_statement",1,It)
+  C_Generate_inline_stat = MakeProperty("inline_stat",1,It)
+  C_Generate_update_statement = MakeProperty("update_statement",1,It)
+  C_Generate_need_shortcut = MakeProperty("need_shortcut",1,It)
+  C_Generate_external_I = MakeProperty("external!",1,It)
+  C_Generate_string2module = MakeProperty("string2module",1,It)
+  C_Generate_printHelp = MakeProperty("printHelp",1,It)
+  C_Generate_gen_module = MakeProperty("gen_module",1,It)
+  C_Generate_declare = MakeProperty("declare",1,It)
+  C_Generate_var_declaration = MakeProperty("var_declaration",1,It)
+  C_Generate_g_statement = MakeProperty("g_statement",1,It)
+  C_Generate_simple_func_ask = MakeProperty("simple_func?",1,It)
+  C_Generate_get_made = MakeProperty("get_made",1,It)
+  C_Generate_fileName = MakeProperty("fileName",1,It)
+  C_Generate_make_lambda_function = MakeProperty("make_lambda_function",1,It)
+  C_Generate_generate_function_start = MakeProperty("generate_function_start",1,It)
+  C_Generate_eid_body = MakeProperty("eid_body",1,It)
+  C_Generate_generate_eid_dual = MakeProperty("generate_eid_dual",1,It)
+  C_Generate_goMethod_ask = MakeProperty("goMethod?",1,It)
+  C_Generate_goVariable = MakeProperty("goVariable",1,It)
+  C_Generate_goMethod = MakeProperty("goMethod",1,It)
+  C_Generate_goVariables = MakeProperty("goVariables",1,It)
+  C_Generate_goFunction = MakeProperty("goFunction",1,It)
+  C_Generate_check_range = MakeProperty("check_range",1,It)
+  C_Generate_simple_body_ask = MakeProperty("simple_body?",1,It)
+  C_Generate_need_debug_ask = MakeProperty("need_debug?",1,It)
+  C_Generate_procedure_body = MakeProperty("procedure_body",1,It)
+  C_Generate_function_body = MakeProperty("function_body",1,It)
+  C_Generate_generate_eid_function = MakeProperty("generate_eid_function",1,It)
+  C_Generate_generate_eval_function = MakeProperty("generate_eval_function",1,It)
+  C_Generate_debug_intro = MakeProperty("debug_intro",1,It)
+  C_Generate_return_result = MakeProperty("return_result",1,It)
+  C_Generate_go_signature = MakeProperty("go_signature",1,It)
+  C_Generate_goEIDFunctionName = MakeProperty("goEIDFunctionName",1,It)
+  C_Generate_goEIDVariables = MakeProperty("goEIDVariables",1,It)
+  C_Generate_print_EID_call = MakeProperty("print_EID_call",1,It)
+  C_Generate_external_EID_arg = MakeProperty("external_EID_arg",1,It)
+  C_Generate_eid_prefix = MakeProperty("eid_prefix",1,It)
+  C_Generate_eid_post = MakeProperty("eid_post",1,It)
+  C_Generate_to_eid = MakeProperty("to_eid",1,It)
+  C_Generate_build_Variable = MakeProperty("build_Variable",1,It)
+  C_Generate_import_princ = MakeProperty("import_princ",1,It)
+  C_Generate_genvar = MakeProperty("genvar",1,It)
+  C_Generate_c_string = MakeProperty("c_string",1,It)
+  C_Generate_cap_ident = MakeProperty("cap_ident",1,It)
+  C_Generate_capitalized_ident = MakeProperty("capitalized_ident",1,It)
+  C_Generate_capitalize = MakeProperty("capitalize",1,It)
+  C_Generate_symbol_ident = MakeProperty("symbol_ident",1,It)
+  C_Generate_globalVar = MakeProperty("globalVar",1,It)
+  C_Generate_type_sort = MakeProperty("type_sort",1,It)
+  C_Generate_g_sort = MakeProperty("g_sort",1,It)
+  C_Generate_valuesSlot = MakeProperty("valuesSlot",1,It)
+  C_imported_function_ask = MakeProperty("imported_function?",1,C_claire)
   C_Generate_open_comparators = MakeProperty("open_comparators",2,It)
   C_Generate_open_operators = MakeProperty("open_operators",2,It)
   C_Generate_div_operators = MakeProperty("div_operators",2,It)
@@ -336,116 +446,6 @@ func MetaLoad() {
   C_Generate_go_var = MakeProperty("go_var",1,It)
   C_Generate_getRange = MakeProperty("getRange",1,It)
   C_Generate_thing_ident = MakeProperty("thing_ident",1,It)
-  C_Generate_gen_module = MakeProperty("gen_module",1,It)
-  C_Generate_declare = MakeProperty("declare",1,It)
-  C_Generate_var_declaration = MakeProperty("var_declaration",1,It)
-  C_Generate_g_statement = MakeProperty("g_statement",1,It)
-  C_Generate_simple_func_ask = MakeProperty("simple_func?",1,It)
-  C_Generate_get_made = MakeProperty("get_made",1,It)
-  C_Generate_fileName = MakeProperty("fileName",1,It)
-  C_Generate_make_lambda_function = MakeProperty("make_lambda_function",1,It)
-  C_Generate_generate_function_start = MakeProperty("generate_function_start",1,It)
-  C_Generate_eid_body = MakeProperty("eid_body",1,It)
-  C_Generate_generate_eid_dual = MakeProperty("generate_eid_dual",1,It)
-  C_Generate_goMethod_ask = MakeProperty("goMethod?",1,It)
-  C_Generate_goVariable = MakeProperty("goVariable",1,It)
-  C_Generate_goMethod = MakeProperty("goMethod",1,It)
-  C_Generate_goVariables = MakeProperty("goVariables",1,It)
-  C_Generate_goFunction = MakeProperty("goFunction",1,It)
-  C_Generate_check_range = MakeProperty("check_range",1,It)
-  C_Generate_simple_body_ask = MakeProperty("simple_body?",1,It)
-  C_Generate_need_debug_ask = MakeProperty("need_debug?",1,It)
-  C_Generate_procedure_body = MakeProperty("procedure_body",1,It)
-  C_Generate_function_body = MakeProperty("function_body",1,It)
-  C_Generate_generate_eid_function = MakeProperty("generate_eid_function",1,It)
-  C_Generate_generate_eval_function = MakeProperty("generate_eval_function",1,It)
-  C_Generate_debug_intro = MakeProperty("debug_intro",1,It)
-  C_Generate_return_result = MakeProperty("return_result",1,It)
-  C_Generate_go_signature = MakeProperty("go_signature",1,It)
-  C_Generate_goEIDFunctionName = MakeProperty("goEIDFunctionName",1,It)
-  C_Generate_goEIDVariables = MakeProperty("goEIDVariables",1,It)
-  C_Generate_print_EID_call = MakeProperty("print_EID_call",1,It)
-  C_Generate_external_EID_arg = MakeProperty("external_EID_arg",1,It)
-  C_Generate_eid_prefix = MakeProperty("eid_prefix",1,It)
-  C_Generate_eid_post = MakeProperty("eid_post",1,It)
-  C_Generate_to_eid = MakeProperty("to_eid",1,It)
-  C_Generate_build_Variable = MakeProperty("build_Variable",1,It)
-  C_Generate_import_princ = MakeProperty("import_princ",1,It)
-  C_Generate_genvar = MakeProperty("genvar",1,It)
-  C_Generate_c_string = MakeProperty("c_string",1,It)
-  C_Generate_cap_ident = MakeProperty("cap_ident",1,It)
-  C_Generate_capitalized_ident = MakeProperty("capitalized_ident",1,It)
-  C_Generate_capitalize = MakeProperty("capitalize",1,It)
-  C_Generate_symbol_ident = MakeProperty("symbol_ident",1,It)
-  C_Generate_globalVar = MakeProperty("globalVar",1,It)
-  C_Generate_type_sort = MakeProperty("type_sort",1,It)
-  C_Generate_g_sort = MakeProperty("g_sort",1,It)
-  C_Generate_valuesSlot = MakeProperty("valuesSlot",1,It)
-  C_imported_function_ask = MakeProperty("imported_function?",1,C_claire)
-  C_Generate_arg_match = MakeProperty("arg_match",1,It)
-  C_dMethod_ask = MakeProperty("dMethod?",1,C_claire)
-  C_Generate_at = MakeProperty("at",1,It)
-  C_Generate_getFunctionName = MakeProperty("getFunctionName",1,It)
-  C_Generate_preCore_ask = MakeProperty("preCore?",1,It)
-  C_Generate_goEIDFunction = MakeProperty("goEIDFunction",1,It)
-  C_Generate_goEvalFunction = MakeProperty("goEvalFunction",1,It)
-  C_Generate_retreive_method = MakeProperty("retreive_method",1,It)
-  C_Generate_retreive_list = MakeProperty("retreive_list",1,It)
-  C_Generate_to_cl = MakeProperty("to_cl",1,It)
-  C_Generate_from_eid = MakeProperty("from_eid",1,It)
-  C_Generate_integer_prefix = MakeProperty("integer_prefix",1,It)
-  C_Generate_float_prefix = MakeProperty("float_prefix",1,It)
-  C_Generate_char_prefix = MakeProperty("char_prefix",1,It)
-  C_Generate_string_prefix = MakeProperty("string_prefix",1,It)
-  C_Generate_string_post = MakeProperty("string_post",1,It)
-  C_Generate_native_post = MakeProperty("native_post",1,It)
-  C_Generate_object_prefix = MakeProperty("object_prefix",1,It)
-  C_Generate_object_post = MakeProperty("object_post",1,It)
-  C_Generate_equal_exp = MakeProperty("equal_exp",1,It)
-  C_Generate_sign_equal = MakeProperty("sign_equal",1,It)
-  C_Generate_char_exp_ask = MakeProperty("char_exp?",1,It)
-  C_Generate_c_member = MakeProperty("c_member",1,It)
-  C_Generate_bag_expression = MakeProperty("bag_expression",1,It)
-  C_Generate_args_list = MakeProperty("args_list",1,It)
-  C_Generate_constant_ask = MakeProperty("constant?",1,It)
-  C_Generate_go_range = MakeProperty("go_range",1,It)
-  C_Generate_full_signature = MakeProperty("full_signature",1,It)
-  C_Generate_signature_I = MakeProperty("signature!",1,It)
-  C_Generate_g_member = MakeProperty("g_member",1,It)
-  C_Generate_cast_Values = MakeProperty("cast_Values",1,It)
-  C_Generate_check_var = MakeProperty("check_var",1,It)
-  C_Generate_use_variable = MakeProperty("use_variable",1,It)
-  C_Generate_g_clean = MakeProperty("g_clean",1,It)
-  C_Generate_inline_exp = MakeProperty("inline_exp",1,It)
-  C_Generate_bounded_expression = MakeProperty("bounded_expression",1,It)
-  C_Generate_eid_provide_ask = MakeProperty("eid_provide?",1,It)
-  C_Generate_print_external_call = MakeProperty("print_external_call",1,It)
-  C_Generate_belong_exp = MakeProperty("belong_exp",1,It)
-  C_Generate_external_casted_arg = MakeProperty("external_casted_arg",1,It)
-  C_Generate_g_table_index = MakeProperty("g_table_index",1,It)
-  C_Generate_sign_or = MakeProperty("sign_or",1,It)
-  C_Generate_unfold_args = MakeProperty("unfold_args",1,It)
-  C_Generate_unfold_arg = MakeProperty("unfold_arg",1,It)
-  C_Generate_unfold_use = MakeProperty("unfold_use",1,It)
-  C_Generate_eid_require_ask = MakeProperty("eid_require?",1,It)
-  C_Generate_unfold_eid = MakeProperty("unfold_eid",1,It)
-  C_Generate_g_try = MakeProperty("g_try",1,It)
-  C_Generate_close_try = MakeProperty("close_try",1,It)
-  C_Generate_error_wrap = MakeProperty("error_wrap",1,It)
-  C_Generate_g_try_void = MakeProperty("g_try_void",1,It)
-  C_Generate_do_statement = MakeProperty("do_statement",1,It)
-  C_Generate_eid_expression = MakeProperty("eid_expression",1,It)
-  C_Generate_stat_exp = MakeProperty("stat_exp",1,It)
-  C_Generate_let_eid_ask = MakeProperty("let_eid?",1,It)
-  C_Generate_g_eid_stat = MakeProperty("g_eid_stat",1,It)
-  C_Generate_bag_class = MakeProperty("bag_class",1,It)
-  C_Generate_iteration_statement = MakeProperty("iteration_statement",1,It)
-  C_Generate_inline_stat = MakeProperty("inline_stat",1,It)
-  C_Generate_update_statement = MakeProperty("update_statement",1,It)
-  C_Generate_need_shortcut = MakeProperty("need_shortcut",1,It)
-  C_Generate_external_I = MakeProperty("external!",1,It)
-  C_Generate_string2module = MakeProperty("string2module",1,It)
-  C_Generate_printHelp = MakeProperty("printHelp",1,It)
   C_Generate_complex_main = MakeProperty("complex_main",1,It)
   C_system_file = MakeProperty("system_file",1,C_claire)
   C_Generate_compile_dir = MakeProperty("compile_dir",1,It)
@@ -453,11 +453,13 @@ func MetaLoad() {
   C_Generate_system_imports = MakeProperty("system_imports",1,It)
   C_Generate_load_function = MakeProperty("load_function",1,It)
   C_Generate_main_function = MakeProperty("main_function",1,It)
+  C_at_index = MakeProperty("at_index",1,C_claire)
+  C_Generate_g_expected = MakeProperty("g_expected",1,It)
   
   // instructions from module sources
   { 
-    var expr EID 
-    { var _CL_obj *Core.GlobalVariable  
+    var expr EID
+    { var _CL_obj *Core.GlobalVariable
       C_Generate__star_ask_interval_star = Core.ToGlobalVariable(new(Core.GlobalVariable).IsNamed(Core.C_global_variable,MakeSymbol("*?_interval*",It)))
       
       _CL_obj = C_Generate__star_ask_interval_star
@@ -468,8 +470,8 @@ func MetaLoad() {
     ErrorCheck(expr)} 
   
   { 
-    var expr EID 
-    { var _CL_obj *Core.GlobalVariable  
+    var expr EID
+    { var _CL_obj *Core.GlobalVariable
       C_Generate__star_dash_dash_integer_star = Core.ToGlobalVariable(new(Core.GlobalVariable).IsNamed(Core.C_global_variable,MakeSymbol("*--_integer*",It)))
       
       _CL_obj = C_Generate__star_dash_dash_integer_star
@@ -480,8 +482,8 @@ func MetaLoad() {
     ErrorCheck(expr)} 
   
   { 
-    var expr EID 
-    { var _CL_obj *Core.GlobalVariable  
+    var expr EID
+    { var _CL_obj *Core.GlobalVariable
       C_Generate__star_plus_integer_star = Core.ToGlobalVariable(new(Core.GlobalVariable).IsNamed(Core.C_global_variable,MakeSymbol("*+_integer*",It)))
       
       _CL_obj = C_Generate__star_plus_integer_star
@@ -492,8 +494,8 @@ func MetaLoad() {
     ErrorCheck(expr)} 
   
   { 
-    var expr EID 
-    { var _CL_obj *Core.GlobalVariable  
+    var expr EID
+    { var _CL_obj *Core.GlobalVariable
       C_Generate__starnth_integer_star = Core.ToGlobalVariable(new(Core.GlobalVariable).IsNamed(Core.C_global_variable,MakeSymbol("*nth_integer*",It)))
       
       _CL_obj = C_Generate__starnth_integer_star
@@ -504,8 +506,8 @@ func MetaLoad() {
     ErrorCheck(expr)} 
   
   { 
-    var expr EID 
-    { var _CL_obj *Core.GlobalVariable  
+    var expr EID
+    { var _CL_obj *Core.GlobalVariable
       C_Generate__starnth_list_star = Core.ToGlobalVariable(new(Core.GlobalVariable).IsNamed(Core.C_global_variable,MakeSymbol("*nth_list*",It)))
       
       _CL_obj = C_Generate__starnth_list_star
@@ -516,8 +518,8 @@ func MetaLoad() {
     ErrorCheck(expr)} 
   
   { 
-    var expr EID 
-    { var _CL_obj *Core.GlobalVariable  
+    var expr EID
+    { var _CL_obj *Core.GlobalVariable
       C_Generate__starnth_tuple_star = Core.ToGlobalVariable(new(Core.GlobalVariable).IsNamed(Core.C_global_variable,MakeSymbol("*nth_tuple*",It)))
       
       _CL_obj = C_Generate__starnth_tuple_star
@@ -528,8 +530,8 @@ func MetaLoad() {
     ErrorCheck(expr)} 
   
   { 
-    var expr EID 
-    { var _CL_obj *Core.GlobalVariable  
+    var expr EID
+    { var _CL_obj *Core.GlobalVariable
       C_Generate__starnth_1_list_star = Core.ToGlobalVariable(new(Core.GlobalVariable).IsNamed(Core.C_global_variable,MakeSymbol("*nth_1_list*",It)))
       
       _CL_obj = C_Generate__starnth_1_list_star
@@ -540,8 +542,8 @@ func MetaLoad() {
     ErrorCheck(expr)} 
   
   { 
-    var expr EID 
-    { var _CL_obj *Core.GlobalVariable  
+    var expr EID
+    { var _CL_obj *Core.GlobalVariable
       C_Generate__starnth_1_tuple_star = Core.ToGlobalVariable(new(Core.GlobalVariable).IsNamed(Core.C_global_variable,MakeSymbol("*nth_1_tuple*",It)))
       
       _CL_obj = C_Generate__starnth_1_tuple_star
@@ -552,8 +554,8 @@ func MetaLoad() {
     ErrorCheck(expr)} 
   
   { 
-    var expr EID 
-    { var _CL_obj *Core.GlobalVariable  
+    var expr EID
+    { var _CL_obj *Core.GlobalVariable
       C_Generate__starnth_1_array_star = Core.ToGlobalVariable(new(Core.GlobalVariable).IsNamed(Core.C_global_variable,MakeSymbol("*nth_1_array*",It)))
       
       _CL_obj = C_Generate__starnth_1_array_star
@@ -564,8 +566,8 @@ func MetaLoad() {
     ErrorCheck(expr)} 
   
   { 
-    var expr EID 
-    { var _CL_obj *Core.GlobalVariable  
+    var expr EID
+    { var _CL_obj *Core.GlobalVariable
       C_Generate__starnth_string_star = Core.ToGlobalVariable(new(Core.GlobalVariable).IsNamed(Core.C_global_variable,MakeSymbol("*nth_string*",It)))
       
       _CL_obj = C_Generate__starnth_string_star
@@ -576,8 +578,8 @@ func MetaLoad() {
     ErrorCheck(expr)} 
   
   { 
-    var expr EID 
-    { var _CL_obj *Core.GlobalVariable  
+    var expr EID
+    { var _CL_obj *Core.GlobalVariable
       C_Generate__starnth_1_string_star = Core.ToGlobalVariable(new(Core.GlobalVariable).IsNamed(Core.C_global_variable,MakeSymbol("*nth_1_string*",It)))
       
       _CL_obj = C_Generate__starnth_1_string_star
@@ -588,8 +590,8 @@ func MetaLoad() {
     ErrorCheck(expr)} 
   
   { 
-    var expr EID 
-    { var _CL_obj *Core.GlobalVariable  
+    var expr EID
+    { var _CL_obj *Core.GlobalVariable
       C_Generate__starnth_equal_list_star = Core.ToGlobalVariable(new(Core.GlobalVariable).IsNamed(Core.C_global_variable,MakeSymbol("*nth=_list*",It)))
       
       _CL_obj = C_Generate__starnth_equal_list_star
@@ -600,8 +602,8 @@ func MetaLoad() {
     ErrorCheck(expr)} 
   
   { 
-    var expr EID 
-    { var _CL_obj *Core.GlobalVariable  
+    var expr EID
+    { var _CL_obj *Core.GlobalVariable
       C_Generate__starnth_put_list_star = Core.ToGlobalVariable(new(Core.GlobalVariable).IsNamed(Core.C_global_variable,MakeSymbol("*nth_put_list*",It)))
       
       _CL_obj = C_Generate__starnth_put_list_star
@@ -612,8 +614,8 @@ func MetaLoad() {
     ErrorCheck(expr)} 
   
   { 
-    var expr EID 
-    { var _CL_obj *Core.GlobalVariable  
+    var expr EID
+    { var _CL_obj *Core.GlobalVariable
       C_Generate__starmake_list_star = Core.ToGlobalVariable(new(Core.GlobalVariable).IsNamed(Core.C_global_variable,MakeSymbol("*make_list*",It)))
       
       _CL_obj = C_Generate__starmake_list_star
@@ -624,8 +626,8 @@ func MetaLoad() {
     ErrorCheck(expr)} 
   
   { 
-    var expr EID 
-    { var _CL_obj *Core.GlobalVariable  
+    var expr EID
+    { var _CL_obj *Core.GlobalVariable
       C_Generate__starnot_star = Core.ToGlobalVariable(new(Core.GlobalVariable).IsNamed(Core.C_global_variable,MakeSymbol("*not*",It)))
       
       _CL_obj = C_Generate__starnot_star
@@ -636,8 +638,8 @@ func MetaLoad() {
     ErrorCheck(expr)} 
   
   { 
-    var expr EID 
-    { var _CL_obj *Core.GlobalVariable  
+    var expr EID
+    { var _CL_obj *Core.GlobalVariable
       C_Generate__starknown_star = Core.ToGlobalVariable(new(Core.GlobalVariable).IsNamed(Core.C_global_variable,MakeSymbol("*known*",It)))
       
       _CL_obj = C_Generate__starknown_star
@@ -648,8 +650,8 @@ func MetaLoad() {
     ErrorCheck(expr)} 
   
   { 
-    var expr EID 
-    { var _CL_obj *Core.GlobalVariable  
+    var expr EID
+    { var _CL_obj *Core.GlobalVariable
       C_Generate__starunknown_star = Core.ToGlobalVariable(new(Core.GlobalVariable).IsNamed(Core.C_global_variable,MakeSymbol("*unknown*",It)))
       
       _CL_obj = C_Generate__starunknown_star
@@ -660,8 +662,8 @@ func MetaLoad() {
     ErrorCheck(expr)} 
   
   { 
-    var expr EID 
-    { var _CL_obj *Core.GlobalVariable  
+    var expr EID
+    { var _CL_obj *Core.GlobalVariable
       C_Generate__starnot_equal_star = Core.ToGlobalVariable(new(Core.GlobalVariable).IsNamed(Core.C_global_variable,MakeSymbol("*not_equal*",It)))
       
       _CL_obj = C_Generate__starnot_equal_star
@@ -672,8 +674,8 @@ func MetaLoad() {
     ErrorCheck(expr)} 
   
   { 
-    var expr EID 
-    { var _CL_obj *Core.GlobalVariable  
+    var expr EID
+    { var _CL_obj *Core.GlobalVariable
       C_Generate__starequal_star = Core.ToGlobalVariable(new(Core.GlobalVariable).IsNamed(Core.C_global_variable,MakeSymbol("*equal*",It)))
       
       _CL_obj = C_Generate__starequal_star
@@ -684,8 +686,8 @@ func MetaLoad() {
     ErrorCheck(expr)} 
   
   { 
-    var expr EID 
-    { var _CL_obj *Core.GlobalVariable  
+    var expr EID
+    { var _CL_obj *Core.GlobalVariable
       C_Generate__starbelong_star = Core.ToGlobalVariable(new(Core.GlobalVariable).IsNamed(Core.C_global_variable,MakeSymbol("*belong*",It)))
       
       _CL_obj = C_Generate__starbelong_star
@@ -696,8 +698,8 @@ func MetaLoad() {
     ErrorCheck(expr)} 
   
   { 
-    var expr EID 
-    { var _CL_obj *Core.GlobalVariable  
+    var expr EID
+    { var _CL_obj *Core.GlobalVariable
       C_Generate__starcontain_list_star = Core.ToGlobalVariable(new(Core.GlobalVariable).IsNamed(Core.C_global_variable,MakeSymbol("*contain_list*",It)))
       
       _CL_obj = C_Generate__starcontain_list_star
@@ -708,8 +710,8 @@ func MetaLoad() {
     ErrorCheck(expr)} 
   
   { 
-    var expr EID 
-    { var _CL_obj *Core.GlobalVariable  
+    var expr EID
+    { var _CL_obj *Core.GlobalVariable
       C_Generate__starcontain_set_star = Core.ToGlobalVariable(new(Core.GlobalVariable).IsNamed(Core.C_global_variable,MakeSymbol("*contain_set*",It)))
       
       _CL_obj = C_Generate__starcontain_set_star
@@ -720,8 +722,8 @@ func MetaLoad() {
     ErrorCheck(expr)} 
   
   { 
-    var expr EID 
-    { var _CL_obj *Core.GlobalVariable  
+    var expr EID
+    { var _CL_obj *Core.GlobalVariable
       C_Generate__starlength_array_star = Core.ToGlobalVariable(new(Core.GlobalVariable).IsNamed(Core.C_global_variable,MakeSymbol("*length_array*",It)))
       
       _CL_obj = C_Generate__starlength_array_star
@@ -732,8 +734,8 @@ func MetaLoad() {
     ErrorCheck(expr)} 
   
   { 
-    var expr EID 
-    { var _CL_obj *Core.GlobalVariable  
+    var expr EID
+    { var _CL_obj *Core.GlobalVariable
       C_Generate__starlength_bag_star = Core.ToGlobalVariable(new(Core.GlobalVariable).IsNamed(Core.C_global_variable,MakeSymbol("*length_bag*",It)))
       
       _CL_obj = C_Generate__starlength_bag_star
@@ -744,8 +746,8 @@ func MetaLoad() {
     ErrorCheck(expr)} 
   
   { 
-    var expr EID 
-    { var _CL_obj *Core.GlobalVariable  
+    var expr EID
+    { var _CL_obj *Core.GlobalVariable
       C_Generate__starclose_exception_star = Core.ToGlobalVariable(new(Core.GlobalVariable).IsNamed(Core.C_global_variable,MakeSymbol("*close_exception*",It)))
       
       _CL_obj = C_Generate__starclose_exception_star
@@ -756,8 +758,8 @@ func MetaLoad() {
     ErrorCheck(expr)} 
   
   { 
-    var expr EID 
-    { var _CL_obj *Core.GlobalVariable  
+    var expr EID
+    { var _CL_obj *Core.GlobalVariable
       C_Generate__starnew_class1_star = Core.ToGlobalVariable(new(Core.GlobalVariable).IsNamed(Core.C_global_variable,MakeSymbol("*new_class1*",It)))
       
       _CL_obj = C_Generate__starnew_class1_star
@@ -768,8 +770,8 @@ func MetaLoad() {
     ErrorCheck(expr)} 
   
   { 
-    var expr EID 
-    { var _CL_obj *Core.GlobalVariable  
+    var expr EID
+    { var _CL_obj *Core.GlobalVariable
       C_Generate__starnew_class2_star = Core.ToGlobalVariable(new(Core.GlobalVariable).IsNamed(Core.C_global_variable,MakeSymbol("*new_class2*",It)))
       
       _CL_obj = C_Generate__starnew_class2_star
@@ -780,8 +782,8 @@ func MetaLoad() {
     ErrorCheck(expr)} 
   
   { 
-    var expr EID 
-    { var _CL_obj *Core.GlobalVariable  
+    var expr EID
+    { var _CL_obj *Core.GlobalVariable
       C_Generate__starslot_get_star = Core.ToGlobalVariable(new(Core.GlobalVariable).IsNamed(Core.C_global_variable,MakeSymbol("*slot_get*",It)))
       
       _CL_obj = C_Generate__starslot_get_star
@@ -792,8 +794,8 @@ func MetaLoad() {
     ErrorCheck(expr)} 
   
   { 
-    var expr EID 
-    { var _CL_obj *Core.GlobalVariable  
+    var expr EID
+    { var _CL_obj *Core.GlobalVariable
       C_Generate__starmap_star = Core.ToGlobalVariable(new(Core.GlobalVariable).IsNamed(Core.C_global_variable,MakeSymbol("*map*",It)))
       
       _CL_obj = C_Generate__starmap_star
@@ -804,8 +806,8 @@ func MetaLoad() {
     ErrorCheck(expr)} 
   
   { 
-    var expr EID 
-    { var _CL_obj *Core.GlobalVariable  
+    var expr EID
+    { var _CL_obj *Core.GlobalVariable
       C_Generate__starof_bag_star = Core.ToGlobalVariable(new(Core.GlobalVariable).IsNamed(Core.C_global_variable,MakeSymbol("*of_bag*",It)))
       
       _CL_obj = C_Generate__starof_bag_star
@@ -816,8 +818,8 @@ func MetaLoad() {
     ErrorCheck(expr)} 
   
   { 
-    var expr EID 
-    { var _CL_obj *Core.GlobalVariable  
+    var expr EID
+    { var _CL_obj *Core.GlobalVariable
       C_Generate__starof_array_star = Core.ToGlobalVariable(new(Core.GlobalVariable).IsNamed(Core.C_global_variable,MakeSymbol("*of_array*",It)))
       
       _CL_obj = C_Generate__starof_array_star
@@ -828,8 +830,8 @@ func MetaLoad() {
     ErrorCheck(expr)} 
   
   { 
-    var expr EID 
-    { var _CL_obj *Core.GlobalVariable  
+    var expr EID
+    { var _CL_obj *Core.GlobalVariable
       C_Generate__starcopy_list_star = Core.ToGlobalVariable(new(Core.GlobalVariable).IsNamed(Core.C_global_variable,MakeSymbol("*copy_list*",It)))
       
       _CL_obj = C_Generate__starcopy_list_star
@@ -840,8 +842,8 @@ func MetaLoad() {
     ErrorCheck(expr)} 
   
   { 
-    var expr EID 
-    { var _CL_obj *Core.GlobalVariable  
+    var expr EID
+    { var _CL_obj *Core.GlobalVariable
       C_Generate__starcopy_set_star = Core.ToGlobalVariable(new(Core.GlobalVariable).IsNamed(Core.C_global_variable,MakeSymbol("*copy_set*",It)))
       
       _CL_obj = C_Generate__starcopy_set_star
@@ -852,8 +854,8 @@ func MetaLoad() {
     ErrorCheck(expr)} 
   
   { 
-    var expr EID 
-    { var _CL_obj *Core.GlobalVariable  
+    var expr EID
+    { var _CL_obj *Core.GlobalVariable
       C_Generate__starempty_set_star = Core.ToGlobalVariable(new(Core.GlobalVariable).IsNamed(Core.C_global_variable,MakeSymbol("*empty_set*",It)))
       
       _CL_obj = C_Generate__starempty_set_star
@@ -864,8 +866,8 @@ func MetaLoad() {
     ErrorCheck(expr)} 
   
   { 
-    var expr EID 
-    { var _CL_obj *Core.GlobalVariable  
+    var expr EID
+    { var _CL_obj *Core.GlobalVariable
       C_Generate__starnth_put_array_star = Core.ToGlobalVariable(new(Core.GlobalVariable).IsNamed(Core.C_global_variable,MakeSymbol("*nth_put_array*",It)))
       
       _CL_obj = C_Generate__starnth_put_array_star
@@ -876,8 +878,8 @@ func MetaLoad() {
     ErrorCheck(expr)} 
   
   { 
-    var expr EID 
-    { var _CL_obj *Core.GlobalVariable  
+    var expr EID
+    { var _CL_obj *Core.GlobalVariable
       C_Generate__star_Zt_star = Core.ToGlobalVariable(new(Core.GlobalVariable).IsNamed(Core.C_global_variable,MakeSymbol("*%t*",It)))
       
       _CL_obj = C_Generate__star_Zt_star
@@ -888,8 +890,8 @@ func MetaLoad() {
     ErrorCheck(expr)} 
   
   { 
-    var expr EID 
-    { var _CL_obj *Core.GlobalVariable  
+    var expr EID
+    { var _CL_obj *Core.GlobalVariable
       C_Generate__starlesst_star = Core.ToGlobalVariable(new(Core.GlobalVariable).IsNamed(Core.C_global_variable,MakeSymbol("*lesst*",It)))
       
       _CL_obj = C_Generate__starlesst_star
@@ -900,8 +902,8 @@ func MetaLoad() {
     ErrorCheck(expr)} 
   
   { 
-    var expr EID 
-    { var _CL_obj *Core.GlobalVariable  
+    var expr EID
+    { var _CL_obj *Core.GlobalVariable
       C_Generate__starincluded_star = Core.ToGlobalVariable(new(Core.GlobalVariable).IsNamed(Core.C_global_variable,MakeSymbol("*included*",It)))
       
       _CL_obj = C_Generate__starincluded_star
@@ -912,8 +914,8 @@ func MetaLoad() {
     ErrorCheck(expr)} 
   
   { 
-    var expr EID 
-    { var _CL_obj *Core.GlobalVariable  
+    var expr EID
+    { var _CL_obj *Core.GlobalVariable
       C_Generate__starstack_apply_star = Core.ToGlobalVariable(new(Core.GlobalVariable).IsNamed(Core.C_global_variable,MakeSymbol("*stack_apply*",It)))
       
       _CL_obj = C_Generate__starstack_apply_star
@@ -924,8 +926,8 @@ func MetaLoad() {
     ErrorCheck(expr)} 
   
   { 
-    var expr EID 
-    { var _CL_obj *Core.GlobalVariable  
+    var expr EID
+    { var _CL_obj *Core.GlobalVariable
       C_Generate__starsuper_apply_star = Core.ToGlobalVariable(new(Core.GlobalVariable).IsNamed(Core.C_global_variable,MakeSymbol("*super_apply*",It)))
       
       _CL_obj = C_Generate__starsuper_apply_star
@@ -936,8 +938,8 @@ func MetaLoad() {
     ErrorCheck(expr)} 
   
   { 
-    var expr EID 
-    { var _CL_obj *Core.GlobalVariable  
+    var expr EID
+    { var _CL_obj *Core.GlobalVariable
       C_Generate__starprinc_string_star = Core.ToGlobalVariable(new(Core.GlobalVariable).IsNamed(Core.C_global_variable,MakeSymbol("*princ_string*",It)))
       
       _CL_obj = C_Generate__starprinc_string_star
@@ -948,8 +950,8 @@ func MetaLoad() {
     ErrorCheck(expr)} 
   
   { 
-    var expr EID 
-    { var _CL_obj *Core.GlobalVariable  
+    var expr EID
+    { var _CL_obj *Core.GlobalVariable
       C_Generate__starinherit_star = Core.ToGlobalVariable(new(Core.GlobalVariable).IsNamed(Core.C_global_variable,MakeSymbol("*inherit*",It)))
       
       _CL_obj = C_Generate__starinherit_star
@@ -960,8 +962,8 @@ func MetaLoad() {
     ErrorCheck(expr)} 
   
   { 
-    var expr EID 
-    { var _CL_obj *Core.GlobalVariable  
+    var expr EID
+    { var _CL_obj *Core.GlobalVariable
       C_Generate__starwrite_value_star = Core.ToGlobalVariable(new(Core.GlobalVariable).IsNamed(Core.C_global_variable,MakeSymbol("*write_value*",It)))
       
       _CL_obj = C_Generate__starwrite_value_star
@@ -972,8 +974,8 @@ func MetaLoad() {
     ErrorCheck(expr)} 
   
   { 
-    var expr EID 
-    { var _CL_obj *Core.GlobalVariable  
+    var expr EID
+    { var _CL_obj *Core.GlobalVariable
       C_Generate__starread_property_star = Core.ToGlobalVariable(new(Core.GlobalVariable).IsNamed(Core.C_global_variable,MakeSymbol("*read_property*",It)))
       
       _CL_obj = C_Generate__starread_property_star
@@ -1003,8 +1005,8 @@ func MetaLoad() {
   Core.F_close_slot(C_Generate_go_producer.AddSlot(C_Generate_varsym,ToType(C_integer.Id()),MakeInteger(0).Id()))
   
   { 
-    var expr EID 
-    { var _CL_obj *Core.GlobalVariable  
+    var expr EID
+    { var _CL_obj *Core.GlobalVariable
       C_Generate_EIDSET = Core.ToGlobalVariable(new(Core.GlobalVariable).IsNamed(Core.C_global_variable,MakeSymbol("EIDSET",It)))
       
       _CL_obj = C_Generate_EIDSET
@@ -1041,8 +1043,8 @@ func MetaLoad() {
   _ = Core.F_attach_method(C_g_test.AddMethod(Signature(C_method.Id(),C_void.Id()),1,MakeFunction1(E_g_test_method,"g_test_method")),MakeString("gosystem.cl:193"))
   
   { 
-    var expr EID 
-    { var _CL_obj *Core.GlobalVariable  
+    var expr EID
+    { var _CL_obj *Core.GlobalVariable
       C_BadMethods = Core.ToGlobalVariable(new(Core.GlobalVariable).IsNamed(Core.C_global_variable,MakeSymbol("BadMethods",C_claire)))
       
       _CL_obj = C_BadMethods
@@ -1186,8 +1188,8 @@ func MetaLoad() {
   _ = Core.F_attach_method(C_Generate_goEIDVariables.AddMethod(Signature(C_Generate_go_producer.Id(),C_list.Id(),C_any.Id()),0,MakeFunction2(E_Generate_goEIDVariables_go_producer,"Generate_goEIDVariables_go_producer")),MakeString("gosystem.cl:783"))
   
   { 
-    var expr EID 
-    { var _CL_obj *Core.GlobalVariable  
+    var expr EID
+    { var _CL_obj *Core.GlobalVariable
       C_ABODY = Core.ToGlobalVariable(new(Core.GlobalVariable).IsNamed(Core.C_global_variable,MakeSymbol("ABODY",C_claire)))
       
       _CL_obj = C_ABODY
@@ -1239,8 +1241,8 @@ func MetaLoad() {
   C_Generate_GO_PRODUCER.Extension = MakeString(".go")
   C_Generate_GO_PRODUCER.Comment = MakeString("Go")
   { 
-    var va_arg1 *GenerateGoProducer  
-    var va_arg2 *ClaireList  
+    var va_arg1 *GenerateGoProducer
+    var va_arg2 *ClaireList
     va_arg1 = C_Generate_GO_PRODUCER
     { 
       va_arg2= ToType(CEMPTY.Id()).EmptyList()
@@ -1280,8 +1282,8 @@ func MetaLoad() {
     va_arg1.BadNames = va_arg2
     } 
   { 
-    var va_arg1 *GenerateGoProducer  
-    var va_arg2 *ClaireList  
+    var va_arg1 *GenerateGoProducer
+    var va_arg2 *ClaireList
     va_arg1 = C_Generate_GO_PRODUCER
     { 
       va_arg2= ToType(CEMPTY.Id()).EmptyList()
@@ -1423,8 +1425,8 @@ func MetaLoad() {
   _ = Core.F_attach_method(C_Generate_goEvalFunction.AddMethod(Signature(C_method.Id(),C_void.Id()),0,MakeFunction1(E_Generate_goEvalFunction_method,"Generate_goEvalFunction_method")),MakeString("gogen.cl:370"))
   
   { 
-    var expr EID 
-    { var _CL_obj *Core.GlobalVariable  
+    var expr EID
+    { var _CL_obj *Core.GlobalVariable
       C_Generate__starlength_string_star = Core.ToGlobalVariable(new(Core.GlobalVariable).IsNamed(Core.C_global_variable,MakeSymbol("*length_string*",It)))
       
       _CL_obj = C_Generate__starlength_string_star
@@ -1435,8 +1437,8 @@ func MetaLoad() {
     ErrorCheck(expr)} 
   
   { 
-    var expr EID 
-    { var _CL_obj *Core.GlobalVariable  
+    var expr EID
+    { var _CL_obj *Core.GlobalVariable
       C_Generate__starset_I_list_star = Core.ToGlobalVariable(new(Core.GlobalVariable).IsNamed(Core.C_global_variable,MakeSymbol("*set!_list*",It)))
       
       _CL_obj = C_Generate__starset_I_list_star
@@ -1526,20 +1528,22 @@ func MetaLoad() {
   
   _ = Core.F_attach_method(C_Generate_g_member.AddMethod(Signature(C_any.Id(),C_class.Id()),1,MakeFunction1(E_Generate_g_member_any,"Generate_g_member_any")),MakeString("gogen.cl:651"))
   
-  _ = Core.F_attach_method(C_Generate_cast_Values.AddMethod(Signature(C_class.Id(),C_class.Id(),C_void.Id()),0,MakeFunction2(E_Generate_cast_Values_class,"Generate_cast_Values_class")),MakeString("gogen.cl:656"))
+  _ = Core.F_attach_method(C_Generate_g_expected.AddMethod(Signature(C_class.Id(),C_class.Id()),0,MakeFunction1(E_Generate_g_expected_class2,"Generate_g_expected_class2")),MakeString("gogen.cl:655"))
   
-  _ = Core.F_attach_method(C_Generate_check_var.AddMethod(Signature(C_string.Id(),C_string.Id()),0,MakeFunction1(E_Generate_check_var_string,"Generate_check_var_string")),MakeString("gogen.cl:662"))
+  _ = Core.F_attach_method(C_Generate_check_var.AddMethod(Signature(C_string.Id(),C_string.Id()),0,MakeFunction1(E_Generate_check_var_string,"Generate_check_var_string")),MakeString("gogen.cl:666"))
   
-  _ = Core.F_attach_method(C_Generate_build_Variable.AddMethod(Signature(C_string.Id(),C_any.Id(),C_Variable.Id()),0,MakeFunction2(E_Generate_build_Variable_string,"Generate_build_Variable_string")),MakeString("gogen.cl:665"))
+  _ = Core.F_attach_method(C_Generate_build_Variable.AddMethod(Signature(C_string.Id(),C_any.Id(),C_Variable.Id()),0,MakeFunction2(E_Generate_build_Variable_string,"Generate_build_Variable_string")),MakeString("gogen.cl:669"))
   
   _ = Core.F_attach_method(C_Generate_use_variable.AddMethod(Signature(C_string.Id(),
     C_class.Id(),
     C_class.Id(),
-    C_void.Id()),1,MakeFunction3(E_Generate_use_variable_string,"Generate_use_variable_string")),MakeString("gogen.cl:671"))
+    C_void.Id()),1,MakeFunction3(E_Generate_use_variable_string,"Generate_use_variable_string")),MakeString("gogen.cl:675"))
   
-  _ = Core.F_attach_method(C_Generate_g_clean.AddMethod(Signature(C_any.Id(),C_boolean.Id()),1,MakeFunction1(E_Generate_g_clean_any,"Generate_g_clean_any")),MakeString("gogen.cl:675"))
+  _ = Core.F_attach_method(C_Generate_g_clean.AddMethod(Signature(C_any.Id(),C_boolean.Id()),1,MakeFunction1(E_Generate_g_clean_any,"Generate_g_clean_any")),MakeString("gogen.cl:679"))
   
-  _ = Core.F_attach_method(C_Generate_simple_func_ask.AddMethod(Signature(C_any.Id(),C_boolean.Id()),1,MakeFunction1(E_Generate_simple_func_ask_any,"Generate_simple_func?_any")),MakeString("gogen.cl:680"))
+  _ = Core.F_attach_method(C_Generate_simple_func_ask.AddMethod(Signature(C_any.Id(),C_boolean.Id()),1,MakeFunction1(E_Generate_simple_func_ask_any,"Generate_simple_func?_any")),MakeString("gogen.cl:684"))
+  
+  _ = Core.F_attach_method(C_at_index.AddMethod(Signature(C_any.Id(),C_void.Id()),1,MakeFunction1(E_at_index_any2,"at_index_any2")),MakeString("gogen.cl:688"))
   
   _ = Core.F_attach_method(C_Generate_g_func.AddMethod(Signature(C_any.Id(),C_boolean.Id()),1,MakeFunction1(E_Generate_g_func_any,"Generate_g_func_any")),MakeString("goexp.cl:69"))
   
@@ -1615,40 +1619,40 @@ func MetaLoad() {
   _ = Core.F_attach_method(C_Generate_inline_exp.AddMethod(Signature(C_Generate_go_producer.Id(),
     Language.C_Call_method.Id(),
     C_class.Id(),
-    C_void.Id()),1,MakeFunction3(E_Generate_inline_exp_go_producer4,"Generate_inline_exp_go_producer4")),MakeString("goexp.cl:523"))
+    C_void.Id()),1,MakeFunction3(E_Generate_inline_exp_go_producer4,"Generate_inline_exp_go_producer4")),MakeString("goexp.cl:522"))
   
   _ = Core.F_attach_method(C_Generate_print_external_call.AddMethod(Signature(C_Generate_go_producer.Id(),
     Language.C_Call_method.Id(),
     C_class.Id(),
-    C_void.Id()),1,MakeFunction3(E_Generate_print_external_call_go_producer,"Generate_print_external_call_go_producer")),MakeString("goexp.cl:545"))
+    C_void.Id()),1,MakeFunction3(E_Generate_print_external_call_go_producer,"Generate_print_external_call_go_producer")),MakeString("goexp.cl:544"))
   
   _ = Core.F_attach_method(C_Generate_external_casted_arg.AddMethod(Signature(C_any.Id(),
     C_class.Id(),
     C_integer.Id(),
     C_boolean.Id(),
-    C_void.Id()),1,MakeFunction4(E_Generate_external_casted_arg_any,"Generate_external_casted_arg_any")),MakeString("goexp.cl:554"))
+    C_void.Id()),1,MakeFunction4(E_Generate_external_casted_arg_any,"Generate_external_casted_arg_any")),MakeString("goexp.cl:553"))
   
-  _ = Core.F_attach_method(C_Generate_bounded_expression.AddMethod(Signature(C_any.Id(),C_class.Id(),C_void.Id()),1,MakeFunction2(E_Generate_bounded_expression_any,"Generate_bounded_expression_any")),MakeString("goexp.cl:571"))
+  _ = Core.F_attach_method(C_Generate_bounded_expression.AddMethod(Signature(C_any.Id(),C_class.Id(),C_void.Id()),1,MakeFunction2(E_Generate_bounded_expression_any,"Generate_bounded_expression_any")),MakeString("goexp.cl:570"))
   
-  _ = Core.F_attach_method(C_Generate_g_expression.AddMethod(Signature(Language.C_If.Id(),C_class.Id(),C_void.Id()),1,MakeFunction2(E_Generate_g_expression_If,"Generate_g_expression_If")),MakeString("goexp.cl:583"))
+  _ = Core.F_attach_method(C_Generate_g_expression.AddMethod(Signature(Language.C_If.Id(),C_class.Id(),C_void.Id()),1,MakeFunction2(E_Generate_g_expression_If,"Generate_g_expression_If")),MakeString("goexp.cl:582"))
   
-  _ = Core.F_attach_method(C_Generate_g_expression.AddMethod(Signature(Language.C_And.Id(),C_class.Id(),C_void.Id()),1,MakeFunction2(E_Generate_g_expression_And,"Generate_g_expression_And")),MakeString("goexp.cl:596"))
+  _ = Core.F_attach_method(C_Generate_g_expression.AddMethod(Signature(Language.C_And.Id(),C_class.Id(),C_void.Id()),1,MakeFunction2(E_Generate_g_expression_And,"Generate_g_expression_And")),MakeString("goexp.cl:595"))
   
-  _ = Core.F_attach_method(C_Generate_g_expression.AddMethod(Signature(Language.C_Or.Id(),C_class.Id(),C_void.Id()),1,MakeFunction2(E_Generate_g_expression_Or,"Generate_g_expression_Or")),MakeString("goexp.cl:608"))
+  _ = Core.F_attach_method(C_Generate_g_expression.AddMethod(Signature(Language.C_Or.Id(),C_class.Id(),C_void.Id()),1,MakeFunction2(E_Generate_g_expression_Or,"Generate_g_expression_Or")),MakeString("goexp.cl:607"))
   
-  _ = Core.F_attach_method(C_Generate_g_expression.AddMethod(Signature(Optimize.C_Compile_C_cast.Id(),C_class.Id(),C_void.Id()),1,MakeFunction2(E_Generate_g_expression_C_cast,"Generate_g_expression_C_cast")),MakeString("goexp.cl:621"))
+  _ = Core.F_attach_method(C_Generate_g_expression.AddMethod(Signature(Optimize.C_Compile_C_cast.Id(),C_class.Id(),C_void.Id()),1,MakeFunction2(E_Generate_g_expression_C_cast,"Generate_g_expression_C_cast")),MakeString("goexp.cl:620"))
   
-  _ = Core.F_attach_method(C_Generate_g_expression.AddMethod(Signature(Language.C_Call_slot.Id(),C_class.Id(),C_void.Id()),1,MakeFunction2(E_Generate_g_expression_Call_slot,"Generate_g_expression_Call_slot")),MakeString("goexp.cl:636"))
+  _ = Core.F_attach_method(C_Generate_g_expression.AddMethod(Signature(Language.C_Call_slot.Id(),C_class.Id(),C_void.Id()),1,MakeFunction2(E_Generate_g_expression_Call_slot,"Generate_g_expression_Call_slot")),MakeString("goexp.cl:635"))
   
-  _ = Core.F_attach_method(C_Generate_g_expression.AddMethod(Signature(Language.C_Call_table.Id(),C_class.Id(),C_void.Id()),1,MakeFunction2(E_Generate_g_expression_Call_table,"Generate_g_expression_Call_table")),MakeString("goexp.cl:656"))
+  _ = Core.F_attach_method(C_Generate_g_expression.AddMethod(Signature(Language.C_Call_table.Id(),C_class.Id(),C_void.Id()),1,MakeFunction2(E_Generate_g_expression_Call_table,"Generate_g_expression_Call_table")),MakeString("goexp.cl:655"))
   
-  _ = Core.F_attach_method(C_Generate_g_table_index.AddMethod(Signature(C_table.Id(),C_any.Id(),C_void.Id()),1,MakeFunction2(E_Generate_g_table_index_table,"Generate_g_table_index_table")),MakeString("goexp.cl:667"))
+  _ = Core.F_attach_method(C_Generate_g_table_index.AddMethod(Signature(C_table.Id(),C_any.Id(),C_void.Id()),1,MakeFunction2(E_Generate_g_table_index_table,"Generate_g_table_index_table")),MakeString("goexp.cl:666"))
   
-  _ = Core.F_attach_method(C_Generate_g_expression.AddMethod(Signature(Language.C_Call_array.Id(),C_class.Id(),C_void.Id()),1,MakeFunction2(E_Generate_g_expression_Call_array,"Generate_g_expression_Call_array")),MakeString("goexp.cl:678"))
+  _ = Core.F_attach_method(C_Generate_g_expression.AddMethod(Signature(Language.C_Call_array.Id(),C_class.Id(),C_void.Id()),1,MakeFunction2(E_Generate_g_expression_Call_array,"Generate_g_expression_Call_array")),MakeString("goexp.cl:677"))
   
-  _ = Core.F_attach_method(C_Generate_sign_equal.AddMethod(Signature(C_boolean.Id(),C_void.Id()),0,MakeFunction1(E_Generate_sign_equal_boolean,"Generate_sign_equal_boolean")),MakeString("goexp.cl:698"))
+  _ = Core.F_attach_method(C_Generate_sign_equal.AddMethod(Signature(C_boolean.Id(),C_void.Id()),0,MakeFunction1(E_Generate_sign_equal_boolean,"Generate_sign_equal_boolean")),MakeString("goexp.cl:697"))
   
-  _ = Core.F_attach_method(C_Generate_sign_or.AddMethod(Signature(C_boolean.Id(),C_void.Id()),0,MakeFunction1(E_Generate_sign_or_boolean,"Generate_sign_or_boolean")),MakeString("goexp.cl:701"))
+  _ = Core.F_attach_method(C_Generate_sign_or.AddMethod(Signature(C_boolean.Id(),C_void.Id()),0,MakeFunction1(E_Generate_sign_or_boolean,"Generate_sign_or_boolean")),MakeString("goexp.cl:700"))
   
   _ = Core.F_attach_method(Optimize.C_Compile_bool_exp.AddMethod(Signature(C_any.Id(),C_boolean.Id(),C_void.Id()),1,MakeFunction2(E_Compile_bool_exp_any,"Compile_bool_exp_any")),MakeString("goexp.cl:705"))
   
@@ -1969,7 +1973,7 @@ func MetaLoad() {
   
   _ = Core.F_attach_method(C_Generate_compile_dir.AddMethod(Signature(C_module.Id(),C_void.Id()),0,MakeFunction1(E_Generate_compile_dir_module,"Generate_compile_dir_module")),MakeString("gomain.cl:271"))
   
-  _ = Core.F_attach_method(C_Generate_compile_exe.AddMethod(Signature(C_string.Id(),C_void.Id()),0,MakeFunction1(E_Generate_compile_exe_string,"Generate_compile_exe_string")),MakeString("gomain.cl:277"))
+  _ = Core.F_attach_method(C_Generate_compile_exe.AddMethod(Signature(C_string.Id(),C_void.Id()),0,MakeFunction1(E_Generate_compile_exe_string,"Generate_compile_exe_string")),MakeString("gomain.cl:276"))
   
   } 
 

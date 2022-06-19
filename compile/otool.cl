@@ -122,8 +122,9 @@ Compile/notice() : void
 [c_warn(self:Call,%type:any) : any
  -> let s := self.selector in
        (if (%type = void)  Cerror("[205] message ~S sent to void object", self)
-        else if (not(s.restrictions) & not(s % OPT.ignore))
-           (warn(),trace(1,"the property ~S is undefined [255]\n", s))
+        else if (not(s.restrictions) & not(s % OPT.ignore) & s.open < open())
+           Cerror("[255] property ~S has no definition and is not defined as open", s)  // v4.0.6
+           // was:   (warn(),trace(1,"the property ~S is undefined [255]\n", s))
         else if (not(s % OPT.ignore) & (s.open <= 1 | s.open = 4) &
                  (case %type (list class!(%type[1]).open != 3)))
             (warn(), trace(1,"wrongly typed message ~S (~S) [256]\n", self, %type))

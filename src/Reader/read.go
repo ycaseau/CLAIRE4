@@ -1,5 +1,5 @@
-/***** CLAIRE Compilation of file /Users/ycaseau/Dropbox/src/clairev4.03/src/meta/read.cl 
-         [version 4.0.04 / safety 5] Sunday 03-13-2022 07:28:42 *****/
+/***** CLAIRE Compilation of file /Users/ycaseau/Dropbox/src/clairev4.05/src/meta/read.cl 
+         [version 4.0.06 / safety 5] Monday 06-06-2022 08:16:30 *****/
 
 package Reader
 import (_ "fmt"
@@ -39,7 +39,7 @@ func import_g0000() {
 // *arrow*:boolean :: false
 // here we define the basic keywords
 /* The go function for: keyword?(x:any) [status=0] */
-func F_keyword_ask_any (x *ClaireAny ) *ClaireBoolean  { 
+func F_keyword_ask_any (x *ClaireAny) *ClaireBoolean { 
     return  x.Isa.IsIn(C_reserved_keyword)
     } 
   
@@ -59,8 +59,7 @@ func E_keyword_ask_any (x EID) EID {
 // for old historical reasons, the reader code uses integers and the macro pattern #/a
 // we could re-write everything using char now that char are natives (rune)
 /* The go function for: next(r:meta_reader) [status=0] */
-func (r *MetaReader ) Next ()  { 
-    // procedure body with s = void
+func (r *MetaReader) Next ()  { 
     r.Fromp.GetNext()
     } 
   
@@ -70,7 +69,7 @@ func E_next_meta_reader (r EID) EID {
     return EVOID} 
   
 /* The go function for: firstc(r:meta_reader) [status=0] */
-func (r *MetaReader ) Firstc () int { 
+func (r *MetaReader) Firstc () int { 
     return  r.Fromp.CharInt()
     } 
   
@@ -80,7 +79,7 @@ func E_firstc_meta_reader (r EID) EID {
   
 // when to stop
 /* The go function for: stop?(n:integer) [status=0] */
-func F_stop_ask_integer (n int) *ClaireAny  { 
+func F_stop_ask_integer (n int) *ClaireAny { 
     return  MakeBoolean((n == 44) || (n == 41) || (n == 93) || (n == 125)).Id()
     } 
   
@@ -91,22 +90,21 @@ func E_stop_ask_integer (n EID) EID {
 // read the next unit (definition, block or expression)
 //
 /* The go function for: nextunit(r:meta_reader) [status=1] */
-func (r *MetaReader ) Nextunit () EID { 
-    // eid body s = any
-    var Result EID 
-    { var n int  = r.Skipc()
+func (r *MetaReader) Nextunit () EID { 
+    var Result EID
+    { var n int = r.Skipc()
       if (n == r.Eof) { 
         r.Next()
         Result = EID{C_Reader_eof.Id(),0}
         }  else if (n == 91) { 
-        { var z *ClaireAny  
-          var try_1 EID 
+        { var z *ClaireAny
+          var try_1 EID
           try_1 = r.Cnext().Nexte()
           if ErrorIn(try_1) {Result = try_1
           } else {
           z = ANY(try_1)
-          { var arg_2 *ClaireAny  
-            var try_3 EID 
+          { var arg_2 *ClaireAny
+            var try_3 EID
             try_3 = r.Nexte()
             if ErrorIn(try_3) {Result = try_3
             } else {
@@ -120,8 +118,8 @@ func (r *MetaReader ) Nextunit () EID {
         if (r.Toplevel == CTRUE) { 
           Result = r.Nexts(C_none)
           } else {
-          { var arg_4 *ClaireAny  
-            var try_5 EID 
+          { var arg_4 *ClaireAny
+            var try_5 EID
             try_5 = r.Cnext().Nexte()
             if ErrorIn(try_5) {Result = try_5
             } else {
@@ -131,8 +129,8 @@ func (r *MetaReader ) Nextunit () EID {
             } 
           } 
         }  else if (n == 96) { 
-        { var arg_6 *ClaireAny  
-          var try_7 EID 
+        { var arg_6 *ClaireAny
+          var try_7 EID
           try_7 = r.Cnext().Nextunit()
           if ErrorIn(try_7) {Result = try_7
           } else {
@@ -153,8 +151,8 @@ func (r *MetaReader ) Nextunit () EID {
           Result = r.Nextunit()
           } 
         } else {
-        { var x *ClaireAny  
-          var try_8 EID 
+        { var x *ClaireAny
+          var try_8 EID
           if (r.Toplevel == CTRUE) { 
             try_8 = r.Nexts(C_none)
             } else {
@@ -163,15 +161,15 @@ func (r *MetaReader ) Nextunit () EID {
           if ErrorIn(try_8) {Result = try_8
           } else {
           x = ANY(try_8)
-          var g0004I *ClaireBoolean  
+          var g0004I *ClaireBoolean
           { 
-            var v_and5 *ClaireBoolean  
+            var v_and5 *ClaireBoolean
             
             v_and5 = r.Toplevel
             if (v_and5 == CFALSE) {g0004I = CFALSE
             } else { 
               if (x.Isa.IsIn(Language.C_Assign) == CTRUE) { 
-                { var g0002 *Language.Assign   = Language.To_Assign(x)
+                { var g0002 *Language.Assign = Language.To_Assign(x)
                   v_and5 = g0002.ClaireVar.Isa.IsIn(Language.C_Vardef)
                   } 
                 } else {
@@ -183,30 +181,30 @@ func (r *MetaReader ) Nextunit () EID {
               } 
             } 
           if (g0004I == CTRUE) { 
-            { var _CL_obj *Language.Defobj   = Language.To_Defobj(new(Language.Defobj).Is(Language.C_Defobj))
+            { var _CL_obj *Language.Defobj = Language.To_Defobj(new(Language.Defobj).Is(Language.C_Defobj))
               _CL_obj.Ident = ToSymbol(OBJ(Core.F_CALL(C_mClaire_pname,ARGS(Core.F_CALL(Language.C_var,ARGS(x.ToEID()))))))
               _CL_obj.Arg = Core.C_global_variable
               { 
-                var va_arg1 *Language.Definition  
-                var va_arg2 *ClaireList  
+                var va_arg1 *Language.Definition
+                var va_arg2 *ClaireList
                 va_arg1 = Language.To_Definition(_CL_obj.Id())
-                var try_9 EID 
+                var try_9 EID
                 { 
-                  var v_bag_arg *ClaireAny  
+                  var v_bag_arg *ClaireAny
                   try_9= EID{ToType(CEMPTY.Id()).EmptyList().Id(),0}
-                  var try_10 EID 
-                  { var _CL_obj *Language.Call   = Language.To_Call(new(Language.Call).Is(Language.C_Call))
+                  var try_10 EID
+                  { var _CL_obj *Language.Call = Language.To_Call(new(Language.Call).Is(Language.C_Call))
                     _CL_obj.Selector = ToProperty(C__equal.Id())
                     { 
-                      var va_arg1 *Language.Call  
-                      var va_arg2 *ClaireList  
+                      var va_arg1 *Language.Call
+                      var va_arg2 *ClaireList
                       va_arg1 = _CL_obj
-                      var try_11 EID 
+                      var try_11 EID
                       { 
-                        var v_bag_arg *ClaireAny  
+                        var v_bag_arg *ClaireAny
                         try_11= EID{ToType(CEMPTY.Id()).EmptyList().Id(),0}
                         ToList(OBJ(try_11)).AddFast(C_range.Id())
-                        var try_12 EID 
+                        var try_12 EID
                         try_12 = Language.F_extract_type_any(ANY(Core.F_CALL(C_range,ARGS(Core.F_CALL(Language.C_var,ARGS(x.ToEID()))))))
                         if ErrorIn(try_12) {try_11 = try_12
                         } else {
@@ -228,7 +226,7 @@ func (r *MetaReader ) Nextunit () EID {
                   } else {
                   v_bag_arg = ANY(try_10)
                   ToList(OBJ(try_9)).AddFast(v_bag_arg)
-                  { var _CL_obj *Language.Call   = Language.To_Call(new(Language.Call).Is(Language.C_Call))
+                  { var _CL_obj *Language.Call = Language.To_Call(new(Language.Call).Is(Language.C_Call))
                     _CL_obj.Selector = ToProperty(C__equal.Id())
                     _CL_obj.Args = MakeConstantList(C_value.Id(),ANY(Core.F_CALL(C_arg,ARGS(x.ToEID()))))
                     v_bag_arg = _CL_obj.Id()
@@ -249,21 +247,21 @@ func (r *MetaReader ) Nextunit () EID {
             }  else if (C_string.Id() == x.Isa.Id()) { 
             Result = x.ToEID()
             } else {
-            var g0005I *ClaireBoolean  
+            var g0005I *ClaireBoolean
             if (x.Isa.IsIn(Language.C_Call) == CTRUE) { 
-              { var g0003 *Language.Call   = Language.To_Call(x)
+              { var g0003 *Language.Call = Language.To_Call(x)
                 { 
-                  var v_and8 *ClaireBoolean  
+                  var v_and8 *ClaireBoolean
                   
                   v_and8 = r.SProperties.Contain_ask(g0003.Selector.Id())
                   if (v_and8 == CFALSE) {g0005I = CFALSE
                   } else { 
-                    { var arg_13 *ClaireAny  
+                    { var arg_13 *ClaireAny
                       { 
-                        var y *ClaireAny  
+                        var y *ClaireAny
                         _ = y
                         arg_13= CFALSE.Id()
-                        var y_support *ClaireList  
+                        var y_support *ClaireList
                         y_support = g0003.Args
                         y_len := y_support.Length()
                         for i_it := 0; i_it < y_len; i_it++ { 
@@ -286,14 +284,14 @@ func (r *MetaReader ) Nextunit () EID {
               g0005I = CFALSE
               } 
             if (g0005I == CTRUE) { 
-              { var z *Language.Call   = Language.To_Call(x)
-                { var a *ClaireAny   = z.Args.At(1-1)
+              { var z *Language.Call = Language.To_Call(x)
+                { var a *ClaireAny = z.Args.At(0)
                   if ((z.Selector.Id() == C_begin.Id()) && 
                       (a.Isa.IsIn(C_unbound_symbol) == CTRUE)) { 
-                    { var arg_14 *ClaireString  
-                      var try_15 EID 
-                      { var arg_16 *ClaireSymbol  
-                        var try_17 EID 
+                    { var arg_14 *ClaireString
+                      var try_15 EID
+                      { var arg_16 *ClaireSymbol
+                        var try_17 EID
                         try_17 = Language.F_extract_symbol_any(a)
                         if ErrorIn(try_17) {try_15 = try_17
                         } else {
@@ -321,8 +319,8 @@ func (r *MetaReader ) Nextunit () EID {
                 } 
               }  else if ((r.Toplevel != CTRUE) && 
                 (x.Isa.IsIn(Language.C_Assert) != CTRUE)) { 
-              { var arg_18 *ClaireAny  
-                var try_19 EID 
+              { var arg_18 *ClaireAny
+                var try_19 EID
                 try_19 = r.Nexte()
                 if ErrorIn(try_19) {Result = try_19
                 } else {
@@ -350,22 +348,21 @@ func E_nextunit_meta_reader (r EID) EID {
 // Note: it actually reads a fragment
 //
 /* The go function for: nexts(r:meta_reader,e:keyword) [status=1] */
-func (r *MetaReader ) Nexts (e *ClaireKeyword ) EID { 
-    // eid body s = any
-    var Result EID 
-    { var n int  = r.Skipc()
+func (r *MetaReader) Nexts (e *ClaireKeyword) EID { 
+    var Result EID
+    { var n int = r.Skipc()
       if (n == r.Eof) { 
         r.Next()
         Result = EID{C_Reader_eof.Id(),0}
         }  else if (n == 91) { 
-        { var z *ClaireAny  
-          var try_1 EID 
+        { var z *ClaireAny
+          var try_1 EID
           try_1 = r.Cnext().Nexte()
           if ErrorIn(try_1) {Result = try_1
           } else {
           z = ANY(try_1)
-          { var arg_2 *ClaireAny  
-            var try_3 EID 
+          { var arg_2 *ClaireAny
+            var try_3 EID
             try_3 = r.Nexte()
             if ErrorIn(try_3) {Result = try_3
             } else {
@@ -378,8 +375,8 @@ func (r *MetaReader ) Nexts (e *ClaireKeyword ) EID {
         }  else if (e.Id() == C_None.Id()) { 
         Result = r.Nexte()
         } else {
-        { var x *ClaireAny  
-          var try_4 EID 
+        { var x *ClaireAny
+          var try_4 EID
           try_4 = r.Nexte()
           if ErrorIn(try_4) {Result = try_4
           } else {
@@ -387,15 +384,15 @@ func (r *MetaReader ) Nexts (e *ClaireKeyword ) EID {
           if (F_keyword_ask_any(x) == CTRUE) { 
             Result = r.Nextstruct(ToKeyword(x),e)
             } else {
-            var g0007I *ClaireBoolean  
+            var g0007I *ClaireBoolean
             { 
-              var v_and6 *ClaireBoolean  
+              var v_and6 *ClaireBoolean
               
               v_and6 = Equal(e.Id(),C_none.Id())
               if (v_and6 == CFALSE) {g0007I = CFALSE
               } else { 
                 if (x.Isa.IsIn(Language.C_Call) == CTRUE) { 
-                  { var g0006 *Language.Call   = Language.To_Call(x)
+                  { var g0006 *Language.Call = Language.To_Call(x)
                     v_and6 = r.SProperties.Contain_ask(g0006.Selector.Id())
                     } 
                   } else {
@@ -425,26 +422,25 @@ func E_nexts_meta_reader (r EID,e EID) EID {
 // loops until the right expression is built (ends with e ',', '}' or ')')
 // x is the first expression that was read
 /* The go function for: loopexp(r:meta_reader,x:any,e:keyword,loop:boolean) [status=1] */
-func (r *MetaReader ) Loopexp (x *ClaireAny ,e *ClaireKeyword ,loop *ClaireBoolean ) EID { 
-    // eid body s = any
-    var Result EID 
-    { var c int  = r.Firstc()
+func (r *MetaReader) Loopexp (x *ClaireAny,e *ClaireKeyword,loop *ClaireBoolean) EID { 
+    var Result EID
+    { var c int = r.Firstc()
       if ((r.Toplevel == CTRUE) && 
           ((e.Id() == C_none.Id()) && 
             (r.Findeol() == CTRUE))) { 
         Result = x.ToEID()
         }  else if (x == C__ask.Id()) { 
-        { var _CL_obj *Language.Call   = Language.To_Call(new(Language.Call).Is(Language.C_Call))
+        { var _CL_obj *Language.Call = Language.To_Call(new(Language.Call).Is(Language.C_Call))
           _CL_obj.Selector = C_inspect
           { 
-            var va_arg1 *Language.Call  
-            var va_arg2 *ClaireList  
+            var va_arg1 *Language.Call
+            var va_arg2 *ClaireList
             va_arg1 = _CL_obj
-            var try_1 EID 
+            var try_1 EID
             { 
-              var v_bag_arg *ClaireAny  
+              var v_bag_arg *ClaireAny
               try_1= EID{ToType(CEMPTY.Id()).EmptyList().Id(),0}
-              var try_2 EID 
+              var try_2 EID
               try_2 = r.Nexte()
               if ErrorIn(try_2) {try_1 = try_2
               } else {
@@ -463,17 +459,17 @@ func (r *MetaReader ) Loopexp (x *ClaireAny ,e *ClaireKeyword ,loop *ClaireBoole
           }
           } 
         }  else if (r.Skipc() == 58) { 
-        { var y *ClaireAny  
-          var try_3 EID 
+        { var y *ClaireAny
+          var try_3 EID
           try_3 = r.Cnext().Nexte()
           if ErrorIn(try_3) {Result = try_3
           } else {
           y = ANY(try_3)
           if (y == C__equal.Id()) { 
-            { var arg_4 *ClaireAny  
-              var try_5 EID 
-              { var arg_6 *ClaireAny  
-                var try_7 EID 
+            { var arg_4 *ClaireAny
+              var try_5 EID
+              { var arg_6 *ClaireAny
+                var try_7 EID
                 try_7 = r.Nexte()
                 if ErrorIn(try_7) {try_5 = try_7
                 } else {
@@ -490,10 +486,10 @@ func (r *MetaReader ) Loopexp (x *ClaireAny ,e *ClaireKeyword ,loop *ClaireBoole
             }  else if (y == C_L_.Id()) { 
             Result = r.Nextinst(x)
             }  else if (F_operation_ask_any(y) == CTRUE) { 
-            { var arg_8 *ClaireAny  
-              var try_9 EID 
-              { var arg_10 *ClaireAny  
-                var try_11 EID 
+            { var arg_8 *ClaireAny
+              var try_9 EID
+              { var arg_10 *ClaireAny
+                var try_11 EID
                 try_11 = r.Nexte()
                 if ErrorIn(try_11) {try_9 = try_11
                 } else {
@@ -510,16 +506,16 @@ func (r *MetaReader ) Loopexp (x *ClaireAny ,e *ClaireKeyword ,loop *ClaireBoole
             }  else if ((x.Isa.IsIn(Language.C_Call) == CTRUE) && 
               (c == 32)) { 
             
-            { var w *ClaireAny  
-              var try_12 EID 
+            { var w *ClaireAny
+              var try_12 EID
               try_12 = r.Nexte()
               if ErrorIn(try_12) {Result = try_12
               } else {
               w = ANY(try_12)
               if (w == C__equal_sup.Id()) { 
                 { 
-                  var va_arg1 *MetaReader  
-                  var va_arg2 *ClaireBoolean  
+                  var va_arg1 *MetaReader
+                  var va_arg2 *ClaireBoolean
                   va_arg1 = r
                   va_arg2 = CTRUE
                   va_arg1.LastArrow = va_arg2
@@ -547,8 +543,8 @@ func (r *MetaReader ) Loopexp (x *ClaireAny ,e *ClaireKeyword ,loop *ClaireBoole
           }
           } 
         } else {
-        { var y *ClaireAny  
-          var try_13 EID 
+        { var y *ClaireAny
+          var try_13 EID
           try_13 = r.Nexte()
           if ErrorIn(try_13) {Result = try_13
           } else {
@@ -575,10 +571,10 @@ func (r *MetaReader ) Loopexp (x *ClaireAny ,e *ClaireKeyword ,loop *ClaireBoole
             Result = x.ToEID()
             }  else if (F_operation_ask_any(y) == CTRUE) { 
             if (loop == CTRUE) { 
-              { var arg_14 *ClaireAny  
-                var try_15 EID 
-                { var arg_16 *ClaireAny  
-                  var try_17 EID 
+              { var arg_14 *ClaireAny
+                var try_15 EID
+                { var arg_16 *ClaireAny
+                  var try_17 EID
                   try_17 = r.Nexte()
                   if ErrorIn(try_17) {try_15 = try_17
                   } else {
@@ -593,10 +589,10 @@ func (r *MetaReader ) Loopexp (x *ClaireAny ,e *ClaireKeyword ,loop *ClaireBoole
                 }
                 } 
               } else {
-              { var arg_18 *ClaireAny  
-                var try_19 EID 
-                { var arg_20 *ClaireAny  
-                  var try_21 EID 
+              { var arg_18 *ClaireAny
+                var try_19 EID
+                { var arg_20 *ClaireAny
+                  var try_21 EID
                   try_21 = r.Nexte()
                   if ErrorIn(try_21) {try_19 = try_21
                   } else {
@@ -628,47 +624,46 @@ func E_loopexp_meta_reader (r EID,x EID,e EID,loop EID) EID {
   
 // this is the special form for x :op y - new in v3.3.32
 /* The go function for: extended_operator(p:property,x:any,y:any) [status=1] */
-func F_extended_operator_property (p *ClaireProperty ,x *ClaireAny ,y *ClaireAny ) EID { 
-    // eid body s = any
-    var Result EID 
+func F_extended_operator_property (p *ClaireProperty,x *ClaireAny,y *ClaireAny) EID { 
+    var Result EID
     if (x.Isa.IsIn(Language.C_Call) == CTRUE) { 
-      { var g0008 *Language.Call   = Language.To_Call(x)
-        { var r *ClaireAny  
+      { var g0008 *Language.Call = Language.To_Call(x)
+        { var r *ClaireAny
           if (g0008.Selector.Id() == C_nth.Id()) { 
-            r = g0008.Args.At(2-1)
+            r = g0008.Args.At(1)
             } else {
-            r = g0008.Args.At(1-1)
+            r = g0008.Args.At(0)
             } 
-          { var v *ClaireVariable  
-            { var _CL_obj *ClaireVariable   = To_Variable(new(ClaireVariable).Is(C_Variable))
+          { var v *ClaireVariable
+            { var _CL_obj *ClaireVariable = To_Variable(new(ClaireVariable).Is(C_Variable))
               _CL_obj.Pname = Core.F_gensym_void()
               v = _CL_obj
               } 
-            { var x2 *Language.Call  
+            { var x2 *Language.Call
               if (g0008.Selector.Id() == C_nth.Id()) { 
-                { var _CL_obj *Language.Call   = Language.To_Call(new(Language.Call).Is(Language.C_Call))
+                { var _CL_obj *Language.Call = Language.To_Call(new(Language.Call).Is(Language.C_Call))
                   _CL_obj.Selector = C_nth
-                  _CL_obj.Args = MakeConstantList(g0008.Args.At(1-1),v.Id())
+                  _CL_obj.Args = MakeConstantList(g0008.Args.At(0),v.Id())
                   x2 = _CL_obj
                   } 
                 } else {
-                { var _CL_obj *Language.Call   = Language.To_Call(new(Language.Call).Is(Language.C_Call))
+                { var _CL_obj *Language.Call = Language.To_Call(new(Language.Call).Is(Language.C_Call))
                   _CL_obj.Selector = g0008.Selector
                   _CL_obj.Args = MakeConstantList(v.Id())
                   x2 = _CL_obj
                   } 
                 } 
               if (r.Isa.IsIn(Language.C_Call) == CTRUE) { 
-                { var _CL_obj *Language.Let   = Language.To_Let(new(Language.Let).Is(Language.C_Let))
+                { var _CL_obj *Language.Let = Language.To_Let(new(Language.Let).Is(Language.C_Let))
                   _CL_obj.ClaireVar = v
                   _CL_obj.Value = r
                   { 
-                    var va_arg1 *Language.Let  
-                    var va_arg2 *ClaireAny  
+                    var va_arg1 *Language.Let
+                    var va_arg2 *ClaireAny
                     va_arg1 = _CL_obj
-                    var try_1 EID 
-                    { var arg_2 *ClaireAny  
-                      var try_3 EID 
+                    var try_1 EID
+                    { var arg_2 *ClaireAny
+                      var try_3 EID
                       try_3 = F_combine_any(x2.Id(),p.Id(),y)
                       if ErrorIn(try_3) {try_1 = try_3
                       } else {
@@ -688,8 +683,8 @@ func F_extended_operator_property (p *ClaireProperty ,x *ClaireAny ,y *ClaireAny
                   }
                   } 
                 } else {
-                { var arg_4 *ClaireAny  
-                  var try_5 EID 
+                { var arg_4 *ClaireAny
+                  var try_5 EID
                   try_5 = F_combine_any(g0008.Id(),p.Id(),y)
                   if ErrorIn(try_5) {Result = try_5
                   } else {
@@ -703,8 +698,8 @@ func F_extended_operator_property (p *ClaireProperty ,x *ClaireAny ,y *ClaireAny
           } 
         } 
       } else {
-      { var arg_6 *ClaireAny  
-        var try_7 EID 
+      { var arg_6 *ClaireAny
+        var try_7 EID
         try_7 = F_combine_any(x,p.Id(),y)
         if ErrorIn(try_7) {Result = try_7
         } else {
@@ -725,11 +720,10 @@ func E_extended_operator_property (p EID,x EID,y EID) EID {
 // reading the next compact expression - comments are ignored but they can
 // be attached to the last read expression
 /* The go function for: nexte(r:meta_reader) [status=1] */
-func (r *MetaReader ) Nexte () EID { 
-    // eid body s = any
-    var Result EID 
-    { var x *ClaireAny  
-      var try_1 EID 
+func (r *MetaReader) Nexte () EID { 
+    var Result EID
+    { var x *ClaireAny
+      var try_1 EID
       try_1 = r.Nextexp(CFALSE)
       if ErrorIn(try_1) {Result = try_1
       } else {
@@ -748,12 +742,12 @@ func E_nexte_meta_reader (r EID) EID {
   
 // v3.3
 // reading the next compact expression/ same
-//
+// str = true <=> a comment is not ignored and returned as a string
+// nextexp handles the specific cases based on first char, nexti handles what starts with an identifier
 /* The go function for: nextexp(r:meta_reader,str:boolean) [status=1] */
-func (r *MetaReader ) Nextexp (str *ClaireBoolean ) EID { 
-    // eid body s = any
-    var Result EID 
-    { var n int  = r.Skipc()
+func (r *MetaReader) Nextexp (str *ClaireBoolean) EID { 
+    var Result EID
+    { var n int = r.Skipc()
       if (n == 41) { 
         Result = r.Paren.ToEID()
         }  else if (n == 125) { 
@@ -782,8 +776,8 @@ func (r *MetaReader ) Nextexp (str *ClaireBoolean ) EID {
         }  else if (n == 35) { 
         Result = r.ReadEscape()
         }  else if (n == 96) { 
-        { var arg_1 *ClaireAny  
-          var try_2 EID 
+        { var arg_1 *ClaireAny
+          var try_2 EID
           try_2 = r.Cnext().Nexte()
           if ErrorIn(try_2) {Result = try_2
           } else {
@@ -792,14 +786,14 @@ func (r *MetaReader ) Nextexp (str *ClaireBoolean ) EID {
           }
           } 
         } else {
-        { var y *ClaireAny   = CNULL
-          { var x *ClaireAny  
-            var try_3 EID 
+        { var y *ClaireAny = CNULL
+          { var x *ClaireAny
+            var try_3 EID
             if (n == 34) { 
               try_3 = EID{r.Cnext().Fromp.ReadString().Id(),0}
               }  else if (n == 40) { 
-              { var arg_4 *ClaireAny  
-                var try_5 EID 
+              { var arg_4 *ClaireAny
+                var try_5 EID
                 try_5 = r.Cnext().Nexte()
                 if ErrorIn(try_5) {try_3 = try_5
                 } else {
@@ -811,8 +805,8 @@ func (r *MetaReader ) Nextexp (str *ClaireBoolean ) EID {
                 (n <= 57)) { 
               try_3 = r.Fromp.ReadNumber().ToEID()
               }  else if (n == 123) { 
-              { var arg_6 *ClaireAny  
-                var try_7 EID 
+              { var arg_6 *ClaireAny
+                var try_7 EID
                 try_7 = r.Cnext().Nexte()
                 if ErrorIn(try_7) {try_3 = try_7
                 } else {
@@ -821,7 +815,7 @@ func (r *MetaReader ) Nextexp (str *ClaireBoolean ) EID {
                 }
                 } 
               } else {
-              var try_8 EID 
+              var try_8 EID
               try_8 = r.Fromp.ReadIdent()
               if ErrorIn(try_8) {try_3 = try_8
               } else {
@@ -850,11 +844,11 @@ func (r *MetaReader ) Nextexp (str *ClaireBoolean ) EID {
               for ((r.Firstc() == 91) || 
                   ((r.Firstc() == 46) || 
                     (r.Firstc() == 60))) { 
-                var loop_9 EID 
+                var loop_9 EID
                 _ = loop_9
                 if (r.Firstc() == 60) { 
                   if (x == Language.C_map.Id()) { 
-                    var try_10 EID 
+                    var try_10 EID
                     try_10 = r.Readmap()
                     if ErrorIn(try_10) {loop_9 = try_10
                     } else {
@@ -862,8 +856,8 @@ func (r *MetaReader ) Nextexp (str *ClaireBoolean ) EID {
                     loop_9 = x.ToEID()
                     }
                     } else {
-                    { var y *ClaireAny  
-                      var try_11 EID 
+                    { var y *ClaireAny
+                      var try_11 EID
                       try_11 = r.Cnext().Nexte()
                       if ErrorIn(try_11) {loop_9 = try_11
                       } else {
@@ -871,12 +865,12 @@ func (r *MetaReader ) Nextexp (str *ClaireBoolean ) EID {
                       if ((C_class.Id() == x.Isa.Id()) && 
                           (r.Firstc() == 62)) { 
                         r.Cnext()
-                        var try_12 EID 
-                        { var arg_13 *ClaireList  
+                        var try_12 EID
+                        { var arg_13 *ClaireList
                           { 
-                            var v_bag_arg *ClaireAny  
+                            var v_bag_arg *ClaireAny
                             arg_13= ToType(CEMPTY.Id()).EmptyList()
-                            { var _CL_obj *Language.Call   = Language.To_Call(new(Language.Call).Is(Language.C_Call))
+                            { var _CL_obj *Language.Call = Language.To_Call(new(Language.Call).Is(Language.C_Call))
                               _CL_obj.Selector = ToProperty(C__equal.Id())
                               _CL_obj.Args = MakeConstantList(C_of.Id(),y)
                               v_bag_arg = _CL_obj.Id()
@@ -890,7 +884,7 @@ func (r *MetaReader ) Nextexp (str *ClaireBoolean ) EID {
                         } else {
                         x = ANY(try_12)
                         loop_9 = x.ToEID()
-                        var try_14 EID 
+                        var try_14 EID
                         try_14 = r.Nexti(x)
                         if ErrorIn(try_14) {loop_9 = try_14
                         Result = try_14
@@ -906,7 +900,7 @@ func (r *MetaReader ) Nextexp (str *ClaireBoolean ) EID {
                       } 
                     } 
                   }  else if (r.Firstc() == 91) { 
-                  var try_15 EID 
+                  var try_15 EID
                   try_15 = r.Readbracket(x)
                   if ErrorIn(try_15) {loop_9 = try_15
                   } else {
@@ -914,25 +908,25 @@ func (r *MetaReader ) Nextexp (str *ClaireBoolean ) EID {
                   loop_9 = x.ToEID()
                   }
                   } else {
-                  { var y *ClaireAny  
-                    var try_16 EID 
+                  { var y *ClaireAny
+                    var try_16 EID
                     try_16 = r.Cnext().Fromp.ReadIdent()
                     if ErrorIn(try_16) {loop_9 = try_16
                     } else {
                     y = ANY(try_16)
-                    { var p *ClaireProperty  
-                      var try_17 EID 
+                    { var p *ClaireProperty
+                      var try_17 EID
                       try_17 = Language.F_make_a_property_any(y)
                       if ErrorIn(try_17) {loop_9 = try_17
                       } else {
                       p = ToProperty(OBJ(try_17))
-                      { var _CL_obj *Language.Call_plus   = Language.To_Call_plus(new(Language.Call_plus).Is(Language.C_Call_plus))
+                      { var _CL_obj *Language.Call_plus = Language.To_Call_plus(new(Language.Call_plus).Is(Language.C_Call_plus))
                         _CL_obj.Selector = p
                         _CL_obj.Args = MakeConstantList(x)
                         x = _CL_obj.Id()
                         } 
                       if (p.Reified.Id() == CTRUE.Id()) { 
-                        { var _CL_obj *Language.Call   = Language.To_Call(new(Language.Call).Is(Language.C_Call))
+                        { var _CL_obj *Language.Call = Language.To_Call(new(Language.Call).Is(Language.C_Call))
                           _CL_obj.Selector = C_read
                           _CL_obj.Args = MakeConstantList(x)
                           x = _CL_obj.Id()
@@ -968,11 +962,10 @@ func E_nextexp_meta_reader (r EID,str EID) EID {
   
 // extended in CLAIRE4: reads the x[y] patterns
 /* The go function for: readbracket(r:meta_reader,x:any) [status=1] */
-func (r *MetaReader ) Readbracket (x *ClaireAny ) EID { 
-    // eid body s = any
-    var Result EID 
-    { var l *ClaireAny  
-      var try_1 EID 
+func (r *MetaReader) Readbracket (x *ClaireAny) EID { 
+    var Result EID
+    { var l *ClaireAny
+      var try_1 EID
       try_1 = r.Cnext().Nextseq(93)
       if ErrorIn(try_1) {Result = try_1
       } else {
@@ -994,12 +987,11 @@ func E_Reader_readbracket_meta_reader (r EID,x EID) EID {
   
 // new in CLAIRE4: reads map<t1,t2>(pairs*)
 /* The go function for: readmap(r:meta_reader) [status=1] */
-func (r *MetaReader ) Readmap () EID { 
-    // eid body s = Map
-    var Result EID 
+func (r *MetaReader) Readmap () EID { 
+    var Result EID
     
-    { var l1 *ClaireAny  
-      var try_1 EID 
+    { var l1 *ClaireAny
+      var try_1 EID
       try_1 = r.Cnext().Nextseq(62)
       if ErrorIn(try_1) {Result = try_1
       } else {
@@ -1011,22 +1003,22 @@ func (r *MetaReader ) Readmap () EID {
         Result = EID{CFALSE.Id(),0}
         } 
       if !ErrorIn(Result) {
-      { var l2 *ClaireAny  
-        var try_2 EID 
+      { var l2 *ClaireAny
+        var try_2 EID
         try_2 = r.Cnext().Nextseq(41)
         if ErrorIn(try_2) {Result = try_2
         } else {
         l2 = ANY(try_2)
-        { var m *Language.Map  
-          var try_3 EID 
-          { var _CL_obj *Language.Map   = Language.To_Map(new(Language.Map).Is(Language.C_Map))
+        { var m *Language.Map
+          var try_3 EID
+          { var _CL_obj *Language.Map = Language.To_Map(new(Language.Map).Is(Language.C_Map))
             { 
-              var va_arg1 *Language.Map  
-              var va_arg2 *ClaireType  
+              var va_arg1 *Language.Map
+              var va_arg2 *ClaireType
               va_arg1 = _CL_obj
-              var try_4 EID 
-              { var arg_5 *ClaireAny  
-                var try_6 EID 
+              var try_4 EID
+              { var arg_5 *ClaireAny
+                var try_6 EID
                 try_6 = Core.F_CALL(C_nth,ARGS(l1.ToEID(),EID{C__INT,IVAL(1)}))
                 if ErrorIn(try_6) {try_4 = try_6
                 } else {
@@ -1043,10 +1035,10 @@ func (r *MetaReader ) Readmap () EID {
               } 
             if !ErrorIn(try_3) {
             { 
-              var va_arg1 *Language.Map  
-              var va_arg2 *ClaireType  
+              var va_arg1 *Language.Map
+              var va_arg2 *ClaireType
               va_arg1 = _CL_obj
-              var try_7 EID 
+              var try_7 EID
               try_7 = Core.F_CALL(C_nth,ARGS(l1.ToEID(),EID{C__INT,IVAL(2)}))
               if ErrorIn(try_7) {try_3 = try_7
               } else {
@@ -1063,11 +1055,11 @@ func (r *MetaReader ) Readmap () EID {
           } else {
           m = Language.To_Map(OBJ(try_3))
           { 
-            var x *ClaireAny  
+            var x *ClaireAny
             _ = x
             Result= EID{CFALSE.Id(),0}
-            var x_support *ClaireList  
-            var try_8 EID 
+            var x_support *ClaireList
+            var try_8 EID
             try_8 = Core.F_enumerate_any(l2)
             if ErrorIn(try_8) {Result = try_8
             } else {
@@ -1075,13 +1067,13 @@ func (r *MetaReader ) Readmap () EID {
             x_len := x_support.Length()
             for i_it := 0; i_it < x_len; i_it++ { 
               x = x_support.At(i_it)
-              var loop_9 EID 
+              var loop_9 EID
               _ = loop_9
               if (x.Isa.IsIn(C_pair) == CTRUE) { 
-                { var g0013 *ClairePair   = ToPair(x)
+                { var g0013 *ClairePair = ToPair(x)
                   { 
-                    var va_arg1 *Language.Construct  
-                    var va_arg2 *ClaireList  
+                    var va_arg1 *Language.Construct
+                    var va_arg2 *ClaireList
                     va_arg1 = Language.To_Construct(m.Id())
                     va_arg2 = m.Args.AddFast(g0013.Id())
                     va_arg1.Args = va_arg2
@@ -1089,10 +1081,10 @@ func (r *MetaReader ) Readmap () EID {
                     } 
                   } 
                 }  else if (x.Isa.IsIn(Language.C_Vardef) == CTRUE) { 
-                { var g0014 *Language.Vardef   = Language.To_Vardef(x)
+                { var g0014 *Language.Vardef = Language.To_Vardef(x)
                   { 
-                    var va_arg1 *Language.Construct  
-                    var va_arg2 *ClaireList  
+                    var va_arg1 *Language.Construct
+                    var va_arg2 *ClaireList
                     va_arg1 = Language.To_Construct(m.Id())
                     va_arg2 = m.Args.AddFast(C_pair.Make(F_Reader_revVar_Vardef(g0014),g0014.Range.Id()))
                     va_arg1.Args = va_arg2
@@ -1126,13 +1118,12 @@ func E_Reader_readmap_meta_reader (r EID) EID {
   
 // returns to the original form from which the Vardef was created (name -> symbol)
 /* The go function for: revVar(x:Vardef) [status=0] */
-func F_Reader_revVar_Vardef (x *Language.Vardef ) *ClaireAny  { 
-    // procedure body with s = any
-    var Result *ClaireAny  
-    { var s *ClaireSymbol   = x.Pname
-      { var v *ClaireAny   = s.Value()
+func F_Reader_revVar_Vardef (x *Language.Vardef) *ClaireAny { 
+    var Result *ClaireAny
+    { var s *ClaireSymbol = x.Pname
+      { var v *ClaireAny = s.Value()
         if (v == CNULL) { 
-          { var _CL_obj *ClaireUnboundSymbol   = ToUnboundSymbol(new(ClaireUnboundSymbol).Is(C_unbound_symbol))
+          { var _CL_obj *ClaireUnboundSymbol = ToUnboundSymbol(new(ClaireUnboundSymbol).Is(C_unbound_symbol))
             _CL_obj.Name = s
             Result = _CL_obj.Id()
             } 
@@ -1148,19 +1139,17 @@ func E_Reader_revVar_Vardef (x EID) EID {
     return F_Reader_revVar_Vardef(Language.To_Vardef(OBJ(x)) ).ToEID()} 
   
 // reads a compact expression that starts with an ident
-//
 /* The go function for: nexti(r:meta_reader,val:any) [status=1] */
-func (r *MetaReader ) Nexti (val *ClaireAny ) EID { 
-    // eid body s = any
-    var Result EID 
+func (r *MetaReader) Nexti (val *ClaireAny) EID { 
+    var Result EID
     if (r.Firstc() == 40) { 
       if ((val == C_forall.Id()) || 
           ((val == C_exists.Id()) || 
             (val == C_some.Id()))) { 
-        { var v *ClaireVariable  
-          var try_1 EID 
-          { var arg_2 *ClaireAny  
-            var try_3 EID 
+        { var v *ClaireVariable
+          var try_1 EID
+          { var arg_2 *ClaireAny
+            var try_3 EID
             try_3 = r.Cnext().Nexte()
             if ErrorIn(try_3) {try_1 = try_3
             } else {
@@ -1171,24 +1160,24 @@ func (r *MetaReader ) Nexti (val *ClaireAny ) EID {
           if ErrorIn(try_1) {Result = try_1
           } else {
           v = To_Variable(OBJ(try_1))
-          { var _Za2 *ClaireAny  
-            var try_4 EID 
+          { var _Za2 *ClaireAny
+            var try_4 EID
             try_4 = r.Nexte()
             if ErrorIn(try_4) {Result = try_4
             } else {
             _Za2 = ANY(try_4)
-            { var _Za3 *ClaireAny   = C_any.Id()
+            { var _Za3 *ClaireAny = C_any.Id()
               if (_Za2 == C_in.Id()) { 
-                var try_5 EID 
+                var try_5 EID
                 try_5 = r.Nexte()
                 if ErrorIn(try_5) {Result = try_5
                 } else {
                 _Za3 = ANY(try_5)
                 Result = _Za3.ToEID()
-                var g0029I *ClaireBoolean  
-                var try_6 EID 
-                { var arg_7 *ClaireAny  
-                  var try_8 EID 
+                var g0029I *ClaireBoolean
+                var try_6 EID
+                { var arg_7 *ClaireAny
+                  var try_8 EID
                   try_8 = r.Nexte()
                   if ErrorIn(try_8) {try_6 = try_8
                   } else {
@@ -1212,17 +1201,17 @@ func (r *MetaReader ) Nexti (val *ClaireAny ) EID {
                 Result = F_Serror_string(MakeString("[156] wrong use of exists(~S ~S ..."),MakeConstantList(v.Id(),_Za2))
                 } 
               if !ErrorIn(Result) {
-              { var _CL_obj *Language.Exists   = Language.To_Exists(new(Language.Exists).Is(Language.C_Exists))
+              { var _CL_obj *Language.Exists = Language.To_Exists(new(Language.Exists).Is(Language.C_Exists))
                 _CL_obj.ClaireVar = v
                 _CL_obj.SetArg = _Za3
                 { 
-                  var va_arg1 *Language.Iteration  
-                  var va_arg2 *ClaireAny  
+                  var va_arg1 *Language.Iteration
+                  var va_arg2 *ClaireAny
                   va_arg1 = Language.To_Iteration(_CL_obj.Id())
-                  var try_9 EID 
-                  { var _Zbind *ClaireList   = r.Bind_I(v)
+                  var try_9 EID
+                  { var _Zbind *ClaireList = r.Bind_I(v)
                     { 
-                      var x EID 
+                      var x EID
                       x = F_nexts_I_meta_reader2(r,41)
                       if ErrorIn(x) {try_9 = x
                       } else {
@@ -1239,8 +1228,8 @@ func (r *MetaReader ) Nexti (val *ClaireAny ) EID {
                   } 
                 if !ErrorIn(Result) {
                 { 
-                  var va_arg1 *Language.Exists  
-                  var va_arg2 *ClaireAny  
+                  var va_arg1 *Language.Exists
+                  var va_arg2 *ClaireAny
                   va_arg1 = _CL_obj
                   if (val == C_forall.Id()) { 
                     va_arg2 = CTRUE.Id()
@@ -1268,10 +1257,10 @@ func (r *MetaReader ) Nexti (val *ClaireAny ) EID {
         } 
       }  else if ((val == C_list.Id()) && 
         (r.Firstc() == 123)) { 
-      { var s *ClaireAny  
-        var try_10 EID 
-        { var arg_11 *ClaireAny  
-          var try_12 EID 
+      { var s *ClaireAny
+        var try_10 EID
+        { var arg_11 *ClaireAny
+          var try_12 EID
           try_12 = r.Cnext().Nexte()
           if ErrorIn(try_12) {try_10 = try_12
           } else {
@@ -1283,12 +1272,12 @@ func (r *MetaReader ) Nexti (val *ClaireAny ) EID {
         } else {
         s = ANY(try_10)
         if (s.Isa.IsIn(Language.C_Image) == CTRUE) { 
-          { var g0016 *Language.Image   = Language.To_Image(s)
+          { var g0016 *Language.Image = Language.To_Image(s)
             g0016.Isa = Language.C_Collect
             Result = EID{g0016.Id(),0}
             } 
           }  else if (s.Isa.IsIn(Language.C_Select) == CTRUE) { 
-          { var g0017 *Language.Select   = Language.To_Select(s)
+          { var g0017 *Language.Select = Language.To_Select(s)
             g0017.Isa = Language.C_Lselect
             Result = EID{g0017.Id(),0}
             } 
@@ -1298,13 +1287,13 @@ func (r *MetaReader ) Nexti (val *ClaireAny ) EID {
         }
         } 
       } else {
-      var g0030I *ClaireBoolean  
+      var g0030I *ClaireBoolean
       { 
-        var v_and3 *ClaireBoolean  
+        var v_and3 *ClaireBoolean
         
         if (val.Isa.IsIn(Language.C_Call) == CTRUE) { 
-          { var g0019 *Language.Call   = Language.To_Call(val)
-            v_and3 = MakeBoolean((g0019.Selector.Id() == C_nth.Id()) && (g0019.Args.At(1-1) == C_list.Id()))
+          { var g0019 *Language.Call = Language.To_Call(val)
+            v_and3 = MakeBoolean((g0019.Selector.Id() == C_nth.Id()) && (g0019.Args.At(0) == C_list.Id()))
             } 
           } else {
           v_and3 = CFALSE
@@ -1318,10 +1307,10 @@ func (r *MetaReader ) Nexti (val *ClaireAny ) EID {
           } 
         } 
       if (g0030I == CTRUE) { 
-        { var s *ClaireAny  
-          var try_13 EID 
-          { var arg_14 *ClaireAny  
-            var try_15 EID 
+        { var s *ClaireAny
+          var try_13 EID
+          { var arg_14 *ClaireAny
+            var try_15 EID
             try_15 = r.Cnext().Nexte()
             if ErrorIn(try_15) {try_13 = try_15
             } else {
@@ -1332,20 +1321,20 @@ func (r *MetaReader ) Nexti (val *ClaireAny ) EID {
           if ErrorIn(try_13) {Result = try_13
           } else {
           s = ANY(try_13)
-          { var x *ClaireType  
-            var try_16 EID 
+          { var x *ClaireType
+            var try_16 EID
             try_16 = F_extract_of_type_Call(Language.To_Call(val))
             if ErrorIn(try_16) {Result = try_16
             } else {
             x = ToType(OBJ(try_16))
             if (s.Isa.IsIn(Language.C_Image) == CTRUE) { 
-              { var g0021 *Language.Image   = Language.To_Image(s)
+              { var g0021 *Language.Image = Language.To_Image(s)
                 g0021.Isa = Language.C_Collect
                 g0021.Of = x
                 Result = EID{g0021.Id(),0}
                 } 
               }  else if (s.Isa.IsIn(Language.C_Select) == CTRUE) { 
-              { var g0022 *Language.Select   = Language.To_Select(s)
+              { var g0022 *Language.Select = Language.To_Select(s)
                 g0022.Isa = Language.C_Lselect
                 g0022.Of = x
                 Result = EID{g0022.Id(),0}
@@ -1358,13 +1347,13 @@ func (r *MetaReader ) Nexti (val *ClaireAny ) EID {
           }
           } 
         } else {
-        var g0031I *ClaireBoolean  
+        var g0031I *ClaireBoolean
         { 
-          var v_and4 *ClaireBoolean  
+          var v_and4 *ClaireBoolean
           
           if (val.Isa.IsIn(Language.C_Call) == CTRUE) { 
-            { var g0024 *Language.Call   = Language.To_Call(val)
-              v_and4 = MakeBoolean((g0024.Selector.Id() == C_nth.Id()) && (g0024.Args.At(1-1) == C_set.Id()))
+            { var g0024 *Language.Call = Language.To_Call(val)
+              v_and4 = MakeBoolean((g0024.Selector.Id() == C_nth.Id()) && (g0024.Args.At(0) == C_set.Id()))
               } 
             } else {
             v_and4 = CFALSE
@@ -1378,10 +1367,10 @@ func (r *MetaReader ) Nexti (val *ClaireAny ) EID {
             } 
           } 
         if (g0031I == CTRUE) { 
-          { var s *ClaireAny  
-            var try_17 EID 
-            { var arg_18 *ClaireAny  
-              var try_19 EID 
+          { var s *ClaireAny
+            var try_17 EID
+            { var arg_18 *ClaireAny
+              var try_19 EID
               try_19 = r.Cnext().Nexte()
               if ErrorIn(try_19) {try_17 = try_19
               } else {
@@ -1392,19 +1381,19 @@ func (r *MetaReader ) Nexti (val *ClaireAny ) EID {
             if ErrorIn(try_17) {Result = try_17
             } else {
             s = ANY(try_17)
-            { var x *ClaireType  
-              var try_20 EID 
+            { var x *ClaireType
+              var try_20 EID
               try_20 = F_extract_of_type_Call(Language.To_Call(val))
               if ErrorIn(try_20) {Result = try_20
               } else {
               x = ToType(OBJ(try_20))
               if (s.Isa.IsIn(Language.C_Image) == CTRUE) { 
-                { var g0026 *Language.Image   = Language.To_Image(s)
+                { var g0026 *Language.Image = Language.To_Image(s)
                   g0026.Of = x
                   Result = EID{g0026.Id(),0}
                   } 
                 }  else if (s.Isa.IsIn(Language.C_Select) == CTRUE) { 
-                { var g0027 *Language.Select   = Language.To_Select(s)
+                { var g0027 *Language.Select = Language.To_Select(s)
                   g0027.Of = x
                   Result = EID{g0027.Id(),0}
                   } 
@@ -1418,8 +1407,8 @@ func (r *MetaReader ) Nexti (val *ClaireAny ) EID {
           }  else if (r.Firstc() == 58) { 
           Result = r.Nextvariable(val)
           }  else if (r.Firstc() == 64) { 
-          { var _Za1 *ClaireAny  
-            var try_21 EID 
+          { var _Za1 *ClaireAny
+            var try_21 EID
             try_21 = r.Cnext().Fromp.ReadIdent()
             if ErrorIn(try_21) {Result = try_21
             } else {
@@ -1452,21 +1441,20 @@ func E_nexti_meta_reader (r EID,val EID) EID {
 // we have read the escape character #
 //
 /* The go function for: read_escape(r:meta_reader) [status=1] */
-func (r *MetaReader ) ReadEscape () EID { 
-    // eid body s = any
-    var Result EID 
+func (r *MetaReader) ReadEscape () EID { 
+    var Result EID
     if (r.Cnext().Firstc() == 47) { 
-      { var val int  = r.Cnext().Firstc()
+      { var val int = r.Cnext().Firstc()
         r.Next()
         Result = EID{C__INT,IVAL(val)}
         } 
       }  else if (r.Firstc() == 39) { 
-      { var arg_1 *ClaireString  
-        var try_2 EID 
-        { var arg_3 *ClaireSymbol  
-          var try_4 EID 
-          { var arg_5 *ClaireAny  
-            var try_6 EID 
+      { var arg_1 *ClaireString
+        var try_2 EID
+        { var arg_3 *ClaireSymbol
+          var try_4 EID
+          { var arg_5 *ClaireAny
+            var try_6 EID
             try_6 = r.Cnext().Fromp.ReadIdent()
             if ErrorIn(try_6) {try_4 = try_6
             } else {
@@ -1506,25 +1494,24 @@ func E_read_escape_meta_reader (r EID) EID {
 // note : this is not enough, hence the pragma may need to be setup manually
 // we could add explicit casts ...
 /* The go function for: nextvariable(r:meta_reader,val:any) [status=1] */
-func (r *MetaReader ) Nextvariable (val *ClaireAny ) EID { 
-    // eid body s = any
-    var Result EID 
+func (r *MetaReader) Nextvariable (val *ClaireAny) EID { 
+    var Result EID
     if (val == C__inf.Id()) { 
       r.Skipc()
       Result = EID{C_triangle.Value,0}
       } else {
-      { var x *ClaireAny  
-        var try_1 EID 
+      { var x *ClaireAny
+        var try_1 EID
         try_1 = r.Cnext().Nexte()
         if ErrorIn(try_1) {Result = try_1
         } else {
         x = ANY(try_1)
-        { var _CL_obj *Language.Vardef   = Language.To_Vardef(new(Language.Vardef).Is(Language.C_Vardef))
+        { var _CL_obj *Language.Vardef = Language.To_Vardef(new(Language.Vardef).Is(Language.C_Vardef))
           { 
-            var va_arg1 *ClaireVariable  
-            var va_arg2 *ClaireSymbol  
+            var va_arg1 *ClaireVariable
+            var va_arg2 *ClaireSymbol
             va_arg1 = To_Variable(_CL_obj.Id())
-            var try_2 EID 
+            var try_2 EID
             try_2 = Language.F_extract_symbol_any(val)
             if ErrorIn(try_2) {Result = try_2
             } else {
@@ -1550,11 +1537,10 @@ func E_nextvariable_meta_reader (r EID,val EID) EID {
 // reads an expression, then the exact keyword e
 //
 /* The go function for: nexts!(r:meta_reader,e:keyword) [status=1] */
-func F_nexts_I_meta_reader1 (r *MetaReader ,e *ClaireKeyword ) EID { 
-    // eid body s = any
-    var Result EID 
-    { var x *ClaireAny  
-      var try_1 EID 
+func F_nexts_I_meta_reader1 (r *MetaReader,e *ClaireKeyword) EID { 
+    var Result EID
+    { var x *ClaireAny
+      var try_1 EID
       try_1 = r.Nexts(e)
       if ErrorIn(try_1) {Result = try_1
       } else {
@@ -1575,19 +1561,18 @@ func E_nexts_I_meta_reader1 (r EID,e EID) EID {
 // reads an expression, then the exact keyword e
 //
 /* The go function for: nexte!(r:meta_reader,e:keyword) [status=1] */
-func (r *MetaReader ) Nexte_I (e *ClaireKeyword ) EID { 
-    // eid body s = any
-    var Result EID 
-    { var x *ClaireAny  
-      var try_1 EID 
+func (r *MetaReader) Nexte_I (e *ClaireKeyword) EID { 
+    var Result EID
+    { var x *ClaireAny
+      var try_1 EID
       try_1 = r.Nexte()
       if ErrorIn(try_1) {Result = try_1
       } else {
       x = ANY(try_1)
-      var g0032I *ClaireBoolean  
-      var try_2 EID 
-      { var arg_3 *ClaireAny  
-        var try_4 EID 
+      var g0032I *ClaireBoolean
+      var try_2 EID
+      { var arg_3 *ClaireAny
+        var try_4 EID
         try_4 = r.Nexte()
         if ErrorIn(try_4) {try_2 = try_4
         } else {
@@ -1614,11 +1599,10 @@ func E_nexte_I_meta_reader (r EID,e EID) EID {
   
 // ... exact separator
 /* The go function for: nexts!(r:meta_reader,e:integer) [status=1] */
-func F_nexts_I_meta_reader2 (r *MetaReader ,e int) EID { 
-    // eid body s = any
-    var Result EID 
-    { var x *ClaireAny  
-      var try_1 EID 
+func F_nexts_I_meta_reader2 (r *MetaReader,e int) EID { 
+    var Result EID
+    { var x *ClaireAny
+      var try_1 EID
       try_1 = r.Nexts(C_none)
       if ErrorIn(try_1) {Result = try_1
       } else {
@@ -1640,11 +1624,10 @@ func E_nexts_I_meta_reader2 (r EID,e EID) EID {
 // ... keyword e or separator n. DOES NOT SKIP the last character
 //
 /* The go function for: nexts!(r:meta_reader,e:keyword,n:integer) [status=1] */
-func F_nexts_I_meta_reader3 (r *MetaReader ,e *ClaireKeyword ,n int) EID { 
-    // eid body s = any
-    var Result EID 
-    { var x *ClaireAny  
-      var try_1 EID 
+func F_nexts_I_meta_reader3 (r *MetaReader,e *ClaireKeyword,n int) EID { 
+    var Result EID
+    { var x *ClaireAny
+      var try_1 EID
       try_1 = r.Nexts(e)
       if ErrorIn(try_1) {Result = try_1
       } else {
@@ -1666,18 +1649,17 @@ func E_nexts_I_meta_reader3 (r EID,e EID,n EID) EID {
 // checks if s is an extended comment
 //
 /* The go function for: extended_comment?(r:meta_reader,s:string) [status=0] */
-func (r *MetaReader ) ExtendedComment_ask (s *ClaireString ) *ClaireBoolean  { 
-    // procedure body with s = boolean
-    var Result *ClaireBoolean  
-    { var n int  = F_get_string(s,']')
+func (r *MetaReader) ExtendedComment_ask (s *ClaireString) *ClaireBoolean { 
+    var Result *ClaireBoolean
+    { var n int = F_get_string(s,']')
       if ((s.At(1) == ToChar(Language.C_EOS.Value).Value) || 
           ((s.At(1) != '[') || 
             (n == 0))) { 
         Result = CFALSE
         } else {
-        { var arg_1 *ClaireAny  
-          { var i int  = 2
-            { var g0033 int  = n
+        { var arg_1 *ClaireAny
+          { var i int = 2
+            { var g0033 int = n
               arg_1= CFALSE.Id()
               for (i <= g0033) { 
                 if (s.At(n) == '[') { 
@@ -1701,13 +1683,12 @@ func E_extended_comment_ask_meta_reader (r EID,s EID) EID {
 // produce the equivalent extended comment
 //
 /* The go function for: extended_comment!(r:meta_reader,s:string) [status=1] */
-func (r *MetaReader ) ExtendedComment_I (s *ClaireString ) EID { 
-    // eid body s = any
-    var Result EID 
-    { var i int  = F_get_string(s,']')
-      { var k int  = F_included_string(s,MakeString("//"),CTRUE)
-        { var m int  = F_length_string(s)
-          { var cx int  = r.Firstc()
+func (r *MetaReader) ExtendedComment_I (s *ClaireString) EID { 
+    var Result EID
+    { var i int = F_get_string(s,']')
+      { var k int = F_included_string(s,MakeString("//"),CTRUE)
+        { var m int = F_length_string(s)
+          { var cx int = r.Firstc()
             Core.F_print_in_string_void()
             for (F_useless_c_integer(F_integer_I_char(s.At(m))) == CTRUE) { 
               m = (m-1)
@@ -1722,8 +1703,8 @@ func (r *MetaReader ) ExtendedComment_I (s *ClaireString ) EID {
             if ((i == 3) && 
                 (s.At(i) == '?')) { 
               PRINC("assert(")
-              { var j int  = (i+2)
-                { var g0035 int  = m
+              { var j int = (i+2)
+                { var g0035 int = m
                   for (j <= g0035) { 
                     F_princ_char(s.At(j))
                     j = (j+1)
@@ -1733,8 +1714,8 @@ func (r *MetaReader ) ExtendedComment_I (s *ClaireString ) EID {
               PRINC(")")
               } else {
               PRINC("trace(")
-              { var j int  = 2
-                { var g0036 int  = (i-1)
+              { var j int = 2
+                { var g0036 int = (i-1)
                   for (j <= g0036) { 
                     F_princ_char(s.At(j))
                     j = (j+1)
@@ -1742,8 +1723,8 @@ func (r *MetaReader ) ExtendedComment_I (s *ClaireString ) EID {
                   } 
                 } 
               PRINC(",\"")
-              { var j int  = (i+2)
-                { var g0037 int  = (k-1)
+              { var j int = (i+2)
+                { var g0037 int = (k-1)
                   for (j <= g0037) { 
                     F_princ_char(s.At(j))
                     j = (j+1)
@@ -1753,8 +1734,8 @@ func (r *MetaReader ) ExtendedComment_I (s *ClaireString ) EID {
               PRINC("\\n\"")
               if ((k+3) <= m) { 
                 PRINC(",")
-                { var j int  = (k+3)
-                  { var g0038 int  = m
+                { var j int = (k+3)
+                  { var g0038 int = m
                     for (j <= g0038) { 
                       F_princ_char(s.At(j))
                       j = (j+1)
@@ -1765,9 +1746,9 @@ func (r *MetaReader ) ExtendedComment_I (s *ClaireString ) EID {
               PRINC(")")
               } 
             { 
-              var s2 EID 
-              { var arg_1 *ClaireString  
-                var try_2 EID 
+              var s2 EID
+              { var arg_1 *ClaireString
+                var try_2 EID
                 try_2 = Core.F_end_of_string_void()
                 if ErrorIn(try_2) {s2 = try_2
                 } else {

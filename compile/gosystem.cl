@@ -695,7 +695,7 @@ parents(self:list) : list
 // default complex case : create a variable "Result"
 [procedure_body(m:method, %l:lambda, %body:any,s:class) : void
   ->  if need_debug?(m) debug_intro(PRODUCER,%l,m),
-      printf("// procedure body with s = ~S~I",s,breakline()),
+      if PRODUCER.debug? printf("// procedure body, with s = ~S~I",s,breakline()),
       if (s != void) 
          (var_declaration("Result",s,1),
           statement(%body,s,"Result",false))
@@ -712,7 +712,7 @@ parents(self:list) : list
 // call for the debug/profile is needed     
 [eid_body(m:method,%body:any,typeOK:boolean, s:class) : void
  -> if need_debug?(m) debug_intro(PRODUCER,m.formula,m),
-    printf("// eid body s = ~S~I",s,breakline()),
+    if PRODUCER.debug? printf("// eid body s = ~S~I",s,breakline()),
     var_declaration("Result",EID,1),
     statement(%body,EID,"Result",g_throw(%body)),
     if need_debug?(m) return_result(PRODUCER,EID,m,"Result")

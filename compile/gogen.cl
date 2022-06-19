@@ -241,7 +241,7 @@ c_string(c:go_producer, self:symbol) : string
 // statement to get rid of this
 // mode : 0 : normal no newline, 1 : newline, 2: special
 [var_declaration(v:string,s:class,mode:integer) : void
-  -> printf("var ~I ~I ~I", c_princ(v), interface!(s), (if (mode > 0) breakline())),
+  -> printf("var ~I ~I~I", c_princ(v), interface!(s), (if (mode > 0) breakline())),
      if (mode = 2) printf("_ = ~I~I",c_princ(v),breakline()) ]
 
 // ! is a semantic marker for imported
@@ -271,7 +271,7 @@ c_string(c:go_producer, self:symbol) : string
                                             else if (m2.module! = m.module! & c ^ m2.domain[1] != {})
                                                arg_match(go_signature(m2), %sig)
                                             else true), 
-                                    any true)))),
+                                    any defined(m.selector.name) = Kernel)))),        // v4.0.6: mix of methods & slot are not supported with Go
             any false)) ]
 
     
@@ -427,12 +427,12 @@ c_string(c:go_producer, self:symbol) : string
 // THERE are 5 sorts in go : int, float, char,  any (object) and EID
 // there are 7 sorts in CLAIRE : int, float, char, object, string, function, any
 [interface!(self:class) : void
- ->   if (self = void) princ("void ")
+ ->   if (self = void) princ("void")
       else if (self = integer) princ("int")
-       else if (self = float) princ("float64")
+      else if (self = float) princ("float64")
       else if (self = char)  princ("rune")
       else if (self = EID) princ("EID")
-      else  printf("*~I ", go_class(self))  ]
+      else  printf("*~I", go_class(self))  ]
 
 // general translation method: x is an expression that must be translated
 // to a CLAIRE object (*ClaireX). x is known to be functional ! s is the sort for x.
@@ -647,13 +647,17 @@ c_string(c:go_producer, self:symbol) : string
   -> if (x % Call_method | x % Construct | x % Variable | x % Call_slot | x % Cast | x % global_variable) 
         // g_sort(member(c_type(x))) //  is too  strong
         let t1 := (c_type(x) @ of) in
-          (if unique?(t1) the(t1) else any)
+          (if unique?(t1) class!(the(t1)) else any)
     else any ]
 
+// new : when g_member is x, what the the expected go_type 
+[g_expected(s:class) : class 
+  -> if (s = float | s = integer) s else any ]    
+
 // this is a way to access the low-level native slices (for list and sets)
-[cast_Values(sbag:class,gmem:class) : void 
-   ->  let short := (if (gmem = integer) "I" else if (gmem = float) "F" else "O") in
-          printf(".Values~A()",short) ]
+//[cast_Values(sbag:class,gmem:class) : void 
+//   ->  let short := (if (gmem = integer) "I" else if (gmem = float) "F" else "O") in
+//          printf(".Values~A()",short) ]
 
 // this method does nothing. It used to check if a name could create a naming conflict.
 // we keep it until we have tested that it is safe to remove it
@@ -678,3 +682,7 @@ build_Variable(s:string,t:any) : Variable
 [simple_func?(x:any) : boolean 
   -> if (g_clean(x) & c_type(x) != void) true
      else false ]
+
+// atIndex : print an integer "minus one"
+[at_index(x:any) : void
+  -> case x (integer princ(x - 1), any (g_expression(x, integer), princ("-1"))) ]

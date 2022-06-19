@@ -147,13 +147,6 @@ readlet(r:meta_reader, e:keyword) : any
                             arg = (if (firstc(r) = #/,) readlet(cnext(r), e)
                                    else nexts(r, e))) in
                    (unbind!(r, %bind), x),
-; I can t remember what this is ...
-;         Defobj let v := extract_variable(var(%def)),
-;                    %bind := bind!(r, v),
-;                    x := Let(var = v, value = get(arg, %def),
-;                            arg = (if (firstc(r) = #/,) readlet(cnext(r), e)
-;                                   else nexts(r, e))) in
-;                   (unbind!(r, %bind), x),
          Let*  (arg(%def) := readlet*(r,args(arg(%def) as Do),1,e), %def),
          Call[selector = write]
            let v1 := Variable(gensym(), any),
@@ -168,7 +161,6 @@ readlet(r:meta_reader, e:keyword) : any
 
 
 // recursive construction of the tail of a Let*
-//
 readlet*(r:meta_reader, l:list, n:integer, e:keyword) : any
  -> (if (n > length(l)) nexts(r, e)
     else let v := extract_variable(var(l[n])),
@@ -178,7 +170,6 @@ readlet*(r:meta_reader, l:list, n:integer, e:keyword) : any
 
 
 // reads a when expression
-//
 readwhen(r:meta_reader, e:keyword) : any
  -> (let %def := nexts!(r, in, #/,) in
       case %def
@@ -193,7 +184,6 @@ readwhen(r:meta_reader, e:keyword) : any
          
 
 // read an if
-//
 readif(r:meta_reader, e:integer) : any
  -> (let %a1 := nexte(r),
         %a2 := nexts(r, else) in
@@ -244,8 +234,9 @@ readset(r:meta_reader, %a1:any) : any
                               (unbind!(r, %bind), x)))
              else if (%a2 = OR)
                 let v := extract_variable(nexts!(r, in)) in
-                  lexical_build(Image(var = v, set_arg = nexts!(r, #/}),
-                                      arg = substitution(%a1,v,v)), list(v), 0)
+                  lexical_index(Image(var = v, set_arg = nexts!(r, #/}),
+                                      arg = substitution(%a1,v,v)), 
+                                list(v), 0, false)                     // v4.0.6 = partial lexical indexing
              else if operation?(%a2)
                 readset(r,
                         loopexp(r, combine(%a1, %a2, nexte(r)), none,
@@ -260,14 +251,19 @@ dereference(x:any) : any
 			
 			
 // reads a sequence of exp. Must end with a e = ) | ] | }
-//
+//  <actually returns a list>
 nextseq(r:meta_reader, e:integer) : any
  -> (//[5] enter nextseq(~S) first=~S // e, firstc(r),
-    if (firstc(r) = e) (next(r), list())  // <yc:v0.01>
+    if (firstc(r) = e) (next(r), list())  // this allows reading empty lists ()
     else let x := nexts(r, (if (e = #/>) None else none)) in
            (if (firstc(r) = 10 & r.toplevel) skipc(r),         // v3.2.22
             if (firstc(r) = e) (next(r), list(x))
-            else if (firstc(r) = #/,) x cons nextseq(cnext(r), e)
+            else if (firstc(r) = #/,) 
+              let y := nextseq(cnext(r), e) in
+                 (if (case y (list (length(y) = 0)))           // v4.0.6 : once a , is read, an value must follow before )
+                     Serror("[171] Read the character ) inside a sequence",list())
+                  else (x cons y))    // builds the sequence recursively
+            // (x cons nextseq(cnext(r), e))
             else Serror("[171] Read the character ~S inside a sequence",
                         list(char!(firstc(r))))))
 
@@ -276,7 +272,11 @@ nextseq(r:meta_reader, e:integer) : any
 readblock(r:meta_reader, x:any, e:integer) : any
  -> (skipc(r),
     if (x = paren(r)) list()
-    else if (firstc(r) = #/,) Do!(x, readblock(r, nexte(cnext(r)), e))
+    else if (firstc(r) = #/,)  
+          let y := nexte(cnext(r)) in
+            (case y (delimiter Serror("[172] delimiter ~S found too soon after ~S + comma(,)",list(y,x)),
+                     any Do!(x,readblock(r,y,e))))               // v4.0.6 check that ,] is trapped
+         // Do!(x, readblock(r, nexte(cnext(r)), e))
     else if (firstc(r) = e) (cnext(r), x)
     else if stop?(firstc(r))
        Serror("[172] the sequence ...~S must end with ~A", list(x, char!(e)))
@@ -289,12 +289,12 @@ readblock(r:meta_reader, x:any, e:integer) : any
           (case y (Call* put(isa,y,Call)),    // this is how () are implemented -> forbids combining
            readblock(r, y, e)))
            
-// variant in CLAIRE4 when e = ), which can also read a lambda
+// variant in CLAIRE4 when e = ), which can also read a lambda of for (...){...}
 readList(r:meta_reader, x:any) : any
   -> let y := readblock(r,x,#/)) in
-       (//[5] readList gets block ~S char=~A // y, firstc(r),
+       (//[5] DEBUG: readList gets block ~S char=~A // y, firstc(r),
         if (firstc(r) = #/{) readlambda(r,y) else y)    
-
+ 
 // create the lambda
 readlambda(r:meta_reader,l:any) : any 
 -> let lbody := nextseq(cnext(r),#/}), lvar := list() in
@@ -421,7 +421,7 @@ nextdefinition(r:meta_reader,x:any,y:any,old?:boolean) : any
                              Call!(=, list(value, nexte(r)))))
      else Do(args = list<any>(x,y)))
     
-    
+// read a method - old? = true means that the method definition is between brackets    
 nextmethod(r:meta_reader,x:any,y:any,table?:boolean,old?:boolean,inl?:boolean)  : any
   -> (let n := skipc(r),
           z := ( if old? readblock(r, nexte(r), #/])

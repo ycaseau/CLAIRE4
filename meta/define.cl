@@ -223,7 +223,7 @@ self_eval(self:Defmethod) : any
            // error("[186] conflict between ~S and ~S is not allowed for ~S", m,r,p),
            trace(1,"--- WARNING ! [186] conflict between ~S and ~S is dangerous since ~S is closed\n", m,r,p), // v3.2.06
         LDEF := list<any>(),
-        if (lbody[3] != body) (trace(2,"---- jito for ~S\n",m),
+        if (lbody[3] != body) (if jito?() trace(3,"---- jito for ~S\n",m),
                                put(formula, m, jito(lambda!(lv, lbody[3])))),
         if (length(lrange) > 1) put(Kernel/typing, m, lrange[2]),
         m.inline? := self.inline?,
@@ -458,7 +458,7 @@ self_eval(self:Defarray) : any
          v := (a[2] as Variable),
          s := extract_type(v.range),
          e := (let l := cdr(a),
-                   b := lexical_build(self.body, l, 0) in
+                   b := lexical_index(self.body, l, 0,true) in
                  (if exists(va in l | occurrence(b, va) > 0) lambda!(l, b)
                   else self.body)),
          d := (case e (lambda unknown, any eval(self.body))) in
@@ -540,7 +540,7 @@ self_eval(self:Defrule) : any
         add!(rule_object.instances,ru),
         let (R,lvar) := make_filter(%condition) in
          let d := make_demon(R,ru.name,
-                            lvar,%condition,lexical_build(self.body,lvar,0)) in
+                            lvar,%condition,lexical_index(self.body,lvar,0,true)) in
          (if (R.if_write % function)
              error("cannot define a new rule on ~S which is closed", R),
           //[5] we have defined a demon ~S for ~S // d,R,
@@ -667,7 +667,6 @@ eventMethod(p:property) : void
         put(functional, m, %f))                   // when we compile -> directly call the demon 
 
 
-
 // **************************************************************************
 // *     Part 5: JITO for methods                                           *
 // **************************************************************************
@@ -676,7 +675,7 @@ eventMethod(p:property) : void
 // we perform an on-the-fly optimization of lambdas through substitution (static calls)
 // Jito(l:lambda) -> apply makeJito to the body (in place substitution)
 [jito(self:any) : any
--> if (not(jito?()) | system.Core/debug! >= 0) self
+-> if not(jito?()) self                      // v4.0.6 : jito?() controls JITO
    else case self
       (list for x in self jito(x),
        Vardef (put(isa,self,Variable), self),
@@ -685,7 +684,7 @@ eventMethod(p:property) : void
        Or jito(self.args),
        Call (makeJito(self), true),
        Let letJito(self),
-       Assign (if not(self.var % Variable) error("[101] ~S is not a variable", self.var),    // moved this test from eval in v4.0 
+       Assign (if not(self.var % Variable) error("[101] ~S is not a variable but a ~S", self.var, owner(self.var)),    // moved this test from eval in v4.0 
                jito(self.arg)),
        Gassign (if (self.var.value % self.var.range) jito(self.arg)),    // watch out for unknown
        Do jito(self.args),
@@ -706,8 +705,6 @@ eventMethod(p:property) : void
                jito(self.other)),
        Definition (if fast_definition?(self.arg) put(isa,self,DefFast)),        
        any false) ]
-
- // claire/VARIANT:boolean := true         // debug to remove, replace by jito?()
 
  // Let is special in CLAIRE4 : we implement the implicit typing found in the compiler = to infer
  // the type  from the value (when no range is given)

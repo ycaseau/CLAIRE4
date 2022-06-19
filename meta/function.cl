@@ -412,6 +412,12 @@ claire/get_value(self:module,s:string) : any -> function!(value_module)  //  v3.
 externC(s:string) : void -> error("cannot execute Go code: ~A", s)
 externC(s:string,c:class) : type[member(c)] -> (error("cannot execute ~A",s), unknown)
 
+// new in claire 4 - print with a constant number of char = truncate or extends
+[princ(s:string,n:integer) : void
+  -> let m := length(s) in
+       (if (m > n) princ(substring(s,1,n))
+        else (princ(s),
+              for i in (m + 1 .. n) princ(' '))) ] 
 
 //------------------- SYMBOL -----------------------------------------------
 make_string(self:symbol) : string
@@ -430,8 +436,8 @@ self_print(self:symbol) : void -> printf("~A/~S", module!(self).name,string!(sel
 //mod(self:integer,x:integer) : integer -> function!(mod_integer)
 claire/--?(self:integer,x:integer) : set -> function!(sequence_integer)
 --!(self:integer,x:integer) : list -> function!(list_integer)
-exit(self:integer) : void -> function!(CL_exit)
-//less_code(n:integer,i:integer) : boolean -> function!(less_code_integer)
+// exit(self:integer) : void -> function!(CL_exit)
+// less_code(n:integer,i:integer) : boolean -> function!(less_code_integer)
 <<(x:integer,y:integer) : integer -> externC("(x << y)",integer)
 >>(x:integer,y:integer) : integer -> externC("(x >> y)",integer)
 and(x:integer,y:integer) : integer -> externC("(x & y)",integer)

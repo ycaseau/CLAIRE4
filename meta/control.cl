@@ -515,7 +515,7 @@ self_eval(self:Array) : any
 self_eval(self:Map) : map_set
   -> let m := map!(self.domain,self.of) in
        (for x in self.args
-          (case x (pair put(m,x.first,x.second),
+          (case x (pair put(m,eval(x.first),eval(x.second)),
                    any error("~S is not a pair, cannot be inserted in map ~S",x,m))),
         m)        
 

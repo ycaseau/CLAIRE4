@@ -290,8 +290,8 @@ unfold_eid(ldef:list,self:any,s:class, v:any,err:boolean,loop:any) : void
        let v2 := c_string(PRODUCER,self.var),  x := self.value,
            f := g_clean(x), try? := g_throw(x), ev := class!(self.var.range) in
               (let_block(),
-               var_declaration(v2,ev,0), 
-               if f printf(" = ~I", g_expression(x,ev)),
+               var_declaration(v2,ev,0),                    // no trailing " " in v4.0.6
+               if f printf(" = ~I", g_expression(x,ev)),    // 
                breakline(),
                // printf("/* noccur = ~A */~I",Language/occurexact(self.arg, self.var),breakline()),   // occurexact should discard setup !
                if (Language/occurexact(self.arg, self.var) < 1)          // avoid unused variable error (1 safe, 0 optimized)
@@ -520,9 +520,9 @@ unfold_eid(ldef:list,self:any,s:class, v:any,err:boolean,loop:any) : void
 // returns 1 if we use a try/pattern for error protection
 [iteration_statement(self:For,%set:any,sbag:class,smember:class,v:string,v3:string,v4:string) : integer
  -> if (g_clean(%set) & designated?(%set) & (smember != any & sbag = list))         // simple forms for list (%set is used once)
-          (printf("for _,~I = range(~I~I)~I", c_princ(v4),                           // typed list iteration pattern
+          (printf("for _,~I = range(~I.~I)~I", c_princ(v4),                           // typed list iteration pattern
                    g_expression(%set, sbag),                                        // notice that v4 occurs once
-                   cast_Values(sbag, smember),                                      // access through Values*()
+                   valuesSlot(smember),                                      // access through Values*()
                    new_block("loop")),
            0)
     else let try? := g_throw(%set) in
@@ -533,11 +533,11 @@ unfold_eid(ldef:list,self:any,s:class, v:any,err:boolean,loop:any) : void
                 printf("for i_it := 0; i_it < ~I.Count; i_it++ ~I~I",  c_princ(v3), 
                      new_block(),
                      (if (smember = integer | smember = float)
-                        printf("~I = ~I~I[i_it]~I", c_princ(v4), c_princ(v3),cast_Values(sbag, smember),breakline())
+                        printf("~I = ~I.~I[i_it]~I", c_princ(v4), c_princ(v3),valuesSlot(smember),breakline())
                       else printf("~I = ~I.At(i_it)~I", c_princ(v4), c_princ(v3),breakline())))
              else if (g_member(%set) != any)                                 // use native pattern for list
-                printf("for _,~I = range(~I~I)~I", c_princ(v4), c_princ(v3), 
-                         cast_Values(sbag, smember),
+                printf("for _,~I = range(~I.~I)~I", c_princ(v4), c_princ(v3), 
+                         valuesSlot(smember),
                          new_block("loop2"))
             else let v5 := c_string(PRODUCER,self.var) /+ "_len" in       // length of bag, used forregular pattern for complex list expr
               (printf("~I := ~I.Length()~I", c_princ(v5),c_princ(v3),breakline()),

@@ -1406,7 +1406,7 @@ func (x *ClaireObject) SetObj(i int, y *ClaireAny) {
 	} else if i == 29 {
 		((*ClaireDummy6)(unsafe.Pointer(x))).a29 = y
 	} else {
-		panic(fmt.Sprintf("Fatal error with setObj, attempt to use i=%d for class %s (>= 30)", i, x.Isa.Name.Key))
+		panic(fmt.Sprintf("Fatal error with setObj, attempt to use i=%d for class %s (>= 30)", i, x.Isa.Name.key))
 	}
 }
 

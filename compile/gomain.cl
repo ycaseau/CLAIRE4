@@ -78,7 +78,7 @@
  (try
   (while (l)
    (case l[1]
-    ({"?", "-help"} printHelp(),
+    ({"?", "-help", "-h"} printHelp(),
      {"-q"} (vlevel := 0, l :<< 1),
      {"-v"} (vlevel := 2, l :<< 1),
      {"-s"}  (if (length(l) >= 2)  l :<< 2 else error("option: -s <s1> <s2>")),
@@ -266,15 +266,14 @@
 
 // create a directory for the module (if it does not exist)
 [compile_dir(m:module): void
- -> let s := "mkdir -p src" / capitalize(string!(m.name)) in 
-     (//[5] ask shell : ~S // s,
+ -> let s := "mkdir -p " /+ home() / "go/src" / capitalize(string!(m.name)) in 
+     (if (home() = "")  error("the environment variable CLAIRE_HOME is undefined\n"),
       shell(s))]
 
 // create the go
 [compile_exe(%out:string): void
- -> let s := "go build src" / %out /+ ".go" in 
-     (//[5] ask shell : ~S // s,
-      shell(s))]
+ -> let s := "go build " /+ home() / "go/src"  / %out /+ ".go" in 
+     (shell(s))]
 
 
 

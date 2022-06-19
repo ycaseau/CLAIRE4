@@ -123,7 +123,7 @@ claire/compiler :: meta_compiler(
    external = "go", // Id(compiler.external),
    env = "MacOS",   // Id(compiler.env),
    version = Id(version()),
-   source = "",
+   source = Id(home() / "go/src"),
    libraries = list<string>("Kernel"))
 
 // re-definable items for bootstrap modifications
@@ -177,7 +177,7 @@ Pattern <: type_expression(
 claire/OPT :: meta_OPT(
     outfile = stdin, 
     ignore = set(mClaire/index!, mClaire/set_index, object!, mClaire/base!, mClaire/set_base,
-                 mClaire/push!, anyObject!, mClaire/get_stack, mClaire/put_stack),
+                 mClaire/push!, anyObject!, mClaire/get_stack, mClaire/put_stack, main),
     to_remove = {},                                         // set(interface),
     knowns = set<relation>(arg1,arg2),                     // v3.1.12
     unsure = list(+ @ integer, * @ integer, - @ integer),
@@ -242,7 +242,7 @@ claire/safe(x:any) : type[x] -> x
       (if (s = void | z = s) //  | OPT.online?)
            (if (s = void & (case x (Call x.selector = =)))
                (warn(),
-                trace(2,"-- Equality meant as an assignment: ~S [264]\n",x)),    // v3.3
+                trace(1,"-- Equality meant as an assignment: ~S [264]\n",x)),    // v3.3
             y)       // v3.0.44 BIG CHANGE
       // else if (s = any)
       //   (if (z = integer & y % Call_slot &                       // need a proper slot

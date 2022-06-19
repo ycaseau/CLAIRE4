@@ -249,7 +249,7 @@ c_type(self:Defmethod) : type -> any
        (case %body (Call (%body.selector = sort &
                           (let a1 := %body.args[1] in
                              (case a1 (Call (a1.selector = @ & a1.args[1] % property)))) &
-                          lexical_build(%body.args[2],lv,0) = lv[1]),
+                          lexical_index(%body.args[2],lv,0,false) = lv[1]),
                     any false))) ]
 
 
@@ -382,7 +382,7 @@ compile_lambda(self:string,l:lambda,m:any) : any
         %v := (case %a (table %a, any error("[internal] the table ~S is unknown", a[1]))),
         s := %a.domain,
         e := (let l := cdr(a),
-                  b := Language/lexical_build(self.body, l, 0) in
+                  b := Language/lexical_index(self.body, l, 0, true) in
                 (if exists(va in l | Language/occurrence(b, va) > 0) lambda!(l, b)
                  else self.body)),
         d := (case e (lambda unknown, any self.body)),

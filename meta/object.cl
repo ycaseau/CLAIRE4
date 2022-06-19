@@ -509,8 +509,9 @@ self_print(self:system_error) : void
                 else if (n = 42) "Wrong array[~S] init value: ~S"
                 else if (n = 43) "Defeasible addition on list ~S requires pre-allocation (size ~S)" // v3.3.06
                 else if (n = 50) "C++ imported error (~S) : ~S"   // NEW IN v3.1.04 (backdoor)
+                else if (n = 300) "range error: write fail for ~S, not a ~S"   // NEW IN v4.0
                 else (self.value := n,
-                      "What the hell is this ! [code: ~S^]")),
+                      "What the hell is this ! [code: ~S]")),
                list(self.value, self.arg))))
 
 // contradictions are nice exceptions
@@ -519,6 +520,7 @@ self_print(x:contradiction) : void
  -> printf("A contradiction has occured.")
 
 // the format method is used to print error messages (similar to a printf)
+// Note: it would be nice to remove the duplication between format and self_eval@Print
 [format(self:string,larg:list) : void
  ->  let s := self,
          n := get(s, '~'),
@@ -528,8 +530,18 @@ self_print(x:contradiction) : void
             (if (n > 1) princ(substring(s, 1, n - 1)),
              if ('A' = m) princ(car(l))
              else if ('S' = m) print(car(l))
+             else if ('F' = m)           // 4.0.6 : support ~Fi in format
+                let fv := car(l),                              // float value
+                    p% := false,                               // print a %
+                    j := integer!(nth_get(s,n + 2,n + 2)) - 48 in
+                 (if ('%' = s[n + 2]) (p% := true, j := 1, fv :* 100.0)
+                  else if (j < 0 | j > 9) error("[189] F requires a single digit integer in ~S",self),
+                  if (not(p%) & '%' = s[n + 3]) (p% := true, fv :* 100.0, n :+ 1),
+                  mClaire/printFDigit(fv,j),
+                  if p% princ("%"),
+                  n :+ 1)        
              else if ('I' = m) error("[143] ~I not allowed in format", unknown),
-             if (m != '%') l := l << 1,
+             l := l << 1,   // // if (m != '%') commented out in v4.0.6
              s := substring(s, n + 2, 1000),
              n := get(s, '~')),
         if (length(s) > 0) princ(s)) ]

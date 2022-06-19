@@ -1,5 +1,5 @@
 /***** CLAIRE Compilation of module Language.cl 
-         [version 4.0.04 / safety 5] Sunday 03-13-2022 07:28:42 *****/
+         [version 4.0.06 / safety 5] Monday 06-06-2022 08:31:22 *****/
 
 package Language
 import (_ "fmt"
@@ -38,7 +38,7 @@ type Vardef struct {
 func To_Vardef(x *ClaireAny) *Vardef {return (*Vardef)(unsafe.Pointer(x))}
 
 // automatic constructor function
-func Make_Vardef(pname *ClaireSymbol ,Range *ClaireType ,index int) *Vardef { 
+func Make_Vardef(pname *ClaireSymbol,Range *ClaireType,index int) *Vardef { 
   var o *Vardef = new(Vardef)
   o.Isa = C_Vardef
   o.Pname = pname
@@ -65,14 +65,14 @@ func Make_ComplexInstruction() *ComplexInstruction {
 // class file for Instruction_with_var in module Language 
 type InstructionWithVar struct { 
    ComplexInstruction
-   ClaireVar *ClaireVariable 
+   ClaireVar *ClaireVariable
   } 
 
 // automatic cast function
 func To_InstructionWithVar(x *ClaireAny) *InstructionWithVar {return (*InstructionWithVar)(unsafe.Pointer(x))}
 
 // automatic constructor function
-func Make_InstructionWithVar(ClaireVar *ClaireVariable ) *InstructionWithVar { 
+func Make_InstructionWithVar(ClaireVar *ClaireVariable) *InstructionWithVar { 
   var o *InstructionWithVar = new(InstructionWithVar)
   o.Isa = C_Instruction_with_var
   o.ClaireVar = ClaireVar
@@ -97,15 +97,15 @@ func Make_ControlStructure() *ControlStructure {
 // class file for Call in module Language 
 type Call struct { 
    ControlStructure
-   Selector *ClaireProperty 
-  Args *ClaireList 
+   Selector *ClaireProperty
+  Args *ClaireList
   } 
 
 // automatic cast function
 func To_Call(x *ClaireAny) *Call {return (*Call)(unsafe.Pointer(x))}
 
 // automatic constructor function
-func Make_Call(selector *ClaireProperty ,args *ClaireList ) *Call { 
+func Make_Call(selector *ClaireProperty,args *ClaireList) *Call { 
   var o *Call = new(Call)
   o.Isa = C_Call
   o.Selector = selector
@@ -122,7 +122,7 @@ type Call_star struct {
 func To_Call_star(x *ClaireAny) *Call_star {return (*Call_star)(unsafe.Pointer(x))}
 
 // automatic constructor function
-func Make_Call_star(selector *ClaireProperty ,args *ClaireList ) *Call_star { 
+func Make_Call_star(selector *ClaireProperty,args *ClaireList) *Call_star { 
   var o *Call_star = new(Call_star)
   o.Isa = C_Call_star
   o.Selector = selector
@@ -139,7 +139,7 @@ type Call_plus struct {
 func To_Call_plus(x *ClaireAny) *Call_plus {return (*Call_plus)(unsafe.Pointer(x))}
 
 // automatic constructor function
-func Make_Call_plus(selector *ClaireProperty ,args *ClaireList ) *Call_plus { 
+func Make_Call_plus(selector *ClaireProperty,args *ClaireList) *Call_plus { 
   var o *Call_plus = new(Call_plus)
   o.Isa = C_Call_plus
   o.Selector = selector
@@ -150,15 +150,15 @@ func Make_Call_plus(selector *ClaireProperty ,args *ClaireList ) *Call_plus {
 // class file for Assign in module Language 
 type Assign struct { 
    BasicInstruction
-   ClaireVar *ClaireAny 
-  Arg *ClaireAny 
+   ClaireVar *ClaireAny
+  Arg *ClaireAny
   } 
 
 // automatic cast function
 func To_Assign(x *ClaireAny) *Assign {return (*Assign)(unsafe.Pointer(x))}
 
 // automatic constructor function
-func Make_Assign(ClaireVar *ClaireAny ,arg *ClaireAny ) *Assign { 
+func Make_Assign(ClaireVar *ClaireAny,arg *ClaireAny) *Assign { 
   var o *Assign = new(Assign)
   o.Isa = C_Assign
   o.ClaireVar = ClaireVar
@@ -169,15 +169,15 @@ func Make_Assign(ClaireVar *ClaireAny ,arg *ClaireAny ) *Assign {
 // class file for Gassign in module Language 
 type Gassign struct { 
    BasicInstruction
-   ClaireVar *Core.GlobalVariable 
-  Arg *ClaireAny 
+   ClaireVar *Core.GlobalVariable
+  Arg *ClaireAny
   } 
 
 // automatic cast function
 func To_Gassign(x *ClaireAny) *Gassign {return (*Gassign)(unsafe.Pointer(x))}
 
 // automatic constructor function
-func Make_Gassign(ClaireVar *Core.GlobalVariable ,arg *ClaireAny ) *Gassign { 
+func Make_Gassign(ClaireVar *Core.GlobalVariable,arg *ClaireAny) *Gassign { 
   var o *Gassign = new(Gassign)
   o.Isa = C_Gassign
   o.ClaireVar = ClaireVar
@@ -188,14 +188,14 @@ func Make_Gassign(ClaireVar *Core.GlobalVariable ,arg *ClaireAny ) *Gassign {
 // class file for And in module Language 
 type And struct { 
    ControlStructure
-   Args *ClaireList 
+   Args *ClaireList
   } 
 
 // automatic cast function
 func To_And(x *ClaireAny) *And {return (*And)(unsafe.Pointer(x))}
 
 // automatic constructor function
-func Make_And(args *ClaireList ) *And { 
+func Make_And(args *ClaireList) *And { 
   var o *And = new(And)
   o.Isa = C_And
   o.Args = args
@@ -205,14 +205,14 @@ func Make_And(args *ClaireList ) *And {
 // class file for Or in module Language 
 type Or struct { 
    ControlStructure
-   Args *ClaireList 
+   Args *ClaireList
   } 
 
 // automatic cast function
 func To_Or(x *ClaireAny) *Or {return (*Or)(unsafe.Pointer(x))}
 
 // automatic constructor function
-func Make_Or(args *ClaireList ) *Or { 
+func Make_Or(args *ClaireList) *Or { 
   var o *Or = new(Or)
   o.Isa = C_Or
   o.Args = args
@@ -222,14 +222,14 @@ func Make_Or(args *ClaireList ) *Or {
 // class file for Quote in module Language 
 type Quote struct { 
    BasicInstruction
-   Arg *ClaireAny 
+   Arg *ClaireAny
   } 
 
 // automatic cast function
 func To_Quote(x *ClaireAny) *Quote {return (*Quote)(unsafe.Pointer(x))}
 
 // automatic constructor function
-func Make_Quote(arg *ClaireAny ) *Quote { 
+func Make_Quote(arg *ClaireAny) *Quote { 
   var o *Quote = new(Quote)
   o.Isa = C_Quote
   o.Arg = arg
@@ -254,15 +254,15 @@ func Make_OptimizedInstruction() *OptimizedInstruction {
 // class file for Call_method in module Language 
 type CallMethod struct { 
    OptimizedInstruction
-   Arg *ClaireMethod 
-  Args *ClaireList 
+   Arg *ClaireMethod
+  Args *ClaireList
   } 
 
 // automatic cast function
 func To_CallMethod(x *ClaireAny) *CallMethod {return (*CallMethod)(unsafe.Pointer(x))}
 
 // automatic constructor function
-func Make_CallMethod(arg *ClaireMethod ,args *ClaireList ) *CallMethod { 
+func Make_CallMethod(arg *ClaireMethod,args *ClaireList) *CallMethod { 
   var o *CallMethod = new(CallMethod)
   o.Isa = C_Call_method
   o.Arg = arg
@@ -279,7 +279,7 @@ type CallMethod1 struct {
 func To_CallMethod1(x *ClaireAny) *CallMethod1 {return (*CallMethod1)(unsafe.Pointer(x))}
 
 // automatic constructor function
-func Make_CallMethod1(arg *ClaireMethod ,args *ClaireList ) *CallMethod1 { 
+func Make_CallMethod1(arg *ClaireMethod,args *ClaireList) *CallMethod1 { 
   var o *CallMethod1 = new(CallMethod1)
   o.Isa = C_Call_method1
   o.Arg = arg
@@ -296,7 +296,7 @@ type CallMethod2 struct {
 func To_CallMethod2(x *ClaireAny) *CallMethod2 {return (*CallMethod2)(unsafe.Pointer(x))}
 
 // automatic constructor function
-func Make_CallMethod2(arg *ClaireMethod ,args *ClaireList ) *CallMethod2 { 
+func Make_CallMethod2(arg *ClaireMethod,args *ClaireList) *CallMethod2 { 
   var o *CallMethod2 = new(CallMethod2)
   o.Isa = C_Call_method2
   o.Arg = arg
@@ -313,7 +313,7 @@ type Language_CallMethod3 struct {
 func To_Language_CallMethod3(x *ClaireAny) *Language_CallMethod3 {return (*Language_CallMethod3)(unsafe.Pointer(x))}
 
 // automatic constructor function
-func Make_Language_CallMethod3(arg *ClaireMethod ,args *ClaireList ) *Language_CallMethod3 { 
+func Make_Language_CallMethod3(arg *ClaireMethod,args *ClaireList) *Language_CallMethod3 { 
   var o *Language_CallMethod3 = new(Language_CallMethod3)
   o.Isa = C_Language_Call_method3
   o.Arg = arg
@@ -324,16 +324,16 @@ func Make_Language_CallMethod3(arg *ClaireMethod ,args *ClaireList ) *Language_C
 // class file for Call_slot in module Language 
 type CallSlot struct { 
    OptimizedInstruction
-   Selector *ClaireSlot 
-  Arg *ClaireAny 
-  Test *ClaireBoolean 
+   Selector *ClaireSlot
+  Arg *ClaireAny
+  Test *ClaireBoolean
   } 
 
 // automatic cast function
 func To_CallSlot(x *ClaireAny) *CallSlot {return (*CallSlot)(unsafe.Pointer(x))}
 
 // automatic constructor function
-func Make_CallSlot(selector *ClaireSlot ,arg *ClaireAny ,test *ClaireBoolean ) *CallSlot { 
+func Make_CallSlot(selector *ClaireSlot,arg *ClaireAny,test *ClaireBoolean) *CallSlot { 
   var o *CallSlot = new(CallSlot)
   o.Isa = C_Call_slot
   o.Selector = selector
@@ -345,16 +345,16 @@ func Make_CallSlot(selector *ClaireSlot ,arg *ClaireAny ,test *ClaireBoolean ) *
 // class file for Call_array in module Language 
 type CallArray struct { 
    OptimizedInstruction
-   Selector *ClaireAny 
-  Arg *ClaireAny 
-  Test *ClaireAny 
+   Selector *ClaireAny
+  Arg *ClaireAny
+  Test *ClaireAny
   } 
 
 // automatic cast function
 func To_CallArray(x *ClaireAny) *CallArray {return (*CallArray)(unsafe.Pointer(x))}
 
 // automatic constructor function
-func Make_CallArray(selector *ClaireAny ,arg *ClaireAny ,test *ClaireAny ) *CallArray { 
+func Make_CallArray(selector *ClaireAny,arg *ClaireAny,test *ClaireAny) *CallArray { 
   var o *CallArray = new(CallArray)
   o.Isa = C_Call_array
   o.Selector = selector
@@ -366,16 +366,16 @@ func Make_CallArray(selector *ClaireAny ,arg *ClaireAny ,test *ClaireAny ) *Call
 // class file for Call_table in module Language 
 type CallTable struct { 
    OptimizedInstruction
-   Selector *ClaireTable 
-  Arg *ClaireAny 
-  Test *ClaireBoolean 
+   Selector *ClaireTable
+  Arg *ClaireAny
+  Test *ClaireBoolean
   } 
 
 // automatic cast function
 func To_CallTable(x *ClaireAny) *CallTable {return (*CallTable)(unsafe.Pointer(x))}
 
 // automatic constructor function
-func Make_CallTable(selector *ClaireTable ,arg *ClaireAny ,test *ClaireBoolean ) *CallTable { 
+func Make_CallTable(selector *ClaireTable,arg *ClaireAny,test *ClaireBoolean) *CallTable { 
   var o *CallTable = new(CallTable)
   o.Isa = C_Call_table
   o.Selector = selector
@@ -387,17 +387,17 @@ func Make_CallTable(selector *ClaireTable ,arg *ClaireAny ,test *ClaireBoolean )
 // class file for Update in module Language 
 type Update struct { 
    OptimizedInstruction
-   Selector *ClaireAny 
-  Arg *ClaireAny 
-  Value *ClaireAny 
-  ClaireVar *ClaireAny 
+   Selector *ClaireAny
+  Arg *ClaireAny
+  Value *ClaireAny
+  ClaireVar *ClaireAny
   } 
 
 // automatic cast function
 func To_Update(x *ClaireAny) *Update {return (*Update)(unsafe.Pointer(x))}
 
 // automatic constructor function
-func Make_Update(selector *ClaireAny ,arg *ClaireAny ,value *ClaireAny ,ClaireVar *ClaireAny ) *Update { 
+func Make_Update(selector *ClaireAny,arg *ClaireAny,value *ClaireAny,ClaireVar *ClaireAny) *Update { 
   var o *Update = new(Update)
   o.Isa = C_Update
   o.Selector = selector
@@ -410,16 +410,16 @@ func Make_Update(selector *ClaireAny ,arg *ClaireAny ,value *ClaireAny ,ClaireVa
 // class file for Super in module Language 
 type Super struct { 
    ControlStructure
-   Selector *ClaireProperty 
-  CastTo *ClaireType 
-  Args *ClaireList 
+   Selector *ClaireProperty
+  CastTo *ClaireType
+  Args *ClaireList
   } 
 
 // automatic cast function
 func To_Super(x *ClaireAny) *Super {return (*Super)(unsafe.Pointer(x))}
 
 // automatic constructor function
-func Make_Super(selector *ClaireProperty ,cast_to *ClaireType ,args *ClaireList ) *Super { 
+func Make_Super(selector *ClaireProperty,cast_to *ClaireType,args *ClaireList) *Super { 
   var o *Super = new(Super)
   o.Isa = C_Super
   o.Selector = selector
@@ -431,15 +431,15 @@ func Make_Super(selector *ClaireProperty ,cast_to *ClaireType ,args *ClaireList 
 // class file for Cast in module Language 
 type Cast struct { 
    BasicInstruction
-   Arg *ClaireAny 
-  SetArg *ClaireType 
+   Arg *ClaireAny
+  SetArg *ClaireType
   } 
 
 // automatic cast function
 func To_Cast(x *ClaireAny) *Cast {return (*Cast)(unsafe.Pointer(x))}
 
 // automatic constructor function
-func Make_Cast(arg *ClaireAny ,set_arg *ClaireType ) *Cast { 
+func Make_Cast(arg *ClaireAny,set_arg *ClaireType) *Cast { 
   var o *Cast = new(Cast)
   o.Isa = C_Cast
   o.Arg = arg
@@ -450,14 +450,14 @@ func Make_Cast(arg *ClaireAny ,set_arg *ClaireType ) *Cast {
 // class file for Return in module Language 
 type Return struct { 
    BasicInstruction
-   Arg *ClaireAny 
+   Arg *ClaireAny
   } 
 
 // automatic cast function
 func To_Return(x *ClaireAny) *Return {return (*Return)(unsafe.Pointer(x))}
 
 // automatic constructor function
-func Make_Return(arg *ClaireAny ) *Return { 
+func Make_Return(arg *ClaireAny) *Return { 
   var o *Return = new(Return)
   o.Isa = C_Return
   o.Arg = arg
@@ -467,16 +467,16 @@ func Make_Return(arg *ClaireAny ) *Return {
 // class file for If in module Language 
 type If struct { 
    ControlStructure
-   Test *ClaireAny 
-  Arg *ClaireAny 
-  Other *ClaireAny 
+   Test *ClaireAny
+  Arg *ClaireAny
+  Other *ClaireAny
   } 
 
 // automatic cast function
 func To_If(x *ClaireAny) *If {return (*If)(unsafe.Pointer(x))}
 
 // automatic constructor function
-func Make_If(test *ClaireAny ,arg *ClaireAny ,other *ClaireAny ) *If { 
+func Make_If(test *ClaireAny,arg *ClaireAny,other *ClaireAny) *If { 
   var o *If = new(If)
   o.Isa = C_If
   o.Test = test
@@ -488,14 +488,14 @@ func Make_If(test *ClaireAny ,arg *ClaireAny ,other *ClaireAny ) *If {
 // class file for Do in module Language 
 type Do struct { 
    ControlStructure
-   Args *ClaireList 
+   Args *ClaireList
   } 
 
 // automatic cast function
 func To_Do(x *ClaireAny) *Do {return (*Do)(unsafe.Pointer(x))}
 
 // automatic constructor function
-func Make_Do(args *ClaireList ) *Do { 
+func Make_Do(args *ClaireList) *Do { 
   var o *Do = new(Do)
   o.Isa = C_Do
   o.Args = args
@@ -505,15 +505,15 @@ func Make_Do(args *ClaireList ) *Do {
 // class file for Let in module Language 
 type Let struct { 
    InstructionWithVar
-   Value *ClaireAny 
-  Arg *ClaireAny 
+   Value *ClaireAny
+  Arg *ClaireAny
   } 
 
 // automatic cast function
 func To_Let(x *ClaireAny) *Let {return (*Let)(unsafe.Pointer(x))}
 
 // automatic constructor function
-func Make_Let(ClaireVar *ClaireVariable ,value *ClaireAny ,arg *ClaireAny ) *Let { 
+func Make_Let(ClaireVar *ClaireVariable,value *ClaireAny,arg *ClaireAny) *Let { 
   var o *Let = new(Let)
   o.Isa = C_Let
   o.ClaireVar = ClaireVar
@@ -525,14 +525,14 @@ func Make_Let(ClaireVar *ClaireVariable ,value *ClaireAny ,arg *ClaireAny ) *Let
 // class file for When in module Language 
 type When struct { 
    Let
-   Other *ClaireAny 
+   Other *ClaireAny
   } 
 
 // automatic cast function
 func To_When(x *ClaireAny) *When {return (*When)(unsafe.Pointer(x))}
 
 // automatic constructor function
-func Make_When(ClaireVar *ClaireVariable ,value *ClaireAny ,arg *ClaireAny ,other *ClaireAny ) *When { 
+func Make_When(ClaireVar *ClaireVariable,value *ClaireAny,arg *ClaireAny,other *ClaireAny) *When { 
   var o *When = new(When)
   o.Isa = C_When
   o.ClaireVar = ClaireVar
@@ -551,7 +551,7 @@ type Let_plus struct {
 func To_Let_plus(x *ClaireAny) *Let_plus {return (*Let_plus)(unsafe.Pointer(x))}
 
 // automatic constructor function
-func Make_Let_plus(ClaireVar *ClaireVariable ,value *ClaireAny ,arg *ClaireAny ) *Let_plus { 
+func Make_Let_plus(ClaireVar *ClaireVariable,value *ClaireAny,arg *ClaireAny) *Let_plus { 
   var o *Let_plus = new(Let_plus)
   o.Isa = C_Let_plus
   o.ClaireVar = ClaireVar
@@ -569,7 +569,7 @@ type Let_star struct {
 func To_Let_star(x *ClaireAny) *Let_star {return (*Let_star)(unsafe.Pointer(x))}
 
 // automatic constructor function
-func Make_Let_star(ClaireVar *ClaireVariable ,value *ClaireAny ,arg *ClaireAny ) *Let_star { 
+func Make_Let_star(ClaireVar *ClaireVariable,value *ClaireAny,arg *ClaireAny) *Let_star { 
   var o *Let_star = new(Let_star)
   o.Isa = C_Let_star
   o.ClaireVar = ClaireVar
@@ -581,15 +581,15 @@ func Make_Let_star(ClaireVar *ClaireVariable ,value *ClaireAny ,arg *ClaireAny )
 // class file for Iteration in module Language 
 type Iteration struct { 
    InstructionWithVar
-   SetArg *ClaireAny 
-  Arg *ClaireAny 
+   SetArg *ClaireAny
+  Arg *ClaireAny
   } 
 
 // automatic cast function
 func To_Iteration(x *ClaireAny) *Iteration {return (*Iteration)(unsafe.Pointer(x))}
 
 // automatic constructor function
-func Make_Iteration(ClaireVar *ClaireVariable ,set_arg *ClaireAny ,arg *ClaireAny ) *Iteration { 
+func Make_Iteration(ClaireVar *ClaireVariable,set_arg *ClaireAny,arg *ClaireAny) *Iteration { 
   var o *Iteration = new(Iteration)
   o.Isa = C_Iteration
   o.ClaireVar = ClaireVar
@@ -607,7 +607,7 @@ type For struct {
 func To_For(x *ClaireAny) *For {return (*For)(unsafe.Pointer(x))}
 
 // automatic constructor function
-func Make_For(ClaireVar *ClaireVariable ,set_arg *ClaireAny ,arg *ClaireAny ) *For { 
+func Make_For(ClaireVar *ClaireVariable,set_arg *ClaireAny,arg *ClaireAny) *For { 
   var o *For = new(For)
   o.Isa = C_For
   o.ClaireVar = ClaireVar
@@ -619,14 +619,14 @@ func Make_For(ClaireVar *ClaireVariable ,set_arg *ClaireAny ,arg *ClaireAny ) *F
 // class file for Collect in module Language 
 type Collect struct { 
    Iteration
-   Of *ClaireType 
+   Of *ClaireType
   } 
 
 // automatic cast function
 func To_Collect(x *ClaireAny) *Collect {return (*Collect)(unsafe.Pointer(x))}
 
 // automatic constructor function
-func Make_Collect(ClaireVar *ClaireVariable ,set_arg *ClaireAny ,arg *ClaireAny ,of *ClaireType ) *Collect { 
+func Make_Collect(ClaireVar *ClaireVariable,set_arg *ClaireAny,arg *ClaireAny,of *ClaireType) *Collect { 
   var o *Collect = new(Collect)
   o.Isa = C_Collect
   o.ClaireVar = ClaireVar
@@ -639,14 +639,14 @@ func Make_Collect(ClaireVar *ClaireVariable ,set_arg *ClaireAny ,arg *ClaireAny 
 // class file for Image in module Language 
 type Image struct { 
    Iteration
-   Of *ClaireType 
+   Of *ClaireType
   } 
 
 // automatic cast function
 func To_Image(x *ClaireAny) *Image {return (*Image)(unsafe.Pointer(x))}
 
 // automatic constructor function
-func Make_Image(ClaireVar *ClaireVariable ,set_arg *ClaireAny ,arg *ClaireAny ,of *ClaireType ) *Image { 
+func Make_Image(ClaireVar *ClaireVariable,set_arg *ClaireAny,arg *ClaireAny,of *ClaireType) *Image { 
   var o *Image = new(Image)
   o.Isa = C_Image
   o.ClaireVar = ClaireVar
@@ -659,14 +659,14 @@ func Make_Image(ClaireVar *ClaireVariable ,set_arg *ClaireAny ,arg *ClaireAny ,o
 // class file for Select in module Language 
 type Select struct { 
    Iteration
-   Of *ClaireType 
+   Of *ClaireType
   } 
 
 // automatic cast function
 func To_Select(x *ClaireAny) *Select {return (*Select)(unsafe.Pointer(x))}
 
 // automatic constructor function
-func Make_Select(ClaireVar *ClaireVariable ,set_arg *ClaireAny ,arg *ClaireAny ,of *ClaireType ) *Select { 
+func Make_Select(ClaireVar *ClaireVariable,set_arg *ClaireAny,arg *ClaireAny,of *ClaireType) *Select { 
   var o *Select = new(Select)
   o.Isa = C_Select
   o.ClaireVar = ClaireVar
@@ -679,14 +679,14 @@ func Make_Select(ClaireVar *ClaireVariable ,set_arg *ClaireAny ,arg *ClaireAny ,
 // class file for Lselect in module Language 
 type Lselect struct { 
    Iteration
-   Of *ClaireType 
+   Of *ClaireType
   } 
 
 // automatic cast function
 func To_Lselect(x *ClaireAny) *Lselect {return (*Lselect)(unsafe.Pointer(x))}
 
 // automatic constructor function
-func Make_Lselect(ClaireVar *ClaireVariable ,set_arg *ClaireAny ,arg *ClaireAny ,of *ClaireType ) *Lselect { 
+func Make_Lselect(ClaireVar *ClaireVariable,set_arg *ClaireAny,arg *ClaireAny,of *ClaireType) *Lselect { 
   var o *Lselect = new(Lselect)
   o.Isa = C_Lselect
   o.ClaireVar = ClaireVar
@@ -699,14 +699,14 @@ func Make_Lselect(ClaireVar *ClaireVariable ,set_arg *ClaireAny ,arg *ClaireAny 
 // class file for Exists in module Language 
 type Exists struct { 
    Iteration
-   Other *ClaireAny 
+   Other *ClaireAny
   } 
 
 // automatic cast function
 func To_Exists(x *ClaireAny) *Exists {return (*Exists)(unsafe.Pointer(x))}
 
 // automatic constructor function
-func Make_Exists(ClaireVar *ClaireVariable ,set_arg *ClaireAny ,arg *ClaireAny ,other *ClaireAny ) *Exists { 
+func Make_Exists(ClaireVar *ClaireVariable,set_arg *ClaireAny,arg *ClaireAny,other *ClaireAny) *Exists { 
   var o *Exists = new(Exists)
   o.Isa = C_Exists
   o.ClaireVar = ClaireVar
@@ -719,15 +719,15 @@ func Make_Exists(ClaireVar *ClaireVariable ,set_arg *ClaireAny ,arg *ClaireAny ,
 // class file for Case in module Language 
 type Case struct { 
    ControlStructure
-   ClaireVar *ClaireAny 
-  Args *ClaireList 
+   ClaireVar *ClaireAny
+  Args *ClaireList
   } 
 
 // automatic cast function
 func To_Case(x *ClaireAny) *Case {return (*Case)(unsafe.Pointer(x))}
 
 // automatic constructor function
-func Make_Case(ClaireVar *ClaireAny ,args *ClaireList ) *Case { 
+func Make_Case(ClaireVar *ClaireAny,args *ClaireList) *Case { 
   var o *Case = new(Case)
   o.Isa = C_Case
   o.ClaireVar = ClaireVar
@@ -738,16 +738,16 @@ func Make_Case(ClaireVar *ClaireAny ,args *ClaireList ) *Case {
 // class file for While in module Language 
 type While struct { 
    ControlStructure
-   Test *ClaireAny 
-  Arg *ClaireAny 
-  Other *ClaireBoolean 
+   Test *ClaireAny
+  Arg *ClaireAny
+  Other *ClaireBoolean
   } 
 
 // automatic cast function
 func To_While(x *ClaireAny) *While {return (*While)(unsafe.Pointer(x))}
 
 // automatic constructor function
-func Make_While(test *ClaireAny ,arg *ClaireAny ,other *ClaireBoolean ) *While { 
+func Make_While(test *ClaireAny,arg *ClaireAny,other *ClaireBoolean) *While { 
   var o *While = new(While)
   o.Isa = C_While
   o.Test = test
@@ -759,16 +759,16 @@ func Make_While(test *ClaireAny ,arg *ClaireAny ,other *ClaireBoolean ) *While {
 // class file for Handle in module Language 
 type ClaireHandle struct { 
    ControlStructure
-   Test *ClaireAny 
-  Arg *ClaireAny 
-  Other *ClaireAny 
+   Test *ClaireAny
+  Arg *ClaireAny
+  Other *ClaireAny
   } 
 
 // automatic cast function
 func To_ClaireHandle(x *ClaireAny) *ClaireHandle {return (*ClaireHandle)(unsafe.Pointer(x))}
 
 // automatic constructor function
-func Make_ClaireHandle(test *ClaireAny ,arg *ClaireAny ,other *ClaireAny ) *ClaireHandle { 
+func Make_ClaireHandle(test *ClaireAny,arg *ClaireAny,other *ClaireAny) *ClaireHandle { 
   var o *ClaireHandle = new(ClaireHandle)
   o.Isa = C_Handle
   o.Test = test
@@ -780,14 +780,14 @@ func Make_ClaireHandle(test *ClaireAny ,arg *ClaireAny ,other *ClaireAny ) *Clai
 // class file for Construct in module Language 
 type Construct struct { 
    ComplexInstruction
-   Args *ClaireList 
+   Args *ClaireList
   } 
 
 // automatic cast function
 func To_Construct(x *ClaireAny) *Construct {return (*Construct)(unsafe.Pointer(x))}
 
 // automatic constructor function
-func Make_Construct(args *ClaireList ) *Construct { 
+func Make_Construct(args *ClaireList) *Construct { 
   var o *Construct = new(Construct)
   o.Isa = C_Construct
   o.Args = args
@@ -797,14 +797,14 @@ func Make_Construct(args *ClaireList ) *Construct {
 // class file for List in module Language 
 type List struct { 
    Construct
-   Of *ClaireType 
+   Of *ClaireType
   } 
 
 // automatic cast function
 func To_List(x *ClaireAny) *List {return (*List)(unsafe.Pointer(x))}
 
 // automatic constructor function
-func Make_List(args *ClaireList ,of *ClaireType ) *List { 
+func Make_List(args *ClaireList,of *ClaireType) *List { 
   var o *List = new(List)
   o.Isa = C_List
   o.Args = args
@@ -821,7 +821,7 @@ type Tuple struct {
 func To_Tuple(x *ClaireAny) *Tuple {return (*Tuple)(unsafe.Pointer(x))}
 
 // automatic constructor function
-func Make_Tuple(args *ClaireList ) *Tuple { 
+func Make_Tuple(args *ClaireList) *Tuple { 
   var o *Tuple = new(Tuple)
   o.Isa = C_Tuple
   o.Args = args
@@ -831,14 +831,14 @@ func Make_Tuple(args *ClaireList ) *Tuple {
 // class file for Set in module Language 
 type Set struct { 
    Construct
-   Of *ClaireType 
+   Of *ClaireType
   } 
 
 // automatic cast function
 func To_Set(x *ClaireAny) *Set {return (*Set)(unsafe.Pointer(x))}
 
 // automatic constructor function
-func Make_Set(args *ClaireList ,of *ClaireType ) *Set { 
+func Make_Set(args *ClaireList,of *ClaireType) *Set { 
   var o *Set = new(Set)
   o.Isa = C_Set
   o.Args = args
@@ -849,14 +849,14 @@ func Make_Set(args *ClaireList ,of *ClaireType ) *Set {
 // class file for Array in module Language 
 type Array struct { 
    Construct
-   Of *ClaireType 
+   Of *ClaireType
   } 
 
 // automatic cast function
 func To_Array(x *ClaireAny) *Array {return (*Array)(unsafe.Pointer(x))}
 
 // automatic constructor function
-func Make_Array(args *ClaireList ,of *ClaireType ) *Array { 
+func Make_Array(args *ClaireList,of *ClaireType) *Array { 
   var o *Array = new(Array)
   o.Isa = C_Array
   o.Args = args
@@ -873,7 +873,7 @@ type Printf struct {
 func To_Printf(x *ClaireAny) *Printf {return (*Printf)(unsafe.Pointer(x))}
 
 // automatic constructor function
-func Make_Printf(args *ClaireList ) *Printf { 
+func Make_Printf(args *ClaireList) *Printf { 
   var o *Printf = new(Printf)
   o.Isa = C_Printf
   o.Args = args
@@ -889,7 +889,7 @@ type Error struct {
 func To_Error(x *ClaireAny) *Error {return (*Error)(unsafe.Pointer(x))}
 
 // automatic constructor function
-func Make_Error(args *ClaireList ) *Error { 
+func Make_Error(args *ClaireList) *Error { 
   var o *Error = new(Error)
   o.Isa = C_Error
   o.Args = args
@@ -905,7 +905,7 @@ type Branch struct {
 func To_Branch(x *ClaireAny) *Branch {return (*Branch)(unsafe.Pointer(x))}
 
 // automatic constructor function
-func Make_Branch(args *ClaireList ) *Branch { 
+func Make_Branch(args *ClaireList) *Branch { 
   var o *Branch = new(Branch)
   o.Isa = C_Branch
   o.Args = args
@@ -915,15 +915,15 @@ func Make_Branch(args *ClaireList ) *Branch {
 // class file for Map in module Language 
 type Map struct { 
    Construct
-   Domain *ClaireType 
-  Of *ClaireType 
+   Domain *ClaireType
+  Of *ClaireType
   } 
 
 // automatic cast function
 func To_Map(x *ClaireAny) *Map {return (*Map)(unsafe.Pointer(x))}
 
 // automatic constructor function
-func Make_Map(args *ClaireList ,domain *ClaireType ,of *ClaireType ) *Map { 
+func Make_Map(args *ClaireList,domain *ClaireType,of *ClaireType) *Map { 
   var o *Map = new(Map)
   o.Isa = C_Map
   o.Args = args
@@ -941,7 +941,7 @@ type Macro struct {
 func To_Macro(x *ClaireAny) *Macro {return (*Macro)(unsafe.Pointer(x))}
 
 // automatic constructor function
-func Make_Macro(args *ClaireList ) *Macro { 
+func Make_Macro(args *ClaireList) *Macro { 
   var o *Macro = new(Macro)
   o.Isa = C_Macro
   o.Args = args
@@ -957,7 +957,7 @@ type Trace struct {
 func To_Trace(x *ClaireAny) *Trace {return (*Trace)(unsafe.Pointer(x))}
 
 // automatic constructor function
-func Make_Trace(args *ClaireList ) *Trace { 
+func Make_Trace(args *ClaireList) *Trace { 
   var o *Trace = new(Trace)
   o.Isa = C_Trace
   o.Args = args
@@ -968,14 +968,14 @@ func Make_Trace(args *ClaireList ) *Trace {
 type Assert struct { 
    Construct
    Index int
-  External *ClaireString 
+  External *ClaireString
   } 
 
 // automatic cast function
 func To_Assert(x *ClaireAny) *Assert {return (*Assert)(unsafe.Pointer(x))}
 
 // automatic constructor function
-func Make_Assert(args *ClaireList ,index int,external *ClaireString ) *Assert { 
+func Make_Assert(args *ClaireList,index int,external *ClaireString) *Assert { 
   var o *Assert = new(Assert)
   o.Isa = C_Assert
   o.Args = args
@@ -1002,15 +1002,15 @@ func Make_Defclaire() *Defclaire {
 // class file for Definition in module Language 
 type Definition struct { 
    Defclaire
-   Arg *ClaireClass 
-  Args *ClaireList 
+   Arg *ClaireClass
+  Args *ClaireList
   } 
 
 // automatic cast function
 func To_Definition(x *ClaireAny) *Definition {return (*Definition)(unsafe.Pointer(x))}
 
 // automatic constructor function
-func Make_Definition(arg *ClaireClass ,args *ClaireList ) *Definition { 
+func Make_Definition(arg *ClaireClass,args *ClaireList) *Definition { 
   var o *Definition = new(Definition)
   o.Isa = C_Definition
   o.Arg = arg
@@ -1027,7 +1027,7 @@ type Language_DefFast struct {
 func To_Language_DefFast(x *ClaireAny) *Language_DefFast {return (*Language_DefFast)(unsafe.Pointer(x))}
 
 // automatic constructor function
-func Make_Language_DefFast(arg *ClaireClass ,args *ClaireList ) *Language_DefFast { 
+func Make_Language_DefFast(arg *ClaireClass,args *ClaireList) *Language_DefFast { 
   var o *Language_DefFast = new(Language_DefFast)
   o.Isa = C_Language_DefFast
   o.Arg = arg
@@ -1038,14 +1038,14 @@ func Make_Language_DefFast(arg *ClaireClass ,args *ClaireList ) *Language_DefFas
 // class file for Defobj in module Language 
 type Defobj struct { 
    Definition
-   Ident *ClaireSymbol 
+   Ident *ClaireSymbol
   } 
 
 // automatic cast function
 func To_Defobj(x *ClaireAny) *Defobj {return (*Defobj)(unsafe.Pointer(x))}
 
 // automatic constructor function
-func Make_Defobj(arg *ClaireClass ,args *ClaireList ,ident *ClaireSymbol ) *Defobj { 
+func Make_Defobj(arg *ClaireClass,args *ClaireList,ident *ClaireSymbol) *Defobj { 
   var o *Defobj = new(Defobj)
   o.Isa = C_Defobj
   o.Arg = arg
@@ -1057,8 +1057,8 @@ func Make_Defobj(arg *ClaireClass ,args *ClaireList ,ident *ClaireSymbol ) *Defo
 // class file for Defclass in module Language 
 type Defclass struct { 
    Defobj
-   Params *ClaireList 
-  Forward_ask *ClaireBoolean 
+   Params *ClaireList
+  Forward_ask *ClaireBoolean
   } 
 
 // automatic cast function
@@ -1067,17 +1067,17 @@ func To_Defclass(x *ClaireAny) *Defclass {return (*Defclass)(unsafe.Pointer(x))}
 // class file for Defmethod in module Language 
 type Defmethod struct { 
    Defclaire
-   Arg *Call 
-  SetArg *ClaireAny 
-  Body *ClaireAny 
-  Inline_ask *ClaireBoolean 
+   Arg *Call
+  SetArg *ClaireAny
+  Body *ClaireAny
+  Inline_ask *ClaireBoolean
   } 
 
 // automatic cast function
 func To_Defmethod(x *ClaireAny) *Defmethod {return (*Defmethod)(unsafe.Pointer(x))}
 
 // automatic constructor function
-func Make_Defmethod(arg *Call ,set_arg *ClaireAny ,body *ClaireAny ,inline_ask *ClaireBoolean ) *Defmethod { 
+func Make_Defmethod(arg *Call,set_arg *ClaireAny,body *ClaireAny,inline_ask *ClaireBoolean) *Defmethod { 
   var o *Defmethod = new(Defmethod)
   o.Isa = C_Defmethod
   o.Arg = arg
@@ -1096,7 +1096,7 @@ type Defarray struct {
 func To_Defarray(x *ClaireAny) *Defarray {return (*Defarray)(unsafe.Pointer(x))}
 
 // automatic constructor function
-func Make_Defarray(arg *Call ,set_arg *ClaireAny ,body *ClaireAny ,inline_ask *ClaireBoolean ) *Defarray { 
+func Make_Defarray(arg *Call,set_arg *ClaireAny,body *ClaireAny,inline_ask *ClaireBoolean) *Defarray { 
   var o *Defarray = new(Defarray)
   o.Isa = C_Defarray
   o.Arg = arg
@@ -1109,17 +1109,17 @@ func Make_Defarray(arg *Call ,set_arg *ClaireAny ,body *ClaireAny ,inline_ask *C
 // class file for Defrule in module Language 
 type Defrule struct { 
    Defclaire
-   Ident *ClaireSymbol 
-  Args *ClaireList 
-  Arg *ClaireAny 
-  Body *ClaireAny 
+   Ident *ClaireSymbol
+  Args *ClaireList
+  Arg *ClaireAny
+  Body *ClaireAny
   } 
 
 // automatic cast function
 func To_Defrule(x *ClaireAny) *Defrule {return (*Defrule)(unsafe.Pointer(x))}
 
 // automatic constructor function
-func Make_Defrule(ident *ClaireSymbol ,args *ClaireList ,arg *ClaireAny ,body *ClaireAny ) *Defrule { 
+func Make_Defrule(ident *ClaireSymbol,args *ClaireList,arg *ClaireAny,body *ClaireAny) *Defrule { 
   var o *Defrule = new(Defrule)
   o.Isa = C_Defrule
   o.Ident = ident
@@ -1132,15 +1132,15 @@ func Make_Defrule(ident *ClaireSymbol ,args *ClaireList ,arg *ClaireAny ,body *C
 // class file for Defvar in module Language 
 type Defvar struct { 
    Defclaire
-   Ident *ClaireVariable 
-  Arg *ClaireAny 
+   Ident *ClaireVariable
+  Arg *ClaireAny
   } 
 
 // automatic cast function
 func To_Defvar(x *ClaireAny) *Defvar {return (*Defvar)(unsafe.Pointer(x))}
 
 // automatic constructor function
-func Make_Defvar(ident *ClaireVariable ,arg *ClaireAny ) *Defvar { 
+func Make_Defvar(ident *ClaireVariable,arg *ClaireAny) *Defvar { 
   var o *Defvar = new(Defvar)
   o.Isa = C_Defvar
   o.Ident = ident
@@ -1151,9 +1151,9 @@ func Make_Defvar(ident *ClaireVariable ,arg *ClaireAny ) *Defvar {
 // class file for Language/demon in module Language 
 type LanguageDemon struct { 
    ClaireLambda
-   Pname *ClaireSymbol 
+   Pname *ClaireSymbol
   Priority int
-  Formula *ClaireLambda 
+  Formula *ClaireLambda
   } 
 
 // automatic cast function
@@ -1167,177 +1167,192 @@ type LanguageRuleObject struct {
 // automatic cast function
 func ToLanguageRuleObject(x *ClaireAny) *LanguageRuleObject {return (*LanguageRuleObject)(unsafe.Pointer(x))}
 
-var C_Basic_instruction *ClaireClass  /*obj*/
-var C_iClaire_typing *Core.GlobalVariable 
-var C_iClaire_index *Core.GlobalVariable 
-var C_Vardef *ClaireClass  /*obj*/
-var C_Complex_instruction *ClaireClass  /*obj*/
-var C_Instruction_with_var *ClaireClass  /*obj*/
-var C_Control_structure *ClaireClass  /*obj*/
-var C_EOF *Core.GlobalVariable 
-var C_EOS *Core.GlobalVariable 
-var C_MAX_INTEGER *Core.GlobalVariable 
-var C__starvariable_index_star *Core.GlobalVariable 
-var C_printl *ClaireProperty  /*obj*/
-var C_Language_PPC *Core.GlobalVariable 
-var C_iClaire_LastCall *Core.GlobalVariable 
-var C_Call *ClaireClass  /*obj*/
-var C_Call_star *ClaireClass  /*obj*/
-var C_Call_plus *ClaireClass  /*obj*/
-var C_Assign *ClaireClass  /*obj*/
-var C_Gassign *ClaireClass  /*obj*/
-var C_And *ClaireClass  /*obj*/
-var C_Or *ClaireClass  /*obj*/
-var C_Quote *ClaireClass  /*obj*/
-var C_Optimized_instruction *ClaireClass  /*obj*/
-var C_Call_method *ClaireClass  /*obj*/
-var C_Call_method1 *ClaireClass  /*obj*/
-var C_Call_method2 *ClaireClass  /*obj*/
-var C_Language_Call_method3 *ClaireClass  /*obj*/
-var C_Call_slot *ClaireClass  /*obj*/
-var C_Call_array *ClaireClass  /*obj*/
-var C_Call_table *ClaireClass  /*obj*/
-var C_Update *ClaireClass  /*obj*/
-var C_Super *ClaireClass  /*obj*/
-var C_Cast *ClaireClass  /*obj*/
-var C_Return *ClaireClass  /*obj*/
-var C_If *ClaireClass  /*obj*/
-var C_Do *ClaireClass  /*obj*/
-var C_Let *ClaireClass  /*obj*/
-var C_When *ClaireClass  /*obj*/
-var C_Let_plus *ClaireClass  /*obj*/
-var C_Let_star *ClaireClass  /*obj*/
-var C_Iteration *ClaireClass  /*obj*/
-var C_iterate *ClaireProperty  /*obj*/
-var C_Iterate *ClaireProperty  /*obj*/
-var C_For *ClaireClass  /*obj*/
-var C_Collect *ClaireClass  /*obj*/
-var C_Image *ClaireClass  /*obj*/
-var C_Select *ClaireClass  /*obj*/
-var C_Lselect *ClaireClass  /*obj*/
-var C_Exists *ClaireClass  /*obj*/
-var C_Case *ClaireClass  /*obj*/
-var C_While *ClaireClass  /*obj*/
-var C_Handle *ClaireClass  /*obj*/
-var C_Construct *ClaireClass  /*obj*/
-var C_List *ClaireClass  /*obj*/
-var C_Tuple *ClaireClass  /*obj*/
-var C_Set *ClaireClass  /*obj*/
-var C_Array *ClaireClass  /*obj*/
-var C_Printf *ClaireClass  /*obj*/
-var C_Error *ClaireClass  /*obj*/
-var C_Branch *ClaireClass  /*obj*/
-var C_Map *ClaireClass  /*obj*/
-var C_Macro *ClaireClass  /*obj*/
-var C_macroexpand *ClaireProperty  /*obj*/
-var C_iClaire_trace_on *ClaireProperty  /*obj*/
-var C_Trace *ClaireClass  /*obj*/
-var C_Assert *ClaireClass  /*obj*/
-var C_extract_item *ClaireProperty  /*obj*/
-var C_function_I *ClaireProperty  /*obj*/
-var C_iClaire_LastComment *Core.GlobalVariable 
-var C_NeedComment *Core.GlobalVariable 
-var C_Defclaire *ClaireClass  /*obj*/
-var C_Definition *ClaireClass  /*obj*/
-var C_Language_DefFast *ClaireClass  /*obj*/
-var C_Defobj *ClaireClass  /*obj*/
-var C_Defclass *ClaireClass  /*obj*/
-var C_Defmethod *ClaireClass  /*obj*/
-var C_Defarray *ClaireClass  /*obj*/
-var C_Defrule *ClaireClass  /*obj*/
-var C_Defvar *ClaireClass  /*obj*/
-var C_LDEF *Core.GlobalVariable 
-var C_bit_vector *ClaireProperty  /*obj*/
-var C_Language_demon *ClaireClass  /*obj*/
-var C_demons *ClaireTable  /*obj*/
-var C__inf_dash *ClaireOperation  /*obj*/
-var C_Language_rule_object *ClaireClass  /*obj*/
-var C_Language_relations *ClaireTable  /*obj*/
-var C_Language_last_rule *ClaireTable  /*obj*/
-var C_eval_rule *ClaireProperty  /*obj*/
-var C_Language_no_eval *ClaireProperty  // Language/"no_eval"
-var C_Language_ppvariable *ClaireProperty  // Language/"ppvariable"
-var C_Language_write_value *ClaireProperty  // Language/"write_value"
-var C_var *ClaireProperty  // claire/"var"
-var C_iClaire_lambda_I *ClaireProperty  // iClaire/"lambda!"
-var C_iClaire_lexical_build *ClaireProperty  // iClaire/"lexical_build"
-var C_iClaire_lexical_change *ClaireProperty  // iClaire/"lexical_change"
-var C_iClaire_extract_symbol *ClaireProperty  // iClaire/"extract_symbol"
-var C_iClaire_make_a_property *ClaireProperty  // iClaire/"make_a_property"
-var C_Language_lbreak *ClaireProperty  // Language/"lbreak"
-var C_Language_put_buffer *ClaireProperty  // Language/"put_buffer"
-var C_Language_checkfar *ClaireProperty  // Language/"checkfar"
-var C_Language_indent *ClaireProperty  // Language/"indent"
-var C_Language_set_level *ClaireProperty  // Language/"set_level"
-var C_Language_printbox *ClaireProperty  // Language/"printbox"
-var C_Language_printexp *ClaireProperty  // Language/"printexp"
-var C_pretty_print *ClaireProperty  // claire/"pretty_print"
-var C_Language_assign *ClaireProperty  // Language/"assign"
-var C_Language_printe *ClaireProperty  // Language/"printe"
-var C_Language_sugar_ask *ClaireProperty  // Language/"sugar?"
-var C_iClaire_cast_to *ClaireProperty  // iClaire/"cast_to"
-var C_iClaire_set_arg *ClaireProperty  // iClaire/"set_arg"
-var C_substitution *ClaireProperty  // claire/"substitution"
-var C_Language_occurrence *ClaireProperty  // Language/"occurrence"
-var C_Language_instruction_copy *ClaireProperty  // Language/"instruction_copy"
-var C_iClaire_other *ClaireProperty  // iClaire/"other"
-var C_iClaire_test *ClaireProperty  // iClaire/"test"
-var C_Language_printstat *ClaireProperty  // Language/"printstat"
-var C_Language_printif *ClaireProperty  // Language/"printif"
-var C_Language_printelse *ClaireProperty  // Language/"printelse"
-var C_Language_printdo *ClaireProperty  // Language/"printdo"
-var C_Language_printblock *ClaireProperty  // Language/"printblock"
-var C_Language_printbody *ClaireProperty  // Language/"printbody"
-var C_iClaire_ident *ClaireProperty  // iClaire/"ident"
-var C_Language_attach_comment *ClaireProperty  // Language/"attach_comment"
-var C_iClaire_extract_signature *ClaireProperty  // iClaire/"extract_signature"
-var C_iClaire_extract_pattern *ClaireProperty  // iClaire/"extract_pattern"
-var C_iClaire_extract_type *ClaireProperty  // iClaire/"extract_type"
-var C_Language_extract_pattern_nth *ClaireProperty  // Language/"extract_pattern_nth"
-var C_iClaire_extract_class_call *ClaireProperty  // iClaire/"extract_class_call"
-var C_iClaire_extract_range *ClaireProperty  // iClaire/"extract_range"
-var C_iClaire_extract_status *ClaireProperty  // iClaire/"extract_status"
-var C_iClaire_type_I *ClaireProperty  // iClaire/"type!"
-var C_iClaire_forward_ask *ClaireProperty  // iClaire/"forward?"
-var C_Language_priority *ClaireProperty  // Language/"priority"
-var C_Language_make_filter *ClaireProperty  // Language/"make_filter"
-var C_Language_make_demon *ClaireProperty  // Language/"make_demon"
-var C_Language_eval_if_write *ClaireProperty  // Language/"eval_if_write"
-var C_Language_readCall *ClaireProperty  // Language/"readCall"
-var C_Language_eventMethod *ClaireProperty  // Language/"eventMethod"
-var C_Language_eventMethod_ask *ClaireProperty  // Language/"eventMethod?"
-var C_Language_putCall *ClaireProperty  // Language/"putCall"
-var C_Language_safeRange *ClaireProperty  // Language/"safeRange"
-var C_imported_function *ClaireProperty  // claire/"imported_function"
-var C_occurchange *ClaireProperty  // claire/"occurchange"
-var C_Language_getDefault *ClaireProperty  // Language/"getDefault"
-var C_Language_fast_definition_ask *ClaireProperty  // Language/"fast_definition?"
-var C_static_type *ClaireProperty  // claire/"static_type"
-var C_Language_static_type_nth *ClaireProperty  // Language/"static_type_nth"
-var C_Language_jito *ClaireProperty  // Language/"jito"
-var C_Language_makeJito *ClaireProperty  // Language/"makeJito"
-var C_Language_letJito *ClaireProperty  // Language/"letJito"
-var C_Language_makeCallMatch *ClaireProperty  // Language/"makeCallMatch"
-var C_Language_new_writes *ClaireProperty  // Language/"new_writes"
-var C_Language_occurexact *ClaireProperty  // Language/"occurexact"
-var C_Language_wrong *ClaireProperty  // Language/"wrong"
-var C_map *ClaireProperty  // claire/"map"
+var C_Basic_instruction *ClaireClass /*obj*/
+var C_iClaire_typing *Core.GlobalVariable
+var C_iClaire_index *Core.GlobalVariable
+var C_Vardef *ClaireClass /*obj*/
+var C_Complex_instruction *ClaireClass /*obj*/
+var C_Instruction_with_var *ClaireClass /*obj*/
+var C_Control_structure *ClaireClass /*obj*/
+var C_EOF *Core.GlobalVariable
+var C_EOS *Core.GlobalVariable
+var C_MAX_INTEGER *Core.GlobalVariable
+var C__starvariable_index_star *Core.GlobalVariable
+var C_printl *ClaireProperty /*obj*/
+var C_Language_PPC *Core.GlobalVariable
+var C_iClaire_LastCall *Core.GlobalVariable
+var C_Call *ClaireClass /*obj*/
+var C_Call_star *ClaireClass /*obj*/
+var C_Call_plus *ClaireClass /*obj*/
+var C_Assign *ClaireClass /*obj*/
+var C_Gassign *ClaireClass /*obj*/
+var C_And *ClaireClass /*obj*/
+var C_Or *ClaireClass /*obj*/
+var C_Quote *ClaireClass /*obj*/
+var C_Optimized_instruction *ClaireClass /*obj*/
+var C_Call_method *ClaireClass /*obj*/
+var C_Call_method1 *ClaireClass /*obj*/
+var C_Call_method2 *ClaireClass /*obj*/
+var C_Language_Call_method3 *ClaireClass /*obj*/
+var C_Call_slot *ClaireClass /*obj*/
+var C_Call_array *ClaireClass /*obj*/
+var C_Call_table *ClaireClass /*obj*/
+var C_Update *ClaireClass /*obj*/
+var C_Super *ClaireClass /*obj*/
+var C_Cast *ClaireClass /*obj*/
+var C_Return *ClaireClass /*obj*/
+var C_If *ClaireClass /*obj*/
+var C_Do *ClaireClass /*obj*/
+var C_Let *ClaireClass /*obj*/
+var C_When *ClaireClass /*obj*/
+var C_Let_plus *ClaireClass /*obj*/
+var C_Let_star *ClaireClass /*obj*/
+var C_Iteration *ClaireClass /*obj*/
+var C_iterate *ClaireProperty /*obj*/
+var C_Iterate *ClaireProperty /*obj*/
+var C_For *ClaireClass /*obj*/
+var C_Collect *ClaireClass /*obj*/
+var C_Image *ClaireClass /*obj*/
+var C_Select *ClaireClass /*obj*/
+var C_Lselect *ClaireClass /*obj*/
+var C_Exists *ClaireClass /*obj*/
+var C_Case *ClaireClass /*obj*/
+var C_While *ClaireClass /*obj*/
+var C_Handle *ClaireClass /*obj*/
+var C_Construct *ClaireClass /*obj*/
+var C_List *ClaireClass /*obj*/
+var C_Tuple *ClaireClass /*obj*/
+var C_Set *ClaireClass /*obj*/
+var C_Array *ClaireClass /*obj*/
+var C_Printf *ClaireClass /*obj*/
+var C_Error *ClaireClass /*obj*/
+var C_Branch *ClaireClass /*obj*/
+var C_Map *ClaireClass /*obj*/
+var C_Macro *ClaireClass /*obj*/
+var C_macroexpand *ClaireProperty /*obj*/
+var C_iClaire_trace_on *ClaireProperty /*obj*/
+var C_Trace *ClaireClass /*obj*/
+var C_Assert *ClaireClass /*obj*/
+var C_extract_item *ClaireProperty /*obj*/
+var C_function_I *ClaireProperty /*obj*/
+var C_iClaire_LastComment *Core.GlobalVariable
+var C_NeedComment *Core.GlobalVariable
+var C_Defclaire *ClaireClass /*obj*/
+var C_Definition *ClaireClass /*obj*/
+var C_Language_DefFast *ClaireClass /*obj*/
+var C_Defobj *ClaireClass /*obj*/
+var C_Defclass *ClaireClass /*obj*/
+var C_Defmethod *ClaireClass /*obj*/
+var C_Defarray *ClaireClass /*obj*/
+var C_Defrule *ClaireClass /*obj*/
+var C_Defvar *ClaireClass /*obj*/
+var C_LDEF *Core.GlobalVariable
+var C_bit_vector *ClaireProperty /*obj*/
+var C_Language_demon *ClaireClass /*obj*/
+var C_demons *ClaireTable /*obj*/
+var C__inf_dash *ClaireOperation /*obj*/
+var C_Language_rule_object *ClaireClass /*obj*/
+var C_Language_relations *ClaireTable /*obj*/
+var C_Language_last_rule *ClaireTable /*obj*/
+var C_eval_rule *ClaireProperty /*obj*/
+var C_Language_putCall *ClaireProperty // Language/"putCall"
+var C_Language_safeRange *ClaireProperty // Language/"safeRange"
+var C_imported_function *ClaireProperty // claire/"imported_function"
+var C_occurchange *ClaireProperty // claire/"occurchange"
+var C_Language_getDefault *ClaireProperty // Language/"getDefault"
+var C_Language_fast_definition_ask *ClaireProperty // Language/"fast_definition?"
+var C_static_type *ClaireProperty // claire/"static_type"
+var C_Language_static_type_nth *ClaireProperty // Language/"static_type_nth"
+var C_Language_jito *ClaireProperty // Language/"jito"
+var C_Language_makeJito *ClaireProperty // Language/"makeJito"
+var C_Language_letJito *ClaireProperty // Language/"letJito"
+var C_Language_makeCallMatch *ClaireProperty // Language/"makeCallMatch"
+var C_Language_new_writes *ClaireProperty // Language/"new_writes"
+var C_Language_occurexact *ClaireProperty // Language/"occurexact"
+var C_Language_wrong *ClaireProperty // Language/"wrong"
+var C_map *ClaireProperty // claire/"map"
+var C_Language_no_eval *ClaireProperty // Language/"no_eval"
+var C_Language_ppvariable *ClaireProperty // Language/"ppvariable"
+var C_Language_write_value *ClaireProperty // Language/"write_value"
+var C_var *ClaireProperty // claire/"var"
+var C_iClaire_lambda_I *ClaireProperty // iClaire/"lambda!"
+var C_iClaire_lexical_change *ClaireProperty // iClaire/"lexical_change"
+var C_iClaire_extract_symbol *ClaireProperty // iClaire/"extract_symbol"
+var C_iClaire_make_a_property *ClaireProperty // iClaire/"make_a_property"
+var C_Language_lbreak *ClaireProperty // Language/"lbreak"
+var C_Language_put_buffer *ClaireProperty // Language/"put_buffer"
+var C_Language_checkfar *ClaireProperty // Language/"checkfar"
+var C_Language_indent *ClaireProperty // Language/"indent"
+var C_Language_set_level *ClaireProperty // Language/"set_level"
+var C_Language_printbox *ClaireProperty // Language/"printbox"
+var C_Language_printexp *ClaireProperty // Language/"printexp"
+var C_pretty_print *ClaireProperty // claire/"pretty_print"
+var C_Language_assign *ClaireProperty // Language/"assign"
+var C_Language_printe *ClaireProperty // Language/"printe"
+var C_Language_sugar_ask *ClaireProperty // Language/"sugar?"
+var C_iClaire_cast_to *ClaireProperty // iClaire/"cast_to"
+var C_iClaire_set_arg *ClaireProperty // iClaire/"set_arg"
+var C_substitution *ClaireProperty // claire/"substitution"
+var C_Language_occurrence *ClaireProperty // Language/"occurrence"
+var C_Language_instruction_copy *ClaireProperty // Language/"instruction_copy"
+var C_iClaire_other *ClaireProperty // iClaire/"other"
+var C_iClaire_test *ClaireProperty // iClaire/"test"
+var C_Language_printstat *ClaireProperty // Language/"printstat"
+var C_Language_printif *ClaireProperty // Language/"printif"
+var C_Language_printelse *ClaireProperty // Language/"printelse"
+var C_Language_printdo *ClaireProperty // Language/"printdo"
+var C_Language_printblock *ClaireProperty // Language/"printblock"
+var C_Language_printbody *ClaireProperty // Language/"printbody"
+var C_iClaire_ident *ClaireProperty // iClaire/"ident"
+var C_Language_attach_comment *ClaireProperty // Language/"attach_comment"
+var C_iClaire_extract_signature *ClaireProperty // iClaire/"extract_signature"
+var C_iClaire_extract_pattern *ClaireProperty // iClaire/"extract_pattern"
+var C_iClaire_extract_type *ClaireProperty // iClaire/"extract_type"
+var C_Language_extract_pattern_nth *ClaireProperty // Language/"extract_pattern_nth"
+var C_iClaire_extract_class_call *ClaireProperty // iClaire/"extract_class_call"
+var C_iClaire_extract_range *ClaireProperty // iClaire/"extract_range"
+var C_iClaire_extract_status *ClaireProperty // iClaire/"extract_status"
+var C_iClaire_type_I *ClaireProperty // iClaire/"type!"
+var C_iClaire_forward_ask *ClaireProperty // iClaire/"forward?"
+var C_Language_priority *ClaireProperty // Language/"priority"
+var C_Language_make_filter *ClaireProperty // Language/"make_filter"
+var C_Language_make_demon *ClaireProperty // Language/"make_demon"
+var C_Language_eval_if_write *ClaireProperty // Language/"eval_if_write"
+var C_Language_readCall *ClaireProperty // Language/"readCall"
+var C_Language_eventMethod *ClaireProperty // Language/"eventMethod"
+var C_Language_eventMethod_ask *ClaireProperty // Language/"eventMethod?"
+var C_iClaire_lexical_index *ClaireProperty // iClaire/"lexical_index"
 var It *ClaireModule
 var C_iClaire *ClaireModule 
 // definition of the meta-model for module Language 
 func MetaLoad() { 
   
   It = MakeModule("Language",C_iClaire)
-  It.Comment = MakeString("Compiled on Sunday 03-13-2022 07:28:42(v4.0.04), lines:2216, warnings:1,safety:5")
+  It.Comment = MakeString("Compiled on Monday 06-06-2022 08:31:22(v4.0.06), lines:2259, warnings:1,safety:5")
   ClEnv.Module_I = It
   
   // definition of the properties
+  C_Language_putCall = MakeProperty("putCall",1,It)
+  C_Language_safeRange = MakeProperty("safeRange",1,It)
+  C_imported_function = MakeProperty("imported_function",1,C_claire)
+  C_occurchange = MakeProperty("occurchange",1,C_claire)
+  C_Language_getDefault = MakeProperty("getDefault",1,It)
+  C_Language_fast_definition_ask = MakeProperty("fast_definition?",1,It)
+  C_static_type = MakeProperty("static_type",1,C_claire)
+  C_Language_static_type_nth = MakeProperty("static_type_nth",1,It)
+  C_Language_jito = MakeProperty("jito",1,It)
+  C_Language_makeJito = MakeProperty("makeJito",1,It)
+  C_Language_letJito = MakeProperty("letJito",1,It)
+  C_Language_makeCallMatch = MakeProperty("makeCallMatch",1,It)
+  C_Language_new_writes = MakeProperty("new_writes",1,It)
+  C_Language_occurexact = MakeProperty("occurexact",1,It)
+  C_Language_wrong = MakeProperty("wrong",2,It)
+  C_map = MakeProperty("map",1,C_claire)
   C_Language_no_eval = MakeProperty("no_eval",1,It)
   C_Language_ppvariable = MakeProperty("ppvariable",1,It)
   C_Language_write_value = MakeProperty("write_value",1,It)
   C_var = MakeProperty("var",0,C_claire)
   C_iClaire_lambda_I = MakeProperty("lambda!",1,C_iClaire)
-  C_iClaire_lexical_build = MakeProperty("lexical_build",1,C_iClaire)
   C_iClaire_lexical_change = MakeProperty("lexical_change",1,C_iClaire)
   C_iClaire_extract_symbol = MakeProperty("extract_symbol",1,C_iClaire)
   C_iClaire_make_a_property = MakeProperty("make_a_property",1,C_iClaire)
@@ -1383,22 +1398,7 @@ func MetaLoad() {
   C_Language_readCall = MakeProperty("readCall",1,It)
   C_Language_eventMethod = MakeProperty("eventMethod",1,It)
   C_Language_eventMethod_ask = MakeProperty("eventMethod?",1,It)
-  C_Language_putCall = MakeProperty("putCall",1,It)
-  C_Language_safeRange = MakeProperty("safeRange",1,It)
-  C_imported_function = MakeProperty("imported_function",1,C_claire)
-  C_occurchange = MakeProperty("occurchange",1,C_claire)
-  C_Language_getDefault = MakeProperty("getDefault",1,It)
-  C_Language_fast_definition_ask = MakeProperty("fast_definition?",1,It)
-  C_static_type = MakeProperty("static_type",1,C_claire)
-  C_Language_static_type_nth = MakeProperty("static_type_nth",1,It)
-  C_Language_jito = MakeProperty("jito",1,It)
-  C_Language_makeJito = MakeProperty("makeJito",1,It)
-  C_Language_letJito = MakeProperty("letJito",1,It)
-  C_Language_makeCallMatch = MakeProperty("makeCallMatch",1,It)
-  C_Language_new_writes = MakeProperty("new_writes",1,It)
-  C_Language_occurexact = MakeProperty("occurexact",1,It)
-  C_Language_wrong = MakeProperty("wrong",2,It)
-  C_map = MakeProperty("map",1,C_claire)
+  C_iClaire_lexical_index = MakeProperty("lexical_index",1,C_iClaire)
   
   // instructions from module sources
   C_Basic_instruction = MakeClass("Basic_instruction",C_Instruction,C_claire)
@@ -1406,8 +1406,8 @@ func MetaLoad() {
   _ = Core.F_attach_method(C_Language_no_eval.AddMethod(Signature(C_Instruction.Id(),C_void.Id()),1,MakeFunction1(E_no_eval_Instruction,"no_eval_Instruction")),MakeString("pretty.cl:20"))
   
   { 
-    var expr EID 
-    { var _CL_obj *Core.GlobalVariable  
+    var expr EID
+    { var _CL_obj *Core.GlobalVariable
       C_iClaire_typing = Core.ToGlobalVariable(new(Core.GlobalVariable).IsNamed(Core.C_global_variable,MakeSymbol("typing",C_iClaire)))
       
       _CL_obj = C_iClaire_typing
@@ -1418,8 +1418,8 @@ func MetaLoad() {
     ErrorCheck(expr)} 
   
   { 
-    var expr EID 
-    { var _CL_obj *Core.GlobalVariable  
+    var expr EID
+    { var _CL_obj *Core.GlobalVariable
       C_iClaire_index = Core.ToGlobalVariable(new(Core.GlobalVariable).IsNamed(Core.C_global_variable,MakeSymbol("index",C_iClaire)))
       
       _CL_obj = C_iClaire_index
@@ -1457,8 +1457,8 @@ func MetaLoad() {
   _ = Core.F_attach_method(C_Language_write_value.AddMethod(Signature(Core.C_global_variable.Id(),C_any.Id(),C_any.Id()),1,MakeFunction2(E_write_value_global_variable,"write_value_global_variable")),MakeString("pretty.cl:91"))
   
   { 
-    var expr EID 
-    { var _CL_obj *Core.GlobalVariable  
+    var expr EID
+    { var _CL_obj *Core.GlobalVariable
       C_EOF = Core.ToGlobalVariable(new(Core.GlobalVariable).IsNamed(Core.C_global_variable,MakeSymbol("EOF",C_claire)))
       
       _CL_obj = C_EOF
@@ -1469,8 +1469,8 @@ func MetaLoad() {
     ErrorCheck(expr)} 
   
   { 
-    var expr EID 
-    { var _CL_obj *Core.GlobalVariable  
+    var expr EID
+    { var _CL_obj *Core.GlobalVariable
       C_EOS = Core.ToGlobalVariable(new(Core.GlobalVariable).IsNamed(Core.C_global_variable,MakeSymbol("EOS",C_claire)))
       
       _CL_obj = C_EOS
@@ -1481,8 +1481,8 @@ func MetaLoad() {
     ErrorCheck(expr)} 
   
   { 
-    var expr EID 
-    { var _CL_obj *Core.GlobalVariable  
+    var expr EID
+    { var _CL_obj *Core.GlobalVariable
       C_MAX_INTEGER = Core.ToGlobalVariable(new(Core.GlobalVariable).IsNamed(Core.C_global_variable,MakeSymbol("MAX_INTEGER",C_claire)))
       
       _CL_obj = C_MAX_INTEGER
@@ -1501,8 +1501,8 @@ func MetaLoad() {
   _ = Core.F_attach_method(C_map.AddMethod(Signature(C_lambda.Id(),C_bag.Id(),C_any.Id()),1,MakeFunction2(E_map_lambda,"map_lambda")),MakeString("pretty.cl:128"))
   
   { 
-    var expr EID 
-    { var _CL_obj *Core.GlobalVariable  
+    var expr EID
+    { var _CL_obj *Core.GlobalVariable
       C__starvariable_index_star = Core.ToGlobalVariable(new(Core.GlobalVariable).IsNamed(Core.C_global_variable,MakeSymbol("*variable_index*",C_claire)))
       
       _CL_obj = C__starvariable_index_star
@@ -1514,25 +1514,26 @@ func MetaLoad() {
   
   _ = Core.F_attach_method(C_iClaire_lambda_I.AddMethod(Signature(C_list.Id(),C_any.Id(),C_lambda.Id()),1,MakeFunction2(E_lambda_I_list,"lambda_I_list")),MakeString("pretty.cl:147"))
   
-  _ = Core.F_attach_method(C_iClaire_lexical_build.AddMethod(Signature(C_any.Id(),
+  _ = Core.F_attach_method(C_iClaire_lexical_change.AddMethod(Signature(C_any.Id(),C_list.Id(),C_any.Id()),1,MakeFunction2(E_lexical_change_any,"lexical_change_any")),MakeString("pretty.cl:196"))
+  
+  _ = Core.F_attach_method(C_iClaire_lexical_index.AddMethod(Signature(C_any.Id(),
     C_list.Id(),
     C_integer.Id(),
-    C_any.Id()),1,MakeFunction3(E_lexical_build_any,"lexical_build_any")),MakeString("pretty.cl:186"))
+    C_boolean.Id(),
+    C_any.Id()),1,MakeFunction4(E_iClaire_lexical_index_any2,"iClaire_lexical_index_any2")),MakeString("pretty.cl:238"))
   
-  _ = Core.F_attach_method(C_iClaire_lexical_change.AddMethod(Signature(C_any.Id(),C_list.Id(),C_any.Id()),1,MakeFunction2(E_lexical_change_any,"lexical_change_any")),MakeString("pretty.cl:192"))
+  _ = Core.F_attach_method(C_close.AddMethod(Signature(C_class.Id(),C_class.Id()),0,MakeFunction1(E_close_class,"close_class")),MakeString("pretty.cl:246"))
   
-  _ = Core.F_attach_method(C_close.AddMethod(Signature(C_class.Id(),C_class.Id()),0,MakeFunction1(E_close_class,"close_class")),MakeString("pretty.cl:200"))
+  _ = Core.F_attach_method(C_iClaire_extract_symbol.AddMethod(Signature(C_any.Id(),C_symbol.Id()),1,MakeFunction1(E_extract_symbol_any,"extract_symbol_any")),MakeString("pretty.cl:259"))
   
-  _ = Core.F_attach_method(C_iClaire_extract_symbol.AddMethod(Signature(C_any.Id(),C_symbol.Id()),1,MakeFunction1(E_extract_symbol_any,"extract_symbol_any")),MakeString("pretty.cl:213"))
-  
-  _ = Core.F_attach_method(C_iClaire_make_a_property.AddMethod(Signature(C_any.Id(),C_property.Id()),1,MakeFunction1(E_make_a_property_any,"make_a_property_any")),MakeString("pretty.cl:231"))
+  _ = Core.F_attach_method(C_iClaire_make_a_property.AddMethod(Signature(C_any.Id(),C_property.Id()),1,MakeFunction1(E_make_a_property_any,"make_a_property_any")),MakeString("pretty.cl:277"))
   
   C_printl = MakeProperty("printl",1,C_claire)
   
   
   { 
-    var expr EID 
-    { var _CL_obj *Core.GlobalVariable  
+    var expr EID
+    { var _CL_obj *Core.GlobalVariable
       C_Language_PPC = Core.ToGlobalVariable(new(Core.GlobalVariable).IsNamed(Core.C_global_variable,MakeSymbol("PPC",It)))
       
       _CL_obj = C_Language_PPC
@@ -1542,53 +1543,53 @@ func MetaLoad() {
       } 
     ErrorCheck(expr)} 
   
-  _ = Core.F_attach_method(C_Language_lbreak.AddMethod(Signature(C_void.Id(),C_any.Id()),1,MakeFunction1(E_lbreak_void,"lbreak_void")),MakeString("pretty.cl:251"))
+  _ = Core.F_attach_method(C_Language_lbreak.AddMethod(Signature(C_void.Id(),C_any.Id()),1,MakeFunction1(E_lbreak_void,"lbreak_void")),MakeString("pretty.cl:297"))
   
-  _ = Core.F_attach_method(C_Language_put_buffer.AddMethod(Signature(C_void.Id(),C_any.Id()),1,MakeFunction1(E_put_buffer_void,"put_buffer_void")),MakeString("pretty.cl:255"))
+  _ = Core.F_attach_method(C_Language_put_buffer.AddMethod(Signature(C_void.Id(),C_any.Id()),1,MakeFunction1(E_put_buffer_void,"put_buffer_void")),MakeString("pretty.cl:301"))
   
-  _ = Core.F_attach_method(C_Language_checkfar.AddMethod(Signature(C_void.Id(),C_any.Id()),1,MakeFunction1(E_checkfar_void,"checkfar_void")),MakeString("pretty.cl:259"))
+  _ = Core.F_attach_method(C_Language_checkfar.AddMethod(Signature(C_void.Id(),C_any.Id()),1,MakeFunction1(E_checkfar_void,"checkfar_void")),MakeString("pretty.cl:305"))
   
-  _ = Core.F_attach_method(C_Language_lbreak.AddMethod(Signature(C_integer.Id(),C_any.Id()),1,MakeFunction1(E_lbreak_integer,"lbreak_integer")),MakeString("pretty.cl:261"))
+  _ = Core.F_attach_method(C_Language_lbreak.AddMethod(Signature(C_integer.Id(),C_any.Id()),1,MakeFunction1(E_lbreak_integer,"lbreak_integer")),MakeString("pretty.cl:307"))
   
-  _ = Core.F_attach_method(C_Language_indent.AddMethod(Signature(C_integer.Id(),C_any.Id()),0,MakeFunction1(E_indent_integer,"indent_integer")),MakeString("pretty.cl:266"))
+  _ = Core.F_attach_method(C_Language_indent.AddMethod(Signature(C_integer.Id(),C_any.Id()),0,MakeFunction1(E_indent_integer,"indent_integer")),MakeString("pretty.cl:312"))
   
-  _ = Core.F_attach_method(C_Language_set_level.AddMethod(Signature(C_void.Id(),C_void.Id()),0,MakeFunction1(E_set_level_void,"set_level_void")),MakeString("pretty.cl:270"))
+  _ = Core.F_attach_method(C_Language_set_level.AddMethod(Signature(C_void.Id(),C_void.Id()),0,MakeFunction1(E_set_level_void,"set_level_void")),MakeString("pretty.cl:316"))
   
-  _ = Core.F_attach_method(C_Language_set_level.AddMethod(Signature(C_integer.Id(),C_void.Id()),0,MakeFunction1(E_set_level_integer,"set_level_integer")),MakeString("pretty.cl:271"))
+  _ = Core.F_attach_method(C_Language_set_level.AddMethod(Signature(C_integer.Id(),C_void.Id()),0,MakeFunction1(E_set_level_integer,"set_level_integer")),MakeString("pretty.cl:317"))
   
   _ = Core.F_attach_method(C_Language_printbox.AddMethod(Signature(C_list.Id(),
     C_integer.Id(),
     C_integer.Id(),
     C_string.Id(),
-    C_any.Id()),1,MakeFunction4(E_Language_printbox_list1,"Language_printbox_list1")),MakeString("pretty.cl:307"))
+    C_any.Id()),1,MakeFunction4(E_Language_printbox_list1,"Language_printbox_list1")),MakeString("pretty.cl:353"))
   
-  _ = Core.F_attach_method(C_Language_printbox.AddMethod(Signature(C_list.Id(),C_any.Id()),1,MakeFunction1(E_Language_printbox_list2,"Language_printbox_list2")),MakeString("pretty.cl:312"))
+  _ = Core.F_attach_method(C_Language_printbox.AddMethod(Signature(C_list.Id(),C_any.Id()),1,MakeFunction1(E_Language_printbox_list2,"Language_printbox_list2")),MakeString("pretty.cl:358"))
   
-  _ = Core.F_attach_method(C_Language_printbox.AddMethod(Signature(C_list.Id(),C_string.Id(),C_any.Id()),1,MakeFunction2(E_Language_printbox_list3,"Language_printbox_list3")),MakeString("pretty.cl:314"))
+  _ = Core.F_attach_method(C_Language_printbox.AddMethod(Signature(C_list.Id(),C_string.Id(),C_any.Id()),1,MakeFunction2(E_Language_printbox_list3,"Language_printbox_list3")),MakeString("pretty.cl:360"))
   
-  _ = Core.F_attach_method(C_printl.AddMethod(Signature(C_list.Id(),C_string.Id(),C_void.Id()),1,MakeFunction2(E_printl_list,"printl_list")),MakeString("pretty.cl:332"))
+  _ = Core.F_attach_method(C_printl.AddMethod(Signature(C_list.Id(),C_string.Id(),C_void.Id()),1,MakeFunction2(E_printl_list,"printl_list")),MakeString("pretty.cl:378"))
   
-  _ = Core.F_attach_method(C_Language_printexp.AddMethod(Signature(C_any.Id(),C_boolean.Id(),C_void.Id()),1,MakeFunction2(E_printexp_any,"printexp_any")),MakeString("pretty.cl:345"))
+  _ = Core.F_attach_method(C_Language_printexp.AddMethod(Signature(C_any.Id(),C_boolean.Id(),C_void.Id()),1,MakeFunction2(E_printexp_any,"printexp_any")),MakeString("pretty.cl:391"))
   
-  _ = Core.F_attach_method(C_pretty_print.AddMethod(Signature(C_any.Id(),C_void.Id()),1,MakeFunction1(E_pretty_print_any,"pretty_print_any")),MakeString("pretty.cl:355"))
+  _ = Core.F_attach_method(C_pretty_print.AddMethod(Signature(C_any.Id(),C_void.Id()),1,MakeFunction1(E_pretty_print_any,"pretty_print_any")),MakeString("pretty.cl:401"))
   
-  _ = Core.F_attach_method(C_self_print.AddMethod(Signature(C_list.Id(),C_void.Id()),1,MakeFunction1(E_self_print_list_Language,"self_print_list_Language")),MakeString("pretty.cl:360"))
+  _ = Core.F_attach_method(C_self_print.AddMethod(Signature(C_list.Id(),C_void.Id()),1,MakeFunction1(E_self_print_list_Language,"self_print_list_Language")),MakeString("pretty.cl:406"))
   
-  _ = Core.F_attach_method(C_self_print.AddMethod(Signature(C_set.Id(),C_void.Id()),1,MakeFunction1(E_self_print_set_Language,"self_print_set_Language")),MakeString("pretty.cl:365"))
+  _ = Core.F_attach_method(C_self_print.AddMethod(Signature(C_set.Id(),C_void.Id()),1,MakeFunction1(E_self_print_set_Language,"self_print_set_Language")),MakeString("pretty.cl:411"))
   
-  _ = Core.F_attach_method(C_self_print.AddMethod(Signature(C_tuple.Id(),C_void.Id()),1,MakeFunction1(E_self_print_tuple_Language,"self_print_tuple_Language")),MakeString("pretty.cl:369"))
+  _ = Core.F_attach_method(C_self_print.AddMethod(Signature(C_tuple.Id(),C_void.Id()),1,MakeFunction1(E_self_print_tuple_Language,"self_print_tuple_Language")),MakeString("pretty.cl:415"))
   
-  _ = Core.F_attach_method(C_self_print.AddMethod(Signature(C_map_set.Id(),C_void.Id()),1,MakeFunction1(E_self_print_map_set,"self_print_map_set")),MakeString("pretty.cl:373"))
+  _ = Core.F_attach_method(C_self_print.AddMethod(Signature(C_map_set.Id(),C_void.Id()),1,MakeFunction1(E_self_print_map_set,"self_print_map_set")),MakeString("pretty.cl:419"))
   
-  _ = Core.F_attach_method(C_self_print.AddMethod(Signature(C_pair.Id(),C_void.Id()),1,MakeFunction1(E_self_print_pair,"self_print_pair")),MakeString("pretty.cl:379"))
+  _ = Core.F_attach_method(C_self_print.AddMethod(Signature(C_pair.Id(),C_void.Id()),1,MakeFunction1(E_self_print_pair,"self_print_pair")),MakeString("pretty.cl:425"))
   
-  _ = Core.F_attach_method(C_static_type.AddMethod(Signature(C_any.Id(),C_class.Id()),1,MakeFunction1(E_static_type_any,"static_type_any")),MakeString("pretty.cl:421"))
+  _ = Core.F_attach_method(C_static_type.AddMethod(Signature(C_any.Id(),C_class.Id()),1,MakeFunction1(E_static_type_any,"static_type_any")),MakeString("pretty.cl:467"))
   
-  _ = Core.F_attach_method(C_Language_static_type_nth.AddMethod(Signature(C_any.Id(),C_class.Id()),1,MakeFunction1(E_Language_static_type_nth_any,"Language_static_type_nth_any")),MakeString("pretty.cl:429"))
+  _ = Core.F_attach_method(C_Language_static_type_nth.AddMethod(Signature(C_any.Id(),C_class.Id()),1,MakeFunction1(E_Language_static_type_nth_any,"Language_static_type_nth_any")),MakeString("pretty.cl:475"))
   
   { 
-    var expr EID 
-    { var _CL_obj *Core.GlobalVariable  
+    var expr EID
+    { var _CL_obj *Core.GlobalVariable
       C_iClaire_LastCall = Core.ToGlobalVariable(new(Core.GlobalVariable).IsNamed(Core.C_global_variable,MakeSymbol("LastCall",C_iClaire)))
       
       _CL_obj = C_iClaire_LastCall
@@ -1959,8 +1960,8 @@ func MetaLoad() {
   
   
   { 
-    var expr EID 
-    { var _CL_obj *Core.GlobalVariable  
+    var expr EID
+    { var _CL_obj *Core.GlobalVariable
       C_iClaire_LastComment = Core.ToGlobalVariable(new(Core.GlobalVariable).IsNamed(Core.C_global_variable,MakeSymbol("LastComment",C_iClaire)))
       
       _CL_obj = C_iClaire_LastComment
@@ -1971,8 +1972,8 @@ func MetaLoad() {
     ErrorCheck(expr)} 
   
   { 
-    var expr EID 
-    { var _CL_obj *Core.GlobalVariable  
+    var expr EID
+    { var _CL_obj *Core.GlobalVariable
       C_NeedComment = Core.ToGlobalVariable(new(Core.GlobalVariable).IsNamed(Core.C_global_variable,MakeSymbol("NeedComment",C_claire)))
       
       _CL_obj = C_NeedComment
@@ -2044,8 +2045,8 @@ func MetaLoad() {
   _ = Core.F_attach_method(C_Language_getDefault.AddMethod(Signature(C_type.Id(),C_any.Id(),C_any.Id()),0,MakeFunction2(E_Language_getDefault_type,"Language_getDefault_type")),MakeString("define.cl:205"))
   
   { 
-    var expr EID 
-    { var _CL_obj *Core.GlobalVariable  
+    var expr EID
+    { var _CL_obj *Core.GlobalVariable
       C_LDEF = Core.ToGlobalVariable(new(Core.GlobalVariable).IsNamed(Core.C_global_variable,MakeSymbol("LDEF",C_claire)))
       
       _CL_obj = C_LDEF
@@ -2142,7 +2143,7 @@ func MetaLoad() {
   C_Language_last_rule.Default = CNULL
   
   { 
-    var expr EID 
+    var expr EID
     expr = Core.F_update_property(C_inverse,
       ToObject(C_Language_relations.Id()),
       8,
@@ -2180,13 +2181,13 @@ func MetaLoad() {
   
   _ = Core.F_attach_method(C_Language_eventMethod.AddMethod(Signature(C_property.Id(),C_void.Id()),0,MakeFunction1(E_eventMethod_property,"eventMethod_property")),MakeString("define.cl:667"))
   
-  _ = Core.F_attach_method(C_Language_jito.AddMethod(Signature(C_any.Id(),C_any.Id()),1,MakeFunction1(E_Language_jito_any,"Language_jito_any")),MakeString("define.cl:708"))
+  _ = Core.F_attach_method(C_Language_jito.AddMethod(Signature(C_any.Id(),C_any.Id()),1,MakeFunction1(E_Language_jito_any,"Language_jito_any")),MakeString("define.cl:707"))
   
-  _ = Core.F_attach_method(C_Language_letJito.AddMethod(Signature(C_Let.Id(),C_any.Id()),1,MakeFunction1(E_Language_letJito_Let,"Language_letJito_Let")),MakeString("define.cl:726"))
+  _ = Core.F_attach_method(C_Language_letJito.AddMethod(Signature(C_Let.Id(),C_any.Id()),1,MakeFunction1(E_Language_letJito_Let,"Language_letJito_Let")),MakeString("define.cl:723"))
   
-  _ = Core.F_attach_method(C_Language_makeJito.AddMethod(Signature(C_Call.Id(),C_void.Id()),1,MakeFunction1(E_Language_makeJito_Call,"Language_makeJito_Call")),MakeString("define.cl:752"))
+  _ = Core.F_attach_method(C_Language_makeJito.AddMethod(Signature(C_Call.Id(),C_void.Id()),1,MakeFunction1(E_Language_makeJito_Call,"Language_makeJito_Call")),MakeString("define.cl:749"))
   
-  _ = Core.F_attach_method(C_Language_makeCallMatch.AddMethod(Signature(C_restriction.Id(),C_list.Id(),C_boolean.Id()),0,MakeFunction2(E_Language_makeCallMatch_restriction,"Language_makeCallMatch_restriction")),MakeString("define.cl:760"))
+  _ = Core.F_attach_method(C_Language_makeCallMatch.AddMethod(Signature(C_restriction.Id(),C_list.Id(),C_boolean.Id()),0,MakeFunction2(E_Language_makeCallMatch_restriction,"Language_makeCallMatch_restriction")),MakeString("define.cl:757"))
   
   C_table.Open = ClEnv.Final
   C_class.Open = ClEnv.Final
@@ -2194,10 +2195,10 @@ func MetaLoad() {
   C_slot.Open = ClEnv.Final
   C_boolean.Open = -1
   { 
-    var x *ClaireClass  
+    var x *ClaireClass
     _ = x
-    var x_iter *ClaireAny  
-    var x_support *ClaireSet  
+    var x_iter *ClaireAny
+    var x_support *ClaireSet
     x_support = C_Instruction.Descendants
     for i_it := 0; i_it < x_support.Count; i_it++ { 
       x_iter = x_support.At(i_it)

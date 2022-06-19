@@ -3,20 +3,97 @@
 // Mac version
 *where* :: "/Users/ycaseau/claire/v4.0/go"                      // where the init file is
 *output* :: "/Users/ycaseau/claire/v4.0/go/src"
-*meta* :: "/Users/ycaseau/Dropbox/src/clairev4.03/src/meta"            // source files on dropbox (v2)
-*compile* :: "/Users/ycaseau/Dropbox/src/clairev4.03/src/compile"      // source files on dropbox (v2)
+*meta* :: "/Users/ycaseau/Dropbox/src/clairev4.05/src/meta"            // source files on dropbox (v2)
+*compile* :: "/Users/ycaseau/Dropbox/src/clairev4.05/src/compile"      // source files on dropbox (v2)
 *bsrc* :: "/Users/ycaseau/claire/v4.0/test/nonreg"
 *tsrc* :: "/Users/ycaseau/claire/v4.0/test/perf"
 *rsrc* :: "/Users/ycaseau/claire/v4.0/test/rules"
 
 // these are the global variables expected by the compiler
-RELEASE:float :: 0.05    // version of March 6th, 2022
+RELEASE:float :: 0.06    // version of March 11th, 2022
 
+// new in v4.0.6
+// atIndex : print an integer "minus one"
+[at_index(x:any) : void
+  -> case x (integer princ(x - 1), any (g_expression(x, integer), princ(" - 1"))) ]
+
+// additions
+/*
+begin(Core)
+[princ(s:string,n:integer) : void
+  -> let m := length(s) in
+       (if (m > n) princ(substring(s,1,n))
+        else (princ(s),
+              for i in (m + 1 .. n) princ(' '))) ] 
+end(Core)
+
+begin(Language)
+iClaire/lexical_index(self:any,lvar:list,n:integer,final?:boolean) : any
+ -> (if (self % thing | self % unbound_symbol) lexical_change(self, lvar)
+     else (case self
+            (Variable (if unknown?(index,self)                          // v3.1.12
+                          error("[145] the symbol ~A is unbound",  self.mClaire/pname),
+                       self),
+             Call let s := lexical_change(self.selector, lvar) in
+                    (lexical_index(self.args, lvar, n,final?),
+                     if (self.selector != s)
+                        (put(selector, self, call),
+                         put(args, self, s cons self.args))),
+             Instruction let %type:class := self.isa in
+                           (if (%type % Instruction_with_var.descendants)
+                               (put(index, self.var, n),
+                                n := n + 1,
+                                if (n > *variable_index*)
+                                   *variable_index* := n),
+                            for s in %type.slots
+                              let x := get(s, self) in
+                                (if ((x % thing | x % unbound_symbol) &
+                                     s.range = any)
+                                    put(s, self, lexical_change(x, lvar))
+                                 else lexical_index(x, lvar, n, final?)),
+                            if (%type = Assign & (self as Assign).var % unbound_symbol & final?)                // CLAIRE4
+                                error("[101] ~S is not a variable but a ~S", (self as Assign).var, owner((self as Assign).var))),             // moved from self_eval @ Assign
+             list let %n := length(self) in
+                   while (%n > 0)
+                     (let x := (nth@list(self, %n)) in
+                        (if (x % thing | x % unbound_symbol)
+                            nth=@list(self, %n, lexical_change(x, lvar))
+                         else lexical_index(x, lvar, n, final?)),
+                      %n :- 1),
+             any nil),
+           self))
+
+end(Language)   
+
+begin(Generate)
+[g_expected(s:class) : class 
+  -> if (s = float | s = integer) s else any ]  
+
+// debug
+[totul?(self:class,l:list) : any
+ ->  let lp := get_indexed(self),
+         n := length(lp) in
+       (if (length(l) = n - 1 & 
+            forall(i in (2 .. n) | selector(lp[i]) = (l[i - 1] as Call).args[1]) &          // args are passed in the proper order !
+            (self.open = default() | self Core/<=t exception) &
+            n <= 4 & forall(i in (2 .. n) | srange(lp[i]) % {any,integer}))
+         let %c:any := Call((if (length(l) = 0) mClaire/new! else anyObject!),
+                        self cons list{ c_code(x.args[2],any) | x in l}),  // v3.00.10
+             m := (close @ self) in
+           (if (length(l) = 0) %c := c_code(%c),
+            if m Call_method1(arg = m, args = list(%c)) else %c)
+        else false) ]
+
+end(Generate)
+*/
 
 // ***************************************************************************
 // *    Part 1: Modules & compiler environment                               *
 // ***************************************************************************
 
+// meta files are now the "official" github directory
+(for m in {Core,Language,Reader} source(m) := *meta*,
+ for m in {Optimize,Generate} source(m) := *compile*)
 
 // where we want to generate the go code
 (when c := get_value("compiler") in 

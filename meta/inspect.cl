@@ -146,7 +146,7 @@ inspect(self:any) : any
                            (case val (list (if (length(val) < 10) pretty_print(val)
                                            else (pretty_print(
                                                    list{val[i] | i in (1 .. 9)}),
-                                                 pretty_print("..."))),
+                                                 princ("..."))),              // v4.0.6 
                                       any pretty_print(val))))),
           any printf("~I\n", pretty_print(self))),
         inspect_system(list(self)),
@@ -255,6 +255,7 @@ debug(system) : void
         (write(Kernel/debug!, system, -1), printf("debugger removed\n"))
      else (write(Kernel/debug!, system, 0),
            put(ctrace, system, stdout),
+           put(jito?,system,false),               // v4.0.6 : debug prevents jito (tracability)
            printf("debugger installed\n")))
 
 // this method is called when an error has occured. The value of index

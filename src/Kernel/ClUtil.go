@@ -1024,7 +1024,7 @@ func F_integer_I_float(n float64) EID {
 	if n < CLMINFLOAT || n > CLMAXFLOAT {
 		return Cerror(39, MakeFloat(n).Id(), MakeInteger(0).Id())
 	} else {
-		return EID{C__INT, IVAL((int)(math.Round(n)))}
+		return EID{C__INT, IVAL((int)(math.Floor(n)))}        // v4.0.6
 	}
 } // v3.3
 

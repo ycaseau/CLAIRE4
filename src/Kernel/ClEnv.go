@@ -446,13 +446,14 @@ func E_claire_shell(s EID) EID {
 	return EVOID
 }
 
-// exit
+// exit : extended with -1 option that triggers a failure (and the use of go debugging)
 func F_CL_exit(i int) {
+	if i == -1 {panic("stop and see why")}
 	os.Exit(i)
 }
 
 func E_CL_exit(s EID) EID {
-	os.Exit(INT(s))
+	F_CL_exit(INT(s))        // was os.Exit(INT(s))
 	return EVOID
 }
 
@@ -1341,13 +1342,16 @@ func (p *ClairePort) ReadNumber() *ClaireAny {
 		res = (res * 10.0) + (float64)(p.firstc-'0')
 		p.GetNext()
 	}
-	if p.firstc != '.' && p.firstc != 'e' {
+	if p.firstc == '%' {              // new in v4.0.6 => 12% = 0.12
+		p.GetNext()
+		return MakeFloat(res / 100.0).ToAny()
+	} else if p.firstc != '.' && p.firstc != 'e' {   // regular number read
 		if res >= MinInt64 && res <= MaxInt64 {
 			return MakeInteger((int)(res)).ToAny() // read an int
 		} else {
-			return MakeFloat(res).ToAny()
+			return MakeFloat(res).ToAny()          // convert to a float
 		} // overflow -> float (v3.0.70)
-	} else {
+	} else {  
 		possible := res      // read a float (saw a e or a .)
 		if p.firstc == '.' { // read the decimal part
 			res = 10.0
@@ -1378,6 +1382,11 @@ func (p *ClairePort) ReadNumber() *ClaireAny {
 			} else {
 				possible = possible * math.Pow(10.0, res)
 			}
+		}
+		// new in v4.0.6 (check on previous versions) : accept % at the end of a number
+		if p.firstc == '%' { // read the exponent part
+			possible = possible / 100.0
+			p.GetNext()
 		}
 		return MakeFloat(possible).ToAny()
 	}
@@ -1449,7 +1458,7 @@ func (p *ClairePort) ReadThing(app *ClaireModule, cur rune, def *ClaireModule) E
 		}
 	} else {
 		s := app.createSymbol(ClEnv.bufferPeek()) // create the symbol
-		if (ClEnv.Verbose == 102) { fmt.Printf(">>>>>>>>>>>>>> read symbol: %s def:%x\n", s.Prt(), s.definition)}
+		// if (ClEnv.Verbose == 102) { fmt.Printf(">>>>>>>>>>>>>> read symbol: %s def:%x\n", s.Prt(), s.definition)}
 		if app == ClEnv.Module_I || s.definition != nil { // allowed to read
 			return EID{s.makeValue(), 0} // return ident value or unbound symbol
 		} else {

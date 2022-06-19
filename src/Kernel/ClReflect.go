@@ -58,9 +58,16 @@ func BootCore() {
 	C_set = makeClass1(C_set)     // descendant is a set
 	// two special values : NIL and EMPTY
 	CEMPTY = makeNilSet()
-	CNIL = makeNilList()
+	CNIL = makeBootList()
+	// fix boots lists
 	CEMPTY.of = ToType(CEMPTY.Id())
 	CNIL.of = ToType(CEMPTY.Id())
+	C_void.Slots.of = ToType(CEMPTY.Id())
+	C_object.Slots.of = ToType(CEMPTY.Id())
+	C_symbol.Slots.of = ToType(CEMPTY.Id())
+	C_slot.Slots.of = ToType(CEMPTY.Id())
+	C_list.Slots.of = ToType(CEMPTY.Id())
+	C_set.Slots.of = ToType(CEMPTY.Id())
 	// hand fix some critical slots
 	C_void.Superclass = C_void
 	C_void.Ancestors = coreList(ToType(C_class.Id()), C_void.Id())
@@ -72,8 +79,8 @@ func BootCore() {
 	C_void.Instances.Isa = C_list
 	C_void.evaluate = EVAL_object // propagate default through inheritance
 	C_class.Instances.AddFast(C_void.Id())
-	// create empty sets
 	C_void.Descendants = ToType(C_class.Id()).EmptySetObject()    // empty descendant set
+	// create other constant onbjects
 	CNULL = new(ClaireAny).Is(C_void)                        // create the unknown object
 	C_void.IfWrite = CNULL
 	C_void.Dictionary = ToMapSet(CNULL)
@@ -250,10 +257,10 @@ func makeNewProperty(name *ClaireSymbol) *ClaireProperty {
 	name.module_I.register(o.Name, o.Id()) // link symbol to object
 	o.Restrictions = MakeList(ToType(C_restriction.Id()))
 	o.Definition = MakeList(ToType(C_restriction.Id()))
-	if ClEnv.Verbose > 10 {
-		fmt.Printf("C_restriction : %s = %x\n", C_restriction.Prt(), C_restriction)
-		fmt.Printf("MakeProperty -> definition -> of:%x = %s\n", o.Definition.of, o.Definition.Of().Prt())
-	}
+	//if ClEnv.Verbose > 10 {
+	//	fmt.Printf("C_restriction : %s = %x\n", C_restriction.Prt(), C_restriction)
+	//	fmt.Printf("MakeProperty -> definition -> of:%x = %s\n", o.Definition.of, o.Definition.Of().Prt())
+	// }
 	o.Multivalued_ask = CFALSE
 	o.Inverse = ToRelation(CNULL)
 	o.Domain = ToType(C_any.Id())
@@ -386,11 +393,10 @@ func (c *ClaireClass) AddSlot(p *ClaireProperty, r *ClaireType, def *ClaireAny) 
 	c1 := r.Class_I()
 	s.Isa = C_slot
 	C_slot.Instances.AddFast(s.ToAny())
-	// s.Index = 1 + len(c.Slots.ValuesO())
-	if ClEnv.Verbose > 10 {
-		fmt.Printf("--- create slot %s@%s position %d and default %x\n", p.Name.key, c.Name.key, s.Index, def)
-		fmt.Printf(" -> srange c1 will be %s from range = %s\n", c1.Prt(), r.Prt())
-	}
+	// if ClEnv.Verbose > 10 {
+	//	fmt.Printf("--- create slot %s@%s position %d and default %x\n", p.Name.key, c.Name.key, s.Index, def)
+	//	fmt.Printf(" -> srange c1 will be %s from range = %s\n", c1.Prt(), r.Prt())
+	//  }
 	// puts s in the list of slots at the right positions and sets the index
 	ls := c.Slots.ValuesO()
 	ix := len(ls)
@@ -466,10 +472,10 @@ func MakeModule(s string, sup *ClaireModule) *ClaireModule {
 		if m2.value.Isa == C_module { return ToModule(m2.value)
 		} else {panic("unsupported conflict on module names with: " + s)}
 	} else {
-	m := makeModule1()
-	m.Name = C_claire.createSymbol(s)
-	makeModule2(m, sup)
-	return m
+		m := makeModule1()
+		m.Name = C_claire.createSymbol(s)
+		makeModule2(m, sup)
+		return m
 	}
 }
 
@@ -492,8 +498,9 @@ func makeClass1(c *ClaireClass) *ClaireClass {
 	c.Isa = C_class
 	// these are incomplete list creation patterns (to be fixed in step2)
 	c.Subclass = ToType(C_class.Id()).EmptySetObject()
-	c.Instances = makeNilList()   // ToList(makeListObject(ToType(C_class.Id()), []*ClaireAny{}).Id())
-	c.Slots = makeNilList()
+	c.Instances = ToType(c.Id()).emptyListObject()
+	               // makeNilList()   // ToList(makeListObject(ToType(C_class.Id()), []*ClaireAny{}).Id())
+	c.Slots = makeBootList()
 	return c
 }
 
@@ -504,7 +511,7 @@ func makeClass2(name string, c1 *ClaireClass, c2 *ClaireClass, m *ClaireModule) 
 	instantiateClass(name,c1,c2)  /// now we define c1 as a subclass of c2
 }
 
-// Debuf : print a set of classes
+// Debug : print a set of classes (temporary : could be removed)
 func SCS(s *ClaireSet) string {
 	var res string = "{"
 	for k := 0; k < s.Count; k++ {res = res + ToClass(s.At(k)).Name.key + " "}
@@ -531,7 +538,8 @@ func instantiateClass(name string, c1 *ClaireClass, c2 *ClaireClass) {
 	if c2.Slots.Length() > 0 {
 		c1.Slots = c2.Slots.Copy() // slots inheritance
 	} else {
-		c1.Slots = makeNilList() // empty tuple (no _expression / no update)
+		c1.Slots = ToType(c1.Id()).emptyListObject()
+		// c1.Slots = makeNilList() // empty tuple (no _expression / no update)
 	} // empty list
 	c1.Open = c2.Open
 	c1.Params = CNIL
@@ -564,7 +572,7 @@ func MakeClass(name string, c *ClaireClass, m *ClaireModule) *ClaireClass {
 // this is how it is called in define.cl - c is the super class
 // this call may return an error if symbol is already used
 func (s *ClaireSymbol) Class_I(c *ClaireClass) EID {
-	if ClEnv.Verbose > 1 {
+	if ClEnv.Verbose > 10 {
 		fmt.Printf("--- make interpreted class %s\n", s.key)
 	}
 	// x := F_new_thing_class(C_class,s)  will not work because of the extra slot (evaluate)

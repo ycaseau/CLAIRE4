@@ -1,5 +1,5 @@
-/***** CLAIRE Compilation of file /Users/ycaseau/Dropbox/src/clairev4.03/src/meta/call.cl 
-         [version 4.0.04 / safety 5] Sunday 03-13-2022 07:28:42 *****/
+/***** CLAIRE Compilation of file /Users/ycaseau/Dropbox/src/clairev4.05/src/meta/call.cl 
+         [version 4.0.06 / safety 5] Monday 06-06-2022 08:31:22 *****/
 
 package Language
 import (_ "fmt"
@@ -38,16 +38,15 @@ func import_g0064() {
 // These are special (x op y) Calls that can be combined !
 // syntactic mark: slot call (x.s)
 /* The go function for: self_print(self:Call) [status=1] */
-func (self *Call ) SelfPrint () EID { 
-    // eid body s = void
-    var Result EID 
-    { var _Zl int  = Core.C_pretty.Index
-      { var _Zs *ClaireProperty   = self.Selector
-        { var _Za *ClaireList   = self.Args
+func (self *Call) SelfPrint () EID { 
+    var Result EID
+    { var _Zl int = Core.C_pretty.Index
+      { var _Zs *ClaireProperty = self.Selector
+        { var _Za *ClaireList = self.Args
           if ((_Zs.Isa.IsIn(C_operation) == CTRUE) && 
               (_Za.Length() == 2)) { 
             Core.C_pretty.Index = (Core.C_pretty.Index+2)
-            Result = F_printe_any(_Za.At(1-1),_Zs)
+            Result = F_printe_any(_Za.At(0),_Zs)
             if !ErrorIn(Result) {
             PRINC(" ")
             Result = Core.F_print_any(_Zs.Id())
@@ -55,33 +54,33 @@ func (self *Call ) SelfPrint () EID {
             PRINC(" ")
             Result = F_lbreak_void()
             if !ErrorIn(Result) {
-            Result = F_printe_any(_Za.At(2-1),_Zs)
+            Result = F_printe_any(_Za.At(1),_Zs)
             }}}
             }  else if (_Zs.Id() == C_nth.Id()) { 
             if (_Za.Length() == 3) { 
-              Result = F_printexp_any(_Za.At(1-1),CFALSE)
+              Result = F_printexp_any(_Za.At(0),CFALSE)
               if !ErrorIn(Result) {
               PRINC("[")
-              Result = Core.F_CALL(C_print,ARGS(_Za.At(2-1).ToEID()))
+              Result = Core.F_CALL(C_print,ARGS(_Za.At(1).ToEID()))
               if !ErrorIn(Result) {
               PRINC(",")
-              Result = Core.F_CALL(C_print,ARGS(_Za.At(3-1).ToEID()))
+              Result = Core.F_CALL(C_print,ARGS(_Za.At(2).ToEID()))
               if !ErrorIn(Result) {
               PRINC("]")
               Result = EVOID
               }}}
               }  else if (_Za.Length() == 1) { 
-              Result = F_printexp_any(_Za.At(1-1),CFALSE)
+              Result = F_printexp_any(_Za.At(0),CFALSE)
               if !ErrorIn(Result) {
               PRINC("[]")
               Result = EVOID
               }
               } else {
-              Result = F_printexp_any(_Za.At(1-1),CFALSE)
+              Result = F_printexp_any(_Za.At(0),CFALSE)
               if !ErrorIn(Result) {
               PRINC("[")
               if (_Za.Length() == 2) { 
-                Result = Core.F_CALL(C_print,ARGS(_Za.At(2-1).ToEID()))
+                Result = Core.F_CALL(C_print,ARGS(_Za.At(1).ToEID()))
                 } else {
                 Result = EID{CFALSE.Id(),0}
                 } 
@@ -92,20 +91,20 @@ func (self *Call ) SelfPrint () EID {
               } 
             }  else if ((_Zs.Id() == C_nth_equal.Id()) && 
               (_Za.Length() >= 3)) { 
-            { var a *ClaireAny   = _Za.At(3-1)
-              { var o *ClaireAny  
+            { var a *ClaireAny = _Za.At(2)
+              { var o *ClaireAny
                 if (a.Isa.IsIn(C_Call) == CTRUE) { 
-                  { var g0066 *Call   = To_Call(a)
+                  { var g0066 *Call = To_Call(a)
                     o = g0066.Selector.Id()
                     } 
                   } else {
                   o = CFALSE.Id()
                   } 
                 if (_Za.Length() == 4) { 
-                  Result = F_printexp_any(_Za.At(1-1),CFALSE)
+                  Result = F_printexp_any(_Za.At(0),CFALSE)
                   if !ErrorIn(Result) {
                   PRINC("[")
-                  Result = Core.F_CALL(C_print,ARGS(_Za.At(2-1).ToEID()))
+                  Result = Core.F_CALL(C_print,ARGS(_Za.At(1).ToEID()))
                   if !ErrorIn(Result) {
                   PRINC(",")
                   Result = Core.F_CALL(C_print,ARGS(a.ToEID()))
@@ -113,25 +112,25 @@ func (self *Call ) SelfPrint () EID {
                   PRINC("] := ")
                   Result = F_lbreak_integer(2)
                   if !ErrorIn(Result) {
-                  Result = Core.F_CALL(C_print,ARGS(_Za.At(4-1).ToEID()))
+                  Result = Core.F_CALL(C_print,ARGS(_Za.At(3).ToEID()))
                   }}}}
                   } else {
-                  var g0070I *ClaireBoolean  
-                  { var arg_1 *ClaireAny  
+                  var g0070I *ClaireBoolean
+                  { var arg_1 *ClaireAny
                     if (a.Isa.IsIn(C_Call) == CTRUE) { 
-                      { var g0067 *Call   = To_Call(a)
-                        arg_1 = g0067.Args.At(1-1)
+                      { var g0067 *Call = To_Call(a)
+                        arg_1 = g0067.Args.At(0)
                         } 
                       } else {
                       arg_1 = CFALSE.Id()
                       } 
-                    g0070I = F_sugar_ask_any(_Za.At(1-1),_Za.At(2-1),o,arg_1)
+                    g0070I = F_sugar_ask_any(_Za.At(0),_Za.At(1),o,arg_1)
                     } 
                   if (g0070I == CTRUE) { 
-                    Result = Core.F_CALL(C_print,ARGS(_Za.At(1-1).ToEID()))
+                    Result = Core.F_CALL(C_print,ARGS(_Za.At(0).ToEID()))
                     if !ErrorIn(Result) {
                     PRINC("[")
-                    Result = Core.F_CALL(C_print,ARGS(_Za.At(2-1).ToEID()))
+                    Result = Core.F_CALL(C_print,ARGS(_Za.At(1).ToEID()))
                     if !ErrorIn(Result) {
                     PRINC("] :")
                     Result = Core.F_CALL(C_print,ARGS(o.ToEID()))
@@ -139,13 +138,13 @@ func (self *Call ) SelfPrint () EID {
                     PRINC(" ")
                     Result = F_lbreak_integer(2)
                     if !ErrorIn(Result) {
-                    Result = Core.F_CALL(C_print,ARGS(ToList(OBJ(Core.F_CALL(C_args,ARGS(a.ToEID())))).At(2-1).ToEID()))
+                    Result = Core.F_CALL(C_print,ARGS(ToList(OBJ(Core.F_CALL(C_args,ARGS(a.ToEID())))).At(1).ToEID()))
                     }}}}
                     } else {
-                    Result = Core.F_CALL(C_print,ARGS(_Za.At(1-1).ToEID()))
+                    Result = Core.F_CALL(C_print,ARGS(_Za.At(0).ToEID()))
                     if !ErrorIn(Result) {
                     PRINC("[")
-                    Result = Core.F_CALL(C_print,ARGS(_Za.At(2-1).ToEID()))
+                    Result = Core.F_CALL(C_print,ARGS(_Za.At(1).ToEID()))
                     if !ErrorIn(Result) {
                     PRINC("] := ")
                     Result = F_lbreak_integer(2)
@@ -157,32 +156,32 @@ func (self *Call ) SelfPrint () EID {
                 } 
               } 
             }  else if ((_Zs.Id() == C_Language_assign.Id()) && 
-              (_Za.At(1-1).Isa.IsIn(C_property) == CTRUE)) { 
-            { var a *ClaireAny   = _Za.At(3-1)
-              { var o *ClaireAny  
+              (_Za.At(0).Isa.IsIn(C_property) == CTRUE)) { 
+            { var a *ClaireAny = _Za.At(2)
+              { var o *ClaireAny
                 if (a.Isa.IsIn(C_Call) == CTRUE) { 
-                  { var g0068 *Call   = To_Call(a)
+                  { var g0068 *Call = To_Call(a)
                     o = g0068.Selector.Id()
                     } 
                   } else {
                   o = CFALSE.Id()
                   } 
-                var g0071I *ClaireBoolean  
-                { var arg_2 *ClaireAny  
+                var g0071I *ClaireBoolean
+                { var arg_2 *ClaireAny
                   if (a.Isa.IsIn(C_Call) == CTRUE) { 
-                    { var g0069 *Call   = To_Call(a)
-                      arg_2 = g0069.Args.At(1-1)
+                    { var g0069 *Call = To_Call(a)
+                      arg_2 = g0069.Args.At(0)
                       } 
                     } else {
                     arg_2 = CFALSE.Id()
                     } 
-                  g0071I = F_sugar_ask_any(_Za.At(1-1),_Za.At(2-1),o,arg_2)
+                  g0071I = F_sugar_ask_any(_Za.At(0),_Za.At(1),o,arg_2)
                   } 
                 if (g0071I == CTRUE) { 
-                  Result = Core.F_CALL(C_print,ARGS(_Za.At(1-1).ToEID()))
+                  Result = Core.F_CALL(C_print,ARGS(_Za.At(0).ToEID()))
                   if !ErrorIn(Result) {
                   PRINC("(")
-                  Result = Core.F_CALL(C_print,ARGS(_Za.At(2-1).ToEID()))
+                  Result = Core.F_CALL(C_print,ARGS(_Za.At(1).ToEID()))
                   if !ErrorIn(Result) {
                   PRINC(") :")
                   Result = Core.F_CALL(C_print,ARGS(o.ToEID()))
@@ -190,47 +189,47 @@ func (self *Call ) SelfPrint () EID {
                   PRINC(" ")
                   Result = F_lbreak_integer(2)
                   if !ErrorIn(Result) {
-                  Result = Core.F_CALL(C_print,ARGS(ToList(OBJ(Core.F_CALL(C_args,ARGS(a.ToEID())))).At(2-1).ToEID()))
+                  Result = Core.F_CALL(C_print,ARGS(ToList(OBJ(Core.F_CALL(C_args,ARGS(a.ToEID())))).At(1).ToEID()))
                   }}}}
                   } else {
-                  Result = Core.F_CALL(C_print,ARGS(_Za.At(1-1).ToEID()))
+                  Result = Core.F_CALL(C_print,ARGS(_Za.At(0).ToEID()))
                   if !ErrorIn(Result) {
                   PRINC("(")
-                  Result = Core.F_CALL(C_print,ARGS(_Za.At(2-1).ToEID()))
+                  Result = Core.F_CALL(C_print,ARGS(_Za.At(1).ToEID()))
                   if !ErrorIn(Result) {
                   PRINC(") := ")
                   Result = F_lbreak_integer(2)
                   if !ErrorIn(Result) {
-                  Result = Core.F_CALL(C_print,ARGS(_Za.At(3-1).ToEID()))
+                  Result = Core.F_CALL(C_print,ARGS(_Za.At(2).ToEID()))
                   }}}
                   } 
                 } 
               } 
             }  else if ((_Zs.Id() == C_add.Id()) && 
-              (_Za.At(1-1).Isa.IsIn(C_property) == CTRUE)) { 
-            Result = Core.F_CALL(C_print,ARGS(_Za.At(1-1).ToEID()))
+              (_Za.At(0).Isa.IsIn(C_property) == CTRUE)) { 
+            Result = Core.F_CALL(C_print,ARGS(_Za.At(0).ToEID()))
             if !ErrorIn(Result) {
             PRINC("(")
-            Result = Core.F_CALL(C_print,ARGS(_Za.At(2-1).ToEID()))
+            Result = Core.F_CALL(C_print,ARGS(_Za.At(1).ToEID()))
             if !ErrorIn(Result) {
             PRINC(") :add ")
             Result = F_lbreak_integer(2)
             if !ErrorIn(Result) {
-            Result = Core.F_CALL(C_print,ARGS(_Za.At(3-1).ToEID()))
+            Result = Core.F_CALL(C_print,ARGS(_Za.At(2).ToEID()))
             }}}
             }  else if ((_Zs.Id() == C_delete.Id()) && 
-              (_Za.At(1-1).Isa.IsIn(C_property) == CTRUE)) { 
-            Result = Core.F_CALL(C_print,ARGS(_Za.At(1-1).ToEID()))
+              (_Za.At(0).Isa.IsIn(C_property) == CTRUE)) { 
+            Result = Core.F_CALL(C_print,ARGS(_Za.At(0).ToEID()))
             if !ErrorIn(Result) {
             PRINC("(")
-            Result = Core.F_CALL(C_print,ARGS(_Za.At(2-1).ToEID()))
+            Result = Core.F_CALL(C_print,ARGS(_Za.At(1).ToEID()))
             if !ErrorIn(Result) {
             PRINC(") :delete ")
             Result = F_lbreak_integer(2)
             if !ErrorIn(Result) {
-            Result = Core.F_CALL(C_print,ARGS(_Za.At(3-1).ToEID()))
+            Result = Core.F_CALL(C_print,ARGS(_Za.At(2).ToEID()))
             }}}
-            }  else if ((_Za.At(1-1) == ClEnv.Id()) && 
+            }  else if ((_Za.At(0) == ClEnv.Id()) && 
               (_Za.Length() == 1)) { 
             Result = Core.F_print_any(_Zs.Id())
             if !ErrorIn(Result) {
@@ -250,8 +249,8 @@ func (self *Call ) SelfPrint () EID {
             } 
           if !ErrorIn(Result) {
           { 
-            var va_arg1 *Core.PrettyPrinter  
-            var va_arg2 int 
+            var va_arg1 *Core.PrettyPrinter
+            var va_arg2 int
             va_arg1 = Core.C_pretty
             va_arg2 = _Zl
             va_arg1.Index = va_arg2
@@ -268,10 +267,9 @@ func E_self_print_Call_Language (self EID) EID {
     return To_Call(OBJ(self)).SelfPrint( )} 
   
 /* The go function for: self_print(self:Call+) [status=1] */
-func (self *Call_plus ) SelfPrint () EID { 
-    // eid body s = void
-    var Result EID 
-    Result = F_printexp_any(self.Args.At(1-1),CTRUE)
+func (self *Call_plus) SelfPrint () EID { 
+    var Result EID
+    Result = F_printexp_any(self.Args.At(0),CTRUE)
     if !ErrorIn(Result) {
     PRINC(".")
     Result = Core.F_print_any(self.Selector.Id())
@@ -283,26 +281,25 @@ func E_self_print_Call_plus_Language (self EID) EID {
     return To_Call_plus(OBJ(self)).SelfPrint( )} 
   
 /* The go function for: self_eval(self:Call) [status=1] */
-func (self *Call ) SelfEval () EID { 
-    // eid body s = any
-    var Result EID 
-    { var start int  = ClEnv.Index
-      { var p *ClaireProperty   = self.Selector
+func (self *Call) SelfEval () EID { 
+    var Result EID
+    { var start int = ClEnv.Index
+      { var p *ClaireProperty = self.Selector
         if (ClEnv.Debug_I >= 0) { 
           C_iClaire_LastCall.Value = self.Id()
           { 
-            var x *ClaireAny  
+            var x *ClaireAny
             _ = x
             Result= EID{CFALSE.Id(),0}
-            var x_support *ClaireList  
+            var x_support *ClaireList
             x_support = self.Args
             x_len := x_support.Length()
             for i_it := 0; i_it < x_len; i_it++ { 
               x = x_support.At(i_it)
-              var loop_1 EID 
+              var loop_1 EID
               _ = loop_1
               { 
-                var arg_2 EID 
+                var arg_2 EID
                 arg_2 = EVAL(x)
                 if ErrorIn(arg_2) {loop_1 = arg_2
                 } else {
@@ -316,7 +313,7 @@ func (self *Call ) SelfEval () EID {
             } 
           if !ErrorIn(Result) {
           { 
-            var rx EID 
+            var rx EID
             rx = Core.F_eval_message_property(p,Core.F_find_which_property(p,start,OWNER(ClEnv.EvalStack[start])),start,CTRUE)
             if ErrorIn(rx) {Result = rx
             } else {
@@ -326,18 +323,18 @@ func (self *Call ) SelfEval () EID {
           }
           } else {
           { 
-            var x *ClaireAny  
+            var x *ClaireAny
             _ = x
             Result= EID{CFALSE.Id(),0}
-            var x_support *ClaireList  
+            var x_support *ClaireList
             x_support = self.Args
             x_len := x_support.Length()
             for i_it := 0; i_it < x_len; i_it++ { 
               x = x_support.At(i_it)
-              var loop_3 EID 
+              var loop_3 EID
               _ = loop_3
               { 
-                var arg_4 EID 
+                var arg_4 EID
                 arg_4 = EVAL(x)
                 if ErrorIn(arg_4) {loop_3 = arg_4
                 } else {
@@ -367,12 +364,11 @@ func EVAL_Call (x *ClaireAny) EID {
   
 // read slot : 
 /* The go function for: self_eval(self:Call+) [status=1] */
-func (self *Call_plus ) SelfEval () EID { 
-    // eid body s = any
-    var Result EID 
+func (self *Call_plus) SelfEval () EID { 
+    var Result EID
     { 
-      var arg_1 EID 
-      arg_1 = EVAL(self.Args.At(1-1))
+      var arg_1 EID
+      arg_1 = EVAL(self.Args.At(0))
       if ErrorIn(arg_1) {Result = arg_1
       } else {
       Result = self.Selector.ReadEID(arg_1)}
@@ -389,26 +385,25 @@ func EVAL_Call_plus (x *ClaireAny) EID {
   
 // dumb : we need to repeat
 /* The go function for: self_eval(self:Call*) [status=1] */
-func (self *Call_star ) SelfEval () EID { 
-    // eid body s = any
-    var Result EID 
-    { var start int  = ClEnv.Index
-      { var p *ClaireProperty   = self.Selector
+func (self *Call_star) SelfEval () EID { 
+    var Result EID
+    { var start int = ClEnv.Index
+      { var p *ClaireProperty = self.Selector
         if (ClEnv.Debug_I >= 0) { 
           C_iClaire_LastCall.Value = self.Id()
           { 
-            var x *ClaireAny  
+            var x *ClaireAny
             _ = x
             Result= EID{CFALSE.Id(),0}
-            var x_support *ClaireList  
+            var x_support *ClaireList
             x_support = self.Args
             x_len := x_support.Length()
             for i_it := 0; i_it < x_len; i_it++ { 
               x = x_support.At(i_it)
-              var loop_1 EID 
+              var loop_1 EID
               _ = loop_1
               { 
-                var arg_2 EID 
+                var arg_2 EID
                 arg_2 = EVAL(x)
                 if ErrorIn(arg_2) {loop_1 = arg_2
                 } else {
@@ -422,7 +417,7 @@ func (self *Call_star ) SelfEval () EID {
             } 
           if !ErrorIn(Result) {
           { 
-            var rx EID 
+            var rx EID
             rx = Core.F_eval_message_property(p,Core.F_find_which_property(p,start,OWNER(ClEnv.EvalStack[start])),start,CTRUE)
             if ErrorIn(rx) {Result = rx
             } else {
@@ -432,18 +427,18 @@ func (self *Call_star ) SelfEval () EID {
           }
           } else {
           { 
-            var x *ClaireAny  
+            var x *ClaireAny
             _ = x
             Result= EID{CFALSE.Id(),0}
-            var x_support *ClaireList  
+            var x_support *ClaireList
             x_support = self.Args
             x_len := x_support.Length()
             for i_it := 0; i_it < x_len; i_it++ { 
               x = x_support.At(i_it)
-              var loop_3 EID 
+              var loop_3 EID
               _ = loop_3
               { 
-                var arg_4 EID 
+                var arg_4 EID
                 arg_4 = EVAL(x)
                 if ErrorIn(arg_4) {loop_3 = arg_4
                 } else {
@@ -473,12 +468,11 @@ func EVAL_Call_star (x *ClaireAny) EID {
   
 // recursive printing of bicall
 /* The go function for: printe(self:any,s:property) [status=1] */
-func F_printe_any (self *ClaireAny ,s *ClaireProperty ) EID { 
-    // eid body s = void
-    var Result EID 
-    var g0073I *ClaireBoolean  
+func F_printe_any (self *ClaireAny,s *ClaireProperty) EID { 
+    var Result EID
+    var g0073I *ClaireBoolean
     if (self.Isa.IsIn(C_Call) == CTRUE) { 
-      { var g0072 *Call   = To_Call(self)
+      { var g0072 *Call = To_Call(self)
         g0073I = MakeBoolean((g0072.Selector.Isa.IsIn(C_operation) == CTRUE) && (g0072.Args.Length() == 2))
         } 
       } else {
@@ -503,15 +497,14 @@ func E_printe_any (self EID,s EID) EID {
 // tells if the sugar :op can be used
 // x(x2) = o(a:x(x2), y) =>  x(x2) :o y
 /* The go function for: sugar?(x:any,x2:any,o:any,a:any) [status=0] */
-func F_sugar_ask_any (x *ClaireAny ,x2 *ClaireAny ,o *ClaireAny ,a *ClaireAny ) *ClaireBoolean  { 
-    // procedure body with s = boolean
-    var Result *ClaireBoolean  
+func F_sugar_ask_any (x *ClaireAny,x2 *ClaireAny,o *ClaireAny,a *ClaireAny) *ClaireBoolean { 
+    var Result *ClaireBoolean
     if (o.Isa.IsIn(C_operation) == CTRUE) { 
       if (x.Isa.IsIn(C_property) == CTRUE) { 
-        { var g0075 *ClaireProperty   = ToProperty(x)
+        { var g0075 *ClaireProperty = ToProperty(x)
           if (a.Isa.IsIn(C_Call) == CTRUE) { 
-            { var g0076 *Call   = To_Call(a)
-              Result = MakeBoolean((g0075.Id() == g0076.Selector.Id()) && (Equal(g0076.Args.At(1-1),x2) == CTRUE))
+            { var g0076 *Call = To_Call(a)
+              Result = MakeBoolean((g0075.Id() == g0076.Selector.Id()) && (Equal(g0076.Args.At(0),x2) == CTRUE))
               } 
             } else {
             Result = CFALSE
@@ -542,23 +535,22 @@ func E_sugar_ask_any (x EID,x2 EID,o EID,a EID) EID {
 //
 // the var slot is filled with a real variable later.
 /* The go function for: self_print(self:Assign) [status=1] */
-func (self *Assign ) SelfPrint () EID { 
-    // eid body s = void
-    var Result EID 
-    { var a *ClaireAny   = self.Arg
-      { var o *ClaireAny  
+func (self *Assign) SelfPrint () EID { 
+    var Result EID
+    { var a *ClaireAny = self.Arg
+      { var o *ClaireAny
         if (a.Isa.IsIn(C_Call) == CTRUE) { 
-          { var g0080 *Call   = To_Call(a)
+          { var g0080 *Call = To_Call(a)
             o = g0080.Selector.Id()
             } 
           } else {
           o = CFALSE.Id()
           } 
-        var g0082I *ClaireBoolean  
-        { var arg_1 *ClaireAny  
+        var g0082I *ClaireBoolean
+        { var arg_1 *ClaireAny
           if (a.Isa.IsIn(C_Call) == CTRUE) { 
-            { var g0081 *Call   = To_Call(a)
-              arg_1 = g0081.Args.At(1-1)
+            { var g0081 *Call = To_Call(a)
+              arg_1 = g0081.Args.At(0)
               } 
             } else {
             arg_1 = CFALSE.Id()
@@ -574,7 +566,7 @@ func (self *Assign ) SelfPrint () EID {
           PRINC(" ")
           Result = F_lbreak_integer(2)
           if !ErrorIn(Result) {
-          Result = F_printexp_any(ToList(OBJ(Core.F_CALL(C_args,ARGS(a.ToEID())))).At(2-1),CTRUE)
+          Result = F_printexp_any(ToList(OBJ(Core.F_CALL(C_args,ARGS(a.ToEID())))).At(1),CTRUE)
           }}}
           } else {
           Result = Core.F_CALL(C_print,ARGS(self.ClaireVar.ToEID()))
@@ -587,8 +579,8 @@ func (self *Assign ) SelfPrint () EID {
           } 
         if !ErrorIn(Result) {
         { 
-          var va_arg1 *Core.PrettyPrinter  
-          var va_arg2 int 
+          var va_arg1 *Core.PrettyPrinter
+          var va_arg2 int
           va_arg1 = Core.C_pretty
           va_arg2 = (Core.C_pretty.Index-2)
           va_arg1.Index = va_arg2
@@ -604,11 +596,10 @@ func E_self_print_Assign_Language (self EID) EID {
     return To_Assign(OBJ(self)).SelfPrint( )} 
   
 /* The go function for: self_eval(self:Assign) [status=1] */
-func (self *Assign ) SelfEval () EID { 
-    // eid body s = any
-    var Result EID 
+func (self *Assign) SelfEval () EID { 
+    var Result EID
     { 
-      var arg_1 EID 
+      var arg_1 EID
       arg_1 = EVAL(self.Arg)
       if ErrorIn(arg_1) {Result = arg_1
       } else {
@@ -627,23 +618,22 @@ func EVAL_Assign (x *ClaireAny) EID {
 // global variables
 //
 /* The go function for: self_print(self:Gassign) [status=1] */
-func (self *Gassign ) SelfPrint () EID { 
-    // eid body s = void
-    var Result EID 
-    { var a *ClaireAny   = self.Arg
-      { var o *ClaireAny  
+func (self *Gassign) SelfPrint () EID { 
+    var Result EID
+    { var a *ClaireAny = self.Arg
+      { var o *ClaireAny
         if (a.Isa.IsIn(C_Call) == CTRUE) { 
-          { var g0084 *Call   = To_Call(a)
+          { var g0084 *Call = To_Call(a)
             o = g0084.Selector.Id()
             } 
           } else {
           o = CFALSE.Id()
           } 
-        var g0086I *ClaireBoolean  
-        { var arg_1 *ClaireAny  
+        var g0086I *ClaireBoolean
+        { var arg_1 *ClaireAny
           if (a.Isa.IsIn(C_Call) == CTRUE) { 
-            { var g0085 *Call   = To_Call(a)
-              arg_1 = g0085.Args.At(1-1)
+            { var g0085 *Call = To_Call(a)
+              arg_1 = g0085.Args.At(0)
               } 
             } else {
             arg_1 = CFALSE.Id()
@@ -659,7 +649,7 @@ func (self *Gassign ) SelfPrint () EID {
           PRINC(" ")
           Result = F_lbreak_integer(2)
           if !ErrorIn(Result) {
-          Result = Core.F_CALL(C_print,ARGS(ToList(OBJ(Core.F_CALL(C_args,ARGS(a.ToEID())))).At(2-1).ToEID()))
+          Result = Core.F_CALL(C_print,ARGS(ToList(OBJ(Core.F_CALL(C_args,ARGS(a.ToEID())))).At(1).ToEID()))
           }}}
           } else {
           Result = Core.F_print_any(self.ClaireVar.Id())
@@ -672,8 +662,8 @@ func (self *Gassign ) SelfPrint () EID {
           } 
         if !ErrorIn(Result) {
         { 
-          var va_arg1 *Core.PrettyPrinter  
-          var va_arg2 int 
+          var va_arg1 *Core.PrettyPrinter
+          var va_arg2 int
           va_arg1 = Core.C_pretty
           va_arg2 = (Core.C_pretty.Index-2)
           va_arg1.Index = va_arg2
@@ -689,12 +679,11 @@ func E_self_print_Gassign_Language (self EID) EID {
     return To_Gassign(OBJ(self)).SelfPrint( )} 
   
 /* The go function for: self_eval(self:Gassign) [status=1] */
-func (self *Gassign ) SelfEval () EID { 
-    // eid body s = any
-    var Result EID 
-    { var v *Core.GlobalVariable   = self.ClaireVar
-      { var arg_1 *ClaireAny  
-        var try_2 EID 
+func (self *Gassign) SelfEval () EID { 
+    var Result EID
+    { var v *Core.GlobalVariable = self.ClaireVar
+      { var arg_1 *ClaireAny
+        var try_2 EID
         try_2 = EVAL(self.Arg)
         if ErrorIn(try_2) {Result = try_2
         } else {
@@ -717,9 +706,8 @@ func EVAL_Gassign (x *ClaireAny) EID {
 // "and" is strictly boolean and is based on short-circuit evaluation.
 //
 /* The go function for: self_print(self:And) [status=1] */
-func (self *And ) SelfPrint () EID { 
-    // eid body s = void
-    var Result EID 
+func (self *And) SelfPrint () EID { 
+    var Result EID
     PRINC("(")
     Result = F_Language_printbox_list3(self.Args,MakeString(" & "))
     if !ErrorIn(Result) {
@@ -733,28 +721,27 @@ func E_self_print_And_Language (self EID) EID {
     return To_And(OBJ(self)).SelfPrint( )} 
   
 /* The go function for: self_eval(self:And) [status=1] */
-func (self *And ) SelfEval () EID { 
-    // eid body s = any
-    var Result EID 
-    { var arg_1 *ClaireAny  
-      var try_2 EID 
+func (self *And) SelfEval () EID { 
+    var Result EID
+    { var arg_1 *ClaireAny
+      var try_2 EID
       { 
-        var x *ClaireAny  
+        var x *ClaireAny
         _ = x
         try_2= EID{CFALSE.Id(),0}
-        var x_support *ClaireList  
+        var x_support *ClaireList
         x_support = self.Args
         x_len := x_support.Length()
         for i_it := 0; i_it < x_len; i_it++ { 
           x = x_support.At(i_it)
-          var loop_3 EID 
+          var loop_3 EID
           _ = loop_3
-          var g0087I *ClaireBoolean  
-          var try_4 EID 
-          { var arg_5 *ClaireBoolean  
-            var try_6 EID 
-            { var arg_7 *ClaireAny  
-              var try_8 EID 
+          var g0087I *ClaireBoolean
+          var try_4 EID
+          { var arg_5 *ClaireBoolean
+            var try_6 EID
+            { var arg_7 *ClaireAny
+              var try_8 EID
               try_8 = EVAL(x)
               if ErrorIn(try_8) {try_6 = try_8
               } else {
@@ -803,9 +790,8 @@ func EVAL_And (x *ClaireAny) EID {
 // or expression
 //
 /* The go function for: self_print(self:Or) [status=1] */
-func (self *Or ) SelfPrint () EID { 
-    // eid body s = void
-    var Result EID 
+func (self *Or) SelfPrint () EID { 
+    var Result EID
     PRINC("(")
     Result = F_Language_printbox_list3(self.Args,MakeString(" | "))
     if !ErrorIn(Result) {
@@ -819,26 +805,25 @@ func E_self_print_Or_Language (self EID) EID {
     return To_Or(OBJ(self)).SelfPrint( )} 
   
 /* The go function for: self_eval(self:Or) [status=1] */
-func (self *Or ) SelfEval () EID { 
-    // eid body s = any
-    var Result EID 
-    var g0088I *ClaireBoolean  
-    var try_1 EID 
+func (self *Or) SelfEval () EID { 
+    var Result EID
+    var g0088I *ClaireBoolean
+    var try_1 EID
     { 
-      var x *ClaireAny  
+      var x *ClaireAny
       _ = x
       try_1= EID{CFALSE.Id(),0}
-      var x_support *ClaireList  
+      var x_support *ClaireList
       x_support = self.Args
       x_len := x_support.Length()
       for i_it := 0; i_it < x_len; i_it++ { 
         x = x_support.At(i_it)
-        var loop_2 EID 
+        var loop_2 EID
         _ = loop_2
-        var g0089I *ClaireBoolean  
-        var try_3 EID 
-        { var arg_4 *ClaireAny  
-          var try_5 EID 
+        var g0089I *ClaireBoolean
+        var try_3 EID
+        { var arg_4 *ClaireAny
+          var try_5 EID
           try_5 = EVAL(x)
           if ErrorIn(try_5) {try_3 = try_5
           } else {
@@ -884,9 +869,8 @@ func EVAL_Or (x *ClaireAny) EID {
 // ----------------- an anti-evaluator ---------------------------------
 //
 /* The go function for: self_print(self:Quote) [status=1] */
-func (self *Quote ) SelfPrint () EID { 
-    // eid body s = void
-    var Result EID 
+func (self *Quote) SelfPrint () EID { 
+    var Result EID
     PRINC("quote(")
     Result = Core.F_CALL(C_print,ARGS(self.Arg.ToEID()))
     if !ErrorIn(Result) {
@@ -900,9 +884,8 @@ func E_self_print_Quote_Language (self EID) EID {
     return To_Quote(OBJ(self)).SelfPrint( )} 
   
 /* The go function for: self_eval(self:Quote) [status=0] */
-func (self *Quote ) SelfEval () EID { 
-    // eid body s = any
-    var Result EID 
+func (self *Quote) SelfEval () EID { 
+    var Result EID
     Result = self.Arg.ToEID()
     return Result} 
   
@@ -925,9 +908,8 @@ func EVAL_Quote (x *ClaireAny) EID {
 // We use the C external function
 //
 /* The go function for: self_print(self:Call_method) [status=1] */
-func (self *CallMethod ) SelfPrint () EID { 
-    // eid body s = void
-    var Result EID 
+func (self *CallMethod) SelfPrint () EID { 
+    var Result EID
     Result = Core.F_print_any(self.Arg.Id())
     if !ErrorIn(Result) {
     PRINC("(")
@@ -943,24 +925,23 @@ func E_self_print_Call_method_Language (self EID) EID {
     return To_CallMethod(OBJ(self)).SelfPrint( )} 
   
 /* The go function for: self_eval(self:Call_method) [status=1] */
-func (self *CallMethod ) SelfEval () EID { 
-    // eid body s = any
-    var Result EID 
-    { var start int  = ClEnv.Index
-      { var Cprop *ClaireMethod   = self.Arg
+func (self *CallMethod) SelfEval () EID { 
+    var Result EID
+    { var start int = ClEnv.Index
+      { var Cprop *ClaireMethod = self.Arg
         { 
-          var x *ClaireAny  
+          var x *ClaireAny
           _ = x
           Result= EID{CFALSE.Id(),0}
-          var x_support *ClaireList  
+          var x_support *ClaireList
           x_support = self.Args
           x_len := x_support.Length()
           for i_it := 0; i_it < x_len; i_it++ { 
             x = x_support.At(i_it)
-            var loop_1 EID 
+            var loop_1 EID
             _ = loop_1
             { 
-              var arg_2 EID 
+              var arg_2 EID
               arg_2 = EVAL(x)
               if ErrorIn(arg_2) {loop_1 = arg_2
               } else {
@@ -989,14 +970,13 @@ func EVAL_Call_method (x *ClaireAny) EID {
   
 // same thing with one only argument: we do not use the stack
 /* The go function for: self_eval(self:Call_method1) [status=1] */
-func (self *CallMethod1 ) SelfEval () EID { 
-    // eid body s = any
-    var Result EID 
-    { var f *ClaireMethod   = self.Arg
-      { var l *ClaireList   = self.Args
+func (self *CallMethod1) SelfEval () EID { 
+    var Result EID
+    { var f *ClaireMethod = self.Arg
+      { var l *ClaireList = self.Args
         { 
-          var arg_1 EID 
-          arg_1 = EVAL(l.At(1-1))
+          var arg_1 EID
+          arg_1 = EVAL(l.At(0))
           if ErrorIn(arg_1) {Result = arg_1
           } else {
           Result = FASTCALL1(f,arg_1)}
@@ -1015,18 +995,17 @@ func EVAL_Call_method1 (x *ClaireAny) EID {
   
 // same thing with two arguments
 /* The go function for: self_eval(self:Call_method2) [status=1] */
-func (self *CallMethod2 ) SelfEval () EID { 
-    // eid body s = any
-    var Result EID 
-    { var f *ClaireMethod   = self.Arg
-      { var l *ClaireList   = self.Args
+func (self *CallMethod2) SelfEval () EID { 
+    var Result EID
+    { var f *ClaireMethod = self.Arg
+      { var l *ClaireList = self.Args
         { 
-          var arg_1 EID 
-          arg_1 = EVAL(l.At(1-1))
+          var arg_1 EID
+          arg_1 = EVAL(l.At(0))
           if ErrorIn(arg_1) {Result = arg_1
           } else {
-          var arg_2 EID 
-          arg_2 = EVAL(l.At(2-1))
+          var arg_2 EID
+          arg_2 = EVAL(l.At(1))
           if ErrorIn(arg_2) {Result = arg_2
           } else {
           Result = FASTCALL2(f,arg_1,arg_2)}}
@@ -1045,22 +1024,21 @@ func EVAL_Call_method2 (x *ClaireAny) EID {
   
 // same thing with two arguments
 /* The go function for: self_eval(self:Call_method3) [status=1] */
-func (self *Language_CallMethod3 ) SelfEval () EID { 
-    // eid body s = any
-    var Result EID 
-    { var f *ClaireMethod   = self.Arg
-      { var l *ClaireList   = self.Args
+func (self *Language_CallMethod3) SelfEval () EID { 
+    var Result EID
+    { var f *ClaireMethod = self.Arg
+      { var l *ClaireList = self.Args
         { 
-          var arg_1 EID 
-          arg_1 = EVAL(l.At(1-1))
+          var arg_1 EID
+          arg_1 = EVAL(l.At(0))
           if ErrorIn(arg_1) {Result = arg_1
           } else {
-          var arg_2 EID 
-          arg_2 = EVAL(l.At(2-1))
+          var arg_2 EID
+          arg_2 = EVAL(l.At(1))
           if ErrorIn(arg_2) {Result = arg_2
           } else {
-          var arg_3 EID 
-          arg_3 = EVAL(l.At(3-1))
+          var arg_3 EID
+          arg_3 = EVAL(l.At(2))
           if ErrorIn(arg_3) {Result = arg_3
           } else {
           Result = FASTCALL3(f,arg_1,arg_2,arg_3)}}}
@@ -1080,9 +1058,8 @@ func EVAL_Language_Call_method3 (x *ClaireAny) EID {
 // an instruction to read a slot
 //
 /* The go function for: self_print(self:Call_slot) [status=1] */
-func (self *CallSlot ) SelfPrint () EID { 
-    // eid body s = void
-    var Result EID 
+func (self *CallSlot) SelfPrint () EID { 
+    var Result EID
     Result = Core.F_print_any(self.Selector.Id())
     if !ErrorIn(Result) {
     PRINC("(")
@@ -1098,11 +1075,10 @@ func E_self_print_Call_slot_Language (self EID) EID {
     return To_CallSlot(OBJ(self)).SelfPrint( )} 
   
 /* The go function for: self_eval(self:Call_slot) [status=1] */
-func (self *CallSlot ) SelfEval () EID { 
-    // eid body s = any
-    var Result EID 
-    { var arg_1 *ClaireAny  
-      var try_2 EID 
+func (self *CallSlot) SelfEval () EID { 
+    var Result EID
+    { var arg_1 *ClaireAny
+      var try_2 EID
       try_2 = EVAL(self.Arg)
       if ErrorIn(try_2) {Result = try_2
       } else {
@@ -1125,9 +1101,8 @@ func EVAL_Call_slot (x *ClaireAny) EID {
 // contains the inferred member_type of the array
 //
 /* The go function for: self_print(self:Call_array) [status=1] */
-func (self *CallArray ) SelfPrint () EID { 
-    // eid body s = void
-    var Result EID 
+func (self *CallArray) SelfPrint () EID { 
+    var Result EID
     Result = Core.F_CALL(C_print,ARGS(self.Selector.ToEID()))
     if !ErrorIn(Result) {
     PRINC("[")
@@ -1143,17 +1118,16 @@ func E_self_print_Call_array_Language (self EID) EID {
     return To_CallArray(OBJ(self)).SelfPrint( )} 
   
 /* The go function for: self_eval(self:Call_array) [status=1] */
-func (self *CallArray ) SelfEval () EID { 
-    // eid body s = any
-    var Result EID 
-    { var arg_1 *ClaireAny  
-      var try_3 EID 
+func (self *CallArray) SelfEval () EID { 
+    var Result EID
+    { var arg_1 *ClaireAny
+      var try_3 EID
       try_3 = EVAL(self.Selector)
       if ErrorIn(try_3) {Result = try_3
       } else {
       arg_1 = ANY(try_3)
-      { var arg_2 *ClaireAny  
-        var try_4 EID 
+      { var arg_2 *ClaireAny
+        var try_4 EID
         try_4 = EVAL(self.Arg)
         if ErrorIn(try_4) {Result = try_4
         } else {
@@ -1176,9 +1150,8 @@ func EVAL_Call_array (x *ClaireAny) EID {
 // an instruction to read a table
 //
 /* The go function for: self_print(self:Call_table) [status=1] */
-func (self *CallTable ) SelfPrint () EID { 
-    // eid body s = void
-    var Result EID 
+func (self *CallTable) SelfPrint () EID { 
+    var Result EID
     Result = Core.F_print_any(self.Selector.Id())
     if !ErrorIn(Result) {
     PRINC("[")
@@ -1194,12 +1167,11 @@ func E_self_print_Call_table_Language (self EID) EID {
     return To_CallTable(OBJ(self)).SelfPrint( )} 
   
 /* The go function for: self_eval(self:Call_table) [status=1] */
-func (self *CallTable ) SelfEval () EID { 
-    // eid body s = any
-    var Result EID 
+func (self *CallTable) SelfEval () EID { 
+    var Result EID
     if (self.Test == CTRUE) { 
-      { var arg_1 *ClaireAny  
-        var try_2 EID 
+      { var arg_1 *ClaireAny
+        var try_2 EID
         try_2 = EVAL(self.Arg)
         if ErrorIn(try_2) {Result = try_2
         } else {
@@ -1208,8 +1180,8 @@ func (self *CallTable ) SelfEval () EID {
         }
         } 
       } else {
-      { var arg_3 *ClaireAny  
-        var try_4 EID 
+      { var arg_3 *ClaireAny
+        var try_4 EID
         try_4 = EVAL(self.Arg)
         if ErrorIn(try_4) {Result = try_4
         } else {
@@ -1234,9 +1206,8 @@ func EVAL_Call_table (x *ClaireAny) EID {
 // self.var is the writable container (call_slot, call_array, call_table)
 // R(x)
 /* The go function for: self_print(self:Update) [status=1] */
-func (self *Update ) SelfPrint () EID { 
-    // eid body s = void
-    var Result EID 
+func (self *Update) SelfPrint () EID { 
+    var Result EID
     Result = Core.F_CALL(C_print,ARGS(self.Selector.ToEID()))
     if !ErrorIn(Result) {
     PRINC("(")
@@ -1252,20 +1223,19 @@ func E_self_print_Update_Language (self EID) EID {
     return To_Update(OBJ(self)).SelfPrint( )} 
   
 /* The go function for: self_eval(self:Update) [status=1] */
-func (self *Update ) SelfEval () EID { 
-    // eid body s = any
-    var Result EID 
-    { var s *ClaireAny   = self.Selector
+func (self *Update) SelfEval () EID { 
+    var Result EID
+    { var s *ClaireAny = self.Selector
       if (s.Isa.IsIn(C_property) == CTRUE) { 
-        { var g0090 *ClaireProperty   = ToProperty(s)
-          { var arg_1 *ClaireAny  
-            var try_3 EID 
+        { var g0090 *ClaireProperty = ToProperty(s)
+          { var arg_1 *ClaireAny
+            var try_3 EID
             try_3 = EVAL(ANY(Core.F_CALL(C_arg,ARGS(self.ClaireVar.ToEID()))))
             if ErrorIn(try_3) {Result = try_3
             } else {
             arg_1 = ANY(try_3)
-            { var arg_2 *ClaireAny  
-              var try_4 EID 
+            { var arg_2 *ClaireAny
+              var try_4 EID
               try_4 = EVAL(self.Value)
               if ErrorIn(try_4) {Result = try_4
               } else {
@@ -1277,15 +1247,15 @@ func (self *Update ) SelfEval () EID {
             } 
           } 
         }  else if (C_table.Id() == s.Isa.Id()) { 
-        { var g0091 *ClaireTable   = ToTable(s)
-          { var arg_5 *ClaireAny  
-            var try_7 EID 
+        { var g0091 *ClaireTable = ToTable(s)
+          { var arg_5 *ClaireAny
+            var try_7 EID
             try_7 = EVAL(ANY(Core.F_CALL(C_arg,ARGS(self.ClaireVar.ToEID()))))
             if ErrorIn(try_7) {Result = try_7
             } else {
             arg_5 = ANY(try_7)
-            { var arg_6 *ClaireAny  
-              var try_8 EID 
+            { var arg_6 *ClaireAny
+              var try_8 EID
               try_8 = EVAL(self.Value)
               if ErrorIn(try_8) {Result = try_8
               } else {
@@ -1320,12 +1290,11 @@ func EVAL_Update (x *ClaireAny) EID {
 // The form of the super is: SELECTOR@ABSTRACT_CLASS(RECEIVER , ...)
 //
 /* The go function for: self_print(self:Super) [status=1] */
-func (self *Super ) SelfPrint () EID { 
-    // eid body s = void
-    var Result EID 
-    { var _Zl int  = Core.C_pretty.Index
-      { var _Zs *ClaireProperty   = self.Selector
-        { var _Za *ClaireList   = self.Args
+func (self *Super) SelfPrint () EID { 
+    var Result EID
+    { var _Zl int = Core.C_pretty.Index
+      { var _Zs *ClaireProperty = self.Selector
+        { var _Za *ClaireList = self.Args
           Result = Core.F_print_any(_Zs.Id())
           if !ErrorIn(Result) {
           PRINC("@")
@@ -1340,8 +1309,8 @@ func (self *Super ) SelfPrint () EID {
           }}}
           if !ErrorIn(Result) {
           { 
-            var va_arg1 *Core.PrettyPrinter  
-            var va_arg2 int 
+            var va_arg1 *Core.PrettyPrinter
+            var va_arg2 int
             va_arg1 = Core.C_pretty
             va_arg2 = _Zl
             va_arg1.Index = va_arg2
@@ -1358,26 +1327,25 @@ func E_self_print_Super_Language (self EID) EID {
     return To_Super(OBJ(self)).SelfPrint( )} 
   
 /* The go function for: self_eval(self:Super) [status=1] */
-func (self *Super ) SelfEval () EID { 
-    // eid body s = any
-    var Result EID 
-    { var start int  = ClEnv.Index
-      { var t *ClaireType   = self.CastTo
-        { var c *ClaireClass   = t.Class_I()
-          { var p *ClaireProperty   = self.Selector
+func (self *Super) SelfEval () EID { 
+    var Result EID
+    { var start int = ClEnv.Index
+      { var t *ClaireType = self.CastTo
+        { var c *ClaireClass = t.Class_I()
+          { var p *ClaireProperty = self.Selector
             { 
-              var x *ClaireAny  
+              var x *ClaireAny
               _ = x
               Result= EID{CFALSE.Id(),0}
-              var x_support *ClaireList  
+              var x_support *ClaireList
               x_support = self.Args
               x_len := x_support.Length()
               for i_it := 0; i_it < x_len; i_it++ { 
                 x = x_support.At(i_it)
-                var loop_1 EID 
+                var loop_1 EID
                 _ = loop_1
                 { 
-                  var arg_2 EID 
+                  var arg_2 EID
                   arg_2 = EVAL(x)
                   if ErrorIn(arg_2) {loop_1 = arg_2
                   } else {
@@ -1410,9 +1378,8 @@ func EVAL_Super (x *ClaireAny) EID {
 // the cast is the new form of simple super
 //
 /* The go function for: self_print(x:Cast) [status=1] */
-func (x *Cast ) SelfPrint () EID { 
-    // eid body s = void
-    var Result EID 
+func (x *Cast) SelfPrint () EID { 
+    var Result EID
     Result = F_printexp_any(x.Arg,CFALSE)
     if !ErrorIn(Result) {
     PRINC(" as ")
@@ -1425,29 +1392,28 @@ func E_self_print_Cast_Language (x EID) EID {
     return To_Cast(OBJ(x)).SelfPrint( )} 
   
 /* The go function for: self_eval(self:Cast) [status=1] */
-func (self *Cast ) SelfEval () EID { 
-    // eid body s = any
-    var Result EID 
-    { var x *ClaireAny  
-      var try_1 EID 
+func (self *Cast) SelfEval () EID { 
+    var Result EID
+    { var x *ClaireAny
+      var try_1 EID
       try_1 = EVAL(self.Arg)
       if ErrorIn(try_1) {Result = try_1
       } else {
       x = ANY(try_1)
-      { var y *ClaireType   = self.SetArg
-        var g0093I *ClaireBoolean  
+      { var y *ClaireType = self.SetArg
+        var g0093I *ClaireBoolean
         if (y.Isa.IsIn(C_Param) == CTRUE) { 
-          { var g0092 *ClaireParam   = To_Param(y.Id())
+          { var g0092 *ClaireParam = To_Param(y.Id())
             g0093I = MakeBoolean(((g0092.Arg.Id() == C_list.Id()) || 
-                (g0092.Arg.Id() == C_set.Id())) && (C_set.Id() == g0092.Args.At(1-1).Isa.Id()) && (Core.F__Z_any1(x,g0092.Arg) == CTRUE))
+                (g0092.Arg.Id() == C_set.Id())) && (C_set.Id() == g0092.Args.At(0).Isa.Id()) && (Core.F__Z_any1(x,g0092.Arg) == CTRUE))
             } 
           } else {
           g0093I = CFALSE
           } 
         if (g0093I == CTRUE) { 
-          { var arg_2 *ClaireAny  
-            var try_3 EID 
-            try_3 = Core.F_the_type(ToType(To_Param(y.Id()).Args.At(1-1)))
+          { var arg_2 *ClaireAny
+            var try_3 EID
+            try_3 = Core.F_the_type(ToType(To_Param(y.Id()).Args.At(0)))
             if ErrorIn(try_3) {Result = try_3
             } else {
             arg_2 = ANY(try_3)
@@ -1477,9 +1443,8 @@ func EVAL_Cast (x *ClaireAny) EID {
 // of structures
 //
 /* The go function for: self_print(self:Return) [status=1] */
-func (self *Return ) SelfPrint () EID { 
-    // eid body s = void
-    var Result EID 
+func (self *Return) SelfPrint () EID { 
+    var Result EID
     PRINC("break(")
     Core.C_pretty.Index = (Core.C_pretty.Index+2)
     Result = Core.F_CALL(C_print,ARGS(self.Arg.ToEID()))
@@ -1495,13 +1460,12 @@ func E_self_print_Return_Language (self EID) EID {
     return To_Return(OBJ(self)).SelfPrint( )} 
   
 /* The go function for: self_eval(self:Return) [status=1] */
-func (self *Return ) SelfEval () EID { 
-    // eid body s = error
-    var Result EID 
-    { var arg_1 *ClaireAny  
-      var try_2 EID 
-      { var arg_3 *ClaireAny  
-        var try_4 EID 
+func (self *Return) SelfEval () EID { 
+    var Result EID
+    { var arg_1 *ClaireAny
+      var try_2 EID
+      { var arg_3 *ClaireAny
+        var try_4 EID
         try_4 = EVAL(self.Arg)
         if ErrorIn(try_4) {try_2 = try_4
         } else {
@@ -1530,19 +1494,18 @@ func EVAL_Return (x *ClaireAny) EID {
 // ****************************************************************
 // substitute any variable with same name as x with the value val
 /* The go function for: substitution(self:any,x:Variable,val:any) [status=0] */
-func F_substitution_any (self *ClaireAny ,x *ClaireVariable ,val *ClaireAny ) *ClaireAny  { 
-    // procedure body with s = any
-    var Result *ClaireAny  
+func F_substitution_any (self *ClaireAny,x *ClaireVariable,val *ClaireAny) *ClaireAny { 
+    var Result *ClaireAny
     if (self.Isa.IsIn(C_Variable) == CTRUE) { 
-      { var g0096 *ClaireVariable   = To_Variable(self)
+      { var g0096 *ClaireVariable = To_Variable(self)
         Result = IfThenElse((g0096.Pname.Id() == x.Pname.Id()),
           val,
           g0096.Id())
         } 
       }  else if (self.Isa.IsIn(C_list) == CTRUE) { 
-      { var g0097 *ClaireList   = ToList(self)
-        { var i int  = 1
-          { var g0098 int  = g0097.Length()
+      { var g0097 *ClaireList = ToList(self)
+        { var i int = 1
+          { var g0098 int = g0097.Length()
             for (i <= g0098) { 
               if ((g0097.At(i-1).Isa.IsIn(C_Variable) == CTRUE) || 
                   (g0097.At(i-1).Isa.IsIn(C_unbound_symbol) == CTRUE)) { 
@@ -1557,22 +1520,22 @@ func F_substitution_any (self *ClaireAny ,x *ClaireVariable ,val *ClaireAny ) *C
         Result = g0097.Id()
         } 
       }  else if (self.Isa.IsIn(C_unbound_symbol) == CTRUE) { 
-      { var g0099 *ClaireUnboundSymbol   = ToUnboundSymbol(self)
+      { var g0099 *ClaireUnboundSymbol = ToUnboundSymbol(self)
         Result = IfThenElse((g0099.Name.Id() == x.Pname.Id()),
           val,
           g0099.Id())
         } 
       }  else if (self.Isa.IsIn(C_Instruction) == CTRUE) { 
-      { var g0100 *ClaireInstruction   = To_Instruction(self)
+      { var g0100 *ClaireInstruction = To_Instruction(self)
         { 
-          var s *ClaireSlot  
+          var s *ClaireSlot
           _ = s
-          var s_iter *ClaireAny  
-          var s_support *ClaireList  
+          var s_iter *ClaireAny
+          var s_support *ClaireList
           s_support = g0100.Id().Isa.Slots
           for _,s_iter = range(s_support.ValuesO()){ 
             s = ToSlot(s_iter)
-            { var y *ClaireAny   = Core.F_get_slot(s,ToObject(g0100.Id()))
+            { var y *ClaireAny = Core.F_get_slot(s,ToObject(g0100.Id()))
               if ((y.Isa.IsIn(C_Variable) == CTRUE) || 
                   (y.Isa.IsIn(C_unbound_symbol) == CTRUE)) { 
                 Core.F_put_slot(s,ToObject(g0100.Id()),F_substitution_any(y,x,val))
@@ -1595,11 +1558,10 @@ func E_substitution_any (self EID,x EID,val EID) EID {
   
 // count the number of occurrences of x
 /* The go function for: occurrence(self:any,x:Variable) [status=0] */
-func F_occurrence_any (self *ClaireAny ,x *ClaireVariable ) int { 
-    // procedure body with s = integer
-    var Result int 
+func F_occurrence_any (self *ClaireAny,x *ClaireVariable) int { 
+    var Result int
     if (self.Isa.IsIn(C_Variable) == CTRUE) { 
-      { var g0102 *ClaireVariable   = To_Variable(self)
+      { var g0102 *ClaireVariable = To_Variable(self)
         if (g0102.Pname.Id() == x.Pname.Id()) { 
           Result = 1
           } else {
@@ -1607,10 +1569,10 @@ func F_occurrence_any (self *ClaireAny ,x *ClaireVariable ) int {
           } 
         } 
       }  else if (self.Isa.IsIn(C_list) == CTRUE) { 
-      { var g0103 *ClaireList   = ToList(self)
-        { var n int  = 0
-          { var i int  = 1
-            { var g0104 int  = g0103.Length()
+      { var g0103 *ClaireList = ToList(self)
+        { var n int = 0
+          { var i int = 1
+            { var g0104 int = g0103.Length()
               for (i <= g0104) { 
                 n = (n+F_occurrence_any(g0103.At(i-1),x))
                 i = (i+1)
@@ -1621,7 +1583,7 @@ func F_occurrence_any (self *ClaireAny ,x *ClaireVariable ) int {
           } 
         } 
       }  else if (self.Isa.IsIn(C_unbound_symbol) == CTRUE) { 
-      { var g0105 *ClaireUnboundSymbol   = ToUnboundSymbol(self)
+      { var g0105 *ClaireUnboundSymbol = ToUnboundSymbol(self)
         if (g0105.Name.Id() == x.Pname.Id()) { 
           Result = 1
           } else {
@@ -1629,13 +1591,13 @@ func F_occurrence_any (self *ClaireAny ,x *ClaireVariable ) int {
           } 
         } 
       }  else if (self.Isa.IsIn(C_Instruction) == CTRUE) { 
-      { var g0106 *ClaireInstruction   = To_Instruction(self)
-        { var n int  = 0
+      { var g0106 *ClaireInstruction = To_Instruction(self)
+        { var n int = 0
           { 
-            var s *ClaireSlot  
+            var s *ClaireSlot
             _ = s
-            var s_iter *ClaireAny  
-            var s_support *ClaireList  
+            var s_iter *ClaireAny
+            var s_support *ClaireList
             s_support = g0106.Id().Isa.Slots
             for _,s_iter = range(s_support.ValuesO()){ 
               s = ToSlot(s_iter)
@@ -1656,21 +1618,20 @@ func E_occurrence_any (self EID,x EID) EID {
   
 // new version in CLAIRE4 : see if the variable is changed
 /* The go function for: occurchange(self:any,x:Variable) [status=0] */
-func F_occurchange_any (self *ClaireAny ,x *ClaireVariable ) *ClaireBoolean  { 
-    // procedure body with s = boolean
-    var Result *ClaireBoolean  
+func F_occurchange_any (self *ClaireAny,x *ClaireVariable) *ClaireBoolean { 
+    var Result *ClaireBoolean
     if (self.Isa.IsIn(C_Assign) == CTRUE) { 
-      { var g0108 *Assign   = To_Assign(self)
+      { var g0108 *Assign = To_Assign(self)
         Result = Equal(ANY(Core.F_CALL(C_mClaire_pname,ARGS(g0108.ClaireVar.ToEID()))),x.Pname.Id())
         } 
       }  else if (self.Isa.IsIn(C_list) == CTRUE) { 
-      { var g0109 *ClaireList   = ToList(self)
-        { var arg_1 *ClaireAny  
+      { var g0109 *ClaireList = ToList(self)
+        { var arg_1 *ClaireAny
           { 
-            var y *ClaireAny  
+            var y *ClaireAny
             _ = y
             arg_1= CFALSE.Id()
-            var y_support *ClaireList  
+            var y_support *ClaireList
             y_support = g0109
             y_len := y_support.Length()
             for i_it := 0; i_it < y_len; i_it++ { 
@@ -1685,14 +1646,14 @@ func F_occurchange_any (self *ClaireAny ,x *ClaireVariable ) *ClaireBoolean  {
           } 
         } 
       }  else if (self.Isa.IsIn(C_Instruction) == CTRUE) { 
-      { var g0110 *ClaireInstruction   = To_Instruction(self)
-        { var arg_2 *ClaireAny  
+      { var g0110 *ClaireInstruction = To_Instruction(self)
+        { var arg_2 *ClaireAny
           { 
-            var s *ClaireSlot  
+            var s *ClaireSlot
             _ = s
-            var s_iter *ClaireAny  
+            var s_iter *ClaireAny
             arg_2= CFALSE.Id()
-            var s_support *ClaireList  
+            var s_support *ClaireList
             s_support = g0110.Id().Isa.Slots
             for _,s_iter = range(s_support.ValuesO()){ 
               s = ToSlot(s_iter)
@@ -1717,11 +1678,10 @@ func E_occurchange_any (self EID,x EID) EID {
 // a variant in CLAIRE 4 that assumes that variable have reveived their lexical bind (index)
 // it also does not count the variable itself in an assign
 /* The go function for: occurexact(self:any,x:Variable) [status=0] */
-func F_Language_occurexact_any (self *ClaireAny ,x *ClaireVariable ) int { 
-    // procedure body with s = integer
-    var Result int 
+func F_Language_occurexact_any (self *ClaireAny,x *ClaireVariable) int { 
+    var Result int
     if (self.Isa.IsIn(C_Variable) == CTRUE) { 
-      { var g0112 *ClaireVariable   = To_Variable(self)
+      { var g0112 *ClaireVariable = To_Variable(self)
         if ((g0112.Pname.Id() == x.Pname.Id()) && 
             (g0112.Index == x.Index)) { 
           Result = 1
@@ -1730,10 +1690,10 @@ func F_Language_occurexact_any (self *ClaireAny ,x *ClaireVariable ) int {
           } 
         } 
       }  else if (self.Isa.IsIn(C_list) == CTRUE) { 
-      { var g0113 *ClaireList   = ToList(self)
-        { var n int  = 0
-          { var i int  = 1
-            { var g0114 int  = g0113.Length()
+      { var g0113 *ClaireList = ToList(self)
+        { var n int = 0
+          { var i int = 1
+            { var g0114 int = g0113.Length()
               for (i <= g0114) { 
                 n = (n+F_Language_occurexact_any(g0113.At(i-1),x))
                 i = (i+1)
@@ -1746,17 +1706,17 @@ func F_Language_occurexact_any (self *ClaireAny ,x *ClaireVariable ) int {
       }  else if (self.Isa.IsIn(C_unbound_symbol) == CTRUE) { 
       Result = 0
       }  else if (self.Isa.IsIn(C_Assign) == CTRUE) { 
-      { var g0116 *Assign   = To_Assign(self)
+      { var g0116 *Assign = To_Assign(self)
         Result = F_Language_occurexact_any(g0116.Arg,x)
         } 
       }  else if (self.Isa.IsIn(C_Instruction) == CTRUE) { 
-      { var g0117 *ClaireInstruction   = To_Instruction(self)
-        { var n int  = 0
+      { var g0117 *ClaireInstruction = To_Instruction(self)
+        { var n int = 0
           { 
-            var s *ClaireSlot  
+            var s *ClaireSlot
             _ = s
-            var s_iter *ClaireAny  
-            var s_support *ClaireList  
+            var s_iter *ClaireAny
+            var s_support *ClaireList
             s_support = g0117.Id().Isa.Slots
             for _,s_iter = range(s_support.ValuesO()){ 
               s = ToSlot(s_iter)
@@ -1778,14 +1738,13 @@ func E_Language_occurexact_any (self EID,x EID) EID {
 // makes a (deep) copy of the instruction self
 //
 /* The go function for: instruction_copy(self:any) [status=0] */
-func F_instruction_copy_any (self *ClaireAny ) *ClaireAny  { 
-    // procedure body with s = any
-    var Result *ClaireAny  
+func F_instruction_copy_any (self *ClaireAny) *ClaireAny { 
+    var Result *ClaireAny
     if (self.Isa.IsIn(C_list) == CTRUE) { 
-      { var g0119 *ClaireList   = ToList(self)
-        { var l *ClaireList   = g0119.Copy()
-          { var i int  = 1
-            { var g0120 int  = g0119.Length()
+      { var g0119 *ClaireList = ToList(self)
+        { var l *ClaireList = g0119.Copy()
+          { var i int = 1
+            { var g0120 int = g0119.Length()
               for (i <= g0120) { 
                 ToArray(l.Id()).NthPut(i,F_instruction_copy_any(g0119.At(i-1)))
                 i = (i+1)
@@ -1796,17 +1755,17 @@ func F_instruction_copy_any (self *ClaireAny ) *ClaireAny  {
           } 
         } 
       }  else if (self.Isa.IsIn(C_Variable) == CTRUE) { 
-      { var g0121 *ClaireVariable   = To_Variable(self)
+      { var g0121 *ClaireVariable = To_Variable(self)
         Result = g0121.Id()
         } 
       }  else if (self.Isa.IsIn(C_Instruction) == CTRUE) { 
-      { var g0122 *ClaireInstruction   = To_Instruction(self)
-        { var o *ClaireInstruction   = To_Instruction(g0122.Copy().Id())
+      { var g0122 *ClaireInstruction = To_Instruction(self)
+        { var o *ClaireInstruction = To_Instruction(g0122.Copy().Id())
           { 
-            var s *ClaireSlot  
+            var s *ClaireSlot
             _ = s
-            var s_iter *ClaireAny  
-            var s_support *ClaireList  
+            var s_iter *ClaireAny
+            var s_support *ClaireList
             s_support = g0122.Id().Isa.Slots
             for _,s_iter = range(s_support.ValuesO()){ 
               s = ToSlot(s_iter)

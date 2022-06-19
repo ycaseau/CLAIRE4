@@ -30,7 +30,7 @@ import (
 // we could fix this by ensuring that *.of is never nil  (CEMPTY is defined late in the boot)
 func (l *ClaireBag) Of() *ClaireType {
 	if l.of == nil {
-		// fmt.Printf("=== conversion nil to EMPTY ==== \n")
+		fmt.Printf("=== conversion nil to EMPTY ==== \n")
 		// only remove this once we have made sure that the test is not needed
 		return ToType(CEMPTY.Id())        // changed in claire 4
 	} else {
@@ -82,7 +82,8 @@ func createList(t *ClaireType, n int) *ClaireList {
 	return l
 }
 
-func makeNilList() *ClaireList {
+// this is a temporary function used in the boot phase (l.of = nil vs l.of = CEMPTY)
+func makeBootList() *ClaireList {
 	o := new(ClaireListObject)
 	o.Isa = C_list
 	o.Srange = C_object
@@ -131,6 +132,13 @@ func makeEmptyObjectList(n int) *ClaireListObject {
 	o.Srange = C_object
 	o.Values = make([]*ClaireAny, n)
 	return o
+}
+
+// short cut used in ClRefect (same as EmptySetObject)
+func (t *ClaireType) emptyListObject() *ClaireList {
+	o := makeEmptyObjectList(0)
+	o.of = t
+	return ToList(o.Id())
 }
 
 // special version for the compiler : created a typed list of size n

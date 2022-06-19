@@ -211,7 +211,8 @@ nexte(r:meta_reader) : any
  -> let x := nextexp(r,false) in (if (x % Instruction) r.last_form := x, x)     // v3.3
 
 // reading the next compact expression/ same
-//
+// str = true <=> a comment is not ignored and returned as a string
+// nextexp handles the specific cases based on first char, nexti handles what starts with an identifier
 nextexp(r:meta_reader,str:boolean) : any
  -> (let n:integer := skipc(r) in
       (if (n = #/)) paren(r)
@@ -232,13 +233,14 @@ nextexp(r:meta_reader,str:boolean) : any
                       else if (n = #/() readList(r,nexte(cnext(r)))
                       else if (n >= #/0 & n <= #/9) Kernel/read_number(r.fromp)         // read an int or a float
                       else if (n = #/{) readset(r, nexte(cnext(r)))                     // read a set
-                      else (y := Kernel/read_ident(r.fromp),
-                            if (y % string) y else nexti(r, y))) in
+                      else (y := Kernel/read_ident(r.fromp),                            // we read an identifier ...
+                            if (y % string) y 
+                            else nexti(r, y))) in                                       // Note that nexti(r) is the default case
               (if (y % string)
                   (if extended_comment?(r,y as string)
-				          extended_comment!(r,y as string)
-				       else if str y          // comment is returned
-                   else nexte(r))         // read a comment => ignored
+				              extended_comment!(r,y as string)
+				           else if str y              // comment is returned
+                   else nexte(r))             // read a comment => ignored
                else (while (firstc(r) = #/[ | firstc(r) = #/. | firstc(r) = #/<)
 	              (if (firstc(r) = #/<)
                     (if (x = map) (x := readmap(r))
@@ -284,7 +286,6 @@ nextexp(r:meta_reader,str:boolean) : any
          else v) ]
 
 // reads a compact expression that starts with an ident
-//
 nexti(r:meta_reader, val:any) : any
  -> (if (firstc(r) = #/()
       (if (val % {exists, forall, some})

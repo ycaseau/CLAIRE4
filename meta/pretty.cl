@@ -127,8 +127,8 @@ self_print(self:lambda) : void
   -> case %l (set {funcall(self,x) | x in %l},
               any list{funcall(self,x) | x in (%l as list)}) ]
 
-// lambda! and flexical_build communicate via a global_variable, which
-// however is only used in this file (and also by cfile :-) ):
+// lambda! and lexical_index communicate via a global_variable, which
+// however is only used in this file (and also by odefine.cl :-) ):
 //
 *variable_index* :: global_variable(range = integer, value = 0)
 
@@ -139,7 +139,7 @@ lambda!(lvar:list,self:any) : lambda
        (put(index, v, *variable_index*),
         put(isa, v, Variable),
         *variable_index* :+ 1),
-     let corps := lexical_build(self, lvar, *variable_index*),
+     let corps := lexical_index(self, lvar, *variable_index*,true),
          resultat:lambda := mClaire/new!(lambda) in
        (put(vars, resultat, lvar),
         put(body, resultat, corps),
@@ -151,7 +151,7 @@ lambda!(lvar:list,self:any) : lambda
 // variable.
 // The number of variables is kept in the global_variable *variable_index*.
 // On entry, n need not be equal to size(lvar) (see [case ...instruction]).
-//
+/*
 lexical_build(self:any,lvar:list,n:integer) : any
  -> (if (self % thing | self % unbound_symbol) lexical_change(self, lvar)
      else (case self
@@ -174,7 +174,11 @@ lexical_build(self:any,lvar:list,n:integer) : any
                                 (if ((x % thing | x % unbound_symbol) &
                                      s.range = any)
                                     put(s, self, lexical_change(x, lvar))
-                                 else lexical_build(x, lvar, n))),
+                                 else lexical_build(x, lvar, n)),
+                            if (%type = Assign & (self as Assign).var % unbound_symbol)                // CLAIRE4
+                               (printf("--- in lexical_build(~S,~S,~S)\n",self,lvar,n),
+                                exit(-1),
+                                error("[101] ~S is not a variable but a ~S", (self as Assign).var, owner((self as Assign).var)))),             // moved from self_eval @ Assign
              list let %n := length(self) in
                    while (%n > 0)
                      (let x := (nth@list(self, %n)) in
@@ -183,13 +187,55 @@ lexical_build(self:any,lvar:list,n:integer) : any
                          else lexical_build(x, lvar, n)),
                       %n :- 1),
              any nil),
-           self))
+           self)) */
 
 lexical_change(self:any,lvar:list) : any
  -> (let rep:any := self,
          %name:symbol := (case self  (Variable self.mClaire/pname,
                                       any extract_symbol(self))) in
        (for x:Variable in lvar (if (x.mClaire/pname = %name) rep := x), rep))
+
+
+// Give to each lexical variable its right position in the stack.
+// We look for a named object or an unbound symbol to replace by a lexical variable.
+// The number of variables is kept in the global_variable *variable_index*.
+// On entry, n need not be equal to size(lvar) (see [case ...instruction]).
+// in claire4, lexical_index replaces lexical_build with an additional variable : 
+// final? = true means all Assign must contain a variable <v4.0.6>
+lexical_index(self:any,lvar:list,n:integer,final?:boolean) : any
+ -> (if (self % thing | self % unbound_symbol) lexical_change(self, lvar)
+     else (case self
+            (Variable (if unknown?(index,self)                          // v3.1.12
+                          error("[145] the symbol ~A is unbound",  self.mClaire/pname),
+                       self),
+             Call let s := lexical_change(self.selector, lvar) in
+                    (lexical_index(self.args, lvar, n,final?),
+                     if (self.selector != s)
+                        (put(selector, self, call),
+                         put(args, self, s cons self.args))),
+             Instruction let %type:class := self.isa in
+                           (if (%type % Instruction_with_var.descendants)
+                               (put(index, self.var, n),
+                                n := n + 1,
+                                if (n > *variable_index*)
+                                   *variable_index* := n),
+                            for s in %type.slots
+                              let x := get(s, self) in
+                                (if ((x % thing | x % unbound_symbol) &
+                                     s.range = any)
+                                    put(s, self, lexical_change(x, lvar))
+                                 else lexical_index(x, lvar, n, final?)),
+                            if (%type = Assign & (self as Assign).var % unbound_symbol & final?)                // CLAIRE4
+                                error("[101] ~S is not a variable but a ~S", (self as Assign).var, owner((self as Assign).var))),             // moved from self_eval @ Assign
+             list let %n := length(self) in
+                   while (%n > 0)
+                     (let x := (nth@list(self, %n)) in
+                        (if (x % thing | x % unbound_symbol)
+                            nth=@list(self, %n, lexical_change(x, lvar))
+                         else lexical_index(x, lvar, n, final?)),
+                      %n :- 1),
+             any nil),
+           self))
 
 // *******************************************************************
 // *       Part 3: functions for lattice_set instantiation           *

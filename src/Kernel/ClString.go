@@ -700,7 +700,6 @@ func InitModule(name string, father *ClaireModule, usage *ClaireList, dir string
 	it.MadeOf = files
 	it.Comment = MakeString(name)
 	it.Status = 3
-	C_module.Instances.AddFast(it.Id())
 	father.Parts.AddFast(it.Id())
 	return it
 }
