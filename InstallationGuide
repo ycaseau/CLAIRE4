@@ -1,8 +1,10 @@
 
-   +-------------------------------------------------------------------------------------------------------------------------------+
-   |     CLAIRE 4.0                                                                                                                |
-   |     Installation Guide
-   +-------------------------------------------------------------------------------------------------------------------------------+
+
+   +-----------------------------------------------------------------------------------------------------------------+
+   |     CLAIRE 4.0                                                                                                  |
+   |     Installation Guide                                                                                          |
+   |     last update : Oct 9th 2022                                                                                  |
+   +-----------------------------------------------------------------------------------------------------------------+
    
    (1) Download from GitHub
    ========================
@@ -34,11 +36,19 @@
    
    - select where you want to install the go files : the root directory *go* where you will do the go compiling
       Here I will show how to do it on a "go" subdirectory of *root* (i.e. *go* = *root*/go)
+      However, this is your choice, but the GOPATH environment variable must be set :
+
    - set the env variable accordingly depending on your OS
         e.g. export GOPATH=*go*  on MacOS, set GOPATH=*go* on Windows, etc
+
+   - On recent go versions, you need to set the GO111MODULE variable 
+       export GO111MODULE=off
+       read for more details  https://maelvls.dev/go111module-everywhere/
+
    - copy the go directories from *root* to *go*/src
         - the claire4.go file
         - all the subdirectories and their contents: Kernel, Core, Language, Reader, Optimize, Generate
+
     - build the claire4 executable:
         go build src/claire4.go
    
@@ -49,7 +59,7 @@
    - claire4 will launch the interpreter.
      If an init.cl file is present, it will be loaded first
      modules are defined in the init file (think of it as a configuration file)
-   -
+   
    - claire3 -cm <module> will combile a module into an executable
    
    
