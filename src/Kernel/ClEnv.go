@@ -283,7 +283,7 @@ func (self *ClaireVariable) WriteEID(val EID) EID {
 
 // output a char to Cout - prints a char on the current port
 func (c *ClaireEnvironment) put(r rune) {
-	ClEnv.Cout.PutChar(r)
+	ClEnv.Cout.Putc(r)
 }
 
 // func (c *ClaireEnvironment) PutInteger(n int) { }

@@ -140,6 +140,7 @@ self_print(self:Assign) : void
         else printf("~S := ~I~I", self.var, lbreak(2), printexp(a, true)),
         pretty.index :- 2))
 
+// assumes that Assign is well-formed (self.var must be a variable)
 self_eval(self:Assign) : any
  -> write_value((self.var as Variable),eval(self.arg))
 

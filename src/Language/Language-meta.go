@@ -1,5 +1,5 @@
 /***** CLAIRE Compilation of module Language.cl 
-         [version 4.0.06 / safety 5] Monday 06-06-2022 08:31:22 *****/
+         [version 4.0.07 / safety 5] Sunday 01-01-2023 08:56:16 *****/
 
 package Language
 import (_ "fmt"
@@ -1328,7 +1328,7 @@ var C_iClaire *ClaireModule
 func MetaLoad() { 
   
   It = MakeModule("Language",C_iClaire)
-  It.Comment = MakeString("Compiled on Monday 06-06-2022 08:31:22(v4.0.06), lines:2259, warnings:1,safety:5")
+  It.Comment = MakeString("Compiled on Sunday 01-01-2023 08:56:16(v4.0.07), lines:2261, warnings:1,safety:5")
   ClEnv.Module_I = It
   
   // definition of the properties
@@ -1520,13 +1520,13 @@ func MetaLoad() {
     C_list.Id(),
     C_integer.Id(),
     C_boolean.Id(),
-    C_any.Id()),1,MakeFunction4(E_iClaire_lexical_index_any2,"iClaire_lexical_index_any2")),MakeString("pretty.cl:238"))
+    C_any.Id()),1,MakeFunction4(E_iClaire_lexical_index_any2,"iClaire_lexical_index_any2")),MakeString("pretty.cl:239"))
   
-  _ = Core.F_attach_method(C_close.AddMethod(Signature(C_class.Id(),C_class.Id()),0,MakeFunction1(E_close_class,"close_class")),MakeString("pretty.cl:246"))
+  _ = Core.F_attach_method(C_close.AddMethod(Signature(C_class.Id(),C_class.Id()),0,MakeFunction1(E_close_class,"close_class")),MakeString("pretty.cl:247"))
   
-  _ = Core.F_attach_method(C_iClaire_extract_symbol.AddMethod(Signature(C_any.Id(),C_symbol.Id()),1,MakeFunction1(E_extract_symbol_any,"extract_symbol_any")),MakeString("pretty.cl:259"))
+  _ = Core.F_attach_method(C_iClaire_extract_symbol.AddMethod(Signature(C_any.Id(),C_symbol.Id()),1,MakeFunction1(E_extract_symbol_any,"extract_symbol_any")),MakeString("pretty.cl:260"))
   
-  _ = Core.F_attach_method(C_iClaire_make_a_property.AddMethod(Signature(C_any.Id(),C_property.Id()),1,MakeFunction1(E_make_a_property_any,"make_a_property_any")),MakeString("pretty.cl:277"))
+  _ = Core.F_attach_method(C_iClaire_make_a_property.AddMethod(Signature(C_any.Id(),C_property.Id()),1,MakeFunction1(E_make_a_property_any,"make_a_property_any")),MakeString("pretty.cl:278"))
   
   C_printl = MakeProperty("printl",1,C_claire)
   
@@ -1543,49 +1543,49 @@ func MetaLoad() {
       } 
     ErrorCheck(expr)} 
   
-  _ = Core.F_attach_method(C_Language_lbreak.AddMethod(Signature(C_void.Id(),C_any.Id()),1,MakeFunction1(E_lbreak_void,"lbreak_void")),MakeString("pretty.cl:297"))
+  _ = Core.F_attach_method(C_Language_lbreak.AddMethod(Signature(C_void.Id(),C_any.Id()),1,MakeFunction1(E_lbreak_void,"lbreak_void")),MakeString("pretty.cl:298"))
   
-  _ = Core.F_attach_method(C_Language_put_buffer.AddMethod(Signature(C_void.Id(),C_any.Id()),1,MakeFunction1(E_put_buffer_void,"put_buffer_void")),MakeString("pretty.cl:301"))
+  _ = Core.F_attach_method(C_Language_put_buffer.AddMethod(Signature(C_void.Id(),C_any.Id()),1,MakeFunction1(E_put_buffer_void,"put_buffer_void")),MakeString("pretty.cl:302"))
   
-  _ = Core.F_attach_method(C_Language_checkfar.AddMethod(Signature(C_void.Id(),C_any.Id()),1,MakeFunction1(E_checkfar_void,"checkfar_void")),MakeString("pretty.cl:305"))
+  _ = Core.F_attach_method(C_Language_checkfar.AddMethod(Signature(C_void.Id(),C_any.Id()),1,MakeFunction1(E_checkfar_void,"checkfar_void")),MakeString("pretty.cl:306"))
   
-  _ = Core.F_attach_method(C_Language_lbreak.AddMethod(Signature(C_integer.Id(),C_any.Id()),1,MakeFunction1(E_lbreak_integer,"lbreak_integer")),MakeString("pretty.cl:307"))
+  _ = Core.F_attach_method(C_Language_lbreak.AddMethod(Signature(C_integer.Id(),C_any.Id()),1,MakeFunction1(E_lbreak_integer,"lbreak_integer")),MakeString("pretty.cl:308"))
   
-  _ = Core.F_attach_method(C_Language_indent.AddMethod(Signature(C_integer.Id(),C_any.Id()),0,MakeFunction1(E_indent_integer,"indent_integer")),MakeString("pretty.cl:312"))
+  _ = Core.F_attach_method(C_Language_indent.AddMethod(Signature(C_integer.Id(),C_any.Id()),0,MakeFunction1(E_indent_integer,"indent_integer")),MakeString("pretty.cl:313"))
   
-  _ = Core.F_attach_method(C_Language_set_level.AddMethod(Signature(C_void.Id(),C_void.Id()),0,MakeFunction1(E_set_level_void,"set_level_void")),MakeString("pretty.cl:316"))
+  _ = Core.F_attach_method(C_Language_set_level.AddMethod(Signature(C_void.Id(),C_void.Id()),0,MakeFunction1(E_set_level_void,"set_level_void")),MakeString("pretty.cl:317"))
   
-  _ = Core.F_attach_method(C_Language_set_level.AddMethod(Signature(C_integer.Id(),C_void.Id()),0,MakeFunction1(E_set_level_integer,"set_level_integer")),MakeString("pretty.cl:317"))
+  _ = Core.F_attach_method(C_Language_set_level.AddMethod(Signature(C_integer.Id(),C_void.Id()),0,MakeFunction1(E_set_level_integer,"set_level_integer")),MakeString("pretty.cl:318"))
   
   _ = Core.F_attach_method(C_Language_printbox.AddMethod(Signature(C_list.Id(),
     C_integer.Id(),
     C_integer.Id(),
     C_string.Id(),
-    C_any.Id()),1,MakeFunction4(E_Language_printbox_list1,"Language_printbox_list1")),MakeString("pretty.cl:353"))
+    C_any.Id()),1,MakeFunction4(E_Language_printbox_list1,"Language_printbox_list1")),MakeString("pretty.cl:354"))
   
-  _ = Core.F_attach_method(C_Language_printbox.AddMethod(Signature(C_list.Id(),C_any.Id()),1,MakeFunction1(E_Language_printbox_list2,"Language_printbox_list2")),MakeString("pretty.cl:358"))
+  _ = Core.F_attach_method(C_Language_printbox.AddMethod(Signature(C_list.Id(),C_any.Id()),1,MakeFunction1(E_Language_printbox_list2,"Language_printbox_list2")),MakeString("pretty.cl:359"))
   
-  _ = Core.F_attach_method(C_Language_printbox.AddMethod(Signature(C_list.Id(),C_string.Id(),C_any.Id()),1,MakeFunction2(E_Language_printbox_list3,"Language_printbox_list3")),MakeString("pretty.cl:360"))
+  _ = Core.F_attach_method(C_Language_printbox.AddMethod(Signature(C_list.Id(),C_string.Id(),C_any.Id()),1,MakeFunction2(E_Language_printbox_list3,"Language_printbox_list3")),MakeString("pretty.cl:361"))
   
-  _ = Core.F_attach_method(C_printl.AddMethod(Signature(C_list.Id(),C_string.Id(),C_void.Id()),1,MakeFunction2(E_printl_list,"printl_list")),MakeString("pretty.cl:378"))
+  _ = Core.F_attach_method(C_printl.AddMethod(Signature(C_list.Id(),C_string.Id(),C_void.Id()),1,MakeFunction2(E_printl_list,"printl_list")),MakeString("pretty.cl:379"))
   
-  _ = Core.F_attach_method(C_Language_printexp.AddMethod(Signature(C_any.Id(),C_boolean.Id(),C_void.Id()),1,MakeFunction2(E_printexp_any,"printexp_any")),MakeString("pretty.cl:391"))
+  _ = Core.F_attach_method(C_Language_printexp.AddMethod(Signature(C_any.Id(),C_boolean.Id(),C_void.Id()),1,MakeFunction2(E_printexp_any,"printexp_any")),MakeString("pretty.cl:392"))
   
-  _ = Core.F_attach_method(C_pretty_print.AddMethod(Signature(C_any.Id(),C_void.Id()),1,MakeFunction1(E_pretty_print_any,"pretty_print_any")),MakeString("pretty.cl:401"))
+  _ = Core.F_attach_method(C_pretty_print.AddMethod(Signature(C_any.Id(),C_void.Id()),1,MakeFunction1(E_pretty_print_any,"pretty_print_any")),MakeString("pretty.cl:402"))
   
-  _ = Core.F_attach_method(C_self_print.AddMethod(Signature(C_list.Id(),C_void.Id()),1,MakeFunction1(E_self_print_list_Language,"self_print_list_Language")),MakeString("pretty.cl:406"))
+  _ = Core.F_attach_method(C_self_print.AddMethod(Signature(C_list.Id(),C_void.Id()),1,MakeFunction1(E_self_print_list_Language,"self_print_list_Language")),MakeString("pretty.cl:407"))
   
-  _ = Core.F_attach_method(C_self_print.AddMethod(Signature(C_set.Id(),C_void.Id()),1,MakeFunction1(E_self_print_set_Language,"self_print_set_Language")),MakeString("pretty.cl:411"))
+  _ = Core.F_attach_method(C_self_print.AddMethod(Signature(C_set.Id(),C_void.Id()),1,MakeFunction1(E_self_print_set_Language,"self_print_set_Language")),MakeString("pretty.cl:412"))
   
-  _ = Core.F_attach_method(C_self_print.AddMethod(Signature(C_tuple.Id(),C_void.Id()),1,MakeFunction1(E_self_print_tuple_Language,"self_print_tuple_Language")),MakeString("pretty.cl:415"))
+  _ = Core.F_attach_method(C_self_print.AddMethod(Signature(C_tuple.Id(),C_void.Id()),1,MakeFunction1(E_self_print_tuple_Language,"self_print_tuple_Language")),MakeString("pretty.cl:416"))
   
-  _ = Core.F_attach_method(C_self_print.AddMethod(Signature(C_map_set.Id(),C_void.Id()),1,MakeFunction1(E_self_print_map_set,"self_print_map_set")),MakeString("pretty.cl:419"))
+  _ = Core.F_attach_method(C_self_print.AddMethod(Signature(C_map_set.Id(),C_void.Id()),1,MakeFunction1(E_self_print_map_set,"self_print_map_set")),MakeString("pretty.cl:420"))
   
-  _ = Core.F_attach_method(C_self_print.AddMethod(Signature(C_pair.Id(),C_void.Id()),1,MakeFunction1(E_self_print_pair,"self_print_pair")),MakeString("pretty.cl:425"))
+  _ = Core.F_attach_method(C_self_print.AddMethod(Signature(C_pair.Id(),C_void.Id()),1,MakeFunction1(E_self_print_pair,"self_print_pair")),MakeString("pretty.cl:426"))
   
-  _ = Core.F_attach_method(C_static_type.AddMethod(Signature(C_any.Id(),C_class.Id()),1,MakeFunction1(E_static_type_any,"static_type_any")),MakeString("pretty.cl:467"))
+  _ = Core.F_attach_method(C_static_type.AddMethod(Signature(C_any.Id(),C_class.Id()),1,MakeFunction1(E_static_type_any,"static_type_any")),MakeString("pretty.cl:468"))
   
-  _ = Core.F_attach_method(C_Language_static_type_nth.AddMethod(Signature(C_any.Id(),C_class.Id()),1,MakeFunction1(E_Language_static_type_nth_any,"Language_static_type_nth_any")),MakeString("pretty.cl:475"))
+  _ = Core.F_attach_method(C_Language_static_type_nth.AddMethod(Signature(C_any.Id(),C_class.Id()),1,MakeFunction1(E_Language_static_type_nth_any,"Language_static_type_nth_any")),MakeString("pretty.cl:476"))
   
   { 
     var expr EID
@@ -1634,36 +1634,36 @@ func MetaLoad() {
   
   _ = Core.F_attach_method(C_self_print.AddMethod(Signature(C_Assign.Id(),C_void.Id()),1,MakeFunction1(E_self_print_Assign_Language,"self_print_Assign_Language")),MakeString("call.cl:141"))
   
-  _ = Core.F_attach_method(Core.C_self_eval.AddEvalMethod(Signature(C_Assign.Id(),C_any.Id()),1,MakeFunction1(E_self_eval_Assign,"self_eval_Assign"),EVAL_Assign),MakeString("call.cl:144"))
+  _ = Core.F_attach_method(Core.C_self_eval.AddEvalMethod(Signature(C_Assign.Id(),C_any.Id()),1,MakeFunction1(E_self_eval_Assign,"self_eval_Assign"),EVAL_Assign),MakeString("call.cl:145"))
   
   C_Gassign = MakeClass("Gassign",C_Basic_instruction,C_claire)
   Core.F_close_slot(C_Gassign.AddSlot(C_var,ToType(Core.C_global_variable.Id()),CNULL))
   Core.F_close_slot(C_Gassign.AddSlot(C_arg,ToType(C_any.Id()),CNULL))
   
-  _ = Core.F_attach_method(C_self_print.AddMethod(Signature(C_Gassign.Id(),C_void.Id()),1,MakeFunction1(E_self_print_Gassign_Language,"self_print_Gassign_Language")),MakeString("call.cl:155"))
+  _ = Core.F_attach_method(C_self_print.AddMethod(Signature(C_Gassign.Id(),C_void.Id()),1,MakeFunction1(E_self_print_Gassign_Language,"self_print_Gassign_Language")),MakeString("call.cl:156"))
   
-  _ = Core.F_attach_method(Core.C_self_eval.AddEvalMethod(Signature(C_Gassign.Id(),C_any.Id()),1,MakeFunction1(E_self_eval_Gassign,"self_eval_Gassign"),EVAL_Gassign),MakeString("call.cl:158"))
+  _ = Core.F_attach_method(Core.C_self_eval.AddEvalMethod(Signature(C_Gassign.Id(),C_any.Id()),1,MakeFunction1(E_self_eval_Gassign,"self_eval_Gassign"),EVAL_Gassign),MakeString("call.cl:159"))
   
   C_And = MakeClass("And",C_Control_structure,C_claire)
   Core.F_close_slot(C_And.AddSlot(C_args,ToType(C_list.Id()),ToType(C_any.Id()).EmptyList().Id()))
   
-  _ = Core.F_attach_method(C_self_print.AddMethod(Signature(C_And.Id(),C_void.Id()),1,MakeFunction1(E_self_print_And_Language,"self_print_And_Language")),MakeString("call.cl:164"))
+  _ = Core.F_attach_method(C_self_print.AddMethod(Signature(C_And.Id(),C_void.Id()),1,MakeFunction1(E_self_print_And_Language,"self_print_And_Language")),MakeString("call.cl:165"))
   
-  _ = Core.F_attach_method(Core.C_self_eval.AddEvalMethod(Signature(C_And.Id(),C_any.Id()),1,MakeFunction1(E_self_eval_And,"self_eval_And"),EVAL_And),MakeString("call.cl:166"))
+  _ = Core.F_attach_method(Core.C_self_eval.AddEvalMethod(Signature(C_And.Id(),C_any.Id()),1,MakeFunction1(E_self_eval_And,"self_eval_And"),EVAL_And),MakeString("call.cl:167"))
   
   C_Or = MakeClass("Or",C_Control_structure,C_claire)
   Core.F_close_slot(C_Or.AddSlot(C_args,ToType(C_list.Id()),ToType(C_any.Id()).EmptyList().Id()))
   
-  _ = Core.F_attach_method(C_self_print.AddMethod(Signature(C_Or.Id(),C_void.Id()),1,MakeFunction1(E_self_print_Or_Language,"self_print_Or_Language")),MakeString("call.cl:171"))
+  _ = Core.F_attach_method(C_self_print.AddMethod(Signature(C_Or.Id(),C_void.Id()),1,MakeFunction1(E_self_print_Or_Language,"self_print_Or_Language")),MakeString("call.cl:172"))
   
-  _ = Core.F_attach_method(Core.C_self_eval.AddEvalMethod(Signature(C_Or.Id(),C_any.Id()),1,MakeFunction1(E_self_eval_Or,"self_eval_Or"),EVAL_Or),MakeString("call.cl:173"))
+  _ = Core.F_attach_method(Core.C_self_eval.AddEvalMethod(Signature(C_Or.Id(),C_any.Id()),1,MakeFunction1(E_self_eval_Or,"self_eval_Or"),EVAL_Or),MakeString("call.cl:174"))
   
   C_Quote = MakeClass("Quote",C_Basic_instruction,C_claire)
   Core.F_close_slot(C_Quote.AddSlot(C_arg,ToType(C_any.Id()),CNULL))
   
-  _ = Core.F_attach_method(C_self_print.AddMethod(Signature(C_Quote.Id(),C_void.Id()),1,MakeFunction1(E_self_print_Quote_Language,"self_print_Quote_Language")),MakeString("call.cl:178"))
+  _ = Core.F_attach_method(C_self_print.AddMethod(Signature(C_Quote.Id(),C_void.Id()),1,MakeFunction1(E_self_print_Quote_Language,"self_print_Quote_Language")),MakeString("call.cl:179"))
   
-  _ = Core.F_attach_method(Core.C_self_eval.AddEvalMethod(Signature(C_Quote.Id(),C_any.Id()),0,MakeFunction1(E_self_eval_Quote,"self_eval_Quote"),EVAL_Quote),MakeString("call.cl:179"))
+  _ = Core.F_attach_method(Core.C_self_eval.AddEvalMethod(Signature(C_Quote.Id(),C_any.Id()),0,MakeFunction1(E_self_eval_Quote,"self_eval_Quote"),EVAL_Quote),MakeString("call.cl:180"))
   
   C_Optimized_instruction = MakeClass("Optimized_instruction",C_Complex_instruction,C_claire)
   
@@ -1671,48 +1671,48 @@ func MetaLoad() {
   Core.F_close_slot(C_Call_method.AddSlot(C_arg,ToType(C_method.Id()),CNULL))
   Core.F_close_slot(C_Call_method.AddSlot(C_args,ToType(C_list.Id()),ToType(C_any.Id()).EmptyList().Id()))
   
-  _ = Core.F_attach_method(C_self_print.AddMethod(Signature(C_Call_method.Id(),C_void.Id()),1,MakeFunction1(E_self_print_Call_method_Language,"self_print_Call_method_Language")),MakeString("call.cl:196"))
+  _ = Core.F_attach_method(C_self_print.AddMethod(Signature(C_Call_method.Id(),C_void.Id()),1,MakeFunction1(E_self_print_Call_method_Language,"self_print_Call_method_Language")),MakeString("call.cl:197"))
   
-  _ = Core.F_attach_method(Core.C_self_eval.AddEvalMethod(Signature(C_Call_method.Id(),C_any.Id()),1,MakeFunction1(E_self_eval_Call_method,"self_eval_Call_method"),EVAL_Call_method),MakeString("call.cl:201"))
+  _ = Core.F_attach_method(Core.C_self_eval.AddEvalMethod(Signature(C_Call_method.Id(),C_any.Id()),1,MakeFunction1(E_self_eval_Call_method,"self_eval_Call_method"),EVAL_Call_method),MakeString("call.cl:202"))
   
   C_Call_method1 = MakeClass("Call_method1",C_Call_method,C_claire)
   
-  _ = Core.F_attach_method(Core.C_self_eval.AddEvalMethod(Signature(C_Call_method1.Id(),C_any.Id()),1,MakeFunction1(E_self_eval_Call_method1,"self_eval_Call_method1"),EVAL_Call_method1),MakeString("call.cl:206"))
+  _ = Core.F_attach_method(Core.C_self_eval.AddEvalMethod(Signature(C_Call_method1.Id(),C_any.Id()),1,MakeFunction1(E_self_eval_Call_method1,"self_eval_Call_method1"),EVAL_Call_method1),MakeString("call.cl:207"))
   
   C_Call_method2 = MakeClass("Call_method2",C_Call_method,C_claire)
   
-  _ = Core.F_attach_method(Core.C_self_eval.AddEvalMethod(Signature(C_Call_method2.Id(),C_any.Id()),1,MakeFunction1(E_self_eval_Call_method2,"self_eval_Call_method2"),EVAL_Call_method2),MakeString("call.cl:213"))
+  _ = Core.F_attach_method(Core.C_self_eval.AddEvalMethod(Signature(C_Call_method2.Id(),C_any.Id()),1,MakeFunction1(E_self_eval_Call_method2,"self_eval_Call_method2"),EVAL_Call_method2),MakeString("call.cl:214"))
   
   C_Language_Call_method3 = MakeClass("Call_method3",C_Call_method,It)
   
-  _ = Core.F_attach_method(Core.C_self_eval.AddEvalMethod(Signature(C_Language_Call_method3.Id(),C_any.Id()),1,MakeFunction1(E_self_eval_Call_method3,"self_eval_Call_method3"),EVAL_Language_Call_method3),MakeString("call.cl:220"))
+  _ = Core.F_attach_method(Core.C_self_eval.AddEvalMethod(Signature(C_Language_Call_method3.Id(),C_any.Id()),1,MakeFunction1(E_self_eval_Call_method3,"self_eval_Call_method3"),EVAL_Language_Call_method3),MakeString("call.cl:221"))
   
   C_Call_slot = MakeClass("Call_slot",C_Optimized_instruction,C_claire)
   Core.F_close_slot(C_Call_slot.AddSlot(C_selector,ToType(C_slot.Id()),CNULL))
   Core.F_close_slot(C_Call_slot.AddSlot(C_arg,ToType(C_any.Id()),CNULL))
   Core.F_close_slot(C_Call_slot.AddSlot(C_iClaire_test,ToType(C_boolean.Id()),CNULL))
   
-  _ = Core.F_attach_method(C_self_print.AddMethod(Signature(C_Call_slot.Id(),C_void.Id()),1,MakeFunction1(E_self_print_Call_slot_Language,"self_print_Call_slot_Language")),MakeString("call.cl:226"))
+  _ = Core.F_attach_method(C_self_print.AddMethod(Signature(C_Call_slot.Id(),C_void.Id()),1,MakeFunction1(E_self_print_Call_slot_Language,"self_print_Call_slot_Language")),MakeString("call.cl:227"))
   
-  _ = Core.F_attach_method(Core.C_self_eval.AddEvalMethod(Signature(C_Call_slot.Id(),C_any.Id()),1,MakeFunction1(E_self_eval_Call_slot,"self_eval_Call_slot"),EVAL_Call_slot),MakeString("call.cl:227"))
+  _ = Core.F_attach_method(Core.C_self_eval.AddEvalMethod(Signature(C_Call_slot.Id(),C_any.Id()),1,MakeFunction1(E_self_eval_Call_slot,"self_eval_Call_slot"),EVAL_Call_slot),MakeString("call.cl:228"))
   
   C_Call_array = MakeClass("Call_array",C_Optimized_instruction,C_claire)
   Core.F_close_slot(C_Call_array.AddSlot(C_selector,ToType(C_any.Id()),CNULL))
   Core.F_close_slot(C_Call_array.AddSlot(C_arg,ToType(C_any.Id()),CNULL))
   Core.F_close_slot(C_Call_array.AddSlot(C_iClaire_test,ToType(C_any.Id()),CNULL))
   
-  _ = Core.F_attach_method(C_self_print.AddMethod(Signature(C_Call_array.Id(),C_void.Id()),1,MakeFunction1(E_self_print_Call_array_Language,"self_print_Call_array_Language")),MakeString("call.cl:235"))
+  _ = Core.F_attach_method(C_self_print.AddMethod(Signature(C_Call_array.Id(),C_void.Id()),1,MakeFunction1(E_self_print_Call_array_Language,"self_print_Call_array_Language")),MakeString("call.cl:236"))
   
-  _ = Core.F_attach_method(Core.C_self_eval.AddEvalMethod(Signature(C_Call_array.Id(),C_any.Id()),1,MakeFunction1(E_self_eval_Call_array,"self_eval_Call_array"),EVAL_Call_array),MakeString("call.cl:237"))
+  _ = Core.F_attach_method(Core.C_self_eval.AddEvalMethod(Signature(C_Call_array.Id(),C_any.Id()),1,MakeFunction1(E_self_eval_Call_array,"self_eval_Call_array"),EVAL_Call_array),MakeString("call.cl:238"))
   
   C_Call_table = MakeClass("Call_table",C_Optimized_instruction,C_claire)
   Core.F_close_slot(C_Call_table.AddSlot(C_selector,ToType(C_table.Id()),CNULL))
   Core.F_close_slot(C_Call_table.AddSlot(C_arg,ToType(C_any.Id()),CNULL))
   Core.F_close_slot(C_Call_table.AddSlot(C_iClaire_test,ToType(C_boolean.Id()),CNULL))
   
-  _ = Core.F_attach_method(C_self_print.AddMethod(Signature(C_Call_table.Id(),C_void.Id()),1,MakeFunction1(E_self_print_Call_table_Language,"self_print_Call_table_Language")),MakeString("call.cl:243"))
+  _ = Core.F_attach_method(C_self_print.AddMethod(Signature(C_Call_table.Id(),C_void.Id()),1,MakeFunction1(E_self_print_Call_table_Language,"self_print_Call_table_Language")),MakeString("call.cl:244"))
   
-  _ = Core.F_attach_method(Core.C_self_eval.AddEvalMethod(Signature(C_Call_table.Id(),C_any.Id()),1,MakeFunction1(E_self_eval_Call_table,"self_eval_Call_table"),EVAL_Call_table),MakeString("call.cl:246"))
+  _ = Core.F_attach_method(Core.C_self_eval.AddEvalMethod(Signature(C_Call_table.Id(),C_any.Id()),1,MakeFunction1(E_self_eval_Call_table,"self_eval_Call_table"),EVAL_Call_table),MakeString("call.cl:247"))
   
   C_Update = MakeClass("Update",C_Optimized_instruction,C_claire)
   Core.F_close_slot(C_Update.AddSlot(C_selector,ToType(C_any.Id()),CNULL))
@@ -1720,46 +1720,46 @@ func MetaLoad() {
   Core.F_close_slot(C_Update.AddSlot(C_value,ToType(C_any.Id()),CNULL))
   Core.F_close_slot(C_Update.AddSlot(C_var,ToType(C_any.Id()),CNULL))
   
-  _ = Core.F_attach_method(C_self_print.AddMethod(Signature(C_Update.Id(),C_void.Id()),1,MakeFunction1(E_self_print_Update_Language,"self_print_Update_Language")),MakeString("call.cl:257"))
+  _ = Core.F_attach_method(C_self_print.AddMethod(Signature(C_Update.Id(),C_void.Id()),1,MakeFunction1(E_self_print_Update_Language,"self_print_Update_Language")),MakeString("call.cl:258"))
   
-  _ = Core.F_attach_method(Core.C_self_eval.AddEvalMethod(Signature(C_Update.Id(),C_any.Id()),1,MakeFunction1(E_self_eval_Update,"self_eval_Update"),EVAL_Update),MakeString("call.cl:263"))
+  _ = Core.F_attach_method(Core.C_self_eval.AddEvalMethod(Signature(C_Update.Id(),C_any.Id()),1,MakeFunction1(E_self_eval_Update,"self_eval_Update"),EVAL_Update),MakeString("call.cl:264"))
   
   C_Super = MakeClass("Super",C_Control_structure,C_claire)
   Core.F_close_slot(C_Super.AddSlot(C_selector,ToType(C_property.Id()),CNULL))
   Core.F_close_slot(C_Super.AddSlot(C_iClaire_cast_to,ToType(C_type.Id()),CNULL))
   Core.F_close_slot(C_Super.AddSlot(C_args,ToType(C_list.Id()),ToType(C_any.Id()).EmptyList().Id()))
   
-  _ = Core.F_attach_method(C_self_print.AddMethod(Signature(C_Super.Id(),C_void.Id()),1,MakeFunction1(E_self_print_Super_Language,"self_print_Super_Language")),MakeString("call.cl:279"))
+  _ = Core.F_attach_method(C_self_print.AddMethod(Signature(C_Super.Id(),C_void.Id()),1,MakeFunction1(E_self_print_Super_Language,"self_print_Super_Language")),MakeString("call.cl:280"))
   
-  _ = Core.F_attach_method(Core.C_self_eval.AddEvalMethod(Signature(C_Super.Id(),C_any.Id()),1,MakeFunction1(E_self_eval_Super,"self_eval_Super"),EVAL_Super),MakeString("call.cl:288"))
+  _ = Core.F_attach_method(Core.C_self_eval.AddEvalMethod(Signature(C_Super.Id(),C_any.Id()),1,MakeFunction1(E_self_eval_Super,"self_eval_Super"),EVAL_Super),MakeString("call.cl:289"))
   
   C_Cast = MakeClass("Cast",C_Basic_instruction,C_claire)
   Core.F_close_slot(C_Cast.AddSlot(C_arg,ToType(C_any.Id()),CNULL))
   Core.F_close_slot(C_Cast.AddSlot(C_iClaire_set_arg,ToType(C_type.Id()),CNULL))
   
-  _ = Core.F_attach_method(C_self_print.AddMethod(Signature(C_Cast.Id(),C_void.Id()),1,MakeFunction1(E_self_print_Cast_Language,"self_print_Cast_Language")),MakeString("call.cl:298"))
+  _ = Core.F_attach_method(C_self_print.AddMethod(Signature(C_Cast.Id(),C_void.Id()),1,MakeFunction1(E_self_print_Cast_Language,"self_print_Cast_Language")),MakeString("call.cl:299"))
   
-  _ = Core.F_attach_method(Core.C_self_eval.AddEvalMethod(Signature(C_Cast.Id(),C_any.Id()),1,MakeFunction1(E_self_eval_Cast,"self_eval_Cast"),EVAL_Cast),MakeString("call.cl:304"))
+  _ = Core.F_attach_method(Core.C_self_eval.AddEvalMethod(Signature(C_Cast.Id(),C_any.Id()),1,MakeFunction1(E_self_eval_Cast,"self_eval_Cast"),EVAL_Cast),MakeString("call.cl:305"))
   
   C_Return = MakeClass("Return",C_Basic_instruction,C_claire)
   Core.F_close_slot(C_Return.AddSlot(C_arg,ToType(C_any.Id()),CNULL))
   
-  _ = Core.F_attach_method(C_self_print.AddMethod(Signature(C_Return.Id(),C_void.Id()),1,MakeFunction1(E_self_print_Return_Language,"self_print_Return_Language")),MakeString("call.cl:315"))
+  _ = Core.F_attach_method(C_self_print.AddMethod(Signature(C_Return.Id(),C_void.Id()),1,MakeFunction1(E_self_print_Return_Language,"self_print_Return_Language")),MakeString("call.cl:316"))
   
-  _ = Core.F_attach_method(Core.C_self_eval.AddEvalMethod(Signature(C_Return.Id(),C_error.Id()),1,MakeFunction1(E_self_eval_Return,"self_eval_Return"),EVAL_Return),MakeString("call.cl:316"))
+  _ = Core.F_attach_method(Core.C_self_eval.AddEvalMethod(Signature(C_Return.Id(),C_error.Id()),1,MakeFunction1(E_self_eval_Return,"self_eval_Return"),EVAL_Return),MakeString("call.cl:317"))
   
   _ = Core.F_attach_method(C_substitution.AddMethod(Signature(C_any.Id(),
     C_Variable.Id(),
     C_any.Id(),
-    C_any.Id()),0,MakeFunction3(E_substitution_any,"substitution_any")),MakeString("call.cl:337"))
+    C_any.Id()),0,MakeFunction3(E_substitution_any,"substitution_any")),MakeString("call.cl:338"))
   
-  _ = Core.F_attach_method(C_Language_occurrence.AddMethod(Signature(C_any.Id(),C_Variable.Id(),C_integer.Id()),0,MakeFunction2(E_occurrence_any,"occurrence_any")),MakeString("call.cl:350"))
+  _ = Core.F_attach_method(C_Language_occurrence.AddMethod(Signature(C_any.Id(),C_Variable.Id(),C_integer.Id()),0,MakeFunction2(E_occurrence_any,"occurrence_any")),MakeString("call.cl:351"))
   
-  _ = Core.F_attach_method(C_occurchange.AddMethod(Signature(C_any.Id(),C_Variable.Id(),C_boolean.Id()),0,MakeFunction2(E_occurchange_any,"occurchange_any")),MakeString("call.cl:358"))
+  _ = Core.F_attach_method(C_occurchange.AddMethod(Signature(C_any.Id(),C_Variable.Id(),C_boolean.Id()),0,MakeFunction2(E_occurchange_any,"occurchange_any")),MakeString("call.cl:359"))
   
-  _ = Core.F_attach_method(C_Language_occurexact.AddMethod(Signature(C_any.Id(),C_Variable.Id(),C_integer.Id()),0,MakeFunction2(E_Language_occurexact_any,"Language_occurexact_any")),MakeString("call.cl:374"))
+  _ = Core.F_attach_method(C_Language_occurexact.AddMethod(Signature(C_any.Id(),C_Variable.Id(),C_integer.Id()),0,MakeFunction2(E_Language_occurexact_any,"Language_occurexact_any")),MakeString("call.cl:375"))
   
-  _ = Core.F_attach_method(C_Language_instruction_copy.AddMethod(Signature(C_any.Id(),C_any.Id()),0,MakeFunction1(E_instruction_copy_any,"instruction_copy_any")),MakeString("call.cl:388"))
+  _ = Core.F_attach_method(C_Language_instruction_copy.AddMethod(Signature(C_any.Id(),C_any.Id()),0,MakeFunction1(E_instruction_copy_any,"instruction_copy_any")),MakeString("call.cl:389"))
   
   C_If = MakeClass("If",C_Control_structure,C_claire)
   Core.F_close_slot(C_If.AddSlot(C_iClaire_test,ToType(C_any.Id()),CNULL))

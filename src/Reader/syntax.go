@@ -1,5 +1,5 @@
-/***** CLAIRE Compilation of file /Users/ycaseau/Dropbox/src/clairev4.05/src/meta/syntax.cl 
-         [version 4.0.06 / safety 5] Monday 06-06-2022 08:16:31 *****/
+/***** CLAIRE Compilation of file /Users/ycaseau/Dropbox/src/clairev4.07/src/meta/syntax.cl 
+         [version 4.0.07 / safety 5] Sunday 01-01-2023 08:49:38 *****/
 
 package Reader
 import (_ "fmt"
@@ -1507,12 +1507,12 @@ func E_readset_meta_reader (r EID,_Za1 EID) EID {
 func F_dereference_any (x *ClaireAny) EID { 
     var Result EID
     if (x.Isa.IsIn(C_unbound_symbol) == CTRUE) { 
-      { var g0086 *ClaireUnboundSymbol = ToUnboundSymbol(x)
-        Result = ToException(Core.C_general_error.Make(MakeString("[170] cannot use ~S in a set constant").Id(),MakeConstantList(g0086.Id()).Id())).Close()
+      { var g0076 *ClaireUnboundSymbol = ToUnboundSymbol(x)
+        Result = ToException(Core.C_general_error.Make(MakeString("[170] cannot use ~S in a set constant").Id(),MakeConstantList(g0076.Id()).Id())).Close()
         } 
       }  else if (x.Isa.IsIn(C_Variable) == CTRUE) { 
-      { var g0087 *ClaireVariable = To_Variable(x)
-        Result = ToException(Core.C_general_error.Make(MakeString("[170] cannot use a variable (~S) in a set constant").Id(),MakeConstantList(g0087.Id()).Id())).Close()
+      { var g0077 *ClaireVariable = To_Variable(x)
+        Result = ToException(Core.C_general_error.Make(MakeString("[170] cannot use a variable (~S) in a set constant").Id(),MakeConstantList(g0077.Id()).Id())).Close()
         } 
       } else {
       Result = EVAL(x)
@@ -1555,15 +1555,15 @@ func (r *MetaReader) Nextseq (e int) EID {
             if ErrorIn(try_2) {Result = try_2
             } else {
             y = ANY(try_2)
-            var g0090I *ClaireBoolean
+            var g0080I *ClaireBoolean
             if (y.Isa.IsIn(C_list) == CTRUE) { 
-              { var g0089 *ClaireList = ToList(y)
-                g0090I = Equal(MakeInteger(g0089.Length()).Id(),MakeInteger(0).Id())
+              { var g0079 *ClaireList = ToList(y)
+                g0080I = Equal(MakeInteger(g0079.Length()).Id(),MakeInteger(0).Id())
                 } 
               } else {
-              g0090I = CFALSE
+              g0080I = CFALSE
               } 
-            if (g0090I == CTRUE) { 
+            if (g0080I == CTRUE) { 
               Result = F_Serror_string(MakeString("[171] Read the character ) inside a sequence"),ToType(CEMPTY.Id()).EmptyList())
               } else {
               Result = EID{F_cons_any(x,ToList(y)).Id(),0}
@@ -1598,8 +1598,8 @@ func (r *MetaReader) Readblock (x *ClaireAny,e int) EID {
         } else {
         y = ANY(try_1)
         if (y.Isa.IsIn(C_delimiter) == CTRUE) { 
-          { var g0091 *Delimiter = ToDelimiter(y)
-            Result = F_Serror_string(MakeString("[172] delimiter ~S found too soon after ~S + comma(,)"),MakeConstantList(g0091.Id(),x))
+          { var g0081 *Delimiter = ToDelimiter(y)
+            Result = F_Serror_string(MakeString("[172] delimiter ~S found too soon after ~S + comma(,)"),MakeConstantList(g0081.Id(),x))
             } 
           } else {
           { var arg_2 *ClaireAny
@@ -1638,7 +1638,7 @@ func (r *MetaReader) Readblock (x *ClaireAny,e int) EID {
         _Zi = Language.To_If(OBJ(try_6))
         { var arg_7 *ClaireAny
           var try_8 EID
-          var g0094I *ClaireBoolean
+          var g0084I *ClaireBoolean
           var try_9 EID
           { var arg_10 *ClaireAny
             var try_11 EID
@@ -1651,8 +1651,8 @@ func (r *MetaReader) Readblock (x *ClaireAny,e int) EID {
             } 
           if ErrorIn(try_9) {try_8 = try_9
           } else {
-          g0094I = ToBoolean(OBJ(try_9))
-          if (g0094I == CTRUE) { 
+          g0084I = ToBoolean(OBJ(try_9))
+          if (g0084I == CTRUE) { 
             try_8 = _Zi.Arg.ToEID()
             } else {
             try_8 = _Zi.Other.ToEID()
@@ -1686,8 +1686,8 @@ func (r *MetaReader) Readblock (x *ClaireAny,e int) EID {
         } else {
         y = ANY(try_14)
         if (y.Isa.IsIn(Language.C_Call_star) == CTRUE) { 
-          { var g0093 *Language.Call_star = Language.To_Call_star(y)
-            g0093.Isa = Language.C_Call
+          { var g0083 *Language.Call_star = Language.To_Call_star(y)
+            g0083.Isa = Language.C_Call
             } 
           } 
         Result = r.Readblock(y,e)
@@ -1737,26 +1737,26 @@ func (r *MetaReader) Readlambda (l *ClaireAny) EID {
       { var lvar *ClaireList = ToType(CEMPTY.Id()).EmptyList()
         
         if (l.Isa.IsIn(Language.C_Vardef) == CTRUE) { 
-          { var g0095 *Language.Vardef = Language.To_Vardef(l)
-            lvar = lvar.AddFast(g0095.Id())
+          { var g0085 *Language.Vardef = Language.To_Vardef(l)
+            lvar = lvar.AddFast(g0085.Id())
             Result = EID{lvar.Id(),0}
             } 
           }  else if (l.Isa.IsIn(Language.C_Do) == CTRUE) { 
-          { var g0096 *Language.Do = Language.To_Do(l)
+          { var g0086 *Language.Do = Language.To_Do(l)
             { 
               var y *ClaireAny
               _ = y
               Result= EID{CFALSE.Id(),0}
               var y_support *ClaireList
-              y_support = g0096.Args
+              y_support = g0086.Args
               y_len := y_support.Length()
               for i_it := 0; i_it < y_len; i_it++ { 
                 y = y_support.At(i_it)
                 var loop_2 EID
                 _ = loop_2
                 if (y.Isa.IsIn(Language.C_Vardef) == CTRUE) { 
-                  { var g0097 *Language.Vardef = Language.To_Vardef(y)
-                    lvar = lvar.AddFast(g0097.Id())
+                  { var g0087 *Language.Vardef = Language.To_Vardef(y)
+                    lvar = lvar.AddFast(g0087.Id())
                     loop_2 = EID{lvar.Id(),0}
                     } 
                   } else {
@@ -1802,21 +1802,21 @@ func (r *MetaReader) Readlambda (l *ClaireAny) EID {
               } 
             } 
           }  else if (l.Isa.IsIn(C_list) == CTRUE) { 
-          { var g0099 *ClaireList = ToList(l)
+          { var g0089 *ClaireList = ToList(l)
             { 
               var y *ClaireAny
               _ = y
               Result= EID{CFALSE.Id(),0}
               var y_support *ClaireList
-              y_support = g0099
+              y_support = g0089
               y_len := y_support.Length()
               for i_it := 0; i_it < y_len; i_it++ { 
                 y = y_support.At(i_it)
                 var loop_7 EID
                 _ = loop_7
                 if (y.Isa.IsIn(Language.C_Vardef) == CTRUE) { 
-                  { var g0100 *Language.Vardef = Language.To_Vardef(y)
-                    lvar = lvar.AddFast(g0100.Id())
+                  { var g0090 *Language.Vardef = Language.To_Vardef(y)
+                    lvar = lvar.AddFast(g0090.Id())
                     loop_7 = EID{lvar.Id(),0}
                     } 
                   } else {
@@ -1927,13 +1927,13 @@ func E_Reader_readlambda_meta_reader (r EID,l EID) EID {
 func F_Do_I_any (x *ClaireAny,y *ClaireAny) EID { 
     var Result EID
     if (y.Isa.IsIn(Language.C_Do) == CTRUE) { 
-      { var g0103 *Language.Do = Language.To_Do(y)
+      { var g0093 *Language.Do = Language.To_Do(y)
         { 
           var va_arg1 *Language.Do
           var va_arg2 *ClaireList
-          va_arg1 = g0103
+          va_arg1 = g0093
           var try_1 EID
-          try_1 = g0103.Args.Nth_plus(1,x)
+          try_1 = g0093.Args.Nth_plus(1,x)
           if ErrorIn(try_1) {Result = try_1
           } else {
           va_arg2 = ToList(OBJ(try_1))
@@ -1942,7 +1942,7 @@ func F_Do_I_any (x *ClaireAny,y *ClaireAny) EID {
           }
           } 
         if !ErrorIn(Result) {
-        Result = EID{g0103.Id(),0}
+        Result = EID{g0093.Id(),0}
         }
         } 
       } else {
@@ -1965,11 +1965,11 @@ func F_extract_of_type_Call (x *Language.Call) EID {
       if (l.Length() > 2) { 
         { var y *ClaireAny = l.At(2)
           if (y.Isa.IsIn(Language.C_List) == CTRUE) { 
-            { var g0105 *Language.List = Language.To_List(y)
-              { var z *ClaireAny = g0105.Args.At(0)
+            { var g0095 *Language.List = Language.To_List(y)
+              { var z *ClaireAny = g0095.Args.At(0)
                 if (z.Isa.IsIn(Language.C_Set) == CTRUE) { 
-                  { var g0106 *Language.Set = Language.To_Set(z)
-                    Result = Language.F_extract_type_any(g0106.Args.At(0))
+                  { var g0096 *Language.Set = Language.To_Set(z)
+                    Result = Language.F_extract_type_any(g0096.Args.At(0))
                     } 
                   } else {
                   Result = EID{C_any.Id(),0}
@@ -2116,15 +2116,15 @@ func (r *MetaReader) Readcall (x *ClaireAny,t *ClaireAny) EID {
           Result = EID{_CL_obj.Id(),0}
           } 
         } else {
-        var g0117I *ClaireBoolean
+        var g0107I *ClaireBoolean
         if (x.Isa.IsIn(Language.C_Call) == CTRUE) { 
-          { var g0109 *Language.Call = Language.To_Call(x)
-            g0117I = Equal(g0109.Args.At(0),C_list.Id())
+          { var g0099 *Language.Call = Language.To_Call(x)
+            g0107I = Equal(g0099.Args.At(0),C_list.Id())
             } 
           } else {
-          g0117I = CFALSE
+          g0107I = CFALSE
           } 
-        if (g0117I == CTRUE) { 
+        if (g0107I == CTRUE) { 
           { var _CL_obj *Language.List = Language.To_List(new(Language.List).Is(Language.C_List))
             { 
               var va_arg1 *Language.List
@@ -2145,15 +2145,15 @@ func (r *MetaReader) Readcall (x *ClaireAny,t *ClaireAny) EID {
             }
             } 
           } else {
-          var g0118I *ClaireBoolean
+          var g0108I *ClaireBoolean
           if (x.Isa.IsIn(Language.C_Call) == CTRUE) { 
-            { var g0110 *Language.Call = Language.To_Call(x)
-              g0118I = Equal(g0110.Args.At(0),C_array.Id())
+            { var g0100 *Language.Call = Language.To_Call(x)
+              g0108I = Equal(g0100.Args.At(0),C_array.Id())
               } 
             } else {
-            g0118I = CFALSE
+            g0108I = CFALSE
             } 
-          if (g0118I == CTRUE) { 
+          if (g0108I == CTRUE) { 
             { var _CL_obj *Language.Array = Language.To_Array(new(Language.Array).Is(Language.C_Array))
               { 
                 var va_arg1 *Language.Array
@@ -2174,15 +2174,15 @@ func (r *MetaReader) Readcall (x *ClaireAny,t *ClaireAny) EID {
               }
               } 
             } else {
-            var g0119I *ClaireBoolean
+            var g0109I *ClaireBoolean
             if (x.Isa.IsIn(Language.C_Call) == CTRUE) { 
-              { var g0111 *Language.Call = Language.To_Call(x)
-                g0119I = Equal(g0111.Args.At(0),C_set.Id())
+              { var g0101 *Language.Call = Language.To_Call(x)
+                g0109I = Equal(g0101.Args.At(0),C_set.Id())
                 } 
               } else {
-              g0119I = CFALSE
+              g0109I = CFALSE
               } 
-            if (g0119I == CTRUE) { 
+            if (g0109I == CTRUE) { 
               { var _CL_obj *Language.Set = Language.To_Set(new(Language.Set).Is(Language.C_Set))
                 { 
                   var va_arg1 *Language.Set
@@ -2231,7 +2231,7 @@ func (r *MetaReader) Readcall (x *ClaireAny,t *ClaireAny) EID {
                 }
                 } 
               }  else if (C_class.Id() == x.Isa.Id()) { 
-              var g0120I *ClaireBoolean
+              var g0110I *ClaireBoolean
               var try_9 EID
               { var arg_10 *ClaireBoolean
                 var try_11 EID
@@ -2252,20 +2252,20 @@ func (r *MetaReader) Readcall (x *ClaireAny,t *ClaireAny) EID {
                       y = y_support.At(i_it)
                       var loop_15 EID
                       _ = loop_15
-                      var g0121I *ClaireBoolean
+                      var g0111I *ClaireBoolean
                       var try_16 EID
                       { var arg_17 *ClaireBoolean
                         var try_18 EID
                         if (y.Isa.IsIn(Language.C_Call) == CTRUE) { 
-                          { var g0112 *Language.Call = Language.To_Call(y)
-                            if (g0112.Selector.Id() == C__equal.Id()) { 
+                          { var g0102 *Language.Call = Language.To_Call(y)
+                            if (g0102.Selector.Id() == C__equal.Id()) { 
                               { var arg_19 *ClaireProperty
                                 var try_20 EID
-                                try_20 = Language.F_make_a_property_any(g0112.Args.At(0))
+                                try_20 = Language.F_make_a_property_any(g0102.Args.At(0))
                                 if ErrorIn(try_20) {try_18 = try_20
                                 } else {
                                 arg_19 = ToProperty(OBJ(try_20))
-                                try_18 = ToArray(g0112.Args.Id()).NthPut(1,arg_19.Id()).ToEID()
+                                try_18 = ToArray(g0102.Args.Id()).NthPut(1,arg_19.Id()).ToEID()
                                 }
                                 } 
                               if !ErrorIn(try_18) {
@@ -2286,8 +2286,8 @@ func (r *MetaReader) Readcall (x *ClaireAny,t *ClaireAny) EID {
                         } 
                       if ErrorIn(try_16) {loop_15 = try_16
                       } else {
-                      g0121I = ToBoolean(OBJ(try_16))
-                      if (g0121I == CTRUE) { 
+                      g0111I = ToBoolean(OBJ(try_16))
+                      if (g0111I == CTRUE) { 
                         try_13 = EID{CTRUE.Id(),0}
                         break
                         } else {
@@ -2314,8 +2314,8 @@ func (r *MetaReader) Readcall (x *ClaireAny,t *ClaireAny) EID {
                 } 
               if ErrorIn(try_9) {Result = try_9
               } else {
-              g0120I = ToBoolean(OBJ(try_9))
-              if (g0120I == CTRUE) { 
+              g0110I = ToBoolean(OBJ(try_9))
+              if (g0110I == CTRUE) { 
                 { var l2 *ClaireList = ToClass(x).Params
                   { var n int
                     if (l2.Isa.IsIn(C_list) == CTRUE) { 
@@ -2327,9 +2327,9 @@ func (r *MetaReader) Readcall (x *ClaireAny,t *ClaireAny) EID {
                       var try_21 EID
                       { var i_bag *ClaireList = ToType(CEMPTY.Id()).EmptyList()
                         { var i int = 1
-                          { var g0115 int = n
+                          { var g0105 int = n
                             try_21= EID{CFALSE.Id(),0}
-                            for (i <= g0115) { 
+                            for (i <= g0105) { 
                               var loop_22 EID
                               _ = loop_22
                               { 
@@ -2405,29 +2405,29 @@ func (r *MetaReader) Readcall (x *ClaireAny,t *ClaireAny) EID {
                 } 
               }
               } else {
-              var g0122I *ClaireBoolean
+              var g0112I *ClaireBoolean
               { 
                 var v_or7 *ClaireBoolean
                 
                 v_or7 = x.Isa.IsIn(C_Variable)
-                if (v_or7 == CTRUE) {g0122I = CTRUE
+                if (v_or7 == CTRUE) {g0112I = CTRUE
                 } else { 
                   { var arg_27 *ClaireObject
                     if (x.Isa.IsIn(Core.C_global_variable) == CTRUE) { 
-                      { var g0116 *Core.GlobalVariable = Core.ToGlobalVariable(x)
-                        arg_27 = ToObject(g0116.Range.Id())
+                      { var g0106 *Core.GlobalVariable = Core.ToGlobalVariable(x)
+                        arg_27 = ToObject(g0106.Range.Id())
                         } 
                       } else {
                       arg_27 = ToObject(CFALSE.Id())
                       } 
                     v_or7 = F_boolean_I_any(arg_27.Id())
                     } 
-                  if (v_or7 == CTRUE) {g0122I = CTRUE
+                  if (v_or7 == CTRUE) {g0112I = CTRUE
                   } else { 
-                    g0122I = CFALSE} 
+                    g0112I = CFALSE} 
                   } 
                 } 
-              if (g0122I == CTRUE) { 
+              if (g0112I == CTRUE) { 
                 { var arg_28 *ClaireList
                   { var arg_29 *ClaireAny
                     if (F_boolean_I_any(l) == CTRUE) { 
@@ -2492,9 +2492,9 @@ func (r *MetaReader) Nextdefinition (x *ClaireAny,y *ClaireAny,old_ask *ClaireBo
       }  else if (y == C_L_.Id()) { 
       { var table_ask *ClaireBoolean
         if (x.Isa.IsIn(Language.C_Call) == CTRUE) { 
-          { var g0123 *Language.Call = Language.To_Call(x)
-            table_ask = MakeBoolean((g0123.Selector.Id() == C_nth.Id()) && ((g0123.Args.At(0).Isa.IsIn(C_unbound_symbol) == CTRUE) || 
-                (C_table.Id() == g0123.Args.At(0).Isa.Id())))
+          { var g0113 *Language.Call = Language.To_Call(x)
+            table_ask = MakeBoolean((g0113.Selector.Id() == C_nth.Id()) && ((g0113.Args.At(0).Isa.IsIn(C_unbound_symbol) == CTRUE) || 
+                (C_table.Id() == g0113.Args.At(0).Isa.Id())))
             } 
           } else {
           table_ask = CFALSE
@@ -2511,13 +2511,13 @@ func (r *MetaReader) Nextdefinition (x *ClaireAny,y *ClaireAny,old_ask *ClaireBo
             if ErrorIn(try_2) {Result = try_2
             } else {
             w = ANY(try_2)
-            var g0126I *ClaireBoolean
+            var g0116I *ClaireBoolean
             if (table_ask == CTRUE) { 
-              g0126I = Equal(w,C_L__equal.Id())
+              g0116I = Equal(w,C_L__equal.Id())
               } else {
-              g0126I = MakeBoolean((Equal(w,C_arrow.Value) == CTRUE) || (w == C__equal_sup.Id()))
+              g0116I = MakeBoolean((Equal(w,C_arrow.Value) == CTRUE) || (w == C__equal_sup.Id()))
               } 
-            if (g0126I == CTRUE) { 
+            if (g0116I == CTRUE) { 
               Result = EID{CNIL.Id(),0}
               } else {
               Result = F_Serror_string(MakeString("[149] wrong keyword (~S) after ~S"),MakeConstantList(w,z))
@@ -2536,7 +2536,7 @@ func (r *MetaReader) Nextdefinition (x *ClaireAny,y *ClaireAny,old_ask *ClaireBo
         } 
       }  else if (y == C_L_L_.Id()) { 
       if (x.Isa.IsIn(Language.C_Call) == CTRUE) { 
-        { var g0124 *Language.Call = Language.To_Call(x)
+        { var g0114 *Language.Call = Language.To_Call(x)
           { var ru *ClaireAny
             _ = ru
             var try_3 EID
@@ -2551,8 +2551,8 @@ func (r *MetaReader) Nextdefinition (x *ClaireAny,y *ClaireAny,old_ask *ClaireBo
               } else {
               z = ANY(try_4)
               { var _CL_obj *Language.Defrule = Language.To_Defrule(new(Language.Defrule).Is(Language.C_Defrule))
-                _CL_obj.Ident = g0124.Selector.Name
-                _CL_obj.Args = g0124.Args
+                _CL_obj.Ident = g0114.Selector.Name
+                _CL_obj.Args = g0114.Args
                 _CL_obj.Arg = z
                 { 
                   var va_arg1 *Language.Defrule
@@ -2780,9 +2780,9 @@ func E_nextmethod_meta_reader (r EID,x EID,y EID,table_ask EID,old_ask EID,inl_a
 func (r *MetaReader) Nextinst (x *ClaireAny) EID { 
     var Result EID
     if (x.Isa.IsIn(C_Variable) == CTRUE) { 
-      { var g0127 *ClaireVariable = To_Variable(x)
+      { var g0117 *ClaireVariable = To_Variable(x)
         { var _CL_obj *Language.Defobj = Language.To_Defobj(new(Language.Defobj).Is(Language.C_Defobj))
-          _CL_obj.Ident = g0127.Pname
+          _CL_obj.Ident = g0117.Pname
           _CL_obj.Arg = Core.C_global_variable
           { 
             var va_arg1 *Language.Definition
@@ -2805,7 +2805,7 @@ func (r *MetaReader) Nextinst (x *ClaireAny) EID {
                     try_3= EID{ToType(CEMPTY.Id()).EmptyList().Id(),0}
                     ToList(OBJ(try_3)).AddFast(C_range.Id())
                     var try_4 EID
-                    try_4 = Language.F_extract_type_any(g0127.Range.Id())
+                    try_4 = Language.F_extract_type_any(g0117.Range.Id())
                     if ErrorIn(try_4) {try_3 = try_4
                     } else {
                     v_bag_arg = ANY(try_4)
@@ -2874,7 +2874,7 @@ func (r *MetaReader) Nextinst (x *ClaireAny) EID {
           } 
         } 
       }  else if (x.Isa.IsIn(Language.C_Call) == CTRUE) { 
-      { var g0128 *Language.Call = Language.To_Call(x)
+      { var g0118 *Language.Call = Language.To_Call(x)
         { var ru *ClaireAny
           _ = ru
           var try_8 EID
@@ -2889,8 +2889,8 @@ func (r *MetaReader) Nextinst (x *ClaireAny) EID {
             } else {
             z = ANY(try_9)
             { var _CL_obj *Language.Defrule = Language.To_Defrule(new(Language.Defrule).Is(Language.C_Defrule))
-              _CL_obj.Ident = g0128.Selector.Name
-              _CL_obj.Args = g0128.Args
+              _CL_obj.Ident = g0118.Selector.Name
+              _CL_obj.Args = g0118.Args
               _CL_obj.Arg = z
               { 
                 var va_arg1 *Language.Defrule
@@ -2934,24 +2934,24 @@ func (r *MetaReader) Nextinst (x *ClaireAny) EID {
         if ErrorIn(try_13) {Result = try_13
         } else {
         y = ANY(try_13)
-        var g0132I *ClaireBoolean
+        var g0122I *ClaireBoolean
         if (x.Isa.IsIn(Core.C_global_variable) == CTRUE) { 
-          g0132I = Core.F_unknown_ask_any(y)
+          g0122I = Core.F_unknown_ask_any(y)
           } else {
-          g0132I = CFALSE
+          g0122I = CFALSE
           } 
-        if (g0132I == CTRUE) { 
+        if (g0122I == CTRUE) { 
           Result = y.ToEID()
           } else {
-          var g0133I *ClaireBoolean
+          var g0123I *ClaireBoolean
           if (y.Isa.IsIn(Language.C_Definition) == CTRUE) { 
-            { var g0131 *Language.Definition = Language.To_Definition(y)
-              g0133I = g0131.Arg.IsIn(C_thing)
+            { var g0121 *Language.Definition = Language.To_Definition(y)
+              g0123I = g0121.Arg.IsIn(C_thing)
               } 
             } else {
-            g0133I = CFALSE
+            g0123I = CFALSE
             } 
-          if (g0133I == CTRUE) { 
+          if (g0123I == CTRUE) { 
             { var _CL_obj *Language.Defobj = Language.To_Defobj(new(Language.Defobj).Is(Language.C_Defobj))
               { 
                 var va_arg1 *Language.Defobj
@@ -3075,20 +3075,20 @@ func (r *MetaReader) NextDefclass (x *ClaireAny,old_ask *ClaireBoolean) EID {
                 y1 = y1_support.At(i_it)
                 var loop_7 EID
                 _ = loop_7
-                var g0138I *ClaireBoolean
+                var g0128I *ClaireBoolean
                 { var arg_8 *ClaireBoolean
                   if (y1.Isa.IsIn(Language.C_Call) == CTRUE) { 
-                    { var g0134 *Language.Call = Language.To_Call(y1)
-                      arg_8 = MakeBoolean((g0134.Selector.Id() == C__equal.Id()) && (g0134.Args.At(0).Isa.IsIn(Language.C_Vardef) == CTRUE))
+                    { var g0124 *Language.Call = Language.To_Call(y1)
+                      arg_8 = MakeBoolean((g0124.Selector.Id() == C__equal.Id()) && (g0124.Args.At(0).Isa.IsIn(Language.C_Vardef) == CTRUE))
                       } 
                     }  else if (y1.Isa.IsIn(Language.C_Vardef) == CTRUE) { 
                     arg_8 = CTRUE
                     } else {
                     arg_8 = CFALSE
                     } 
-                  g0138I = arg_8.Not
+                  g0128I = arg_8.Not
                   } 
-                if (g0138I == CTRUE) { 
+                if (g0128I == CTRUE) { 
                   loop_7 = F_Serror_string(MakeString("[175] Wrong form ~S in ~S(~S)"),MakeConstantList(y1,c,l))
                   } else {
                   loop_7 = EID{CFALSE.Id(),0}
@@ -3116,15 +3116,15 @@ func (r *MetaReader) NextDefclass (x *ClaireAny,old_ask *ClaireBoolean) EID {
         { var lp *ClaireList = CNIL
           { var idt *ClaireSymbol
             var try_9 EID
-            var g0139I *ClaireBoolean
+            var g0129I *ClaireBoolean
             if (x.Isa.IsIn(Language.C_Call) == CTRUE) { 
-              { var g0137 *Language.Call = Language.To_Call(x)
-                g0139I = Equal(g0137.Selector.Id(),C_nth.Id())
+              { var g0127 *Language.Call = Language.To_Call(x)
+                g0129I = Equal(g0127.Selector.Id(),C_nth.Id())
                 } 
               } else {
-              g0139I = CFALSE
+              g0129I = CFALSE
               } 
-            if (g0139I == CTRUE) { 
+            if (g0129I == CTRUE) { 
               { var l *ClaireList = Language.To_Call(x).Args
                 if (C_class.Id() == l.At(0).Isa.Id()) { 
                   lp = ToList(l.At(1))

@@ -1,5 +1,5 @@
-/***** CLAIRE Compilation of file /Users/ycaseau/Dropbox/src/clairev4.05/src/meta/pretty.cl 
-         [version 4.0.06 / safety 5] Monday 06-06-2022 08:31:22 *****/
+/***** CLAIRE Compilation of file /Users/ycaseau/Dropbox/src/clairev4.07/src/meta/pretty.cl 
+         [version 4.0.07 / safety 5] Sunday 01-01-2023 08:56:16 *****/
 
 package Language
 import (_ "fmt"
@@ -476,6 +476,7 @@ func E_lexical_change_any (self EID,lvar EID) EID {
 /* The go function for: iClaire/lexical_index(self:any,lvar:list,n:integer,final?:boolean) [status=1] */
 func F_iClaire_lexical_index_any2 (self *ClaireAny,lvar *ClaireList,n int,final_ask *ClaireBoolean) EID { 
     var Result EID
+    
     if ((self.Isa.IsIn(C_thing) == CTRUE) || 
         (self.Isa.IsIn(C_unbound_symbol) == CTRUE)) { 
       Result = F_lexical_change_any(self,lvar)
@@ -572,7 +573,7 @@ func F_iClaire_lexical_index_any2 (self *ClaireAny,lvar *ClaireList,n int,final_
               } 
             if !ErrorIn(Result) {
             if ((_Ztype.Id() == C_Assign.Id()) && 
-                ((Core.F_owner_any(To_Assign(g0010.Id()).ClaireVar).IsIn(C_unbound_symbol) == CTRUE) && 
+                ((Core.F_owner_any(To_Assign(g0010.Id()).ClaireVar).IsIn(C_Variable) != CTRUE) && 
                   (final_ask == CTRUE))) { 
               Result = ToException(Core.C_general_error.Make(MakeString("[101] ~S is not a variable but a ~S").Id(),MakeConstantList(To_Assign(g0010.Id()).ClaireVar,Core.F_owner_any(To_Assign(g0010.Id()).ClaireVar).Id()).Id())).Close()
               } else {

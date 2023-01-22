@@ -97,7 +97,7 @@ unfold_use(ldef:list,x:any,s:class,v:string,err:boolean,loop:any) : void
 [g_try(self:any,v:string,e:class,vglobal:string,loop:any) : void
   -> let v2 := (if (e = EID) v else genvar("try_")) in 
         (if (e != EID) var_declaration(v2,EID,1),
-         if PRODUCER.debug? printf("/*g_try(v2:~S,loop:~S) */~I",v2,loop,breakline()),
+         if PRODUCER.debug? printf("/*g_try(v2:~S,loop:~S,e:~S) */~I",v2,loop,e,breakline()),
          g_statement(self,EID,v2,true,loop),
          // AUDACIEUX: if self is a Do, and we have a loop, break statements cover the error case
          if (self % Do & loop % Tuple) printf("{~I",breakline())
@@ -205,20 +205,29 @@ unfold_eid(ldef:list,self:any,s:class, v:any,err:boolean,loop:any) : void
                          (if (length(x.args) >= 3) (princ(","), eid_expression(x.args[3],EID,lvar))),
                          (if (length(x.args) = 4) (princ(","), eid_expression(x.args[4],EID,lvar))))
                       else if (x.arg = *read_property*)
-                          printf("~I.ReadEID(~I)",g_expression(x.args[1],property),
+                          printf("~I.ReadEID(~I)",g_eid_expression(x.args[1],property,lvar),
                                     eid_expression(x.args[2],EID,lvar))
                      else if  (x.arg.selector = write_fast)
                           printf("~I.WriteEID(~I,~I)",g_expression(x.args[1],property),
-                                    g_expression(x.args[2],object),
+                                    g_eid_expression(x.args[2],object,lvar),
                                     eid_expression(x.args[3],EID,lvar))
                      else if  (x.arg.selector = nth_write)
-                          printf("~I.WriteEID(~I,~I)",g_expression(x.args[1],list),
-                                    g_expression(x.args[2],integer),
+                          printf("~I.WriteEID(~I,~I)",g_eid_expression(x.args[1],list),
+                                    g_eid_expression(x.args[2],integer,lvar),
                                     eid_expression(x.args[3],EID,lvar))
-                      else  printf("~I.WriteEID(~I)",g_expression(x.args[1],Variable),
+                      else  printf("~I.WriteEID(~I)",g_eid_expression(x.args[1],Variable,lvar),
                                    eid_expression(x.args[2],EID,lvar))),
          any g_expression(x,s)) ]
 
+// reverse from eid (the args of the call have been EIDed : represented by an EID var)
+// hence when we need a regular object, we must check that the arg x is not in the var list
+[g_eid_expression(x:any,s:class,lvar:list<Variable>) : void
+    -> case x
+        (Variable (if (x % lvar) (eid_prefix(s),
+                                  princ(c_string(PRODUCER,x)),
+                                  eid_post(s))
+                   else g_expression(x,s)),
+         any g_expression(x,s)) ]
 
 //**********************************************************************
 //*          Part 3: Basic control structures                          *

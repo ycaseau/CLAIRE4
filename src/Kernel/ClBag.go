@@ -918,26 +918,32 @@ func (l *ClaireList) Nth_plus(n int, val *ClaireAny) EID {
 		return Cerror(5, AnyInteger(n), l.Id())
 	}
 	if l.Srange == C_integer {
+		if m == 0 {l.AddFastInteger(ToInteger(val).Value)
+		} else {
 		l.AddFastInteger(l.ValuesI()[m-1])
 		ls := l.toInteger().Values
 		for i := m - 1; i >= n; i-- {
 			ls[i] = ls[i-1]
 		}
-		ls[n-1] = ToInteger(val).Value
+		ls[n-1] = ToInteger(val).Value }
 	} else if l.Srange == C_float {
+		if m == 0 {l.AddFastFloat(ToFloat(val).Value)
+		} else {
 		l.AddFastFloat(l.ValuesF()[m-1])
 		ls := l.toFloat().Values
 		for i := m - 1; i >= n; i-- {
 			ls[i] = ls[i-1]
 		}
-		ls[n-1] = ToFloat(val).Value
+		ls[n-1] = ToFloat(val).Value }
 	} else {
+		if m == 0 {F_add_listObject(l.toObject(),val)
+		} else {
 		F_add_listObject(l.toObject(), l.ValuesO()[m-1])
 		ls := l.toObject().Values // change !
 		for i := m - 1; i >= n; i-- {
 			ls[i] = ls[i-1]
 		}
-		ls[n-1] = val
+		ls[n-1] = val}
 	}
 	return EID{l.Id(), 0}
 }
@@ -1134,7 +1140,7 @@ func makeEmptyFloatSet(n int) *ClaireSetFloat {
 	o := new(ClaireSetFloat)
 	o.Isa = C_set
 	o.Srange = C_float
-	o.Values = make([]float64, 2* n)
+	o.Values = make([]float64, 2 * n)
 	o.Count = 0
 	return o
 }
@@ -1586,11 +1592,11 @@ func (l *ClaireList) Set_I() *ClaireSet {
 			s.AddSetInteger(v)
 		}
 	} else {
-		s := ToType(C_float.Id()).EmptySet()
+		s = ToType(C_float.Id()).EmptySet()
 		for _, v := range l.ValuesF() {
 			s.AddSetFloat(v)
-		}
-	}
+		}}
+
 	return s
 }
 

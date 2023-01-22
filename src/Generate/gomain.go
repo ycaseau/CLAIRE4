@@ -1,5 +1,5 @@
-/***** CLAIRE Compilation of file /Users/ycaseau/Dropbox/src/clairev4.05/src/compile/gomain.cl 
-         [version 4.0.06 / safety 5] Monday 06-06-2022 08:16:34 *****/
+/***** CLAIRE Compilation of file /Users/ycaseau/Dropbox/src/clairev4.07/src/compile/gomain.cl 
+         [version 4.0.07 / safety 5] Sunday 01-01-2023 17:08:27 *****/
 
 package Generate
 import (_ "fmt"
@@ -11,7 +11,7 @@ import (_ "fmt"
 )
 
 //-------- dumb function to prevent import errors --------
-func import_g0206() { 
+func import_g0214() { 
     _ = Core.It
     _ = Language.It
     _ = Reader.It
@@ -61,8 +61,8 @@ func F_Generate_string2module_string (s *ClaireString) EID {
     var Result EID
     { var m *ClaireAny = F_value_string(s)
       if (m.Isa.IsIn(C_module) == CTRUE) { 
-        { var g0207 *ClaireModule = ToModule(m)
-          Result = EID{g0207.Id(),0}
+        { var g0215 *ClaireModule = ToModule(m)
+          Result = EID{g0215.Id(),0}
           } 
         } else {
         Result = ToException(Core.C_general_error.Make(MakeString("~A is not a module").Id(),MakeConstantList((s).Id()).Id())).Close()
@@ -448,6 +448,7 @@ func F_Generate_complex_main_void () EID {
                               Optimize.C_claire_modules.Value = ToList(Optimize.C_claire_modules.Value).AddFast(m.Id()).Id()
                               Result = Core.F_CALL(Reader.C_load,ARGS(F_value_string(MakeString("Compile")).ToEID()))
                               if !ErrorIn(Result) {
+                              ClEnv.Jito_ask = CFALSE
                               Optimize.C_compiler.Active_ask = CTRUE
                               if (_Zout.Value != MakeString("").Value) { 
                                 m.External = _Zout

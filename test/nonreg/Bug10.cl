@@ -17,7 +17,7 @@
 // ***************************************************************************
 // * Part 0: Forward declarations
 // ***************************************************************************
-ephemeral_object <: object()
+// ephemeral_object <: object()
 
 [private/reversible_cell <: ephemeral_object]
 [private/reversible_list <: ephemeral_object]

@@ -271,7 +271,8 @@ c_string(c:go_producer, self:symbol) : string
                                             else if (m2.module! = m.module! & c ^ m2.domain[1] != {})
                                                arg_match(go_signature(m2), %sig)
                                             else true), 
-                                    any defined(m.selector.name) = Kernel)))),        // v4.0.6: mix of methods & slot are not supported with Go
+                                    any (defined(m.selector.name) = Kernel &        // v4.0.6: mix of methods & slot are not supported with Go
+                                         module!(m2) = Kernel))))),                  // we make an exception for Kernel methods
             any false)) ]
 
     
@@ -478,15 +479,16 @@ c_string(c:go_producer, self:symbol) : string
      else if (s = integer) printf("INT(")
      else if (s = float) printf("FLOAT(")
      else if (s = char) printf("CHAR(")
-     else if (s = any | s = primitive) printf("ANY(") 
+     else if (s = primitive) printf("ToPrimitive(ANY(")
+     else if (s = any) printf("ANY(") 
      else if (s <= object | s = array | s = string | s = port | s = function)
         printf("~I(OBJ(",cast_class(s))               
      else if (s != any) error("what the fuck: eid prefix for ~S",s) ]
 
 [eid_post(s:class) : void
   ->  if (s = EID | s = void) nil
-      else if (s = char | s = any | s = primitive) princ(")")
-      else if (s <= object |  s = array | s = string | s = port | s = function) printf("))")
+      else if (s = char | s = any) princ(")")
+      else if (s <= object |  s = array | s = string | s = port | s = function | s = primitive) printf("))")
       else if (s != any) princ(")") ]
 
  // move from an integer to a EID or Object

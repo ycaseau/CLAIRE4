@@ -659,10 +659,12 @@ parents(self:list) : list
 // however is c_type(exp) is void we need to return CNULL
 [function_body(self:any,s:class) : void
   -> let %ret := (if (s != void) "return " else "") in
-//       (if (s = boolean)        // this is an old optimization that is USELESS in CLAIRE4
-//         printf("if ~I {return CTRUE~I} else {return CFALSE}",bool_exp(self,true),breakline())
-//        else printf("~A ~I~I", %ret, g_expression(self,s),breakline())) ]
-     (if (c_type(self) = void & s != void)
+      (if (s = boolean & (case self (Call_method (let p := self.arg.selector in 
+                                      (p = = | p = < | p = > | p = >= | p = <=)  ))))       
+                               // this is an old optimization - there is a debate if this is still needed with CLAIRE4
+                               // reintroduced in v4.0.7 for mSend, but only for direct comparisons
+          printf("if ~I {return CTRUE~I} else {return CFALSE}",bool_exp(self,true),breakline())
+       else if (c_type(self) = void & s != void)
          printf("~I~Ireturn ~I~I",
                  g_expression(self,void), breakline(),
                  g_expression(unknown,s), breakline())

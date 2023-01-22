@@ -1,5 +1,5 @@
-/***** CLAIRE Compilation of file /Users/ycaseau/Dropbox/src/clairev4.05/src/meta/object.cl 
-         [version 4.0.06 / safety 5] Monday 06-06-2022 08:16:30 *****/
+/***** CLAIRE Compilation of file /Users/ycaseau/Dropbox/src/clairev4.07/src/meta/object.cl 
+         [version 4.0.07 / safety 5] Sunday 12-25-2022 13:07:24 *****/
 
 package Core
 import (_ "fmt"
@@ -63,6 +63,7 @@ func E_about_void (_CL_obj EID) EID {
     return F_about_void( ).ToEID()} 
   
 // properties that are defined through compiling (eval would entail a loop)
+// added for upward compatibility reasons
 // *********************************************************************
 // *   Part 1: Ask, debug & trace                                      *
 // *********************************************************************
@@ -1634,7 +1635,7 @@ func (self *RangeError) SelfPrint () EID {
     PRINC(": range error, ")
     Result = F_CALL(C_print,ARGS(self.Arg.ToEID()))
     if !ErrorIn(Result) {
-    PRINC(" does not belong? to ")
+    PRINC(" does not belong to ")
     Result = F_CALL(C_print,ARGS(self.Wrong.ToEID()))
     if !ErrorIn(Result) {
     PRINC(".\n")

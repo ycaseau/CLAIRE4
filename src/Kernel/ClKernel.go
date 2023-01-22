@@ -1465,8 +1465,8 @@ func (c *ClaireClass) isIn(c2 *ClaireClass) *ClaireBoolean {
 // set,list,string = deep equality
 // imported = same value  (integer, float, char, string, ....
 func Equal(x *ClaireAny, y *ClaireAny) *ClaireBoolean {
-	// if ClEnv.Verbose == 122 {
-	//	 fmt.Printf("Equal with %s(%s) and %s(%s)\n",x.Prt(),x.Isa.Prt(),y.Prt(),y.Isa.Prt()) }
+	if ClEnv.Verbose == 122 {
+		 fmt.Printf("Equal with %p:%s(%s) and %p:%s(%s)\n",x,x.Prt(),x.Isa.Prt(),y,y.Prt(),y.Isa.Prt()) }
 	if x == y {
 		return CTRUE
 	} else if x.Isa.Ident_ask == CTRUE || y.Isa.Ident_ask == CTRUE {
@@ -1478,6 +1478,12 @@ func Equal(x *ClaireAny, y *ClaireAny) *ClaireBoolean {
     } else if x.Isa == C_set {return ToSet(x).equalSet(ToSet(y))
 	} else if x.Isa == C_string {
 		if ToString(x).Value == ToString(y).Value {
+			return CTRUE
+		} else {
+			return CFALSE
+		}
+	} else if x.Isa == C_char {
+		if ToChar(x).Value == ToChar(y).Value {
 			return CTRUE
 		} else {
 			return CFALSE

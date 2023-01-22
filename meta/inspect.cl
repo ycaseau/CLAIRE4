@@ -56,7 +56,7 @@ TopDebug:integer := 0
            princ("> "),
            try (r.toplevel := true,
                 if (system.mClaire/count_call > 0) system.mClaire/count_call := 1,
-                res := nextunit(r),
+                res := lexical_index(nextunit(r),nil,0,true),
                 if (TopLevelMode = 1) system.index := 20,
                 if (TopLevelMode = 3 & res != q) inspect_loop(res,InspectStack)
                 else (if (TopLevelMode = 1) printf("eval[~S]> ",TopCount :+ 1)

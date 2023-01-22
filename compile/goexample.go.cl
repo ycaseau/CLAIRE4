@@ -74,6 +74,8 @@ C_class = MakeClass("name",superclass,module)     // module is where the class i
 go_class(c) = ModClass,  class_ident = <mod.>C_class
 examples : ClaireClass OptimizeCallSpecial => Kernel.C_class, Optimize.C_Call_special
 
+because of forward, we need NewClass("name",superclass,module) which looks for a class with that name first
+
 // adding a slot
 func (c *ClaireClass) AddSlot(p *ClaireProperty, r *ClaireType, def *ClaireAny) EID {
     note that we do not handle the index 

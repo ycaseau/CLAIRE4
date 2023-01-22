@@ -138,6 +138,7 @@
              trace(0,"=== Light Module ~S:~S -> use ~S=== ", m, m.uses,claire_modules)),
          claire_modules :add m,
          load(get_value("Compile")),     // load the compiler
+         jito?() := false,               // turn just-in-time compiling off (sub optimal compared to compiler)
          compiler.active? := true,
 	       if (%out != "") external(m) := %out,
 	       load(m),                        // load the module

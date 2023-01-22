@@ -1,5 +1,5 @@
-/***** CLAIRE Compilation of file /Users/ycaseau/Dropbox/src/clairev4.05/src/meta/control.cl 
-         [version 4.0.06 / safety 5] Monday 06-06-2022 08:31:22 *****/
+/***** CLAIRE Compilation of file /Users/ycaseau/Dropbox/src/clairev4.07/src/meta/control.cl 
+         [version 4.0.07 / safety 5] Sunday 01-01-2023 08:56:16 *****/
 
 package Language
 import (_ "fmt"

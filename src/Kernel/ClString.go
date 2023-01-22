@@ -105,7 +105,7 @@ func F_integer_I_char(r rune) int { return (int)(r) }
 func E_integer_I_char(c EID) EID  { return EID{C__INT, IVAL((int)(CHAR(c)))} }
 
 // princ a char / int / float
-func F_princ_char(r rune) { ClEnv.Cout.PutChar(r) }
+func F_princ_char(r rune) { ClEnv.Cout.Putc(r) }
 func E_princ_char(c EID) EID {
 	F_princ_char(CHAR(c))
 	return EVOID
@@ -159,7 +159,7 @@ func F_c_princ_char(r rune) {
 	case '≤':
 		PRINC("_two")
 	default:
-		ClEnv.Cout.PutChar(r)
+		ClEnv.Cout.Putc(r)
 	}
 }
 
@@ -886,7 +886,7 @@ func E_port_I_void(void EID) EID { return EID{F_port_I_void().Id(), 0} }
 // these two functions are imported in read.cl through direct import pattern
 // read one char at at time (local to this module ??)
 func (p *ClairePort) GetNext() {
-	p.firstc = p.GetChar()
+	p.firstc = p.Getc()
 }
 
 func (p *ClairePort) CharInt() int {
@@ -933,7 +933,7 @@ func E_fclose_port(p EID) EID {
 
 // buffered version
 // uses the size to make a right size Read !
-func (p *ClairePort) GetChar() rune {
+func (p *ClairePort) Getc() rune {
 	if p.status == 3 {
 	    return p.GetStringChar()
 	} else if p.status == 4 {
@@ -963,10 +963,10 @@ func (p *ClairePort) GetChar() rune {
 
 // this function is exported to the interpreter
 func E_getc_port(p EID) EID {
-	// c := ToPort(OBJ(p)).GetChar()
+	// c := ToPort(OBJ(p)).Getc()
 	// fmt.Printf("readChar(%p) -> %c\n",p,c)
 	// return EID{C__CHAR, CVAL(c)}
-	return EID{C__CHAR, CVAL(ToPort(OBJ(p)).GetChar())}
+	return EID{C__CHAR, CVAL(ToPort(OBJ(p)).Getc())}
 }
 
 // when we hit the end of the buffer p.getSlice gets the next slice (into the buffer)
@@ -985,7 +985,7 @@ func (p *ClairePort) getSlice() {
 }
 
 // extract a rune that starts with byte b ... can be complex if we slice at the wrong place
-// this is the complex function that makes getChar work :)
+// this is the complex function that makes getc work :)
 func (p *ClairePort) getRune(b byte) rune {
 	if b < 127 {
 		return rune(b)
@@ -1054,7 +1054,7 @@ func (p *ClairePort) GetStringChar() rune {
 // because there are no exception in go, we avoid write errors by dynamic sizing of buffer string
 
 // buffered put methods
-func (p *ClairePort) PutChar(c rune) {
+func (p *ClairePort) Putc(c rune) {
 	if p.status == 2 { // write to string
 		p.PutStringChar(c)
 	} else if p.file == os.Stdout {
@@ -1078,7 +1078,7 @@ func (p *ClairePort) PutChar(c rune) {
 
 // this function is exported to the interpreter (possible name conflict -> Putc)
 func E_putc_char (c EID, p EID) EID {
-	ToPort(OBJ(p)).PutChar(CHAR(c))
+	ToPort(OBJ(p)).Putc(CHAR(c))
 	return EVOID
 }
 
@@ -1124,7 +1124,7 @@ func (p *ClairePort) PutStringChar(c rune) {
 // ¨utString uses PutChar, hence it works for all ports
 func (p *ClairePort) PutString(s string) {
 	for _, c := range s {
-		p.PutChar(c)
+		p.Putc(c)
 	}
 }
 

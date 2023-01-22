@@ -357,6 +357,11 @@ Compile/ForceNotThrow :: list<method>()
 // NEW in claire 4, because error handling is mananaged by the compiler
 // tells if an expression can throw an exception, based on can_throw?(p or m)
 
+// two constants because of arithmetics
+*times_integer* :: (* @ integer)
+*div_integer* :: (/ @ integer)
+*div_float* :: (/ @ float)
+
 // debug loop
 claire/DSHOW:boolean := false
 
@@ -374,8 +379,11 @@ claire/DSHOW:boolean := false
        And g_throw(self.args),
        Or g_throw(self.args),
        Call  (self.selector != unsafe & (g_throw(self.args) | can_throw?(self.selector))),
-       Call_method (self.arg != m_unsafe & notOpt(self) & self.arg.selector != externC &
-                     (g_throw(self.args) | can_throw?(self.arg))),
+       Call_method (g_throw(self.args) |
+                     (if (self.arg = *times_integer*) compiler.overflow?
+                      else if (self.arg = *div_integer*) not(self.args[2] % integer & self.args[2] != 0)
+                      else if (self.arg = *div_float*) not(self.args[2] % float & self.args[2] != 0.0)
+                      else (self.arg != m_unsafe & notOpt(self) & self.arg.selector != externC & can_throw?(self.arg)))),
        Call_slot (g_throw(get(arg, self)) | (known?(test,self) & self.test)),
        Call_table (g_throw(get(arg, self)) | (known?(test,self) & self.test)),
        Call_array (g_throw(get(selector,self)) | g_throw(get(arg, self))),

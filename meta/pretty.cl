@@ -203,7 +203,8 @@ lexical_change(self:any,lvar:list) : any
 // in claire4, lexical_index replaces lexical_build with an additional variable : 
 // final? = true means all Assign must contain a variable <v4.0.6>
 lexical_index(self:any,lvar:list,n:integer,final?:boolean) : any
- -> (if (self % thing | self % unbound_symbol) lexical_change(self, lvar)
+ -> (//[5] call lexical index on ~S (~S) // self,owner(self),
+     if (self % thing | self % unbound_symbol) lexical_change(self, lvar)
      else (case self
             (Variable (if unknown?(index,self)                          // v3.1.12
                           error("[145] the symbol ~A is unbound",  self.mClaire/pname),
@@ -225,7 +226,7 @@ lexical_index(self:any,lvar:list,n:integer,final?:boolean) : any
                                      s.range = any)
                                     put(s, self, lexical_change(x, lvar))
                                  else lexical_index(x, lvar, n, final?)),
-                            if (%type = Assign & (self as Assign).var % unbound_symbol & final?)                // CLAIRE4
+                            if (%type = Assign & not((self as Assign).var % Variable) & final?)                // CLAIRE4
                                 error("[101] ~S is not a variable but a ~S", (self as Assign).var, owner((self as Assign).var))),             // moved from self_eval @ Assign
              list let %n := length(self) in
                    while (%n > 0)

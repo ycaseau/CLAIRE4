@@ -219,6 +219,7 @@ func Bootstrap() {
 	C_float.Ident_ask = CFALSE
 	C_integer.Ident_ask = CFALSE
 	C_port.Ident_ask = CFALSE
+	C_char.Ident_ask = CFALSE
 	InitChar() // now that C_char exists :)
 	// reflective descriptions of slots and methods
 	BootSlot()
@@ -402,7 +403,7 @@ func (c *ClaireClass) AddSlot(p *ClaireProperty, r *ClaireType, def *ClaireAny) 
 	ix := len(ls)
 	for ix > 0 && ToSlot(ls[ix - 1]).Selector != p {ix--}     // look for slots from
 	if ix > 0  {   // slot co-variant override
-		fmt.Printf("------ slot override for p=%s ---------\n",p.Prt())
+		// fmt.Printf("------ slot override for p=%s ---------\n",p.Prt())
 		s.Index = ix
 		s.Srange = ToSlot(ls[ix - 1]).Srange                  // srange cannot change ! 
 		ls[ix - 1] = s.Id()
@@ -569,6 +570,19 @@ func MakeClass(name string, c *ClaireClass, m *ClaireModule) *ClaireClass {
 	return o
 }
 
+// this is safe (compiler) version to create a class unless it already exists (then reuse)
+// this is only used by the compiler (assumes no mistakes) ... to support forward declaration
+func NewClass(name string, c *ClaireClass, m *ClaireModule) *ClaireClass {
+	s := m.createSymbol(name)
+	if s.value != nil && s.value.Isa == C_class {
+		 return ToClass(s.value)
+	} else { o := makeClass1(new(ClaireClass))
+		     o.Name = s
+			 instantiateClass(name,o,c)
+			 m.register(s, o.Id())
+			 return o }
+}
+
 // this is how it is called in define.cl - c is the super class
 // this call may return an error if symbol is already used
 func (s *ClaireSymbol) Class_I(c *ClaireClass) EID {
@@ -597,13 +611,6 @@ func E_class_I_symbol(s EID, c EID) EID {
 	return ToSymbol(OBJ(s)).Class_I(ToClass(OBJ(s))) 
 }
 
-/* make an instruction : DEPRECATED
-func makeIClass(name string, c *ClaireClass, ef *ClaireFunction, m *ClaireModule) *ClaireClass {
-	o := MakeClass(name, c, m)
-	o.evaluate = toFunction1(ef).call
-	return o
-}
-*/
 
 // make an object - used by compiler => range is *ClaireAny
 func (c *ClaireClass) New() *ClaireAny {
@@ -1120,6 +1127,8 @@ func BootMethod() {
 	C_max = MakeOperation("max", 0, C_claire, 20)
 	C_mod = MakeOperation("mod", 0, C_claire, 10)
 	C_cons = MakeOperation("cons", 0, C_claire, 10)
+	C_max.Open = 2
+	C_min.Open = 2
 
 	// fmt.Println("---------------------- start defining methods -----------------------------")
 	// methods that are defined in Kernel
@@ -1255,8 +1264,8 @@ func BootMethod() {
 	C_string_I.AddMethod(Signature(C_port.Id(), C_string.Id()), 0, MakeFunction1(E_string_I_port, "string_I_port"))
 	C_length.AddMethod(Signature(C_port.Id(), C_integer.Id()), 0, MakeFunction1(E_length_port, "length_port"))
 	C_set_length.AddMethod(Signature(C_port.Id(), C_integer.Id(), C_void.Id()), 0, MakeFunction2(E_set_length_port, "set_length_port"))
-	C_getc.AddMethod(Signature(C_port.Id(), C_char.Id()), 0, MakeFunction1(E_getc_port, "GetChar"))
-	C_putc.AddMethod(Signature(C_char.Id(), C_port.Id(),C_void.Id()), 0, MakeFunction2(E_putc_char, "PutChar"))
+	C_getc.AddMethod(Signature(C_port.Id(), C_char.Id()), 0, MakeFunction1(E_getc_port, "Getc"))
+	C_putc.AddMethod(Signature(C_char.Id(), C_port.Id(),C_void.Id()), 0, MakeFunction2(E_putc_char, "Putc"))
 	C_fopen.AddMethod(Signature(C_string.Id(), C_string.Id(), C_port.Id()), 1, MakeFunction2(E_fopen_string, "fopen_string"))
 	C_flush.AddMethod(Signature(C_port.Id(), C_void.Id()), 0, MakeFunction1(E_flush_port, "flush_port"))
 	C_flush.AddMethod(Signature(C_port.Id(), C_integer.Id(),C_void.Id()), 0, MakeFunction2(E_pushback_port, "pushback_port"))

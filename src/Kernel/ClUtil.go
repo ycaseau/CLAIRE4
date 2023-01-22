@@ -850,9 +850,10 @@ func E_princ_integer(c EID) EID {
 	return EVOID
 }
 
-// random
+// random  (notice the extension to 0, compared to Go, for upward compatibility)
 func F_random_integer(n int) int {
-	return rand.Intn(n)
+	if n == 0 {return 0
+	}  else {return rand.Intn(n)}
 }
 func E_random_integer(c EID) EID { return EID{C__INT, IVAL(F_random_integer(INT(c)))} }
 

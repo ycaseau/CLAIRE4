@@ -1,5 +1,5 @@
-/***** CLAIRE Compilation of file /Users/ycaseau/Dropbox/src/clairev4.05/src/compile/osystem.cl 
-         [version 4.0.06 / safety 5] Monday 06-06-2022 08:39:44 *****/
+/***** CLAIRE Compilation of file /Users/ycaseau/Dropbox/src/clairev4.07/src/compile/osystem.cl 
+         [version 4.0.07 / safety 5] Sunday 01-01-2023 08:09:27 *****/
 
 package Optimize
 import (_ "fmt"
@@ -718,6 +718,7 @@ func E_Optimize_selector_psort_Call (self EID) EID {
 // new one being compiled
 // NEW in claire 4, because error handling is mananaged by the compiler
 // tells if an expression can throw an exception, based on can_throw?(p or m)
+// two constants because of arithmetics
 // debug loop
 /* The go function for: Compile/g_throw(self:any) [status=1] */
 func F_Compile_g_throw_any (self *ClaireAny) EID { 
@@ -888,51 +889,59 @@ func F_Optimize_g_throw1_any (self *ClaireAny) EID {
       }  else if (self.Isa.IsIn(Language.C_Call_method) == CTRUE) { 
       { var g0066 *Language.CallMethod = Language.To_CallMethod(self)
         { 
-          var v_and4 *ClaireBoolean
+          var v_or4 *ClaireBoolean
           
-          v_and4 = Core.F__I_equal_any(g0066.Arg.Id(),C_Compile_m_unsafe.Value)
-          if (v_and4 == CFALSE) {Result = EID{CFALSE.Id(),0}
+          var try_13 EID
+          try_13 = F_Compile_g_throw_any(g0066.Args.Id())
+          if ErrorIn(try_13) {Result = try_13
+          } else {
+          v_or4 = ToBoolean(OBJ(try_13))
+          if (v_or4 == CTRUE) {Result = EID{CTRUE.Id(),0}
           } else { 
-            var try_13 EID
-            try_13 = F_Optimize_notOpt_Call_method(g0066)
-            if ErrorIn(try_13) {Result = try_13
-            } else {
-            v_and4 = ToBoolean(OBJ(try_13))
-            if (v_and4 == CFALSE) {Result = EID{CFALSE.Id(),0}
-            } else { 
-              v_and4 = Core.F__I_equal_any(g0066.Arg.Selector.Id(),Core.C_externC.Id())
-              if (v_and4 == CFALSE) {Result = EID{CFALSE.Id(),0}
-              } else { 
-                var try_14 EID
-                { 
-                  var v_or8 *ClaireBoolean
-                  
+            var try_14 EID
+            if (g0066.Arg.Id() == C_Optimize__startimes_integer_star.Value) { 
+              try_14 = EID{C_compiler.Overflow_ask.Id(),0}
+              }  else if (g0066.Arg.Id() == C_Optimize__stardiv_integer_star.Value) { 
+              try_14 = EID{MakeBoolean((C_integer.Id() == g0066.Args.At(1).Isa.Id()) && !g0066.Args.At(1).IsInt(0)).Not.Id(),0}
+              }  else if (g0066.Arg.Id() == C_Optimize__stardiv_float_star.Value) { 
+              try_14 = EID{MakeBoolean((C_float.Id() == g0066.Args.At(1).Isa.Id()) && (Equal(g0066.Args.At(1),MakeFloat(0).Id()) != CTRUE)).Not.Id(),0}
+              } else {
+              { 
+                var v_and7 *ClaireBoolean
+                
+                v_and7 = Core.F__I_equal_any(g0066.Arg.Id(),C_Compile_m_unsafe.Value)
+                if (v_and7 == CFALSE) {try_14 = EID{CFALSE.Id(),0}
+                } else { 
                   var try_15 EID
-                  try_15 = F_Compile_g_throw_any(g0066.Args.Id())
+                  try_15 = F_Optimize_notOpt_Call_method(g0066)
                   if ErrorIn(try_15) {try_14 = try_15
                   } else {
-                  v_or8 = ToBoolean(OBJ(try_15))
-                  if (v_or8 == CTRUE) {try_14 = EID{CTRUE.Id(),0}
+                  v_and7 = ToBoolean(OBJ(try_15))
+                  if (v_and7 == CFALSE) {try_14 = EID{CFALSE.Id(),0}
                   } else { 
-                    var try_16 EID
-                    try_16 = F_Compile_can_throw_ask_method(g0066.Arg)
-                    if ErrorIn(try_16) {try_14 = try_16
-                    } else {
-                    v_or8 = ToBoolean(OBJ(try_16))
-                    if (v_or8 == CTRUE) {try_14 = EID{CTRUE.Id(),0}
+                    v_and7 = Core.F__I_equal_any(g0066.Arg.Selector.Id(),Core.C_externC.Id())
+                    if (v_and7 == CFALSE) {try_14 = EID{CFALSE.Id(),0}
                     } else { 
-                      try_14 = EID{CFALSE.Id(),0}} 
+                      var try_16 EID
+                      try_16 = F_Compile_can_throw_ask_method(g0066.Arg)
+                      if ErrorIn(try_16) {try_14 = try_16
+                      } else {
+                      v_and7 = ToBoolean(OBJ(try_16))
+                      if (v_and7 == CFALSE) {try_14 = EID{CFALSE.Id(),0}
+                      } else { 
+                        try_14 = EID{CTRUE.Id(),0}} 
+                      } 
                     } 
-                  }}
                   } 
-                if ErrorIn(try_14) {Result = try_14
-                } else {
-                v_and4 = ToBoolean(OBJ(try_14))
-                if (v_and4 == CFALSE) {Result = EID{CFALSE.Id(),0}
-                } else { 
-                  Result = EID{CTRUE.Id(),0}} 
+                }}
                 } 
               } 
+            if ErrorIn(try_14) {Result = try_14
+            } else {
+            v_or4 = ToBoolean(OBJ(try_14))
+            if (v_or4 == CTRUE) {Result = EID{CTRUE.Id(),0}
+            } else { 
+              Result = EID{CFALSE.Id(),0}} 
             } 
           }}
           } 

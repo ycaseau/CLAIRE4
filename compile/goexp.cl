@@ -389,7 +389,7 @@ g_expression(self:Call_method,s:class) : void -> inline_exp(PRODUCER,self,s)
  -> let m := self.arg, p := m.selector, 
         a1 := self.args[1], a2 := self.args[2], s1 := class!(c_type(a1)) in
       ( if (p = class! & a1 % symbol)
-           printf("~I = MakeClass(~S,~I,~I)", symbol_ident(a1),
+           printf("~I = NewClass(~S,~I,~I)", symbol_ident(a1),
                   string!(a1),                         // name  
                   g_expression(a2,class),              // superclass
                   g_expression(module!(a1),module))    // <yc>  7/98  safer (was current_module)

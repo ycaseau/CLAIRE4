@@ -450,7 +450,7 @@ compile with claire3 (compiled compiler) !
 (a) see where c_code bugs ... 
     c_code(quote([fob(x:Store[of = X],y:X) : void -> x.value := y ]))
     method fob @ list<any>(Store[of:(any)], <ref:list(of)(ltype[0])>) is not known
-    => a problem with a reference  -> solved in method.cl (@)
+    => a problem with a reference  => solved in method.cl (@)
 (b) get rid of the ugly retreive_method => m is passed as the 6th args by c_code(odefine.cl)
     will need to cleanup
 (c) make reference a true expression (avoid ugly let ... expansion)
@@ -478,27 +478,27 @@ WE LEFT UOPDATE in gostat.cl UNCOMPLETED !!!!!!!!!!!!!!!!!!!!!!!!!!!!
  - add arity 2 to demon functions in odefine.cl
 
 12/13
- - added an underscore for complex class names: m/aClass -> MAClass and m/AClass -> M_AClass  : bu13 ok
+ - added an underscore for complex class names: m/aClass => MAClass and m/AClass => M_AClass  : bu13 ok
  - bu14 and bu 15 OK
  - sudoku.cl (bu16) asks many questions
      (a) still a compilation bug !   Kernel.F_store_list does not produce an error/EID
      (b) compilation bug: instantiation C(x= 1,y= 2) triggers rules on x ..  (cf: the interpreter -> use update and not write)
-     (c) I had to rename value into volue -> not nice
+     (c) I had to rename value into volue - > not nice
      (d) see if adding a filter would work : r1(x:Cell,y:integer)
 
 First correction: store(l,i,x) should look for i in (1 .. length) and thus 
 may produce an error   => need to retrofit to claire1 !  (function.cl)
 
 to tests
- (a) all bu* (seems bu9, bu11 broken) -> 
+ (a) all bu* (seems bu9, bu11 broken) - > 
  
  (b) this seems to work & bu16 works :)
-    -> g_test(quote(store(C.line.counts,1,0)))   : check for errors
-    -> g_test(quote(store(C.line.counts,1,0,true)))  : no errors
+    - > g_test(quote(store(C.line.counts,1,0)))   : check for errors
+    - > g_test(quote(store(C.line.counts,1,0,true)))  : no errors
 
 Second correction: instantiation should generate update(...) if if_write is present
 
-then restore volue -> value in sudoku.cl
+then restore volue - > value in sudoku.cl
 
 12/18-19 small improvements + compiler verbosity + compiler safety
  
@@ -509,52 +509,230 @@ then restore volue -> value in sudoku.cl
     1. Pair in Kernel + reader
        need to remove pair in function.cl
        : is already a special char
-       create pair(x,y) in read.cl -> more patterns than Vardef
+       create pair(x,y) in read.cl - > more patterns than Vardef
        - create map(lambda,l), Map (Construct)
        - map<t1,t2>(Pair*)   ... le type est obligatoire
        eval(map)
     
-    2. (lvar)->(e) in reader : 
-       Attention à durcir la condition ")->" pour ne pas réagir sur f(..) ->
+    2. (lvar)- >(e) in reader : 
+       Attention à durcir la condition ")- >" pour ne pas réagir sur f(..) - >
     
-    3. difference between x.s and s(x) -> is it Call+ ? 
+    3. difference between x.s and s(x) - > is it Call+ ? 
        we want x.s to return an error if unknown ...
        note that under full optimization (O2) they are the same ...
        Call+ is OK, call(..) with a slot must use get vs read.
     
     4. slice for strings and lists + l[Pair] shortcut
-        -> remove substring & sublist
-        -> must recognize Vardef ! 
+        - > remove substring & sublist
+        - > must recognize Vardef ! 
 
+12/23 : 
+- map becomes map_set, map is the usual lamda
+- get rid of slice syntax because it conflicts with A[x:int] : B .....
+- created claire4 - > all test but bu5 OK
 
-todo demain
-- change map into map_set
-- add enumerate -> returns the list of pairs 
-- change map_ into map
+12/24
+- syntax for lambda is (x){e*}  !!! super elegant
+- extend JITO to property with 12 restrictions !
+
+12/26
+- move all code (meta & compile) back to dropbox : clairev4.03
+- implement c_code(self:Map) in odefine.cl
+- create read_lambda(s:tring) in method.cl
+- implement g_exp(self:lambda)
+
+12/27: added debugger -D + moved to PC !
+
+12/28: added test/rules
+  - mFilter OK
+  - mDinner OK but should work on it
+  - mMonkey
+  - mZebra
+
+12/29: great version -> published on GitHub !
+
+1/1: fix bugs
+  - get @ symbol is deprecated but left in the code because value @ symbol is a slot in 3.5 !
+
+1/2: publish 4.0.4 on GitHub
+- also with blog post
+
+// --------------------------------------- start 4.0.5 -------------------------------------------------------
  
-// =================== to do backlog ==========================================
+1/16 => nth and nth= @ array are using the list EID functions hence defined in Kernel
+ - also in define.cl added While to jito
+ - results is q qsort which is on the same level as Python (5s vs 3.5s)
 
-- trace()  -> core dump  !! 
+2/28 resume working on CLAIRE after a long break !
+AHA ! we need a versioning strategy for go1/go2/go3/go4
+   - keep them as they are : how to create claire4 (v4.0.4) from claire 3.5
+   - go will be the new (current) version, using sclaire and claire (previous & current)
+
+We need to fix the crazy compilation of not @ any ..
+- should be debug-compile the compiler ?
+- should we use sclaire1 + load the compiler ?
+     => this is a nice investment for the future !
+     create init1.cl   (init for claire1)
+     this way we can trace and debug ... 
+
+3/6 - work on optimized mode !
+  compiler.optimize? = true => native global variables !
+    (1) gexp.cl  / gogen.cl :  globalVar(v) produced v or v.value,  g_exp(v) must also adapt to the sort: any OR native
+    (2) gstat.cl  => assign is more complex
+    (3) odefine => do not produce the global variable instantiation !
+    bu1 is OK
+
+    HOWEVER: we have a HUGE regression, almost all bu do not compile anymore (bu2 to bu6) .. seems OK later
+    todo 
+    (a) fix with regular compiling
+    (b) fix with -O
+
+3/10 - resume working on 4.0.5 => make ctest.cl
+  - bu1 et bu2 OK at 17:50
+  - bu3 : normal : compile with -O but not -O5 (since there is an intensional error)
+  - bu4 : same ! works with -O and -O2
+  - bu5 : lambda compiling
+      we known that read_lambda(s) does not return an error :)
+  - bu6 : _CL_obj declared but not used
+     in let x = f in x pattern with s = void
+        hence the _=x is necessary if arg = var and s = void ..
+     created Do! in otool.cl and I should use it more often
+  - bu7 to bu12.cl work well :)
+  - bu13 Kernel.PRINC("") used as value in bug13.go:90
+      => changed in gosystem.cl : function_body => test if self:void and return CNULL
+
+
+// --------------------------------------- start 4.0.6 -------------------------------------------------------
+
+// TODO : avoid generating At(2-1)  => when i is a constant, perform the -1 at once !
+created at_index(x:any) in goGen.cl
+
+// 3/27 - CLAIRE week-end
+(1) create a testCore (will grow progressively)  -> kernel_test.go in Kernel
+   - runs OK but without option -race (check unsafe usage of pointers)
+   - go test -covermode=atomic -coverprofile=coverage.out
+     gives 27% coverage  => creating a test lib would make sense !
+
+(2) fixed in ClUtil.go, Round(f) -> Floor(f)
+
+// 4/3 : fixed let x := 1 in (y := 2)
+Added a trap for error code 300 ... not the best ?
+-> interpreted : Assign will NOT complain but trying to use y will (cf. self_eval @ Assign in call.cl that assumes self.var is a Variable)
+-> in a method : lexical_bind (pretty.cl) will check and produce an Error 101
+
+// 4/9 get rid of l.of == nil
+- renamed makeNilList into makeBootList
+- fixed by hand (Boot) the few boot lists 
+- changed in otool.cl to stop (error 255) when a property is unknown and not open
+
+// .........  June 2nd: start compiling GWDG !!! opening pandora's box .....  ..................................
+
+problem 1:  call g_expression(X,s) where s is a type, not a class
+// 6/5
+ - fix g_member to return always a class
+ - decide that goMethod?(m) is false if a slot co-exist with a method (same name)
+ - this creates a problem with close ...
+ - add princ@string
+ - syntax.cl : 
+       -> changed nextseq to ensure that "," implies reading a value after (vs (1,2,))
+       -> changed readblock() to also checj that [foo() -> 12, ] is detected
+
+// ******************** June 6th: create cinit.cl to run the compiler in interpreted mode ********************
+- changed lexical_build into lexical_index to add final?:boolean argument
+
+// Backlog : Error to fix !
+- [foo() -> 12,]   -> is not trapped, then fails
+
+// June 19th : publish to Git Hub
+here are the steps for next  time
+- make git copies all the files from the active directories (dropbox for claire, go/Kernel for go files) onto the
+  root directory  (claire4 / src+meta+compile)
+- gitAdd (script) adds all the files into git to be pushed
+- git commit -m "your comment goes here"
+- git push -f origin master
+
+// move to CLAIRE v4.0.7 on June 20th 2022 ------------------------------------------------------------------
+
+// resume for Xmas vacacations 2022 ! 
+-  add m.resources: list of string that represent useful files (great to copy/upload module)
+-  add two gitUpload and gitDownload methods  ? unclear (more like fragments)
+
+// first step : recompile Claire4 using the new file directories
+
+// test 2 key modules (load, compile, compare output with CLAIRE 3.5)
+(a) MMS
+- load (m3 vs m2 in Claire3)
+- compile : error ! forward declarations do not work
+BIG CHANGE : introduce NewClass(name,c,m) which checks if the class is already there (support forward def)
+-> compiled(m3) works
+
+(b) EMLA
+- load (m5)
+added ephemeral_object for upward_compatibility in object.cl
+bug in gauge.cl => line 329 : a piece of code yields strange "enumerate primitive"
+min.open was 2 in claire3.5 -> reset in 4.0
+[foo(x:list<int>) -> 12] does not complain (list<X> may be parametric)
+
+load(m5) fails .. nth error (inside code)
+=> big error in nth+ (ClBag.go)  -> add the empty case nth+((),1,X)
+Aha ! characters in CLAIRE4 requires their equality tests (only a small part is cashed)
+=> now load(m5) works
+
+// Dec 28th
+compile(m5) fails with two problems ....
+(1) soft: fractional @ integer (use a / 10) produces status = 1 (while code is safe)
+    need to understand
+
+(2) hard: 
+g_test(quote(for x in LIST_LEVEL print(x)))  fails with a member_type
+car pmember({list<float>(0.2, 0.3, 0.5, 0.7)}) fails !!
+=> resolved (big bug in ClBag : set!(list<float>) ... used s := ... vs =
+
+(3) Attention: slots cannot have the same name as methods in Go.
+    thus the "simple" goMethod?(m) must check that no other restrictions is a slot (with intersecting domain)
+
+(4) true compiler error with use of indirect read(p) where p = list[i]
+    
+
+TODO
+enrich the Go unit tests ! 
+list: 
+   -  nth+(list<integer>(),1,1) = list<integer>(1)
+   - set!(list<float>(1.2)) = {1.2}
+test Equal('a','a'), Equal('a','b'), 
+
+// add to code
+- reset()
+
+// add to documentation
+void is a superset of any (it is a compiler annotation: can return anything, should not be used
+=> we need to explain this in the documentatation !
+IT IS THE CONSEQUENCE OF ANY METHOD IS A FUNCTION THAT RETURNS A VALUE.
+f() : void -> 12  is a good example.
+
+// in the reference section
+- exit(-1)
+- princ("fff",6)
+- module slots : import and resources (files that are needed)
+
+
+
+// =================== to do backlog v4.0.8 (Spring 2023)==========================================
+
+tester 2 autre modules clés, voire 3 (fbid)
+  - SGSS
+  - SIFOA
+
+- play with spy
+- get rid of the test l.of == nil in a few weeks (once gwdg is compiled)
 - dual definition of global constant should complain ? 
 - add something for methods with no errors but poor range ...
      simplest is when we test can_throw / check that c_type <= range.
-
-- add a few map test and a few lambda tests into bu*
-
 - doublon entre get@symbol et value@symbol -> get rid of get@symbol   
-
 - Introduce CheckRange(type,Result,"cause")
 - add the "close world assumption" for a Call in g_throw => restiction! is not empty
-- it would be nice if comment(m) was the file name (and maybe the line)
-   generate :   CLOSE(.... addMethod stuff, "file") versus F_close(....)  
-      => create set_file(m,s) in method.cl
-      Note: puting the right comment in a method should be done in odefine.cl
-- create the jito?() slot for system
-   => the c_substitution does not work with jito on !!!!! find out why 
+-  the c_substitution does not work with jito on !!!!! find out why 
       try g_test(for i in (1 .. (2 + 3)) print(i))
-- option -d : puts the debugger / turns the jito off
-- option -s : safe => compiler safetuy to 1 + jito 
-- check the documentation
 - fix the compilation of self_print @ string (self_print is open) => in gexp
   optimize print(integer) ?
 - why do we set compiler.inline? to false, it should be true !
@@ -562,43 +740,11 @@ todo demain
     a. we should get rid of "good/bad lists" (unless we keep it as a debug back door)
     b. we should generate the code that is expected by the status
     c. a proper warning should be issued
-
-
-KNOWN STUPID BUG TO BE FIXED
-============================
-
-
-
-
-
-
-// THEN
-- get rid of the test l.of == nil
-  actually requires some work in the boostrap (first lists before EMPTY exists)
-
-// GITHUB
-it is possible that a script exists on the PC ? no.
-(1) do a commit 
-
-
-============ TODO:  10 steps to produce CLAIRE 4 (summer) ===============================
-
-
-(1) create an interpreter C1 : Core + Language + Reader - done sucessfully
-(2) test thoroughly the interpreter => revise the test files (2020 perfs and 2010 test cases)
-(3) run the new compiler : C1 + Optimize(revised) + Generate(new)
-(4) debug the produced intepreter C2
-    debug the rules examples
-
-(5) extend the intepreter C2 with the desired new features
-(6) compile the compiler -> produce C3
-(7) test C3
-(8) cross-compile C3
-(9) publish code on GitHub - alpha version of CLAIRE4
-(10) beta version End of 2021 => advertise
-
-// ================= CLAIRE 4 bugs that need to be fixed ==========================================
 - add a second-order type to check_in
+
+=> Réfléchir à une méthode pour automatiser des tests Claire via Go
+    Claire -ct mTests  -> run tests via un go test ...
+    Suppose de bien comprendre le monde Go 
 
 
 

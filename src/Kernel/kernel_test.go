@@ -19,6 +19,16 @@ func TestLoad(t *testing.T) {
 	Bootstrap()
 }
 
+// test integer functions 
+func TestFloat(t *testing.T) {
+	if 0 != F_random_integer(0) {t.Error("random(0)")}
+	if 0 != F_random_integer(1) {t.Error("random(1)")}
+	for i := 0; i < 100; i++ {
+	   if 1000 <= F_random_integer(1) {t.Error("random(1000)")}}
+	if 6 != F__times_integer(2,3) {t.Error("times(2,3)")}
+}
+
+
 // tests float functions 
 func TestFloat(t *testing.T) {
 	if 2 != INT(F_integer_I_float(2.3)) {t.Error("integer!(2.3)")}

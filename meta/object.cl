@@ -44,6 +44,8 @@
 index! :: property(range = integer)
 base! :: property(range = integer)
 
+// added for upward compatibility reasons
+claire/ephemeral_object <: object()
 
 // *********************************************************************
 // *   Part 1: Ask, debug & trace                                      *
@@ -449,7 +451,7 @@ self_print(self:read_slot_error) : void
 // range errors
 range_error <: error(cause:any,arg:any,wrong:any)
 self_print(self:range_error) : void
-    -> printf("****[139] ~S: range error, ~S does not belong? to ~S.\n",
+    -> printf("****[139] ~S: range error, ~S does not belong to ~S.\n",
               self.cause, self.arg, self.wrong)
 
 // selector errors

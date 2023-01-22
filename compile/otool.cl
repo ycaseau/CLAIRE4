@@ -239,7 +239,8 @@ ptype(x:type) : type
  -> (case x (Union (if (x.Kernel/t1 = any) x.Kernel/t2 else x), any x))
 
 // v3.1.06: member -> always apply to a ptype
-pmember(x:type) : type -> member(ptype(x))
+pmember(x:type) : type 
+  -> member(ptype(x))
 
 // transform an instruction representing a set into an instruction
 // representing an enumeration
