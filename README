@@ -1,7 +1,7 @@
 +-----------------------------------------------------------------------------------------------------+
 |   CLAIRE4                                                                                           |
 |   README                                                                                            |
-|   version 4.0.4 - 1/2/2022                                                                          |
+|   version 4.0.7 - 1/22/2023                                                                         |
 +-----------------------------------------------------------------------------------------------------+
 
 
@@ -16,6 +16,7 @@ https://en.wikipedia.org/wiki/Claire_(programming_language)
 CLAIRE is 28 years old, but CLAIRE 4.0 started in September 2020.
 The current version is in alpha-status. Beta status is expected this summer of 2022
 
+CLAIRE4 now has its own Web site: https://sites.google.com/view/claire4/home
 
 2. Organization
 ===============
