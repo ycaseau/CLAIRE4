@@ -462,12 +462,8 @@ self_print(self:float) : void -> function!(print_float)
 +(self:float,x:float) : float ->  (self + x)  
 -(self:float,x:float) : float -> (self - x) 
 *(self:float,x:float) : float -> (self * x) 
-/(self:float,x:float) : float -> (self / x) 
-// old junk
-// +(self:float,x:float) : float -> (let y:float := (self + x) in y)
-// -(self:float,x:float) : float -> (let y:float := (self - x) in y)
-// *(self:float,x:float) : float -> (let y:float := (self * x) in y)
-// /(self:float,x:float) : float -> (let y:float := (self / x) in y)
+/(self:float,x:float) : float -> unsafe(self / x)     // v4.0.7   -> cross compiled function without error 
+
 
 -(self:float) : float -> (-1.0 * self)
 

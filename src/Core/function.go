@@ -1,5 +1,5 @@
 /***** CLAIRE Compilation of file /Users/ycaseau/Dropbox/src/clairev4.07/src/meta/function.cl 
-         [version 4.0.07 / safety 5] Sunday 12-25-2022 13:07:24 *****/
+         [version 4.0.08 / safety 5] Sunday 03-12-2023 14:47:34 *****/
 
 package Core
 import (_ "fmt"
@@ -389,8 +389,8 @@ func E_print_any (x EID) EID {
 // short_enough = we expect that what we want to print is short enough (more that 10 chars to the width)
 /* The go function for: short_enough(self:integer) [status=0] */
 func F_short_enough_integer (self int) *ClaireBoolean { 
-    return  F__inf_integer(self,C_pretty.Width)
-    } 
+    if (self < C_pretty.Width) {return CTRUE
+    } else {return CFALSE}} 
   
 // The EID go function for: short_enough @ integer (throw: false) 
 func E_short_enough_integer (self EID) EID { 
@@ -549,8 +549,8 @@ func E_known_ask_any (self EID) EID {
   
 /* The go function for: unknown?(self:any) [status=0] */
 func F_unknown_ask_any (self *ClaireAny) *ClaireBoolean { 
-    return  Equal(CNULL,self)
-    } 
+    if (CNULL == self) {return CTRUE
+    } else {return CFALSE}} 
   
 // The EID go function for: unknown? @ any (throw: false) 
 func E_unknown_ask_any (self EID) EID { 
@@ -1559,11 +1559,7 @@ func F__7_float (self float64,x float64) float64 {
 func E__7_float (self EID,x EID) EID { 
     return EID{C__FLOAT,FVAL(F__7_float(FLOAT(self),FLOAT(x) ))}} 
   
-// old junk
-// +(self:float,x:float) : float -> (let y:float := (self + x) in y)
-// -(self:float,x:float) : float -> (let y:float := (self - x) in y)
-// *(self:float,x:float) : float -> (let y:float := (self * x) in y)
-// /(self:float,x:float) : float -> (let y:float := (self / x) in y)
+// v4.0.7   -> cross compiled function without error 
 /* The go function for: -(self:float) [status=0] */
 func F__dash_float2 (self float64) float64 { 
     return  ((-1)*self)
@@ -1680,27 +1676,21 @@ func F_printFDigit_integer (x int,i int) EID {
         if ErrorIn(try_1) {Result = try_1
         } else {
         f = INT(try_1)
-        { var d int
-          var try_2 EID
-          try_2 = EID{C__INT,IVAL((x/f))}
-          if ErrorIn(try_2) {Result = try_2
-          } else {
-          d = INT(try_2)
+        { var d int = (x/f)
           F_princ_integer(d)
           if (i > 1) { 
-            { var arg_3 int
-              var try_4 EID
-              try_4 = EID{C__INT,IVAL((x%f))}
-              if ErrorIn(try_4) {Result = try_4
+            { var arg_2 int
+              var try_3 EID
+              try_3 = EID{C__INT,IVAL((x%f))}
+              if ErrorIn(try_3) {Result = try_3
               } else {
-              arg_3 = INT(try_4)
-              Result = F_printFDigit_integer(arg_3,(i-1))
+              arg_2 = INT(try_3)
+              Result = F_printFDigit_integer(arg_2,(i-1))
               }
               } 
             } else {
             Result = EID{CFALSE.Id(),0}
             } 
-          }
           } 
         }
         } 
@@ -2381,8 +2371,8 @@ func E_self_print_char_Core (self EID) EID {
   
 /* The go function for: <=(c1:char,c2:char) [status=0] */
 func F__inf_equal_char (c1 rune,c2 rune) *ClaireBoolean { 
-    return  F__inf_equal_integer(int(c1),int(c2))
-    } 
+    if (int(c1) <= int(c2)) {return CTRUE
+    } else {return CFALSE}} 
   
 // The EID go function for: <= @ char (throw: false) 
 func E__inf_equal_char (c1 EID,c2 EID) EID { 
@@ -2392,8 +2382,8 @@ func E__inf_equal_char (c1 EID,c2 EID) EID {
 /* The go function for: random(b:boolean) [status=0] */
 func F_random_boolean (b *ClaireBoolean) *ClaireBoolean { 
     if (b == CTRUE) { 
-      return  F__sup_equal_integer(F_random_integer(10000),5000)
-      } else {
+      if (F_random_integer(10000) >= 5000) {return CTRUE
+      } else {return CFALSE}} else {
       return  CFALSE
       } 
     } 

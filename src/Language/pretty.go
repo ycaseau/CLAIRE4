@@ -1,5 +1,5 @@
 /***** CLAIRE Compilation of file /Users/ycaseau/Dropbox/src/clairev4.07/src/meta/pretty.cl 
-         [version 4.0.07 / safety 5] Sunday 01-01-2023 08:56:16 *****/
+         [version 4.0.08 / safety 5] Sunday 03-12-2023 14:47:34 *****/
 
 package Language
 import (_ "fmt"

@@ -1,5 +1,5 @@
 /***** CLAIRE Compilation of file /Users/ycaseau/Dropbox/src/clairev4.07/src/meta/inspect.cl 
-         [version 4.0.07 / safety 5] Sunday 01-01-2023 08:49:38 *****/
+         [version 4.0.08 / safety 5] Sunday 03-12-2023 14:47:34 *****/
 
 package Reader
 import (_ "fmt"
@@ -1458,14 +1458,14 @@ func E_closure_build_any (self EID,lvar EID) EID {
 // number of experiments
 // simple methods add, mean, stdev
 /* The go function for: close(x:measure) [status=0] */
-func (x *Measure) Close () *Measure { 
+func F_close_measure (x *Measure) *Measure { 
     x.MIndex = C_measure.Instances.Length()
     return  x
     } 
   
 // The EID go function for: close @ measure (throw: false) 
 func E_close_measure (x EID) EID { 
-    return EID{ToMeasure(OBJ(x)).Close( ).Id(),0}} 
+    return EID{F_close_measure(ToMeasure(OBJ(x)) ).Id(),0}} 
   
 /* The go function for: add(x:measure,f:float) [status=0] */
 func (x *Measure) Add (f float64) *Measure { 

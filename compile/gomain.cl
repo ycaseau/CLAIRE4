@@ -267,7 +267,7 @@
 
 // create a directory for the module (if it does not exist)
 [compile_dir(m:module): void
- -> let s := "mkdir -p " /+ home() / "go/src" / capitalize(string!(m.name)) in 
+ -> let s := "mkdir -p " /+ home() / "go" / "src" / capitalize(string!(m.name)) in 
      (if (home() = "")  error("the environment variable CLAIRE_HOME is undefined\n"),
       shell(s))]
 

@@ -1,5 +1,5 @@
 /***** CLAIRE Compilation of file /Users/ycaseau/Dropbox/src/clairev4.07/src/meta/method.cl 
-         [version 4.0.07 / safety 5] Sunday 12-25-2022 13:07:24 *****/
+         [version 4.0.08 / safety 5] Sunday 03-12-2023 14:47:34 *****/
 
 package Core
 import (_ "fmt"

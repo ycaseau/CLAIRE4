@@ -692,17 +692,43 @@ car pmember({list<float>(0.2, 0.3, 0.5, 0.7)}) fails !!
     thus the "simple" goMethod?(m) must check that no other restrictions is a slot (with intersecting domain)
 
 (4) true compiler error with use of indirect read(p) where p = list[i]
-    
 
-TODO
-enrich the Go unit tests ! 
+// Jan 1st : MMS & EMLA OK + tests and perf
+
+// when we restart : copy sclaire in a safe place and recompile everything 
+
+// =================== to do backlog v4.0.8 (Spring 2023)==========================================
+
+gomain.cl  -> dans mkdir, removed a direct use of / !!!!! (did not work on PC)
+
+// New : add a reboot function in CLAIRE (useful to play with server)
+// reboot() : recreate all objects (rebuild a clean state)
+
+- ajouter la ligne de code dans le code généré  pour claire1.go
+    (a) dans Load (à la fin)
+    C_reboot.AddMethod(Signature(C_void.Id(), C_void.Id()), 0, MakeFunction1(E_reboot_void, "reboot_void"))
+    (b) deux méthodes associées
+    func reboot_void() {
+      Bootstrap()
+      Load()
+      Reader.C_reader.Fromp = ClEnv.Cin
+    }
+    func E_reboot_void(s EID) EID {
+      reboot_void()
+      return EVOID
+    }
+	
+// enrich the Go unit tests ! 
+// create a nice command to launch tests from the makefile
 list: 
    -  nth+(list<integer>(),1,1) = list<integer>(1)
    - set!(list<float>(1.2)) = {1.2}
 test Equal('a','a'), Equal('a','b'), 
 
-// add to code
-- reset()
+// before we make 4.08 a beta version, we need to test 3 more modules
+- fbid (4G licence)
+- SGSS (smart grid)
+- SIFOA (not ready to put on github though)
 
 // add to documentation
 void is a superset of any (it is a compiler annotation: can return anything, should not be used
@@ -710,20 +736,11 @@ void is a superset of any (it is a compiler annotation: can return anything, sho
 IT IS THE CONSEQUENCE OF ANY METHOD IS A FUNCTION THAT RETURNS A VALUE.
 f() : void -> 12  is a good example.
 
-// in the reference section
-- exit(-1)
-- princ("fff",6)
-- module slots : import and resources (files that are needed)
-
-
-
-// =================== to do backlog v4.0.8 (Spring 2023)==========================================
-
-tester 2 autre modules clés, voire 3 (fbid)
-  - SGSS
-  - SIFOA
-
+// extensions
+- use € versus % for belong
 - play with spy
+- imports is not used !!!
+- talk about new 16 bits char in the claire documentation
 - get rid of the test l.of == nil in a few weeks (once gwdg is compiled)
 - dual definition of global constant should complain ? 
 - add something for methods with no errors but poor range ...

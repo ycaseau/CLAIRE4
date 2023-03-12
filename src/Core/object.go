@@ -1,5 +1,5 @@
 /***** CLAIRE Compilation of file /Users/ycaseau/Dropbox/src/clairev4.07/src/meta/object.cl 
-         [version 4.0.07 / safety 5] Sunday 12-25-2022 13:07:24 *****/
+         [version 4.0.08 / safety 5] Sunday 03-12-2023 14:47:34 *****/
 
 package Core
 import (_ "fmt"
@@ -2039,7 +2039,7 @@ func E_princ_set (s EID) EID {
 // NOTE: we need to refine the scheme for global constants !
 // GV are defeasible
 /* The go function for: close(self:global_variable) [status=1] */
-func (self *GlobalVariable) Close () EID { 
+func F_close_global_variable (self *GlobalVariable) EID { 
     var Result EID
     if ((self.Value != CNULL) && 
         ((ToType(C_set.Id()).Contains(self.Range.Id()) != CTRUE) && 
@@ -2060,7 +2060,7 @@ func (self *GlobalVariable) Close () EID {
   
 // The EID go function for: close @ global_variable (throw: true) 
 func E_close_global_variable (self EID) EID { 
-    return ToGlobalVariable(OBJ(self)).Close( )} 
+    return F_close_global_variable(ToGlobalVariable(OBJ(self)) )} 
   
 /* The go function for: self_eval(self:global_variable) [status=0] */
 func (self *GlobalVariable) SelfEval () EID { 

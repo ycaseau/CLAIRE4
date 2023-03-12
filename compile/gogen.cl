@@ -272,7 +272,7 @@ c_string(c:go_producer, self:symbol) : string
                                                arg_match(go_signature(m2), %sig)
                                             else true), 
                                     any (defined(m.selector.name) = Kernel &        // v4.0.6: mix of methods & slot are not supported with Go
-                                         module!(m2) = Kernel))))),                  // we make an exception for Kernel methods
+                                         module!(m) = Kernel))))),                  // v4.0.7: we make an exception for Kernel methods
             any false)) ]
 
     
@@ -290,7 +290,8 @@ c_string(c:go_producer, self:symbol) : string
                            case m2 (method (if (m2.module! = m.module! & c ^ m2.domain[1] != {})
                                                arg_match(go_signature(m2), %sig)
                                             else true), 
-                                    any true)))))]
+                                    any (defined(m.selector.name) = Kernel &        // v4.0.6: mix of methods & slot are not supported with Go
+                                         module!(m) = Kernel))))))]                  // we make an exception for Kernel methods
 
             
 // same argument types for all restrictions, excluding the range (that is included in go_signature)

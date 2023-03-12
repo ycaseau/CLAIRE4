@@ -1,5 +1,5 @@
 /***** CLAIRE Compilation of module Optimize.cl 
-         [version 4.0.07 / safety 5] Sunday 01-01-2023 08:09:27 *****/
+         [version 4.0.08 / safety 5] Sunday 03-12-2023 14:47:37 *****/
 
 package Optimize
 import (_ "fmt"
@@ -11,7 +11,7 @@ import (_ "fmt"
 )
 
 //-------- dumb function to prevent import errors --------
-func import_g0329() { 
+func import_g0331() { 
     _ = Core.It
     _ = Language.It
     _ = Reader.It
@@ -356,7 +356,7 @@ var C_Compile *ClaireModule
 func MetaLoad() { 
   
   It = MakeModule("Optimize",C_Compile)
-  It.Comment = MakeString("Compiled on Sunday 01-01-2023 08:09:27(v4.0.07), lines:3027, warnings:1,safety:5")
+  It.Comment = MakeString("Compiled on Sunday 03-12-2023 14:47:37(v4.0.08), lines:3031, warnings:1,safety:5")
   ClEnv.Module_I = It
   
   // definition of the properties
@@ -495,7 +495,7 @@ func MetaLoad() {
       _CL_obj = C_Compile_srange
       _CL_obj.Range = ToType(CEMPTY.Id())
       _CL_obj.Value = C_mClaire_srange.Id()
-      expr = _CL_obj.Close()
+      expr = Core.F_close_global_variable(_CL_obj)
       } 
     ErrorCheck(expr)} 
   
@@ -507,7 +507,7 @@ func MetaLoad() {
       _CL_obj = C_Compile_status
       _CL_obj.Range = ToType(CEMPTY.Id())
       _CL_obj.Value = C_mClaire_status.Id()
-      expr = _CL_obj.Close()
+      expr = Core.F_close_global_variable(_CL_obj)
       } 
     ErrorCheck(expr)} 
   
@@ -519,7 +519,7 @@ func MetaLoad() {
       _CL_obj = C_Compile_tmatch_ask
       _CL_obj.Range = ToType(CEMPTY.Id())
       _CL_obj.Value = Core.C_Core_tmatch_ask.Id()
-      expr = _CL_obj.Close()
+      expr = Core.F_close_global_variable(_CL_obj)
       } 
     ErrorCheck(expr)} 
   
@@ -531,15 +531,15 @@ func MetaLoad() {
       _CL_obj = C_Compile_pname
       _CL_obj.Range = ToType(CEMPTY.Id())
       _CL_obj.Value = C_mClaire_pname.Id()
-      expr = _CL_obj.Close()
+      expr = Core.F_close_global_variable(_CL_obj)
       } 
     ErrorCheck(expr)} 
   
   _ = Core.F_attach_method(C_home.AddMethod(Signature(C_void.Id(),C_string.Id()),0,MakeFunction1(E_home_void,"home_void")),MakeString("osystem.cl:42"))
   
-  C_EID = MakeClass("EID",C_object,C_claire)
+  C_EID = NewClass("EID",C_object,C_claire)
   
-  C_Optimize_meta_OPT = MakeClass("meta_OPT",C_thing,It)
+  C_Optimize_meta_OPT = NewClass("meta_OPT",C_thing,It)
   Core.F_close_slot(C_Optimize_meta_OPT.AddSlot(C_Compile_instructions,ToType(C_list.Id()),ToType(C_any.Id()).EmptyList().Id()))
   Core.F_close_slot(C_Optimize_meta_OPT.AddSlot(C_Compile_objects,ToType(C_list.Id()),ToType(C_any.Id()).EmptyList().Id()))
   Core.F_close_slot(C_Optimize_meta_OPT.AddSlot(C_Compile_properties,Core.F_nth_class2(C_set,MakeList(ToType(C_any.Id()),C_of.Id()),MakeConstantList(MakeConstantSet(C_property.Id()).Id())),ToType(C_property.Id()).EmptySet().Id()))
@@ -563,7 +563,7 @@ func MetaLoad() {
   Core.F_close_slot(C_Optimize_meta_OPT.AddSlot(C_Compile_non_identifiable_set,Core.F_nth_class2(C_set,MakeList(ToType(C_any.Id()),C_of.Id()),MakeConstantList(MakeConstantSet(C_class.Id()).Id())),ToType(C_class.Id()).EmptySet().Id()))
   Core.F_close_slot(C_Optimize_meta_OPT.AddSlot(C_Compile_use_string_update,ToType(C_boolean.Id()),CFALSE.Id()))
   
-  C_Optimize_meta_compiler = MakeClass("meta_compiler",C_thing,It)
+  C_Optimize_meta_compiler = NewClass("meta_compiler",C_thing,It)
   Core.F_close_slot(C_Optimize_meta_compiler.AddSlot(C_external,ToType(C_string.Id()),CNULL))
   Core.F_close_slot(C_Optimize_meta_compiler.AddSlot(C_source,ToType(C_string.Id()),CNULL))
   Core.F_close_slot(C_Optimize_meta_compiler.AddSlot(C_debug_ask,Core.F_nth_class2(C_list,MakeList(ToType(C_any.Id()),C_of.Id()),MakeConstantList(MakeConstantSet(C_module.Id()).Id())),ToType(C_module.Id()).EmptyList().Id()))
@@ -583,7 +583,7 @@ func MetaLoad() {
   Core.F_close_slot(C_Optimize_meta_compiler.AddSlot(C_n_methods,ToType(C_integer.Id()),MakeInteger(0).Id()))
   Core.F_close_slot(C_Optimize_meta_compiler.AddSlot(C_n_metheids,ToType(C_integer.Id()),MakeInteger(0).Id()))
   
-  C_Compile_producer = MakeClass("producer",C_thing,C_Compile)
+  C_Compile_producer = NewClass("producer",C_thing,C_Compile)
   Core.F_close_slot(C_Compile_producer.AddSlot(C_Compile_current_file,ToType(C_string.Id()),MakeString("").Id()))
   
   { 
@@ -594,7 +594,7 @@ func MetaLoad() {
       _CL_obj = C_PRODUCER
       _CL_obj.Range = ToType(C_Compile_producer.Id())
       _CL_obj.Value = CNULL
-      expr = _CL_obj.Close()
+      expr = Core.F_close_global_variable(_CL_obj)
       } 
     ErrorCheck(expr)} 
   
@@ -634,14 +634,14 @@ func MetaLoad() {
           } 
         va_arg1.Value = va_arg2
         } 
-      expr = _CL_obj.Close()
+      expr = Core.F_close_global_variable(_CL_obj)
       } 
     ErrorCheck(expr)} 
   
   C_compiler = ToOptimizeMetaCompiler(new(OptimizeMetaCompiler).IsNamed(C_Optimize_meta_compiler,MakeSymbol("compiler",C_claire)))
   C_compiler.External = MakeString("go")
   C_compiler.Env = MakeString("MacOS")
-  C_compiler.Version = MakeFloat(0.07).Id()
+  C_compiler.Version = MakeFloat(0.08).Id()
   C_compiler.Source = MakeString("/Users/ycaseau/claire/v4.0/go/src")
   C_compiler.Libraries = MakeList(ToType(C_string.Id()),MakeString("Kernel").Id())
   
@@ -749,7 +749,7 @@ func MetaLoad() {
       _CL_obj = C_Compile_m_unsafe
       _CL_obj.Range = ToType(CEMPTY.Id())
       _CL_obj.Value = Core.F__at_property1(Core.C_unsafe,C_any).Id()
-      expr = _CL_obj.Close()
+      expr = Core.F_close_global_variable(_CL_obj)
       } 
     ErrorCheck(expr)} 
   
@@ -761,7 +761,7 @@ func MetaLoad() {
       _CL_obj = C_Compile_m_member
       _CL_obj.Range = ToType(CEMPTY.Id())
       _CL_obj.Value = Core.F__at_property2(ToProperty(C__Z.Id()),MakeConstantList(C_any.Id(),C_any.Id())).Id()
-      expr = _CL_obj.Close()
+      expr = Core.F_close_global_variable(_CL_obj)
       } 
     ErrorCheck(expr)} 
   
@@ -771,11 +771,11 @@ func MetaLoad() {
   C_Compile_nativeVar_ask = MakeProperty("nativeVar?",1,C_Compile)
   
   
-  C_Compile_C_cast = MakeClass("C_cast",Language.C_Optimized_instruction,C_Compile)
+  C_Compile_C_cast = NewClass("C_cast",Language.C_Optimized_instruction,C_Compile)
   Core.F_close_slot(C_Compile_C_cast.AddSlot(C_arg,ToType(C_any.Id()),CNULL))
   Core.F_close_slot(C_Compile_C_cast.AddSlot(Language.C_iClaire_set_arg,ToType(C_class.Id()),CNULL))
   
-  C_Optimize_Pattern = MakeClass("Pattern",C_type_expression,It)
+  C_Optimize_Pattern = NewClass("Pattern",C_type_expression,It)
   Core.F_close_slot(C_Optimize_Pattern.AddSlot(C_selector,ToType(C_property.Id()),CNULL))
   Core.F_close_slot(C_Optimize_Pattern.AddSlot(C_arg,ToType(C_list.Id()),ToType(C_any.Id()).EmptyList().Id()))
   
@@ -808,6 +808,7 @@ func MetaLoad() {
     C_type.Id(),
     C_primitive.Id(),
     C_string.Id(),
+    C_char.Id(),
     C_bag.Id(),
     C_tuple.Id(),
     C_port.Id())
@@ -848,7 +849,7 @@ func MetaLoad() {
         Core.F__at_property1(ToProperty(C__inf_equal.Id()),C_type_expression).Id(),
         C__sup_equal.Id(),
         Core.F__at_property2(ToProperty(C__star.Id()),MakeConstantList(C_integer.Id(),C_integer.Id())).Id()).Id()
-      expr = _CL_obj.Close()
+      expr = Core.F_close_global_variable(_CL_obj)
       } 
     ErrorCheck(expr)} 
   
@@ -860,7 +861,7 @@ func MetaLoad() {
       _CL_obj = C_Compile_ForceThrow
       _CL_obj.Range = ToType(CEMPTY.Id())
       _CL_obj.Value = ToType(C_method.Id()).EmptyList().Id()
-      expr = _CL_obj.Close()
+      expr = Core.F_close_global_variable(_CL_obj)
       } 
     ErrorCheck(expr)} 
   
@@ -872,7 +873,7 @@ func MetaLoad() {
       _CL_obj = C_Compile_ForceNotThrow
       _CL_obj.Range = ToType(CEMPTY.Id())
       _CL_obj.Value = ToType(C_method.Id()).EmptyList().Id()
-      expr = _CL_obj.Close()
+      expr = Core.F_close_global_variable(_CL_obj)
       } 
     ErrorCheck(expr)} 
   
@@ -884,7 +885,7 @@ func MetaLoad() {
       _CL_obj = C_Optimize__startimes_integer_star
       _CL_obj.Range = ToType(CEMPTY.Id())
       _CL_obj.Value = Core.F__at_property1(ToProperty(C__star.Id()),C_integer).Id()
-      expr = _CL_obj.Close()
+      expr = Core.F_close_global_variable(_CL_obj)
       } 
     ErrorCheck(expr)} 
   
@@ -896,7 +897,7 @@ func MetaLoad() {
       _CL_obj = C_Optimize__stardiv_integer_star
       _CL_obj.Range = ToType(CEMPTY.Id())
       _CL_obj.Value = Core.F__at_property1(ToProperty(C__7.Id()),C_integer).Id()
-      expr = _CL_obj.Close()
+      expr = Core.F_close_global_variable(_CL_obj)
       } 
     ErrorCheck(expr)} 
   
@@ -908,7 +909,7 @@ func MetaLoad() {
       _CL_obj = C_Optimize__stardiv_float_star
       _CL_obj.Range = ToType(CEMPTY.Id())
       _CL_obj.Value = Core.F__at_property1(ToProperty(C__7.Id()),C_float).Id()
-      expr = _CL_obj.Close()
+      expr = Core.F_close_global_variable(_CL_obj)
       } 
     ErrorCheck(expr)} 
   
@@ -920,19 +921,19 @@ func MetaLoad() {
       _CL_obj = C_DSHOW
       _CL_obj.Range = ToType(C_boolean.Id())
       _CL_obj.Value = CFALSE.Id()
-      expr = _CL_obj.Close()
+      expr = Core.F_close_global_variable(_CL_obj)
       } 
     ErrorCheck(expr)} 
   
   _ = Core.F_attach_method(C_Compile_g_throw.AddMethod(Signature(C_any.Id(),C_boolean.Id()),1,MakeFunction1(E_Compile_g_throw_any,"Compile_g_throw_any")),MakeString("osystem.cl:371"))
   
-  _ = Core.F_attach_method(C_Optimize_g_throw1.AddMethod(Signature(C_any.Id(),C_boolean.Id()),1,MakeFunction1(E_Optimize_g_throw1_any,"Optimize_g_throw1_any")),MakeString("osystem.cl:406"))
+  _ = Core.F_attach_method(C_Optimize_g_throw1.AddMethod(Signature(C_any.Id(),C_boolean.Id()),1,MakeFunction1(E_Optimize_g_throw1_any,"Optimize_g_throw1_any")),MakeString("osystem.cl:410"))
   
-  _ = Core.F_attach_method(C_Optimize_notOpt.AddMethod(Signature(Language.C_Call_method.Id(),C_boolean.Id()),1,MakeFunction1(E_Optimize_notOpt_Call_method,"Optimize_notOpt_Call_method")),MakeString("osystem.cl:421"))
+  _ = Core.F_attach_method(C_Optimize_notOpt.AddMethod(Signature(Language.C_Call_method.Id(),C_boolean.Id()),1,MakeFunction1(E_Optimize_notOpt_Call_method,"Optimize_notOpt_Call_method")),MakeString("osystem.cl:425"))
   
-  _ = Core.F_attach_method(C_Compile_can_throw_ask.AddMethod(Signature(C_property.Id(),C_boolean.Id()),1,MakeFunction1(E_Compile_can_throw_ask_property,"Compile_can_throw?_property")),MakeString("osystem.cl:427"))
+  _ = Core.F_attach_method(C_Compile_can_throw_ask.AddMethod(Signature(C_property.Id(),C_boolean.Id()),1,MakeFunction1(E_Compile_can_throw_ask_property,"Compile_can_throw?_property")),MakeString("osystem.cl:431"))
   
-  _ = Core.F_attach_method(C_Compile_can_throw_ask.AddMethod(Signature(C_method.Id(),C_boolean.Id()),1,MakeFunction1(E_Compile_can_throw_ask_method,"Compile_can_throw?_method")),MakeString("osystem.cl:437"))
+  _ = Core.F_attach_method(C_Compile_can_throw_ask.AddMethod(Signature(C_method.Id(),C_boolean.Id()),1,MakeFunction1(E_Compile_can_throw_ask_method,"Compile_can_throw?_method")),MakeString("osystem.cl:441"))
   
   { 
     var expr EID
@@ -942,31 +943,31 @@ func MetaLoad() {
       _CL_obj = C_DTHROW
       _CL_obj.Range = ToType(C_any.Id())
       _CL_obj.Value = CNULL
-      expr = _CL_obj.Close()
+      expr = Core.F_close_global_variable(_CL_obj)
       } 
     ErrorCheck(expr)} 
   
-  _ = Core.F_attach_method(C_Compile_can_throw_I.AddMethod(Signature(C_method.Id(),C_boolean.Id()),1,MakeFunction1(E_Compile_can_throw_I_method,"Compile_can_throw!_method")),MakeString("osystem.cl:448"))
+  _ = Core.F_attach_method(C_Compile_can_throw_I.AddMethod(Signature(C_method.Id(),C_boolean.Id()),1,MakeFunction1(E_Compile_can_throw_I_method,"Compile_can_throw!_method")),MakeString("osystem.cl:452"))
   
-  _ = Core.F_attach_method(C_Compile_can_throw_status.AddMethod(Signature(C_method.Id(),C_boolean.Id()),1,MakeFunction1(E_Compile_can_throw_status_method,"Compile_can_throw_status_method")),MakeString("osystem.cl:454"))
+  _ = Core.F_attach_method(C_Compile_can_throw_status.AddMethod(Signature(C_method.Id(),C_boolean.Id()),1,MakeFunction1(E_Compile_can_throw_status_method,"Compile_can_throw_status_method")),MakeString("osystem.cl:458"))
   
-  _ = Core.F_attach_method(C_s_throw.AddMethod(Signature(C_method.Id(),C_void.Id()),1,MakeFunction1(E_s_throw_method,"s_throw_method")),MakeString("osystem.cl:462"))
+  _ = Core.F_attach_method(C_s_throw.AddMethod(Signature(C_method.Id(),C_void.Id()),1,MakeFunction1(E_s_throw_method,"s_throw_method")),MakeString("osystem.cl:466"))
   
-  _ = Core.F_attach_method(C_Optimize_legal_ask.AddMethod(Signature(C_module.Id(),C_any.Id(),C_boolean.Id()),0,MakeFunction2(E_Optimize_legal_ask_module,"Optimize_legal?_module")),MakeString("osystem.cl:479"))
+  _ = Core.F_attach_method(C_Optimize_legal_ask.AddMethod(Signature(C_module.Id(),C_any.Id(),C_boolean.Id()),0,MakeFunction2(E_Optimize_legal_ask_module,"Optimize_legal?_module")),MakeString("osystem.cl:483"))
   
-  _ = Core.F_attach_method(C_Optimize_legal_ask.AddMethod(Signature(C_environment.Id(),C_any.Id(),C_any.Id()),0,MakeFunction2(E_Optimize_legal_ask_environment,"Optimize_legal?_environment")),MakeString("osystem.cl:481"))
+  _ = Core.F_attach_method(C_Optimize_legal_ask.AddMethod(Signature(C_environment.Id(),C_any.Id(),C_any.Id()),0,MakeFunction2(E_Optimize_legal_ask_environment,"Optimize_legal?_environment")),MakeString("osystem.cl:485"))
   
-  _ = Core.F_attach_method(C_Optimize_c_register.AddMethod(Signature(Core.F_U_type(ToType(C_thing.Id()),ToType(C_class.Id())).Id(),C_any.Id()),0,MakeFunction1(E_Optimize_c_register_object,"Optimize_c_register_object")),MakeString("osystem.cl:487"))
+  _ = Core.F_attach_method(C_Optimize_c_register.AddMethod(Signature(Core.F_U_type(ToType(C_thing.Id()),ToType(C_class.Id())).Id(),C_any.Id()),0,MakeFunction1(E_Optimize_c_register_object,"Optimize_c_register_object")),MakeString("osystem.cl:491"))
   
-  _ = Core.F_attach_method(C_Optimize_c_register.AddMethod(Signature(C_property.Id(),C_any.Id()),0,MakeFunction1(E_Optimize_c_register_property,"Optimize_c_register_property")),MakeString("osystem.cl:496"))
+  _ = Core.F_attach_method(C_Optimize_c_register.AddMethod(Signature(C_property.Id(),C_any.Id()),0,MakeFunction1(E_Optimize_c_register_property,"Optimize_c_register_property")),MakeString("osystem.cl:500"))
   
-  _ = Core.F_attach_method(C_Optimize_selector_register.AddMethod(Signature(C_property.Id(),C_any.Id()),0,MakeFunction1(E_Optimize_selector_register_property,"Optimize_selector_register_property")),MakeString("osystem.cl:501"))
+  _ = Core.F_attach_method(C_Optimize_selector_register.AddMethod(Signature(C_property.Id(),C_any.Id()),0,MakeFunction1(E_Optimize_selector_register_property,"Optimize_selector_register_property")),MakeString("osystem.cl:505"))
   
-  _ = Core.F_attach_method(C_Optimize_stable_ask.AddMethod(Signature(C_relation.Id(),C_boolean.Id()),0,MakeFunction1(E_Optimize_stable_ask_relation,"Optimize_stable?_relation")),MakeString("osystem.cl:510"))
+  _ = Core.F_attach_method(C_Optimize_stable_ask.AddMethod(Signature(C_relation.Id(),C_boolean.Id()),0,MakeFunction1(E_Optimize_stable_ask_relation,"Optimize_stable?_relation")),MakeString("osystem.cl:514"))
   
-  _ = Core.F_attach_method(C_Compile_get_module.AddMethod(Signature(Core.F_U_type(ToType(C_thing.Id()),ToType(C_class.Id())).Id(),C_any.Id()),0,MakeFunction1(E_Compile_get_module_object,"Compile_get_module_object")),MakeString("osystem.cl:515"))
+  _ = Core.F_attach_method(C_Compile_get_module.AddMethod(Signature(Core.F_U_type(ToType(C_thing.Id()),ToType(C_class.Id())).Id(),C_any.Id()),0,MakeFunction1(E_Compile_get_module_object,"Compile_get_module_object")),MakeString("osystem.cl:519"))
   
-  _ = Core.F_attach_method(Reader.C_known_I.AddMethod(Signature(C_listargs.Id(),C_any.Id()),0,MakeFunction1(E_known_I_listargs,"known!_listargs")),MakeString("osystem.cl:522"))
+  _ = Core.F_attach_method(Reader.C_known_I.AddMethod(Signature(C_listargs.Id(),C_any.Id()),0,MakeFunction1(E_known_I_listargs,"known!_listargs")),MakeString("osystem.cl:526"))
   
   _ = Core.F_attach_method(C_self_print.AddMethod(Signature(C_Compile_C_cast.Id(),C_void.Id()),1,MakeFunction1(E_self_print_C_cast,"self_print_C_cast")),MakeString("otool.cl:56"))
   
@@ -1266,7 +1267,7 @@ func MetaLoad() {
   
   _ = Core.F_attach_method(C_c_code.AddMethod(Signature(Language.C_Super.Id(),C_any.Id()),1,MakeFunction1(E_c_code_Super,"c_code_Super")),MakeString("ocontrol.cl:132"))
   
-  C_Optimize_Call_function2 = MakeClass("Call_function2",Language.C_Optimized_instruction,It)
+  C_Optimize_Call_function2 = NewClass("Call_function2",Language.C_Optimized_instruction,It)
   Core.F_close_slot(C_Optimize_Call_function2.AddSlot(C_arg,ToType(C_function.Id()),CNULL))
   Core.F_close_slot(C_Optimize_Call_function2.AddSlot(C_args,ToType(C_list.Id()),ToType(C_any.Id()).EmptyList().Id()))
   
@@ -1312,7 +1313,7 @@ func MetaLoad() {
       _CL_obj = C_PENIBLE
       _CL_obj.Range = ToType(C_boolean.Id())
       _CL_obj.Value = CFALSE.Id()
-      expr = _CL_obj.Close()
+      expr = Core.F_close_global_variable(_CL_obj)
       } 
     ErrorCheck(expr)} 
   
@@ -1476,7 +1477,7 @@ func MetaLoad() {
       _CL_obj = C_Compile__starname_star
       _CL_obj.Range = ToType(C_symbol.Id())
       _CL_obj.Value = Core.F_symbol_I_string2(MakeString("_CL_obj")).Id()
-      expr = _CL_obj.Close()
+      expr = Core.F_close_global_variable(_CL_obj)
       } 
     ErrorCheck(expr)} 
   
@@ -1520,7 +1521,7 @@ func MetaLoad() {
       _CL_obj = C_Optimize__staradd_method2_star
       _CL_obj.Range = ToType(CEMPTY.Id())
       _CL_obj.Value = C_add_method.Restrictions.ValuesO()[1]
-      expr = _CL_obj.Close()
+      expr = Core.F_close_global_variable(_CL_obj)
       } 
     ErrorCheck(expr)} 
   

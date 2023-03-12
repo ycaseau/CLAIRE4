@@ -10,11 +10,11 @@
 *rsrc* :: "/Users/ycaseau/claire/v4.0/test/rules"
 
 // these are the global variables expected by the compiler
-RELEASE:float :: 0.07    // version of March 11th, 2022
+RELEASE:float :: 0.08    // version of March 12th, 2023
 
-// additions
+/* // additions  (comment out what you don't want)
 begin(Core)
-// claire/ephemeral_object <: object()
+claire/ephemeral_object <: object()
 end(Core)
 
 begin(Optimize)
@@ -35,6 +35,7 @@ begin(Generate)
          any g_expression(x,s)) ]
 end(Generate)
 
+ */ // end of additions
 
 // ***************************************************************************
 // *    Part 1: Modules & compiler environment                               *

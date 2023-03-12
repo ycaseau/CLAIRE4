@@ -1,5 +1,5 @@
 /***** CLAIRE Compilation of module Language.cl 
-         [version 4.0.07 / safety 5] Sunday 01-01-2023 08:56:16 *****/
+         [version 4.0.08 / safety 5] Sunday 03-12-2023 14:47:34 *****/
 
 package Language
 import (_ "fmt"
@@ -1328,7 +1328,7 @@ var C_iClaire *ClaireModule
 func MetaLoad() { 
   
   It = MakeModule("Language",C_iClaire)
-  It.Comment = MakeString("Compiled on Sunday 01-01-2023 08:56:16(v4.0.07), lines:2261, warnings:1,safety:5")
+  It.Comment = MakeString("Compiled on Sunday 03-12-2023 14:47:34(v4.0.08), lines:2261, warnings:1,safety:5")
   ClEnv.Module_I = It
   
   // definition of the properties
@@ -1401,7 +1401,7 @@ func MetaLoad() {
   C_iClaire_lexical_index = MakeProperty("lexical_index",1,C_iClaire)
   
   // instructions from module sources
-  C_Basic_instruction = MakeClass("Basic_instruction",C_Instruction,C_claire)
+  C_Basic_instruction = NewClass("Basic_instruction",C_Instruction,C_claire)
   
   _ = Core.F_attach_method(C_Language_no_eval.AddMethod(Signature(C_Instruction.Id(),C_void.Id()),1,MakeFunction1(E_no_eval_Instruction,"no_eval_Instruction")),MakeString("pretty.cl:20"))
   
@@ -1413,7 +1413,7 @@ func MetaLoad() {
       _CL_obj = C_iClaire_typing
       _CL_obj.Range = ToType(CEMPTY.Id())
       _CL_obj.Value = C_Kernel_typing.Id()
-      expr = _CL_obj.Close()
+      expr = Core.F_close_global_variable(_CL_obj)
       } 
     ErrorCheck(expr)} 
   
@@ -1425,7 +1425,7 @@ func MetaLoad() {
       _CL_obj = C_iClaire_index
       _CL_obj.Range = ToType(CEMPTY.Id())
       _CL_obj.Value = C_mClaire_index.Id()
-      expr = _CL_obj.Close()
+      expr = Core.F_close_global_variable(_CL_obj)
       } 
     ErrorCheck(expr)} 
   
@@ -1443,16 +1443,16 @@ func MetaLoad() {
   
   _ = Core.F_attach_method(C_Language_write_value.AddMethod(Signature(C_Variable.Id(),C_any.Id(),C_any.Id()),1,MakeFunction2(E_write_value_Variable,"write_value_Variable")),MakeString("pretty.cl:67"))
   
-  C_Vardef = MakeClass("Vardef",C_Variable,C_claire)
+  C_Vardef = NewClass("Vardef",C_Variable,C_claire)
   
   _ = Core.F_attach_method(Core.C_self_eval.AddEvalMethod(Signature(C_Vardef.Id(),C_any.Id()),1,MakeFunction1(E_self_eval_Vardef,"self_eval_Vardef"),EVAL_Vardef),MakeString("pretty.cl:77"))
   
-  C_Complex_instruction = MakeClass("Complex_instruction",C_Instruction,C_claire)
+  C_Complex_instruction = NewClass("Complex_instruction",C_Instruction,C_claire)
   
-  C_Instruction_with_var = MakeClass("Instruction_with_var",C_Complex_instruction,C_claire)
+  C_Instruction_with_var = NewClass("Instruction_with_var",C_Complex_instruction,C_claire)
   Core.F_close_slot(C_Instruction_with_var.AddSlot(C_var,ToType(C_Variable.Id()),CNULL))
   
-  C_Control_structure = MakeClass("Control_structure",C_Complex_instruction,C_claire)
+  C_Control_structure = NewClass("Control_structure",C_Complex_instruction,C_claire)
   
   _ = Core.F_attach_method(C_Language_write_value.AddMethod(Signature(Core.C_global_variable.Id(),C_any.Id(),C_any.Id()),1,MakeFunction2(E_write_value_global_variable,"write_value_global_variable")),MakeString("pretty.cl:91"))
   
@@ -1464,7 +1464,7 @@ func MetaLoad() {
       _CL_obj = C_EOF
       _CL_obj.Range = ToType(C_char.Id())
       _CL_obj.Value = MakeChar(F_char_I_integer(-1)).Id()
-      expr = _CL_obj.Close()
+      expr = Core.F_close_global_variable(_CL_obj)
       } 
     ErrorCheck(expr)} 
   
@@ -1476,7 +1476,7 @@ func MetaLoad() {
       _CL_obj = C_EOS
       _CL_obj.Range = ToType(C_char.Id())
       _CL_obj.Value = MakeChar(F_char_I_integer(0)).Id()
-      expr = _CL_obj.Close()
+      expr = Core.F_close_global_variable(_CL_obj)
       } 
     ErrorCheck(expr)} 
   
@@ -1488,7 +1488,7 @@ func MetaLoad() {
       _CL_obj = C_MAX_INTEGER
       _CL_obj.Range = ToType(CEMPTY.Id())
       _CL_obj.Value = MakeInteger(1073741822).Id()
-      expr = _CL_obj.Close()
+      expr = Core.F_close_global_variable(_CL_obj)
       } 
     ErrorCheck(expr)} 
   
@@ -1508,7 +1508,7 @@ func MetaLoad() {
       _CL_obj = C__starvariable_index_star
       _CL_obj.Range = ToType(C_integer.Id())
       _CL_obj.Value = MakeInteger(0).Id()
-      expr = _CL_obj.Close()
+      expr = Core.F_close_global_variable(_CL_obj)
       } 
     ErrorCheck(expr)} 
   
@@ -1539,7 +1539,7 @@ func MetaLoad() {
       _CL_obj = C_Language_PPC
       _CL_obj.Range = ToType(C_integer.Id())
       _CL_obj.Value = MakeInteger(0).Id()
-      expr = _CL_obj.Close()
+      expr = Core.F_close_global_variable(_CL_obj)
       } 
     ErrorCheck(expr)} 
   
@@ -1595,19 +1595,19 @@ func MetaLoad() {
       _CL_obj = C_iClaire_LastCall
       _CL_obj.Range = ToType(C_any.Id())
       _CL_obj.Value = CNULL
-      expr = _CL_obj.Close()
+      expr = Core.F_close_global_variable(_CL_obj)
       } 
     ErrorCheck(expr)} 
   
-  C_Call = MakeClass("Call",C_Control_structure,C_claire)
+  C_Call = NewClass("Call",C_Control_structure,C_claire)
   Core.F_close_slot(C_Call.AddSlot(C_selector,ToType(C_property.Id()),CNULL))
   Core.F_close_slot(C_Call.AddSlot(C_args,ToType(C_list.Id()),ToType(C_any.Id()).EmptyList().Id()))
   C_Call.Params = MakeList(ToType(C_any.Id()),C_selector.Id(),C_args.Id())
   
-  C_Call_star = MakeClass("Call*",C_Call,C_claire)
+  C_Call_star = NewClass("Call*",C_Call,C_claire)
   C_Call_star.Params = MakeList(ToType(C_any.Id()),C_selector.Id(),C_args.Id())
   
-  C_Call_plus = MakeClass("Call+",C_Call,C_claire)
+  C_Call_plus = NewClass("Call+",C_Call,C_claire)
   C_Call_plus.Params = MakeList(ToType(C_any.Id()),C_selector.Id(),C_args.Id())
   
   _ = Core.F_attach_method(C_self_print.AddMethod(Signature(C_Call.Id(),C_void.Id()),1,MakeFunction1(E_self_print_Call_Language,"self_print_Call_Language")),MakeString("call.cl:68"))
@@ -1628,7 +1628,7 @@ func MetaLoad() {
     C_any.Id(),
     C_boolean.Id()),0,MakeFunction4(E_sugar_ask_any,"sugar_ask_any")),MakeString("call.cl:120"))
   
-  C_Assign = MakeClass("Assign",C_Basic_instruction,C_claire)
+  C_Assign = NewClass("Assign",C_Basic_instruction,C_claire)
   Core.F_close_slot(C_Assign.AddSlot(C_var,ToType(C_any.Id()),CNULL))
   Core.F_close_slot(C_Assign.AddSlot(C_arg,ToType(C_any.Id()),CNULL))
   
@@ -1636,7 +1636,7 @@ func MetaLoad() {
   
   _ = Core.F_attach_method(Core.C_self_eval.AddEvalMethod(Signature(C_Assign.Id(),C_any.Id()),1,MakeFunction1(E_self_eval_Assign,"self_eval_Assign"),EVAL_Assign),MakeString("call.cl:145"))
   
-  C_Gassign = MakeClass("Gassign",C_Basic_instruction,C_claire)
+  C_Gassign = NewClass("Gassign",C_Basic_instruction,C_claire)
   Core.F_close_slot(C_Gassign.AddSlot(C_var,ToType(Core.C_global_variable.Id()),CNULL))
   Core.F_close_slot(C_Gassign.AddSlot(C_arg,ToType(C_any.Id()),CNULL))
   
@@ -1644,30 +1644,30 @@ func MetaLoad() {
   
   _ = Core.F_attach_method(Core.C_self_eval.AddEvalMethod(Signature(C_Gassign.Id(),C_any.Id()),1,MakeFunction1(E_self_eval_Gassign,"self_eval_Gassign"),EVAL_Gassign),MakeString("call.cl:159"))
   
-  C_And = MakeClass("And",C_Control_structure,C_claire)
+  C_And = NewClass("And",C_Control_structure,C_claire)
   Core.F_close_slot(C_And.AddSlot(C_args,ToType(C_list.Id()),ToType(C_any.Id()).EmptyList().Id()))
   
   _ = Core.F_attach_method(C_self_print.AddMethod(Signature(C_And.Id(),C_void.Id()),1,MakeFunction1(E_self_print_And_Language,"self_print_And_Language")),MakeString("call.cl:165"))
   
   _ = Core.F_attach_method(Core.C_self_eval.AddEvalMethod(Signature(C_And.Id(),C_any.Id()),1,MakeFunction1(E_self_eval_And,"self_eval_And"),EVAL_And),MakeString("call.cl:167"))
   
-  C_Or = MakeClass("Or",C_Control_structure,C_claire)
+  C_Or = NewClass("Or",C_Control_structure,C_claire)
   Core.F_close_slot(C_Or.AddSlot(C_args,ToType(C_list.Id()),ToType(C_any.Id()).EmptyList().Id()))
   
   _ = Core.F_attach_method(C_self_print.AddMethod(Signature(C_Or.Id(),C_void.Id()),1,MakeFunction1(E_self_print_Or_Language,"self_print_Or_Language")),MakeString("call.cl:172"))
   
   _ = Core.F_attach_method(Core.C_self_eval.AddEvalMethod(Signature(C_Or.Id(),C_any.Id()),1,MakeFunction1(E_self_eval_Or,"self_eval_Or"),EVAL_Or),MakeString("call.cl:174"))
   
-  C_Quote = MakeClass("Quote",C_Basic_instruction,C_claire)
+  C_Quote = NewClass("Quote",C_Basic_instruction,C_claire)
   Core.F_close_slot(C_Quote.AddSlot(C_arg,ToType(C_any.Id()),CNULL))
   
   _ = Core.F_attach_method(C_self_print.AddMethod(Signature(C_Quote.Id(),C_void.Id()),1,MakeFunction1(E_self_print_Quote_Language,"self_print_Quote_Language")),MakeString("call.cl:179"))
   
   _ = Core.F_attach_method(Core.C_self_eval.AddEvalMethod(Signature(C_Quote.Id(),C_any.Id()),0,MakeFunction1(E_self_eval_Quote,"self_eval_Quote"),EVAL_Quote),MakeString("call.cl:180"))
   
-  C_Optimized_instruction = MakeClass("Optimized_instruction",C_Complex_instruction,C_claire)
+  C_Optimized_instruction = NewClass("Optimized_instruction",C_Complex_instruction,C_claire)
   
-  C_Call_method = MakeClass("Call_method",C_Optimized_instruction,C_claire)
+  C_Call_method = NewClass("Call_method",C_Optimized_instruction,C_claire)
   Core.F_close_slot(C_Call_method.AddSlot(C_arg,ToType(C_method.Id()),CNULL))
   Core.F_close_slot(C_Call_method.AddSlot(C_args,ToType(C_list.Id()),ToType(C_any.Id()).EmptyList().Id()))
   
@@ -1675,19 +1675,19 @@ func MetaLoad() {
   
   _ = Core.F_attach_method(Core.C_self_eval.AddEvalMethod(Signature(C_Call_method.Id(),C_any.Id()),1,MakeFunction1(E_self_eval_Call_method,"self_eval_Call_method"),EVAL_Call_method),MakeString("call.cl:202"))
   
-  C_Call_method1 = MakeClass("Call_method1",C_Call_method,C_claire)
+  C_Call_method1 = NewClass("Call_method1",C_Call_method,C_claire)
   
   _ = Core.F_attach_method(Core.C_self_eval.AddEvalMethod(Signature(C_Call_method1.Id(),C_any.Id()),1,MakeFunction1(E_self_eval_Call_method1,"self_eval_Call_method1"),EVAL_Call_method1),MakeString("call.cl:207"))
   
-  C_Call_method2 = MakeClass("Call_method2",C_Call_method,C_claire)
+  C_Call_method2 = NewClass("Call_method2",C_Call_method,C_claire)
   
   _ = Core.F_attach_method(Core.C_self_eval.AddEvalMethod(Signature(C_Call_method2.Id(),C_any.Id()),1,MakeFunction1(E_self_eval_Call_method2,"self_eval_Call_method2"),EVAL_Call_method2),MakeString("call.cl:214"))
   
-  C_Language_Call_method3 = MakeClass("Call_method3",C_Call_method,It)
+  C_Language_Call_method3 = NewClass("Call_method3",C_Call_method,It)
   
   _ = Core.F_attach_method(Core.C_self_eval.AddEvalMethod(Signature(C_Language_Call_method3.Id(),C_any.Id()),1,MakeFunction1(E_self_eval_Call_method3,"self_eval_Call_method3"),EVAL_Language_Call_method3),MakeString("call.cl:221"))
   
-  C_Call_slot = MakeClass("Call_slot",C_Optimized_instruction,C_claire)
+  C_Call_slot = NewClass("Call_slot",C_Optimized_instruction,C_claire)
   Core.F_close_slot(C_Call_slot.AddSlot(C_selector,ToType(C_slot.Id()),CNULL))
   Core.F_close_slot(C_Call_slot.AddSlot(C_arg,ToType(C_any.Id()),CNULL))
   Core.F_close_slot(C_Call_slot.AddSlot(C_iClaire_test,ToType(C_boolean.Id()),CNULL))
@@ -1696,7 +1696,7 @@ func MetaLoad() {
   
   _ = Core.F_attach_method(Core.C_self_eval.AddEvalMethod(Signature(C_Call_slot.Id(),C_any.Id()),1,MakeFunction1(E_self_eval_Call_slot,"self_eval_Call_slot"),EVAL_Call_slot),MakeString("call.cl:228"))
   
-  C_Call_array = MakeClass("Call_array",C_Optimized_instruction,C_claire)
+  C_Call_array = NewClass("Call_array",C_Optimized_instruction,C_claire)
   Core.F_close_slot(C_Call_array.AddSlot(C_selector,ToType(C_any.Id()),CNULL))
   Core.F_close_slot(C_Call_array.AddSlot(C_arg,ToType(C_any.Id()),CNULL))
   Core.F_close_slot(C_Call_array.AddSlot(C_iClaire_test,ToType(C_any.Id()),CNULL))
@@ -1705,7 +1705,7 @@ func MetaLoad() {
   
   _ = Core.F_attach_method(Core.C_self_eval.AddEvalMethod(Signature(C_Call_array.Id(),C_any.Id()),1,MakeFunction1(E_self_eval_Call_array,"self_eval_Call_array"),EVAL_Call_array),MakeString("call.cl:238"))
   
-  C_Call_table = MakeClass("Call_table",C_Optimized_instruction,C_claire)
+  C_Call_table = NewClass("Call_table",C_Optimized_instruction,C_claire)
   Core.F_close_slot(C_Call_table.AddSlot(C_selector,ToType(C_table.Id()),CNULL))
   Core.F_close_slot(C_Call_table.AddSlot(C_arg,ToType(C_any.Id()),CNULL))
   Core.F_close_slot(C_Call_table.AddSlot(C_iClaire_test,ToType(C_boolean.Id()),CNULL))
@@ -1714,7 +1714,7 @@ func MetaLoad() {
   
   _ = Core.F_attach_method(Core.C_self_eval.AddEvalMethod(Signature(C_Call_table.Id(),C_any.Id()),1,MakeFunction1(E_self_eval_Call_table,"self_eval_Call_table"),EVAL_Call_table),MakeString("call.cl:247"))
   
-  C_Update = MakeClass("Update",C_Optimized_instruction,C_claire)
+  C_Update = NewClass("Update",C_Optimized_instruction,C_claire)
   Core.F_close_slot(C_Update.AddSlot(C_selector,ToType(C_any.Id()),CNULL))
   Core.F_close_slot(C_Update.AddSlot(C_arg,ToType(C_any.Id()),CNULL))
   Core.F_close_slot(C_Update.AddSlot(C_value,ToType(C_any.Id()),CNULL))
@@ -1724,7 +1724,7 @@ func MetaLoad() {
   
   _ = Core.F_attach_method(Core.C_self_eval.AddEvalMethod(Signature(C_Update.Id(),C_any.Id()),1,MakeFunction1(E_self_eval_Update,"self_eval_Update"),EVAL_Update),MakeString("call.cl:264"))
   
-  C_Super = MakeClass("Super",C_Control_structure,C_claire)
+  C_Super = NewClass("Super",C_Control_structure,C_claire)
   Core.F_close_slot(C_Super.AddSlot(C_selector,ToType(C_property.Id()),CNULL))
   Core.F_close_slot(C_Super.AddSlot(C_iClaire_cast_to,ToType(C_type.Id()),CNULL))
   Core.F_close_slot(C_Super.AddSlot(C_args,ToType(C_list.Id()),ToType(C_any.Id()).EmptyList().Id()))
@@ -1733,7 +1733,7 @@ func MetaLoad() {
   
   _ = Core.F_attach_method(Core.C_self_eval.AddEvalMethod(Signature(C_Super.Id(),C_any.Id()),1,MakeFunction1(E_self_eval_Super,"self_eval_Super"),EVAL_Super),MakeString("call.cl:289"))
   
-  C_Cast = MakeClass("Cast",C_Basic_instruction,C_claire)
+  C_Cast = NewClass("Cast",C_Basic_instruction,C_claire)
   Core.F_close_slot(C_Cast.AddSlot(C_arg,ToType(C_any.Id()),CNULL))
   Core.F_close_slot(C_Cast.AddSlot(C_iClaire_set_arg,ToType(C_type.Id()),CNULL))
   
@@ -1741,7 +1741,7 @@ func MetaLoad() {
   
   _ = Core.F_attach_method(Core.C_self_eval.AddEvalMethod(Signature(C_Cast.Id(),C_any.Id()),1,MakeFunction1(E_self_eval_Cast,"self_eval_Cast"),EVAL_Cast),MakeString("call.cl:305"))
   
-  C_Return = MakeClass("Return",C_Basic_instruction,C_claire)
+  C_Return = NewClass("Return",C_Basic_instruction,C_claire)
   Core.F_close_slot(C_Return.AddSlot(C_arg,ToType(C_any.Id()),CNULL))
   
   _ = Core.F_attach_method(C_self_print.AddMethod(Signature(C_Return.Id(),C_void.Id()),1,MakeFunction1(E_self_print_Return_Language,"self_print_Return_Language")),MakeString("call.cl:316"))
@@ -1761,7 +1761,7 @@ func MetaLoad() {
   
   _ = Core.F_attach_method(C_Language_instruction_copy.AddMethod(Signature(C_any.Id(),C_any.Id()),0,MakeFunction1(E_instruction_copy_any,"instruction_copy_any")),MakeString("call.cl:389"))
   
-  C_If = MakeClass("If",C_Control_structure,C_claire)
+  C_If = NewClass("If",C_Control_structure,C_claire)
   Core.F_close_slot(C_If.AddSlot(C_iClaire_test,ToType(C_any.Id()),CNULL))
   Core.F_close_slot(C_If.AddSlot(C_arg,ToType(C_any.Id()),CNULL))
   Core.F_close_slot(C_If.AddSlot(C_iClaire_other,ToType(C_any.Id()),CFALSE.Id()))
@@ -1776,7 +1776,7 @@ func MetaLoad() {
   
   _ = Core.F_attach_method(Core.C_self_eval.AddEvalMethod(Signature(C_If.Id(),C_any.Id()),1,MakeFunction1(E_self_eval_If,"self_eval_If"),EVAL_If),MakeString("control.cl:64"))
   
-  C_Do = MakeClass("Do",C_Control_structure,C_claire)
+  C_Do = NewClass("Do",C_Control_structure,C_claire)
   Core.F_close_slot(C_Do.AddSlot(C_args,ToType(C_list.Id()),ToType(C_any.Id()).EmptyList().Id()))
   C_Do.Params = MakeList(ToType(C_any.Id()),C_args.Id())
   
@@ -1788,7 +1788,7 @@ func MetaLoad() {
   
   _ = Core.F_attach_method(Core.C_self_eval.AddEvalMethod(Signature(C_Do.Id(),C_any.Id()),1,MakeFunction1(E_self_eval_Do,"self_eval_Do"),EVAL_Do),MakeString("control.cl:89"))
   
-  C_Let = MakeClass("Let",C_Instruction_with_var,C_claire)
+  C_Let = NewClass("Let",C_Instruction_with_var,C_claire)
   Core.F_close_slot(C_Let.AddSlot(C_value,ToType(C_any.Id()),CNULL))
   Core.F_close_slot(C_Let.AddSlot(C_arg,ToType(C_any.Id()),CNULL))
   
@@ -1798,22 +1798,22 @@ func MetaLoad() {
   
   _ = Core.F_attach_method(Core.C_self_eval.AddEvalMethod(Signature(C_Let.Id(),C_any.Id()),1,MakeFunction1(E_self_eval_Let,"self_eval_Let"),EVAL_Let),MakeString("control.cl:112"))
   
-  C_When = MakeClass("When",C_Let,C_claire)
+  C_When = NewClass("When",C_Let,C_claire)
   Core.F_close_slot(C_When.AddSlot(C_iClaire_other,ToType(C_any.Id()),CNULL))
   
   _ = Core.F_attach_method(C_self_print.AddMethod(Signature(C_When.Id(),C_void.Id()),1,MakeFunction1(E_self_print_When_Language,"self_print_When_Language")),MakeString("control.cl:124"))
   
   _ = Core.F_attach_method(Core.C_self_eval.AddEvalMethod(Signature(C_When.Id(),C_any.Id()),1,MakeFunction1(E_self_eval_When,"self_eval_When"),EVAL_When),MakeString("control.cl:131"))
   
-  C_Let_plus = MakeClass("Let+",C_Let,C_claire)
+  C_Let_plus = NewClass("Let+",C_Let,C_claire)
   
-  C_Let_star = MakeClass("Let*",C_Let,C_claire)
+  C_Let_star = NewClass("Let*",C_Let,C_claire)
   
   _ = Core.F_attach_method(C_self_print.AddMethod(Signature(C_Let_plus.Id(),C_void.Id()),1,MakeFunction1(E_self_print_Let_plus_Language,"self_print_Let_plus_Language")),MakeString("control.cl:149"))
   
   _ = Core.F_attach_method(C_self_print.AddMethod(Signature(C_Let_star.Id(),C_void.Id()),1,MakeFunction1(E_self_print_Let_star_Language,"self_print_Let_star_Language")),MakeString("control.cl:174"))
   
-  C_Iteration = MakeClass("Iteration",C_Instruction_with_var,C_claire)
+  C_Iteration = NewClass("Iteration",C_Instruction_with_var,C_claire)
   Core.F_close_slot(C_Iteration.AddSlot(C_iClaire_set_arg,ToType(C_any.Id()),CNULL))
   Core.F_close_slot(C_Iteration.AddSlot(C_arg,ToType(C_any.Id()),CNULL))
   
@@ -1823,48 +1823,48 @@ func MetaLoad() {
   C_Iterate = MakeProperty("Iterate",2,C_claire)
   
   
-  C_For = MakeClass("For",C_Iteration,C_claire)
+  C_For = NewClass("For",C_Iteration,C_claire)
   
   _ = Core.F_attach_method(C_self_print.AddMethod(Signature(C_For.Id(),C_void.Id()),1,MakeFunction1(E_self_print_For_Language,"self_print_For_Language")),MakeString("control.cl:195"))
   
   _ = Core.F_attach_method(Core.C_self_eval.AddEvalMethod(Signature(C_For.Id(),C_any.Id()),1,MakeFunction1(E_self_eval_For,"self_eval_For"),EVAL_For),MakeString("control.cl:212"))
   
-  C_Collect = MakeClass("Collect",C_Iteration,C_claire)
+  C_Collect = NewClass("Collect",C_Iteration,C_claire)
   Core.F_close_slot(C_Collect.AddSlot(C_of,ToType(C_type.Id()),CNULL))
   
   _ = Core.F_attach_method(C_self_print.AddMethod(Signature(C_Collect.Id(),C_void.Id()),1,MakeFunction1(E_self_print_Collect_Language,"self_print_Collect_Language")),MakeString("control.cl:226"))
   
   _ = Core.F_attach_method(Core.C_self_eval.AddEvalMethod(Signature(C_Collect.Id(),C_any.Id()),1,MakeFunction1(E_self_eval_Collect,"self_eval_Collect"),EVAL_Collect),MakeString("control.cl:242"))
   
-  C_Image = MakeClass("Image",C_Iteration,C_claire)
+  C_Image = NewClass("Image",C_Iteration,C_claire)
   Core.F_close_slot(C_Image.AddSlot(C_of,ToType(C_type.Id()),CNULL))
   
   _ = Core.F_attach_method(C_self_print.AddMethod(Signature(C_Image.Id(),C_void.Id()),1,MakeFunction1(E_self_print_Image_Language,"self_print_Image_Language")),MakeString("control.cl:255"))
   
   _ = Core.F_attach_method(Core.C_self_eval.AddEvalMethod(Signature(C_Image.Id(),C_any.Id()),1,MakeFunction1(E_self_eval_Image,"self_eval_Image"),EVAL_Image),MakeString("control.cl:261"))
   
-  C_Select = MakeClass("Select",C_Iteration,C_claire)
+  C_Select = NewClass("Select",C_Iteration,C_claire)
   Core.F_close_slot(C_Select.AddSlot(C_of,ToType(C_type.Id()),CNULL))
   
   _ = Core.F_attach_method(C_self_print.AddMethod(Signature(C_Select.Id(),C_void.Id()),1,MakeFunction1(E_self_print_Select_Language,"self_print_Select_Language")),MakeString("control.cl:273"))
   
   _ = Core.F_attach_method(Core.C_self_eval.AddEvalMethod(Signature(C_Select.Id(),C_any.Id()),1,MakeFunction1(E_self_eval_Select,"self_eval_Select"),EVAL_Select),MakeString("control.cl:289"))
   
-  C_Lselect = MakeClass("Lselect",C_Iteration,C_claire)
+  C_Lselect = NewClass("Lselect",C_Iteration,C_claire)
   Core.F_close_slot(C_Lselect.AddSlot(C_of,ToType(C_type.Id()),CNULL))
   
   _ = Core.F_attach_method(C_self_print.AddMethod(Signature(C_Lselect.Id(),C_void.Id()),1,MakeFunction1(E_self_print_Lselect_Language,"self_print_Lselect_Language")),MakeString("control.cl:302"))
   
   _ = Core.F_attach_method(Core.C_self_eval.AddEvalMethod(Signature(C_Lselect.Id(),C_any.Id()),1,MakeFunction1(E_self_eval_Lselect,"self_eval_Lselect"),EVAL_Lselect),MakeString("control.cl:318"))
   
-  C_Exists = MakeClass("Exists",C_Iteration,C_claire)
+  C_Exists = NewClass("Exists",C_Iteration,C_claire)
   Core.F_close_slot(C_Exists.AddSlot(C_iClaire_other,ToType(C_any.Id()),CFALSE.Id()))
   
   _ = Core.F_attach_method(C_self_print.AddMethod(Signature(C_Exists.Id(),C_void.Id()),1,MakeFunction1(E_self_print_Exists_Language,"self_print_Exists_Language")),MakeString("control.cl:335"))
   
   _ = Core.F_attach_method(Core.C_self_eval.AddEvalMethod(Signature(C_Exists.Id(),C_any.Id()),1,MakeFunction1(E_self_eval_Exists,"self_eval_Exists"),EVAL_Exists),MakeString("control.cl:353"))
   
-  C_Case = MakeClass("Case",C_Control_structure,C_claire)
+  C_Case = NewClass("Case",C_Control_structure,C_claire)
   Core.F_close_slot(C_Case.AddSlot(C_var,ToType(C_any.Id()),CNULL))
   Core.F_close_slot(C_Case.AddSlot(C_args,ToType(C_list.Id()),ToType(C_any.Id()).EmptyList().Id()))
   
@@ -1872,7 +1872,7 @@ func MetaLoad() {
   
   _ = Core.F_attach_method(Core.C_self_eval.AddEvalMethod(Signature(C_Case.Id(),C_any.Id()),1,MakeFunction1(E_self_eval_Case,"self_eval_Case"),EVAL_Case),MakeString("control.cl:390"))
   
-  C_While = MakeClass("While",C_Control_structure,C_claire)
+  C_While = NewClass("While",C_Control_structure,C_claire)
   Core.F_close_slot(C_While.AddSlot(C_iClaire_test,ToType(C_any.Id()),CNULL))
   Core.F_close_slot(C_While.AddSlot(C_arg,ToType(C_any.Id()),CNULL))
   Core.F_close_slot(C_While.AddSlot(C_iClaire_other,ToType(C_boolean.Id()),CFALSE.Id()))
@@ -1881,7 +1881,7 @@ func MetaLoad() {
   
   _ = Core.F_attach_method(Core.C_self_eval.AddEvalMethod(Signature(C_While.Id(),C_any.Id()),1,MakeFunction1(E_self_eval_While,"self_eval_While"),EVAL_While),MakeString("control.cl:407"))
   
-  C_Handle = MakeClass("Handle",C_Control_structure,C_claire)
+  C_Handle = NewClass("Handle",C_Control_structure,C_claire)
   Core.F_close_slot(C_Handle.AddSlot(C_iClaire_test,ToType(C_any.Id()),CNULL))
   Core.F_close_slot(C_Handle.AddSlot(C_arg,ToType(C_any.Id()),CNULL))
   Core.F_close_slot(C_Handle.AddSlot(C_iClaire_other,ToType(C_any.Id()),CNULL))
@@ -1890,27 +1890,27 @@ func MetaLoad() {
   
   _ = Core.F_attach_method(Core.C_self_eval.AddEvalMethod(Signature(C_Handle.Id(),C_any.Id()),1,MakeFunction1(E_self_eval_Handle,"self_eval_Handle"),EVAL_Handle),MakeString("control.cl:433"))
   
-  C_Construct = MakeClass("Construct",C_Complex_instruction,C_claire)
+  C_Construct = NewClass("Construct",C_Complex_instruction,C_claire)
   Core.F_close_slot(C_Construct.AddSlot(C_args,ToType(C_list.Id()),ToType(C_any.Id()).EmptyList().Id()))
   
-  C_List = MakeClass("List",C_Construct,C_claire)
+  C_List = NewClass("List",C_Construct,C_claire)
   Core.F_close_slot(C_List.AddSlot(C_of,ToType(C_type.Id()),CNULL))
   
-  C_Tuple = MakeClass("Tuple",C_Construct,C_claire)
+  C_Tuple = NewClass("Tuple",C_Construct,C_claire)
   
-  C_Set = MakeClass("Set",C_Construct,C_claire)
+  C_Set = NewClass("Set",C_Construct,C_claire)
   Core.F_close_slot(C_Set.AddSlot(C_of,ToType(C_type.Id()),CNULL))
   
-  C_Array = MakeClass("Array",C_Construct,C_claire)
+  C_Array = NewClass("Array",C_Construct,C_claire)
   Core.F_close_slot(C_Array.AddSlot(C_of,ToType(C_type.Id()),CNULL))
   
-  C_Printf = MakeClass("Printf",C_Construct,C_claire)
+  C_Printf = NewClass("Printf",C_Construct,C_claire)
   
-  C_Error = MakeClass("Error",C_Construct,C_claire)
+  C_Error = NewClass("Error",C_Construct,C_claire)
   
-  C_Branch = MakeClass("Branch",C_Construct,C_claire)
+  C_Branch = NewClass("Branch",C_Construct,C_claire)
   
-  C_Map = MakeClass("Map",C_Construct,C_claire)
+  C_Map = NewClass("Map",C_Construct,C_claire)
   Core.F_close_slot(C_Map.AddSlot(C_domain,ToType(C_type.Id()),CNULL))
   Core.F_close_slot(C_Map.AddSlot(C_of,ToType(C_type.Id()),CNULL))
   
@@ -1926,7 +1926,7 @@ func MetaLoad() {
   
   _ = Core.F_attach_method(Core.C_self_eval.AddEvalMethod(Signature(C_Map.Id(),C_map_set.Id()),1,MakeFunction1(E_self_eval_Map,"self_eval_Map"),EVAL_Map),MakeString("control.cl:520"))
   
-  C_Macro = MakeClass("Macro",C_Construct,C_claire)
+  C_Macro = NewClass("Macro",C_Construct,C_claire)
   
   C_macroexpand = MakeProperty("macroexpand",3,C_claire)
   C_macroexpand.Open = 3
@@ -1941,11 +1941,11 @@ func MetaLoad() {
   C_iClaire_trace_on = MakeProperty("trace_on",1,C_iClaire)
   
   
-  C_Trace = MakeClass("Trace",C_Construct,C_claire)
+  C_Trace = NewClass("Trace",C_Construct,C_claire)
   
   _ = Core.F_attach_method(Core.C_self_eval.AddEvalMethod(Signature(C_Trace.Id(),C_any.Id()),1,MakeFunction1(E_self_eval_Trace,"self_eval_Trace"),EVAL_Trace),MakeString("control.cl:596"))
   
-  C_Assert = MakeClass("Assert",C_Construct,C_claire)
+  C_Assert = NewClass("Assert",C_Construct,C_claire)
   Core.F_close_slot(C_Assert.AddSlot(C_mClaire_index,ToType(C_integer.Id()),MakeInteger(0).Id()))
   Core.F_close_slot(C_Assert.AddSlot(C_external,ToType(C_string.Id()),CNULL))
   
@@ -1967,7 +1967,7 @@ func MetaLoad() {
       _CL_obj = C_iClaire_LastComment
       _CL_obj.Range = ToType(C_any.Id())
       _CL_obj.Value = CNULL
-      expr = _CL_obj.Close()
+      expr = Core.F_close_global_variable(_CL_obj)
       } 
     ErrorCheck(expr)} 
   
@@ -1979,32 +1979,32 @@ func MetaLoad() {
       _CL_obj = C_NeedComment
       _CL_obj.Range = ToType(C_boolean.Id())
       _CL_obj.Value = CFALSE.Id()
-      expr = _CL_obj.Close()
+      expr = Core.F_close_global_variable(_CL_obj)
       } 
     ErrorCheck(expr)} 
   
-  C_Defclaire = MakeClass("Defclaire",C_Complex_instruction,C_claire)
+  C_Defclaire = NewClass("Defclaire",C_Complex_instruction,C_claire)
   
-  C_Definition = MakeClass("Definition",C_Defclaire,C_claire)
+  C_Definition = NewClass("Definition",C_Defclaire,C_claire)
   Core.F_close_slot(C_Definition.AddSlot(C_arg,ToType(C_class.Id()),CNULL))
   Core.F_close_slot(C_Definition.AddSlot(C_args,ToType(C_list.Id()),ToType(C_any.Id()).EmptyList().Id()))
   
   _ = Core.F_attach_method(C_self_print.AddMethod(Signature(C_Definition.Id(),C_any.Id()),1,MakeFunction1(E_self_print_Definition_Language,"self_print_Definition_Language")),MakeString("define.cl:36"))
   
-  C_Language_DefFast = MakeClass("DefFast",C_Definition,It)
+  C_Language_DefFast = NewClass("DefFast",C_Definition,It)
   
-  C_Defobj = MakeClass("Defobj",C_Definition,C_claire)
+  C_Defobj = NewClass("Defobj",C_Definition,C_claire)
   Core.F_close_slot(C_Defobj.AddSlot(C_iClaire_ident,ToType(C_symbol.Id()),CNULL))
   
   _ = Core.F_attach_method(C_self_print.AddMethod(Signature(C_Defobj.Id(),C_void.Id()),1,MakeFunction1(E_self_print_Defobj_Language,"self_print_Defobj_Language")),MakeString("define.cl:54"))
   
-  C_Defclass = MakeClass("Defclass",C_Defobj,C_claire)
+  C_Defclass = NewClass("Defclass",C_Defobj,C_claire)
   Core.F_close_slot(C_Defclass.AddSlot(C_params,ToType(C_list.Id()),ToType(C_any.Id()).EmptyList().Id()))
   Core.F_close_slot(C_Defclass.AddSlot(C_iClaire_forward_ask,ToType(C_boolean.Id()),CNULL))
   
   _ = Core.F_attach_method(C_self_print.AddMethod(Signature(C_Defclass.Id(),C_void.Id()),1,MakeFunction1(E_self_print_Defclass_Language,"self_print_Defclass_Language")),MakeString("define.cl:75"))
   
-  C_Defmethod = MakeClass("Defmethod",C_Defclaire,C_claire)
+  C_Defmethod = NewClass("Defmethod",C_Defclaire,C_claire)
   Core.F_close_slot(C_Defmethod.AddSlot(C_arg,ToType(C_Call.Id()),CNULL))
   Core.F_close_slot(C_Defmethod.AddSlot(C_iClaire_set_arg,ToType(C_any.Id()),CNULL))
   Core.F_close_slot(C_Defmethod.AddSlot(C_body,ToType(C_any.Id()),CNULL))
@@ -2012,11 +2012,11 @@ func MetaLoad() {
   
   _ = Core.F_attach_method(C_self_print.AddMethod(Signature(C_Defmethod.Id(),C_void.Id()),1,MakeFunction1(E_self_print_Defmethod_Language,"self_print_Defmethod_Language")),MakeString("define.cl:88"))
   
-  C_Defarray = MakeClass("Defarray",C_Defmethod,C_claire)
+  C_Defarray = NewClass("Defarray",C_Defmethod,C_claire)
   
   _ = Core.F_attach_method(C_self_print.AddMethod(Signature(C_Defarray.Id(),C_void.Id()),1,MakeFunction1(E_self_print_Defarray_Language,"self_print_Defarray_Language")),MakeString("define.cl:97"))
   
-  C_Defrule = MakeClass("Defrule",C_Defclaire,C_claire)
+  C_Defrule = NewClass("Defrule",C_Defclaire,C_claire)
   Core.F_close_slot(C_Defrule.AddSlot(C_iClaire_ident,ToType(C_symbol.Id()),CNULL))
   Core.F_close_slot(C_Defrule.AddSlot(C_args,ToType(C_list.Id()),ToType(C_any.Id()).EmptyList().Id()))
   Core.F_close_slot(C_Defrule.AddSlot(C_arg,ToType(C_any.Id()),CNULL))
@@ -2024,7 +2024,7 @@ func MetaLoad() {
   
   _ = Core.F_attach_method(C_self_print.AddMethod(Signature(C_Defrule.Id(),C_void.Id()),1,MakeFunction1(E_self_print_Defrule_Language,"self_print_Defrule_Language")),MakeString("define.cl:105"))
   
-  C_Defvar = MakeClass("Defvar",C_Defclaire,C_claire)
+  C_Defvar = NewClass("Defvar",C_Defclaire,C_claire)
   Core.F_close_slot(C_Defvar.AddSlot(C_iClaire_ident,ToType(C_Variable.Id()),CNULL))
   Core.F_close_slot(C_Defvar.AddSlot(C_arg,ToType(C_any.Id()),CNULL))
   
@@ -2052,7 +2052,7 @@ func MetaLoad() {
       _CL_obj = C_LDEF
       _CL_obj.Range = ToType(C_any.Id())
       _CL_obj.Value = ToType(CEMPTY.Id()).EmptyList().Id()
-      expr = _CL_obj.Close()
+      expr = Core.F_close_global_variable(_CL_obj)
       } 
     ErrorCheck(expr)} 
   
@@ -2094,7 +2094,7 @@ func MetaLoad() {
   
   _ = Core.F_attach_method(Core.C_self_eval.AddEvalMethod(Signature(C_Defarray.Id(),C_any.Id()),1,MakeFunction1(E_self_eval_Defarray,"self_eval_Defarray"),EVAL_Defarray),MakeString("define.cl:506"))
   
-  C_Language_demon = MakeClass("demon",C_lambda,It)
+  C_Language_demon = NewClass("demon",C_lambda,It)
   Core.F_close_slot(C_Language_demon.AddSlot(C_mClaire_pname,ToType(C_symbol.Id()),Core.F_symbol_I_string2(MakeString("unamed")).Id()))
   Core.F_close_slot(C_Language_demon.AddSlot(C_Language_priority,ToType(C_integer.Id()),MakeInteger(0).Id()))
   Core.F_close_slot(C_Language_demon.AddSlot(C_formula,ToType(C_lambda.Id()),CNULL))
@@ -2123,7 +2123,7 @@ func MetaLoad() {
   C__inf_dash = ToOperation(new(ClaireOperation).IsNamed(C_operation,MakeSymbol("<-",C_claire)))
   
   
-  C_Language_rule_object = MakeClass("rule_object",C_property,It)
+  C_Language_rule_object = NewClass("rule_object",C_property,It)
   
   C_Language_relations = ToTable(new(ClaireTable).IsNamed(C_table,MakeSymbol("relations",It)))
   C_Language_relations.Multivalued_ask = CTRUE

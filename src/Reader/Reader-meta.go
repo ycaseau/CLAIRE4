@@ -1,5 +1,5 @@
 /***** CLAIRE Compilation of module Reader.cl 
-         [version 4.0.07 / safety 5] Sunday 01-01-2023 08:49:38 *****/
+         [version 4.0.08 / safety 5] Sunday 03-12-2023 14:47:34 *****/
 
 package Reader
 import (_ "fmt"
@@ -211,6 +211,33 @@ var C_Kernel_call_count *ClaireProperty // Kernel/"call_count"
 var C_Reader_last_arrow *ClaireProperty // Reader/"last_arrow"
 var C_Reader_s_properties *ClaireProperty // Reader/"s_properties"
 var C_Reader_extended_operator *ClaireProperty // Reader/"extended_operator"
+var C_Reader_debugLoop *ClaireProperty // Reader/"debugLoop"
+var C_Reader_readbracket *ClaireProperty // Reader/"readbracket"
+var C_Reader_readmap *ClaireProperty // Reader/"readmap"
+var C_Reader_revVar *ClaireProperty // Reader/"revVar"
+var C_Reader_readList *ClaireProperty // Reader/"readList"
+var C_Reader_readlambda *ClaireProperty // Reader/"readlambda"
+var C_Reader_s_index *ClaireProperty // Reader/"s_index"
+var C_Reader_fromp *ClaireProperty // Reader/"fromp"
+var C_Reader_nb_line *ClaireProperty // Reader/"nb_line"
+var C_Reader_firstc *ClaireProperty // Reader/"firstc"
+var C_Reader_last_form *ClaireProperty // Reader/"last_form"
+var C_Reader_maxstack *ClaireProperty // Reader/"maxstack"
+var C_Reader_toplevel *ClaireProperty // Reader/"toplevel"
+var C_Reader_eof *ClaireProperty // Reader/"eof"
+var C_Reader_space *ClaireProperty // Reader/"space"
+var C_Reader_tab *ClaireProperty // Reader/"tab"
+var C_Reader_bracket *ClaireProperty // Reader/"bracket"
+var C_Reader_paren *ClaireProperty // Reader/"paren"
+var C_Reader_comma *ClaireProperty // Reader/"comma"
+var C_Reader_curly *ClaireProperty // Reader/"curly"
+var C_Reader_next *ClaireProperty // Reader/"next"
+var C_Reader_keyword_ask *ClaireProperty // Reader/"keyword?"
+var C_Reader_stop_ask *ClaireProperty // Reader/"stop?"
+var C_Reader_nextunit *ClaireProperty // Reader/"nextunit"
+var C_Reader_nexts *ClaireProperty // Reader/"nexts"
+var C_Reader_loopexp *ClaireProperty // Reader/"loopexp"
+var C_Reader_nexte *ClaireProperty // Reader/"nexte"
 var C_sqr *ClaireProperty // claire/"sqr"
 var C_Reader_m_index *ClaireProperty // Reader/"m_index"
 var C_Reader_sum_value *ClaireProperty // Reader/"sum_value"
@@ -249,40 +276,13 @@ var C_logMeasure *ClaireProperty // claire/"logMeasure"
 var C_addLog *ClaireProperty // claire/"addLog"
 var C_Reader_simple_main *ClaireProperty // Reader/"simple_main"
 var C_Reader_top_level *ClaireProperty // Reader/"top_level"
-var C_Reader_debugLoop *ClaireProperty // Reader/"debugLoop"
-var C_Reader_readbracket *ClaireProperty // Reader/"readbracket"
-var C_Reader_readmap *ClaireProperty // Reader/"readmap"
-var C_Reader_revVar *ClaireProperty // Reader/"revVar"
-var C_Reader_readList *ClaireProperty // Reader/"readList"
-var C_Reader_readlambda *ClaireProperty // Reader/"readlambda"
-var C_Reader_s_index *ClaireProperty // Reader/"s_index"
-var C_Reader_fromp *ClaireProperty // Reader/"fromp"
-var C_Reader_nb_line *ClaireProperty // Reader/"nb_line"
-var C_Reader_firstc *ClaireProperty // Reader/"firstc"
-var C_Reader_last_form *ClaireProperty // Reader/"last_form"
-var C_Reader_maxstack *ClaireProperty // Reader/"maxstack"
-var C_Reader_toplevel *ClaireProperty // Reader/"toplevel"
-var C_Reader_eof *ClaireProperty // Reader/"eof"
-var C_Reader_space *ClaireProperty // Reader/"space"
-var C_Reader_tab *ClaireProperty // Reader/"tab"
-var C_Reader_bracket *ClaireProperty // Reader/"bracket"
-var C_Reader_paren *ClaireProperty // Reader/"paren"
-var C_Reader_comma *ClaireProperty // Reader/"comma"
-var C_Reader_curly *ClaireProperty // Reader/"curly"
-var C_Reader_next *ClaireProperty // Reader/"next"
-var C_Reader_keyword_ask *ClaireProperty // Reader/"keyword?"
-var C_Reader_stop_ask *ClaireProperty // Reader/"stop?"
-var C_Reader_nextunit *ClaireProperty // Reader/"nextunit"
-var C_Reader_nexts *ClaireProperty // Reader/"nexts"
-var C_Reader_loopexp *ClaireProperty // Reader/"loopexp"
-var C_Reader_nexte *ClaireProperty // Reader/"nexte"
 var It *ClaireModule
 
 // definition of the meta-model for module Reader 
 func MetaLoad() { 
   
   It = MakeModule("Reader",Language.C_iClaire)
-  It.Comment = MakeString("Compiled on Sunday 01-01-2023 08:49:38(v4.0.07), lines:1784, warnings:3,safety:5")
+  It.Comment = MakeString("Compiled on Sunday 03-12-2023 14:47:34(v4.0.08), lines:1784, warnings:3,safety:5")
   ClEnv.Module_I = It
   
   // definition of the properties
@@ -328,6 +328,33 @@ func MetaLoad() {
   C_Reader_last_arrow = MakeProperty("last_arrow",2,It)
   C_Reader_s_properties = MakeProperty("s_properties",1,It)
   C_Reader_extended_operator = MakeProperty("extended_operator",1,It)
+  C_Reader_debugLoop = MakeProperty("debugLoop",1,It)
+  C_Reader_readbracket = MakeProperty("readbracket",1,It)
+  C_Reader_readmap = MakeProperty("readmap",1,It)
+  C_Reader_revVar = MakeProperty("revVar",1,It)
+  C_Reader_readList = MakeProperty("readList",1,It)
+  C_Reader_readlambda = MakeProperty("readlambda",1,It)
+  C_Reader_s_index = MakeProperty("s_index",1,It)
+  C_Reader_fromp = MakeProperty("fromp",1,It)
+  C_Reader_nb_line = MakeProperty("nb_line",1,It)
+  C_Reader_firstc = MakeProperty("firstc",1,It)
+  C_Reader_last_form = MakeProperty("last_form",1,It)
+  C_Reader_maxstack = MakeProperty("maxstack",1,It)
+  C_Reader_toplevel = MakeProperty("toplevel",1,It)
+  C_Reader_eof = MakeProperty("eof",1,It)
+  C_Reader_space = MakeProperty("space",1,It)
+  C_Reader_tab = MakeProperty("tab",1,It)
+  C_Reader_bracket = MakeProperty("bracket",1,It)
+  C_Reader_paren = MakeProperty("paren",1,It)
+  C_Reader_comma = MakeProperty("comma",1,It)
+  C_Reader_curly = MakeProperty("curly",1,It)
+  C_Reader_next = MakeProperty("next",1,It)
+  C_Reader_keyword_ask = MakeProperty("keyword?",1,It)
+  C_Reader_stop_ask = MakeProperty("stop?",1,It)
+  C_Reader_nextunit = MakeProperty("nextunit",1,It)
+  C_Reader_nexts = MakeProperty("nexts",1,It)
+  C_Reader_loopexp = MakeProperty("loopexp",1,It)
+  C_Reader_nexte = MakeProperty("nexte",1,It)
   C_sqr = MakeProperty("sqr",1,C_claire)
   C_Reader_m_index = MakeProperty("m_index",1,It)
   C_Reader_sum_value = MakeProperty("sum_value",1,It)
@@ -366,36 +393,9 @@ func MetaLoad() {
   C_addLog = MakeProperty("addLog",1,C_claire)
   C_Reader_simple_main = MakeProperty("simple_main",1,It)
   C_Reader_top_level = MakeProperty("top_level",1,It)
-  C_Reader_debugLoop = MakeProperty("debugLoop",1,It)
-  C_Reader_readbracket = MakeProperty("readbracket",1,It)
-  C_Reader_readmap = MakeProperty("readmap",1,It)
-  C_Reader_revVar = MakeProperty("revVar",1,It)
-  C_Reader_readList = MakeProperty("readList",1,It)
-  C_Reader_readlambda = MakeProperty("readlambda",1,It)
-  C_Reader_s_index = MakeProperty("s_index",1,It)
-  C_Reader_fromp = MakeProperty("fromp",1,It)
-  C_Reader_nb_line = MakeProperty("nb_line",1,It)
-  C_Reader_firstc = MakeProperty("firstc",1,It)
-  C_Reader_last_form = MakeProperty("last_form",1,It)
-  C_Reader_maxstack = MakeProperty("maxstack",1,It)
-  C_Reader_toplevel = MakeProperty("toplevel",1,It)
-  C_Reader_eof = MakeProperty("eof",1,It)
-  C_Reader_space = MakeProperty("space",1,It)
-  C_Reader_tab = MakeProperty("tab",1,It)
-  C_Reader_bracket = MakeProperty("bracket",1,It)
-  C_Reader_paren = MakeProperty("paren",1,It)
-  C_Reader_comma = MakeProperty("comma",1,It)
-  C_Reader_curly = MakeProperty("curly",1,It)
-  C_Reader_next = MakeProperty("next",1,It)
-  C_Reader_keyword_ask = MakeProperty("keyword?",1,It)
-  C_Reader_stop_ask = MakeProperty("stop?",1,It)
-  C_Reader_nextunit = MakeProperty("nextunit",1,It)
-  C_Reader_nexts = MakeProperty("nexts",1,It)
-  C_Reader_loopexp = MakeProperty("loopexp",1,It)
-  C_Reader_nexte = MakeProperty("nexte",1,It)
   
   // instructions from module sources
-  C_delimiter = MakeClass("delimiter",Core.C_global_variable,C_claire)
+  C_delimiter = NewClass("delimiter",Core.C_global_variable,C_claire)
   
   { 
     var expr EID
@@ -414,7 +414,7 @@ func MetaLoad() {
           } 
         va_arg1.Value = va_arg2
         } 
-      expr = _CL_obj.Close()
+      expr = Core.F_close_global_variable(_CL_obj)
       } 
     ErrorCheck(expr)} 
   
@@ -437,11 +437,11 @@ func MetaLoad() {
           } 
         va_arg1.Value = va_arg2
         } 
-      expr = _CL_obj.Close()
+      expr = Core.F_close_global_variable(_CL_obj)
       } 
     ErrorCheck(expr)} 
   
-  C_reserved_keyword = MakeClass("reserved_keyword",C_keyword,C_claire)
+  C_reserved_keyword = NewClass("reserved_keyword",C_keyword,C_claire)
   
   C_else = ToReservedKeyword(new(ReservedKeyword).IsNamed(C_reserved_keyword,MakeSymbol("else",C_claire)))
   
@@ -544,7 +544,7 @@ func MetaLoad() {
   C_known_I = MakeProperty("known!",2,C_claire)
   
   
-  C_meta_reader = MakeClass("meta_reader",C_thing,C_claire)
+  C_meta_reader = NewClass("meta_reader",C_thing,C_claire)
   Core.F_close_slot(C_meta_reader.AddSlot(C_source,ToType(C_string.Id()),CNULL))
   Core.F_close_slot(C_meta_reader.AddSlot(C_Reader_s_index,ToType(C_integer.Id()),MakeInteger(0).Id()))
   Core.F_close_slot(C_meta_reader.AddSlot(C_Reader_fromp,ToType(C_port.Id()),CNULL))
@@ -562,13 +562,13 @@ func MetaLoad() {
   Core.F_close_slot(C_meta_reader.AddSlot(C_Reader_comma,ToType(C_any.Id()),CNULL))
   Core.F_close_slot(C_meta_reader.AddSlot(C_Reader_curly,ToType(C_any.Id()),CNULL))
   Core.F_close_slot(C_meta_reader.AddSlot(C_Reader_last_arrow,ToType(C_boolean.Id()),CFALSE.Id()))
-  Core.F_close_slot(C_meta_reader.AddSlot(C_Reader_s_properties,Core.F_nth_class1(C_set,ToType(C_property.Id())),MakeSet(ToType(C_property.Id()),C_final.Id(),
+  Core.F_close_slot(C_meta_reader.AddSlot(C_Reader_s_properties,Core.F_nth_class1(C_set,ToType(C_property.Id())),MakeSet(ToType(C_property.Id()),Core.C_reify.Id(),
+    C_final.Id(),
     C_abstract.Id(),
     C_ephemeral.Id(),
     C_store.Id(),
     C_begin.Id(),
     C_end.Id(),
-    Core.C_reify.Id(),
     C_known_I.Id()).Id()))
   
   _ = Core.F_attach_method(C_Reader_next.AddMethod(Signature(C_meta_reader.Id(),C_void.Id()),0,MakeFunction1(E_next_meta_reader,"next_meta_reader")),MakeString("read.cl:102"))
@@ -585,7 +585,7 @@ func MetaLoad() {
       _CL_obj = C_AND
       _CL_obj.Range = ToType(C_any.Id())
       _CL_obj.Value = Core.C__and.Id()
-      expr = _CL_obj.Close()
+      expr = Core.F_close_global_variable(_CL_obj)
       } 
     ErrorCheck(expr)} 
   
@@ -610,7 +610,7 @@ func MetaLoad() {
         }
         } 
       if !ErrorIn(expr) {
-      expr = _CL_obj.Close()
+      expr = Core.F_close_global_variable(_CL_obj)
       }
       } 
     ErrorCheck(expr)} 
@@ -861,7 +861,7 @@ func MetaLoad() {
       _CL_obj = C_stdout
       _CL_obj.Range = ToType(C_port.Id())
       _CL_obj.Value = ClEnv.Cout.Id()
-      expr = _CL_obj.Close()
+      expr = Core.F_close_global_variable(_CL_obj)
       } 
     ErrorCheck(expr)} 
   
@@ -875,7 +875,7 @@ func MetaLoad() {
       _CL_obj = C_stdin
       _CL_obj.Range = ToType(C_port.Id())
       _CL_obj.Value = ClEnv.Cin.Id()
-      expr = _CL_obj.Close()
+      expr = Core.F_close_global_variable(_CL_obj)
       } 
     ErrorCheck(expr)} 
   
@@ -887,7 +887,7 @@ func MetaLoad() {
       _CL_obj = C__starfs_star
       _CL_obj.Range = ToType(C_string.Id())
       _CL_obj.Value = (ClEnv.FileSeparator()).Id()
-      expr = _CL_obj.Close()
+      expr = Core.F_close_global_variable(_CL_obj)
       } 
     ErrorCheck(expr)} 
   
@@ -1051,7 +1051,7 @@ func MetaLoad() {
       _CL_obj = C__starlast_star
       _CL_obj.Range = ToType(C_any.Id())
       _CL_obj.Value = CNULL
-      expr = _CL_obj.Close()
+      expr = Core.F_close_global_variable(_CL_obj)
       } 
     ErrorCheck(expr)} 
   
@@ -1063,7 +1063,7 @@ func MetaLoad() {
       _CL_obj = C__starindex_star
       _CL_obj.Range = ToType(C_integer.Id())
       _CL_obj.Value = CNULL
-      expr = _CL_obj.Close()
+      expr = Core.F_close_global_variable(_CL_obj)
       } 
     ErrorCheck(expr)} 
   
@@ -1075,7 +1075,7 @@ func MetaLoad() {
       _CL_obj = C__starmaxd_star
       _CL_obj.Range = ToType(C_integer.Id())
       _CL_obj.Value = CNULL
-      expr = _CL_obj.Close()
+      expr = Core.F_close_global_variable(_CL_obj)
       } 
     ErrorCheck(expr)} 
   
@@ -1087,7 +1087,7 @@ func MetaLoad() {
       _CL_obj = C__starcurd_star
       _CL_obj.Range = ToType(C_integer.Id())
       _CL_obj.Value = MakeInteger(0).Id()
-      expr = _CL_obj.Close()
+      expr = Core.F_close_global_variable(_CL_obj)
       } 
     ErrorCheck(expr)} 
   
@@ -1099,7 +1099,7 @@ func MetaLoad() {
       _CL_obj = C__starshowall_star
       _CL_obj.Range = ToType(C_boolean.Id())
       _CL_obj.Value = CTRUE.Id()
-      expr = _CL_obj.Close()
+      expr = Core.F_close_global_variable(_CL_obj)
       } 
     ErrorCheck(expr)} 
   
@@ -1113,7 +1113,7 @@ func MetaLoad() {
       _CL_obj = C_Reader_InspectStack
       _CL_obj.Range = ToType(C_list.Id())
       _CL_obj.Value = CNIL.Id()
-      expr = _CL_obj.Close()
+      expr = Core.F_close_global_variable(_CL_obj)
       } 
     ErrorCheck(expr)} 
   
@@ -1125,7 +1125,7 @@ func MetaLoad() {
       _CL_obj = C_Reader_TopLevelMode
       _CL_obj.Range = ToType(C_integer.Id())
       _CL_obj.Value = MakeInteger(1).Id()
-      expr = _CL_obj.Close()
+      expr = Core.F_close_global_variable(_CL_obj)
       } 
     ErrorCheck(expr)} 
   
@@ -1137,7 +1137,7 @@ func MetaLoad() {
       _CL_obj = C_Reader_TopCount
       _CL_obj.Range = ToType(C_integer.Id())
       _CL_obj.Value = MakeInteger(0).Id()
-      expr = _CL_obj.Close()
+      expr = Core.F_close_global_variable(_CL_obj)
       } 
     ErrorCheck(expr)} 
   
@@ -1149,7 +1149,7 @@ func MetaLoad() {
       _CL_obj = C_Reader_TopIndex
       _CL_obj.Range = ToType(C_integer.Id())
       _CL_obj.Value = MakeInteger(0).Id()
-      expr = _CL_obj.Close()
+      expr = Core.F_close_global_variable(_CL_obj)
       } 
     ErrorCheck(expr)} 
   
@@ -1161,7 +1161,7 @@ func MetaLoad() {
       _CL_obj = C_Reader_TopBase
       _CL_obj.Range = ToType(C_integer.Id())
       _CL_obj.Value = MakeInteger(0).Id()
-      expr = _CL_obj.Close()
+      expr = Core.F_close_global_variable(_CL_obj)
       } 
     ErrorCheck(expr)} 
   
@@ -1173,7 +1173,7 @@ func MetaLoad() {
       _CL_obj = C_Reader_TopDebug
       _CL_obj.Range = ToType(C_integer.Id())
       _CL_obj.Value = MakeInteger(0).Id()
-      expr = _CL_obj.Close()
+      expr = Core.F_close_global_variable(_CL_obj)
       } 
     ErrorCheck(expr)} 
   
@@ -1241,7 +1241,7 @@ func MetaLoad() {
   
   _ = Core.F_attach_method(C_Reader_closure_build.AddMethod(Signature(C_any.Id(),C_list.Id(),C_void.Id()),0,MakeFunction2(E_closure_build_any,"closure_build_any")),MakeString("inspect.cl:403"))
   
-  C_measure = MakeClass("measure",C_object,C_claire)
+  C_measure = NewClass("measure",C_object,C_claire)
   Core.F_close_slot(C_measure.AddSlot(C_Reader_m_index,ToType(C_integer.Id()),MakeInteger(1).Id()))
   Core.F_close_slot(C_measure.AddSlot(C_Reader_sum_value,ToType(C_float.Id()),MakeFloat(0).Id()))
   Core.F_close_slot(C_measure.AddSlot(C_Reader_sum_square,ToType(C_float.Id()),MakeFloat(0).Id()))

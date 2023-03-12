@@ -212,7 +212,7 @@ unfold_eid(ldef:list,self:any,s:class, v:any,err:boolean,loop:any) : void
                                     g_eid_expression(x.args[2],object,lvar),
                                     eid_expression(x.args[3],EID,lvar))
                      else if  (x.arg.selector = nth_write)
-                          printf("~I.WriteEID(~I,~I)",g_eid_expression(x.args[1],list),
+                          printf("~I.WriteEID(~I,~I)",g_eid_expression(x.args[1],list,lvar),
                                     g_eid_expression(x.args[2],integer,lvar),
                                     eid_expression(x.args[3],EID,lvar))
                       else  printf("~I.WriteEID(~I)",g_eid_expression(x.args[1],Variable,lvar),

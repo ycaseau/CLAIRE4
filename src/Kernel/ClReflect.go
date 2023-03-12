@@ -1084,6 +1084,7 @@ func BootMethod() {
 	C_of = makeProperty("of")
 	C_mClaire_restore_state = makeMicroProperty("restore_state")
 	C_abort = makeProperty("abort")
+	C_reboot = makeProperty("reboot")
 	C_defined = makeProperty("defined")
 	C_fopen = makeProperty("fopen")
 	C_empty_list = makeProperty("empty_list")
@@ -1421,7 +1422,7 @@ func (p *ClaireProperty) WriteEID(x *ClaireObject, y EID) EID {
 			    return Cerror(17,ANY(y),ToSlot(r.Id()).Range.Id())} }
 }
 
-// this method is accessible from CLAIRE
+// this method is accessible from CLAIRE interpreter
 func E_write_fast_property(p EID, x EID, y EID) EID {
 	return ToProperty(OBJ(p)).WriteEID(ToObject(OBJ(x)), y)
 }

@@ -1,5 +1,5 @@
 /***** CLAIRE Compilation of file /Users/ycaseau/Dropbox/src/clairev4.07/src/compile/gomain.cl 
-         [version 4.0.07 / safety 5] Sunday 01-01-2023 17:08:27 *****/
+         [version 4.0.08 / safety 5] Sunday 03-12-2023 14:47:37 *****/
 
 package Generate
 import (_ "fmt"
@@ -11,7 +11,7 @@ import (_ "fmt"
 )
 
 //-------- dumb function to prevent import errors --------
-func import_g0214() { 
+func import_g0210() { 
     _ = Core.It
     _ = Language.It
     _ = Reader.It
@@ -61,8 +61,8 @@ func F_Generate_string2module_string (s *ClaireString) EID {
     var Result EID
     { var m *ClaireAny = F_value_string(s)
       if (m.Isa.IsIn(C_module) == CTRUE) { 
-        { var g0215 *ClaireModule = ToModule(m)
-          Result = EID{g0215.Id(),0}
+        { var g0211 *ClaireModule = ToModule(m)
+          Result = EID{g0211.Id(),0}
           } 
         } else {
         Result = ToException(Core.C_general_error.Make(MakeString("~A is not a module").Id(),MakeConstantList((s).Id()).Id())).Close()
@@ -866,7 +866,7 @@ func E_Generate_main_function_module (m EID,l_used EID,_Zmain EID) EID {
 /* The go function for: compile_dir(m:module) [status=0] */
 func F_Generate_compile_dir_module (m *ClaireModule) EID { 
     var Result EID
-    { var s *ClaireString = Reader.F__7_string(Reader.F__7_string(F_append_string(MakeString("mkdir -p "),Optimize.F_home_void()),MakeString("go/src")),F_Generate_capitalize_string(m.Name.String_I()))
+    { var s *ClaireString = Reader.F__7_string(Reader.F__7_string(Reader.F__7_string(F_append_string(MakeString("mkdir -p "),Optimize.F_home_void()),MakeString("go")),MakeString("src")),F_Generate_capitalize_string(m.Name.String_I()))
       if (Optimize.F_home_void().Value == MakeString("").Value) { 
         Result = ToException(Core.C_general_error.Make(MakeString("the environment variable CLAIRE_HOME is undefined\n").Id(),CNIL.Id())).Close()
         } else {

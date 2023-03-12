@@ -1,5 +1,5 @@
 /***** CLAIRE Compilation of file /Users/ycaseau/Dropbox/src/clairev4.07/src/compile/gogen.cl 
-         [version 4.0.07 / safety 5] Sunday 01-01-2023 17:08:27 *****/
+         [version 4.0.08 / safety 5] Sunday 03-12-2023 14:47:37 *****/
 
 package Generate
 import (_ "fmt"
@@ -598,7 +598,7 @@ func F_Generate_goMethod_ask_any (m *ClaireAny) *ClaireBoolean {
                                             } 
                                           } 
                                         } else {
-                                        arg_2 = MakeBoolean((g0045.Selector.Name.Defined().Id() == C_Kernel.Id()) && (m2.Module_I.Id() == C_Kernel.Id()))
+                                        arg_2 = MakeBoolean((g0045.Selector.Name.Defined().Id() == C_Kernel.Id()) && (g0045.Module_I.Id() == C_Kernel.Id()))
                                         } 
                                       g0049I = arg_2.Not
                                       } 
@@ -719,7 +719,7 @@ func F_dMethod_ask_any (m *ClaireAny) EID {
                           } 
                         } 
                       } else {
-                      try_11 = EID{CTRUE.Id(),0}
+                      try_11 = EID{MakeBoolean((ToSymbol(OBJ(Core.F_CALL(C_name,ARGS(Core.F_CALL(C_selector,ARGS(m.ToEID())))))).Defined().Id() == C_Kernel.Id()) && (ANY(Core.F_CALL(C_module_I,ARGS(m.ToEID()))) == C_Kernel.Id())).Id(),0}
                       } 
                     }
                     if ErrorIn(try_11) {try_9 = try_11
@@ -771,6 +771,7 @@ func F_dMethod_ask_any (m *ClaireAny) EID {
 func E_dMethod_ask_any (m EID) EID { 
     return F_dMethod_ask_any(ANY(m) )} 
   
+// we make an exception for Kernel methods
 // same argument types for all restrictions, excluding the range (that is included in go_signature)
 /* The go function for: arg_match(l1:list<class>,l2:list<class>) [status=0] */
 func F_Generate_arg_match_list (l1 *ClaireList,l2 *ClaireList) *ClaireBoolean { 

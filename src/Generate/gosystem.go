@@ -1,5 +1,5 @@
 /***** CLAIRE Compilation of file /Users/ycaseau/Dropbox/src/clairev4.07/src/compile/gosystem.cl 
-         [version 4.0.07 / safety 5] Sunday 01-01-2023 17:08:27 *****/
+         [version 4.0.08 / safety 5] Sunday 03-12-2023 14:47:37 *****/
 
 package Generate
 import (_ "fmt"
@@ -420,31 +420,21 @@ func (p *GenerateGoProducer) Compile (m *ClaireModule) EID {
         Core.F_tformat_string(MakeString("~S should be declared for ~S \n"),1,MakeConstantList(l1.Id(),m.Id()))
         } 
       { var arg_2 *ClaireList
-        var try_3 EID
         { 
           var v_bag_arg *ClaireAny
-          try_3= EID{ToType(CEMPTY.Id()).EmptyList().Id(),0}
-          ToList(OBJ(try_3)).AddFast(m.Id())
-          ToList(OBJ(try_3)).AddFast(MakeInteger(Optimize.C_compiler.NLoc).Id())
-          ToList(OBJ(try_3)).AddFast(MakeInteger(Optimize.C_compiler.NWarnings).Id())
-          ToList(OBJ(try_3)).AddFast(MakeInteger(Optimize.C_compiler.NNotes).Id())
-          ToList(OBJ(try_3)).AddFast(MakeInteger(Optimize.C_compiler.NDynamic).Id())
-          var try_4 EID
+          arg_2= ToType(CEMPTY.Id()).EmptyList()
+          arg_2.AddFast(m.Id())
+          arg_2.AddFast(MakeInteger(Optimize.C_compiler.NLoc).Id())
+          arg_2.AddFast(MakeInteger(Optimize.C_compiler.NWarnings).Id())
+          arg_2.AddFast(MakeInteger(Optimize.C_compiler.NNotes).Id())
+          arg_2.AddFast(MakeInteger(Optimize.C_compiler.NDynamic).Id())
           if (Optimize.C_compiler.NMethods == 0) { 
-            try_4 = EID{C__INT,IVAL(0)}
+            v_bag_arg = MakeInteger(0).Id()
             } else {
-            try_4 = EID{C__INT,IVAL(((100*Optimize.C_compiler.NMetheids)/Optimize.C_compiler.NMethods))}
+            v_bag_arg = MakeInteger(((100*Optimize.C_compiler.NMetheids)/Optimize.C_compiler.NMethods)).Id()
             } 
-          if ErrorIn(try_4) {try_3 = try_4
-          } else {
-          v_bag_arg = ANY(try_4)
-          ToList(OBJ(try_3)).AddFast(v_bag_arg)}
-          } 
-        if ErrorIn(try_3) {Result = try_3
-        } else {
-        arg_2 = ToList(OBJ(try_3))
+          arg_2.AddFast(v_bag_arg)} 
         Result = Core.F_tformat_string(MakeString("~S: ~A lines of code compiled. ~A warnings, ~A notes. ~A dynamic calls, ~A% exception-ready methods\n"),1,arg_2)
-        }
         } 
       }}}
       } 

@@ -1142,6 +1142,7 @@ var C_osname *ClaireProperty
 var C_file_separator *ClaireProperty
 var C_stat *ClaireProperty
 var C_hash *ClaireProperty
+var C_reboot *ClaireProperty
 	
 // operations
 var C_add *ClaireOperation

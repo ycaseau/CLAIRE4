@@ -1,5 +1,5 @@
 /***** CLAIRE Compilation of file /Users/ycaseau/Dropbox/src/clairev4.07/src/meta/file.cl 
-         [version 4.0.07 / safety 5] Sunday 01-01-2023 08:49:38 *****/
+         [version 4.0.08 / safety 5] Sunday 03-12-2023 14:47:34 *****/
 
 package Reader
 import (_ "fmt"
@@ -1215,8 +1215,8 @@ func E_known_ask_table (a EID,x EID) EID {
   
 /* The go function for: unknown?(a:table,x:any) [status=0] */
 func F_unknown_ask_table (a *ClaireTable,x *ClaireAny) *ClaireBoolean { 
-    return  Equal(Core.F_get_table(a,x),CNULL)
-    } 
+    if (Core.F_get_table(a,x) == CNULL) {return CTRUE
+    } else {return CFALSE}} 
   
 // The EID go function for: unknown? @ table (throw: false) 
 func E_unknown_ask_table (a EID,x EID) EID { 
