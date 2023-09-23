@@ -1,5 +1,5 @@
-/***** CLAIRE Compilation of file /Users/ycaseau/Dropbox/src/clairev4.07/src/compile/gostat.cl 
-         [version 4.0.08 / safety 5] Sunday 03-12-2023 14:47:37 *****/
+/***** CLAIRE Compilation of file /Users/ycaseau/Dropbox/src/clairev4.10/src/compile/gostat.cl 
+         [version 4.1 / safety 5] Saturday 09-23-2023 07:22:33 *****/
 
 package Generate
 import (_ "fmt"
@@ -22,7 +22,7 @@ func import_g0135() {
 //+-------------------------------------------------------------+
 //| CLAIRE                                                      |
 //| gostat.cl                                                   |
-//| Copyright (C) 2020-2021   Yves Caseau. All Rights Reserved  |
+//| Copyright (C) 2020-2023   Yves Caseau. All Rights Reserved  |
 //| cf. copyright info in file object.cl: about()               |
 //+-------------------------------------------------------------+
 // statement is implemented as a general method that calls a restriction
@@ -2682,14 +2682,21 @@ func F_Generate_g_statement_Iteration (self *Language.Iteration,s *ClaireClass,v
                 
                 F_Generate_new_block_string(MakeString("Iteration"))
                 F_Generate_var_declaration_string(vlist,bag_type,1)
-                F_Generate_var_declaration_string(v2,v2_range,1)
+                { var arg_6 int
+                  if (Language.F_Language_occurexact_any(self.Arg,self.ClaireVar) < 1) { 
+                    arg_6 = 2
+                    } else {
+                    arg_6 = 1
+                    } 
+                  F_Generate_var_declaration_string(v2,v2_range,arg_6)
+                  } 
                 F_Generate_var_declaration_string(vlocal,C_any,1)
                 var g0184I *ClaireBoolean
-                var try_6 EID
-                try_6 = Optimize.F_Compile_g_throw_any(self.SetArg)
-                if ErrorIn(try_6) {Result = try_6
+                var try_7 EID
+                try_7 = Optimize.F_Compile_g_throw_any(self.SetArg)
+                if ErrorIn(try_7) {Result = try_7
                 } else {
-                g0184I = ToBoolean(OBJ(try_6))
+                g0184I = ToBoolean(OBJ(try_7))
                 if (g0184I == CTRUE) { 
                   try_count = (try_count+1)
                   Result = Core.F_CALL(C_Generate_g_try,ARGS(self.SetArg.ToEID(),
@@ -2708,13 +2715,13 @@ func F_Generate_g_statement_Iteration (self *Language.Iteration,s *ClaireClass,v
                 if !ErrorIn(Result) {
                 PRINC("CreateList(")
                 if (Core.F_get_property(C_of,ToObject(self.Id())) != CNULL) { 
-                  { var arg_7 *ClaireAny
-                    var try_8 EID
-                    try_8 = Core.F_CALL(Optimize.C_c_code,ARGS(Core.F_CALL(C_of,ARGS(EID{self.Id(),0})),EID{C_type.Id(),0}))
-                    if ErrorIn(try_8) {Result = try_8
+                  { var arg_8 *ClaireAny
+                    var try_9 EID
+                    try_9 = Core.F_CALL(Optimize.C_c_code,ARGS(Core.F_CALL(C_of,ARGS(EID{self.Id(),0})),EID{C_type.Id(),0}))
+                    if ErrorIn(try_9) {Result = try_9
                     } else {
-                    arg_7 = ANY(try_8)
-                    Result = Core.F_CALL(C_Generate_g_expression,ARGS(arg_7.ToEID(),EID{C_type.Id(),0}))
+                    arg_8 = ANY(try_9)
+                    Result = Core.F_CALL(C_Generate_g_expression,ARGS(arg_8.ToEID(),EID{C_type.Id(),0}))
                     }
                     } 
                   } else {
@@ -2748,11 +2755,11 @@ func F_Generate_g_statement_Iteration (self *Language.Iteration,s *ClaireClass,v
                 }
                 if !ErrorIn(Result) {
                 var g0185I *ClaireBoolean
-                var try_9 EID
-                try_9 = Optimize.F_Compile_g_throw_any(self.Arg)
-                if ErrorIn(try_9) {Result = try_9
+                var try_10 EID
+                try_10 = Optimize.F_Compile_g_throw_any(self.Arg)
+                if ErrorIn(try_10) {Result = try_10
                 } else {
-                g0185I = ToBoolean(OBJ(try_9))
+                g0185I = ToBoolean(OBJ(try_10))
                 if (g0185I == CTRUE) { 
                   try_count = (try_count+1)
                   Result = Core.F_CALL(C_Generate_g_try,ARGS(self.Arg.ToEID(),
@@ -4222,118 +4229,47 @@ func F_Generate_update_statement_Update (self *Language.Update,s *ClaireClass) E
                     }}}
                     } else {
                     var g0207I *ClaireBoolean
-                    var try_20 EID
                     if (x.Isa.IsIn(Language.C_Call_table) == CTRUE) { 
-                      { 
-                        var v_or11 *ClaireBoolean
-                        
-                        var try_21 EID
-                        { var arg_22 *ClaireAny
-                          var try_23 EID
-                          { var arg_24 *ClaireType
-                            var try_25 EID
-                            { var arg_26 *ClaireType
-                              var try_27 EID
-                              try_27 = Core.F_CALL(Optimize.C_c_type,ARGS(p.ToEID()))
-                              if ErrorIn(try_27) {try_25 = try_27
-                              } else {
-                              arg_26 = ToType(OBJ(try_27))
-                              try_25 = EID{Core.F_member_type(arg_26).Id(),0}
-                              }
-                              } 
-                            if ErrorIn(try_25) {try_23 = try_25
-                            } else {
-                            arg_24 = ToType(OBJ(try_25))
-                            try_23 = Core.F_CALL(C_sort_I,ARGS(EID{arg_24.Id(),0}))
-                            }
-                            } 
-                          if ErrorIn(try_23) {try_21 = try_23
-                          } else {
-                          arg_22 = ANY(try_23)
-                          try_21 = EID{Equal(arg_22,C_integer.Id()).Id(),0}
-                          }
-                          } 
-                        if ErrorIn(try_21) {try_20 = try_21
-                        } else {
-                        v_or11 = ToBoolean(OBJ(try_21))
-                        if (v_or11 == CTRUE) {try_20 = EID{CTRUE.Id(),0}
-                        } else { 
-                          var try_28 EID
-                          { var arg_29 *ClaireAny
-                            var try_30 EID
-                            { var arg_31 *ClaireType
-                              var try_32 EID
-                              { var arg_33 *ClaireType
-                                var try_34 EID
-                                try_34 = Core.F_CALL(Optimize.C_c_type,ARGS(p.ToEID()))
-                                if ErrorIn(try_34) {try_32 = try_34
-                                } else {
-                                arg_33 = ToType(OBJ(try_34))
-                                try_32 = EID{Core.F_member_type(arg_33).Id(),0}
-                                }
-                                } 
-                              if ErrorIn(try_32) {try_30 = try_32
-                              } else {
-                              arg_31 = ToType(OBJ(try_32))
-                              try_30 = Core.F_CALL(C_sort_I,ARGS(EID{arg_31.Id(),0}))
-                              }
-                              } 
-                            if ErrorIn(try_30) {try_28 = try_30
-                            } else {
-                            arg_29 = ANY(try_30)
-                            try_28 = EID{Equal(arg_29,C_float.Id()).Id(),0}
-                            }
-                            } 
-                          if ErrorIn(try_28) {try_20 = try_28
-                          } else {
-                          v_or11 = ToBoolean(OBJ(try_28))
-                          if (v_or11 == CTRUE) {try_20 = EID{CTRUE.Id(),0}
-                          } else { 
-                            try_20 = EID{CFALSE.Id(),0}} 
-                          } 
-                        }}
-                        } 
+                      g0207I = MakeBoolean((ToRelation(p).Range.Id() == C_integer.Id()) || (ToRelation(p).Range.Id() == C_float.Id())).Not
                       } else {
-                      try_20 = EID{CFALSE.Id(),0}
+                      g0207I = CFALSE
                       } 
-                    if ErrorIn(try_20) {Result = try_20
-                    } else {
-                    g0207I = ToBoolean(OBJ(try_20))
                     if (g0207I == CTRUE) { 
+                      PRINC("Core.F_put_table(")
                       Result = Core.F_CALL(C_Generate_g_expression,ARGS(p.ToEID(),EID{C_table.Id(),0}))
                       if !ErrorIn(Result) {
-                      PRINC(".PutAt(")
-                      Result = F_Generate_g_table_index_table(ToTable(p),ANY(Core.F_CALL(C_arg,ARGS(x.ToEID()))))
+                      PRINC(",")
+                      Result = Core.F_CALL(C_Generate_g_expression,ARGS(Core.F_CALL(C_arg,ARGS(x.ToEID())),EID{C_any.Id(),0}))
                       if !ErrorIn(Result) {
                       PRINC(",")
                       Result = Core.F_CALL(C_Generate_g_expression,ARGS(v.ToEID(),EID{C_any.Id(),0}))
                       if !ErrorIn(Result) {
-                      PRINC("-1)")
+                      PRINC(")")
                       Result = F_Generate_breakline_void().ToEID()
                       }}}
                       } else {
                       if (x.Isa.IsIn(Language.C_Call_array) == CTRUE) { 
-                        var try_35 EID
-                        { var arg_36 *ClaireType
-                          var try_37 EID
-                          { var arg_38 *ClaireType
-                            var try_39 EID
-                            try_39 = Core.F_CALL(Optimize.C_c_type,ARGS(p.ToEID()))
-                            if ErrorIn(try_39) {try_37 = try_39
+                        var try_20 EID
+                        { var arg_21 *ClaireType
+                          var try_22 EID
+                          { var arg_23 *ClaireType
+                            var try_24 EID
+                            try_24 = Core.F_CALL(Optimize.C_c_type,ARGS(p.ToEID()))
+                            if ErrorIn(try_24) {try_22 = try_24
                             } else {
-                            arg_38 = ToType(OBJ(try_39))
-                            try_37 = EID{Core.F_member_type(arg_38).Id(),0}
+                            arg_23 = ToType(OBJ(try_24))
+                            try_22 = EID{Core.F_member_type(arg_23).Id(),0}
                             }
                             } 
-                          if ErrorIn(try_37) {try_35 = try_37
+                          if ErrorIn(try_22) {try_20 = try_22
                           } else {
-                          arg_36 = ToType(OBJ(try_37))
-                          try_35 = Core.F_CALL(C_sort_I,ARGS(EID{arg_36.Id(),0}))
+                          arg_21 = ToType(OBJ(try_22))
+                          try_20 = Core.F_CALL(C_sort_I,ARGS(EID{arg_21.Id(),0}))
                           }
                           } 
-                        if ErrorIn(try_35) {Result = try_35
+                        if ErrorIn(try_20) {Result = try_20
                         } else {
-                        s2 = ToClass(OBJ(try_35))
+                        s2 = ToClass(OBJ(try_20))
                         Result = EID{s2.Id(),0}
                         if (s2.Id() == C_object.Id()) { 
                           s2 = C_any
@@ -4358,7 +4294,6 @@ func F_Generate_update_statement_Update (self *Language.Update,s *ClaireClass) E
                       }}
                       }
                       } 
-                    }
                     } 
                   }
                   } 

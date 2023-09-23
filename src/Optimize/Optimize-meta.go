@@ -1,5 +1,5 @@
 /***** CLAIRE Compilation of module Optimize.cl 
-         [version 4.0.08 / safety 5] Sunday 03-12-2023 14:47:37 *****/
+         [version 4.1 / safety 5] Saturday 09-23-2023 07:22:33 *****/
 
 package Optimize
 import (_ "fmt"
@@ -216,6 +216,7 @@ var C_Compile_ForceNotThrow *Core.GlobalVariable
 var C_Optimize__startimes_integer_star *Core.GlobalVariable
 var C_Optimize__stardiv_integer_star *Core.GlobalVariable
 var C_Optimize__stardiv_float_star *Core.GlobalVariable
+var C_Optimize__starmod_integer_star *Core.GlobalVariable
 var C_DSHOW *Core.GlobalVariable
 var C_DTHROW *Core.GlobalVariable
 var C_Optimize_ambiguous *ClaireKeyword /*obj*/
@@ -356,7 +357,7 @@ var C_Compile *ClaireModule
 func MetaLoad() { 
   
   It = MakeModule("Optimize",C_Compile)
-  It.Comment = MakeString("Compiled on Sunday 03-12-2023 14:47:37(v4.0.08), lines:3031, warnings:1,safety:5")
+  It.Comment = MakeString("Compiled on Saturday 09-23-2023 07:22:33(v4.1), lines:3034, warnings:1,safety:5")
   ClEnv.Module_I = It
   
   // definition of the properties
@@ -641,7 +642,7 @@ func MetaLoad() {
   C_compiler = ToOptimizeMetaCompiler(new(OptimizeMetaCompiler).IsNamed(C_Optimize_meta_compiler,MakeSymbol("compiler",C_claire)))
   C_compiler.External = MakeString("go")
   C_compiler.Env = MakeString("MacOS")
-  C_compiler.Version = MakeFloat(0.08).Id()
+  C_compiler.Version = MakeFloat(1).Id()
   C_compiler.Source = MakeString("/Users/ycaseau/claire/v4.0/go/src")
   C_compiler.Libraries = MakeList(ToType(C_string.Id()),MakeString("Kernel").Id())
   
@@ -916,6 +917,18 @@ func MetaLoad() {
   { 
     var expr EID
     { var _CL_obj *Core.GlobalVariable
+      C_Optimize__starmod_integer_star = Core.ToGlobalVariable(new(Core.GlobalVariable).IsNamed(Core.C_global_variable,MakeSymbol("*mod_integer*",It)))
+      
+      _CL_obj = C_Optimize__starmod_integer_star
+      _CL_obj.Range = ToType(CEMPTY.Id())
+      _CL_obj.Value = Core.F__at_property1(ToProperty(C_mod.Id()),C_integer).Id()
+      expr = Core.F_close_global_variable(_CL_obj)
+      } 
+    ErrorCheck(expr)} 
+  
+  { 
+    var expr EID
+    { var _CL_obj *Core.GlobalVariable
       C_DSHOW = Core.ToGlobalVariable(new(Core.GlobalVariable).IsNamed(Core.C_global_variable,MakeSymbol("DSHOW",C_claire)))
       
       _CL_obj = C_DSHOW
@@ -925,15 +938,15 @@ func MetaLoad() {
       } 
     ErrorCheck(expr)} 
   
-  _ = Core.F_attach_method(C_Compile_g_throw.AddMethod(Signature(C_any.Id(),C_boolean.Id()),1,MakeFunction1(E_Compile_g_throw_any,"Compile_g_throw_any")),MakeString("osystem.cl:371"))
+  _ = Core.F_attach_method(C_Compile_g_throw.AddMethod(Signature(C_any.Id(),C_boolean.Id()),1,MakeFunction1(E_Compile_g_throw_any,"Compile_g_throw_any")),MakeString("osystem.cl:372"))
   
-  _ = Core.F_attach_method(C_Optimize_g_throw1.AddMethod(Signature(C_any.Id(),C_boolean.Id()),1,MakeFunction1(E_Optimize_g_throw1_any,"Optimize_g_throw1_any")),MakeString("osystem.cl:410"))
+  _ = Core.F_attach_method(C_Optimize_g_throw1.AddMethod(Signature(C_any.Id(),C_boolean.Id()),1,MakeFunction1(E_Optimize_g_throw1_any,"Optimize_g_throw1_any")),MakeString("osystem.cl:413"))
   
-  _ = Core.F_attach_method(C_Optimize_notOpt.AddMethod(Signature(Language.C_Call_method.Id(),C_boolean.Id()),1,MakeFunction1(E_Optimize_notOpt_Call_method,"Optimize_notOpt_Call_method")),MakeString("osystem.cl:425"))
+  _ = Core.F_attach_method(C_Optimize_notOpt.AddMethod(Signature(Language.C_Call_method.Id(),C_boolean.Id()),1,MakeFunction1(E_Optimize_notOpt_Call_method,"Optimize_notOpt_Call_method")),MakeString("osystem.cl:428"))
   
-  _ = Core.F_attach_method(C_Compile_can_throw_ask.AddMethod(Signature(C_property.Id(),C_boolean.Id()),1,MakeFunction1(E_Compile_can_throw_ask_property,"Compile_can_throw?_property")),MakeString("osystem.cl:431"))
+  _ = Core.F_attach_method(C_Compile_can_throw_ask.AddMethod(Signature(C_property.Id(),C_boolean.Id()),1,MakeFunction1(E_Compile_can_throw_ask_property,"Compile_can_throw?_property")),MakeString("osystem.cl:434"))
   
-  _ = Core.F_attach_method(C_Compile_can_throw_ask.AddMethod(Signature(C_method.Id(),C_boolean.Id()),1,MakeFunction1(E_Compile_can_throw_ask_method,"Compile_can_throw?_method")),MakeString("osystem.cl:441"))
+  _ = Core.F_attach_method(C_Compile_can_throw_ask.AddMethod(Signature(C_method.Id(),C_boolean.Id()),1,MakeFunction1(E_Compile_can_throw_ask_method,"Compile_can_throw?_method")),MakeString("osystem.cl:444"))
   
   { 
     var expr EID
@@ -947,27 +960,27 @@ func MetaLoad() {
       } 
     ErrorCheck(expr)} 
   
-  _ = Core.F_attach_method(C_Compile_can_throw_I.AddMethod(Signature(C_method.Id(),C_boolean.Id()),1,MakeFunction1(E_Compile_can_throw_I_method,"Compile_can_throw!_method")),MakeString("osystem.cl:452"))
+  _ = Core.F_attach_method(C_Compile_can_throw_I.AddMethod(Signature(C_method.Id(),C_boolean.Id()),1,MakeFunction1(E_Compile_can_throw_I_method,"Compile_can_throw!_method")),MakeString("osystem.cl:455"))
   
-  _ = Core.F_attach_method(C_Compile_can_throw_status.AddMethod(Signature(C_method.Id(),C_boolean.Id()),1,MakeFunction1(E_Compile_can_throw_status_method,"Compile_can_throw_status_method")),MakeString("osystem.cl:458"))
+  _ = Core.F_attach_method(C_Compile_can_throw_status.AddMethod(Signature(C_method.Id(),C_boolean.Id()),1,MakeFunction1(E_Compile_can_throw_status_method,"Compile_can_throw_status_method")),MakeString("osystem.cl:461"))
   
-  _ = Core.F_attach_method(C_s_throw.AddMethod(Signature(C_method.Id(),C_void.Id()),1,MakeFunction1(E_s_throw_method,"s_throw_method")),MakeString("osystem.cl:466"))
+  _ = Core.F_attach_method(C_s_throw.AddMethod(Signature(C_method.Id(),C_void.Id()),1,MakeFunction1(E_s_throw_method,"s_throw_method")),MakeString("osystem.cl:469"))
   
-  _ = Core.F_attach_method(C_Optimize_legal_ask.AddMethod(Signature(C_module.Id(),C_any.Id(),C_boolean.Id()),0,MakeFunction2(E_Optimize_legal_ask_module,"Optimize_legal?_module")),MakeString("osystem.cl:483"))
+  _ = Core.F_attach_method(C_Optimize_legal_ask.AddMethod(Signature(C_module.Id(),C_any.Id(),C_boolean.Id()),0,MakeFunction2(E_Optimize_legal_ask_module,"Optimize_legal?_module")),MakeString("osystem.cl:486"))
   
-  _ = Core.F_attach_method(C_Optimize_legal_ask.AddMethod(Signature(C_environment.Id(),C_any.Id(),C_any.Id()),0,MakeFunction2(E_Optimize_legal_ask_environment,"Optimize_legal?_environment")),MakeString("osystem.cl:485"))
+  _ = Core.F_attach_method(C_Optimize_legal_ask.AddMethod(Signature(C_environment.Id(),C_any.Id(),C_any.Id()),0,MakeFunction2(E_Optimize_legal_ask_environment,"Optimize_legal?_environment")),MakeString("osystem.cl:488"))
   
-  _ = Core.F_attach_method(C_Optimize_c_register.AddMethod(Signature(Core.F_U_type(ToType(C_thing.Id()),ToType(C_class.Id())).Id(),C_any.Id()),0,MakeFunction1(E_Optimize_c_register_object,"Optimize_c_register_object")),MakeString("osystem.cl:491"))
+  _ = Core.F_attach_method(C_Optimize_c_register.AddMethod(Signature(Core.F_U_type(ToType(C_thing.Id()),ToType(C_class.Id())).Id(),C_any.Id()),0,MakeFunction1(E_Optimize_c_register_object,"Optimize_c_register_object")),MakeString("osystem.cl:494"))
   
-  _ = Core.F_attach_method(C_Optimize_c_register.AddMethod(Signature(C_property.Id(),C_any.Id()),0,MakeFunction1(E_Optimize_c_register_property,"Optimize_c_register_property")),MakeString("osystem.cl:500"))
+  _ = Core.F_attach_method(C_Optimize_c_register.AddMethod(Signature(C_property.Id(),C_any.Id()),0,MakeFunction1(E_Optimize_c_register_property,"Optimize_c_register_property")),MakeString("osystem.cl:503"))
   
-  _ = Core.F_attach_method(C_Optimize_selector_register.AddMethod(Signature(C_property.Id(),C_any.Id()),0,MakeFunction1(E_Optimize_selector_register_property,"Optimize_selector_register_property")),MakeString("osystem.cl:505"))
+  _ = Core.F_attach_method(C_Optimize_selector_register.AddMethod(Signature(C_property.Id(),C_any.Id()),0,MakeFunction1(E_Optimize_selector_register_property,"Optimize_selector_register_property")),MakeString("osystem.cl:508"))
   
-  _ = Core.F_attach_method(C_Optimize_stable_ask.AddMethod(Signature(C_relation.Id(),C_boolean.Id()),0,MakeFunction1(E_Optimize_stable_ask_relation,"Optimize_stable?_relation")),MakeString("osystem.cl:514"))
+  _ = Core.F_attach_method(C_Optimize_stable_ask.AddMethod(Signature(C_relation.Id(),C_boolean.Id()),0,MakeFunction1(E_Optimize_stable_ask_relation,"Optimize_stable?_relation")),MakeString("osystem.cl:517"))
   
-  _ = Core.F_attach_method(C_Compile_get_module.AddMethod(Signature(Core.F_U_type(ToType(C_thing.Id()),ToType(C_class.Id())).Id(),C_any.Id()),0,MakeFunction1(E_Compile_get_module_object,"Compile_get_module_object")),MakeString("osystem.cl:519"))
+  _ = Core.F_attach_method(C_Compile_get_module.AddMethod(Signature(Core.F_U_type(ToType(C_thing.Id()),ToType(C_class.Id())).Id(),C_any.Id()),0,MakeFunction1(E_Compile_get_module_object,"Compile_get_module_object")),MakeString("osystem.cl:522"))
   
-  _ = Core.F_attach_method(Reader.C_known_I.AddMethod(Signature(C_listargs.Id(),C_any.Id()),0,MakeFunction1(E_known_I_listargs,"known!_listargs")),MakeString("osystem.cl:526"))
+  _ = Core.F_attach_method(Reader.C_known_I.AddMethod(Signature(C_listargs.Id(),C_any.Id()),0,MakeFunction1(E_known_I_listargs,"known!_listargs")),MakeString("osystem.cl:529"))
   
   _ = Core.F_attach_method(C_self_print.AddMethod(Signature(C_Compile_C_cast.Id(),C_void.Id()),1,MakeFunction1(E_self_print_C_cast,"self_print_C_cast")),MakeString("otool.cl:56"))
   

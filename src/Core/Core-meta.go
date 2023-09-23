@@ -1,5 +1,5 @@
 /***** CLAIRE Compilation of module Core.cl 
-         [version 4.0.08 / safety 5] Sunday 03-12-2023 14:47:34 *****/
+         [version 4.1 / safety 5] Saturday 09-23-2023 07:22:30 *****/
 
 package Core
 import (_ "fmt"
@@ -254,6 +254,35 @@ var C__backslash *ClaireOperation /*obj*/
 var C_glb *ClaireOperation /*obj*/
 var C_Core__inf_equalt *ClaireOperation /*obj*/
 var C_Core__Zt *ClaireOperation /*obj*/
+var C_factor_ask *ClaireProperty // claire/"factor?"
+var C_divide_ask *ClaireProperty // claire/"divide?"
+var C_Id *ClaireProperty // claire/"Id"
+var C_Core_check_inverse *ClaireProperty // Core/"check_inverse"
+var C_invert *ClaireProperty // claire/"invert"
+var C_domain_I *ClaireProperty // claire/"domain!"
+var C_methods *ClaireProperty // claire/"methods"
+var C_mClaire_cause *ClaireProperty // mClaire/"cause"
+var C_Core_wrong *ClaireProperty // Core/"wrong"
+var C_format *ClaireProperty // claire/"format"
+var C_Core_tformat *ClaireProperty // Core/"tformat"
+var C_contradiction_I *ClaireProperty // claire/"contradiction!"
+var C_mClaire_get_stack *ClaireProperty // mClaire/"get_stack"
+var C_mClaire_put_stack *ClaireProperty // mClaire/"put_stack"
+var C_mClaire_push_I *ClaireProperty // mClaire/"push!"
+var C_time_get *ClaireProperty // claire/"time_get"
+var C_time_set *ClaireProperty // claire/"time_set"
+var C_time_show *ClaireProperty // claire/"time_show"
+var C_print_in_string *ClaireProperty // claire/"print_in_string"
+var C_mClaire_buffer_length *ClaireProperty // mClaire/"buffer_length"
+var C_mClaire_buffer_set_length *ClaireProperty // mClaire/"buffer_set_length"
+var C_not *ClaireProperty // claire/"not"
+var C_externC *ClaireProperty // claire/"externC"
+var C_getenv *ClaireProperty // claire/"getenv"
+var C_last *ClaireProperty // claire/"last"
+var C_rmlast *ClaireProperty // claire/"rmlast"
+var C_car *ClaireProperty // claire/"car"
+var C_sort *ClaireProperty // claire/"sort"
+var C_Core_quicksort *ClaireProperty // Core/"quicksort"
 var C_Core_build_powerset *ClaireProperty // Core/"build_powerset"
 var C_difference *ClaireProperty // claire/"difference"
 var C_Core_of_extract *ClaireProperty // Core/"of_extract"
@@ -322,45 +351,45 @@ var C__plus *ClaireOperation // claire/"+"
 var C_Core_identified_ask *ClaireProperty // Core/"identified?"
 var C_identical_ask *ClaireProperty // claire/"identical?"
 var C_Core_get_index *ClaireProperty // Core/"get_index"
-var C_factor_ask *ClaireProperty // claire/"factor?"
-var C_divide_ask *ClaireProperty // claire/"divide?"
-var C_Id *ClaireProperty // claire/"Id"
-var C_Core_check_inverse *ClaireProperty // Core/"check_inverse"
-var C_invert *ClaireProperty // claire/"invert"
-var C_domain_I *ClaireProperty // claire/"domain!"
-var C_methods *ClaireProperty // claire/"methods"
-var C_mClaire_cause *ClaireProperty // mClaire/"cause"
-var C_Core_wrong *ClaireProperty // Core/"wrong"
-var C_format *ClaireProperty // claire/"format"
-var C_Core_tformat *ClaireProperty // Core/"tformat"
-var C_contradiction_I *ClaireProperty // claire/"contradiction!"
-var C_mClaire_get_stack *ClaireProperty // mClaire/"get_stack"
-var C_mClaire_put_stack *ClaireProperty // mClaire/"put_stack"
-var C_mClaire_push_I *ClaireProperty // mClaire/"push!"
-var C_time_get *ClaireProperty // claire/"time_get"
-var C_time_set *ClaireProperty // claire/"time_set"
-var C_time_show *ClaireProperty // claire/"time_show"
-var C_print_in_string *ClaireProperty // claire/"print_in_string"
-var C_mClaire_buffer_length *ClaireProperty // mClaire/"buffer_length"
-var C_mClaire_buffer_set_length *ClaireProperty // mClaire/"buffer_set_length"
-var C_not *ClaireProperty // claire/"not"
-var C_externC *ClaireProperty // claire/"externC"
-var C_getenv *ClaireProperty // claire/"getenv"
-var C_last *ClaireProperty // claire/"last"
-var C_rmlast *ClaireProperty // claire/"rmlast"
-var C_car *ClaireProperty // claire/"car"
-var C_sort *ClaireProperty // claire/"sort"
-var C_Core_quicksort *ClaireProperty // Core/"quicksort"
 var It *ClaireModule
 
 // definition of the meta-model for module Core 
 func MetaLoad() { 
   
   It = MakeModule("Core",C_mClaire)
-  It.Comment = MakeString("Compiled on Sunday 03-12-2023 14:47:34(v4.0.08), lines:2426, warnings:5,safety:5")
+  It.Comment = MakeString("Compiled on Saturday 09-23-2023 07:22:30(v4.1), lines:2426, warnings:7,safety:5")
   ClEnv.Module_I = It
   
   // definition of the properties
+  C_factor_ask = MakeProperty("factor?",1,C_claire)
+  C_divide_ask = MakeProperty("divide?",1,C_claire)
+  C_Id = MakeProperty("Id",1,C_claire)
+  C_Core_check_inverse = MakeProperty("check_inverse",1,It)
+  C_invert = MakeProperty("invert",1,C_claire)
+  C_domain_I = MakeProperty("domain!",1,C_claire)
+  C_methods = MakeProperty("methods",1,C_claire)
+  C_mClaire_cause = MakeProperty("cause",1,C_mClaire)
+  C_Core_wrong = MakeProperty("wrong",1,It)
+  C_format = MakeProperty("format",1,C_claire)
+  C_Core_tformat = MakeProperty("tformat",1,It)
+  C_contradiction_I = MakeProperty("contradiction!",1,C_claire)
+  C_mClaire_get_stack = MakeProperty("get_stack",1,C_mClaire)
+  C_mClaire_put_stack = MakeProperty("put_stack",1,C_mClaire)
+  C_mClaire_push_I = MakeProperty("push!",1,C_mClaire)
+  C_time_get = MakeProperty("time_get",1,C_claire)
+  C_time_set = MakeProperty("time_set",1,C_claire)
+  C_time_show = MakeProperty("time_show",2,C_claire)
+  C_print_in_string = MakeProperty("print_in_string",1,C_claire)
+  C_mClaire_buffer_length = MakeProperty("buffer_length",1,C_mClaire)
+  C_mClaire_buffer_set_length = MakeProperty("buffer_set_length",1,C_mClaire)
+  C_not = MakeProperty("not",1,C_claire)
+  C_externC = MakeProperty("externC",1,C_claire)
+  C_getenv = MakeProperty("getenv",2,C_claire)
+  C_last = MakeProperty("last",1,C_claire)
+  C_rmlast = MakeProperty("rmlast",1,C_claire)
+  C_car = MakeProperty("car",1,C_claire)
+  C_sort = MakeProperty("sort",1,C_claire)
+  C_Core_quicksort = MakeProperty("quicksort",1,It)
   C_Core_build_powerset = MakeProperty("build_powerset",1,It)
   C_difference = MakeProperty("difference",1,C_claire)
   C_Core_of_extract = MakeProperty("of_extract",1,It)
@@ -429,35 +458,6 @@ func MetaLoad() {
   C_Core_identified_ask = MakeProperty("identified?",1,It)
   C_identical_ask = MakeProperty("identical?",1,C_claire)
   C_Core_get_index = MakeProperty("get_index",1,It)
-  C_factor_ask = MakeProperty("factor?",1,C_claire)
-  C_divide_ask = MakeProperty("divide?",1,C_claire)
-  C_Id = MakeProperty("Id",1,C_claire)
-  C_Core_check_inverse = MakeProperty("check_inverse",1,It)
-  C_invert = MakeProperty("invert",1,C_claire)
-  C_domain_I = MakeProperty("domain!",1,C_claire)
-  C_methods = MakeProperty("methods",1,C_claire)
-  C_mClaire_cause = MakeProperty("cause",1,C_mClaire)
-  C_Core_wrong = MakeProperty("wrong",1,It)
-  C_format = MakeProperty("format",1,C_claire)
-  C_Core_tformat = MakeProperty("tformat",1,It)
-  C_contradiction_I = MakeProperty("contradiction!",1,C_claire)
-  C_mClaire_get_stack = MakeProperty("get_stack",1,C_mClaire)
-  C_mClaire_put_stack = MakeProperty("put_stack",1,C_mClaire)
-  C_mClaire_push_I = MakeProperty("push!",1,C_mClaire)
-  C_time_get = MakeProperty("time_get",1,C_claire)
-  C_time_set = MakeProperty("time_set",1,C_claire)
-  C_time_show = MakeProperty("time_show",2,C_claire)
-  C_print_in_string = MakeProperty("print_in_string",1,C_claire)
-  C_mClaire_buffer_length = MakeProperty("buffer_length",1,C_mClaire)
-  C_mClaire_buffer_set_length = MakeProperty("buffer_set_length",1,C_mClaire)
-  C_not = MakeProperty("not",1,C_claire)
-  C_externC = MakeProperty("externC",1,C_claire)
-  C_getenv = MakeProperty("getenv",2,C_claire)
-  C_last = MakeProperty("last",1,C_claire)
-  C_rmlast = MakeProperty("rmlast",1,C_claire)
-  C_car = MakeProperty("car",1,C_claire)
-  C_sort = MakeProperty("sort",1,C_claire)
-  C_Core_quicksort = MakeProperty("quicksort",1,It)
   
   // instructions from module sources
   { 
@@ -745,9 +745,9 @@ func MetaLoad() {
     C_integer.Id(),
     C_object.Id()),0,MakeFunction4(E_find_which_class,"find_which_class")),MakeString("method.cl:567"))
   
-  ClEnv.Version = 0.08
+  ClEnv.Version = 1
   PRINC("-- CLAIRE run-time library v 4.")
-  F_princ_float(0.08)
+  F_princ_float(1)
   PRINC(" [os: ")
   PRINC("macos")
   PRINC(", compiler:")
@@ -1048,7 +1048,7 @@ func MetaLoad() {
       
       _CL_obj = C_claire_date
       _CL_obj.Range = ToType(C_string.Id())
-      _CL_obj.Value = MakeString("Sunday 03-12-2023").Id()
+      _CL_obj.Value = MakeString("Saturday 09-23-2023").Id()
       expr = F_close_global_variable(_CL_obj)
       } 
     ErrorCheck(expr)} 

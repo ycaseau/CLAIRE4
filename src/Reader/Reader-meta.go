@@ -1,5 +1,5 @@
 /***** CLAIRE Compilation of module Reader.cl 
-         [version 4.0.08 / safety 5] Sunday 03-12-2023 14:47:34 *****/
+         [version 4.1 / safety 5] Saturday 09-23-2023 07:22:30 *****/
 
 package Reader
 import (_ "fmt"
@@ -169,20 +169,35 @@ var C_up *ClaireProperty /*obj*/
 var C_dn *ClaireProperty /*obj*/
 var C_where *ClaireProperty /*obj*/
 var C_measure *ClaireClass /*obj*/
-var C_Reader_nextseq *ClaireProperty // Reader/"nextseq"
-var C_readblock *ClaireProperty // claire/"readblock"
-var C_Reader_Do_I *ClaireProperty // Reader/"Do!"
-var C_Reader_readcall *ClaireProperty // Reader/"readcall"
-var C_Reader_nextdefinition *ClaireProperty // Reader/"nextdefinition"
-var C_Reader_nextmethod *ClaireProperty // Reader/"nextmethod"
-var C_Reader_nextinst *ClaireProperty // Reader/"nextinst"
-var C_Reader_nextDefclass *ClaireProperty // Reader/"nextDefclass"
-var C_Reader_useless_c *ClaireProperty // Reader/"useless_c"
-var C_Reader_skipc *ClaireProperty // Reader/"skipc"
-var C_Reader_skipc_I *ClaireProperty // Reader/"skipc!"
-var C_Reader_cnext *ClaireProperty // Reader/"cnext"
-var C_Reader_findeol *ClaireProperty // Reader/"findeol"
-var C_Reader_checkno *ClaireProperty // Reader/"checkno"
+var C_Reader_nextvariable *ClaireProperty // Reader/"nextvariable"
+var C_Reader_nexts_I *ClaireProperty // Reader/"nexts!"
+var C_Reader_nexte_I *ClaireProperty // Reader/"nexte!"
+var C_Reader_extended_comment_ask *ClaireProperty // Reader/"extended_comment?"
+var C_Reader_extended_comment_I *ClaireProperty // Reader/"extended_comment!"
+var C_Reader_DBregister *ClaireProperty // Reader/"DBregister"
+var C_Reader_Call_I *ClaireProperty // Reader/"Call!"
+var C_Reader_operation_ask *ClaireProperty // Reader/"operation?"
+var C_Reader_combine *ClaireProperty // Reader/"combine"
+var C_Reader_combine_I *ClaireProperty // Reader/"combine!"
+var C_Reader_operation_I *ClaireProperty // Reader/"operation!"
+var C_Reader_operand_I *ClaireProperty // Reader/"operand!"
+var C_Reader_precedence_I *ClaireProperty // Reader/"precedence!"
+var C_Reader_nextstruct *ClaireProperty // Reader/"nextstruct"
+var C_Reader_readlet *ClaireProperty // Reader/"readlet"
+var C_Reader_readlet_star *ClaireProperty // Reader/"readlet*"
+var C_Reader_readwhen *ClaireProperty // Reader/"readwhen"
+var C_show *ClaireProperty // claire/"show"
+var C_Reader_readif *ClaireProperty // Reader/"readif"
+var C_Reader_readcase *ClaireProperty // Reader/"readcase"
+var C_Reader_readset *ClaireProperty // Reader/"readset"
+var C_Reader_dereference *ClaireProperty // Reader/"dereference"
+var C_stdev *ClaireProperty // claire/"stdev"
+var C_stdev_Z *ClaireProperty // claire/"stdev%"
+var C_reset *ClaireProperty // claire/"reset"
+var C_logMeasure *ClaireProperty // claire/"logMeasure"
+var C_addLog *ClaireProperty // claire/"addLog"
+var C_Reader_simple_main *ClaireProperty // Reader/"simple_main"
+var C_Reader_top_level *ClaireProperty // Reader/"top_level"
 var C_Reader_verify *ClaireProperty // Reader/"verify"
 var C_Reader_Serror *ClaireProperty // Reader/"Serror"
 var C_Reader_extract_variable *ClaireProperty // Reader/"extract_variable"
@@ -247,59 +262,59 @@ var C_mean *ClaireProperty // claire/"mean"
 var C_Reader_nextexp *ClaireProperty // Reader/"nextexp"
 var C_Reader_nexti *ClaireProperty // Reader/"nexti"
 var C_Reader_read_escape *ClaireProperty // Reader/"read_escape"
-var C_Reader_nextvariable *ClaireProperty // Reader/"nextvariable"
-var C_Reader_nexts_I *ClaireProperty // Reader/"nexts!"
-var C_Reader_nexte_I *ClaireProperty // Reader/"nexte!"
-var C_Reader_extended_comment_ask *ClaireProperty // Reader/"extended_comment?"
-var C_Reader_extended_comment_I *ClaireProperty // Reader/"extended_comment!"
-var C_Reader_DBregister *ClaireProperty // Reader/"DBregister"
-var C_Reader_Call_I *ClaireProperty // Reader/"Call!"
-var C_Reader_operation_ask *ClaireProperty // Reader/"operation?"
-var C_Reader_combine *ClaireProperty // Reader/"combine"
-var C_Reader_combine_I *ClaireProperty // Reader/"combine!"
-var C_Reader_operation_I *ClaireProperty // Reader/"operation!"
-var C_Reader_operand_I *ClaireProperty // Reader/"operand!"
-var C_Reader_precedence_I *ClaireProperty // Reader/"precedence!"
-var C_Reader_nextstruct *ClaireProperty // Reader/"nextstruct"
-var C_Reader_readlet *ClaireProperty // Reader/"readlet"
-var C_Reader_readlet_star *ClaireProperty // Reader/"readlet*"
-var C_Reader_readwhen *ClaireProperty // Reader/"readwhen"
-var C_show *ClaireProperty // claire/"show"
-var C_Reader_readif *ClaireProperty // Reader/"readif"
-var C_Reader_readcase *ClaireProperty // Reader/"readcase"
-var C_Reader_readset *ClaireProperty // Reader/"readset"
-var C_Reader_dereference *ClaireProperty // Reader/"dereference"
-var C_stdev *ClaireProperty // claire/"stdev"
-var C_stdev_Z *ClaireProperty // claire/"stdev%"
-var C_reset *ClaireProperty // claire/"reset"
-var C_logMeasure *ClaireProperty // claire/"logMeasure"
-var C_addLog *ClaireProperty // claire/"addLog"
-var C_Reader_simple_main *ClaireProperty // Reader/"simple_main"
-var C_Reader_top_level *ClaireProperty // Reader/"top_level"
+var C_Reader_nextseq *ClaireProperty // Reader/"nextseq"
+var C_readblock *ClaireProperty // claire/"readblock"
+var C_Reader_Do_I *ClaireProperty // Reader/"Do!"
+var C_Reader_readcall *ClaireProperty // Reader/"readcall"
+var C_Reader_nextdefinition *ClaireProperty // Reader/"nextdefinition"
+var C_Reader_nextmethod *ClaireProperty // Reader/"nextmethod"
+var C_Reader_nextinst *ClaireProperty // Reader/"nextinst"
+var C_Reader_nextDefclass *ClaireProperty // Reader/"nextDefclass"
+var C_Reader_useless_c *ClaireProperty // Reader/"useless_c"
+var C_Reader_skipc *ClaireProperty // Reader/"skipc"
+var C_Reader_skipc_I *ClaireProperty // Reader/"skipc!"
+var C_Reader_cnext *ClaireProperty // Reader/"cnext"
+var C_Reader_findeol *ClaireProperty // Reader/"findeol"
+var C_Reader_checkno *ClaireProperty // Reader/"checkno"
 var It *ClaireModule
 
 // definition of the meta-model for module Reader 
 func MetaLoad() { 
   
   It = MakeModule("Reader",Language.C_iClaire)
-  It.Comment = MakeString("Compiled on Sunday 03-12-2023 14:47:34(v4.0.08), lines:1784, warnings:3,safety:5")
+  It.Comment = MakeString("Compiled on Saturday 09-23-2023 07:22:30(v4.1), lines:1761, warnings:3,safety:5")
   ClEnv.Module_I = It
   
   // definition of the properties
-  C_Reader_nextseq = MakeProperty("nextseq",1,It)
-  C_readblock = MakeProperty("readblock",1,C_claire)
-  C_Reader_Do_I = MakeProperty("Do!",1,It)
-  C_Reader_readcall = MakeProperty("readcall",1,It)
-  C_Reader_nextdefinition = MakeProperty("nextdefinition",1,It)
-  C_Reader_nextmethod = MakeProperty("nextmethod",1,It)
-  C_Reader_nextinst = MakeProperty("nextinst",1,It)
-  C_Reader_nextDefclass = MakeProperty("nextDefclass",1,It)
-  C_Reader_useless_c = MakeProperty("useless_c",1,It)
-  C_Reader_skipc = MakeProperty("skipc",1,It)
-  C_Reader_skipc_I = MakeProperty("skipc!",1,It)
-  C_Reader_cnext = MakeProperty("cnext",1,It)
-  C_Reader_findeol = MakeProperty("findeol",1,It)
-  C_Reader_checkno = MakeProperty("checkno",1,It)
+  C_Reader_nextvariable = MakeProperty("nextvariable",1,It)
+  C_Reader_nexts_I = MakeProperty("nexts!",1,It)
+  C_Reader_nexte_I = MakeProperty("nexte!",1,It)
+  C_Reader_extended_comment_ask = MakeProperty("extended_comment?",1,It)
+  C_Reader_extended_comment_I = MakeProperty("extended_comment!",1,It)
+  C_Reader_DBregister = MakeProperty("DBregister",1,It)
+  C_Reader_Call_I = MakeProperty("Call!",1,It)
+  C_Reader_operation_ask = MakeProperty("operation?",1,It)
+  C_Reader_combine = MakeProperty("combine",1,It)
+  C_Reader_combine_I = MakeProperty("combine!",1,It)
+  C_Reader_operation_I = MakeProperty("operation!",1,It)
+  C_Reader_operand_I = MakeProperty("operand!",1,It)
+  C_Reader_precedence_I = MakeProperty("precedence!",1,It)
+  C_Reader_nextstruct = MakeProperty("nextstruct",1,It)
+  C_Reader_readlet = MakeProperty("readlet",1,It)
+  C_Reader_readlet_star = MakeProperty("readlet*",1,It)
+  C_Reader_readwhen = MakeProperty("readwhen",1,It)
+  C_show = MakeProperty("show",1,C_claire)
+  C_Reader_readif = MakeProperty("readif",1,It)
+  C_Reader_readcase = MakeProperty("readcase",1,It)
+  C_Reader_readset = MakeProperty("readset",1,It)
+  C_Reader_dereference = MakeProperty("dereference",1,It)
+  C_stdev = MakeProperty("stdev",1,C_claire)
+  C_stdev_Z = MakeProperty("stdev%",1,C_claire)
+  C_reset = MakeProperty("reset",1,C_claire)
+  C_logMeasure = MakeProperty("logMeasure",1,C_claire)
+  C_addLog = MakeProperty("addLog",1,C_claire)
+  C_Reader_simple_main = MakeProperty("simple_main",1,It)
+  C_Reader_top_level = MakeProperty("top_level",1,It)
   C_Reader_verify = MakeProperty("verify",1,It)
   C_Reader_Serror = MakeProperty("Serror",1,It)
   C_Reader_extract_variable = MakeProperty("extract_variable",1,It)
@@ -364,35 +379,20 @@ func MetaLoad() {
   C_Reader_nextexp = MakeProperty("nextexp",1,It)
   C_Reader_nexti = MakeProperty("nexti",1,It)
   C_Reader_read_escape = MakeProperty("read_escape",1,It)
-  C_Reader_nextvariable = MakeProperty("nextvariable",1,It)
-  C_Reader_nexts_I = MakeProperty("nexts!",1,It)
-  C_Reader_nexte_I = MakeProperty("nexte!",1,It)
-  C_Reader_extended_comment_ask = MakeProperty("extended_comment?",1,It)
-  C_Reader_extended_comment_I = MakeProperty("extended_comment!",1,It)
-  C_Reader_DBregister = MakeProperty("DBregister",1,It)
-  C_Reader_Call_I = MakeProperty("Call!",1,It)
-  C_Reader_operation_ask = MakeProperty("operation?",1,It)
-  C_Reader_combine = MakeProperty("combine",1,It)
-  C_Reader_combine_I = MakeProperty("combine!",1,It)
-  C_Reader_operation_I = MakeProperty("operation!",1,It)
-  C_Reader_operand_I = MakeProperty("operand!",1,It)
-  C_Reader_precedence_I = MakeProperty("precedence!",1,It)
-  C_Reader_nextstruct = MakeProperty("nextstruct",1,It)
-  C_Reader_readlet = MakeProperty("readlet",1,It)
-  C_Reader_readlet_star = MakeProperty("readlet*",1,It)
-  C_Reader_readwhen = MakeProperty("readwhen",1,It)
-  C_show = MakeProperty("show",1,C_claire)
-  C_Reader_readif = MakeProperty("readif",1,It)
-  C_Reader_readcase = MakeProperty("readcase",1,It)
-  C_Reader_readset = MakeProperty("readset",1,It)
-  C_Reader_dereference = MakeProperty("dereference",1,It)
-  C_stdev = MakeProperty("stdev",1,C_claire)
-  C_stdev_Z = MakeProperty("stdev%",1,C_claire)
-  C_reset = MakeProperty("reset",1,C_claire)
-  C_logMeasure = MakeProperty("logMeasure",1,C_claire)
-  C_addLog = MakeProperty("addLog",1,C_claire)
-  C_Reader_simple_main = MakeProperty("simple_main",1,It)
-  C_Reader_top_level = MakeProperty("top_level",1,It)
+  C_Reader_nextseq = MakeProperty("nextseq",1,It)
+  C_readblock = MakeProperty("readblock",1,C_claire)
+  C_Reader_Do_I = MakeProperty("Do!",1,It)
+  C_Reader_readcall = MakeProperty("readcall",1,It)
+  C_Reader_nextdefinition = MakeProperty("nextdefinition",1,It)
+  C_Reader_nextmethod = MakeProperty("nextmethod",1,It)
+  C_Reader_nextinst = MakeProperty("nextinst",1,It)
+  C_Reader_nextDefclass = MakeProperty("nextDefclass",1,It)
+  C_Reader_useless_c = MakeProperty("useless_c",1,It)
+  C_Reader_skipc = MakeProperty("skipc",1,It)
+  C_Reader_skipc_I = MakeProperty("skipc!",1,It)
+  C_Reader_cnext = MakeProperty("cnext",1,It)
+  C_Reader_findeol = MakeProperty("findeol",1,It)
+  C_Reader_checkno = MakeProperty("checkno",1,It)
   
   // instructions from module sources
   C_delimiter = NewClass("delimiter",Core.C_global_variable,C_claire)
@@ -562,13 +562,13 @@ func MetaLoad() {
   Core.F_close_slot(C_meta_reader.AddSlot(C_Reader_comma,ToType(C_any.Id()),CNULL))
   Core.F_close_slot(C_meta_reader.AddSlot(C_Reader_curly,ToType(C_any.Id()),CNULL))
   Core.F_close_slot(C_meta_reader.AddSlot(C_Reader_last_arrow,ToType(C_boolean.Id()),CFALSE.Id()))
-  Core.F_close_slot(C_meta_reader.AddSlot(C_Reader_s_properties,Core.F_nth_class1(C_set,ToType(C_property.Id())),MakeSet(ToType(C_property.Id()),Core.C_reify.Id(),
-    C_final.Id(),
+  Core.F_close_slot(C_meta_reader.AddSlot(C_Reader_s_properties,Core.F_nth_class1(C_set,ToType(C_property.Id())),MakeSet(ToType(C_property.Id()),C_final.Id(),
     C_abstract.Id(),
     C_ephemeral.Id(),
     C_store.Id(),
     C_begin.Id(),
     C_end.Id(),
+    Core.C_reify.Id(),
     C_known_I.Id()).Id()))
   
   _ = Core.F_attach_method(C_Reader_next.AddMethod(Signature(C_meta_reader.Id(),C_void.Id()),0,MakeFunction1(E_next_meta_reader,"next_meta_reader")),MakeString("read.cl:102"))
@@ -1177,25 +1177,25 @@ func MetaLoad() {
       } 
     ErrorCheck(expr)} 
   
-  _ = Core.F_attach_method(C_Reader_top_level.AddMethod(Signature(C_meta_reader.Id(),C_void.Id()),1,MakeFunction1(E_Reader_top_level_meta_reader,"Reader_top_level_meta_reader")),MakeString("inspect.cl:83"))
+  _ = Core.F_attach_method(C_Reader_top_level.AddMethod(Signature(C_meta_reader.Id(),C_void.Id()),1,MakeFunction1(E_Reader_top_level_meta_reader,"Reader_top_level_meta_reader")),MakeString("inspect.cl:84"))
   
-  _ = Core.F_attach_method(C_Reader_debugLoop.AddMethod(Signature(C_meta_reader.Id(),C_void.Id()),0,MakeFunction1(E_Reader_debugLoop_meta_reader,"Reader_debugLoop_meta_reader")),MakeString("inspect.cl:93"))
+  _ = Core.F_attach_method(C_Reader_debugLoop.AddMethod(Signature(C_meta_reader.Id(),C_void.Id()),0,MakeFunction1(E_Reader_debugLoop_meta_reader,"Reader_debugLoop_meta_reader")),MakeString("inspect.cl:94"))
   
-  _ = Core.F_attach_method(C_Reader_inspect_system.AddMethod(Signature(C_list.Id(),C_void.Id()),0,MakeFunction1(E_Reader_inspect_system_list2,"Reader_inspect_system_list2")),MakeString("inspect.cl:99"))
+  _ = Core.F_attach_method(C_Reader_inspect_system.AddMethod(Signature(C_list.Id(),C_void.Id()),0,MakeFunction1(E_Reader_inspect_system_list2,"Reader_inspect_system_list2")),MakeString("inspect.cl:100"))
   
-  _ = Core.F_attach_method(C_Reader_simple_main.AddMethod(Signature(C_void.Id(),C_void.Id()),1,MakeFunction1(E_Reader_simple_main_void,"Reader_simple_main_void")),MakeString("inspect.cl:104"))
+  _ = Core.F_attach_method(C_Reader_simple_main.AddMethod(Signature(C_void.Id(),C_void.Id()),1,MakeFunction1(E_Reader_simple_main_void,"Reader_simple_main_void")),MakeString("inspect.cl:105"))
   
-  _ = Core.F_attach_method(C_inspect.AddMethod(Signature(C_any.Id(),C_any.Id()),1,MakeFunction1(E_inspect_any,"inspect_any")),MakeString("inspect.cl:153"))
+  _ = Core.F_attach_method(C_inspect.AddMethod(Signature(C_any.Id(),C_any.Id()),1,MakeFunction1(E_inspect_any,"inspect_any")),MakeString("inspect.cl:130"))
   
-  _ = Core.F_attach_method(C_inspect_loop.AddMethod(Signature(C_any.Id(),C_list.Id(),C_void.Id()),1,MakeFunction2(E_inspect_loop_any,"inspect_loop_any")),MakeString("inspect.cl:174"))
+  _ = Core.F_attach_method(C_inspect_loop.AddMethod(Signature(C_any.Id(),C_list.Id(),C_void.Id()),1,MakeFunction2(E_inspect_loop_any,"inspect_loop_any")),MakeString("inspect.cl:151"))
   
-  _ = Core.F_attach_method(C_get_from_integer.AddMethod(Signature(C_any.Id(),C_integer.Id(),C_any.Id()),1,MakeFunction2(E_get_from_integer_any,"get_from_integer_any")),MakeString("inspect.cl:185"))
+  _ = Core.F_attach_method(C_get_from_integer.AddMethod(Signature(C_any.Id(),C_integer.Id(),C_any.Id()),1,MakeFunction2(E_get_from_integer_any,"get_from_integer_any")),MakeString("inspect.cl:162"))
   
-  _ = Core.F_attach_method(Language.C_iClaire_trace_on.AddMethod(Signature(C_any.Id(),C_any.Id()),1,MakeFunction1(E_trace_on_any,"trace_on_any")),MakeString("inspect.cl:207"))
+  _ = Core.F_attach_method(Language.C_iClaire_trace_on.AddMethod(Signature(C_any.Id(),C_any.Id()),1,MakeFunction1(E_trace_on_any,"trace_on_any")),MakeString("inspect.cl:184"))
   
-  _ = Core.F_attach_method(C_Reader_untrace.AddMethod(Signature(C_any.Id(),C_any.Id()),1,MakeFunction1(E_untrace_any,"untrace_any")),MakeString("inspect.cl:219"))
+  _ = Core.F_attach_method(C_Reader_untrace.AddMethod(Signature(C_any.Id(),C_any.Id()),1,MakeFunction1(E_untrace_any,"untrace_any")),MakeString("inspect.cl:196"))
   
-  _ = Core.F_attach_method(Core.C_spy.AddMethod(Signature(C_listargs.Id(),C_void.Id()),0,MakeFunction1(E_spy_listargs2_Reader,"spy_listargs2_Reader")),MakeString("inspect.cl:227"))
+  _ = Core.F_attach_method(Core.C_spy.AddMethod(Signature(C_listargs.Id(),C_void.Id()),0,MakeFunction1(E_spy_listargs2_Reader,"spy_listargs2_Reader")),MakeString("inspect.cl:204"))
   
   _ = Core.F_attach_method(C_Reader_trace_rule.AddMethod(Signature(C_relation.Id(),
     C_string.Id(),
@@ -1203,15 +1203,15 @@ func MetaLoad() {
     C_any.Id(),
     C_any.Id(),
     C_any.Id(),
-    C_void.Id()),1,MakeFunction6(E_trace_rule_relation,"trace_rule_relation")),MakeString("inspect.cl:237"))
+    C_void.Id()),1,MakeFunction6(E_trace_rule_relation,"trace_rule_relation")),MakeString("inspect.cl:214"))
   
-  _ = Core.F_attach_method(C_Reader_stop.AddMethod(Signature(C_property.Id(),C_listargs.Id(),C_any.Id()),1,MakeFunction2(E_stop_property,"stop_property")),MakeString("inspect.cl:245"))
+  _ = Core.F_attach_method(C_Reader_stop.AddMethod(Signature(C_property.Id(),C_listargs.Id(),C_any.Id()),1,MakeFunction2(E_stop_property,"stop_property")),MakeString("inspect.cl:222"))
   
-  _ = Core.F_attach_method(Core.C_debug.AddMethod(Signature(C_void.Id(),C_void.Id()),0,MakeFunction1(E_debug_void,"debug_void")),MakeString("inspect.cl:259"))
+  _ = Core.F_attach_method(Core.C_debug.AddMethod(Signature(C_void.Id(),C_void.Id()),0,MakeFunction1(E_debug_void,"debug_void")),MakeString("inspect.cl:236"))
   
-  _ = Core.F_attach_method(C_call_debug.AddMethod(Signature(C_void.Id(),C_any.Id()),0,MakeFunction1(E_call_debug_void,"call_debug_void")),MakeString("inspect.cl:280"))
+  _ = Core.F_attach_method(C_call_debug.AddMethod(Signature(C_void.Id(),C_any.Id()),0,MakeFunction1(E_call_debug_void,"call_debug_void")),MakeString("inspect.cl:257"))
   
-  _ = Core.F_attach_method(C_Reader_breakpoint.AddMethod(Signature(C_void.Id(),C_void.Id()),1,MakeFunction1(E_breakpoint_void,"breakpoint_void")),MakeString("inspect.cl:305"))
+  _ = Core.F_attach_method(C_Reader_breakpoint.AddMethod(Signature(C_void.Id(),C_void.Id()),1,MakeFunction1(E_breakpoint_void,"breakpoint_void")),MakeString("inspect.cl:282"))
   
   C_up = MakeProperty("up",2,C_claire)
   
@@ -1222,24 +1222,24 @@ func MetaLoad() {
   C_where = MakeProperty("where",2,C_claire)
   
   
-  _ = Core.F_attach_method(C_dn.AddMethod(Signature(C_integer.Id(),C_void.Id()),0,MakeFunction1(E_dn_integer,"dn_integer")),MakeString("inspect.cl:315"))
+  _ = Core.F_attach_method(C_dn.AddMethod(Signature(C_integer.Id(),C_void.Id()),0,MakeFunction1(E_dn_integer,"dn_integer")),MakeString("inspect.cl:292"))
   
-  _ = Core.F_attach_method(C_up.AddMethod(Signature(C_integer.Id(),C_void.Id()),0,MakeFunction1(E_up_integer,"up_integer")),MakeString("inspect.cl:324"))
+  _ = Core.F_attach_method(C_up.AddMethod(Signature(C_integer.Id(),C_void.Id()),0,MakeFunction1(E_up_integer,"up_integer")),MakeString("inspect.cl:301"))
   
-  _ = Core.F_attach_method(C_where.AddMethod(Signature(C_integer.Id(),C_void.Id()),1,MakeFunction1(E_where_integer,"where_integer")),MakeString("inspect.cl:334"))
+  _ = Core.F_attach_method(C_where.AddMethod(Signature(C_integer.Id(),C_void.Id()),1,MakeFunction1(E_where_integer,"where_integer")),MakeString("inspect.cl:311"))
   
   _ = Core.F_attach_method(C_Reader_print_debug_info.AddMethod(Signature(C_integer.Id(),
     C_integer.Id(),
     C_integer.Id(),
-    C_void.Id()),1,MakeFunction3(E_print_debug_info_integer,"print_debug_info_integer")),MakeString("inspect.cl:346"))
+    C_void.Id()),1,MakeFunction3(E_print_debug_info_integer,"print_debug_info_integer")),MakeString("inspect.cl:323"))
   
-  _ = Core.F_attach_method(C_Reader_Show.AddMethod(Signature(C_integer.Id(),C_any.Id()),1,MakeFunction1(E_Show_integer,"Show_integer")),MakeString("inspect.cl:359"))
+  _ = Core.F_attach_method(C_Reader_Show.AddMethod(Signature(C_integer.Id(),C_any.Id()),1,MakeFunction1(E_Show_integer,"Show_integer")),MakeString("inspect.cl:336"))
   
-  _ = Core.F_attach_method(C_block.AddMethod(Signature(C_integer.Id(),C_void.Id()),1,MakeFunction1(E_block_integer,"block_integer")),MakeString("inspect.cl:384"))
+  _ = Core.F_attach_method(C_block.AddMethod(Signature(C_integer.Id(),C_void.Id()),1,MakeFunction1(E_block_integer,"block_integer")),MakeString("inspect.cl:361"))
   
-  _ = Core.F_attach_method(C_Reader_closure_build.AddMethod(Signature(C_lambda.Id(),C_list.Id()),0,MakeFunction1(E_closure_build_lambda,"closure_build_lambda")),MakeString("inspect.cl:392"))
+  _ = Core.F_attach_method(C_Reader_closure_build.AddMethod(Signature(C_lambda.Id(),C_list.Id()),0,MakeFunction1(E_closure_build_lambda,"closure_build_lambda")),MakeString("inspect.cl:369"))
   
-  _ = Core.F_attach_method(C_Reader_closure_build.AddMethod(Signature(C_any.Id(),C_list.Id(),C_void.Id()),0,MakeFunction2(E_closure_build_any,"closure_build_any")),MakeString("inspect.cl:403"))
+  _ = Core.F_attach_method(C_Reader_closure_build.AddMethod(Signature(C_any.Id(),C_list.Id(),C_void.Id()),0,MakeFunction2(E_closure_build_any,"closure_build_any")),MakeString("inspect.cl:380"))
   
   C_measure = NewClass("measure",C_object,C_claire)
   Core.F_close_slot(C_measure.AddSlot(C_Reader_m_index,ToType(C_integer.Id()),MakeInteger(1).Id()))
@@ -1247,28 +1247,28 @@ func MetaLoad() {
   Core.F_close_slot(C_measure.AddSlot(C_Reader_sum_square,ToType(C_float.Id()),MakeFloat(0).Id()))
   Core.F_close_slot(C_measure.AddSlot(C_Reader_num_value,ToType(C_float.Id()),MakeFloat(0).Id()))
   
-  _ = Core.F_attach_method(C_close.AddMethod(Signature(C_measure.Id(),C_measure.Id()),0,MakeFunction1(E_close_measure,"close_measure")),MakeString("inspect.cl:420"))
+  _ = Core.F_attach_method(C_close.AddMethod(Signature(C_measure.Id(),C_measure.Id()),0,MakeFunction1(E_close_measure,"close_measure")),MakeString("inspect.cl:397"))
   
-  _ = Core.F_attach_method(C_add.AddMethod(Signature(C_measure.Id(),C_float.Id(),C_measure.Id()),0,MakeFunction2(E_add_measure,"add_measure")),MakeString("inspect.cl:422"))
+  _ = Core.F_attach_method(C_add.AddMethod(Signature(C_measure.Id(),C_float.Id(),C_measure.Id()),0,MakeFunction2(E_add_measure,"add_measure")),MakeString("inspect.cl:399"))
   
-  _ = Core.F_attach_method(C_mean.AddMethod(Signature(C_measure.Id(),C_float.Id()),0,MakeFunction1(E_mean_measure,"mean_measure")),MakeString("inspect.cl:424"))
+  _ = Core.F_attach_method(C_mean.AddMethod(Signature(C_measure.Id(),C_float.Id()),0,MakeFunction1(E_mean_measure,"mean_measure")),MakeString("inspect.cl:401"))
   
-  _ = Core.F_attach_method(C_stdev.AddMethod(Signature(C_measure.Id(),C_float.Id()),0,MakeFunction1(E_stdev_measure,"stdev_measure")),MakeString("inspect.cl:427"))
+  _ = Core.F_attach_method(C_stdev.AddMethod(Signature(C_measure.Id(),C_float.Id()),0,MakeFunction1(E_stdev_measure,"stdev_measure")),MakeString("inspect.cl:404"))
   
-  _ = Core.F_attach_method(C_stdev_Z.AddMethod(Signature(C_measure.Id(),C_float.Id()),0,MakeFunction1(E_stdev_Z_measure,"stdev_Z_measure")),MakeString("inspect.cl:428"))
+  _ = Core.F_attach_method(C_stdev_Z.AddMethod(Signature(C_measure.Id(),C_float.Id()),0,MakeFunction1(E_stdev_Z_measure,"stdev_Z_measure")),MakeString("inspect.cl:405"))
   
-  _ = Core.F_attach_method(C_reset.AddMethod(Signature(C_measure.Id(),C_void.Id()),0,MakeFunction1(E_reset_measure,"reset_measure")),MakeString("inspect.cl:429"))
+  _ = Core.F_attach_method(C_reset.AddMethod(Signature(C_measure.Id(),C_void.Id()),0,MakeFunction1(E_reset_measure,"reset_measure")),MakeString("inspect.cl:406"))
   
-  _ = Core.F_attach_method(C_self_print.AddMethod(Signature(C_measure.Id(),C_void.Id()),1,MakeFunction1(E_self_print_measure_Reader,"self_print_measure_Reader")),MakeString("inspect.cl:430"))
+  _ = Core.F_attach_method(C_self_print.AddMethod(Signature(C_measure.Id(),C_void.Id()),1,MakeFunction1(E_self_print_measure_Reader,"self_print_measure_Reader")),MakeString("inspect.cl:407"))
   
-  _ = Core.F_attach_method(C_logMeasure.AddMethod(Signature(C_string.Id(),C_void.Id()),1,MakeFunction1(E_logMeasure_string,"logMeasure_string")),MakeString("inspect.cl:442"))
+  _ = Core.F_attach_method(C_logMeasure.AddMethod(Signature(C_string.Id(),C_void.Id()),1,MakeFunction1(E_logMeasure_string,"logMeasure_string")),MakeString("inspect.cl:419"))
   
   _ = Core.F_attach_method(C_addLog.AddMethod(Signature(C_integer.Id(),
     C_float.Id(),
     C_float.Id(),
     C_float.Id(),
     C_integer.Id(),
-    C_void.Id()),1,MakeFunction5(E_addLog_integer,"addLog_integer")),MakeString("inspect.cl:449"))
+    C_void.Id()),1,MakeFunction5(E_addLog_integer,"addLog_integer")),MakeString("inspect.cl:426"))
   
   } 
 

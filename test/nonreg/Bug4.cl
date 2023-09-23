@@ -55,12 +55,14 @@ Request <: object(to:Screen,
 cClass <: thing(score:integer, requests:set<Request>)
 store(score)
 
-[bar(x:integer,c:cClass) : integer -> x]
+[bar(x:integer,c:cClass) : integer 
+ -> x]
 
 valueMatch(s1:Screen,s2:Screen) : integer
  -> 12
 
-valueMatch(r:Request,s:Screen) : integer => valueMatch(r.to, s)
+valueMatch(r:Request,s:Screen) : integer 
+  => valueMatch(r.to, s)
 
 bestmatch(r:Request) : Screen -> r.to 
 
@@ -102,5 +104,11 @@ resList)]
           check("fooThB",v = 12))  ]
 
 (fooThB())
+
+// new bug from SGSS
+[createLists() 
+  -> let l1 := list(1,2,3,4,5),
+         l2 := list<float>{ 0.0 | y in l1} in
+      check("sgss", length(l2) = 5) ]
 
 (testOK())

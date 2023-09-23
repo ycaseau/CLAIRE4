@@ -1,5 +1,5 @@
-/***** CLAIRE Compilation of file /Users/ycaseau/Dropbox/src/clairev4.07/src/compile/osystem.cl 
-         [version 4.0.08 / safety 5] Sunday 03-12-2023 14:47:37 *****/
+/***** CLAIRE Compilation of file /Users/ycaseau/Dropbox/src/clairev4.10/src/compile/osystem.cl 
+         [version 4.1 / safety 5] Saturday 09-23-2023 07:22:33 *****/
 
 package Optimize
 import (_ "fmt"
@@ -936,10 +936,13 @@ func F_Optimize_g_throw1_any (self *ClaireAny) EID {
             }  else if (g0066.Arg.Id() == C_Optimize__startimes_integer_star.Value) { 
             Result = EID{C_compiler.Overflow_ask.Id(),0}
             }  else if (g0066.Arg.Id() == C_Optimize__stardiv_integer_star.Value) { 
-            Result = EID{MakeBoolean((C_compiler.Safety < 5) && ((C_integer.Id() != g0066.Args.At(1).Isa.Id()) || 
+            Result = EID{MakeBoolean((C_compiler.Safety < 2) && ((C_integer.Id() != g0066.Args.At(1).Isa.Id()) || 
+                g0066.Args.At(1).IsInt(0))).Id(),0}
+            }  else if (g0066.Arg.Id() == C_Optimize__starmod_integer_star.Value) { 
+            Result = EID{MakeBoolean((C_compiler.Safety < 2) && ((C_integer.Id() != g0066.Args.At(1).Isa.Id()) || 
                 g0066.Args.At(1).IsInt(0))).Id(),0}
             }  else if (g0066.Arg.Id() == C_Optimize__stardiv_float_star.Value) { 
-            Result = EID{MakeBoolean((C_compiler.Safety < 5) && ((C_float.Id() != g0066.Args.At(1).Isa.Id()) || 
+            Result = EID{MakeBoolean((C_compiler.Safety < 2) && ((C_float.Id() != g0066.Args.At(1).Isa.Id()) || 
                 (Equal(g0066.Args.At(1),MakeFloat(0).Id()) == CTRUE))).Id(),0}
             } else {
             Result = F_Compile_can_throw_ask_method(g0066.Arg)

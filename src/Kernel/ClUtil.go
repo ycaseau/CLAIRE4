@@ -857,6 +857,15 @@ func F_random_integer(n int) int {
 }
 func E_random_integer(c EID) EID { return EID{C__INT, IVAL(F_random_integer(INT(c)))} }
 
+// random_I_integer resets the seed
+func F_random_I_integer(n int) {
+	rand.Seed(int64(n))
+}
+
+func E_random_I_integer(c EID) EID { 
+	F_random_I_integer(INT(c))
+	return EVOID}
+
 // used locally
 func minInt(x int, y int) int {
 	if x > y {

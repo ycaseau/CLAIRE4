@@ -361,6 +361,7 @@ Compile/ForceNotThrow :: list<method>()
 *times_integer* :: (* @ integer)
 *div_integer* :: (/ @ integer)
 *div_float* :: (/ @ float)
+*mod_integer* :: (mod @ integer)
 
 // debug loop
 claire/DSHOW:boolean := false
@@ -384,9 +385,11 @@ claire/DSHOW:boolean := false
                      else if g_throw(self.args) true
                      else if (self.arg = *times_integer*)  compiler.overflow?
                      else if (self.arg = *div_integer*) 
-                        (compiler.safety < 5 & not(self.args[2] % integer & self.args[2] != 0))
+                        (compiler.safety < 2 & not(self.args[2] % integer & self.args[2] != 0))
+                    else if (self.arg = *mod_integer*) 
+                        (compiler.safety < 2 & not(self.args[2] % integer & self.args[2] != 0))
                      else if (self.arg = *div_float*) 
-                        (compiler.safety < 5 & not(self.args[2] % float & self.args[2] != 0.0))
+                        (compiler.safety < 2 & not(self.args[2] % float & self.args[2] != 0.0))
                      else  can_throw?(self.arg)),
        Call_slot (g_throw(get(arg, self)) | (known?(test,self) & self.test)),
        Call_table (g_throw(get(arg, self)) | (known?(test,self) & self.test)),

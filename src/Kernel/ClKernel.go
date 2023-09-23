@@ -2,7 +2,7 @@
 // microCLAIRE                                              CLAIRE 4
 // golang microClaire Kernel - started on June 21st, 2020
 //
-//  Copyright (C) 2020-2022 Yves Caseau. All Rights Reserved.
+//  Copyright (C) 2020-2023 Yves Caseau. All Rights Reserved.
 //  Redistribution and use in source and binary forms are permitted
 //  provided that source distribution retains this entire copyright
 //  notice and comments.
@@ -797,6 +797,8 @@ type ClaireModule struct {
 	MadeOf   *ClaireList              // listf of file names
 	Status   int                      // new (0:default, 1:loaded, 2 compiled, 3:c+loaded, 4:c+l+traced)
 	External *ClaireString            // external of the module: .lib library
+	Imports *ClaireSet                // set of resources names
+	Resources *ClaireList             // listf of file names
 	Evaluate *ClaireFunction          // load function produced by compiler
 	table    map[string]*ClaireSymbol // each mod has a symbol table (private)
 }
@@ -1012,6 +1014,7 @@ var C_part_of *ClaireProperty
 var C_uses *ClaireProperty
 var C_source *ClaireProperty
 var C_made_of *ClaireProperty
+var C_resources *ClaireProperty
 var C_mClaire_status *ClaireProperty
 var C_external *ClaireProperty
 var C_get *ClaireProperty
@@ -1042,6 +1045,7 @@ var C_symbol_I *ClaireProperty
 var C_make_string *ClaireProperty
 var C_make_array *ClaireProperty
 var C_random *ClaireProperty
+var C_random_I *ClaireProperty
 var C_string_I *ClaireProperty
 var C_set_I *ClaireProperty
 var C_integer_I *ClaireProperty
@@ -1140,9 +1144,9 @@ var C_second *ClaireProperty
 var C_slice *ClaireProperty
 var C_osname *ClaireProperty
 var C_file_separator *ClaireProperty
-var C_stat *ClaireProperty
+var C_statistics *ClaireProperty
 var C_hash *ClaireProperty
-var C_reboot *ClaireProperty
+var C_reboot *ClaireProperty         // v4.10 : reboot() relaunch the system construction
 	
 // operations
 var C_add *ClaireOperation
@@ -1177,7 +1181,8 @@ var C_cons *ClaireOperation
 
 // consequence: Claire Object slots are either *Clany or direct 64bits values (float or int)
 
-// this is a dummy hierarchy to support object up to size 30
+// this is a dummy hierarchy to support object up to size 50 
+// it is broken into 5 slots incremeants to allocate the right size (modulo 5)
 type ClaireDummy1 struct {
 	ClaireAny
 	a2 *ClaireAny
@@ -1221,7 +1226,6 @@ type ClaireDummy5 struct {
 	a24 *ClaireAny
 }
 
-// for the time being we stop at 30 slots.
 type ClaireDummy6 struct {
 	ClaireDummy5
 	a25 *ClaireAny
@@ -1231,6 +1235,42 @@ type ClaireDummy6 struct {
 	a29 *ClaireAny
 }
 
+type ClaireDummy7 struct {
+	ClaireDummy6
+	a30 *ClaireAny
+	a31 *ClaireAny
+	a32 *ClaireAny
+	a33 *ClaireAny
+	a34 *ClaireAny
+}
+
+type ClaireDummy8 struct {
+	ClaireDummy7
+	a35 *ClaireAny
+	a36 *ClaireAny
+	a37 *ClaireAny
+	a38 *ClaireAny
+	a39 *ClaireAny
+}
+
+type ClaireDummy9 struct {
+	ClaireDummy8
+	a40 *ClaireAny
+	a41 *ClaireAny
+	a42 *ClaireAny
+	a43 *ClaireAny
+	a44 *ClaireAny
+}
+
+// for the time being we stop at 50 slots and we check it in ClRfelect.go (addSlot)
+type ClaireDummy10 struct {
+	ClaireDummy9
+	a45 *ClaireAny
+	a46 *ClaireAny
+	a47 *ClaireAny
+	a48 *ClaireAny
+	a49 *ClaireAny
+}
 
 // constructors : generic "make object" using c.slots to know the size 
 // HENCE IT DOES NOT WORK WITH CLASSES or objects with hidden go slots
@@ -1249,8 +1289,16 @@ func (c *ClaireClass) makeObject() *ClaireObject {
 		o = (*ClaireObject)(unsafe.Pointer(new(ClaireDummy5)))
 	} else if n < 30 {
 		o = (*ClaireObject)(unsafe.Pointer(new(ClaireDummy6)))
+	} else if n < 35 {
+		o = (*ClaireObject)(unsafe.Pointer(new(ClaireDummy7)))
+	} else if n < 40 {
+		o = (*ClaireObject)(unsafe.Pointer(new(ClaireDummy8)))
+	} else if n < 45 {
+		o = (*ClaireObject)(unsafe.Pointer(new(ClaireDummy9)))
+	} else if n < 50 {
+		o = (*ClaireObject)(unsafe.Pointer(new(ClaireDummy10)))
 	} else {
-		panic(fmt.Sprintf("object of size %d is too big for claire ", n))
+		panic(fmt.Sprintf("object of size %d (over 50) is too big for claire (fatal error)", n))
 	}
 	return o
 }
@@ -1328,8 +1376,48 @@ func (x *ClaireObject) GetObj(i int) *ClaireAny {
 		return ((*ClaireDummy6)(unsafe.Pointer(x))).a28
 	} else if i == 29 {
 		return ((*ClaireDummy6)(unsafe.Pointer(x))).a29
+	} else if i == 30 {
+		return ((*ClaireDummy7)(unsafe.Pointer(x))).a30
+	} else if i == 31 {
+		return ((*ClaireDummy7)(unsafe.Pointer(x))).a31
+	} else if i == 32 {
+		return ((*ClaireDummy7)(unsafe.Pointer(x))).a32
+	} else if i == 33 {
+		return ((*ClaireDummy7)(unsafe.Pointer(x))).a33
+	} else if i == 34 {
+		return ((*ClaireDummy7)(unsafe.Pointer(x))).a34
+	} else if i == 35 {
+		return ((*ClaireDummy8)(unsafe.Pointer(x))).a35
+	} else if i == 36 {
+		return ((*ClaireDummy8)(unsafe.Pointer(x))).a36
+	} else if i == 37 {
+		return ((*ClaireDummy8)(unsafe.Pointer(x))).a37
+	} else if i == 38 {
+		return ((*ClaireDummy8)(unsafe.Pointer(x))).a38
+	} else if i == 39 {
+		return ((*ClaireDummy8)(unsafe.Pointer(x))).a39
+	} else if i == 40 {
+		return ((*ClaireDummy9)(unsafe.Pointer(x))).a40
+	} else if i == 41 {
+		return ((*ClaireDummy9)(unsafe.Pointer(x))).a41
+	} else if i == 42 {
+		return ((*ClaireDummy9)(unsafe.Pointer(x))).a42
+	} else if i == 43 {
+		return ((*ClaireDummy9)(unsafe.Pointer(x))).a43
+	} else if i == 44 {
+		return ((*ClaireDummy9)(unsafe.Pointer(x))).a44
+	} else if i == 45 {
+		return ((*ClaireDummy10)(unsafe.Pointer(x))).a45
+	} else if i == 46 {
+		return ((*ClaireDummy10)(unsafe.Pointer(x))).a46
+	} else if i == 47 {
+		return ((*ClaireDummy10)(unsafe.Pointer(x))).a47
+	} else if i == 48 {
+		return ((*ClaireDummy10)(unsafe.Pointer(x))).a48
+	} else if i == 49 {
+		return ((*ClaireDummy10)(unsafe.Pointer(x))).a49
 	} else {
-		panic("Fatal error with getObj (i too big >= 30)")
+		panic("Fatal error with getObj (i too big >= 50)")
 		return C_class.Id()
 	} // need a Cerror !
 }
@@ -1406,8 +1494,48 @@ func (x *ClaireObject) SetObj(i int, y *ClaireAny) {
 		((*ClaireDummy6)(unsafe.Pointer(x))).a28 = y
 	} else if i == 29 {
 		((*ClaireDummy6)(unsafe.Pointer(x))).a29 = y
+	} else if i == 30 {
+		((*ClaireDummy7)(unsafe.Pointer(x))).a30 = y
+	} else if i == 31 {
+		((*ClaireDummy7)(unsafe.Pointer(x))).a31 = y
+	} else if i == 32 {
+		((*ClaireDummy7)(unsafe.Pointer(x))).a32 = y
+	} else if i == 33 {
+		((*ClaireDummy7)(unsafe.Pointer(x))).a33 = y
+	} else if i == 34 {
+		((*ClaireDummy7)(unsafe.Pointer(x))).a34 = y
+	} else if i == 35 {
+		((*ClaireDummy8)(unsafe.Pointer(x))).a35 = y
+	} else if i == 36 {
+		((*ClaireDummy8)(unsafe.Pointer(x))).a36 = y
+	} else if i == 37 {
+		((*ClaireDummy8)(unsafe.Pointer(x))).a37 = y
+	} else if i == 38 {
+		((*ClaireDummy8)(unsafe.Pointer(x))).a38 = y
+	} else if i == 39 {
+		((*ClaireDummy8)(unsafe.Pointer(x))).a39 = y
+	} else if i == 40 {
+		((*ClaireDummy9)(unsafe.Pointer(x))).a40 = y
+	} else if i == 41 {
+		((*ClaireDummy9)(unsafe.Pointer(x))).a41 = y
+	} else if i == 42 {
+		((*ClaireDummy9)(unsafe.Pointer(x))).a42 = y
+	} else if i == 43 {
+		((*ClaireDummy9)(unsafe.Pointer(x))).a43 = y
+	} else if i == 44 {
+		((*ClaireDummy9)(unsafe.Pointer(x))).a44 = y
+	} else if i == 45 {
+		((*ClaireDummy10)(unsafe.Pointer(x))).a45 = y
+	} else if i == 46 {
+		((*ClaireDummy10)(unsafe.Pointer(x))).a46 = y
+	} else if i == 47 {
+		((*ClaireDummy10)(unsafe.Pointer(x))).a47 = y
+	} else if i == 48 {
+		((*ClaireDummy10)(unsafe.Pointer(x))).a48 = y
+	} else if i == 49 {
+		((*ClaireDummy10)(unsafe.Pointer(x))).a49 = y
 	} else {
-		panic(fmt.Sprintf("Fatal error with setObj, attempt to use i=%d for class %s (>= 30)", i, x.Isa.Name.key))
+		panic(fmt.Sprintf("Fatal error with setObj, attempt to use i=%d for class %s (>= 50)", i, x.Isa.Name.key))
 	}
 }
 
@@ -1441,6 +1569,7 @@ func (x *ClaireObject) SetFloat(i int, y float64) {
 
 // class inclusion : c <= c2  <=>   c.ancestor = (void ... c2.....) with c2 in position n - 1 (len ancestors)
 func (c *ClaireClass) IsIn(c2 *ClaireClass) *ClaireBoolean {
+	// fmt.Printf("IsIn %s:%p %s:%p\n", c.Prt(), c, c2.Prt(),c2)
 	n := len(c2.Ancestors.ValuesO())
 	if n <= len(c.Ancestors.ValuesO()) && c.Ancestors.ValuesO()[n-1] == c2.Id() {
 		return CTRUE

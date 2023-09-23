@@ -204,4 +204,17 @@ Dist[x:integer,y:integer] : integer := 0
  
 (naivebug())
 
+// a new bug from SGSS
+City <: object(name:string)
+(instanced(City))
+
+CY[i:(1 .. 10)] : City := unknown
+
+[testSGSS()
+  -> for i in (1 .. 10)
+       CY[i] := City(name = "City" /+ string!(i)),
+    check("instanced works", size(City) = 10)]
+
+(testSGSS()) 
+
 (testOK())

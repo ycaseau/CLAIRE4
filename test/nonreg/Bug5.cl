@@ -5,8 +5,13 @@
 
 
 // ---------------------------------------------------------------
-// this file contains bugs related with floats
+// this file contains bugs related with floats & imported primitives
 // ---------------------------------------------------------------
+
+// integer bugs --------------------------------------------------------------------
+[day_(i:integer) : integer 
+    -> (i mod (365 * 24)) / 24]
+
 
 // bugs from XL -----------------------------------------------------------------------
 
@@ -25,7 +30,6 @@ zz :: Z()
 
 
 /// classical stuff ---------------------------------
-
 
 [sum(s:any) : float
   -> let d := 0.0 in (for x in s d :+ x, d) ]
@@ -47,6 +51,12 @@ this_is_a_global:any :: 12
 [bar(sze:float) : float -> sze :/ 546.0]
 
 (check("barfoo",bar(foo()) = 1.0))
+
+// ---------- dumb float function --------------------
+[sinis(x:float) : float
+ -> let y := x / 6.28, f := y - float!(integer!(y)), z := f * 6.28 in
+      (if (z > 3.14) -(sinis(z - 3.14))
+       else (z / (3.14 / 2))) ]
 
 // --------- parsing a float -------------------------
 
@@ -258,6 +268,17 @@ LL :: (x:integer){x + 1}
 
 (testLambda())
 
-(testOK())
 
+
+// test the use of ports -------------------------------------------
+[openFile(s:string) : port
+  -> let fn := s /+ ".log",
+         p := fopen(fn ,"w") in
+       (use_as_output(p),
+        printf("------------------  Experiment version ~A on ~A",release(),date!(1)),
+        p) ]
+
+(fclose(openFile("sample")))
+
+(testOK())
 

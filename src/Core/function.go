@@ -1,5 +1,5 @@
-/***** CLAIRE Compilation of file /Users/ycaseau/Dropbox/src/clairev4.07/src/meta/function.cl 
-         [version 4.0.08 / safety 5] Sunday 03-12-2023 14:47:34 *****/
+/***** CLAIRE Compilation of file /Users/ycaseau/Dropbox/src/clairev4.10/src/meta/function.cl 
+         [version 4.1 / safety 5] Saturday 09-23-2023 07:22:30 *****/
 
 package Core
 import (_ "fmt"
@@ -1469,15 +1469,7 @@ func E_random_integer2 (a EID,b EID) EID {
 /* The go function for: factor?(x:integer,y:integer) [status=1] */
 func F_factor_ask_integer (x int,y int) EID { 
     var Result EID
-    { var arg_1 int
-      var try_2 EID
-      try_2 = EID{C__INT,IVAL((x%y))}
-      if ErrorIn(try_2) {Result = try_2
-      } else {
-      arg_1 = INT(try_2)
-      Result = EID{Equal(MakeInteger(arg_1).Id(),MakeInteger(0).Id()).Id(),0}
-      }
-      } 
+    Result = EID{Equal(MakeInteger((x%y)).Id(),MakeInteger(0).Id()).Id(),0}
     return Result} 
   
 // The EID go function for: factor? @ integer (throw: true) 
@@ -1487,15 +1479,7 @@ func E_factor_ask_integer (x EID,y EID) EID {
 /* The go function for: divide?(x:integer,y:integer) [status=1] */
 func F_divide_ask_integer (x int,y int) EID { 
     var Result EID
-    { var arg_1 int
-      var try_2 EID
-      try_2 = EID{C__INT,IVAL((y%x))}
-      if ErrorIn(try_2) {Result = try_2
-      } else {
-      arg_1 = INT(try_2)
-      Result = EID{Equal(MakeInteger(arg_1).Id(),MakeInteger(0).Id()).Id(),0}
-      }
-      } 
+    Result = EID{Equal(MakeInteger((y%x)).Id(),MakeInteger(0).Id()).Id(),0}
     return Result} 
   
 // The EID go function for: divide? @ integer (throw: true) 
@@ -1679,15 +1663,7 @@ func F_printFDigit_integer (x int,i int) EID {
         { var d int = (x/f)
           F_princ_integer(d)
           if (i > 1) { 
-            { var arg_2 int
-              var try_3 EID
-              try_3 = EID{C__INT,IVAL((x%f))}
-              if ErrorIn(try_3) {Result = try_3
-              } else {
-              arg_2 = INT(try_3)
-              Result = F_printFDigit_integer(arg_2,(i-1))
-              }
-              } 
+            Result = F_printFDigit_integer((x%f),(i-1))
             } else {
             Result = EID{CFALSE.Id(),0}
             } 

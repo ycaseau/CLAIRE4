@@ -1,7 +1,7 @@
 //+-------------------------------------------------------------+
 //| CLAIRE                                                      |
 //| gogen.cl                                                    |
-//| Copyright (C) 2020 - 2021 Yves Caseau. All Rights Reserved  |
+//| Copyright (C) 2020 - 2023 Yves Caseau. All Rights Reserved  |
 //| cf. copyright info in file object.cl: about()               |
 //+-------------------------------------------------------------+
 
@@ -444,17 +444,9 @@ c_string(c:go_producer, self:symbol) : string
     else if (s = float) printf("MakeFloat(~I)", g_expression(x,float))
     else if (s = char) printf("MakeChar(~I)", g_expression(x,char))
     // else if (s = string) printf("MakeString(~I)", g_expression(x,string))  // ??? why the comment out ?
-    else if (s inherit? object | s = any | s = primitive) g_expression(x,s)
+    else if (s inherit? object | s = any | s = primitive | s = port) g_expression(x,s)
     else error("[internal] to_cl for a ~S is not implemented", s) ]
 
-/* reverse function : produce a native forme from a claire object
-// quite simple with go since for object, OID is the object
-[to_c(c:go_producer,x:any,s:class) : void
-  -> if (x = unknown) printf("CNULL")
-     // else if (x % global_variable & x.range = {} & x.value = nil)   printf("Kernel.nil")
-     else if (s = integer | s = float | s = string | s = char | s = function) 
-       printf("~I.Value", g_expression(x, s))
-     else g_expression(x,s) ] */
 
 // new for go: compile to an EID form (128 bit generic representation)
 // s is the expected sort
@@ -464,7 +456,7 @@ c_string(c:go_producer, self:symbol) : string
     else if (s = float) printf("EID{C__FLOAT,FVAL(~I)}", g_expression(x,float))
     else if (s = char) printf("EID{C__CHAR,CVAL(~I)}", g_expression(x,char))
     else if (s = string | s = function | s inherit? object) printf("EID{~I,0}", g_expression(x,any))
-    else if (s = any | s = primitive) printf("~I.ToEID()",to_cl(c,x,s))
+    else if (s = any | s = primitive | s = port) printf("~I.ToEID()",to_cl(c,x,s))
     else error("[internal] to_eid for a ~S is not implemented", s) ]
 
 // reciprocate with an expected class e / used for variables
@@ -484,7 +476,7 @@ c_string(c:go_producer, self:symbol) : string
      else if (s = any) printf("ANY(") 
      else if (s <= object | s = array | s = string | s = port | s = function)
         printf("~I(OBJ(",cast_class(s))               
-     else if (s != any) error("what the fuck: eid prefix for ~S",s) ]
+     else if (s != any) error("[internal]: eid prefix for ~S is not implemented",s) ]
 
 [eid_post(s:class) : void
   ->  if (s = EID | s = void) nil

@@ -1,5 +1,5 @@
-/***** CLAIRE Compilation of file /Users/ycaseau/Dropbox/src/clairev4.07/src/compile/gogen.cl 
-         [version 4.0.08 / safety 5] Sunday 03-12-2023 14:47:37 *****/
+/***** CLAIRE Compilation of file /Users/ycaseau/Dropbox/src/clairev4.10/src/compile/gogen.cl 
+         [version 4.1 / safety 5] Saturday 09-23-2023 07:22:33 *****/
 
 package Generate
 import (_ "fmt"
@@ -22,7 +22,7 @@ func import_g0041() {
 //+-------------------------------------------------------------+
 //| CLAIRE                                                      |
 //| gogen.cl                                                    |
-//| Copyright (C) 2020 - 2021 Yves Caseau. All Rights Reserved  |
+//| Copyright (C) 2020 - 2023 Yves Caseau. All Rights Reserved  |
 //| cf. copyright info in file object.cl: about()               |
 //+-------------------------------------------------------------+
 // *******************************************************************
@@ -1366,7 +1366,8 @@ func (c *GenerateGoProducer) ToCl (x *ClaireAny,s *ClaireClass) EID {
       }
       }  else if ((s.IsIn(C_object) == CTRUE) || 
         ((s.Id() == C_any.Id()) || 
-          (s.Id() == C_primitive.Id()))) { 
+          ((s.Id() == C_primitive.Id()) || 
+            (s.Id() == C_port.Id())))) { 
       Result = Core.F_CALL(C_Generate_g_expression,ARGS(x.ToEID(),EID{s.Id(),0}))
       } else {
       Result = ToException(Core.C_general_error.Make(MakeString("[internal] to_cl for a ~S is not implemented").Id(),MakeConstantList(s.Id()).Id())).Close()
@@ -1377,7 +1378,6 @@ func (c *GenerateGoProducer) ToCl (x *ClaireAny,s *ClaireClass) EID {
 func E_Generate_to_cl_go_producer (c EID,x EID,s EID) EID { 
     return ToGenerateGoProducer(OBJ(c)).ToCl(ANY(x),ToClass(OBJ(s)) )} 
   
-//
 // new for go: compile to an EID form (128 bit generic representation)
 // s is the expected sort
 /* The go function for: to_eid(c:go_producer,x:any,s:class) [status=1] */
@@ -1417,7 +1417,8 @@ func (c *GenerateGoProducer) ToEid (x *ClaireAny,s *ClaireClass) EID {
       Result = EVOID
       }
       }  else if ((s.Id() == C_any.Id()) || 
-        (s.Id() == C_primitive.Id())) { 
+        ((s.Id() == C_primitive.Id()) || 
+          (s.Id() == C_port.Id()))) { 
       Result = c.ToCl(x,s)
       if !ErrorIn(Result) {
       PRINC(".ToEID()")
@@ -1481,7 +1482,7 @@ func F_Generate_eid_prefix_class (s *ClaireClass) EID {
       PRINC("(OBJ(")
       Result = EVOID
       }  else if (s.Id() != C_any.Id()) { 
-      Result = ToException(Core.C_general_error.Make(MakeString("what the fuck: eid prefix for ~S").Id(),MakeConstantList(s.Id()).Id())).Close()
+      Result = ToException(Core.C_general_error.Make(MakeString("[internal]: eid prefix for ~S is not implemented").Id(),MakeConstantList(s.Id()).Id())).Close()
       } else {
       Result = EID{CFALSE.Id(),0}
       } 

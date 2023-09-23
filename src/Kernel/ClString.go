@@ -539,7 +539,7 @@ func (s *ClaireSymbol) Value() *ClaireAny {
 }
 
 func E_value_symbol(s EID) EID {
-	return EID{ToSymbol(OBJ(s)).value, 0}
+	return EID{ToSymbol(OBJ(s)).Value(), 0}
 }
 
 // create a symbol in the current module
@@ -717,10 +717,10 @@ func E_namespace_module (m EID) EID {
 }
 
 // open a module x with module identifier index
-func (x *ClaireModule) Begin() {
-	// fmt.Printf(">> Begin module %s\n",x.Prt())
+func (m *ClaireModule) Begin() {
+	// fmt.Printf(">> Begin module %s\n",m.Prt())
 	ClEnv.moduleStack.AddFast(ClEnv.Module_I.ToAny())
-	ClEnv.Module_I = x
+	ClEnv.Module_I = m
 }
 
 func E_begin_module(m EID) EID {

@@ -3,39 +3,31 @@
 // Mac version
 *where* :: "/Users/ycaseau/claire/v4.0/go"                      // where the init file is
 *output* :: "/Users/ycaseau/claire/v4.0/go/src"
-*meta* :: "/Users/ycaseau/Dropbox/src/clairev4.07/src/meta"            // source files on dropbox (v2)
-*compile* :: "/Users/ycaseau/Dropbox/src/clairev4.07/src/compile"      // source files on dropbox (v2)
+*meta* :: "/Users/ycaseau/Dropbox/src/clairev4.10/src/meta"            // source files on dropbox (v2)
+*compile* :: "/Users/ycaseau/Dropbox/src/clairev4.10/src/compile"      // source files on dropbox (v2)
 *bsrc* :: "/Users/ycaseau/claire/v4.0/test/nonreg"
 *tsrc* :: "/Users/ycaseau/claire/v4.0/test/perf"
 *rsrc* :: "/Users/ycaseau/claire/v4.0/test/rules"
 
 // these are the global variables expected by the compiler
-RELEASE:float :: 0.08    // version of March 12th, 2023
+RELEASE:float :: 1.0    // version of September 23rd, 2023
+
+// note : the log file is 
 
 /* // additions  (comment out what you don't want)
 begin(Core)
 claire/ephemeral_object <: object()
-end(Core)
+end(Core) */
 
 begin(Optimize)
-*times_integer* :: (* @ integer)
-*div_integer* :: (/ @ integer)
-*div_float* :: (/ @ float)
+*mod_integer* :: (mod @ integer)
 end(Optimize)
 
 begin(Generate)
-// reverse from eid (the args of the call have been EIDed : represented by an EID var)
-// hence when we need a regular object, we must check that the arg x is not in the var list
-[g_eid_expression(x:any,s:class,lvar:list<Variable>) : void
-    -> case x
-        (Variable (if (x % lvar) (eid_prefix(PRODUCER,s),
-                                  princ(c_string(PRODUCER,x)),
-                                  eid_post(PRODUCER,s))
-                   else g_expression(x,s)),
-         any g_expression(x,s)) ]
+// output :: property()
 end(Generate)
 
- */ // end of additions
+ // end of additions
 
 // ***************************************************************************
 // *    Part 1: Modules & compiler environment                               *
@@ -96,6 +88,9 @@ mCopy :: module(part_of = claire,
 // *    Part 3: Bugs for CLAIRE                                              *
 // ***************************************************************************
 
+// bu0 is a file of bugs that used to crash nastyly but now should trigger a panic error
+bu0 :: module( uses = list(Reader), source = *bsrc*,
+               made_of = list("bug0"))
 
 // parsing bugs: things that cannot get read right
 bu1 :: module( uses = list(Reader), source = *bsrc*,

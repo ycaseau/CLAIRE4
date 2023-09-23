@@ -48,15 +48,16 @@ TopDebug:integer := 0
 
 // this is the classical print(eval(read)) LISP top level :)
 // error are caught
+// v4.10 use directly "reader" object versus r variable, to support reboot
 [top_level(r:meta_reader) : void
   ->  let res:any := 0 in
         (while (res != q)
           (princ((if (TopLevelMode = 1) string!(name(module!()))
                   else if (TopLevelMode = 2) "debug" else "inspect")),
            princ("> "),
-           try (r.toplevel := true,
+           try (reader.toplevel := true,
                 if (system.mClaire/count_call > 0) system.mClaire/count_call := 1,
-                res := lexical_index(nextunit(r),nil,0,true),
+                res := lexical_index(nextunit(reader),nil,0,true),
                 if (TopLevelMode = 1) system.index := 20,
                 if (TopLevelMode = 3 & res != q) inspect_loop(res,InspectStack)
                 else (if (TopLevelMode = 1) printf("eval[~S]> ",TopCount :+ 1)
@@ -67,9 +68,9 @@ TopDebug:integer := 0
            catch any
              (if (let e := exception!() in (e.isa = system_error & e.index = -1)) // abort
                  (TopLevelMode := 1, res := q)
-              else (mClaire/restore_state(r),        // unclear what it does 
-                    if (r.external != "toplevel")
-                       printf("---- file: ~I, line: ~I\n", princ(r.external), princ(n_line())), 
+              else (mClaire/restore_state(reader),        // file.cl then ClEnv.go
+                    if (reader.external != "toplevel")
+                       printf("---- file: ~I, line: ~I\n", princ(reader.external), princ(n_line())), 
                     debug_if_possible(),
                     princ("\n"))),
            if (TopLevelMode != 1 & res = q)            // quit debug or inspect loop 
@@ -102,30 +103,6 @@ TopDebug:integer := 0
 [simple_main() : void
   -> top_level(reader),
 	   printf("[regular exit] Bye.\n") ]
-
-// unclear that we need this (simple_main is used with -cm)
-/*
-  ->  let %init? := true, l := (copy(params()) as list<string>) in  // args list
-    (try
-      (while (l)
-       (case l[1]
-        ({"-s"}  (if (length(l) >= 2)  l :<< 2 else error("option: -s <s1> <s2>")),
-         {"-f"}  (if (length(l) >= 2)  (load(l[2]), l :<< 2)
-                  else error("option: -f <filename>")),
-         {"-m"}  (if (length(l) >= 2)
-                 (if %init? (load("init"), %init? := false),
-                  let m := value(l[2]) in
-                     (if not(m % module) error("~S is not a module",l[2]),
-                      load(m), begin(m), l :<< 2))
-                  else error("option: -m <module>")),
-         {"-n"} (%init? := false, l :<< 1),
-         any (if (l[1][1] = '-') (printf("~S is an unvalid option\n",l[1])),
-              l := list<string>()))),
-       if %init? load("init"))
-       catch any (mClaire/restore_state(reader),
-                  Reader/debug_if_possible()),
-     top_level(reader),
-	   printf("[regular exit] Bye.\n")) ]  */
 
 
 // *********************************************************************

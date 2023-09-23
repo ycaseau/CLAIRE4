@@ -1,5 +1,5 @@
 /***** CLAIRE Compilation of module Language.cl 
-         [version 4.0.08 / safety 5] Sunday 03-12-2023 14:47:34 *****/
+         [version 4.1 / safety 5] Saturday 09-23-2023 07:22:30 *****/
 
 package Language
 import (_ "fmt"
@@ -1328,7 +1328,7 @@ var C_iClaire *ClaireModule
 func MetaLoad() { 
   
   It = MakeModule("Language",C_iClaire)
-  It.Comment = MakeString("Compiled on Sunday 03-12-2023 14:47:34(v4.0.08), lines:2261, warnings:1,safety:5")
+  It.Comment = MakeString("Compiled on Saturday 09-23-2023 07:22:30(v4.1), lines:2261, warnings:1,safety:5")
   ClEnv.Module_I = It
   
   // definition of the properties

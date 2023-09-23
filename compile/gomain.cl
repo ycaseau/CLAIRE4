@@ -1,7 +1,7 @@
 //+-------------------------------------------------------------+
 //| CLAIRE                                                      |
 //| gomain.cl                                                   |
-//| Copyright (C) 1994 - 2021 Yves Caseau. All Rights Reserved  |
+//| Copyright (C) 1994 - 2023 Yves Caseau. All Rights Reserved  |
 //| cf. copyright info in file object.cl: about()               |
 //+-------------------------------------------------------------+
 
@@ -100,7 +100,7 @@
                 (value(new(global_variable,symbol!(l[2]))) := true,
                  l :<< 2)
              else error("option: -S <FLAG>")),
-     {"-od"} (if (length(l) >= 2) (compiler.source := l[2], l :<< 2)
+     {"-od"} (if (length(l) >= 2) (PRODUCER.output := l[2], l :<< 2)
               else error("option: -od <directory>")),
      {"-o"} (if (length(l) >= 2) (%out := l[2], l :<< 2) 
              else error("option: -o <name>")),
@@ -235,7 +235,16 @@
 // create the main function
 // %main = true means call main()
 [main_function(m:module,l_used:list[module],%main:boolean) : void
- -> // stuff that is useful to parse
+ -> // new in v4.10 : create a E_reboot
+    printf("\n// reboot function is created by compiler \n"),
+    printf("func E_reboot(s EID) EID ~I",new_block()),
+    printf("Bootstrap()~I",breakline()),
+    printf("Load()~I",breakline()),
+    printf("Reader.C_reader.Fromp = ClEnv.Cin;~I",breakline()),
+    if (get_value("Generate") % l_used)
+        printf("ClEnv.Module_I = C_claire~I",breakline()),
+    printf("return EVOID~I~I~I",breakline(),close_block(),breakline()),
+    // stuff that is useful to parse
     printf("\n// the main function \n"),
     printf("func main() ~I",new_block()),
     printf("MemoryFlags()~I",breakline()),
@@ -249,16 +258,14 @@
         close_block(),
         close_block()),
     // printf("fmt.Printf(\"=== CLAIRE4 interpreter version 1.0    ===\\n\")~I",breakline()),
-    printf("Bootstrap()~I",breakline()),
-    printf("Load()~I",breakline()),
-    if (get_value("Generate") % l_used)
-        printf("ClEnv.Module_I = C_claire~I",breakline()),
-	  printf("Reader.C_reader.Fromp = ClEnv.Cin~I",breakline()),
+    printf("E_reboot(EVOID)~I",breakline()),
+    printf("ToMethod(C_reboot.Restrictions.ValuesO()[0]).Functional = MakeFunction1(E_reboot,\"reboot\")~I",breakline()),
+    printf("Reader.C_reader.Fromp = ClEnv.Cin~I",breakline()),
     if %main printf("Core.F_CALL(Core.C_main,ARGS(EID{ClEnv.Id(),0}))")
     else if (get_value("Generate") % l_used) printf("Generate.F_Generate_complex_main_void()")
     else printf("Reader.F_Reader_simple_main_void()"),
     breakline(),
-    close_block() ]
+    close_block()]
 
 // *******************************************************************
 // *       Part 3: module compiling : execute a command line         *
@@ -273,7 +280,9 @@
 
 // create the go
 [compile_exe(%out:string): void
- -> let s := "go build " /+ home() / "go/src"  / %out /+ ".go" in 
+ -> let  outdir := (if known?(output,PRODUCER) (" -o " /+ PRODUCER.output /+ " ") 
+                    else ""),
+         s := "go build " /+ outdir /+ home() / "go" / "src"  / %out /+ ".go" in 
      (shell(s))]
 
 

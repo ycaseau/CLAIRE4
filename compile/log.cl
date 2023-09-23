@@ -697,7 +697,62 @@ car pmember({list<float>(0.2, 0.3, 0.5, 0.7)}) fails !!
 
 // when we restart : copy sclaire in a safe place and recompile everything 
 
-// =================== to do backlog v4.0.8 (Spring 2023)==========================================
+// ============= CLAIRE 4.08 =====================================================
+
+- osystem.cl : error checking for division only if compiler.safety < 5
+- makefile: added "make cross" to be used before "make"
+
+Decision
+(1) always run cross-compilation and fixed point
+(2) odd version numbers are private ... even versions are public
+
+// ============= CLAIRE 4.10 =====================================================
+
+create v4.09 then move to v4.10 when tested
+
+- extend the size of possible classes to 50 (simple + compatible with SGSS)
+   -> ClReflect: add a test and an error (fatal error ? )
+   -> ClKernel: create, read and set objet slots
+
+- create reboot()
+  (a) in claire1.go : add a method E_reboot() that calls Bootstrap() and Load()
+  (b) add ToMethod(C_reboot.Restrictions.ValuesO()[0]).Functional = MakeFunction0(E_reboot,"reboot")
+  (c) tune compiler to add the previous line (gomain.cl)
+  (d) add reboot() in ClReflect.go
+  (e) make top-level independant from local variable (to avoid r:reader becoming obsolete)
+
+- load SGSS as a test
+
+   (1) added random! as defined in the documentations
+   (2) renamed stat() into statistics()  ( short cuts and abbreviation are not supported) 
+
+- load FBID as a test
+
+- compile SGSS & FBID : fixed a number of compiler bugs :)
+
+September 2nd
+- add m.resources: list of string that represent useful files (great to copy/upload module)
+  it works AS LONG AS THE SLOT is put in the right position
+  it was also the opportuniuty to put import where it should be 
+- now supports creating the executable on another directory
+   claire4 -od <dir> -cm <module>
+  this allowed to clean the test generation to avoid the mess in go directory
+- fixed stupid bug with value@symbol that called .value vs .Value()
+
+TODO on PC
+============
+
+(1) move to 4.10
+(2) publier CLAIRE v4.10 sur GitHub
+(3) test on PC !!!
+(4) modifier https://sites.google.com/view/claire4/home
+(5) update the CLAIRE programming language page !!
+(6) update Facebook page
+(7) publier SGSS et FBID sur github
+
+
+
+// =================== to do backlog v4.0.9 (Spring 2023)==========================================
 
 gomain.cl  -> dans mkdir, removed a direct use of / !!!!! (did not work on PC)
 

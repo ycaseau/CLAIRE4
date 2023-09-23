@@ -348,7 +348,7 @@ g_expression(self:Call_method,s:class) : void -> inline_exp(PRODUCER,self,s)
 // note that we need the *_prefix / *_post 
 [inline_exp(c:go_producer,self:Call_method1,s:class) : void
  -> let m := self.arg, p := m.selector, a1 := car(self.args), dm := domain!(m) in
-       (if (p = - & ( dm = integer | dm = float))
+       (if (p = - & ( dm = integer | dm = float) & (s = integer | s = float))
            printf("~I(-~I)~I", cast_prefix(dm,s),bounded_expression(a1,s), cast_post(dm,s))
         else if (p = owner & eid_provide?(a1))
            printf("~IOWNER(~I)~I", object_prefix(class,s),g_expression(a1,EID),object_post(class,s))

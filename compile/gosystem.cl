@@ -1,7 +1,7 @@
 //+-------------------------------------------------------------+
 //| CLAIRE                                                      |
 //| gosystem.cl                                                 |
-//| Copyright (C) 2020-2021 Yves Caseau. All Rights Reserved    |
+//| Copyright (C) 2020-2023 Yves Caseau. All Rights Reserved    |
 //| cf. copyright info in file object.cl: about()               |
 //+-------------------------------------------------------------+
 
@@ -96,8 +96,8 @@ code_producer <: producer(
    body:any = 0,                          // used to store the body of the current method
    extension:string,                      // extension for generated files
    comment:string,                        // a string that designates the target language
-   interfaces:list,                       // used to translate imported to C/.. entities
-   stat:integer = 0)                      // v3.3.32: stats about GC protection  */
+   interfaces:list)                       // used to translate imported to C/.. entities
+ //  stat:integer = 0)                      // v3.3.32: stats about GC protection  */
 
 // add the go_producer here  (replaces the C++ producer)
 // note that the double list bad/good names is ugly and should be replaced by a dictionary later 
@@ -108,7 +108,8 @@ go_producer <: code_producer(
     kernel_methods:list,               // dictionary for go "sugar" (nice methods in Kernel versus functions)
     source:string,                 // where to place the go code
     debug?:boolean = false,        // if debug, add /* explanation */ into code
-    varsym:integer = 0)            // desambiguate variables by adding a number
+    varsym:integer = 0,            // desambiguate variables by adding a number
+    output:string)                 // where to place the executable
 
 
 // TODO: define a status = 3 for the PRODUCER class that tells that is it extensible

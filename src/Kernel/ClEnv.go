@@ -399,10 +399,10 @@ func F_time_get_void() int {
 
 func E_time_get_void(void EID) EID { return EID{C__INT, IVAL(F_time_get_void())} }
 
-// read the value but only
+// reads the elapsed time in microseconds
 func F_time_read_void() int {
 	now := makeTimestamp()
-	return (now - ClEnv.tStack[ClEnv.tIndex])
+	return (now - ClEnv.tStack[ClEnv.tIndex]) / 1000
 }
 
 func E_time_read_void(void EID) EID { return EID{C__INT, IVAL(F_time_read_void())} }
@@ -1162,15 +1162,18 @@ func E_range_map_set (d EID) EID { return EID{ToMapSet(OBJ(d)).Range().Id(),0}}
 
 
 // set extension of a map = list of values	
-func (d *ClaireMapSet) SetI() *ClaireSet {
-	s := ToType(C_any.Id()).EmptySet()
+func (d *ClaireMapSet) Set_I() *ClaireSet {
+	s := d.mrange.EmptySet()
 	for _, value := range d.Value {
 		s.AddFast(value)
 	}
 	return s
 }	
 
-func E_set_I_map_set(d EID) EID {return EID{ToMapSet(OBJ(d)).SetI().Id(),0}}
+func E_set_I_map_set(d EID) EID {return EID{ToMapSet(OBJ(d)).Set_I().Id(),0}}
+
+// note: this implementation does not support projection of a map = set of keys
+
 
 // table function ----------------------------------------------------------------
 

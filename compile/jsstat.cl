@@ -1,43 +1,26 @@
 //+-------------------------------------------------------------+
 //| CLAIRE                                                      |
-//| gostat.cl                                                   |
-//| Copyright (C) 2020-2023   Yves Caseau. All Rights Reserved  |
+//| jsstat.cl                                                   |
+//| Copyright (C) 2023-2023   Yves Caseau. All Rights Reserved  |
 //| cf. copyright info in file object.cl: about()               |
 //+-------------------------------------------------------------+
 
-// statement is implemented as a general method that calls a restriction
-//        g_statement(self:any,e:class,v:string,err:boolean,loop:any)
-// (1) e is the goType that the variable v must receive (HENCE goCast must be inserted)
-//     a proper goType is a class, or EID, or void
-// (2) The argument v is the named of the C variable in which the
-//     result of the evaluation must be placed.
-// (3) err tells if an error is possible, which forces to create a chain an not a block (see Do for example)
-//     Note : if err = true, s is expected to be EID to (a) force a chain (b) place the error value in v
-// (4) loop is either false (not within a loop) or a tuple(v,s) inside the compiling of While/For
-//     This tuple describes the vreturn Variable in case a break(v) is encoutered
-
-// there are two possible outputs: blocks (lines of code without {}, used to be call inner_statement)
-// and chains  (we use chains to denote long nested ifs that manage error handling)
-
-// indentation : 
-//    we call statement(s) at the proper current indentation level => it produices n lines with the indentation
-//    and stop after a break line, at the proper identation level
-
+// j_statement is implemented as a general method that calls a restriction
+//        g_statement(self:any,,v:string)
 
 //**********************************************************************
 //*  Table of contents:                                                *
-//*          Part 1: Unfolding of complex expressions                  *
-//*          Part 2: Error Management and EID Unfolding                *
-//*          Part 3: Basic control structures                          *
-//*          Part 4: iteration                                         *
-//*          Part 5: CLAIRE-specific structures                        *
+//*          Part 1: Unfolding of complex expressions                     *
+//*          Part 2: Basic control structures                          *
+//*          Part 3: iteration                                         *
+//*          Part 4: CLAIRE-specific structures                        *
 //**********************************************************************
 
 //*************************************************************************
 //*          Part 1: Unfolding of complex expressions                     *
 //*************************************************************************
 
-// when local CLAIRE expressions are not go expression, we need to unfold the global expression into a big Let
+// when local CLAIRE expressions are not JS expression, we need to unfold the global expression into a big Let
 // HOWEVER, if only works for list of arguments whose evaluation order is not specified ! (because we move some of the evaluations earlier)
 // this reintrant compiling (calling g_statement on a expanded Let) works because Let checks if g_expression can be used
 // the same pattern is used for call_slot/call_table
@@ -50,7 +33,7 @@
 //     m is the number of statement args in l
 //     ai is a Let that defines the i-th variable corresponding to the i-th bad guy
 // CLAIRE 4: we unfold args that are not functional or args that can throw error
-unfold_args(l:list) : list
+js_unfold_args(l:list) : list
   ->  let lbad := list{i in (1 .. length(l)) | not(g_clean(l[i])) } in // list of indices
         (//[5] unfold -> ~S : ~S // list{l[x] | x in lbad}, list{stupid_t(l[x]) | x in lbad},
          list{ Let(var = build_Variable(genvar("arg_"), static_type(l[i])),
@@ -58,7 +41,7 @@ unfold_args(l:list) : list
 
 // uses the previous list to use the variable instead of the Fold.
 // l is the list of arguments, ld is the previously build unfold_args(l)
-unfold_arg(l:list,ld:list,x:any) : any
+js_unfold_arg(l:list,ld:list,x:any) : any
  -> let i := 1, j := 0, m := length(l) in
        (if (while (i <= m)
              (if not(g_clean(l[i]))
@@ -71,7 +54,7 @@ unfold_arg(l:list,ld:list,x:any) : any
 // creates the Let from the ldef definition and places the statement x in the body
 // note that the error handling is done in the Let (with g_statement)
 // x is the call form where the variable has been replaced if needed
-unfold_use(ldef:list,x:any,s:class,v:string,err:boolean,loop:any) : void
+js_unfold_use(ldef:list,x:any,s:class,v:string,err:boolean,loop:any) : void
  -> (if eid_require?(x) unfold_eid(ldef,x,s,v,err,loop)
      else let  n := length(ldef), vb := verbose() in
       (verbose() := 0,                  // v3.1.06
@@ -83,154 +66,9 @@ unfold_use(ldef:list,x:any,s:class,v:string,err:boolean,loop:any) : void
        g_statement(ldef[1] as Let,s,v,err,loop)))
 
 
-//*************************************************************************
-//*          Part 2: Error Management and EID Unfolding                   *
-//*************************************************************************
-
-// this is the error catching pattern: evaluate(self) and check if error then place it in vglobal,
-// if no error we want the value in v with expected gotype e (a true gotype = class)
-// if v is an EID variable, do not create an extra variable (we use it temporarily)
-// in a loop we generate a break to exit to loop
-// v is the variable that must receive self
-// note : g_try produces a pattern   <e = code>, if Err(e) {res =e} else { ...
-// that must be closed } with a close_try => and nothing after the close_try (nothing must if an error occured)
-[g_try(self:any,v:string,e:class,vglobal:string,loop:any) : void
-  -> let v2 := (if (e = EID) v else genvar("try_")) in 
-        (if (e != EID) var_declaration(v2,EID,1),
-         if PRODUCER.debug? printf("/*g_try(v2:~S,loop:~S,e:~S) */~I",v2,loop,e,breakline()),
-         g_statement(self,EID,v2,true,loop),
-         // AUDACIEUX: if self is a Do, and we have a loop, break statements cover the error case
-         if (self % Do & loop % Tuple) printf("{~I",breakline())
-         else
-           (if PRODUCER.debug? printf("/* ERROR PROTECTION INSERTED (~A-~A) */~I",v,vglobal,breakline()),   // for debug
-            if (v = vglobal & e = EID & not(loop % tuple))   // simpler since the value is already in vglobal !
-              printf("if !ErrorIn(~I) {~I", c_princ(v2), breakline())
-           else (printf("if ErrorIn(~I) {", c_princ(v2)),
-               if (v != vglobal) printf("~I = ~I~I",c_princ(vglobal), c_princ(v2), breakline()),
-               if (loop % tuple) 
-                  (if (loop[1] !=  vglobal) printf("~I = ~I~I",c_princ(loop[1]),c_princ(v2),breakline()),
-                   princ("break"), 
-                   breakline()), 
-               printf("} else {~I",breakline()))),
-         if (e != void & v != v2)                           // place the right go form in v
-              printf("~I = ~I~I", c_princ(v),from_eid(PRODUCER,v2,e),breakline())) ]
-
-// when the error is nested in the expression, the unfold pattern will make sure that we separate the sub_exp that may
-// create the error, but assignment is not managed this way, hence this code to avoid double error check
-[g_try(self:Assign,v:string,e:class,vglobal:string,loop:any) : void
-  -> let %var := self.var,  v1 := c_string(PRODUCER,%var), %range := class!(range(%var)) in
-        (g_try(self.arg,v1,%range,vglobal,loop),
-         if (e != void) printf("~I = ~I~I",c_princ(v),use_variable(v1,e,%range),breakline()))]
-   
-// each g_try produces a {, which we must balance before returning a new line 
-// does NOT change OPT.level !
-[close_try(n:integer) : void 
-  ->  for i in (1 .. n) princ("}"),
-      if (n > 0) breakline()]        
-
-// special case when v is a g_func that can produce an error (s is assumed to be EID)
-[error_wrap(self:any,s:class,v:string) : void 
-  -> if (s != EID)  
-        (trace(0,"---- g_throw(~S) = ~S\n",self, g_throw(self)),
-         error("design bug for error_wrap with ~S and s = ~S",self,s)),
-     printf("~A = ~I~I",v,g_expression(self,EID),breakline()) ]
-
-// this is a special case when the statement result is not needed (e = void) so we should
-// not reuse v as a temporary variable (which we considered) 
-// this is called inside a For/While, so loop is a tuple
-[g_try_void(self:any,vglobal:string,loop:any) : void   
-   -> if (case self (Assign (range(self.var) = EID)))    // pragma v:EID was used
-        let %var := self.var, v1 := c_string(PRODUCER,%var) in
-             g_try(self.arg,v1,EID,vglobal,loop)
-      else let v2 := genvar("loop_") in  
-        (// printf("/* try_void(~S) : throw = ~S */~I",self,g_throw(self), breakline()),
-         var_declaration(v2,EID,1),       // this is the EID variable for error check (assign to vglobal only if error)
-         printf("_ = ~A~I", v2,breakline()),     // sometimes this variable is not used
-         case self
-           (Do  (princ("{ "), 
-                 breakline(),                      // g_try opens one { + no change on OPT
-                 do_statement(self,EID,v2,true,loop,false)),   // no need for the last Do value
-            any g_try(self,v2,EID,vglobal,loop))) ]
-
-// eid_require means that the internal call should better be evaluated in EID mode
-// this is really what we need for mClaire/push!(eval(x)) and funcall(f,...) ... but has been be extended to methods
-// that do a better job (no allocation) in EID mode
-eid_require?(x:any) : boolean
-  -> (case x (Call x.selector = mClaire/push!, 
-              Call_method (x.arg.selector = funcall | x.arg = *write_value* | x.arg = *read_property* | 
-                           x.arg.selector = write_fast | x.arg.selector = nth_write),
-              any false))
-
-// eid_provide? says that the call will produce first an EID
-eid_provide?(x:any) : boolean
-  -> (case x (Call x.selector = mClaire/get_stack,        // gets and EID directly
-              Call_method (x.arg.selector = eval | x.arg = m_unsafe),        // eval returns an EID :)
-              Variable (x.range <= integer),              // avoid MakeInteger() conversion+alloc
-              integer true,
-              // to_CL eid_provide?(x.arg),                  // to get rid of ! 
-              any false))
-
-
-// eid_unfold could use a more general "EID compling mode" (with a list of EID variables passed as context)
-// this is a quickfix => we build the EID Let on our own (code borrowed from g_stat@Let)
-unfold_eid(ldef:list,self:any,s:class, v:any,err:boolean,loop:any) : void
-  -> let n := length(ldef), lvar := list<Variable>(), count_try := 0 in
-        (new_block("LetEID"),
-         for i in (1 .. n)
-           let %l := (ldef[i] as Let), v2 :=  c_string(PRODUCER,%l.var), 
-               x := %l.value, try? := g_throw(x) in 
-            (var_declaration(v2,EID,0), 
-             lvar :add %l.var,
-             breakline(),
-             if  try? 
-                (count_try :+ 1,
-                 g_try(x,v2,EID,v,false))          // if the value may be an error => start if chain
-             else  statement(x, EID, v2,loop)),
-         if (s != void) printf("~A = ", v),
-         eid_expression(self,EID,lvar),                 // compiles the expression self in EID mode
-         close_try(count_try),
-         close_block("LetEID"))
-
- // eid_expression compiles a call or call_method with one EID variable
- // it performs all the compiler optimization (see the eid_fold? pattern in gostat.cl)
- [eid_expression(x:any,s:class,lvar:list<Variable>) : void
-    -> case x
-        (Variable (if (x % lvar & s = EID) princ(c_string(PRODUCER,x))
-                   else g_expression(x,s)),
-         Call printf("ClEnv.Push(~I)",eid_expression(x.args[1],EID,lvar)),
-         Call_method (if (x.arg.selector = funcall)
-                        printf("FASTCALL~A(~I,~I~I~I)", (length(x.args) - 1),   // 1,2 or 3
-                         eid_expression(x.args[1],method,lvar), 
-                         eid_expression(x.args[2],EID,lvar),
-                         (if (length(x.args) >= 3) (princ(","), eid_expression(x.args[3],EID,lvar))),
-                         (if (length(x.args) = 4) (princ(","), eid_expression(x.args[4],EID,lvar))))
-                      else if (x.arg = *read_property*)
-                          printf("~I.ReadEID(~I)",g_eid_expression(x.args[1],property,lvar),
-                                    eid_expression(x.args[2],EID,lvar))
-                     else if  (x.arg.selector = write_fast)
-                          printf("~I.WriteEID(~I,~I)",g_expression(x.args[1],property),
-                                    g_eid_expression(x.args[2],object,lvar),
-                                    eid_expression(x.args[3],EID,lvar))
-                     else if  (x.arg.selector = nth_write)
-                          printf("~I.WriteEID(~I,~I)",g_eid_expression(x.args[1],list,lvar),
-                                    g_eid_expression(x.args[2],integer,lvar),
-                                    eid_expression(x.args[3],EID,lvar))
-                      else  printf("~I.WriteEID(~I)",g_eid_expression(x.args[1],Variable,lvar),
-                                   eid_expression(x.args[2],EID,lvar))),
-         any g_expression(x,s)) ]
-
-// reverse from eid (the args of the call have been EIDed : represented by an EID var)
-// hence when we need a regular object, we must check that the arg x is not in the var list
-[g_eid_expression(x:any,s:class,lvar:list<Variable>) : void
-    -> case x
-        (Variable (if (x % lvar) (eid_prefix(s),
-                                  princ(c_string(PRODUCER,x)),
-                                  eid_post(s))
-                   else g_expression(x,s)),
-         any g_expression(x,s)) ]
 
 //**********************************************************************
-//*          Part 3: Basic control structures                          *
+//*          Part 2: Basic control structures                          *
 //**********************************************************************
 
 // The re-entry definition (called within g_statement, not directly)
@@ -483,7 +321,7 @@ unfold_eid(ldef:list,self:any,s:class, v:any,err:boolean,loop:any) : void
 
 
 //**********************************************************************
-//*          Part 3: iteration                                         *
+//*          Part 3: Iteration                                         *
 //**********************************************************************
 
 // we know to iterate sets or lists in Go
@@ -653,35 +491,9 @@ unfold_eid(ldef:list,self:any,s:class, v:any,err:boolean,loop:any) : void
 // this is one example on how to unfold: a Call
 // note that if the error is returned it should be passed away
 // we also add inline_stat in v4 for special cases
-[g_statement(self:Call,s:class,v:string,err:boolean,loop:any) : void
- -> if g_clean(self.args) inline_stat(self,s,v)        // ASSUMES err = false or s = EID
-    else let l := args(self),         // list of arguments in the call
-        ld := unfold_args(l) in  // produces the list of (v,expr)
-      (if (ld = nil)                // we are here if the call is simple but an error is possible
-        error_wrap(self,s,v)
-       else unfold_use(ld, Call(selector(self), list{unfold_arg(l,ld,z) | z in l}), s, v, err, loop)) ]
+[j_statement(self:Call,v:string) : void
+ -> error("unresolved call: ~S not supported in Diet Claire", self) ]
 
-// this is our special inling that requires an assignment (not allowed as an expression in go)
-[inline_stat(self:Call,s:class,v:string)
-  -> if (self.selector = object!)           // object!(...) is our instanciation macro
-          let a1 := self.args[1], a2 := self.args[2] in     // a class
-             (if (a2 = property & (value(a1) % property))
-                 printf("~I = ~I~I",symbol_ident(a1),
-                           declare(PRODUCER,value(a1)), 
-                           breakline())
-              else  (printf("~I = ~Inew(~I).IsNamed(~I,MakeSymbol(~S,~I))~I~I",symbol_ident(a1),
-                                  object_prefix(any,a2),
-                                  go_class(a2),                  // v3.3.14
-                                  class_ident(a2),
-                                  string!(a1),
-                                  g_expression(module!(a1),module),
-                                  object_post(any,a2),
-                                  breakline())),
-              if (s != void)
-                  printf("~I~I = ~I~I", breakline(),c_princ(v),symbol_ident(a1),breakline()))
-      else if (s = EID) printf("~I = ~I~I", c_princ(v),g_expression(self,s),breakline())
-      else error("desing error : inline_stat for ~S", self) ]
-    
 
 // A call method is now simpler with unfolding ! very similar structucture
 [g_statement(self:Call_method,s:class,v:string,err:boolean,loop:any) : void

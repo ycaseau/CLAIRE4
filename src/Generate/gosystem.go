@@ -1,5 +1,5 @@
-/***** CLAIRE Compilation of file /Users/ycaseau/Dropbox/src/clairev4.07/src/compile/gosystem.cl 
-         [version 4.0.08 / safety 5] Sunday 03-12-2023 14:47:37 *****/
+/***** CLAIRE Compilation of file /Users/ycaseau/Dropbox/src/clairev4.10/src/compile/gosystem.cl 
+         [version 4.1 / safety 5] Saturday 09-23-2023 07:22:33 *****/
 
 package Generate
 import (_ "fmt"
@@ -22,7 +22,7 @@ func import_g0000() {
 //+-------------------------------------------------------------+
 //| CLAIRE                                                      |
 //| gosystem.cl                                                 |
-//| Copyright (C) 2020-2021 Yves Caseau. All Rights Reserved    |
+//| Copyright (C) 2020-2023 Yves Caseau. All Rights Reserved    |
 //| cf. copyright info in file object.cl: about()               |
 //+-------------------------------------------------------------+
 //**********************************************************************
@@ -62,10 +62,11 @@ func import_g0000() {
 // encapsulated with a producer object
 // CLAIRE 4 is focused on go, but we try to keep the previous structure of CLAIRE3 to be ready
 // for Java or Swift compiling. However, the GC management stuff is lost forever :)
-// v3.3.32: stats about GC protection  */
+// used to translate imported to C/.. entities
+//  stat:integer = 0)                      // v3.3.32: stats about GC protection  */
 // add the go_producer here  (replaces the C++ producer)
 // note that the double list bad/good names is ugly and should be replaced by a dictionary later 
-// desambiguate variables by adding a number
+// where to place the executable
 // TODO: define a status = 3 for the PRODUCER class that tells that is it extensible
 // (Genearate/producer.open := 3)
 // this is a special case : the function may return an error but the optimized form does not

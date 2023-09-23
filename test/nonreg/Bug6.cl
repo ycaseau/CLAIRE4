@@ -81,8 +81,9 @@ obj <: thing(l0:integer,l1:integer,l2:integer,l3:integer)
 ats2(t:obj) : tuple(integer,integer,integer,integer) 
  -> tuple(l0(t),l1(t),l2(t),l3(t))
 
-ats(t:obj) : list[integer] 
-  -> list(l0(t),l1(t),l2(t),l3(t))
+[ats(t:obj) : list[integer] 
+  ->  trace(0,"calling ats wigh l0(t) = ~S\n",read(l0,t)),
+      list(l0(t),l1(t),l2(t),l3(t))]
 
 oo :: obj(l0 = 123, l1 = 321, l2 = 789, l3 = 987)
 

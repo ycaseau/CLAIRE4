@@ -1,5 +1,5 @@
-/***** CLAIRE Compilation of file /Users/ycaseau/Dropbox/src/clairev4.07/src/compile/gomain.cl 
-         [version 4.0.08 / safety 5] Sunday 03-12-2023 14:47:37 *****/
+/***** CLAIRE Compilation of file /Users/ycaseau/Dropbox/src/clairev4.10/src/compile/gomain.cl 
+         [version 4.1 / safety 5] Saturday 09-23-2023 07:22:33 *****/
 
 package Generate
 import (_ "fmt"
@@ -22,7 +22,7 @@ func import_g0210() {
 //+-------------------------------------------------------------+
 //| CLAIRE                                                      |
 //| gomain.cl                                                   |
-//| Copyright (C) 1994 - 2021 Yves Caseau. All Rights Reserved  |
+//| Copyright (C) 1994 - 2023 Yves Caseau. All Rights Reserved  |
 //| cf. copyright info in file object.cl: about()               |
 //+-------------------------------------------------------------+
 // ----------------------------------------------------------------------
@@ -282,7 +282,7 @@ func F_Generate_complex_main_void () EID {
                                 } 
                               }  else if (ToString(l.ValuesO()[0]).Value == MakeString("-od").Value) { 
                               if (l.Length() >= 2) { 
-                                Optimize.C_compiler.Source = ToString(l.ValuesO()[1])
+                                ToGenerateGoProducer(Optimize.C_PRODUCER.Value).Output = ToString(l.ValuesO()[1])
                                 l = l.Skip(2)
                                 loop_1 = EID{l.Id(),0}
                                 } else {
@@ -813,6 +813,23 @@ func E_Generate_load_function_module (m EID,l_necessary EID) EID {
 // %main = true means call main()
 /* The go function for: main_function(m:module,l_used:list[module],%main:boolean) [status=0] */
 func F_Generate_main_function_module (m *ClaireModule,l_used *ClaireList,_Zmain *ClaireBoolean)  { 
+    PRINC("\n// reboot function is created by compiler \n")
+    PRINC("func E_reboot(s EID) EID ")
+    F_Generate_new_block_void()
+    PRINC("Bootstrap()")
+    F_Generate_breakline_void()
+    PRINC("Load()")
+    F_Generate_breakline_void()
+    PRINC("Reader.C_reader.Fromp = ClEnv.Cin;")
+    F_Generate_breakline_void()
+    if (ToBoolean(l_used.Contain_ask(F_value_string(MakeString("Generate"))).Id()) == CTRUE) { 
+      PRINC("ClEnv.Module_I = C_claire")
+      F_Generate_breakline_void()
+      } 
+    PRINC("return EVOID")
+    F_Generate_breakline_void()
+    F_Generate_close_block_void()
+    F_Generate_breakline_void()
     PRINC("\n// the main function \n")
     PRINC("func main() ")
     F_Generate_new_block_void()
@@ -833,14 +850,10 @@ func F_Generate_main_function_module (m *ClaireModule,l_used *ClaireList,_Zmain 
       F_Generate_close_block_void()
       F_Generate_close_block_void()
       } 
-    PRINC("Bootstrap()")
+    PRINC("E_reboot(EVOID)")
     F_Generate_breakline_void()
-    PRINC("Load()")
+    PRINC("ToMethod(C_reboot.Restrictions.ValuesO()[0]).Functional = MakeFunction1(E_reboot,\"reboot\")")
     F_Generate_breakline_void()
-    if (ToBoolean(l_used.Contain_ask(F_value_string(MakeString("Generate"))).Id()) == CTRUE) { 
-      PRINC("ClEnv.Module_I = C_claire")
-      F_Generate_breakline_void()
-      } 
     PRINC("Reader.C_reader.Fromp = ClEnv.Cin")
     F_Generate_breakline_void()
     if (_Zmain == CTRUE) { 
@@ -886,8 +899,15 @@ func E_Generate_compile_dir_module (m EID) EID {
 // create the go
 /* The go function for: compile_exe(%out:string) [status=0] */
 func F_Generate_compile_exe_string (_Zout *ClaireString)  { 
-    { var s *ClaireString = F_append_string(Reader.F__7_string(Reader.F__7_string(F_append_string(MakeString("go build "),Optimize.F_home_void()),MakeString("go/src")),_Zout),MakeString(".go"))
-      F_claire_shell(s)
+    { var outdir *ClaireString
+      if ((ToGenerateGoProducer(Optimize.C_PRODUCER.Value).Output).Id() != CNULL) { 
+        outdir = F_append_string(F_append_string(MakeString(" -o "),ToGenerateGoProducer(Optimize.C_PRODUCER.Value).Output),MakeString(" "))
+        } else {
+        outdir = MakeString("")
+        } 
+      { var s *ClaireString = F_append_string(Reader.F__7_string(Reader.F__7_string(Reader.F__7_string(F_append_string(F_append_string(MakeString("go build "),outdir),Optimize.F_home_void()),MakeString("go")),MakeString("src")),_Zout),MakeString(".go"))
+        F_claire_shell(s)
+        } 
       } 
     } 
   

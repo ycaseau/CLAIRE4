@@ -2,7 +2,7 @@
 // microCLAIRE                                              CLAIRE 4
 // golang microClaire Kernel - started on June 21st, 2020
 //
-//  Copyright (C) 2020-2022 Yves Caseau. All Rights Reserved.
+//  Copyright (C) 2020-2023 Yves Caseau. All Rights Reserved.
 //  Redistribution and use in source and binary forms are permitted
 //  provided that source distribution retains this entire copyright
 //  notice and comments.
@@ -408,6 +408,8 @@ func (c *ClaireClass) AddSlot(p *ClaireProperty, r *ClaireType, def *ClaireAny) 
 		s.Srange = ToSlot(ls[ix - 1]).Srange                  // srange cannot change ! 
 		ls[ix - 1] = s.Id()
 	} else {
+		// new in v4.10: check that the class does not have more than 50 slots
+		if len(ls) >= 49 {panic("too many slots (more than 50) in class " + c.Name.key + "(fatal error)")}
 		s.Index = len(ls) + 1
 		s.Srange = c1
 	    // CLAIRE 4 : propagate slots down - used only during the bootstrap
@@ -459,9 +461,11 @@ func makeModule2(m *ClaireModule, sup *ClaireModule) {
 	m.Status = 0
 	m.Comment = ToString(CNULL)
 	m.MadeOf = ToType(C_string.Id()).EmptyList()
+	m.Imports = ToType(C_string.Id()).EmptySet()
+	m.Resources = ToType(C_string.Id()).EmptyList()
 	m.Uses = ToType(C_module.Id()).EmptyList()
 	m.Source = ToString(CNULL)
-	m.Evaluate = ToFunction(CNULL)
+	m.Evaluate = ToFunction(CNULL)        // unused ? 
 	m.External = ToString(CNULL)
 }
 
@@ -838,6 +842,7 @@ func BootSlot() {
 	C_uses = makeProperty("uses")
 	C_source = makeProperty("source")
 	C_made_of = makeProperty("made_of")
+	C_resources = makeProperty("resources")
 	C_mClaire_status = makeMicroProperty("status")
 	C_external = makeProperty("external")
 	C_put = makeProperty("put")
@@ -947,6 +952,8 @@ func BootSlot() {
 	C_module.AddSlot(C_mClaire_status, ToType(C_integer.Id()), AnyInteger(0))
 	C_module.AddSlot(C_external, ToType(C_string.Id()), CNULL)
 	C_module.AddSlot(C_imports, ToType(C_map_set.Id()), CNULL)
+	// this does not work ...
+	C_module.AddSlot(C_resources, ToType(C_list.Id()), ToType(C_string.Id()).EmptyList().Id()) 
 	// Types
 	C_Union.AddSlot(C_mClaire_t1, ToType(C_type.Id()), CNULL)
 	C_Union.AddSlot(C_mClaire_t2, ToType(C_type.Id()), CNULL)
@@ -1028,6 +1035,7 @@ func BootMethod() {
 	C_make_string = makeProperty("make_string")
 	C_make_array = makeProperty("make_array")
 	C_random = makeProperty("random")
+	C_random_I = makeProperty("random!")
 	C_string_I = makeProperty("string!")
 	C_class_I = makeProperty("class!")
 	C_new = makeProperty("new")
@@ -1102,7 +1110,7 @@ func BootMethod() {
 	C_arity = makeKernelProperty("arity")
 	C_set_arity = makeKernelProperty("set_arity")
 	C_slice = makeProperty("slice")
-	C_stat = makeProperty("stat")	
+	C_statistics = makeProperty("statistics")	
 	C_hash = makeProperty("hash")
 	C_file_separator = makeProperty("file_separator")
 	// C_getenv = makeProperty("getenv")
@@ -1280,9 +1288,10 @@ func BootMethod() {
 	C_close.AddMethod(Signature(C_exception.Id(), CEMPTY.Id()), 1, MakeFunction1(E_close_exception, "close_exception"))
 	C_shell.AddMethod(Signature(C_string.Id(), C_void.Id()), 0, MakeFunction1(E_claire_shell, "claire_shell"))
 	C_exit.AddMethod(Signature(C_integer.Id(), C_void.Id()), 0, MakeFunction1(E_CL_exit, "CL_exit"))
+	C_reboot.AddMethod(Signature(C_void.Id(), C_void.Id()), 0, MakeFunction1(E_claire_stat, "claire_stat"))
 	C_abort.AddMethod(Signature(C_environment.Id(), C_void.Id()), 0, MakeFunction1(E_abort_system, "abort_system"))
 	C_file_separator.AddMethod(Signature(C_environment.Id(), C_string.Id()), 0, MakeFunction1(E_file_separator, "file_separator"))
-	C_stat.AddMethod(Signature(C_void.Id(), C_void.Id()), 0, MakeFunction1(E_claire_stat, "claire_stat"))
+	C_statistics.AddMethod(Signature(C_void.Id(), C_void.Id()), 0, MakeFunction1(E_claire_stat, "claire_stat"))
 	C_hash.AddMethod(Signature(C_list.Id(), C_any.Id(), C_integer.Id()), 0, MakeFunction2(E_hash_list, "hash_list"))
 	C_mClaire_restore_state.AddMethod(Signature(C_void.Id(), C_void.Id()), 0, MakeFunction1(E_restore_state_void, "restore_state_void"))
 	C_store.AddMethod(Signature(C_list.Id(), C_integer.Id(), C_any.Id(), C_boolean.Id(), C_any.Id()), 0, MakeFunction4(E_store_list, "store_list"))
@@ -1314,6 +1323,7 @@ func BootMethod() {
 	C_boolean_I.AddMethod(Signature(C_any.Id(), C_boolean.Id()), 0, MakeFunction1(E_boolean_I_any, "boolean_I_any"))
 	C_princ.AddMethod(Signature(C_integer.Id(), C_void.Id()), 0, MakeFunction1(E_princ_integer, "princ_integer"))
 	C_random.AddMethod(Signature(C_integer.Id(), C_integer.Id()), 0, MakeFunction1(E_random_integer, "random_integer"))
+	C_random_I.AddMethod(Signature(C_integer.Id(), C_void.Id()), 0, MakeFunction1(E_random_I_integer, "random_I_integer"))
 	// C_min.AddMethod(Signature(C_integer.Id(), C_integer.Id(), C_integer.Id()), 0, MakeFunction2(E_min_integer, "min_integer"))
 	// C_max.AddMethod(Signature(C_integer.Id(), C_integer.Id(), C_integer.Id()), 0, MakeFunction2(E_max_integer, "max_integer"))
 	C__dash.AddMethod(Signature(C_integer.Id(), C_integer.Id()), 0, MakeFunction1(E_ch_sign, "ch_sign"))
@@ -1369,8 +1379,10 @@ func E_slot_get_object(x EID, n EID, s EID) EID {
 // --------------- read: property method --------------------------------------------------------
 // reflective slot access 
 // we use to the EID version since this is not really used much
-func (p *ClaireProperty) Read(x *ClaireObject) *ClaireAny {
-	return ANY(p.ReadEID(x.ToEID()))
+// func (p *ClaireProperty) Read(x *ClaireObject) *ClaireAny {
+//	return ANY(p.ReadEID(x.ToEID()))
+func (p *ClaireProperty) Read(x *ClaireObject) EID {    // must return EID since errors may occur
+	return p.ReadEID(x.ToEID())
 }
 
 // optimized version that writes and returns an EID (no allocation)
@@ -1385,7 +1397,7 @@ func (p *ClaireProperty) ReadEID(x EID) EID {
 		if s == C_integer { return EID{C__INT,IVAL(z.GetInt(i))}
 		} else if s == C_float { return EID{C__FLOAT,FVAL(z.GetFloat(i))}
 		} else { 
-				y := z.GetObj(i) 
+			    y := z.GetObj(i) 
 				if y == CNULL && ToSlot(r.Id()).Range.Contains(y) == CFALSE {
 					return Cerror(1,p.Id(),ANY(x))
 				} else {return y.ToEID()}

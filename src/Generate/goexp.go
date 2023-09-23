@@ -1,5 +1,5 @@
-/***** CLAIRE Compilation of file /Users/ycaseau/Dropbox/src/clairev4.07/src/compile/goexp.cl 
-         [version 4.0.08 / safety 5] Sunday 03-12-2023 14:47:37 *****/
+/***** CLAIRE Compilation of file /Users/ycaseau/Dropbox/src/clairev4.10/src/compile/goexp.cl 
+         [version 4.1 / safety 5] Saturday 09-23-2023 07:22:33 *****/
 
 package Generate
 import (_ "fmt"
@@ -1276,8 +1276,10 @@ func F_Generate_inline_exp_go_producer2 (c *GenerateGoProducer,self *Language.Ca
           a1 = ANY(try_1)
           { var dm *ClaireClass = Core.F_domain_I_restriction(ToRestriction(m.Id()))
             if ((p.Id() == C__dash.Id()) && 
-                ((dm.Id() == C_integer.Id()) || 
-                    (dm.Id() == C_float.Id()))) { 
+                (((dm.Id() == C_integer.Id()) || 
+                    (dm.Id() == C_float.Id())) && 
+                  ((s.Id() == C_integer.Id()) || 
+                      (s.Id() == C_float.Id())))) { 
               Result = F_Generate_cast_prefix_class(dm,s)
               if !ErrorIn(Result) {
               PRINC("(-")

@@ -1,5 +1,5 @@
-/***** CLAIRE Compilation of file /Users/ycaseau/Dropbox/src/clairev4.07/src/meta/inspect.cl 
-         [version 4.0.08 / safety 5] Sunday 03-12-2023 14:47:34 *****/
+/***** CLAIRE Compilation of file /Users/ycaseau/Dropbox/src/clairev4.10/src/meta/inspect.cl 
+         [version 4.1 / safety 5] Saturday 09-23-2023 07:22:30 *****/
 
 package Reader
 import (_ "fmt"
@@ -44,6 +44,7 @@ func import_g0145() {
 // for debug loop, store the stack context
 // this is the classical print(eval(read)) LISP top level :)
 // error are caught
+// v4.10 use directly "reader" object versus r variable, to support reboot
 /* The go function for: top_level(r:meta_reader) [status=1] */
 func (r *MetaReader) TopLevel () EID { 
     var Result EID
@@ -67,14 +68,14 @@ func (r *MetaReader) TopLevel () EID {
         { 
           h_index := ClEnv.Index
           h_base := ClEnv.Base
-          r.Toplevel = CTRUE
+          C_reader.Toplevel = CTRUE
           if (ClEnv.CountCall > 0) { 
             ClEnv.CountCall = 1
             } 
           var try_3 EID
           { var arg_4 *ClaireAny
             var try_5 EID
-            try_5 = r.Nextunit()
+            try_5 = C_reader.Nextunit()
             if ErrorIn(try_5) {try_3 = try_5
             } else {
             arg_4 = ANY(try_5)
@@ -138,10 +139,10 @@ func (r *MetaReader) TopLevel () EID {
               res = C_q.Id()
               loop_1 = res.ToEID()
               } else {
-              r.RestoreState()
-              if (r.External.Value != MakeString("toplevel").Value) { 
+              C_reader.RestoreState()
+              if (C_reader.External.Value != MakeString("toplevel").Value) { 
                 PRINC("---- file: ")
-                F_princ_string(r.External)
+                F_princ_string(C_reader.External)
                 PRINC(", line: ")
                 F_princ_integer(ClEnv.NLine)
                 PRINC("\n")
@@ -228,8 +229,6 @@ func F_Reader_simple_main_void () EID {
 func E_Reader_simple_main_void (_CL_obj EID) EID { 
     return F_Reader_simple_main_void( )} 
   
-// unclear that we need this (simple_main is used with -cm)
-//
 // *********************************************************************
 // *      Part 2: Inspection                                           *
 // *********************************************************************
