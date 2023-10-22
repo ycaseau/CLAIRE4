@@ -80,6 +80,13 @@ glb(x:Pattern,y:type_expression) : type_expression
                       else {}),
              any {}))
 
+// v4.1.0: need the symetrical formula
+glb(x:type_expression,y:Pattern) : type_expression
+  -> (case x (Pattern (if (x.selector = y.selector) Pattern(selector = x.selector,
+                                                            arg = glb(x.arg,y.arg))
+                      else {}),
+             any {}))
+
 // extension of <= for Patterns
 [less?(x:Pattern,y:type_expression) : boolean
  -> case y

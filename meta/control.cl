@@ -313,7 +313,7 @@ self_eval(self:Lselect) : any
                (write_value(self.var, y), if (eval(self.arg) != false) res :add y)),
         if known?(of,self)
           (when x := some(x in res | not(x % self.of)) in   // v3.1.06
-               range_error(mClaire/cause = self,arg = x,wrong = self.of),
+               range_error(mClaire/cause = self,arg = x, Core/wrong = self.of),
            Kernel/cast!(res,self.of)),
         res))
 

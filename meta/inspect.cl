@@ -114,6 +114,7 @@ inspect(self:any) : any
  -> let m0 := module!(), ix := 0 in
        (case self
          (list for i in (1 .. length(self)) printf("~A: ~S\n", i, self[i]),
+          set inspect(list!(self)),
           object for rel in owner(self).slots
                   let m := module!(name(selector(rel))) in
                     (ix :+ 1,            // ix is the position in the slots list

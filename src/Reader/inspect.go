@@ -1,5 +1,5 @@
 /***** CLAIRE Compilation of file /Users/ycaseau/Dropbox/src/clairev4.10/src/meta/inspect.cl 
-         [version 4.1 / safety 5] Saturday 09-23-2023 07:22:30 *****/
+         [version 4.1 / safety 5] Sunday 10-22-2023 07:00:35 *****/
 
 package Reader
 import (_ "fmt"
@@ -267,15 +267,19 @@ func F_inspect_any (self *ClaireAny) EID {
                 } 
               } 
             } 
+          }  else if (C_set.Id() == self.Isa.Id()) { 
+          { var g0149 *ClaireSet = ToSet(self)
+            Result = F_inspect_any(g0149.List_I().Id())
+            } 
           }  else if (Core.F__Z_any1(self,C_object) == CTRUE) { 
-          { var g0149 *ClaireObject = ToObject(self)
+          { var g0150 *ClaireObject = ToObject(self)
             { 
               var rel *ClaireSlot
               _ = rel
               var rel_iter *ClaireAny
               Result= EID{CFALSE.Id(),0}
               var rel_support *ClaireList
-              rel_support = g0149.Id().Isa.Slots
+              rel_support = g0150.Id().Isa.Slots
               for _,rel_iter = range(rel_support.ValuesO()){ 
                 rel = ToSlot(rel_iter)
                 var loop_2 EID
@@ -285,7 +289,7 @@ func F_inspect_any (self *ClaireAny) EID {
                   if ((m.Id() == m0.Id()) || 
                       ((m.Id() == C_claire.Id()) || 
                         (ToBoolean(C__starshowall_star.Value) == CTRUE))) { 
-                    { var val *ClaireAny = Core.F_get_slot(rel,g0149)
+                    { var val *ClaireAny = Core.F_get_slot(rel,g0150)
                       F_princ_integer(ix)
                       PRINC(": ")
                       loop_2 = Core.F_print_any(rel.Selector.Id())
@@ -294,16 +298,16 @@ func F_inspect_any (self *ClaireAny) EID {
                       } else {
                       PRINC(" = ")
                       if (val.Isa.IsIn(C_list) == CTRUE) { 
-                        { var g0150 *ClaireList = ToList(val)
-                          if (g0150.Length() < 10) { 
-                            loop_2 = Language.F_pretty_print_any(g0150.Id())
+                        { var g0151 *ClaireList = ToList(val)
+                          if (g0151.Length() < 10) { 
+                            loop_2 = Language.F_pretty_print_any(g0151.Id())
                             } else {
                             { var arg_3 *ClaireList
                               { var i_bag *ClaireList = ToType(CEMPTY.Id()).EmptyList()
                                 { var i int = 1
-                                  { var g0151 int = 9
-                                    for (i <= g0151) { 
-                                      i_bag.AddFast(g0150.At(i-1))
+                                  { var g0152 int = 9
+                                    for (i <= g0152) { 
+                                      i_bag.AddFast(g0151.At(i-1))
                                       i = (i+1)
                                       } 
                                     } 
@@ -370,15 +374,15 @@ func E_inspect_any (self EID) EID {
 func F_inspect_loop_any (_Zread *ClaireAny,old *ClaireList) EID { 
     var Result EID
     { var self *ClaireAny = old.At(0)
-      var g0155I *ClaireBoolean
+      var g0156I *ClaireBoolean
       if (_Zread.Isa.IsIn(Language.C_Call) == CTRUE) { 
-        { var g0154 *Language.Call = Language.To_Call(_Zread)
-          g0155I = Equal(g0154.Selector.Id(),C_put.Id())
+        { var g0155 *Language.Call = Language.To_Call(_Zread)
+          g0156I = Equal(g0155.Selector.Id(),C_put.Id())
           } 
         } else {
-        g0155I = CFALSE
+        g0156I = CFALSE
         } 
-      if (g0155I == CTRUE) { 
+      if (g0156I == CTRUE) { 
         { var n int = ToInteger(ToList(OBJ(Core.F_CALL(C_args,ARGS(_Zread.ToEID())))).At(0)).Value
           { var s *ClaireSymbol
             var try_1 EID
@@ -521,8 +525,8 @@ func E_get_from_integer_any (self EID,n EID) EID {
 func F_trace_on_any (self *ClaireAny) EID { 
     var Result EID
     if (self.Isa.IsIn(C_property) == CTRUE) { 
-      { var g0156 *ClaireProperty = ToProperty(self)
-        if (g0156.Id() == Core.C_spy.Id()) { 
+      { var g0157 *ClaireProperty = ToProperty(self)
+        if (g0157.Id() == Core.C_spy.Id()) { 
           { var m *ClaireAny = Core.F__at_property1(Core.C_spy,C_void).Id()
             if (F_boolean_I_any(m) == CTRUE) { 
               Result = F_store_object(ToObject(ClEnv.Id()),
@@ -534,13 +538,13 @@ func F_trace_on_any (self *ClaireAny) EID {
               Result = EID{CFALSE.Id(),0}
               } 
             } 
-          }  else if (g0156.Id() == C_where.Id()) { 
+          }  else if (g0157.Id() == C_where.Id()) { 
           Result = Core.F_write_property(C_Kernel_call_count,ToObject(ClEnv.Id()),MakeInteger(1).Id())
           } else {
           { 
             var va_arg1 *ClaireProperty
             var va_arg2 int
-            va_arg1 = g0156
+            va_arg1 = g0157
             va_arg2 = (5-ClEnv.Verbose)
             va_arg1.Trace_I = va_arg2
             Result = EID{C__INT,IVAL(va_arg2)}
@@ -557,16 +561,16 @@ func F_trace_on_any (self *ClaireAny) EID {
         Result = EID{C__INT,IVAL(va_arg2)}
         } 
       }  else if (self.Isa.IsIn(C_module) == CTRUE) { 
-      { var g0158 *ClaireModule = ToModule(self)
-        if (g0158.Status > 2) { 
-          g0158.Status = 4
+      { var g0159 *ClaireModule = ToModule(self)
+        if (g0159.Status > 2) { 
+          g0159.Status = 4
           } 
         { 
           var m *ClaireAny
           _ = m
           Result= EID{CFALSE.Id(),0}
           var m_support *ClaireList
-          m_support = g0158.Parts
+          m_support = g0159.Parts
           m_len := m_support.Length()
           for i_it := 0; i_it < m_len; i_it++ { 
             m = m_support.At(i_it)
@@ -581,24 +585,24 @@ func F_trace_on_any (self *ClaireAny) EID {
           } 
         } 
       }  else if (C_port.Id() == self.Isa.Id()) { 
-      { var g0159 *ClairePort = ToPort(self)
+      { var g0160 *ClairePort = ToPort(self)
         { 
           var va_arg1 *ClaireEnvironment
           var va_arg2 *ClairePort
           va_arg1 = ClEnv
-          va_arg2 = g0159
+          va_arg2 = g0160
           va_arg1.Ctrace = va_arg2
           Result = va_arg2.ToEID()
           } 
         } 
       }  else if (C_string.Id() == self.Isa.Id()) { 
-      { var g0160 *ClaireString = ToString(self)
+      { var g0161 *ClaireString = ToString(self)
         { 
           var va_arg1 *ClaireEnvironment
           var va_arg2 *ClairePort
           va_arg1 = ClEnv
           var try_2 EID
-          try_2 = F_fopen_string(g0160,MakeString("w"))
+          try_2 = F_fopen_string(g0161,MakeString("w"))
           if ErrorIn(try_2) {Result = try_2
           } else {
           va_arg2 = ToPort(OBJ(try_2))
@@ -608,12 +612,12 @@ func F_trace_on_any (self *ClaireAny) EID {
           } 
         } 
       }  else if (C_integer.Id() == self.Isa.Id()) { 
-      { var g0161 int = ToInteger(self).Value
+      { var g0162 int = ToInteger(self).Value
         { 
           var va_arg1 *ClaireEnvironment
           var va_arg2 int
           va_arg1 = ClEnv
-          va_arg2 = g0161
+          va_arg2 = g0162
           va_arg1.Verbose = va_arg2
           Result = EID{C__INT,IVAL(va_arg2)}
           } 
@@ -634,8 +638,8 @@ func E_trace_on_any (self EID) EID {
 func F_untrace_any (self *ClaireAny) EID { 
     var Result EID
     if (self.Isa.IsIn(C_property) == CTRUE) { 
-      { var g0163 *ClaireProperty = ToProperty(self)
-        if (g0163.Id() == Core.C_spy.Id()) { 
+      { var g0164 *ClaireProperty = ToProperty(self)
+        if (g0164.Id() == Core.C_spy.Id()) { 
           { 
             var va_arg1 *ClaireEnvironment
             var va_arg2 *ClaireObject
@@ -644,13 +648,13 @@ func F_untrace_any (self *ClaireAny) EID {
             va_arg1.Spy_I = va_arg2
             Result = EID{va_arg2.Id(),0}
             } 
-          }  else if (g0163.Id() == C_where.Id()) { 
+          }  else if (g0164.Id() == C_where.Id()) { 
           Result = Core.F_write_property(C_Kernel_call_count,ToObject(ClEnv.Id()),MakeInteger(-1).Id())
           } else {
           { 
             var va_arg1 *ClaireProperty
             var va_arg2 int
-            va_arg1 = g0163
+            va_arg1 = g0164
             va_arg2 = 0
             va_arg1.Trace_I = va_arg2
             Result = EID{C__INT,IVAL(va_arg2)}
@@ -667,16 +671,16 @@ func F_untrace_any (self *ClaireAny) EID {
         Result = EID{C__INT,IVAL(va_arg2)}
         } 
       }  else if (self.Isa.IsIn(C_module) == CTRUE) { 
-      { var g0165 *ClaireModule = ToModule(self)
-        if (g0165.Status == 4) { 
-          g0165.Status = 3
+      { var g0166 *ClaireModule = ToModule(self)
+        if (g0166.Status == 4) { 
+          g0166.Status = 3
           } 
         { 
           var m *ClaireAny
           _ = m
           Result= EID{CFALSE.Id(),0}
           var m_support *ClaireList
-          m_support = g0165.Parts
+          m_support = g0166.Parts
           m_len := m_support.Length()
           for i_it := 0; i_it < m_len; i_it++ { 
             m = m_support.At(i_it)
@@ -724,22 +728,22 @@ func F_spy_listargs2_Reader (l *ClaireList)  {
           m,
           CFALSE)
         { 
-          var g0168 *ClaireClass
-          _ = g0168
-          var g0168_iter *ClaireAny
-          var g0168_support *ClaireSet
-          g0168_support = C_property.Descendants
-          for i_it := 0; i_it < g0168_support.Count; i_it++ { 
-            g0168_iter = g0168_support.At(i_it)
-            g0168 = ToClass(g0168_iter)
-            { var g0169 *ClaireBoolean
+          var g0169 *ClaireClass
+          _ = g0169
+          var g0169_iter *ClaireAny
+          var g0169_support *ClaireSet
+          g0169_support = C_property.Descendants
+          for i_it := 0; i_it < g0169_support.Count; i_it++ { 
+            g0169_iter = g0169_support.At(i_it)
+            g0169 = ToClass(g0169_iter)
+            { var g0170 *ClaireBoolean
               { 
                 var f *ClaireProperty
                 _ = f
                 var f_iter *ClaireAny
-                g0169= CFALSE
+                g0170= CFALSE
                 var f_support *ClaireList
-                f_support = g0168.Instances
+                f_support = g0169.Instances
                 f_len := f_support.Length()
                 for i_it := 0; i_it < f_len; i_it++ { 
                   f_iter = f_support.At(i_it)
@@ -749,7 +753,7 @@ func F_spy_listargs2_Reader (l *ClaireList)  {
                     } 
                   } 
                 } 
-              if (g0169 == CTRUE) { 
+              if (g0170 == CTRUE) { 
                 
                 break
                 } 
@@ -930,7 +934,7 @@ func F_breakpoint_void () EID {
         C__starindex_star.Value = MakeInteger(0).Id()
         C__starcurd_star.Value = MakeInteger(top).Id()
         C__starmaxd_star.Value = MakeInteger(top).Id()
-        var g0172I *ClaireBoolean
+        var g0173I *ClaireBoolean
         var try_1 EID
         { 
           var v_and4 *ClaireBoolean
@@ -951,8 +955,8 @@ func F_breakpoint_void () EID {
           } 
         if ErrorIn(try_1) {Result = try_1
         } else {
-        g0172I = ToBoolean(OBJ(try_1))
-        if (g0172I == CTRUE) { 
+        g0173I = ToBoolean(OBJ(try_1))
+        if (g0173I == CTRUE) { 
           { var j int = INT(ClEnv.EvalStack[top])
             { var num_args int = (INT(ClEnv.EvalStack[(j+2)])-1)
               { var start int = INT(ClEnv.EvalStack[(j+3)])
@@ -964,9 +968,9 @@ func F_breakpoint_void () EID {
                   Result = Core.F_CALL(C_print,ARGS(ClEnv.EvalStack[start]))
                   if !ErrorIn(Result) {
                   { var i int = (start+1)
-                    { var g0171 int = (start+num_args)
+                    { var g0172 int = (start+num_args)
                       Result= EID{CFALSE.Id(),0}
-                      for (i <= g0171) { 
+                      for (i <= g0172) { 
                         var loop_3 EID
                         _ = loop_3
                         { 
@@ -1131,8 +1135,8 @@ func F_print_debug_info_integer (index int,stack_level int,cur_index int) EID {
           F_princ_integer((cur_index+stack_level))
           PRINC("]>")
           { var x int = 1
-            { var g0173 int = stack_level
-              for (x <= g0173) { 
+            { var g0174 int = stack_level
+              for (x <= g0174) { 
                 PRINC(">")
                 x = (x+1)
                 } 
@@ -1145,9 +1149,9 @@ func F_print_debug_info_integer (index int,stack_level int,cur_index int) EID {
           Result = Core.F_CALL(C_print,ARGS(ClEnv.EvalStack[start]))
           if !ErrorIn(Result) {
           { var i int = (start+1)
-            { var g0174 int = (start+num_args)
+            { var g0175 int = (start+num_args)
               Result= EID{CFALSE.Id(),0}
-              for (i <= g0174) { 
+              for (i <= g0175) { 
                 var loop_1 EID
                 _ = loop_1
                 { 
@@ -1212,9 +1216,9 @@ func F_Show_integer (n int) EID {
             break
             } else {
             { var j int = 0
-              { var g0175 int = num_args
+              { var g0176 int = num_args
                 loop_1= EID{CFALSE.Id(),0}
-                for (j <= g0175) { 
+                for (j <= g0176) { 
                   var loop_2 EID
                   _ = loop_2
                   { 
@@ -1278,24 +1282,24 @@ func F_block_integer (x int) EID {
               { var z *ClaireProperty = ToProperty(OBJ(ClEnv.EvalStack[(j+1)]))
                 { var m *ClaireObject = Core.F_find_which_list(z.Definition,OWNER(ClEnv.EvalStack[start]),start,INT(Core.F_CALL(ToProperty(Core.C__plus.Id()),ARGS(EID{C__INT,IVAL(start)},nargs.ToEID()))))
                   if (C_method.Id() == m.Isa.Id()) { 
-                    { var g0176 *ClaireMethod = ToMethod(m.Id())
+                    { var g0177 *ClaireMethod = ToMethod(m.Id())
                       PRINC("debug[")
                       F_princ_integer((ToInteger(C__starindex_star.Value).Value+stack_level))
                       PRINC("] > ")
-                      loop_1 = Core.F_print_any(g0176.Id())
+                      loop_1 = Core.F_print_any(g0177.Id())
                       if ErrorIn(loop_1) {Result = loop_1
                       break
                       } else {
                       PRINC("(")
-                      if ((g0176.Formula.Id() != CNULL) && 
-                          (g0176.Formula.Isa.IsIn(C_lambda) == CTRUE)) { 
+                      if ((g0177.Formula.Id() != CNULL) && 
+                          (g0177.Formula.Isa.IsIn(C_lambda) == CTRUE)) { 
                         { var n int = 0
                           { 
                             var v *ClaireAny
                             _ = v
                             loop_1= EID{CFALSE.Id(),0}
                             var v_support *ClaireList
-                            v_support = F_closure_build_lambda(g0176.Formula)
+                            v_support = F_closure_build_lambda(g0177.Formula)
                             v_len := v_support.Length()
                             for i_it := 0; i_it < v_len; i_it++ { 
                               v = v_support.At(i_it)
@@ -1325,7 +1329,7 @@ func F_block_integer (x int) EID {
                           } 
                         } else {
                         PRINC("<compiled:")
-                        loop_1 = Core.F_print_any(g0176.Module_I.Id())
+                        loop_1 = Core.F_print_any(g0177.Module_I.Id())
                         if ErrorIn(loop_1) {Result = loop_1
                         break
                         } else {
@@ -1410,28 +1414,28 @@ func E_closure_build_lambda (self EID) EID {
 /* The go function for: closure_build(self:any,lvar:list) [status=0] */
 func F_closure_build_any (self *ClaireAny,lvar *ClaireList)  { 
     if (self.Isa.IsIn(C_Variable) == CTRUE) { 
-      { var g0178 *ClaireVariable = To_Variable(self)
-        ToArray(lvar.Id()).NthPut((g0178.Index+1),g0178.Id())
+      { var g0179 *ClaireVariable = To_Variable(self)
+        ToArray(lvar.Id()).NthPut((g0179.Index+1),g0179.Id())
         } 
       }  else if (self.Isa.IsIn(C_Instruction) == CTRUE) { 
-      { var g0179 *ClaireInstruction = To_Instruction(self)
+      { var g0180 *ClaireInstruction = To_Instruction(self)
         { 
           var s *ClaireSlot
           _ = s
           var s_iter *ClaireAny
-          for _,s_iter = range(g0179.Isa.Slots.ValuesO()){ 
+          for _,s_iter = range(g0180.Isa.Slots.ValuesO()){ 
             s = ToSlot(s_iter)
-            F_closure_build_any(Core.F_get_slot(s,ToObject(g0179.Id())),lvar)
+            F_closure_build_any(Core.F_get_slot(s,ToObject(g0180.Id())),lvar)
             } 
           } 
         } 
       }  else if (self.Isa.IsIn(C_list) == CTRUE) { 
-      { var g0180 *ClaireList = ToList(self)
+      { var g0181 *ClaireList = ToList(self)
         { 
           var x *ClaireAny
           _ = x
           var x_support *ClaireList
-          x_support = g0180
+          x_support = g0181
           x_len := x_support.Length()
           for i_it := 0; i_it < x_len; i_it++ { 
             x = x_support.At(i_it)
@@ -1562,22 +1566,22 @@ func F_logMeasure_string (s *ClaireString) EID {
         PRINC("// log file produced on ")
         F_princ_string(F_date_I_integer(1))
         { 
-          var g0185 *ClaireClass
-          _ = g0185
-          var g0185_iter *ClaireAny
-          var g0185_support *ClaireSet
-          g0185_support = C_measure.Descendants
-          for i_it := 0; i_it < g0185_support.Count; i_it++ { 
-            g0185_iter = g0185_support.At(i_it)
-            g0185 = ToClass(g0185_iter)
-            { var g0186 *ClaireBoolean
+          var g0186 *ClaireClass
+          _ = g0186
+          var g0186_iter *ClaireAny
+          var g0186_support *ClaireSet
+          g0186_support = C_measure.Descendants
+          for i_it := 0; i_it < g0186_support.Count; i_it++ { 
+            g0186_iter = g0186_support.At(i_it)
+            g0186 = ToClass(g0186_iter)
+            { var g0187 *ClaireBoolean
               { 
                 var m *Measure
                 _ = m
                 var m_iter *ClaireAny
-                g0186= CFALSE
+                g0187= CFALSE
                 var m_support *ClaireList
-                m_support = g0185.Instances
+                m_support = g0186.Instances
                 m_len := m_support.Length()
                 for i_it := 0; i_it < m_len; i_it++ { 
                   m_iter = m_support.At(i_it)
@@ -1595,7 +1599,7 @@ func F_logMeasure_string (s *ClaireString) EID {
                   PRINC("))\n")
                   } 
                 } 
-              if (g0186 == CTRUE) { 
+              if (g0187 == CTRUE) { 
                 
                 break
                 } 

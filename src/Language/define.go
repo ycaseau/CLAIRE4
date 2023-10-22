@@ -1,5 +1,5 @@
 /***** CLAIRE Compilation of file /Users/ycaseau/Dropbox/src/clairev4.10/src/meta/define.cl 
-         [version 4.1 / safety 5] Saturday 09-23-2023 07:22:30 *****/
+         [version 4.1 / safety 5] Sunday 10-22-2023 07:00:35 *****/
 
 package Language
 import (_ "fmt"
@@ -2347,14 +2347,7 @@ func (self *Defarray) SelfEval () EID {
                 } 
               if !ErrorIn(Result) {
               if (ar.Range.Id() == CNULL) { 
-                { var _CL_obj *Core.RangeError = Core.ToRangeError(new(Core.RangeError).Is(Core.C_range_error))
-                  _CL_obj.Cause = C_table.Id()
-                  _CL_obj.Arg = self.SetArg
-                  Result = Core.F_write_property(C_Language_wrong,ToObject(_CL_obj.Id()),C_type.Id())
-                  if !ErrorIn(Result) {
-                  Result = _CL_obj.Close()
-                  }
-                  } 
+                Result = ToException(Core.C_range_error.Make(C_table.Id(),self.SetArg,C_type.Id())).Close()
                 } else {
                 Result = EID{CFALSE.Id(),0}
                 } 
@@ -2366,14 +2359,7 @@ func (self *Defarray) SelfEval () EID {
                 } 
               if (d != CNULL) { 
                 if (ar.Range.Contains(d) != CTRUE) { 
-                  { var _CL_obj *Core.RangeError = Core.ToRangeError(new(Core.RangeError).Is(Core.C_range_error))
-                    _CL_obj.Cause = ar.Id()
-                    _CL_obj.Arg = d
-                    Result = Core.F_write_property(C_Language_wrong,ToObject(_CL_obj.Id()),ar.Range.Id())
-                    if !ErrorIn(Result) {
-                    Result = _CL_obj.Close()
-                    }
-                    } 
+                  Result = ToException(Core.C_range_error.Make(ar.Id(),d,ar.Range.Id())).Close()
                   } else {
                   Result = EID{CFALSE.Id(),0}
                   } 

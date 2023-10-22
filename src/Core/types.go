@@ -1,5 +1,5 @@
 /***** CLAIRE Compilation of file /Users/ycaseau/Dropbox/src/clairev4.10/src/meta/types.cl 
-         [version 4.1 / safety 5] Saturday 09-23-2023 07:22:30 *****/
+         [version 4.1 / safety 5] Sunday 10-22-2023 07:00:35 *****/
 
 package Core
 import (_ "fmt"

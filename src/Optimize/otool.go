@@ -1,5 +1,5 @@
 /***** CLAIRE Compilation of file /Users/ycaseau/Dropbox/src/clairev4.10/src/compile/otool.cl 
-         [version 4.1 / safety 5] Saturday 09-23-2023 07:22:33 *****/
+         [version 4.1 / safety 5] Sunday 10-22-2023 07:00:38 *****/
 
 package Optimize
 import (_ "fmt"
@@ -187,7 +187,7 @@ func E__Z_any3 (x EID,y EID) EID {
   
 // this is very lazy, we could do better
 /* The go function for: glb(x:Pattern,y:type_expression) [status=1] */
-func (x *ClairePattern) Glb (y *ClaireTypeExpression) *ClaireTypeExpression { 
+func F_glb_Pattern (x *ClairePattern,y *ClaireTypeExpression) *ClaireTypeExpression { 
     var Result *ClaireTypeExpression
     if (y.Isa.IsIn(C_Optimize_Pattern) == CTRUE) { 
       { var g0101 *ClairePattern = To_ClairePattern(y.Id())
@@ -208,29 +208,54 @@ func (x *ClairePattern) Glb (y *ClaireTypeExpression) *ClaireTypeExpression {
   
 // The EID go function for: glb @ Pattern (throw: false) 
 func E_glb_Pattern (x EID,y EID) EID { 
-    return EID{To_ClairePattern(OBJ(x)).Glb(ToTypeExpression(OBJ(y)) ).Id(),0}} 
+    return EID{F_glb_Pattern(To_ClairePattern(OBJ(x)),ToTypeExpression(OBJ(y)) ).Id(),0}} 
+  
+// v4.1.0: need the symetrical formula
+/* The go function for: glb(x:type_expression,y:Pattern) [status=0] */
+func F_glb_type_expression (x *ClaireTypeExpression,y *ClairePattern) *ClaireTypeExpression { 
+    var Result *ClaireTypeExpression
+    if (x.Isa.IsIn(C_Optimize_Pattern) == CTRUE) { 
+      { var g0103 *ClairePattern = To_ClairePattern(x.Id())
+        if (g0103.Selector.Id() == y.Selector.Id()) { 
+          { var _CL_obj *ClairePattern = To_ClairePattern(new(ClairePattern).Is(C_Optimize_Pattern))
+            _CL_obj.Selector = g0103.Selector
+            _CL_obj.Arg = ToList(OBJ(Core.F_CALL(ToProperty(Core.C_glb.Id()),ARGS(EID{g0103.Arg.Id(),0},EID{y.Arg.Id(),0}))))
+            Result = ToTypeExpression(_CL_obj.Id())
+            } 
+          } else {
+          Result = ToTypeExpression(CEMPTY.Id())
+          } 
+        } 
+      } else {
+      Result = ToTypeExpression(CEMPTY.Id())
+      } 
+    return Result} 
+  
+// The EID go function for: glb @ type_expression (throw: false) 
+func E_glb_type_expression (x EID,y EID) EID { 
+    return EID{F_glb_type_expression(ToTypeExpression(OBJ(x)),To_ClairePattern(OBJ(y)) ).Id(),0}} 
   
 // extension of <= for Patterns
 /* The go function for: less?(x:Pattern,y:type_expression) [status=0] */
 func F_less_ask_Pattern (x *ClairePattern,y *ClaireTypeExpression) *ClaireBoolean { 
     var Result *ClaireBoolean
     if (y.Isa.IsIn(C_Optimize_Pattern) == CTRUE) { 
-      { var g0103 *ClairePattern = To_ClairePattern(y.Id())
+      { var g0105 *ClairePattern = To_ClairePattern(y.Id())
         { 
           var v_and4 *ClaireBoolean
           
-          v_and4 = Equal(x.Selector.Id(),g0103.Selector.Id())
+          v_and4 = Equal(x.Selector.Id(),g0105.Selector.Id())
           if (v_and4 == CFALSE) {Result = CFALSE
           } else { 
-            v_and4 = Equal(MakeInteger(x.Arg.Length()).Id(),MakeInteger(g0103.Arg.Length()).Id())
+            v_and4 = Equal(MakeInteger(x.Arg.Length()).Id(),MakeInteger(g0105.Arg.Length()).Id())
             if (v_and4 == CFALSE) {Result = CFALSE
             } else { 
               { var arg_1 *ClaireAny
                 { var i int = 1
-                  { var g0104 int = x.Arg.Length()
+                  { var g0106 int = x.Arg.Length()
                     arg_1= CFALSE.Id()
-                    for (i <= g0104) { 
-                      if (Core.F__equaltype_ask_any(ToType(x.Arg.At(i-1)),ToType(g0103.Arg.At(i-1))) != CTRUE) { 
+                    for (i <= g0106) { 
+                      if (Core.F__equaltype_ask_any(ToType(x.Arg.At(i-1)),ToType(g0105.Arg.At(i-1))) != CTRUE) { 
                         arg_1 = CTRUE.Id()
                         break
                         } 
@@ -260,7 +285,7 @@ func E_less_ask_Pattern (x EID,y EID) EID {
 func F_less_ask_type_expression2 (x *ClaireTypeExpression,y *ClairePattern) EID { 
     var Result EID
     if (C_set.Id() == x.Isa.Id()) { 
-      { var g0106 *ClaireSet = ToSet(x.Id())
+      { var g0108 *ClaireSet = ToSet(x.Id())
         { var arg_1 *ClaireAny
           var try_2 EID
           { 
@@ -268,12 +293,12 @@ func F_less_ask_type_expression2 (x *ClaireTypeExpression,y *ClairePattern) EID 
             _ = z
             try_2= EID{CFALSE.Id(),0}
             var z_support *ClaireSet
-            z_support = g0106
+            z_support = g0108
             for i_it := 0; i_it < z_support.Count; i_it++ { 
               z = z_support.At(i_it)
               var loop_3 EID
               _ = loop_3
-              var g0110I *ClaireBoolean
+              var g0112I *ClaireBoolean
               var try_4 EID
               { var arg_5 *ClaireBoolean
                 var try_6 EID
@@ -286,8 +311,8 @@ func F_less_ask_type_expression2 (x *ClaireTypeExpression,y *ClairePattern) EID 
                 } 
               if ErrorIn(try_4) {loop_3 = try_4
               } else {
-              g0110I = ToBoolean(OBJ(try_4))
-              if (g0110I == CTRUE) { 
+              g0112I = ToBoolean(OBJ(try_4))
+              if (g0112I == CTRUE) { 
                 try_2 = EID{CTRUE.Id(),0}
                 break
                 } else {
@@ -308,22 +333,22 @@ func F_less_ask_type_expression2 (x *ClaireTypeExpression,y *ClairePattern) EID 
           } 
         } 
       }  else if (x.Isa.IsIn(C_Optimize_Pattern) == CTRUE) { 
-      { var g0107 *ClairePattern = To_ClairePattern(x.Id())
+      { var g0109 *ClairePattern = To_ClairePattern(x.Id())
         { 
           var v_and4 *ClaireBoolean
           
-          v_and4 = Equal(g0107.Selector.Id(),y.Selector.Id())
+          v_and4 = Equal(g0109.Selector.Id(),y.Selector.Id())
           if (v_and4 == CFALSE) {Result = EID{CFALSE.Id(),0}
           } else { 
-            v_and4 = Equal(MakeInteger(g0107.Arg.Length()).Id(),MakeInteger(y.Arg.Length()).Id())
+            v_and4 = Equal(MakeInteger(g0109.Arg.Length()).Id(),MakeInteger(y.Arg.Length()).Id())
             if (v_and4 == CFALSE) {Result = EID{CFALSE.Id(),0}
             } else { 
               { var arg_7 *ClaireAny
                 { var i int = 1
-                  { var g0108 int = g0107.Arg.Length()
+                  { var g0110 int = g0109.Arg.Length()
                     arg_7= CFALSE.Id()
-                    for (i <= g0108) { 
-                      if (Core.F__equaltype_ask_any(ToType(g0107.Arg.At(i-1)),ToType(y.Arg.At(i-1))) != CTRUE) { 
+                    for (i <= g0110) { 
+                      if (Core.F__equaltype_ask_any(ToType(g0109.Arg.At(i-1)),ToType(y.Arg.At(i-1))) != CTRUE) { 
                         arg_7 = CTRUE.Id()
                         break
                         } 
@@ -432,30 +457,30 @@ func F_Optimize_c_warn_Call (self *Language.Call,_Ztype *ClaireAny) EID {
             (s.Open < ClEnv.Open))) { 
         Result = Core.F_CALL(C_Compile_Cerror,ARGS(EID{MakeString("[255] property ~S has no definition and is not defined as open").Id(),0},EID{s.Id(),0}))
         } else {
-        var g0114I *ClaireBoolean
+        var g0116I *ClaireBoolean
         { 
           var v_and4 *ClaireBoolean
           
           v_and4 = C_OPT.Ignore.Contain_ask(s.Id()).Not
-          if (v_and4 == CFALSE) {g0114I = CFALSE
+          if (v_and4 == CFALSE) {g0116I = CFALSE
           } else { 
             v_and4 = MakeBoolean((s.Open <= 1) || (s.Open == 4))
-            if (v_and4 == CFALSE) {g0114I = CFALSE
+            if (v_and4 == CFALSE) {g0116I = CFALSE
             } else { 
               if (_Ztype.Isa.IsIn(C_list) == CTRUE) { 
-                { var g0113 *ClaireList = ToList(_Ztype)
-                  v_and4 = Core.F__I_equal_any(MakeInteger(ToTypeExpression(g0113.At(0)).Class_I().Open).Id(),MakeInteger(3).Id())
+                { var g0115 *ClaireList = ToList(_Ztype)
+                  v_and4 = Core.F__I_equal_any(MakeInteger(ToTypeExpression(g0115.At(0)).Class_I().Open).Id(),MakeInteger(3).Id())
                   } 
                 } else {
                 v_and4 = CFALSE
                 } 
-              if (v_and4 == CFALSE) {g0114I = CFALSE
+              if (v_and4 == CFALSE) {g0116I = CFALSE
               } else { 
-                g0114I = CTRUE} 
+                g0116I = CTRUE} 
               } 
             } 
           } 
-        if (g0114I == CTRUE) { 
+        if (g0116I == CTRUE) { 
           F_Compile_warn_void()
           Result = Core.F_tformat_string(MakeString("wrongly typed message ~S (~S) [256]\n"),1,MakeConstantList(self.Id(),_Ztype))
           }  else if (C_compiler.Optimize_ask == CTRUE) { 
@@ -539,7 +564,7 @@ func F_Optimize_c_warn_Variable (self *ClaireVariable,x *ClaireAny,y *ClaireType
     if (self.Index == -1) { 
       Result = x.ToEID()
       } else {
-      var g0115I *ClaireBoolean
+      var g0117I *ClaireBoolean
       var try_1 EID
       { var arg_2 *ClaireBoolean
         var try_3 EID
@@ -560,8 +585,8 @@ func F_Optimize_c_warn_Variable (self *ClaireVariable,x *ClaireAny,y *ClaireType
         } 
       if ErrorIn(try_1) {Result = try_1
       } else {
-      g0115I = ToBoolean(OBJ(try_1))
-      if (g0115I == CTRUE) { 
+      g0117I = ToBoolean(OBJ(try_1))
+      if (g0117I == CTRUE) { 
         if (C_compiler.Safety >= 2) { 
           F_Compile_warn_void()
           Result = Core.F_tformat_string(MakeString("~S of type ~S is put in the variable ~S:~S [257a]\n"),1,MakeConstantList(x,
@@ -659,15 +684,15 @@ func E_Compile_osort_any (x EID) EID {
 func F_sort_Variable (x *ClaireVariable) *ClaireClass { 
     var Result *ClaireClass
     { var r *ClaireType = x.Range
-      var g0117I *ClaireBoolean
+      var g0119I *ClaireBoolean
       if (r.Isa.IsIn(C_Union) == CTRUE) { 
-        { var g0116 *ClaireUnion = To_Union(r.Id())
-          g0117I = Equal(g0116.T1.Id(),CEMPTY.Id())
+        { var g0118 *ClaireUnion = To_Union(r.Id())
+          g0119I = Equal(g0118.T1.Id(),CEMPTY.Id())
           } 
         } else {
-        g0117I = CFALSE
+        g0119I = CFALSE
         } 
-      if (g0117I == CTRUE) { 
+      if (g0119I == CTRUE) { 
         Result = F_Compile_psort_any(To_Union(To_Union(r.Id()).T2.Id()).T2.Id())
         } else {
         Result = F_Compile_psort_any(r.Id())
@@ -724,17 +749,17 @@ func E_Compile_stupid_t_any2 (self EID,x EID) EID {
 func F_Optimize_extended_ask_type (self *ClaireType) EID { 
     var Result EID
     if (self.Isa.IsIn(C_Union) == CTRUE) { 
-      { var g0118 *ClaireUnion = To_Union(self.Id())
+      { var g0120 *ClaireUnion = To_Union(self.Id())
         { 
           var v_and4 *ClaireBoolean
           
-          v_and4 = Equal(C_set.Id(),g0118.T2.Isa.Id())
+          v_and4 = Equal(C_set.Id(),g0120.T2.Isa.Id())
           if (v_and4 == CFALSE) {Result = EID{CFALSE.Id(),0}
           } else { 
             var try_1 EID
             { var arg_2 *ClaireAny
               var try_3 EID
-              try_3 = Core.F_CALL(C_size,ARGS(EID{g0118.T2.Id(),0}))
+              try_3 = Core.F_CALL(C_size,ARGS(EID{g0120.T2.Id(),0}))
               if ErrorIn(try_3) {try_1 = try_3
               } else {
               arg_2 = ANY(try_3)
@@ -749,7 +774,7 @@ func F_Optimize_extended_ask_type (self *ClaireType) EID {
               var try_4 EID
               { var arg_5 *ClaireAny
                 var try_6 EID
-                try_6 = Core.F_the_type(g0118.T2)
+                try_6 = Core.F_the_type(g0120.T2)
                 if ErrorIn(try_6) {try_4 = try_6
                 } else {
                 arg_5 = ANY(try_6)
@@ -820,8 +845,8 @@ func E_Optimize_sort_abstract_I_type (x EID) EID {
 func F_Optimize_sort_abstract_ask_type (x *ClaireType) *ClaireBoolean { 
     var Result *ClaireBoolean
     if (x.Isa.IsIn(C_Union) == CTRUE) { 
-      { var g0120 *ClaireUnion = To_Union(x.Id())
-        Result = Equal(g0120.T1.Id(),C_any.Id())
+      { var g0122 *ClaireUnion = To_Union(x.Id())
+        Result = Equal(g0122.T1.Id(),C_any.Id())
         } 
       } else {
       Result = CFALSE
@@ -838,11 +863,11 @@ func E_Optimize_sort_abstract_ask_type (x EID) EID {
 func F_Optimize_ptype_type (x *ClaireType) *ClaireType { 
     var Result *ClaireType
     if (x.Isa.IsIn(C_Union) == CTRUE) { 
-      { var g0122 *ClaireUnion = To_Union(x.Id())
-        if (g0122.T1.Id() == C_any.Id()) { 
-          Result = g0122.T2
+      { var g0124 *ClaireUnion = To_Union(x.Id())
+        if (g0124.T1.Id() == C_any.Id()) { 
+          Result = g0124.T2
           } else {
-          Result = ToType(g0122.Id())
+          Result = ToType(g0124.Id())
           } 
         } 
       } else {
@@ -935,7 +960,7 @@ func E_Optimize_range_infers_for_Variable (self EID,y EID,ts EID) EID {
 /* The go function for: range_infers(self:Variable,y:type) [status=1] */
 func F_Optimize_range_infers_Variable (self *ClaireVariable,y *ClaireType) EID { 
     var Result EID
-    var g0124I *ClaireBoolean
+    var g0126I *ClaireBoolean
     var try_1 EID
     { 
       var v_or2 *ClaireBoolean
@@ -956,8 +981,8 @@ func F_Optimize_range_infers_Variable (self *ClaireVariable,y *ClaireType) EID {
       } 
     if ErrorIn(try_1) {Result = try_1
     } else {
-    g0124I = ToBoolean(OBJ(try_1))
-    if (g0124I == CTRUE) { 
+    g0126I = ToBoolean(OBJ(try_1))
+    if (g0126I == CTRUE) { 
       if (C_set.Id() == y.Isa.Id()) { 
         { 
           var va_arg1 *ClaireVariable
@@ -993,8 +1018,8 @@ func E_Optimize_range_infers_Variable (self EID,y EID) EID {
 /* The go function for: range_sets(self:any,y:type) [status=0] */
 func F_Optimize_range_sets_any (self *ClaireAny,y *ClaireType)  { 
     if (self.Isa.IsIn(C_Variable) == CTRUE) { 
-      { var g0125 *ClaireVariable = To_Variable(self)
-        g0125.Range = y
+      { var g0127 *ClaireVariable = To_Variable(self)
+        g0127.Range = y
         } 
       } 
     } 
@@ -1033,18 +1058,18 @@ func E_Compile_nativeVar_ask_global_variable (x EID) EID {
 func F_Compile_return_type_any (self *ClaireAny) EID { 
     var Result EID
     if (self.Isa.IsIn(Language.C_Let) == CTRUE) { 
-      { var g0126 *Language.Let = Language.To_Let(self)
-        Result = F_Compile_return_type_any(g0126.Arg)
+      { var g0128 *Language.Let = Language.To_Let(self)
+        Result = F_Compile_return_type_any(g0128.Arg)
         } 
       }  else if (self.Isa.IsIn(Language.C_Do) == CTRUE) { 
-      { var g0127 *Language.Do = Language.To_Do(self)
+      { var g0129 *Language.Do = Language.To_Do(self)
         { var x *ClaireSet = CEMPTY
           { 
             var y *ClaireAny
             _ = y
             Result= EID{CFALSE.Id(),0}
             var y_support *ClaireList
-            y_support = g0127.Args
+            y_support = g0129.Args
             y_len := y_support.Length()
             for i_it := 0; i_it < y_len; i_it++ { 
               y = y_support.At(i_it)
@@ -1074,16 +1099,16 @@ func F_Compile_return_type_any (self *ClaireAny) EID {
           } 
         } 
       }  else if (self.Isa.IsIn(Language.C_If) == CTRUE) { 
-      { var g0128 *Language.If = Language.To_If(self)
+      { var g0130 *Language.If = Language.To_If(self)
         { var arg_5 *ClaireType
           var try_7 EID
-          try_7 = F_Compile_return_type_any(g0128.Arg)
+          try_7 = F_Compile_return_type_any(g0130.Arg)
           if ErrorIn(try_7) {Result = try_7
           } else {
           arg_5 = ToType(OBJ(try_7))
           { var arg_6 *ClaireType
             var try_8 EID
-            try_8 = F_Compile_return_type_any(g0128.Other)
+            try_8 = F_Compile_return_type_any(g0130.Other)
             if ErrorIn(try_8) {Result = try_8
             } else {
             arg_6 = ToType(OBJ(try_8))
@@ -1094,18 +1119,18 @@ func F_Compile_return_type_any (self *ClaireAny) EID {
           } 
         } 
       }  else if (self.Isa.IsIn(Language.C_Return) == CTRUE) { 
-      { var g0129 *Language.Return = Language.To_Return(self)
-        Result = Core.F_CALL(C_c_type,ARGS(g0129.Arg.ToEID()))
+      { var g0131 *Language.Return = Language.To_Return(self)
+        Result = Core.F_CALL(C_c_type,ARGS(g0131.Arg.ToEID()))
         } 
       }  else if (self.Isa.IsIn(Language.C_Case) == CTRUE) { 
-      { var g0130 *Language.Case = Language.To_Case(self)
+      { var g0132 *Language.Case = Language.To_Case(self)
         { var x *ClaireSet = CEMPTY
           { 
             var y *ClaireAny
             _ = y
             Result= EID{CFALSE.Id(),0}
             var y_support *ClaireList
-            y_support = g0130.Args
+            y_support = g0132.Args
             y_len := y_support.Length()
             for i_it := 0; i_it < y_len; i_it++ { 
               y = y_support.At(i_it)
@@ -1135,8 +1160,8 @@ func F_Compile_return_type_any (self *ClaireAny) EID {
           } 
         } 
       }  else if (self.Isa.IsIn(Language.C_Handle) == CTRUE) { 
-      { var g0131 *Language.ClaireHandle = Language.To_ClaireHandle(self)
-        Result = F_Compile_return_type_any(g0131.Arg)
+      { var g0133 *Language.ClaireHandle = Language.To_ClaireHandle(self)
+        Result = F_Compile_return_type_any(g0133.Arg)
         } 
       } else {
       Result = EID{CEMPTY.Id(),0}
@@ -1424,7 +1449,7 @@ func F_Optimize_member_code_class (self *ClaireClass,x *ClaireAny) EID {
           var va_arg2 *ClaireProperty
           va_arg1 = _CL_obj
           var try_2 EID
-          var g0133I *ClaireBoolean
+          var g0135I *ClaireBoolean
           var try_3 EID
           { var arg_4 *ClaireType
             var try_5 EID
@@ -1437,8 +1462,8 @@ func F_Optimize_member_code_class (self *ClaireClass,x *ClaireAny) EID {
             } 
           if ErrorIn(try_3) {try_2 = try_3
           } else {
-          g0133I = ToBoolean(OBJ(try_3))
-          if (g0133I == CTRUE) { 
+          g0135I = ToBoolean(OBJ(try_3))
+          if (g0135I == CTRUE) { 
             try_2 = EID{C_isa.Id(),0}
             } else {
             try_2 = EID{Core.C_owner.Id(),0}
@@ -1631,8 +1656,8 @@ func F_Optimize_member_code_Param (self *ClaireParam,x *ClaireAny) EID {
             { var arg_3 *ClaireList
               { var i_bag *ClaireList = ToType(CEMPTY.Id()).EmptyList()
                 { var i int = 1
-                  { var g0134 int = self.Params.Length()
-                    for (i <= g0134) { 
+                  { var g0136 int = self.Params.Length()
+                    for (i <= g0136) { 
                       { var arg_4 *Language.Call
                         { var _CL_obj *Language.Call = Language.To_Call(new(Language.Call).Is(Language.C_Call))
                           _CL_obj.Selector = ToProperty(C__Z.Id())
@@ -1693,8 +1718,8 @@ func F_Optimize_member_code_tuple (self *ClaireTuple,x *ClaireAny) EID {
               va_arg1 = _CL_obj
               { var i_bag *ClaireList = ToType(CEMPTY.Id()).EmptyList()
                 { var i int = 1
-                  { var g0135 int = self.Length()
-                    for (i <= g0135) { 
+                  { var g0137 int = self.Length()
+                    for (i <= g0137) { 
                       { var arg_2 *Language.Call
                         { var _CL_obj *Language.Call = Language.To_Call(new(Language.Call).Is(Language.C_Call))
                           _CL_obj.Selector = ToProperty(C__Z.Id())
@@ -1756,33 +1781,33 @@ func F_Optimize_member_code_any (self *ClaireAny,x *ClaireAny) EID {
         if ErrorIn(try_4) {Result = try_4
         } else {
         r = ANY(try_4)
-        var g0137I *ClaireBoolean
+        var g0139I *ClaireBoolean
         { 
           var v_or4 *ClaireBoolean
           
           v_or4 = Equal(r,CNULL)
-          if (v_or4 == CTRUE) {g0137I = CTRUE
+          if (v_or4 == CTRUE) {g0139I = CTRUE
           } else { 
             v_or4 = Equal(self,C_object.Id())
-            if (v_or4 == CTRUE) {g0137I = CTRUE
+            if (v_or4 == CTRUE) {g0139I = CTRUE
             } else { 
               { var arg_5 *ClaireObject
                 if (self.Isa.IsIn(Core.C_global_variable) == CTRUE) { 
-                  { var g0136 *Core.GlobalVariable = Core.ToGlobalVariable(self)
-                    arg_5 = ToObject(g0136.Range.Id())
+                  { var g0138 *Core.GlobalVariable = Core.ToGlobalVariable(self)
+                    arg_5 = ToObject(g0138.Range.Id())
                     } 
                   } else {
                   arg_5 = ToObject(CFALSE.Id())
                   } 
                 v_or4 = F_boolean_I_any(arg_5.Id())
                 } 
-              if (v_or4 == CTRUE) {g0137I = CTRUE
+              if (v_or4 == CTRUE) {g0139I = CTRUE
               } else { 
-                g0137I = CFALSE} 
+                g0139I = CFALSE} 
               } 
             } 
           } 
-        if (g0137I == CTRUE) { 
+        if (g0139I == CTRUE) { 
           Result = F_Optimize_c_code_method_method1(ToMethod(Core.F__at_property2(ToProperty(C__Z.Id()),_Ztype).Id()),MakeConstantList(x,self),_Ztype)
           } else {
           Result = Core.F_CALL(C_Optimize_member_code,ARGS(r.ToEID(),x.ToEID()))
@@ -1898,11 +1923,11 @@ func E__Z_any5 (x EID,y EID) EID {
 func F_Compile_Variable_I_symbol (s *ClaireSymbol,n int,t *ClaireAny) *ClaireVariable { 
     var Result *ClaireVariable
     if (t.Isa.IsIn(C_type) == CTRUE) { 
-      { var g0138 *ClaireType = ToType(t)
+      { var g0140 *ClaireType = ToType(t)
         { var _CL_obj *ClaireVariable = To_Variable(new(ClaireVariable).Is(C_Variable))
           _CL_obj.Pname = s
           _CL_obj.Index = n
-          _CL_obj.Range = g0138
+          _CL_obj.Range = g0140
           Result = _CL_obj
           } 
         } 
@@ -1962,10 +1987,10 @@ func F_Compile_designated_ask_any (self *ClaireAny) EID {
                     } else { 
                       var try_1 EID
                       if (self.Isa.IsIn(Language.C_Call) == CTRUE) { 
-                        { var g0140 *Language.Call = Language.To_Call(self)
+                        { var g0142 *Language.Call = Language.To_Call(self)
                           { var x *ClaireAny
                             var try_2 EID
-                            try_2 = Core.F_CALL(C_c_code,ARGS(EID{g0140.Id(),0}))
+                            try_2 = Core.F_CALL(C_c_code,ARGS(EID{g0142.Id(),0}))
                             if ErrorIn(try_2) {try_1 = try_2
                             } else {
                             x = ANY(try_2)
@@ -1995,7 +2020,7 @@ func F_Compile_designated_ask_any (self *ClaireAny) EID {
                               v_or14 = ToBoolean(OBJ(try_3))
                               if (v_or14 == CTRUE) {try_1 = EID{CTRUE.Id(),0}
                               } else { 
-                                v_or14 = Equal(g0140.Selector.Id(),Core.C_mClaire_get_stack.Id())
+                                v_or14 = Equal(g0142.Selector.Id(),Core.C_mClaire_get_stack.Id())
                                 if (v_or14 == CTRUE) {try_1 = EID{CTRUE.Id(),0}
                                 } else { 
                                   try_1 = EID{CFALSE.Id(),0}} 
@@ -2006,23 +2031,23 @@ func F_Compile_designated_ask_any (self *ClaireAny) EID {
                             } 
                           } 
                         }  else if (self.Isa.IsIn(Language.C_Call_slot) == CTRUE) { 
-                        { var g0141 *Language.CallSlot = Language.To_CallSlot(self)
-                          try_1 = F_Compile_designated_ask_any(g0141.Arg)
-                          } 
-                        }  else if (self.Isa.IsIn(Language.C_Call_table) == CTRUE) { 
-                        { var g0142 *Language.CallTable = Language.To_CallTable(self)
-                          try_1 = F_Compile_designated_ask_any(g0142.Arg)
-                          } 
-                        }  else if (self.Isa.IsIn(Language.C_Call_array) == CTRUE) { 
-                        { var g0143 *Language.CallArray = Language.To_CallArray(self)
+                        { var g0143 *Language.CallSlot = Language.To_CallSlot(self)
                           try_1 = F_Compile_designated_ask_any(g0143.Arg)
                           } 
+                        }  else if (self.Isa.IsIn(Language.C_Call_table) == CTRUE) { 
+                        { var g0144 *Language.CallTable = Language.To_CallTable(self)
+                          try_1 = F_Compile_designated_ask_any(g0144.Arg)
+                          } 
+                        }  else if (self.Isa.IsIn(Language.C_Call_array) == CTRUE) { 
+                        { var g0145 *Language.CallArray = Language.To_CallArray(self)
+                          try_1 = F_Compile_designated_ask_any(g0145.Arg)
+                          } 
                         }  else if (self.Isa.IsIn(Language.C_Call_method) == CTRUE) { 
-                        { var g0144 *Language.CallMethod = Language.To_CallMethod(self)
+                        { var g0146 *Language.CallMethod = Language.To_CallMethod(self)
                           { 
                             var v_and13 *ClaireBoolean
                             
-                            v_and13 = MakeBoolean((C_OPT.SimpleOperations.Contain_ask(g0144.Arg.Selector.Id()) == CTRUE) || (g0144.Arg.Id() == Core.F__at_property1(Core.C_unsafe,C_any).Id()) || (g0144.Arg.Id() == Core.F__at_property1(C_nth,C_list).Id()))
+                            v_and13 = MakeBoolean((C_OPT.SimpleOperations.Contain_ask(g0146.Arg.Selector.Id()) == CTRUE) || (g0146.Arg.Id() == Core.F__at_property1(Core.C_unsafe,C_any).Id()) || (g0146.Arg.Id() == Core.F__at_property1(C_nth,C_list).Id()))
                             if (v_and13 == CFALSE) {try_1 = EID{CFALSE.Id(),0}
                             } else { 
                               var try_5 EID
@@ -2033,13 +2058,13 @@ func F_Compile_designated_ask_any (self *ClaireAny) EID {
                                   _ = y
                                   try_7= EID{CFALSE.Id(),0}
                                   var y_support *ClaireList
-                                  y_support = g0144.Args
+                                  y_support = g0146.Args
                                   y_len := y_support.Length()
                                   for i_it := 0; i_it < y_len; i_it++ { 
                                     y = y_support.At(i_it)
                                     var loop_8 EID
                                     _ = loop_8
-                                    var g0146I *ClaireBoolean
+                                    var g0148I *ClaireBoolean
                                     var try_9 EID
                                     { var arg_10 *ClaireBoolean
                                       var try_11 EID
@@ -2052,8 +2077,8 @@ func F_Compile_designated_ask_any (self *ClaireAny) EID {
                                       } 
                                     if ErrorIn(try_9) {loop_8 = try_9
                                     } else {
-                                    g0146I = ToBoolean(OBJ(try_9))
-                                    if (g0146I == CTRUE) { 
+                                    g0148I = ToBoolean(OBJ(try_9))
+                                    if (g0148I == CTRUE) { 
                                       try_7 = EID{CTRUE.Id(),0}
                                       break
                                       } else {
@@ -2244,8 +2269,8 @@ func E_Optimize_c_inline_method2 (self EID,l EID) EID {
 func F_Optimize_c_inline_arg_ask_any (self *ClaireAny) EID { 
     var Result EID
     if (self.Isa.IsIn(Language.C_Call) == CTRUE) { 
-      { var g0148 *Language.Call = Language.To_Call(self)
-        { var l *ClaireList = g0148.Args
+      { var g0150 *Language.Call = Language.To_Call(self)
+        { var l *ClaireList = g0150.Args
           { var m *ClaireAny
             var try_1 EID
             { var arg_2 *ClaireList
@@ -2271,24 +2296,24 @@ func F_Optimize_c_inline_arg_ask_any (self *ClaireAny) EID {
               if ErrorIn(try_3) {try_1 = try_3
               } else {
               arg_2 = ToList(OBJ(try_3))
-              try_1 = F_Optimize_restriction_I_property(g0148.Selector,arg_2,CTRUE).ToEID()
+              try_1 = F_Optimize_restriction_I_property(g0150.Selector,arg_2,CTRUE).ToEID()
               }
               } 
             if ErrorIn(try_1) {Result = try_1
             } else {
             m = ANY(try_1)
             if (C_method.Id() == m.Isa.Id()) { 
-              { var g0149 *ClaireMethod = ToMethod(m)
-                var g0152I *ClaireBoolean
+              { var g0151 *ClaireMethod = ToMethod(m)
+                var g0154I *ClaireBoolean
                 var try_5 EID
                 { 
                   var v_and8 *ClaireBoolean
                   
-                  v_and8 = g0149.Inline_ask
+                  v_and8 = g0151.Inline_ask
                   if (v_and8 == CFALSE) {try_5 = EID{CFALSE.Id(),0}
                   } else { 
                     var try_6 EID
-                    try_6 = F_Optimize_c_inline_ask_method(g0149,l)
+                    try_6 = F_Optimize_c_inline_ask_method(g0151,l)
                     if ErrorIn(try_6) {try_5 = try_6
                     } else {
                     v_and8 = ToBoolean(OBJ(try_6))
@@ -2300,9 +2325,9 @@ func F_Optimize_c_inline_arg_ask_any (self *ClaireAny) EID {
                   } 
                 if ErrorIn(try_5) {Result = try_5
                 } else {
-                g0152I = ToBoolean(OBJ(try_5))
-                if (g0152I == CTRUE) { 
-                  Result = F_Optimize_c_inline_method2(g0149,l)
+                g0154I = ToBoolean(OBJ(try_5))
+                if (g0154I == CTRUE) { 
+                  Result = F_Optimize_c_inline_method2(g0151,l)
                   } else {
                   Result = EID{CFALSE.Id(),0}
                   } 
@@ -2338,13 +2363,13 @@ func E_Optimize_c_inline_arg_ask_any (self EID) EID {
 func F_Optimize_c_substitution_any (self *ClaireAny,lx *ClaireList,val *ClaireList,eval_ask *ClaireBoolean) EID { 
     var Result EID
     if (self.Isa.IsIn(C_Variable) == CTRUE) { 
-      { var g0153 *ClaireVariable = To_Variable(self)
+      { var g0155 *ClaireVariable = To_Variable(self)
         { var i *ClaireAny
           { var j_some *ClaireAny = CNULL
             { var j int = 1
-              { var g0154 int = lx.Length()
-                for (j <= g0154) { 
-                  if (g0153.Pname.Id() == To_Variable(lx.At(j-1)).Pname.Id()) { 
+              { var g0156 int = lx.Length()
+                for (j <= g0156) { 
+                  if (g0155.Pname.Id() == To_Variable(lx.At(j-1)).Pname.Id()) { 
                     j_some = MakeInteger(j).Id()
                     break
                     } 
@@ -2357,26 +2382,26 @@ func F_Optimize_c_substitution_any (self *ClaireAny,lx *ClaireList,val *ClaireLi
           if (i != CNULL) { 
             Result = val.At(ToInteger(i).Value-1).ToEID()
             } else {
-            Result = EID{g0153.Id(),0}
+            Result = EID{g0155.Id(),0}
             } 
           } 
         } 
       }  else if (self.Isa.IsIn(C_list) == CTRUE) { 
-      { var g0155 *ClaireList = ToList(self)
+      { var g0157 *ClaireList = ToList(self)
         { var i int = 1
-          { var g0156 int = g0155.Length()
+          { var g0158 int = g0157.Length()
             Result= EID{CFALSE.Id(),0}
-            for (i <= g0156) { 
+            for (i <= g0158) { 
               var loop_1 EID
               _ = loop_1
               { 
               { var arg_2 *ClaireAny
                 var try_3 EID
-                try_3 = F_Optimize_c_substitution_any(g0155.At(i-1),lx,val,eval_ask)
+                try_3 = F_Optimize_c_substitution_any(g0157.At(i-1),lx,val,eval_ask)
                 if ErrorIn(try_3) {loop_1 = try_3
                 } else {
                 arg_2 = ANY(try_3)
-                loop_1 = ToArray(g0155.Id()).NthPut(i,arg_2).ToEID()
+                loop_1 = ToArray(g0157.Id()).NthPut(i,arg_2).ToEID()
                 }
                 } 
               if ErrorIn(loop_1) {Result = loop_1
@@ -2389,29 +2414,29 @@ func F_Optimize_c_substitution_any (self *ClaireAny,lx *ClaireList,val *ClaireLi
             } 
           } 
         if !ErrorIn(Result) {
-        Result = EID{g0155.Id(),0}
+        Result = EID{g0157.Id(),0}
         }
         } 
       }  else if (self.Isa.IsIn(Language.C_Call) == CTRUE) { 
-      { var g0157 *Language.Call = Language.To_Call(self)
-        if (g0157.Selector.Id() == Core.C_eval.Id()) { 
+      { var g0159 *Language.Call = Language.To_Call(self)
+        if (g0159.Selector.Id() == Core.C_eval.Id()) { 
           { var arg_4 *ClaireBoolean
             var try_5 EID
             { 
               var v_or6 *ClaireBoolean
               
-              v_or6 = Equal(MakeInteger(g0157.Args.Length()).Id(),MakeInteger(1).Id())
+              v_or6 = Equal(MakeInteger(g0159.Args.Length()).Id(),MakeInteger(1).Id())
               if (v_or6 == CTRUE) {try_5 = EID{CTRUE.Id(),0}
               } else { 
                 var try_6 EID
                 { 
                   var v_and8 *ClaireBoolean
                   
-                  v_and8 = Equal(MakeInteger(g0157.Args.Length()).Id(),MakeInteger(2).Id())
+                  v_and8 = Equal(MakeInteger(g0159.Args.Length()).Id(),MakeInteger(2).Id())
                   if (v_and8 == CFALSE) {try_6 = EID{CFALSE.Id(),0}
                   } else { 
                     var try_7 EID
-                    try_7 = Core.F_BELONG(val.At(0),g0157.Args.At(1))
+                    try_7 = Core.F_BELONG(val.At(0),g0159.Args.At(1))
                     if ErrorIn(try_7) {try_6 = try_7
                     } else {
                     v_and8 = ToBoolean(OBJ(try_7))
@@ -2433,7 +2458,7 @@ func F_Optimize_c_substitution_any (self *ClaireAny,lx *ClaireList,val *ClaireLi
             if ErrorIn(try_5) {Result = try_5
             } else {
             arg_4 = ToBoolean(OBJ(try_5))
-            Result = F_Optimize_c_substitution_any(g0157.Args.At(0),lx,val,arg_4)
+            Result = F_Optimize_c_substitution_any(g0159.Args.At(0),lx,val,arg_4)
             }
             } 
           }  else if (eval_ask == CTRUE) { 
@@ -2446,7 +2471,7 @@ func F_Optimize_c_substitution_any (self *ClaireAny,lx *ClaireList,val *ClaireLi
                 var v_list7 *ClaireList
                 var y *ClaireAny
                 var v_local7 *ClaireAny
-                v_list7 = g0157.Args
+                v_list7 = g0159.Args
                 try_9 = EID{CreateList(ToType(CEMPTY.Id()),v_list7.Length()).Id(),0}
                 for CLcount := 0; CLcount < v_list7.Length(); CLcount++{ 
                   y = v_list7.At(CLcount)
@@ -2463,7 +2488,7 @@ func F_Optimize_c_substitution_any (self *ClaireAny,lx *ClaireList,val *ClaireLi
               if ErrorIn(try_9) {Result = try_9
               } else {
               arg_8 = ToList(OBJ(try_9))
-              Result = Core.F_apply_property(g0157.Selector,arg_8)
+              Result = Core.F_apply_property(g0159.Selector,arg_8)
               }
               } 
             if ErrorIn(Result){ 
@@ -2472,40 +2497,40 @@ func F_Optimize_c_substitution_any (self *ClaireAny,lx *ClaireList,val *ClaireLi
               Core.F_tformat_string(MakeString("a strange problem happens ~A \n"),0,MakeConstantList(MakeInteger(ClEnv.Verbose).Id()))
               F_Compile_warn_void()
               Core.F_tformat_string(MakeString("failed substitution: ~S"),1,MakeConstantList(ClEnv.Exception_I.Id()))
-              Result = F_Optimize_c_substitution_any(g0157.Args.Id(),lx,val,CFALSE)
+              Result = F_Optimize_c_substitution_any(g0159.Args.Id(),lx,val,CFALSE)
               if !ErrorIn(Result) {
-              Result = EID{g0157.Id(),0}
+              Result = EID{g0159.Id(),0}
               }
               } 
             } 
           } else {
-          Result = F_Optimize_c_substitution_any(g0157.Args.Id(),lx,val,CFALSE)
+          Result = F_Optimize_c_substitution_any(g0159.Args.Id(),lx,val,CFALSE)
           if !ErrorIn(Result) {
-          Result = EID{g0157.Id(),0}
+          Result = EID{g0159.Id(),0}
           }
           } 
         } 
       }  else if (self.Isa.IsIn(C_Instruction) == CTRUE) { 
-      { var g0158 *ClaireInstruction = To_Instruction(self)
+      { var g0160 *ClaireInstruction = To_Instruction(self)
         { 
           var s *ClaireSlot
           _ = s
           var s_iter *ClaireAny
           Result= EID{CFALSE.Id(),0}
           var s_support *ClaireList
-          s_support = g0158.Id().Isa.Slots
+          s_support = g0160.Id().Isa.Slots
           for _,s_iter = range(s_support.ValuesO()){ 
             s = ToSlot(s_iter)
             var loop_11 EID
             _ = loop_11
-            { var y *ClaireAny = Core.F_get_slot(s,ToObject(g0158.Id()))
+            { var y *ClaireAny = Core.F_get_slot(s,ToObject(g0160.Id()))
               { var arg_12 *ClaireAny
                 var try_13 EID
                 try_13 = F_Optimize_c_substitution_any(y,lx,val,eval_ask)
                 if ErrorIn(try_13) {loop_11 = try_13
                 } else {
                 arg_12 = ANY(try_13)
-                loop_11 = Core.F_put_slot(s,ToObject(g0158.Id()),arg_12).ToEID()
+                loop_11 = Core.F_put_slot(s,ToObject(g0160.Id()),arg_12).ToEID()
                 }
                 } 
               } 
@@ -2516,7 +2541,7 @@ func F_Optimize_c_substitution_any (self *ClaireAny,lx *ClaireList,val *ClaireLi
             } 
           } 
         if !ErrorIn(Result) {
-        Result = EID{g0158.Id(),0}
+        Result = EID{g0160.Id(),0}
         }
         } 
       } else {
@@ -2548,27 +2573,27 @@ func F_Optimize_bound_variables_any (self *ClaireAny) EID {
     var Result EID
     { var l *ClaireList = ToType(C_any.Id()).EmptyList()
       if (self.Isa.IsIn(Language.C_Instruction_with_var) == CTRUE) { 
-        { var g0160 *Language.InstructionWithVar = Language.To_InstructionWithVar(self)
-          l = MakeList(ToType(C_any.Id()),g0160.ClaireVar.Id())
+        { var g0162 *Language.InstructionWithVar = Language.To_InstructionWithVar(self)
+          l = MakeList(ToType(C_any.Id()),g0162.ClaireVar.Id())
           } 
         } 
       if (self.Isa.IsIn(C_Variable) == CTRUE) { 
         Result = EID{CNIL.Id(),0}
         }  else if (self.Isa.IsIn(C_Instruction) == CTRUE) { 
-        { var g0162 *ClaireInstruction = To_Instruction(self)
+        { var g0164 *ClaireInstruction = To_Instruction(self)
           { 
             var s *ClaireSlot
             _ = s
             var s_iter *ClaireAny
             Result= EID{CFALSE.Id(),0}
-            for _,s_iter = range(g0162.Isa.Slots.ValuesO()){ 
+            for _,s_iter = range(g0164.Isa.Slots.ValuesO()){ 
               s = ToSlot(s_iter)
               var loop_1 EID
               _ = loop_1
               var try_2 EID
               { var arg_3 *ClaireList
                 var try_4 EID
-                try_4 = F_Optimize_bound_variables_any(Core.F_get_slot(s,ToObject(g0162.Id())))
+                try_4 = F_Optimize_bound_variables_any(Core.F_get_slot(s,ToObject(g0164.Id())))
                 if ErrorIn(try_4) {try_2 = try_4
                 } else {
                 arg_3 = ToList(OBJ(try_4))
@@ -2585,13 +2610,13 @@ func F_Optimize_bound_variables_any (self *ClaireAny) EID {
             } 
           } 
         }  else if (self.Isa.IsIn(C_list) == CTRUE) { 
-        { var g0163 *ClaireList = ToList(self)
+        { var g0165 *ClaireList = ToList(self)
           { 
             var x *ClaireAny
             _ = x
             Result= EID{CFALSE.Id(),0}
             var x_support *ClaireList
-            x_support = g0163
+            x_support = g0165
             x_len := x_support.Length()
             for i_it := 0; i_it < x_len; i_it++ { 
               x = x_support.At(i_it)
@@ -2642,13 +2667,13 @@ func F_Optimize_c_boolean_any (x *ClaireAny) EID {
       { var ptx *ClaireType = F_Optimize_ptype_type(tx)
         if (ptx.Included(ToType(C_boolean.Id())) == CTRUE) { 
           if (x.Isa.IsIn(Language.C_Call) == CTRUE) { 
-            { var g0164 *Language.Call = Language.To_Call(x)
-              var g0165I *ClaireBoolean
+            { var g0166 *Language.Call = Language.To_Call(x)
+              var g0167I *ClaireBoolean
               var try_2 EID
               { 
                 var v_and7 *ClaireBoolean
                 
-                v_and7 = Equal(g0164.Selector.Id(),Core.C_not.Id())
+                v_and7 = Equal(g0166.Selector.Id(),Core.C_not.Id())
                 if (v_and7 == CFALSE) {try_2 = EID{CFALSE.Id(),0}
                 } else { 
                   var try_3 EID
@@ -2656,7 +2681,7 @@ func F_Optimize_c_boolean_any (x *ClaireAny) EID {
                     var try_5 EID
                     { var arg_6 *ClaireType
                       var try_7 EID
-                      try_7 = Core.F_CALL(C_c_type,ARGS(g0164.Args.At(0).ToEID()))
+                      try_7 = Core.F_CALL(C_c_type,ARGS(g0166.Args.At(0).ToEID()))
                       if ErrorIn(try_7) {try_5 = try_7
                       } else {
                       arg_6 = ToType(OBJ(try_7))
@@ -2680,8 +2705,8 @@ func F_Optimize_c_boolean_any (x *ClaireAny) EID {
                 } 
               if ErrorIn(try_2) {Result = try_2
               } else {
-              g0165I = ToBoolean(OBJ(try_2))
-              if (g0165I == CTRUE) { 
+              g0167I = ToBoolean(OBJ(try_2))
+              if (g0167I == CTRUE) { 
                 { var _CL_obj *Language.Call = Language.To_Call(new(Language.Call).Is(Language.C_Call))
                   _CL_obj.Selector = ToProperty(Core.C__I_equal.Id())
                   { 
@@ -2693,22 +2718,22 @@ func F_Optimize_c_boolean_any (x *ClaireAny) EID {
                       va_arg2= ToType(CEMPTY.Id()).EmptyList()
                       { var _CL_obj *Language.Call = Language.To_Call(new(Language.Call).Is(Language.C_Call))
                         _CL_obj.Selector = C_boolean_I
-                        _CL_obj.Args = MakeConstantList(g0164.Args.At(0))
+                        _CL_obj.Args = MakeConstantList(g0166.Args.At(0))
                         v_bag_arg = _CL_obj.Id()
                         } 
                       va_arg2.AddFast(v_bag_arg)
                       va_arg2.AddFast(CTRUE.Id())} 
                     va_arg1.Args = va_arg2
                     } 
-                  g0164 = _CL_obj
+                  g0166 = _CL_obj
                   } 
-                Result = EID{g0164.Id(),0}
+                Result = EID{g0166.Id(),0}
                 } else {
                 Result = EID{CFALSE.Id(),0}
                 } 
               }
               if !ErrorIn(Result) {
-              x = g0164.Id()
+              x = g0166.Id()
               Result = x.ToEID()
               }
               } 

@@ -1,5 +1,5 @@
 /***** CLAIRE Compilation of file /Users/ycaseau/Dropbox/src/clairev4.10/src/compile/goexp.cl 
-         [version 4.1 / safety 5] Saturday 09-23-2023 07:22:33 *****/
+         [version 4.1 / safety 5] Sunday 10-22-2023 07:00:38 *****/
 
 package Generate
 import (_ "fmt"

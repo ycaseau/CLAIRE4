@@ -1,5 +1,5 @@
 /***** CLAIRE Compilation of file /Users/ycaseau/Dropbox/src/clairev4.10/src/meta/control.cl 
-         [version 4.1 / safety 5] Saturday 09-23-2023 07:22:30 *****/
+         [version 4.1 / safety 5] Sunday 10-22-2023 07:00:35 *****/
 
 package Language
 import (_ "fmt"
@@ -1694,14 +1694,7 @@ func (self *Lselect) SelfEval () EID {
               x = x_some
               } 
             if (x != CNULL) { 
-              { var _CL_obj *Core.RangeError = Core.ToRangeError(new(Core.RangeError).Is(Core.C_range_error))
-                _CL_obj.Cause = self.Id()
-                _CL_obj.Arg = x
-                Result = Core.F_write_property(C_Language_wrong,ToObject(_CL_obj.Id()),self.Of.Id())
-                if !ErrorIn(Result) {
-                Result = _CL_obj.Close()
-                }
-                } 
+              Result = ToException(Core.C_range_error.Make(self.Id(),x,self.Of.Id())).Close()
               } else {
               Result = EID{CNULL,0}
               } 

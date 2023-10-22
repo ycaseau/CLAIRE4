@@ -1,5 +1,5 @@
 /***** CLAIRE Compilation of module Optimize.cl 
-         [version 4.1 / safety 5] Saturday 09-23-2023 07:22:33 *****/
+         [version 4.1 / safety 5] Sunday 10-22-2023 07:00:38 *****/
 
 package Optimize
 import (_ "fmt"
@@ -11,7 +11,7 @@ import (_ "fmt"
 )
 
 //-------- dumb function to prevent import errors --------
-func import_g0331() { 
+func import_g0333() { 
     _ = Core.It
     _ = Language.It
     _ = Reader.It
@@ -357,7 +357,7 @@ var C_Compile *ClaireModule
 func MetaLoad() { 
   
   It = MakeModule("Optimize",C_Compile)
-  It.Comment = MakeString("Compiled on Saturday 09-23-2023 07:22:33(v4.1), lines:3034, warnings:1,safety:5")
+  It.Comment = MakeString("Compiled on Sunday 10-22-2023 07:00:38(v4.1), lines:3041, warnings:1,safety:5")
   ClEnv.Module_I = It
   
   // definition of the properties
@@ -996,142 +996,144 @@ func MetaLoad() {
   
   _ = Core.F_attach_method(Core.C_glb.AddMethod(Signature(C_Optimize_Pattern.Id(),C_type_expression.Id(),C_type_expression.Id()),1,MakeFunction2(E_glb_Pattern,"glb_Pattern")),MakeString("otool.cl:81"))
   
-  _ = Core.F_attach_method(Core.C_less_ask.AddMethod(Signature(C_Optimize_Pattern.Id(),C_type_expression.Id(),C_boolean.Id()),0,MakeFunction2(E_less_ask_Pattern,"less?_Pattern")),MakeString("otool.cl:88"))
+  _ = Core.F_attach_method(Core.C_glb.AddMethod(Signature(C_type_expression.Id(),C_Optimize_Pattern.Id(),C_type_expression.Id()),0,MakeFunction2(E_glb_type_expression,"glb_type_expression")),MakeString("otool.cl:88"))
   
-  _ = Core.F_attach_method(Core.C_less_ask.AddMethod(Signature(C_type_expression.Id(),C_Optimize_Pattern.Id(),C_boolean.Id()),1,MakeFunction2(E_less_ask_type_expression2,"less?_type_expression2")),MakeString("otool.cl:95"))
+  _ = Core.F_attach_method(Core.C_less_ask.AddMethod(Signature(C_Optimize_Pattern.Id(),C_type_expression.Id(),C_boolean.Id()),0,MakeFunction2(E_less_ask_Pattern,"less?_Pattern")),MakeString("otool.cl:95"))
   
-  _ = Core.F_attach_method(C_nth.AddMethod(Signature(C_property.Id(),C_tuple.Id(),C_Optimize_Pattern.Id()),0,MakeFunction2(E_nth_property,"nth_property")),MakeString("otool.cl:98"))
+  _ = Core.F_attach_method(Core.C_less_ask.AddMethod(Signature(C_type_expression.Id(),C_Optimize_Pattern.Id(),C_boolean.Id()),1,MakeFunction2(E_less_ask_type_expression2,"less?_type_expression2")),MakeString("otool.cl:102"))
   
-  _ = Core.F_attach_method(C_Compile_warn.AddMethod(Signature(C_void.Id(),C_void.Id()),0,MakeFunction1(E_Compile_warn_void,"Compile_warn_void")),MakeString("otool.cl:108"))
+  _ = Core.F_attach_method(C_nth.AddMethod(Signature(C_property.Id(),C_tuple.Id(),C_Optimize_Pattern.Id()),0,MakeFunction2(E_nth_property,"nth_property")),MakeString("otool.cl:105"))
   
-  _ = Core.F_attach_method(C_Compile_Cerror.AddMethod(Signature(C_string.Id(),C_listargs.Id(),CEMPTY.Id()),1,MakeFunction2(E_Compile_Cerror_string,"Compile_Cerror_string")),MakeString("otool.cl:113"))
+  _ = Core.F_attach_method(C_Compile_warn.AddMethod(Signature(C_void.Id(),C_void.Id()),0,MakeFunction1(E_Compile_warn_void,"Compile_warn_void")),MakeString("otool.cl:115"))
   
-  _ = Core.F_attach_method(C_Compile_notice.AddMethod(Signature(C_void.Id(),C_void.Id()),0,MakeFunction1(E_Compile_notice_void,"Compile_notice_void")),MakeString("otool.cl:119"))
+  _ = Core.F_attach_method(C_Compile_Cerror.AddMethod(Signature(C_string.Id(),C_listargs.Id(),CEMPTY.Id()),1,MakeFunction2(E_Compile_Cerror_string,"Compile_Cerror_string")),MakeString("otool.cl:120"))
   
-  _ = Core.F_attach_method(C_Optimize_c_warn.AddMethod(Signature(Language.C_Call.Id(),C_any.Id(),C_any.Id()),1,MakeFunction2(E_Optimize_c_warn_Call,"Optimize_c_warn_Call")),MakeString("otool.cl:133"))
+  _ = Core.F_attach_method(C_Compile_notice.AddMethod(Signature(C_void.Id(),C_void.Id()),0,MakeFunction1(E_Compile_notice_void,"Compile_notice_void")),MakeString("otool.cl:126"))
   
-  _ = Core.F_attach_method(C_Optimize_c_warn.AddMethod(Signature(Language.C_Super.Id(),C_any.Id(),C_any.Id()),1,MakeFunction2(E_Optimize_c_warn_Super,"Optimize_c_warn_Super")),MakeString("otool.cl:143"))
+  _ = Core.F_attach_method(C_Optimize_c_warn.AddMethod(Signature(Language.C_Call.Id(),C_any.Id(),C_any.Id()),1,MakeFunction2(E_Optimize_c_warn_Call,"Optimize_c_warn_Call")),MakeString("otool.cl:140"))
+  
+  _ = Core.F_attach_method(C_Optimize_c_warn.AddMethod(Signature(Language.C_Super.Id(),C_any.Id(),C_any.Id()),1,MakeFunction2(E_Optimize_c_warn_Super,"Optimize_c_warn_Super")),MakeString("otool.cl:150"))
   
   _ = Core.F_attach_method(C_Optimize_c_warn.AddMethod(Signature(C_property.Id(),
     C_list.Id(),
     C_list.Id(),
-    C_any.Id()),1,MakeFunction3(E_Optimize_c_warn_property,"Optimize_c_warn_property")),MakeString("otool.cl:150"))
+    C_any.Id()),1,MakeFunction3(E_Optimize_c_warn_property,"Optimize_c_warn_property")),MakeString("otool.cl:157"))
   
   _ = Core.F_attach_method(C_Optimize_c_warn.AddMethod(Signature(C_Variable.Id(),
     C_any.Id(),
     C_type.Id(),
-    C_any.Id()),1,MakeFunction3(E_Optimize_c_warn_Variable,"Optimize_c_warn_Variable")),MakeString("otool.cl:167"))
+    C_any.Id()),1,MakeFunction3(E_Optimize_c_warn_Variable,"Optimize_c_warn_Variable")),MakeString("otool.cl:174"))
   
-  _ = Core.F_attach_method(C_Compile_sort_equal.AddMethod(Signature(C_class.Id(),C_class.Id(),C_any.Id()),0,MakeFunction2(E_Compile_sort_equal_class,"Compile_sort=_class")),MakeString("otool.cl:184"))
+  _ = Core.F_attach_method(C_Compile_sort_equal.AddMethod(Signature(C_class.Id(),C_class.Id(),C_any.Id()),0,MakeFunction2(E_Compile_sort_equal_class,"Compile_sort=_class")),MakeString("otool.cl:191"))
   
-  _ = Core.F_attach_method(C_Compile_psort.AddMethod(Signature(C_any.Id(),C_class.Id()),0,MakeFunction1(E_Compile_psort_any,"Compile_psort_any")),MakeString("otool.cl:190"))
+  _ = Core.F_attach_method(C_Compile_psort.AddMethod(Signature(C_any.Id(),C_class.Id()),0,MakeFunction1(E_Compile_psort_any,"Compile_psort_any")),MakeString("otool.cl:197"))
   
-  _ = Core.F_attach_method(C_Compile_osort.AddMethod(Signature(C_any.Id(),C_class.Id()),0,MakeFunction1(E_Compile_osort_any,"Compile_osort_any")),MakeString("otool.cl:195"))
+  _ = Core.F_attach_method(C_Compile_osort.AddMethod(Signature(C_any.Id(),C_class.Id()),0,MakeFunction1(E_Compile_osort_any,"Compile_osort_any")),MakeString("otool.cl:202"))
   
-  _ = Core.F_attach_method(Core.C_sort.AddMethod(Signature(C_Variable.Id(),C_class.Id()),0,MakeFunction1(E_sort_Variable,"sort_Variable")),MakeString("otool.cl:201"))
+  _ = Core.F_attach_method(Core.C_sort.AddMethod(Signature(C_Variable.Id(),C_class.Id()),0,MakeFunction1(E_sort_Variable,"sort_Variable")),MakeString("otool.cl:208"))
   
-  _ = Core.F_attach_method(C_Compile_stupid_t.AddMethod(Signature(C_any.Id(),C_class.Id()),1,MakeFunction1(E_Compile_stupid_t_any1,"Compile_stupid_t_any1")),MakeString("otool.cl:206"))
+  _ = Core.F_attach_method(C_Compile_stupid_t.AddMethod(Signature(C_any.Id(),C_class.Id()),1,MakeFunction1(E_Compile_stupid_t_any1,"Compile_stupid_t_any1")),MakeString("otool.cl:213"))
   
-  _ = Core.F_attach_method(C_Compile_stupid_t.AddMethod(Signature(C_any.Id(),C_any.Id(),C_boolean.Id()),1,MakeFunction2(E_Compile_stupid_t_any2,"Compile_stupid_t_any2")),MakeString("otool.cl:212"))
+  _ = Core.F_attach_method(C_Compile_stupid_t.AddMethod(Signature(C_any.Id(),C_any.Id(),C_boolean.Id()),1,MakeFunction2(E_Compile_stupid_t_any2,"Compile_stupid_t_any2")),MakeString("otool.cl:219"))
   
-  _ = Core.F_attach_method(C_Optimize_extended_ask.AddMethod(Signature(C_type.Id(),C_boolean.Id()),1,MakeFunction1(E_Optimize_extended_ask_type,"Optimize_extended?_type")),MakeString("otool.cl:219"))
+  _ = Core.F_attach_method(C_Optimize_extended_ask.AddMethod(Signature(C_type.Id(),C_boolean.Id()),1,MakeFunction1(E_Optimize_extended_ask_type,"Optimize_extended?_type")),MakeString("otool.cl:226"))
   
-  _ = Core.F_attach_method(C_Optimize_extends.AddMethod(Signature(C_type.Id(),C_type.Id()),0,MakeFunction1(E_Optimize_extends_type,"Optimize_extends_type")),MakeString("otool.cl:225"))
+  _ = Core.F_attach_method(C_Optimize_extends.AddMethod(Signature(C_type.Id(),C_type.Id()),0,MakeFunction1(E_Optimize_extends_type,"Optimize_extends_type")),MakeString("otool.cl:232"))
   
-  _ = Core.F_attach_method(C_Optimize_sort_abstract_I.AddMethod(Signature(C_type.Id(),C_type.Id()),0,MakeFunction1(E_Optimize_sort_abstract_I_type,"Optimize_sort_abstract!_type")),MakeString("otool.cl:232"))
+  _ = Core.F_attach_method(C_Optimize_sort_abstract_I.AddMethod(Signature(C_type.Id(),C_type.Id()),0,MakeFunction1(E_Optimize_sort_abstract_I_type,"Optimize_sort_abstract!_type")),MakeString("otool.cl:239"))
   
-  _ = Core.F_attach_method(C_Optimize_sort_abstract_ask.AddMethod(Signature(C_type.Id(),C_boolean.Id()),0,MakeFunction1(E_Optimize_sort_abstract_ask_type,"Optimize_sort_abstract?_type")),MakeString("otool.cl:234"))
+  _ = Core.F_attach_method(C_Optimize_sort_abstract_ask.AddMethod(Signature(C_type.Id(),C_boolean.Id()),0,MakeFunction1(E_Optimize_sort_abstract_ask_type,"Optimize_sort_abstract?_type")),MakeString("otool.cl:241"))
   
-  _ = Core.F_attach_method(C_Optimize_ptype.AddMethod(Signature(C_type.Id(),C_type.Id()),0,MakeFunction1(E_Optimize_ptype_type,"Optimize_ptype_type")),MakeString("otool.cl:239"))
+  _ = Core.F_attach_method(C_Optimize_ptype.AddMethod(Signature(C_type.Id(),C_type.Id()),0,MakeFunction1(E_Optimize_ptype_type,"Optimize_ptype_type")),MakeString("otool.cl:246"))
   
-  _ = Core.F_attach_method(C_Optimize_pmember.AddMethod(Signature(C_type.Id(),C_type.Id()),0,MakeFunction1(E_Optimize_pmember_type,"Optimize_pmember_type")),MakeString("otool.cl:243"))
+  _ = Core.F_attach_method(C_Optimize_pmember.AddMethod(Signature(C_type.Id(),C_type.Id()),0,MakeFunction1(E_Optimize_pmember_type,"Optimize_pmember_type")),MakeString("otool.cl:250"))
   
-  _ = Core.F_attach_method(C_Optimize_enumerate_code.AddMethod(Signature(C_any.Id(),C_type.Id(),C_any.Id()),1,MakeFunction2(E_Optimize_enumerate_code_any,"Optimize_enumerate_code_any")),MakeString("otool.cl:252"))
+  _ = Core.F_attach_method(C_Optimize_enumerate_code.AddMethod(Signature(C_any.Id(),C_type.Id(),C_any.Id()),1,MakeFunction2(E_Optimize_enumerate_code_any,"Optimize_enumerate_code_any")),MakeString("otool.cl:259"))
   
   _ = Core.F_attach_method(C_Optimize_range_infers_for.AddMethod(Signature(C_Variable.Id(),
     C_type.Id(),
     C_type.Id(),
-    C_any.Id()),0,MakeFunction3(E_Optimize_range_infers_for_Variable,"Optimize_range_infers_for_Variable")),MakeString("otool.cl:266"))
+    C_any.Id()),0,MakeFunction3(E_Optimize_range_infers_for_Variable,"Optimize_range_infers_for_Variable")),MakeString("otool.cl:273"))
   
-  _ = Core.F_attach_method(C_Optimize_range_infers.AddMethod(Signature(C_Variable.Id(),C_type.Id(),C_any.Id()),1,MakeFunction2(E_Optimize_range_infers_Variable,"Optimize_range_infers_Variable")),MakeString("otool.cl:280"))
+  _ = Core.F_attach_method(C_Optimize_range_infers.AddMethod(Signature(C_Variable.Id(),C_type.Id(),C_any.Id()),1,MakeFunction2(E_Optimize_range_infers_Variable,"Optimize_range_infers_Variable")),MakeString("otool.cl:287"))
   
-  _ = Core.F_attach_method(C_Optimize_range_sets.AddMethod(Signature(C_any.Id(),C_type.Id(),C_void.Id()),0,MakeFunction2(E_Optimize_range_sets_any,"Optimize_range_sets_any")),MakeString("otool.cl:287"))
+  _ = Core.F_attach_method(C_Optimize_range_sets.AddMethod(Signature(C_any.Id(),C_type.Id(),C_void.Id()),0,MakeFunction2(E_Optimize_range_sets_any,"Optimize_range_sets_any")),MakeString("otool.cl:294"))
   
-  _ = Core.F_attach_method(C_Optimize_c_srange.AddMethod(Signature(C_method.Id(),C_class.Id()),1,MakeFunction1(E_Optimize_c_srange_method,"Optimize_c_srange_method")),MakeString("otool.cl:300"))
+  _ = Core.F_attach_method(C_Optimize_c_srange.AddMethod(Signature(C_method.Id(),C_class.Id()),1,MakeFunction1(E_Optimize_c_srange_method,"Optimize_c_srange_method")),MakeString("otool.cl:307"))
   
-  _ = Core.F_attach_method(C_Compile_nativeVar_ask.AddMethod(Signature(Core.C_global_variable.Id(),C_boolean.Id()),0,MakeFunction1(E_Compile_nativeVar_ask_global_variable,"Compile_nativeVar?_global_variable")),MakeString("otool.cl:306"))
+  _ = Core.F_attach_method(C_Compile_nativeVar_ask.AddMethod(Signature(Core.C_global_variable.Id(),C_boolean.Id()),0,MakeFunction1(E_Compile_nativeVar_ask_global_variable,"Compile_nativeVar?_global_variable")),MakeString("otool.cl:313"))
   
-  _ = Core.F_attach_method(C_Compile_return_type.AddMethod(Signature(C_any.Id(),C_type.Id()),1,MakeFunction1(E_Compile_return_type_any,"Compile_return_type_any")),MakeString("otool.cl:319"))
+  _ = Core.F_attach_method(C_Compile_return_type.AddMethod(Signature(C_any.Id(),C_type.Id()),1,MakeFunction1(E_Compile_return_type_any,"Compile_return_type_any")),MakeString("otool.cl:326"))
   
-  _ = Core.F_attach_method(C_c_code.AddMethod(Signature(Core.F_U_type(Core.F_U_type(ToType(C_type_operator.Id()),ToType(C_Reference.Id())),ToType(C_Optimize_Pattern.Id())).Id(),C_class.Id(),C_any.Id()),1,MakeFunction2(E_c_code_type_expression,"c_code_type_expression")),MakeString("otool.cl:327"))
+  _ = Core.F_attach_method(C_c_code.AddMethod(Signature(Core.F_U_type(Core.F_U_type(ToType(C_type_operator.Id()),ToType(C_Reference.Id())),ToType(C_Optimize_Pattern.Id())).Id(),C_class.Id(),C_any.Id()),1,MakeFunction2(E_c_code_type_expression,"c_code_type_expression")),MakeString("otool.cl:334"))
   
-  _ = Core.F_attach_method(C_Compile_self_code.AddMethod(Signature(C_subtype.Id(),C_any.Id()),1,MakeFunction1(E_Compile_self_code_subtype,"Compile_self_code_subtype")),MakeString("otool.cl:331"))
+  _ = Core.F_attach_method(C_Compile_self_code.AddMethod(Signature(C_subtype.Id(),C_any.Id()),1,MakeFunction1(E_Compile_self_code_subtype,"Compile_self_code_subtype")),MakeString("otool.cl:338"))
   
-  _ = Core.F_attach_method(C_Compile_self_code.AddMethod(Signature(C_Param.Id(),C_any.Id()),1,MakeFunction1(E_Compile_self_code_Param,"Compile_self_code_Param")),MakeString("otool.cl:338"))
+  _ = Core.F_attach_method(C_Compile_self_code.AddMethod(Signature(C_Param.Id(),C_any.Id()),1,MakeFunction1(E_Compile_self_code_Param,"Compile_self_code_Param")),MakeString("otool.cl:345"))
   
-  _ = Core.F_attach_method(C_Compile_self_code.AddMethod(Signature(C_Union.Id(),C_any.Id()),1,MakeFunction1(E_Compile_self_code_Union,"Compile_self_code_Union")),MakeString("otool.cl:341"))
+  _ = Core.F_attach_method(C_Compile_self_code.AddMethod(Signature(C_Union.Id(),C_any.Id()),1,MakeFunction1(E_Compile_self_code_Union,"Compile_self_code_Union")),MakeString("otool.cl:348"))
   
-  _ = Core.F_attach_method(C_Compile_self_code.AddMethod(Signature(C_Interval.Id(),C_any.Id()),0,MakeFunction1(E_Compile_self_code_Interval,"Compile_self_code_Interval")),MakeString("otool.cl:344"))
+  _ = Core.F_attach_method(C_Compile_self_code.AddMethod(Signature(C_Interval.Id(),C_any.Id()),0,MakeFunction1(E_Compile_self_code_Interval,"Compile_self_code_Interval")),MakeString("otool.cl:351"))
   
-  _ = Core.F_attach_method(C_Compile_self_code.AddMethod(Signature(C_Reference.Id(),C_any.Id()),0,MakeFunction1(E_Compile_self_code_Reference,"Compile_self_code_Reference")),MakeString("otool.cl:347"))
+  _ = Core.F_attach_method(C_Compile_self_code.AddMethod(Signature(C_Reference.Id(),C_any.Id()),0,MakeFunction1(E_Compile_self_code_Reference,"Compile_self_code_Reference")),MakeString("otool.cl:354"))
   
-  _ = Core.F_attach_method(C_Compile_self_code.AddMethod(Signature(C_Optimize_Pattern.Id(),C_any.Id()),0,MakeFunction1(E_Compile_self_code_Pattern,"Compile_self_code_Pattern")),MakeString("otool.cl:354"))
+  _ = Core.F_attach_method(C_Compile_self_code.AddMethod(Signature(C_Optimize_Pattern.Id(),C_any.Id()),0,MakeFunction1(E_Compile_self_code_Pattern,"Compile_self_code_Pattern")),MakeString("otool.cl:361"))
   
-  _ = Core.F_attach_method(C_Optimize_member_code.AddMethod(Signature(C_class.Id(),C_any.Id(),C_any.Id()),1,MakeFunction2(E_Optimize_member_code_class,"Optimize_member_code_class")),MakeString("otool.cl:364"))
+  _ = Core.F_attach_method(C_Optimize_member_code.AddMethod(Signature(C_class.Id(),C_any.Id(),C_any.Id()),1,MakeFunction2(E_Optimize_member_code_class,"Optimize_member_code_class")),MakeString("otool.cl:371"))
   
-  _ = Core.F_attach_method(C_Optimize_member_code.AddMethod(Signature(C_type_operator.Id(),C_any.Id(),C_any.Id()),1,MakeFunction2(E_Optimize_member_code_type_operator,"Optimize_member_code_type_operator")),MakeString("otool.cl:368"))
+  _ = Core.F_attach_method(C_Optimize_member_code.AddMethod(Signature(C_type_operator.Id(),C_any.Id(),C_any.Id()),1,MakeFunction2(E_Optimize_member_code_type_operator,"Optimize_member_code_type_operator")),MakeString("otool.cl:375"))
   
-  _ = Core.F_attach_method(C_Optimize_member_code.AddMethod(Signature(C_Union.Id(),C_any.Id(),C_any.Id()),1,MakeFunction2(E_Optimize_member_code_Union,"Optimize_member_code_Union")),MakeString("otool.cl:372"))
+  _ = Core.F_attach_method(C_Optimize_member_code.AddMethod(Signature(C_Union.Id(),C_any.Id(),C_any.Id()),1,MakeFunction2(E_Optimize_member_code_Union,"Optimize_member_code_Union")),MakeString("otool.cl:379"))
   
-  _ = Core.F_attach_method(C_Optimize_member_code.AddMethod(Signature(C_Interval.Id(),C_any.Id(),C_any.Id()),1,MakeFunction2(E_Optimize_member_code_Interval,"Optimize_member_code_Interval")),MakeString("otool.cl:377"))
+  _ = Core.F_attach_method(C_Optimize_member_code.AddMethod(Signature(C_Interval.Id(),C_any.Id(),C_any.Id()),1,MakeFunction2(E_Optimize_member_code_Interval,"Optimize_member_code_Interval")),MakeString("otool.cl:384"))
   
-  _ = Core.F_attach_method(C_Optimize_member_code.AddMethod(Signature(C_Param.Id(),C_any.Id(),C_any.Id()),1,MakeFunction2(E_Optimize_member_code_Param,"Optimize_member_code_Param")),MakeString("otool.cl:384"))
+  _ = Core.F_attach_method(C_Optimize_member_code.AddMethod(Signature(C_Param.Id(),C_any.Id(),C_any.Id()),1,MakeFunction2(E_Optimize_member_code_Param,"Optimize_member_code_Param")),MakeString("otool.cl:391"))
   
-  _ = Core.F_attach_method(C_Optimize_member_code.AddMethod(Signature(C_tuple.Id(),C_any.Id(),C_any.Id()),1,MakeFunction2(E_Optimize_member_code_tuple,"Optimize_member_code_tuple")),MakeString("otool.cl:392"))
+  _ = Core.F_attach_method(C_Optimize_member_code.AddMethod(Signature(C_tuple.Id(),C_any.Id(),C_any.Id()),1,MakeFunction2(E_Optimize_member_code_tuple,"Optimize_member_code_tuple")),MakeString("otool.cl:399"))
   
-  _ = Core.F_attach_method(C_Optimize_member_code.AddMethod(Signature(C_any.Id(),C_any.Id(),C_any.Id()),1,MakeFunction2(E_Optimize_member_code_any,"Optimize_member_code_any")),MakeString("otool.cl:401"))
+  _ = Core.F_attach_method(C_Optimize_member_code.AddMethod(Signature(C_any.Id(),C_any.Id(),C_any.Id()),1,MakeFunction2(E_Optimize_member_code_any,"Optimize_member_code_any")),MakeString("otool.cl:408"))
   
   _ = Core.F_inlineok_ask_method(
-  Core.F_attach_method(C__Z.AddMethod(Signature(C_any.Id(),F_nth_property(ToProperty(C__dot_dot.Id()),MakeTuple(C_any.Id(),C_any.Id())).Id(),C_boolean.Id()),1,MakeFunction2(E__Z_any4,"%_any4")),MakeString("otool.cl:405")),
+  Core.F_attach_method(C__Z.AddMethod(Signature(C_any.Id(),F_nth_property(ToProperty(C__dot_dot.Id()),MakeTuple(C_any.Id(),C_any.Id())).Id(),C_boolean.Id()),1,MakeFunction2(E__Z_any4,"%_any4")),MakeString("otool.cl:412")),
   MakeString("lambda[(x:any,y:any),(x <= eval(y.args[2]) & eval(y.args[1]) <= x)]"))
   
   _ = Core.F_inlineok_ask_method(
-  Core.F_attach_method(C__Z.AddMethod(Signature(C_any.Id(),F_nth_property(ToProperty(Core.C_but.Id()),MakeTuple(C_any.Id(),C_any.Id())).Id(),C_boolean.Id()),1,MakeFunction2(E__Z_any5,"%_any5")),MakeString("otool.cl:408")),
+  Core.F_attach_method(C__Z.AddMethod(Signature(C_any.Id(),F_nth_property(ToProperty(Core.C_but.Id()),MakeTuple(C_any.Id(),C_any.Id())).Id(),C_boolean.Id()),1,MakeFunction2(E__Z_any5,"%_any5")),MakeString("otool.cl:415")),
   MakeString("lambda[(x:any,y:any),(x % eval(y.args[1]) & x != eval(y.args[2]))]"))
   
   _ = Core.F_attach_method(C_Compile_Variable_I.AddMethod(Signature(C_symbol.Id(),
     C_integer.Id(),
     C_any.Id(),
-    C_Variable.Id()),0,MakeFunction3(E_Compile_Variable_I_symbol,"Compile_Variable!_symbol")),MakeString("otool.cl:418"))
+    C_Variable.Id()),0,MakeFunction3(E_Compile_Variable_I_symbol,"Compile_Variable!_symbol")),MakeString("otool.cl:425"))
   
-  _ = Core.F_attach_method(C_Compile_get_indexed.AddMethod(Signature(C_class.Id(),C_list.Id()),0,MakeFunction1(E_Compile_get_indexed_class,"Compile_get_indexed_class")),MakeString("otool.cl:420"))
+  _ = Core.F_attach_method(C_Compile_get_indexed.AddMethod(Signature(C_class.Id(),C_list.Id()),0,MakeFunction1(E_Compile_get_indexed_class,"Compile_get_indexed_class")),MakeString("otool.cl:427"))
   
-  _ = Core.F_attach_method(C_Compile_designated_ask.AddMethod(Signature(C_any.Id(),C_boolean.Id()),1,MakeFunction1(E_Compile_designated_ask_any,"Compile_designated?_any")),MakeString("otool.cl:442"))
+  _ = Core.F_attach_method(C_Compile_designated_ask.AddMethod(Signature(C_any.Id(),C_boolean.Id()),1,MakeFunction1(E_Compile_designated_ask_any,"Compile_designated?_any")),MakeString("otool.cl:449"))
   
-  _ = Core.F_attach_method(C_Compile_identifiable_ask.AddMethod(Signature(C_any.Id(),C_boolean.Id()),1,MakeFunction1(E_Compile_identifiable_ask_any,"Compile_identifiable?_any")),MakeString("otool.cl:451"))
+  _ = Core.F_attach_method(C_Compile_identifiable_ask.AddMethod(Signature(C_any.Id(),C_boolean.Id()),1,MakeFunction1(E_Compile_identifiable_ask_any,"Compile_identifiable?_any")),MakeString("otool.cl:458"))
   
   _ = Core.F_attach_method(C_Optimize_c_inline.AddMethod(Signature(C_method.Id(),
     C_list.Id(),
     C_class.Id(),
-    C_any.Id()),1,MakeFunction3(E_Optimize_c_inline_method1,"Optimize_c_inline_method1")),MakeString("otool.cl:458"))
+    C_any.Id()),1,MakeFunction3(E_Optimize_c_inline_method1,"Optimize_c_inline_method1")),MakeString("otool.cl:465"))
   
-  _ = Core.F_attach_method(C_Optimize_c_inline.AddMethod(Signature(C_method.Id(),C_list.Id(),C_any.Id()),1,MakeFunction2(E_Optimize_c_inline_method2,"Optimize_c_inline_method2")),MakeString("otool.cl:479"))
+  _ = Core.F_attach_method(C_Optimize_c_inline.AddMethod(Signature(C_method.Id(),C_list.Id(),C_any.Id()),1,MakeFunction2(E_Optimize_c_inline_method2,"Optimize_c_inline_method2")),MakeString("otool.cl:486"))
   
-  _ = Core.F_attach_method(C_Optimize_c_inline_arg_ask.AddMethod(Signature(C_any.Id(),C_any.Id()),1,MakeFunction1(E_Optimize_c_inline_arg_ask_any,"Optimize_c_inline_arg?_any")),MakeString("otool.cl:490"))
+  _ = Core.F_attach_method(C_Optimize_c_inline_arg_ask.AddMethod(Signature(C_any.Id(),C_any.Id()),1,MakeFunction1(E_Optimize_c_inline_arg_ask_any,"Optimize_c_inline_arg?_any")),MakeString("otool.cl:497"))
   
   _ = Core.F_attach_method(C_Optimize_c_substitution.AddMethod(Signature(C_any.Id(),
     Core.F_nth_class1(C_list,ToType(C_Variable.Id())).Id(),
     C_list.Id(),
     C_boolean.Id(),
-    C_any.Id()),1,MakeFunction4(E_Optimize_c_substitution_any,"Optimize_c_substitution_any")),MakeString("otool.cl:521"))
+    C_any.Id()),1,MakeFunction4(E_Optimize_c_substitution_any,"Optimize_c_substitution_any")),MakeString("otool.cl:528"))
   
-  _ = Core.F_attach_method(Core.C_eval.AddMethod(Signature(C_any.Id(),C_class.Id(),C_any.Id()),1,MakeFunction2(E_eval_any2,"eval_any2")),MakeString("otool.cl:524"))
+  _ = Core.F_attach_method(Core.C_eval.AddMethod(Signature(C_any.Id(),C_class.Id(),C_any.Id()),1,MakeFunction2(E_eval_any2,"eval_any2")),MakeString("otool.cl:531"))
   
-  _ = Core.F_attach_method(C_Optimize_bound_variables.AddMethod(Signature(C_any.Id(),C_list.Id()),1,MakeFunction1(E_Optimize_bound_variables_any,"Optimize_bound_variables_any")),MakeString("otool.cl:535"))
+  _ = Core.F_attach_method(C_Optimize_bound_variables.AddMethod(Signature(C_any.Id(),C_list.Id()),1,MakeFunction1(E_Optimize_bound_variables_any,"Optimize_bound_variables_any")),MakeString("otool.cl:542"))
   
-  _ = Core.F_attach_method(C_Optimize_c_boolean.AddMethod(Signature(C_any.Id(),C_any.Id()),1,MakeFunction1(E_Optimize_c_boolean_any,"Optimize_c_boolean_any")),MakeString("otool.cl:546"))
+  _ = Core.F_attach_method(C_Optimize_c_boolean.AddMethod(Signature(C_any.Id(),C_any.Id()),1,MakeFunction1(E_Optimize_c_boolean_any,"Optimize_c_boolean_any")),MakeString("otool.cl:553"))
   
-  _ = Core.F_attach_method(C_Compile_Do_I.AddMethod(Signature(C_list.Id(),C_any.Id()),0,MakeFunction1(E_Compile_Do_I_list,"Compile_Do!_list")),MakeString("otool.cl:550"))
+  _ = Core.F_attach_method(C_Compile_Do_I.AddMethod(Signature(C_list.Id(),C_any.Id()),0,MakeFunction1(E_Compile_Do_I_list,"Compile_Do!_list")),MakeString("otool.cl:557"))
   
   C_Optimize_ambiguous = ToKeyword(new(ClaireKeyword).IsNamed(C_keyword,MakeSymbol("ambiguous",It)))
   

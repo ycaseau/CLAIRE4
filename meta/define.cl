@@ -463,12 +463,12 @@ self_eval(self:Defarray) : any
                   else self.body)),
          d := (case e (lambda unknown, any eval(self.body))) in
        (write(range, ar, extract_pattern(self.set_arg, nil)),
-        if unknown?(range,ar) range_error(mClaire/cause = table, arg = self.set_arg, wrong = type), // v3.3.18
+        if unknown?(range,ar) range_error(mClaire/cause = table, arg = self.set_arg, Core/wrong = type), // v3.3.18
         if (unknown?(d) & (ar.range <= integer | ar.range <= float)) 
             trace(0,"=== CLAIRE4 Warning: unknown not allowed as a default for table with range ~S\n ",ar.range),
         if known?(d) 
            (if not(d % ar.range)                  // v3.1.06
-               range_error(mClaire/cause = ar,arg = d, wrong = ar.range))
+               range_error(mClaire/cause = ar,arg = d, Core/wrong = ar.range))
         else if (ar.range <= integer) d := 0
         else if (ar.range <= float) d := 0.0,                        // v4.0: unknown not allowed as a float or int
         put(range, v, s),

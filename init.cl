@@ -17,15 +17,16 @@ RELEASE:float :: 1.0    // version of September 23rd, 2023
 /* // additions  (comment out what you don't want)
 begin(Core)
 claire/ephemeral_object <: object()
-end(Core) */
+end(Core) 
 
 begin(Optimize)
-*mod_integer* :: (mod @ integer)
+
 end(Optimize)
 
 begin(Generate)
 // output :: property()
 end(Generate)
+*/
 
  // end of additions
 

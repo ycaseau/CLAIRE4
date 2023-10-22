@@ -1,5 +1,5 @@
 /***** CLAIRE Compilation of module Language.cl 
-         [version 4.1 / safety 5] Saturday 09-23-2023 07:22:30 *****/
+         [version 4.1 / safety 5] Sunday 10-22-2023 07:00:35 *****/
 
 package Language
 import (_ "fmt"
@@ -1269,7 +1269,6 @@ var C_Language_letJito *ClaireProperty // Language/"letJito"
 var C_Language_makeCallMatch *ClaireProperty // Language/"makeCallMatch"
 var C_Language_new_writes *ClaireProperty // Language/"new_writes"
 var C_Language_occurexact *ClaireProperty // Language/"occurexact"
-var C_Language_wrong *ClaireProperty // Language/"wrong"
 var C_map *ClaireProperty // claire/"map"
 var C_Language_no_eval *ClaireProperty // Language/"no_eval"
 var C_Language_ppvariable *ClaireProperty // Language/"ppvariable"
@@ -1328,7 +1327,7 @@ var C_iClaire *ClaireModule
 func MetaLoad() { 
   
   It = MakeModule("Language",C_iClaire)
-  It.Comment = MakeString("Compiled on Saturday 09-23-2023 07:22:30(v4.1), lines:2261, warnings:1,safety:5")
+  It.Comment = MakeString("Compiled on Sunday 10-22-2023 07:00:35(v4.1), lines:2261, warnings:1,safety:5")
   ClEnv.Module_I = It
   
   // definition of the properties
@@ -1346,7 +1345,6 @@ func MetaLoad() {
   C_Language_makeCallMatch = MakeProperty("makeCallMatch",1,It)
   C_Language_new_writes = MakeProperty("new_writes",1,It)
   C_Language_occurexact = MakeProperty("occurexact",1,It)
-  C_Language_wrong = MakeProperty("wrong",2,It)
   C_map = MakeProperty("map",1,C_claire)
   C_Language_no_eval = MakeProperty("no_eval",1,It)
   C_Language_ppvariable = MakeProperty("ppvariable",1,It)

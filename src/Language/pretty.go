@@ -1,5 +1,5 @@
 /***** CLAIRE Compilation of file /Users/ycaseau/Dropbox/src/clairev4.10/src/meta/pretty.cl 
-         [version 4.1 / safety 5] Saturday 09-23-2023 07:22:30 *****/
+         [version 4.1 / safety 5] Sunday 10-22-2023 07:00:35 *****/
 
 package Language
 import (_ "fmt"
@@ -172,10 +172,8 @@ func F_write_value_Variable (self *ClaireVariable,val *ClaireAny) EID {
       { var _CL_obj *Core.RangeError = Core.ToRangeError(new(Core.RangeError).Is(Core.C_range_error))
         _CL_obj.Arg = self.Id()
         _CL_obj.Cause = val
-        Result = Core.F_write_property(C_Language_wrong,ToObject(_CL_obj.Id()),self.Range.Id())
-        if !ErrorIn(Result) {
+        _CL_obj.Wrong = self.Range.Id()
         Result = _CL_obj.Close()
-        }
         } 
       } 
     return Result} 
@@ -221,14 +219,7 @@ func F_write_value_global_variable (self *Core.GlobalVariable,val *ClaireAny) EI
       Result = val.ToEID()
       }
       } else {
-      { var _CL_obj *Core.RangeError = Core.ToRangeError(new(Core.RangeError).Is(Core.C_range_error))
-        _CL_obj.Cause = self.Id()
-        _CL_obj.Arg = val
-        Result = Core.F_write_property(C_Language_wrong,ToObject(_CL_obj.Id()),self.Range.Id())
-        if !ErrorIn(Result) {
-        Result = _CL_obj.Close()
-        }
-        } 
+      Result = ToException(Core.C_range_error.Make(self.Id(),val,self.Range.Id())).Close()
       } 
     return Result} 
   
