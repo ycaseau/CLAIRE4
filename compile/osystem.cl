@@ -163,10 +163,11 @@ Compile/m_member :: (% @ list(any,any))
 Compile/warn :: property()
 Compile/nativeVar? :: property()
 
-// these are the classes defined especially for this module
-// Compile/to_CL <: Optimized_instruction(arg:any,set_arg:class)
-// Compile/to_C <: Optimized_instruction(arg:any,set_arg:class)
+// Casting is specific in Go (replace to_C)
+// C_cast is a type anotation that is ignored by the go code generation
+// Super_cast is the same, but passed to Go in the code generation (v4.12)
 Compile/C_cast <: Optimized_instruction(arg:any,set_arg:class)   // was to_C()
+Compile/Super_cast <: C_cast()                // used for Super
 
 // Patterns are calls p(X) that are seen as a type expression
 Pattern <: type_expression(
@@ -224,12 +225,11 @@ claire/safe(x:any) : type[x] -> x
 
 // CLAIRE 4: introduce C_cast so that psort(x) is what is expected (s)
 [c_strict_check(x:any,s:class) : any
- -> if (s inherit? object & not(static_type(x) inherit? s))
-       (// [5] c_strict_check is unhappy with ~S: expecting ~S and found ~S [claire:~S] // x,s,static_type(x),c_type(x),
-        // if (c_type(x) = any)     // v3.2.06 - avoid C++ compiler error !
-        // Cerror("Need explict cast: ~S is not a ~S",x,s),
+   -> let s2 := static_type(x) in
+      (if (s inherit? object & not( s2 inherit? s))
+       (//[5] c_strict_check is unhappy with ~S: expecting ~S and found ~S [claire:~S] // x,s,s2,c_type(x),
         C_cast(arg = x, set_arg = s))
-     else x ]
+      else x) ] 
 
 // using conversions. s is a sort or void (we do not need the value).
 // note: we need s to be the precise sort for C++

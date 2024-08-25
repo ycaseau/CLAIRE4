@@ -26,7 +26,7 @@
 // useful gadgets
 //
 [self_eval(self:delimiter) : void
- -> next(reader),                       // v3.1.04 better safe than sorry
+ -> //  next(reader),                       // old code v3.1.04 better safe than sorry
     error("[117] loose delimiter ~S in program [line ~A ?]", self, n_line())]
 
 // a small useful function

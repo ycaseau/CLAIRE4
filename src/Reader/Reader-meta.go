@@ -1,5 +1,5 @@
 /***** CLAIRE Compilation of module Reader.cl 
-         [version 4.1 / safety 5] Sunday 10-22-2023 07:00:35 *****/
+         [version 4.1.2 / safety 5] Sunday 08-11-2024 08:17:29 *****/
 
 package Reader
 import (_ "fmt"
@@ -10,12 +10,12 @@ import (_ "fmt"
 )
 
 //-------- dumb function to prevent import errors --------
-func import_g0191() { 
-    _ = Core.It
-    _ = Language.It
-    } 
-  
-  
+func import_g0194() { 
+  _ = Core.It
+  _ = Language.It
+  } 
+
+
 // class file for delimiter in module Reader 
 type Delimiter struct { 
    Core.GlobalVariable
@@ -169,19 +169,6 @@ var C_up *ClaireProperty /*obj*/
 var C_dn *ClaireProperty /*obj*/
 var C_where *ClaireProperty /*obj*/
 var C_measure *ClaireClass /*obj*/
-var C_Reader_nextvariable *ClaireProperty // Reader/"nextvariable"
-var C_Reader_nexts_I *ClaireProperty // Reader/"nexts!"
-var C_Reader_nexte_I *ClaireProperty // Reader/"nexte!"
-var C_Reader_extended_comment_ask *ClaireProperty // Reader/"extended_comment?"
-var C_Reader_extended_comment_I *ClaireProperty // Reader/"extended_comment!"
-var C_Reader_DBregister *ClaireProperty // Reader/"DBregister"
-var C_Reader_Call_I *ClaireProperty // Reader/"Call!"
-var C_Reader_operation_ask *ClaireProperty // Reader/"operation?"
-var C_Reader_combine *ClaireProperty // Reader/"combine"
-var C_Reader_combine_I *ClaireProperty // Reader/"combine!"
-var C_Reader_operation_I *ClaireProperty // Reader/"operation!"
-var C_Reader_operand_I *ClaireProperty // Reader/"operand!"
-var C_Reader_precedence_I *ClaireProperty // Reader/"precedence!"
 var C_Reader_nextstruct *ClaireProperty // Reader/"nextstruct"
 var C_Reader_readlet *ClaireProperty // Reader/"readlet"
 var C_Reader_readlet_star *ClaireProperty // Reader/"readlet*"
@@ -276,29 +263,31 @@ var C_Reader_skipc_I *ClaireProperty // Reader/"skipc!"
 var C_Reader_cnext *ClaireProperty // Reader/"cnext"
 var C_Reader_findeol *ClaireProperty // Reader/"findeol"
 var C_Reader_checkno *ClaireProperty // Reader/"checkno"
+var C_Reader_nextvariable *ClaireProperty // Reader/"nextvariable"
+var C_Reader_nexts_I *ClaireProperty // Reader/"nexts!"
+var C_Reader_nexte_I *ClaireProperty // Reader/"nexte!"
+var C_Reader_extended_comment_ask *ClaireProperty // Reader/"extended_comment?"
+var C_Reader_extended_comment_I *ClaireProperty // Reader/"extended_comment!"
+var C_Reader_DBregister *ClaireProperty // Reader/"DBregister"
+var C_Reader_Call_I *ClaireProperty // Reader/"Call!"
+var C_Reader_operation_ask *ClaireProperty // Reader/"operation?"
+var C_Reader_combine *ClaireProperty // Reader/"combine"
+var C_Reader_combine_I *ClaireProperty // Reader/"combine!"
+var C_Reader_operation_I *ClaireProperty // Reader/"operation!"
+var C_Reader_operand_I *ClaireProperty // Reader/"operand!"
+var C_Reader_precedence_I *ClaireProperty // Reader/"precedence!"
+var C_Reader_conditional_comment_ask *ClaireProperty // Reader/"conditional_comment?"
+var C_Reader_conditional_comment_I *ClaireProperty // Reader/"conditional_comment!"
 var It *ClaireModule
 
 // definition of the meta-model for module Reader 
 func MetaLoad() { 
   
   It = MakeModule("Reader",Language.C_iClaire)
-  It.Comment = MakeString("Compiled on Sunday 10-22-2023 07:00:35(v4.1), lines:1762, warnings:3,safety:5")
+  It.Comment = MakeString("Compiled on Sunday 08-11-2024 08:17:29(v4.1.2), lines:1793, warnings:3,safety:5")
   ClEnv.Module_I = It
   
   // definition of the properties
-  C_Reader_nextvariable = MakeProperty("nextvariable",1,It)
-  C_Reader_nexts_I = MakeProperty("nexts!",1,It)
-  C_Reader_nexte_I = MakeProperty("nexte!",1,It)
-  C_Reader_extended_comment_ask = MakeProperty("extended_comment?",1,It)
-  C_Reader_extended_comment_I = MakeProperty("extended_comment!",1,It)
-  C_Reader_DBregister = MakeProperty("DBregister",1,It)
-  C_Reader_Call_I = MakeProperty("Call!",1,It)
-  C_Reader_operation_ask = MakeProperty("operation?",1,It)
-  C_Reader_combine = MakeProperty("combine",1,It)
-  C_Reader_combine_I = MakeProperty("combine!",1,It)
-  C_Reader_operation_I = MakeProperty("operation!",1,It)
-  C_Reader_operand_I = MakeProperty("operand!",1,It)
-  C_Reader_precedence_I = MakeProperty("precedence!",1,It)
   C_Reader_nextstruct = MakeProperty("nextstruct",1,It)
   C_Reader_readlet = MakeProperty("readlet",1,It)
   C_Reader_readlet_star = MakeProperty("readlet*",1,It)
@@ -393,6 +382,21 @@ func MetaLoad() {
   C_Reader_cnext = MakeProperty("cnext",1,It)
   C_Reader_findeol = MakeProperty("findeol",1,It)
   C_Reader_checkno = MakeProperty("checkno",1,It)
+  C_Reader_nextvariable = MakeProperty("nextvariable",1,It)
+  C_Reader_nexts_I = MakeProperty("nexts!",1,It)
+  C_Reader_nexte_I = MakeProperty("nexte!",1,It)
+  C_Reader_extended_comment_ask = MakeProperty("extended_comment?",1,It)
+  C_Reader_extended_comment_I = MakeProperty("extended_comment!",1,It)
+  C_Reader_DBregister = MakeProperty("DBregister",1,It)
+  C_Reader_Call_I = MakeProperty("Call!",1,It)
+  C_Reader_operation_ask = MakeProperty("operation?",1,It)
+  C_Reader_combine = MakeProperty("combine",1,It)
+  C_Reader_combine_I = MakeProperty("combine!",1,It)
+  C_Reader_operation_I = MakeProperty("operation!",1,It)
+  C_Reader_operand_I = MakeProperty("operand!",1,It)
+  C_Reader_precedence_I = MakeProperty("precedence!",1,It)
+  C_Reader_conditional_comment_ask = MakeProperty("conditional_comment?",1,It)
+  C_Reader_conditional_comment_I = MakeProperty("conditional_comment!",1,It)
   
   // instructions from module sources
   C_delimiter = NewClass("delimiter",Core.C_global_variable,C_claire)
@@ -632,34 +636,38 @@ func MetaLoad() {
   
   _ = Core.F_attach_method(C_Reader_nexte.AddMethod(Signature(C_meta_reader.Id(),C_any.Id()),1,MakeFunction1(E_nexte_meta_reader,"nexte_meta_reader")),MakeString("read.cl:211"))
   
-  _ = Core.F_attach_method(C_Reader_nextexp.AddMethod(Signature(C_meta_reader.Id(),C_boolean.Id(),C_any.Id()),1,MakeFunction2(E_nextexp_meta_reader,"nextexp_meta_reader")),MakeString("read.cl:258"))
+  _ = Core.F_attach_method(C_Reader_nextexp.AddMethod(Signature(C_meta_reader.Id(),C_boolean.Id(),C_any.Id()),1,MakeFunction2(E_nextexp_meta_reader,"nextexp_meta_reader")),MakeString("read.cl:260"))
   
-  _ = Core.F_attach_method(C_Reader_readbracket.AddMethod(Signature(C_meta_reader.Id(),C_any.Id(),C_any.Id()),1,MakeFunction2(E_Reader_readbracket_meta_reader,"Reader_readbracket_meta_reader")),MakeString("read.cl:264"))
+  _ = Core.F_attach_method(C_Reader_readbracket.AddMethod(Signature(C_meta_reader.Id(),C_any.Id(),C_any.Id()),1,MakeFunction2(E_Reader_readbracket_meta_reader,"Reader_readbracket_meta_reader")),MakeString("read.cl:266"))
   
-  _ = Core.F_attach_method(C_Reader_readmap.AddMethod(Signature(C_meta_reader.Id(),Language.C_Map.Id()),1,MakeFunction1(E_Reader_readmap_meta_reader,"Reader_readmap_meta_reader")),MakeString("read.cl:280"))
+  _ = Core.F_attach_method(C_Reader_readmap.AddMethod(Signature(C_meta_reader.Id(),Language.C_Map.Id()),1,MakeFunction1(E_Reader_readmap_meta_reader,"Reader_readmap_meta_reader")),MakeString("read.cl:282"))
   
-  _ = Core.F_attach_method(C_Reader_revVar.AddMethod(Signature(Language.C_Vardef.Id(),C_any.Id()),0,MakeFunction1(E_Reader_revVar_Vardef,"Reader_revVar_Vardef")),MakeString("read.cl:286"))
+  _ = Core.F_attach_method(C_Reader_revVar.AddMethod(Signature(Language.C_Vardef.Id(),C_any.Id()),0,MakeFunction1(E_Reader_revVar_Vardef,"Reader_revVar_Vardef")),MakeString("read.cl:288"))
   
-  _ = Core.F_attach_method(C_Reader_nexti.AddMethod(Signature(C_meta_reader.Id(),C_any.Id(),C_any.Id()),1,MakeFunction2(E_nexti_meta_reader,"nexti_meta_reader")),MakeString("read.cl:334"))
+  _ = Core.F_attach_method(C_Reader_nexti.AddMethod(Signature(C_meta_reader.Id(),C_any.Id(),C_any.Id()),1,MakeFunction2(E_nexti_meta_reader,"nexti_meta_reader")),MakeString("read.cl:336"))
   
-  _ = Core.F_attach_method(C_Reader_read_escape.AddMethod(Signature(C_meta_reader.Id(),C_any.Id()),1,MakeFunction1(E_read_escape_meta_reader,"read_escape_meta_reader")),MakeString("read.cl:345"))
+  _ = Core.F_attach_method(C_Reader_read_escape.AddMethod(Signature(C_meta_reader.Id(),C_any.Id()),1,MakeFunction1(E_read_escape_meta_reader,"read_escape_meta_reader")),MakeString("read.cl:347"))
   
-  _ = Core.F_attach_method(C_Reader_nextvariable.AddMethod(Signature(C_meta_reader.Id(),C_any.Id(),C_any.Id()),1,MakeFunction2(E_nextvariable_meta_reader,"nextvariable_meta_reader")),MakeString("read.cl:359"))
+  _ = Core.F_attach_method(C_Reader_nextvariable.AddMethod(Signature(C_meta_reader.Id(),C_any.Id(),C_any.Id()),1,MakeFunction2(E_nextvariable_meta_reader,"nextvariable_meta_reader")),MakeString("read.cl:361"))
   
-  _ = Core.F_attach_method(C_Reader_nexts_I.AddMethod(Signature(C_meta_reader.Id(),C_keyword.Id(),C_any.Id()),1,MakeFunction2(E_nexts_I_meta_reader1,"nexts_I_meta_reader1")),MakeString("read.cl:366"))
+  _ = Core.F_attach_method(C_Reader_nexts_I.AddMethod(Signature(C_meta_reader.Id(),C_keyword.Id(),C_any.Id()),1,MakeFunction2(E_nexts_I_meta_reader1,"nexts_I_meta_reader1")),MakeString("read.cl:368"))
   
-  _ = Core.F_attach_method(C_Reader_nexte_I.AddMethod(Signature(C_meta_reader.Id(),C_keyword.Id(),C_any.Id()),1,MakeFunction2(E_nexte_I_meta_reader,"nexte_I_meta_reader")),MakeString("read.cl:373"))
+  _ = Core.F_attach_method(C_Reader_nexte_I.AddMethod(Signature(C_meta_reader.Id(),C_keyword.Id(),C_any.Id()),1,MakeFunction2(E_nexte_I_meta_reader,"nexte_I_meta_reader")),MakeString("read.cl:375"))
   
-  _ = Core.F_attach_method(C_Reader_nexts_I.AddMethod(Signature(C_meta_reader.Id(),C_integer.Id(),C_any.Id()),1,MakeFunction2(E_nexts_I_meta_reader2,"nexts_I_meta_reader2")),MakeString("read.cl:379"))
+  _ = Core.F_attach_method(C_Reader_nexts_I.AddMethod(Signature(C_meta_reader.Id(),C_integer.Id(),C_any.Id()),1,MakeFunction2(E_nexts_I_meta_reader2,"nexts_I_meta_reader2")),MakeString("read.cl:381"))
   
   _ = Core.F_attach_method(C_Reader_nexts_I.AddMethod(Signature(C_meta_reader.Id(),
     C_keyword.Id(),
     C_integer.Id(),
-    C_any.Id()),1,MakeFunction3(E_nexts_I_meta_reader3,"nexts_I_meta_reader3")),MakeString("read.cl:386"))
+    C_any.Id()),1,MakeFunction3(E_nexts_I_meta_reader3,"nexts_I_meta_reader3")),MakeString("read.cl:388"))
   
-  _ = Core.F_attach_method(C_Reader_extended_comment_ask.AddMethod(Signature(C_meta_reader.Id(),C_string.Id(),C_boolean.Id()),0,MakeFunction2(E_extended_comment_ask_meta_reader,"extended_comment_ask_meta_reader")),MakeString("read.cl:393"))
+  _ = Core.F_attach_method(C_Reader_extended_comment_ask.AddMethod(Signature(C_meta_reader.Id(),C_string.Id(),C_boolean.Id()),0,MakeFunction2(E_extended_comment_ask_meta_reader,"extended_comment_ask_meta_reader")),MakeString("read.cl:395"))
   
-  _ = Core.F_attach_method(C_Reader_extended_comment_I.AddMethod(Signature(C_meta_reader.Id(),C_string.Id(),C_any.Id()),1,MakeFunction2(E_extended_comment_I_meta_reader,"extended_comment_I_meta_reader")),MakeString("read.cl:416"))
+  _ = Core.F_attach_method(C_Reader_extended_comment_I.AddMethod(Signature(C_meta_reader.Id(),C_string.Id(),C_any.Id()),1,MakeFunction2(E_extended_comment_I_meta_reader,"extended_comment_I_meta_reader")),MakeString("read.cl:419"))
+  
+  _ = Core.F_attach_method(C_Reader_conditional_comment_ask.AddMethod(Signature(C_meta_reader.Id(),C_string.Id(),C_boolean.Id()),0,MakeFunction2(E_Reader_conditional_comment_ask_meta_reader2,"Reader_conditional_comment?_meta_reader2")),MakeString("read.cl:429"))
+  
+  _ = Core.F_attach_method(C_Reader_conditional_comment_I.AddMethod(Signature(C_meta_reader.Id(),C_string.Id(),C_any.Id()),1,MakeFunction2(E_Reader_conditional_comment_I_meta_reader2,"Reader_conditional_comment!_meta_reader2")),MakeString("read.cl:450"))
   
   _ = Core.F_attach_method(C_Reader_operation_ask.AddMethod(Signature(C_any.Id(),C_boolean.Id()),0,MakeFunction1(E_operation_ask_any,"operation_ask_any")),MakeString("syntax.cl:27"))
   

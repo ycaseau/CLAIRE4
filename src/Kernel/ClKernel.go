@@ -1700,6 +1700,7 @@ func ARGS(args ...EID) int {
 // ---------------------- Claire Function methods --------------------------------------
 
 // applies a claire function (EID) to the content of the eval stack
+// note : it should grow to at least 10
 func F_stack_apply_function(f *ClaireFunction, i int, top int) EID {
 	var x EID
 	// if ClEnv.Verbose == 13 {fmt.Printf(">>> stack apply will use f=%s\n",f.name)}
@@ -1715,7 +1716,14 @@ func F_stack_apply_function(f *ClaireFunction, i int, top int) EID {
 	} else if top == i+5 {
 		x = ((*ClaireFunction5)(unsafe.Pointer(f))).call(ClEnv.EvalStack[i], ClEnv.EvalStack[i+1], ClEnv.EvalStack[i+2],
 			ClEnv.EvalStack[i+3], ClEnv.EvalStack[i+4])
+	} else if top == i+6 {
+		x = ((*ClaireFunction6)(unsafe.Pointer(f))).call(ClEnv.EvalStack[i], ClEnv.EvalStack[i+1], ClEnv.EvalStack[i+2],
+			ClEnv.EvalStack[i+3], ClEnv.EvalStack[i+4], ClEnv.EvalStack[i+5])
+	} else if top == i+7 {
+		x = ((*ClaireFunction7)(unsafe.Pointer(f))).call(ClEnv.EvalStack[i], ClEnv.EvalStack[i+1], ClEnv.EvalStack[i+2],
+			ClEnv.EvalStack[i+3], ClEnv.EvalStack[i+4], ClEnv.EvalStack[i+5],ClEnv.EvalStack[i+6])
 	} else {
+		fmt.Printf("stack apply used from %d to %d\n",i,top)
 		panic("CLAIRE does not handle so many parameters in stack apply")
 	}
 	ClEnv.Index = i

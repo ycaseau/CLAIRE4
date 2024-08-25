@@ -374,6 +374,15 @@ self_eval(self:Return) : error -> return_error(arg = eval(self.arg))
                       n),
        any 0) ]
 
+// new : search for a break => avoid useless complexity in code generation
+[occurbreak(self:any) : boolean
+ -> case self
+      (list exists(y in self | occurbreak(y)), 
+       Return true,
+       Instruction 
+          exists(s in owner(self).slots |  occurbreak(get(s, self))),
+       any false) ]
+
 // makes a (deep) copy of the instruction self
 //
 instruction_copy(self:any) : any

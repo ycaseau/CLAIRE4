@@ -72,7 +72,8 @@ c_code(self:Return) : any
   ->  Return(arg = c_code(self.arg , any))
 
 // optimisation of exception handlers
-[c_type(self:Handle) : type -> (c_type(self.arg) U c_type(self.other))]
+[c_type(self:Handle) : type
+  -> (c_type(self.arg) U c_type(self.other))]
 
 [c_code(self:Handle,s:class) : any
  ->  let x := Handle(test = any, arg = c_code(self.arg, s),
@@ -87,7 +88,8 @@ c_code(self:Return) : any
 // __________________ CAST ________________________________________
 
 // cast is now more subtle since we introduce coercion for list<t> types
-[c_type(self:Cast) : type -> self.set_arg]
+[c_type(self:Cast) : type 
+   -> self.set_arg]
 
 // insert dynamic types (check_in) when we see a claire cast
 // CLAIRE 4 : when we decide to drop the cast (safety), we generate a C_cast
@@ -99,7 +101,8 @@ c_code(self:Return) : any
              else  c_code( Call(Core/check_in,list(self.arg,(y as Param).arg, utype)),
                            ftype))
        else if (c_type(self.arg) <= y) c_code(self.arg, ftype)   // no check but a Cast is necessary
-       else if (compiler.safety >= 2) Compile/C_cast(arg =  c_code(self.arg, ftype), Compile/set_arg = y)
+       else if (compiler.safety >= 2) 
+           Compile/C_cast(arg =  c_code(self.arg, ftype), Compile/set_arg = y)
        else c_code(Call(Core/check_in,               // v3.3.16 - type check for as 
                               list(self.arg,y)),ftype)) ]
 
@@ -128,7 +131,9 @@ c_code(self:Super) : any
         (slot Call_slot(selector = prop,
                         arg = c_code(l[1], psort(domain!(prop))),
                         test = (not(get(default, prop) % prop.range) & compiler.safety < 5)),
-         method c_code_method(prop, l, %type),
+         method c_code_method(prop,      // v4.12 : add a Cast for first argument
+                              cons( Super_cast(arg = car(l), set_arg = class!(self.cast_to)), cdr(l)),
+                              %type),
          any c_warn(self, %type)))
 
 // we will need this direct call for compiling call to CLAIRE_demons
@@ -558,8 +563,10 @@ c_code(self:Iteration) : any
 
 // new in v3.1.16
 // selection has its own optimization method that takes care of the polymorphism
-[c_code(self:Select) : any -> c_code_select(self,set) ]                               
-[c_code(self:Lselect) : any -> c_code_select(self,list) ] 
+[c_code(self:Select) : any 
+   -> c_code_select(self,set) ]                               
+[c_code(self:Lselect) : any 
+   -> c_code_select(self,list) ] 
 
 // changed in CLAIRE 4 (cf trans -> init.cl)
 // x is set or list, tells what we want as output
@@ -570,7 +577,8 @@ c_code(self:Iteration) : any
         val := (if (x = set) set() else list()),   // v3.2
         v1 := Compile/Variable!(self.var.mClaire/pname /+ "_in", (OPT.Compile/max_vars :+ 1, 0), %t),    // change for CLAIRE 4
         v2 := Compile/Variable!(self.var.mClaire/pname /+ "_out", (OPT.Compile/max_vars :+ 1, 0), x) in
-    (if known?(of,self)
+    (//[5] c_code_select(~S,~S) -> %t=~S // self,x,%t,
+     if known?(of,self)                              // typed select (hence the empty seed val is casted)
        let  %typeIn := Optimize/pmember(%t) in
           (if (not(Optimize/ptype(%typeIn) <= self.of) & compiler.safety <= 1)
              (warn(),
@@ -579,11 +587,12 @@ c_code(self:Iteration) : any
            cast!(val,self.of),                       // v3.1.06
            put(range,v2, Core/param!(x,self.of)),
            Optimize/inner_select(self,v2,sx,val))             // v3.2.01 ??
-      else if (%t <= x)                              // we want to conserve the type of
+      /* v4.12 remove this branch (previous covers a typed select / otherwise generic is OK)
+         else if (not(%t <= x) & compiler.safety <= 3) ???           // we want to conserve the type of
          Let(var = v1,                               // the input
              value = st,
              arg = Optimize/inner_select(self,v2,v1,
-                              Compile/C_cast(arg = c_code(Call(empty,list(v1)),x), Compile/set_arg = x)))
+                              Compile/C_cast(arg = c_code(Call(empty,list(v1)),x), Compile/set_arg = x))) */
       else inner_select(self,v2,sx, (if (x = set) Set(of = {})
                                      else List(of = {})))) ]  // v3.2.01
 
@@ -676,9 +685,17 @@ c_code(self:While,s:class) : any
 
 // finds the right restriction of Iterate
 // Iterate applies to the non-evaluated types (meta level)
+// new optimization : no breaks
 [Iterate!(self:Iteration) : any
- -> restriction!(Iterate,
-                 list(set(self.set_arg), set(self.var), any), true) ]
+  //-> restriction!(Iterate,
+  //                list(set(self.set_arg), set(self.var), any), true) ]
+   -> let m1 := (if not(Language/occurbreak(self))
+                restriction!(IterateFast,
+                  list(set(self.set_arg), set(self.var), any), true)
+                else nil) in 
+      (if (m1 % method) m1 
+       else restriction!(Iterate,
+                 list(set(self.set_arg), set(self.var), any), true)) ]
 
 // iteration methods
 // note the beauty of this: we only apply the code transformation if
@@ -694,8 +711,12 @@ iterate(x:array,v:Variable,e:any) : any
        while (%i <= %max) let v := %a[%i] in (e, %i :+ 1))
 
 Iterate(x:class,v:Variable,e:any) : any
- => (for %v_1 in x.descendants
-       let %v_2 := (for v in %v_1.instances e) in (if %v_2 break(%v_2)))
+ =>  (for %v_1 in x.descendants
+           let %v_2 := (for v in %v_1.instances e) in (if %v_2 break(%v_2)))
+
+IterateFast(x:class,v:Variable,e:any) : any
+ =>  (for %v_1 in x.descendants
+           (for v in %v_1.instances e))
 
 Iterate(x:..[tuple(integer, integer)],v:Variable,e:any) : any
  => (let v := eval(x.args[1]),

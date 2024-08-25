@@ -42,7 +42,6 @@
 // this reintrant compiling (calling g_statement on a expanded Let) works because Let checks if g_expression can be used
 // the same pattern is used for call_slot/call_table
 
-
 // this function is used to unfold complex expressions that should be compiled as
 // expressions and not statements. It takes a list of arguments l and returns the
 // embedded Lets that defines the necessary variable or nil (nothing is needed)
@@ -375,7 +374,7 @@ unfold_eid(ldef:list,self:any,s:class, v:any,err:boolean,loop:any) : void
  [g_statement(self:If,s:class,v:string,err:boolean,loop:any) : void
  ->  let try? := g_throw(self.test) in
        (if g_clean(self.test)                                       // easy case 
-          (printf("if ~I ", bool_exp(self.test, true)),
+          (printf("if ~I ", b_expression(PRODUCER,self.test, true)),
                   new_block("If"))
         else let v2 := c_string(PRODUCER,gensym() /+ "I") in       // use intermediary variable
           (var_declaration(v2, boolean, 1),
@@ -615,7 +614,7 @@ unfold_eid(ldef:list,self:any,s:class, v:any,err:boolean,loop:any) : void
                                 cast_prefix(boolean,s),
                                 cast_post(boolean,s), 
                                 breakline()),
-        if f?  printf("for ~I ",bool_exp(self.iClaire/test, true))      // while self.test = true ...
+        if f?  printf("for ~I ",b_expression(PRODUCER,self.iClaire/test, true))      // while self.test = true ...
         else 
              (if try? g_try(self.iClaire/test,v2,boolean,v,false)
               else statement((if self.iClaire/other false else self.iClaire/test), boolean, v2,false),

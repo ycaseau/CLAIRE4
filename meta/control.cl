@@ -18,6 +18,7 @@
 
 //--------------- the IF --------------------------------------------
 If <: Control_structure(test:any,arg:any,other:any = false)
+claire/If? <: If()              // v4.12 conditional comment
 
 self_print(self:If) : void
  -> printf("(~I~I~I)", (pretty.index :+ 1), printstat(self),
@@ -179,6 +180,7 @@ self_print(self:Let*) : void
 Iteration <: Instruction_with_var(set_arg:any,arg:any)
 iterate :: property()
 Iterate :: property()
+IterateFast :: property()
 
 // for is the simplest evaluation loop
 //

@@ -17,7 +17,7 @@
 //    into the variable;
 //
 // A special case occurs when the expression represent a boolean value and is
-// functional, we can use bool_exp that returns a C boolean
+// functional, we can use b_expression that returns a C boolean
 // ---------------------------------------------------------------------
 
 // *********************************************************************
@@ -33,6 +33,28 @@
 //     s = EID                            => produce an EID
 //     s = any, object, c                 => produces a *ClaireAny  representation (default case)
 //     s = integer, char, float, string   => produced a native representation
+
+// generic compiler method
+[expression!(p:go_producer, self:any,s:class) : void
+ -> g_expression(self,s) ]
+
+// made generic with print_true
+[print_true(p:go_producer) : void
+   -> princ("CTRUE")]
+
+// generate an expressions with boundaries (parenthesis if necessary)
+[bounded_expression(p:code_producer,self:any,s:class) : void
+  -> case self (Assign printf("(~I)",expression!(p,self,s)),
+                integer (if (self < 0)  printf("(~I)",expression!(p,self,s))    // v3.2.44
+                         else expression!(p,self,s)),                           // avoid (2--2)
+                float   (if (self < 0.0)  printf("(~I)",expression!(p,self,s))
+                         else expression!(p,self,s)),
+                any    expression!(p,self,s)) ]
+
+// CLAIRE uses 1 .. n as array range, target languages use 0 .. n-1
+[at_index(p:code_producer,x:any) : void
+  -> case x (integer princ(x - 1), any (expression!(p,x, integer), princ("-1"))) ]
+
 
 //**********************************************************************
 //*          Part 1: g_func & expression for objects                   *
@@ -349,7 +371,7 @@ g_expression(self:Call_method,s:class) : void -> inline_exp(PRODUCER,self,s)
 [inline_exp(c:go_producer,self:Call_method1,s:class) : void
  -> let m := self.arg, p := m.selector, a1 := car(self.args), dm := domain!(m) in
        (if (p = - & ( dm = integer | dm = float) & (s = integer | s = float))
-           printf("~I(-~I)~I", cast_prefix(dm,s),bounded_expression(a1,s), cast_post(dm,s))
+           printf("~I(-~I)~I", cast_prefix(dm,s),bounded_expression(c,a1,s), cast_post(dm,s))
         else if (p = owner & eid_provide?(a1))
            printf("~IOWNER(~I)~I", object_prefix(class,s),g_expression(a1,EID),object_post(class,s))
         else if (p = owner & Compile/designated?(a1))
@@ -399,9 +421,9 @@ g_expression(self:Call_method,s:class) : void -> inline_exp(PRODUCER,self,s)
                                                     float a2 != 0.0, 
                                                     any (compiler.safety >= 3))))))
            printf("~I(~I~A~I)~I", cast_prefix(s1,s),
-                     bounded_expression(a1,s1), 
+                     bounded_expression(c,a1,s1), 
                      (if (p = mod) "%" else string!(p.name)), 
-                     bounded_expression(a2, s1), cast_post(s1,s))
+                     bounded_expression(c,a2, s1), cast_post(s1,s))
         else if (m = *contain_list* & Compile/identifiable?(a2))
            printf("~I~I.Memq(~I)~I", object_prefix(boolean,s),g_expression(a1, list), 
                     g_expression(a2, any),object_post(boolean,s))
@@ -414,7 +436,7 @@ g_expression(self:Call_method,s:class) : void -> inline_exp(PRODUCER,self,s)
                     g_expression(a2, (if (sm = integer) integer else if (sm = float) float else any)), 
                     object_post(boolean,s))
         else if (m.selector = externC) princ(a1)
-        else if (m = m_member) belong_exp(a1, a2,s)
+        else if (m = m_member) belong_exp(c,a1, a2,s)
         else if (m = *write_value* & eid_provide?(a2))   // returns EID hence should not be converted (error possible)
            printf("~I.WriteEID(~I)",g_expression(a1,Variable),g_expression(a2,EID))
         else if (m = *inherit*)
@@ -440,13 +462,13 @@ g_expression(self:Call_method,s:class) : void -> inline_exp(PRODUCER,self,s)
               printf("~I~I.~I[~I]~I", cast_prefix(s1,s),
                      g_expression(a1,list), 
                      valuesSlot(g_member(a1)),
-                     at_index(a2), 
+                     at_index(c,a2), 
                      cast_post(s1,s))
         else if (((m = *nth_list* | m = *nth_tuple*) & compiler.safety >= 3) | 
                  (m = *nth_1_list* |  m = *nth_1_tuple* | m = *nth_1_array* ))     // use the .At method
              printf("~I~I.At(~I)~I", cast_prefix(any,s),
                      g_expression(a1,list), 
-                     at_index(a2),                       // new in v4.0.6 
+                     at_index(c,a2),                       // new in v4.0.6 
                      cast_post(any,s))
         else if (p = add! & domain!(m) <= bag)
            let sbag := (if (domain!(m) = set) set else list), %type := g_member(a1) in
@@ -465,7 +487,7 @@ g_expression(self:Call_method,s:class) : void -> inline_exp(PRODUCER,self,s)
                    g_expression(a1, table), 
                    g_expression(a2, any),cast_post(any,s))
         else if (m.selector = identical?)
-           printf("~IMakeBoolean(~I)~I", cast_prefix(boolean,s), bool_exp(self, true), cast_post(boolean,s))
+           printf("~IMakeBoolean(~I)~I", cast_prefix(boolean,s), b_expression(c,self, true), cast_post(boolean,s))
         else if (p = inlineok? & a2 % string)                        // define a macro method through an expression
            printf("~IF_inlineok_ask_method(~I~I,~IMakeString(~S))",preCore?(),
                    breakline(),
@@ -484,7 +506,7 @@ g_expression(self:Call_method,s:class) : void -> inline_exp(PRODUCER,self,s)
  -> let m := self.arg, a1 := self.args[1], a2 := self.args[2], a3 := self.args[3] in
        (if (m = *nth=_list* & compiler.safety >= 3 & g_member(a1) != any & s = void)
            printf("~I.~I[~I]=~I", g_expression(a1,list),
-                  valuesSlot(g_member(a1)), at_index(a2), g_expression(a3, g_expected(g_member(a1))))
+                  valuesSlot(g_member(a1)), at_index(c,a2), g_expression(a3, g_expected(g_member(a1))))
         else if (m = *nth_put_list* | m = *nth_put_array* | (compiler.safety >= 3 & m = *nth=_list*))
          printf("~I~I.NthPut(~I,~I)~I", cast_prefix(any,s), g_expression(a1,array),
                   g_expression(a2, integer), 
@@ -557,22 +579,10 @@ g_expression(self:Call_method,s:class) : void -> inline_exp(PRODUCER,self,s)
 //*          Part 4: expression for structures                       *
 //**********************************************************************
 
-// this is an attempt to get rid of useless parenthesis without creating ambuiguous situations
-// bounded_expression(x,loop) adds wrapping ( ) if needed     ==     bounded expression :)
-// here we assume that native is needed
-[bounded_expression(self:any,s:class) : void
-  -> case self (Assign printf("(~I)",g_expression(self,s)),
-                // Generate/to_C  printf("(~I)",g_expression(self,s)),                     // v3.2.44
-                integer (if (self < 0)  printf("(~I)",g_expression(self,s))    // v3.2.44
-                         else g_expression(self,s)),                           // avoid (2--2)
-                float   (if (self < 0.0)  printf("(~I)",g_expression(self,s))
-                         else g_expression(self,s)),
-                any    g_expression(self,s)) ]
-
 // if can be represented by an expression if the two arguments are constants (evaluation does not cost)
 [g_expression(self:If,s:class) : void
  -> (object_prefix(any,s),
-     printf("IfThenElse(~I,", bool_exp(self.test, true)),
+     printf("IfThenElse(~I,", b_expression(PRODUCER,self.test, true)),
      OPT.level :+ 1,
      breakline(),
      printf("~I,", g_expression(get(arg, self),any)),
@@ -589,7 +599,7 @@ g_expression(self:Call_method,s:class) : void -> inline_exp(PRODUCER,self,s)
         princ("MakeBoolean("),
         for i in (1 .. n)
           let x := self.args[i] in
-            (bool_exp(x, true),
+            (b_expression(PRODUCER,x, true),
              if (i < n) printf(" && ~I", (if b breakline()))),
         princ(")"),
         object_post(boolean,s)) ]
@@ -601,26 +611,23 @@ g_expression(self:Call_method,s:class) : void -> inline_exp(PRODUCER,self,s)
         princ("MakeBoolean("),
         for i in (1 .. n)
           let x := self.args[i] in
-            (bool_exp(x, true),
+            (b_expression(PRODUCER,x, true),
              if (i < n) printf(" || ~I", (if b breakline()))),
         princ(")"),
         object_post(boolean,s)) ]
-
-// to_CL(x) produces a CLAIRE id from an external representation
-// [g_expression(self:Generate/to_CL,s:class) : void
-//  -> //[5] toCL -> ~S:~S // self.arg, owner(self.arg),
-//    g_expression(self.arg, s)]
 
 // to_C(x) produces an external representation from a CLAIRE id
 // g_expression(self:Generate/to_C,s:class) : void
 // -> g_expression(self.arg, s)
 
-// C_cast(x) produces a cast for go  => unclear if it is still needed
-g_expression(self:Generate/C_cast,s:class) : void
- -> g_expression(self.arg,s)    
-
-
-               
+// C_cast(x) produces a cast for go  
+// v4.12 : we need exlicit Go cast for super compiling 
+[g_expression(self:C_cast,s:class) : void
+ ->  if (self % Super_cast)          // v4.12 special case for super
+         (princ("/*Super_cast*/"),
+          printf("~I(~I.Id())",cast_class(self.set_arg),g_expression(self.arg,s)))
+      else g_expression(self.arg,s) ]
+          
 // reads a slot : more complex that it looks
 // when the test is on, we produce x.p.KNOWN(p) To transform CNULL into an error 
 // because slots can be native, we need the generic pre/post to convert to the proper slot
@@ -672,94 +679,123 @@ g_expression(self:Generate/C_cast,s:class) : void
          sm := g_member(self.selector) in
        (cast_prefix(sa,s),
         if (sm != any)
-            printf("~I.~I[~I]",g_expression(self.selector, list), valuesSlot(sm), at_index(self.arg))
-        else printf("~I.At(~I)",g_expression(self.selector, list), at_index(self.arg)),
+            printf("~I.~I[~I]",g_expression(self.selector, list), 
+                    valuesSlot(sm), at_index(PRODUCER,self.arg))
+        else printf("~I.At(~I)",g_expression(self.selector, list), at_index(PRODUCER,self.arg)),
         cast_post(sa,s)) ]
-
 
 //**********************************************************************
 //*          Part 5: the logical expression compilation                *
 //**********************************************************************
 
-
-// bool_exp(x,pos?) returns a native boolean go expression, assumes that g_func(x) !
-// bool_expression(x) could be g_expression(x,boolean)
-// however, boolean are not native in CLAIRE4 () to avoid conversions
-
-// note : we drop bool_exp? and bool_exp!
-
-// this is the boolean compiler. An automatic computation of negation is
+// b_expression(p,x,pos?) returns a native boolean go expression, assumes that it is functional
+// this is an optimization over expression!(x,boolean) to make sure that
+// boolean expression are generated as native boolean expressions
+// Note that an automatic computation of negation is
 // included. The flag pos? tells if the assertion is positive. When a
 // negation occurs, we simply change the flag. At the end of compiling,
-// the flag is used to generate == or != according to this method:
+// the flag is used to generate == or != according to this method
 
 // generate the = or /=
 sign_equal(self:boolean) : void -> (if self princ("==") else princ("!="))
 
 // generate a conjunction/disjunction
-sign_or(self:boolean) : void -> (if self princ("||") else princ("&&"))   
+sign_or(self:boolean) : void -> (if self princ("||") else princ("&&")) 
 
-// default solution
-[bool_exp(self:any,pos?:boolean) : void 
+// generic b_expression code (reused for Javascript or Python)
+
+[b_expression(p:code_producer,self:any,pos?:boolean) : void 
   -> if (self = true) princ("true")    // v4.0.
-     else printf("(~I ~I CTRUE)", g_expression(self, boolean), sign_equal(pos?)) ]
+     else printf("(~I ~I ~I)", expression!(p,self, boolean), sign_equal(pos?), print_true(p)) ]
 
 // strange : not clear why we should see a C_cast here
-[bool_exp(self:C_cast,pos?:boolean) : void 
-  -> bool_exp(self.arg,pos?) ]
+[b_expression(p:code_producer,self:C_cast,pos?:boolean) : void 
+  -> b_expression(p,self.arg,pos?) ]
 
 
-// if we have a CL, we know that the self.arg is of type boolean
-// [bool_exp(self:Generate/to_CL,pos?:boolean) : void
-//  -> bool_exp(self.arg,pos?) ]
-
-// If is supported with IfThenElse (means that all terms will be evaluated),
-[bool_exp(self:If,pos?:boolean) : void
+// If is supported with IfThenElse (means that all terms will be evaluated) [generic]
+[b_expression(p:code_producer,self:If,pos?:boolean) : void
  -> if self.other
-        printf("(~I ? ~I : ~I)", bool_exp(self.test, true),
-                                 bool_exp(self.arg, pos?),
-                                 bool_exp(self.other, pos?))
-     else printf("(~I ~I ~I)", bool_exp(self.test, pos?),
-                 Generate/sign_or(not(pos?)), bool_exp(self.arg, pos?)) ]
+        printf("(~I ? ~I : ~I)", b_expression(p,self.test, true),
+                                 b_expression(p,self.arg, pos?),
+                                 b_expression(p,self.other, pos?))
+     else printf("(~I ~I ~I)", b_expression(p,self.test, pos?),
+                 Generate/sign_or(not(pos?)), b_expression(p,self.arg, pos?)) ]
 
-// for a AND, we can used the && C operation
-[bool_exp(self:And,pos?:boolean) : void
+// for a AND, we can used the && C operation [generic]
+[b_expression(p:code_producer,self:And,pos?:boolean) : void
  -> let l := self.args, m := length(l), n := 0, %l := OPT.level in
        (OPT.level :+ 1,
         for x in l
           (n :+ 1,
-           if (n = m) bool_exp(x, pos?)
-           else (printf("(~I ~I ", bool_exp(x, pos?), Generate/sign_or(not(pos?))),
+           if (n = m) b_expression(p,x, pos?)
+           else (printf("(~I ~I ", b_expression(p,x, pos?), Generate/sign_or(not(pos?))),
                  OPT.level :+ 1,
                  breakline())),
         for x in (2 .. m) princ(")"),
         OPT.level := %l)  ]
 
-// idem for OR: we use ||
-[bool_exp(self:Or,pos?:boolean) : void
+// idem for OR: we use ||  [generic]
+[b_expression(p:code_producer,self:Or,pos?:boolean) : void
  -> let l := self.args, m := length(l), n := 0, %l := OPT.level in
        (OPT.level :+ 1,
         for x in l
           (n :+ 1,
-           if (n = m) bool_exp(x, pos?)
-           else (printf("(~I ~I ", bool_exp(x, pos?), Generate/sign_or(pos?)),
+           if (n = m) b_expression(p,x, pos?)
+           else (printf("(~I ~I ", b_expression(p,x, pos?), Generate/sign_or(pos?)),
                  OPT.level :+ 1,
                  breakline())),
         for x in (2 .. m) princ(")"),
         OPT.level := %l) ]
 
 
-// membership
-[bool_exp(self:Call,pos?:boolean) : void
+// membership optization [generic, through belong_exp]
+[b_expression(c:code_producer,self:Call,pos?:boolean) : void
  -> let p := self.selector in
-       (if (p = %) printf("(~I ~I CTRUE)", belong_exp(self.args[1], self.args[2],boolean), sign_equal(pos?)) 
-        else bool_exp@any(self, pos?)) ]
+       (if (p = %) printf("(~I ~I ~I)", belong_exp(c,self.args[1], self.args[2],boolean),
+                          sign_equal(pos?), print_true(c)) 
+        else printf("(~I ~I ~I)", expression!(c,self, boolean), sign_equal(pos?), print_true(c))) ]
 
-// compile (a % ..), s is always a boolean but for EID mode
-// the notOpt() test in gostat.cl ensures that the first three cases are seen as not-throw (not EID)
-// however this fragment may be called to return an EID hence the global wrap with prefix/post
-[belong_exp(a1:any,a2:any,s:class) : void
- ->  if (static_type(a2) <= type) 
+// generic !
+[b_expression(p:code_producer,self:Call_method1,pos?:boolean) : void
+ -> let m := self.arg, a1 := self.args[1] in
+       (if (m = *not*) b_expression(p,a1, not(pos?))     // v3.3.12 - was :  & a1 % to_CL
+        else if (m = *known*) equal_exp(p,a1, not(pos?), unknown, true)
+        else if (m = *unknown*) equal_exp(p,a1, pos?, unknown, true)
+        else printf("(~I ~I ~I)", expression!(p,self, boolean), sign_equal(pos?), print_true(p))) ]
+ 
+ 
+// same thing for two arguments functions => generic
+// equal_exp is in gogen.cl
+[b_expression(c:code_producer,self:Call_method2,pos?:boolean) : void
+ -> let m := self.arg, p := m.selector, lop := c.Generate/open_comparators,
+        a1 := self.args[1], a2 := self.args[2] in
+      (if (p = !=) equal_exp(c,a1, not(pos?), a2, false)
+       else if (p = identical?) equal_exp(c,a1, pos?, a2, true)
+       else if (p = =) equal_exp(c,a1, pos?, a2, false)
+       else if (m = m_member) printf("(~I ~I ~I)",belong_exp(c,a1,a2,boolean),
+                                      sign_equal(pos?),print_true(c)) 
+       else if (p % lop & domain!(m) % {float,integer})
+           printf("(~I ~I ~I)", expression!(c,a1, domain!(m)),
+                  (if pos? print(p)
+                   else print(lop[((get(lop, p) + 1) mod 4) + 1])),  // lop = (<, >, >=, <=)
+                  expression!(c,a2, domain!(m)))
+       else if (m = *nth_integer*) // bit vectors  (a1 is a integer seen as a set, a2 is an integer)
+           printf("(BitVectorContains(~I,~I) ~I ~I)", 
+                      expression!(c,a1,integer), expression!(c,a2,integer), sign_equal(pos?),
+                      print_true(c))
+        else if (p = inherit? & domain!(m) = class)
+         printf("(~I.IsIn(~I) ~I ~I)", 
+                  expression!(c,a1,class), expression!(c,a2,class),sign_equal(pos?),print_true(c))
+       else 
+          printf("(~I ~I ~I)", expression!(c,self, boolean), 
+                 sign_equal(pos?),print_true(c))) ]
+
+
+// belong_exp is not generic but is a producer method
+// assumption : we require a boolean (s = boolean input constraint)
+[belong_exp(p:go_producer,a1:any,a2:any,s:class) : void
+  ->  if (static_type(a2) <= type) 
          printf("~I~I.Contains(~I)~I",  cast_prefix(boolean,s),
                 g_expression(a2,type), g_expression(a1,any),cast_post(boolean,s))
      else if (static_type(a2) <= integer & static_type(a1) <= integer)
@@ -775,38 +811,4 @@ sign_or(self:boolean) : void -> (if self princ("||") else princ("&&"))
                  g_expression(a2,any),
                  cast_post(EID,s)) ]
 
-
-// some special functions are open coded when used in a logical test
-[bool_exp(self:Call_method1,pos?:boolean) : void
- -> let m := self.arg, a1 := self.args[1] in
-       (if (m = *not*) bool_exp(a1, not(pos?))     // v3.3.12 - was :  & a1 % to_CL
-        else if (m = *known*) equal_exp(PRODUCER,a1, not(pos?), unknown, true)
-        else if (m = *unknown*) equal_exp(PRODUCER,a1, pos?, unknown, true)
-        else if (m.range <= boolean)
-           printf("(~I ~I CTRUE)", g_expression(self, boolean), sign_equal(pos?))
-        else bool_exp@any(self, pos?)) ]
-
-// same thing for two arguments functions
-// equal_exp is in gogen.cl
-[bool_exp(self:Call_method2,pos?:boolean) : void
- -> let m := self.arg, p := m.selector, lop := PRODUCER.Generate/open_comparators,
-        a1 := self.args[1], a2 := self.args[2] in
-      (if (p = !=) equal_exp(PRODUCER,a1, not(pos?), a2, false)
-       else if (p = identical?) equal_exp(PRODUCER,a1, pos?, a2, true)
-       else if (p = =) equal_exp(PRODUCER,a1, pos?, a2, false)
-       else if (m = m_member) printf("(~I ~I CTRUE)",belong_exp(a1,a2,boolean),sign_equal(pos?)) 
-       else if (p % lop & domain!(m) % {float,integer})
-           printf("(~I ~I ~I)", g_expression(a1, domain!(m)),
-                  (if pos? print(p)
-                   else print(lop[((get(lop, p) + 1) mod 4) + 1])),  // lop = (<, >, >=, <=)
-                  g_expression(a2, domain!(m)))
-        else if (m = *nth_integer*) // bit vectors  (a1 is a integer seen as a set, a2 is an integer)
-           printf("(BitVectorContains(~I,~I) ~I CTRUE)", 
-                      g_expression(a1,integer), g_expression(a2,integer), sign_equal(pos?))
-        else if (p = inherit? & domain!(m) = class)
-         printf("(~I.IsIn(~I) ~I CTRUE)", 
-                  g_expression(a1,class), g_expression(a2,class),sign_equal(pos?))
-       else if (m.range <= boolean)
-          printf("(~I ~I CTRUE)", g_expression(self, boolean), sign_equal(pos?))
-       else bool_exp@any(self, pos?)) ]
-
+ // end of file

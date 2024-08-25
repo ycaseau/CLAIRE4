@@ -156,7 +156,9 @@ self_eval(self:Defobj) : any
  -> let %c := self.arg, %o:object := (unknown as object) in
        (if (%c.open <= 0) error("[105] cannot instantiate ~S", %c),
         if (%c inherit? thing)
-            (%o := mClaire/new!(%c, self.ident),
+            (if (value(self.ident) % global_variable & range(value(self.ident) as global_variable) = {}) 
+                trace(0,"CLAIRE4 Warning: global constant defined twice: ~S\n",self),  // v 4.12 
+             %o := mClaire/new!(%c, self.ident),
              case %o (property (if (length(%o.restrictions) > 0)     // v3.2.58 : cause compiler problems !
                                   error("[188] the property ~S is already defined", %o))))
         else (%o := mClaire/new!(%c),

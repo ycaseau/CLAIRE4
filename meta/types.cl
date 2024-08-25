@@ -339,7 +339,7 @@ U(x:type,y:type) : type
 
 // exception
 but :: operation()
-but(s:any,x:any) : type[(if (x <= list) nth(list,member(s)) else (if (x <= set) nth(set,member(s)) else any))]      // <yc> 16/3/98
+but(s:any,x:any) : type[s]      // v4.12  (same type as s)
  -> (case s (list list{y in s | y != x},         // v3.3.36 (thanks to fxj)
              set copy(s) delete x, 
              any Core/enumerate(s) delete x))

@@ -15,7 +15,6 @@
 [tel(n:integer) -> time_set(), el(n), time_show()]
 
 
-
 [lta(n:integer) : list<integer>
   -> let l := list<integer>(0) in
         (for i in (1 .. n)

@@ -31,6 +31,16 @@ ambiguous :: keyword()
  ->  for i in (1 .. length(l)) l[i] := ptype(l[i]),
      restriction!(self.Kernel/definition, l, mode)]
 
+// new: extended match for listargs (last member of l2) - note that we test this precondition :)
+[claire/dmatch?(l:list,l2:list) : boolean
+ -> (let x := length(l2), z := length(l) in
+       (if (z != x & (l2[x] != listargs | z < x - 1)) false           // v3.2.24
+        else not((for i in (1 .. x)
+                    (if (i = x & l2[i] = listargs) break(false)
+                     else if not(tmatch?(l[i], l2[i], l)) 
+                        (//[5] tmatch?(~S,~S) failed // l[i], l2[i],
+                         break(true))))))) ] 
+
 // finds a suitable restriction in lr. Returns a restriction for a match,
 // list(r) for a possible match (unique), () for no match and ambiguous
 // otherwise
@@ -40,7 +50,12 @@ ambiguous :: keyword()
      let open_required := (length(lr) > 0 & (lr[1]).selector = 3),  // open property ? 
          rep:any := {} in                         // extensibility node
             (for r:restriction in lr
-               (if (not(rep) & tmatch?(l, r.domain))
+               (if (r.domain[length(r.domain)] = listargs)    // v4.12   // should use last(r.domain) !
+                   (if dmatch?(l, r.domain) 
+                      (if not(rep)   // first match -> this is the right method
+                         (if mode rep := r else rep := r.range, break(true))
+                       else (if mode (rep := ambiguous, break(true)) else rep :U r.range)))
+                else if (not(rep) & tmatch?(l, r.domain))
                    (if mode rep := r else rep := r.range, break(true))
                 else if (r.domain ^ l)
                    (if not(mode)
@@ -59,15 +74,7 @@ ambiguous :: keyword()
           printf("tmatch(~S) with ~S -> ~S, intersection:~S\n",
                  r,l, tmatch?(l, r.domain),(r.domain ^ l))) ]
 
-// TO REMOVE DEBUG tmatch
-[claire/dmatch?(l:list,l2:list) : boolean
- -> (let x := length(l2), z := length(l) in
-       (if (z != x & (l2[x] != listargs | z < x - 1)) false           // v3.2.24
-        else not((for i in (1 .. x)
-                    (if (i = x & l2[i] = listargs) break(false)
-                     else if not(tmatch?(l[i], l2[i], l)) 
-                        (//[0] tmatch?(~S,~S) failed // l[i], l2[i],
-                         break(true))))))) ]                 
+                
 
 // special version for Super, which only looks at methods with domains
 // bigger than c
@@ -159,7 +166,7 @@ ambiguous :: keyword()
                  any (if not(s.restrictions) selector_psort(self)
                       else if (s.open = 3 | r != ambiguous) class!(s.range) // sort_abstract!(s.range)
                       else class!(restriction!(s, %type, false) as type)))) ]
-                      // sort_abstract!(restriction!(s, %type, false) as type)))) ]
+                      
 
 // this is the optimizer for messages : does not use the sort unless there is a macro
 c_code(self:Call) : any -> c_code_call(self,void)
@@ -226,13 +233,18 @@ c_code(self:Call) : any -> c_code_call(self,void)
                          if (void % %type) Cerror("[205] call ~S uses a void argument [~S]",self,%type), // v3.3
                          // <yc> 7/98 : ensure correct namespaces for further reading
                          if (s % {begin,end} & l[1] % module) eval(self),
-                         if (last(z.domain) = listargs |
-                             (z.domain[1] = void & l[1] != system))
+                         if (z.domain[length(z.domain)] = listargs) // v4.12 - we support listargs in the optimizer
+                             c_code_method(z, listargsFormat(l,length(z.domain)), %type, sx)
+                         else if (z.domain[1] = void & l[1] != system)
                             open_message(s, l)
                          else c_code_method(z, l, %type, sx)),
                  keyword c_warn(s, l, %type),    // ambiguous ...
                  any c_warn(self, %type))))) ]     // true error
 
+// new in v4.12 : keep the n-1 args and group the rest in a List
+[listargsFormat(l:list,n:integer) : list
+ ->  list{ (if (i < n) l[i]
+            else List(args = list{ l[j] | j in (n .. length(l))})) | i in (1 .. n)} ]
 
 // create the compiled message with necessary protections
 [open_message(self:property,l:list) : Call

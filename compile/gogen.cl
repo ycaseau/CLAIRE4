@@ -678,6 +678,4 @@ build_Variable(s:string,t:any) : Variable
   -> if (g_clean(x) & c_type(x) != void) true
      else false ]
 
-// atIndex : print an integer "minus one"
-[at_index(x:any) : void
-  -> case x (integer princ(x - 1), any (g_expression(x, integer), princ("-1"))) ]
+

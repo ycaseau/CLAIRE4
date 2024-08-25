@@ -13,6 +13,8 @@
 // *     Part 4: Inverse Management                                    *
 // *********************************************************************
 
+Compile/*name*:symbol := symbol!("_CL_obj")     // */
+
 // *********************************************************************
 // *     Part 1: Set, List and Tuple creation                          *
 // *********************************************************************
@@ -69,7 +71,8 @@ c_type(self:Set) : type
  -> Tuple(args = list{ c_code(%x,any) | %x in self.args}) ]
 
 // CLAIRE 4: extended to maps
-[c_type(self:Map) : type -> map_set]
+[c_type(self:Map) : type 
+   -> map_set]
 
 // macroexpension of the 
 [c_code(self:Map) : any
@@ -86,8 +89,6 @@ c_type(self:Set) : type
 
 c_type(self:Definition) : type ->
   (if (self.arg Core/<=t exception) {} else self.arg)
-
-Compile/*name*:symbol := symbol!("_CL_obj")     // */
 
 // creation of a new object
 c_code(self:Definition,s:class) : any

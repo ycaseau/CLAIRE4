@@ -8,9 +8,10 @@
 //**********************************************************************
 //* Contents                                                           *
 //*          Part 1: Global_variables & producer interface             *
-//*          Part 2: Module Compiler Interface                         *
-//*          Part 3: File Compiler                                     *
-//*          Part 4: Function Compiler                                 *
+//*          Part 2: Generic Compiler Methods                          *
+//*          Part 3: Module Compiler Interface                         *
+//*          Part 4: File Compiler                                     *
+//*          Part 5: Function Compiler                                 *
 //**********************************************************************
 
 // content map (represent the tree with a indented hierarchy :))
@@ -21,14 +22,13 @@
 //            - start_file
 //            - gen_objects
 //            - gen_classes
-//  compile_lambda -> ... -> make_go_function [Part 4]
+//  compile_lambda -> ... -> gen_function [Part 4]
 //       - gen_func_start   [gogen]
 //       - function_body, procedure_body, eid_body
 //       - generate_eid_function
 //       - check_sort
 
 // the form is the expected go type : a ClaireX, a native (4) or EID
-
 
 //**********************************************************************
 //*          Part 1: Global_variables                                  *
@@ -58,8 +58,6 @@
 *belong* :: (Core/belong @ any)         // special method in types => dispatch to any
 *contain_list* :: (contain? @ list)
 *contain_set* :: (contain? @ set)
-// Compile/*min_integer* :: (min @ integer)
-// Compile/*max_integer* :: (max @ integer)
 *length_array* :: (length @ array)
 *length_bag* :: (length @ bag)
 *close_exception* :: (close @ exception)            // v3.2.58  */
@@ -67,7 +65,6 @@
 *new_class2* :: (mClaire/new! @ list(class,symbol))
 *slot_get* :: (slot_get @ object)
 *map* :: (map! @ type)
-// bag methods could be ommited in the future - these methods are used to force compiling (could be removed later)
 *of_bag* :: (of @ bag)
 *of_array* :: (of @ array)
 *copy_list* :: (copy @ list)
@@ -84,7 +81,6 @@
 *write_value* :: (Language/write_value @ Variable)
 *read_property* :: (read @ property)
 
-
 // new: the target code production (the part that depends on the target language) is
 // encapsulated with a producer object
 // CLAIRE 4 is focused on go, but we try to keep the previous structure of CLAIRE3 to be ready
@@ -97,7 +93,6 @@ code_producer <: producer(
    extension:string,                      // extension for generated files
    comment:string,                        // a string that designates the target language
    interfaces:list)                       // used to translate imported to C/.. entities
- //  stat:integer = 0)                      // v3.3.32: stats about GC protection  */
 
 // add the go_producer here  (replaces the C++ producer)
 // note that the double list bad/good names is ugly and should be replaced by a dictionary later 
@@ -111,9 +106,6 @@ go_producer <: code_producer(
     varsym:integer = 0,            // desambiguate variables by adding a number
     output:string)                 // where to place the executable
 
-
-// TODO: define a status = 3 for the PRODUCER class that tells that is it extensible
-// (Genearate/producer.open := 3)
 // this is a special case : the function may return an error but the optimized form does not
 EIDSET:set<any> := set<any>(nth @ list)
 
@@ -132,8 +124,8 @@ breakline() : any -> (princ("\n"), indent_c())
 [new_block() : void
  -> OPT.level :+ 1, princ("{ "), breakline()]
 
- // adds a new block without the breaklines for Let
- [let_block() : void
+// adds a new block without the breaklines for Let
+[let_block() : void
  -> OPT.level :+ 1, princ("{ ")]
 
 // closes the current C block
@@ -144,12 +136,134 @@ breakline() : any -> (princ("\n"), indent_c())
 [finish_block() : void 
  -> OPT.level :- 1, princ("} ")]
 
+//*********************************************************************
+//*          Part 2: Generic Compiler Methods                         *
+//*********************************************************************
+
+// these are the code_producer methods that works with go, C++ or Javascript
+// compiling.
+
+// this this the heart of the compiler : compiles module m into a set of files
+[compile(p:code_producer, m:module) : void
+ ->   OPT.need_modules := {},
+      compiler.inline? := true, 
+      compiler.n_loc := 0,                // number of lines of code
+      compiler.n_warnings := 0,           // number of warnings
+      compiler.n_notes := 0,              // number of notes
+      let l1:bag := parents(Reader/add_modules(list(m))) in
+      (//[3] ==========  START GO COMPILING (~S) with ~S ================ // m, l1,
+       OPT.legal_modules := set!(l1),
+       p.current := m,                                  // v4: we need to know in which module we are
+       gen_files(p,m),                                  // (generic) files to files
+       gen_mod_file(p,m),                               // (generic) module file
+       l1 := difference(set!(OPT.need_modules), OPT.legal_modules),
+       if l1 (warn(),trace(1, "~S should be declared for ~S \n", l1, m))) ]
+
+// the first part is to generate the files associated to the module claire files
+// gen_files prepare the optimizer (OPT) and calls gen_file for each file
+[gen_files(p:go_producer,m:module) : void
+ ->  //[0] ==== Generate ~A files for module ~S [verbose = ~A, Opt? = ~S] // p.comment, m, verbose(),compiler.optimize?,
+     OPT.instructions := list<any>(),
+     OPT.properties := set<property>(),
+     OPT.objects := list<object>(),
+     OPT.functions := list<any>(),
+     OPT.need_to_close := set<any>(),
+     begin(m),
+     for x in m.made_of
+       (//[1] ++++ Compiling the file ~A.cl [v. 4.~A - safety:~A] // x, compiler.version, compiler.safety,
+        if (x = string!(m.name))
+           Cerror("[211]  ~S cannot be used both as a file and module name",x),
+        // OPT.level := 1, // debug - to remove
+        p.current_file := x,       // CLAIRE4 : keep the file name handy 
+        gen_file(p, m.source / x, p.source / x)),
+     end(m) ]
+
+// main method: generate a target file associated to a CLAIRE file
+[gen_file(p:code_producer, f1:string,f2:string)
+ -> let p1 := fopen(f1 /+ ".cl", "r"), 
+        b := reader.Reader/toplevel,
+        p0 := reader.Reader/fromp,         // b, p0: reading context when we start
+        out? := outfile?(p),
+        prev_comment  := "" in
+       (if out? OPT.outfile := fopen(f2 /+ p.Generate/extension, "w"),
+        reader.Reader/toplevel := false,
+        compiler.loading? := true,
+        n_line() := 1,
+        reader.external := f1,
+        reader.Reader/fromp := p1,                     // <yc> ensures automatic fclose !
+        if out? start_file(p,f1,module!(),false),      // v4.12, if outfile? add a header
+        let %instruction := Reader/readblock(p1) in
+          while not(%instruction = Reader/eof)
+             (prev_comment := gen_instruction(p,%instruction,prev_comment),
+              %instruction := Reader/readblock(p1)),
+        compiler.n_loc :+ n_line(),
+        fclose(p1),
+        compiler.loading? := false,
+        // restore reading context
+        reader.Reader/toplevel := b,
+        reader.external := "toplevel",
+        reader.Reader/fromp := p0,
+        if out? fclose(OPT.outfile))] 
+
+// generate a file associated with module m (called meta-m)
+[gen_mod_file(p:code_producer, m:module) : void
+ -> let prt := fopen(((p.source /+ *fs*) /+ modfile_name(p,m)) /+ p.Generate/extension, "w"),
+        s := string!(m.name) in
+      (//[0] ==== generate ~A file for module ~S [~A] ==== // p.comment,m,modfile_name(p,m),
+       OPT.outfile := prt,
+       start_file(p,s,m,true),            // true tells this is the module file
+       use_as_output(OPT.outfile),
+       gen_classes(p,m),                 // v4.0 : keep the class/struct definition in the module
+       gen_objects(p,m),
+       gen_functions(p,m),
+       gen_meta_load(p,m),                 // reflective description (class, methods, vars)
+       breakline(),                       // v3.0.3
+       fclose(OPT.outfile)) ]
+
+
+// test the compiling of a method
+// e.f. g_test(foo @ any)
+[compile_method(p:code_producer,m:method) : void
+  -> when l := get(formula,m) in
+        (//[0] ---- Compiling ~S with following definition ---- // m,
+        pretty_print(body(l)),
+        OPT.in_method := m,
+        OPT.Optimize/use_string_update := false,   // v3.3.46
+        OPT.Optimize/max_vars := 0,
+        OPT.legal_modules := set!(module.instances),
+        OPT.outfile := stdout,
+        compiler.inline? := true, 
+        p.current := claire,
+        trace(0,"\n---- code produced by the optimizer -------------------\n"),
+        pretty_print(c_strict_code(formula(m).body,class!(m.range))),
+        trace(0,"\n---- code produced by the generator ------------------- \n"),
+        gen_function(p,formula(m),"test",m),
+        OPT.in_method := unknown ) ]
+
+// these are the open properties that CLAIRE compiler expects (specific to the target language)
+gen_instruction :: property(open = 3)
+belong_exp :: property(open = 3)
+outfile? :: property(open = 3)
+gen_classes :: property(open = 3)
+gen_objects :: property(open = 3)
+gen_functions :: property(open = 3)
+gen_meta_load :: property(open = 3)
+print_true :: property(open = 3)
+gen_function :: property(open = 3)
+
+// open for future producers (such as Javascript)
+(start_file.open := 3)
+(compile.open := 3)
+(b_expression.open := 3)
+(inline_exp.open := 3)
+(modfile_name.open := 3)
+
 
 //*********************************************************************
-//*          Part 2: Module Compiler Interface                        *
+//*          Part 3: Module Compiler Interface                        *
 //*********************************************************************
 
-// a small test function for the compiler
+// a small g_test function for the compiler : very convenient to test the compiler
 [claire/g_test(x:any) : void 
  -> g_test(claire,x)]
 
@@ -177,90 +291,51 @@ breakline() : any -> (princ("\n"), indent_c())
 // test the compiling of a method
 // e.f. g_test(foo @ any)
 [g_test(m:method) : void
-  -> when l := get(formula,m) in
-        (//[0] ---- Compiling ~S with following definition ---- // m,
-        pretty_print(body(l)),
-        OPT.in_method := m,
-        OPT.Optimize/use_string_update := false,   // v3.3.46
-        OPT.Optimize/max_vars := 0,
-        OPT.legal_modules := set!(module.instances),
-        OPT.outfile := stdout,
-        compiler.inline? := true, 
-        PRODUCER.current := claire,
-        trace(0,"\n---- code produced by the optimizer -------------------\n"),
-        pretty_print(c_strict_code(formula(m).body,class!(m.range))),
-        trace(0,"\n---- code produced by the generator ------------------- \n"),
-        make_go_function(PRODUCER,formula(m),"test",m),
-        OPT.in_method := unknown ) ]
+  -> compile_method(PRODUCER,m)]
+
+// debug (to remove later)
+[g_test(l:lambda) : void
+  -> OPT.in_method := unknown,
+     OPT.Optimize/use_string_update := false,   // v3.3.46
+     OPT.Optimize/max_vars := 0,
+     OPT.legal_modules := set!(module.instances),
+     OPT.outfile := stdout,
+     compiler.inline? := true, 
+     PRODUCER.current := claire,
+     trace(0,"\n---- code produced by the generator ------------------- \n"),
+     make_c_function(l, "test", void),
+     OPT.in_method := unknown ]
 
 // debug (to remove later)
 claire/BadMethods:list<method> :: unknown
 
 // compile the modules and check that no necessary modules is not
 // declared
-[claire/compile(m:module) -> compile(PRODUCER,m)]   //  shortcut that already exists
-[compile(p:go_producer, m:module) : void
- ->   OPT.need_modules := {},
-      BadMethods := list<method>(),
-      compiler.inline? := true, 
-      compiler.n_loc := 0,                // number of lines of code
-      compiler.n_warnings := 0,           // number of warnings
-      compiler.n_notes := 0,              // number of notes
-      compiler.n_dynamic := 0,            // number of dyn calls
-      compiler.n_metheids := 0,          // methods that may return an error
-      let l1:bag := parents(Reader/add_modules(list(m))) in
-      (//[3] ==========  START GO COMPILING (~S) with ~S ================ // m, l1,
-       OPT.legal_modules := set!(l1),
-       p.current := m,                                              // v4: we need to know in which module we are
-       p.source := compiler.source / string!(m.name),               // produce code in the <src>/<module> directory
-       gen_files(p,m),                // files to files
-       gen_mod_file(p,m),
-       l1 := difference(set!(OPT.need_modules), OPT.legal_modules),
-       if l1 (warn(),trace(1, "~S should be declared for ~S \n", l1, m)),
-       trace(1, "~S: ~A lines of code compiled. ~A warnings, ~A notes. ~A dynamic calls, ~A% exception-ready methods\n",
-              m, compiler.n_loc, compiler.n_warnings, compiler.n_notes, compiler.n_dynamic, 
-              (if (compiler.n_methods = 0) 0 else (100 * compiler.n_metheids) / compiler.n_methods))) ]
+[claire/compile(m:module) 
+   -> compile(PRODUCER,m)]   //  shortcut that already exists
 
-// the first part is to generate the go files in the FileToFile mode
-[gen_files(p:go_producer,m:module) : void
- ->  //[0] ==== Generate ~A files for module ~S [verbose = ~A, Opt? = ~S] // PRODUCER.comment, m, verbose(),compiler.optimize?,
-     OPT.instructions := list<any>(),
-     OPT.properties := set<property>(),
-     OPT.objects := list<object>(),
-     OPT.functions := list<any>(),
-     OPT.need_to_close := set<any>(),
-     begin(m),
-     for x in m.made_of
-       (//[1] ++++ Compiling the file ~A.cl [v. 4.~A - safety:~A] // x, compiler.version, compiler.safety,
-        if (x = string!(m.name))
-           Cerror("[211]  ~S cannot be used both as a file and module name",x),
-        OPT.level := 1, // debug - to remove
-        p.current_file := x,       // CLAIRE4 : keep the file name handy 
-        gen_file(p, m.source / x, p.source / x)),
-     end(m) ]
+// adds a little book_keeping + more detailed summary to the generic method in Part 2
+[compile(p:go_producer, m:module) : void
+ ->  BadMethods := list<method>(),       // specific to cross-compiling
+     compiler.n_dynamic := 0,            // number of dyn calls
+    compiler.n_metheids := 0,           // methods that may return an error (useful for Go)
+    p.source := compiler.source / string!(m.name),               // produce code in the <src>/<module> directory
+    compile@code_producer(p,m),
+    trace(1, "~S: ~A lines of code compiled. ~A warnings, ~A notes. ~A dynamic calls, ~A% exception-ready methods\n",
+            m, compiler.n_loc, compiler.n_warnings, compiler.n_notes, compiler.n_dynamic, 
+            (if (compiler.n_methods = 0) 0 
+             else (100 * compiler.n_metheids) / compiler.n_methods)) ]
 
 
 // Creates the "meta" file for the module m.
-// This makes the initial loading function by compiling all the claire
-// expression placed in the list oself. *new_objects* holds all the new
-// objects defined in this file.
-// The name of the function is built from the file name (s argument)
-//
 [gen_mod_file(p:go_producer, m:module) : void
- -> let prt := fopen(((PRODUCER.source /+ *fs*) /+ string!(m.name) /+ "-meta") /+ PRODUCER.Generate/extension, "w"),
-        s := string!(m.name) in
-      (//[2] ==== generate file for module ~S ==== // m,
-       OPT.outfile := prt,
-       start_file(p,s,m,true),            // true tells this is the module file
-       use_as_output(OPT.outfile),
-       gen_classes(p,m),                 // v4.0 : keep the class/struct definition in the module
-       gen_objects(p,m),
-       gen_meta_load(p,m),                 // reflective description (class, methods, vars)
-       breakline(),
-       close_block(),
-       breakline(),                       // v3.0.3
-       if (compiler.safety > 4) //[1] ===== [CROSS]  ~A BAD METHODS : ~S  // length(BadMethods), BadMethods,
-       fclose(OPT.outfile)) ]
+ -> gen_mod_file@code_producer(p,m),
+    if (compiler.safety > 4) //[1] ===== [CROSS]  ~A BAD METHODS : ~S  // length(BadMethods), BadMethods
+    ]
+
+// functions are produced in continuous mode for go compiling (gen_functions does nothing)
+[gen_functions(p:go_producer, m:module) : void
+  -> nil ]    
 
 // start the produced go file
 // Puts the reference to the packages, and some useful comments
@@ -375,7 +450,6 @@ claire/BadMethods:list<method> :: unknown
 [construct_class?(c:class) : boolean 
   -> c <= object & length(c.slots) <= 5 ]
 
-
 // generate a constructor
 [gen_construct(p:go_producer,c:class) : void
   -> let first := true in 
@@ -462,7 +536,10 @@ claire/BadMethods:list<method> :: unknown
           else  
                 (// printf("/* default case with ~S:~S*/~I",i,g_func(i),breakline()),
                  statement(i, void, "Niet", false)),          // Niet is a junk EID variable
-          j := i) ]
+          j := i),
+    breakline(),
+    close_block() ]
+       
 
 // generate the module definition - only the module structure (the decoration is found in the system file)
 // cool recursive method that ensures that all non-package modules are visible
@@ -507,7 +584,6 @@ parents(self:module,l:list) : list
 
 // this methods takes a list of modules that must be loaded and returns
 // a list of modules that are necessary for the definition
-//
 parents(self:list) : list
  -> (let l := list<module>() in (for x in self l := parents(x, l), l))
 
@@ -516,38 +592,26 @@ parents(self:list) : list
   ->  load(m), begin(m) ]
 
 // *********************************************************************
-// *     Part 3: File compilation                                      *
+// *     Part 4: File compilation                                      *
 // *********************************************************************
 
-// this is the basic file cross_compiler, which translates from claire to go
-// this file compiler runs only in the good environment (the file to be compiled must be already loaded).
-// it generates methods definitions in f2 and stores the instructions into OPT.instructions
-[gen_file(p:go_producer, f1:string,f2:string) : void
- -> let p1 := fopen(f1 /+ ".cl", "r"), b := reader.Reader/toplevel,
-        p0 := reader.Reader/fromp in         // b, p0: reading context when we start
-       (OPT.outfile := fopen(f2 /+ p.Generate/extension, "w"),
-        reader.Reader/toplevel := false,
-        compiler.loading? := true,
-        n_line() := 1,
-        reader.external := f1,
-        reader.Reader/fromp := p1,                     // <yc> ensures automatic fclose !
-        start_file(p,f1,module!(),false),               // CLAIRE 4 : always add a header
-        let %instruction := Reader/readblock(p1) in
-          while not(%instruction = Reader/eof)
-            (if (%instruction % string)            // we have found a comment
+// Go compiler need the output port to be open for continuous generation
+[outfile?(p:go_producer) : boolean
+  -> true]
+
+// name of the file generated for the module
+[modfile_name(p:go_producer,m:module) : string
+  -> string!(m.name) /+ "-meta"]
+
+// compiles one instrtuction from the CLAIRE file
+// comments are printed (thanks to OPT.outfile) others are stacked in OPT.instructions  
+[gen_instruction(p:go_producer,%instruction:any,prev_comment:string) : string  
+  -> (if (%instruction % string)            // we have found a comment
                let pp := use_as_output(OPT.outfile) in
                  (printf("\n//~A", %instruction),
-                  use_as_output(pp))
-             else OPT.instructions :add c_code(%instruction, void),
-             %instruction := Reader/readblock(p1)),
-       compiler.n_loc :+ n_line(),
-       fclose(p1),
-       compiler.loading? := false,
-       // restore reading context
-       reader.Reader/toplevel := b,
-       reader.external := "toplevel",
-       reader.Reader/fromp := p0,
-       fclose(OPT.outfile)) ]
+                  use_as_output(pp)) 
+      else OPT.instructions :add c_code(%instruction, void),
+      prev_comment)]
 
  // sugar
  [fileName(s:string) : string
@@ -555,14 +619,13 @@ parents(self:list) : list
         (if (i > 0) fileName(substring(s,i + 1, n)) else s) ]   
 
 //**********************************************************************
-//*     Part 4: the lambda-to-function compiler                        *
+//*     Part 5: the lambda-to-function compiler                        *
 //**********************************************************************
-
 
 // This is simplified in CLAIRE4 since the class2file mode is no longer supported
 // we could re-introduce it from CLAIRE 3.5 if we want to support Java compiling
 [make_c_function(self:lambda,%nom:string,m:any) : void
- ->  if (m % method) make_go_function(PRODUCER,self,%nom,m)
+ ->  if (m % method) gen_function(PRODUCER,self,%nom,m)
      else make_lambda_function(PRODUCER,self,%nom) ]
 
 
@@ -572,8 +635,8 @@ parents(self:list) : list
 // create an EID lambda  
 [make_lambda_function(p:go_producer,self:lambda,%nom:string) : void
   -> let %body := c_code(self.body,any) in
-        (//[3] ===== generate an EID function from a lambda for ~A // %nom,
-         // printf("Optimization:\nlambda = ~S\n optimized = ~S\n",self,%body),
+        (//[0] ===== generate an EID function from a lambda for ~A // %nom,
+         printf("Optimization:\nlambda = ~S\n optimized = ~S\n",self,%body),
          use_as_output(OPT.outfile),
          generate_function_start(PRODUCER, self, EID, nil, %nom),        // defined in gogen
          new_block(),
@@ -604,12 +667,10 @@ parents(self:list) : list
        else printf("func ~I (~I) ~I ", goFunction(m), goVariables(p,lv), 
                   (if (s != void) interface!(s))))   ]
 
-  
-
 // This method creates a go function from a claire lambda for a method m.
 // %name is the name that was proposed for the lambda (or derived from method m)
 // we either use function_body to try a simple approach or (procedure_body | eid_body) that add all the trimmings
-[make_go_function(p:go_producer,self:lambda,%nom:string,m:method) : void
+[gen_function(p:go_producer,self:lambda,%nom:string,m:method) : void
   -> let typeOK := check_range(m,self.body),
          s := class!(m.range),
          %body := c_strict_code(self.body,s),
@@ -631,9 +692,9 @@ parents(self:list) : list
            generate_function_start(PRODUCER, self, s, m, %nom),        
            new_block(),
            if (need_debug?(m) |  OPT.profile? | not(simple_body?(%body)) | s = void) 
-              procedure_body(m,self,%body,s)
+              procedure_body(p,m,self,%body,s)
            else (if p.debug? printf("// use function body compiling ~I",breakline()),
-                 function_body(%body,s)))
+                 function_body(p,%body,s)))
        else (//[3] --- EID function generation (can throw = ~S) // throw?,
              throw? := true,  
              compiler.n_metheids :+ 1,                                     // this is the EID pathd
@@ -654,17 +715,15 @@ parents(self:list) : list
         Do simple_body?(last(self.args)),
         any g_func(self))]
 
-// generic case (g_func is true)
-
 // simpler case that we apply for Do, Ifs and functional expressions
 // however is c_type(exp) is void we need to return CNULL
-[function_body(self:any,s:class) : void
+[function_body(c:go_producer,self:any,s:class) : void
   -> let %ret := (if (s != void) "return " else "") in
       (if (s = boolean & (case self (Call_method (let p := self.arg.selector in 
                                       (p = = | p = < | p = > | p = >= | p = <=)  ))))       
                                // this is an old optimization - there is a debate if this is still needed with CLAIRE4
                                // reintroduced in v4.0.7 for mSend, but only for direct comparisons
-          printf("if ~I {return CTRUE~I} else {return CFALSE}",bool_exp(self,true),breakline())
+          printf("if ~I {return CTRUE~I} else {return CFALSE}",b_expression(c,self,true),breakline())
        else if (c_type(self) = void & s != void)
          printf("~I~Ireturn ~I~I",
                  g_expression(self,void), breakline(),
@@ -672,31 +731,31 @@ parents(self:list) : list
       else printf("~A ~I~I", %ret, g_expression(self,s),breakline())) ]
 
 // generate nice code for If function (inspired from g_statement@If)
-[function_body(self:If, s:class) : void
+[function_body(c:go_producer,self:If, s:class) : void
   -> printf("if ~I ~I",
-            bool_exp(self.test, true),
+            b_expression(c,self.test, true),
             new_block("body If")),
-    function_body(self.arg,s),
+    function_body(c,self.arg,s),
     if (self.other = nil) close_block()
     else if (self.other % If) 
-      printf("~I else ~I",finish_block(), function_body(self.other,s))  
+      printf("~I else ~I",finish_block(), function_body(c,self.other,s))  
     else if (s != void | not(designated?(self.other)))
         printf("} else {~I~I~I", breakline(),
-                     function_body(self.other,s),
+                     function_body(c,self.other,s),
                      close_block("body If"))
     else close_block("body If") ]
 
 // generate nice code for a Do
-[function_body(self:Do, s:class) : void
+[function_body(c:go_producer,self:Do, s:class) : void
   ->  let l := self.args, %length := length(l), m := 0 in
         ( for x in l
             (m :+ 1,
-             if (m = %length) function_body(x,s)
+             if (m = %length) function_body(c,x,s)
              else statement(x, void, "Unused", false)))
   ]
 
 // default complex case : create a variable "Result"
-[procedure_body(m:method, %l:lambda, %body:any,s:class) : void
+[procedure_body(c:go_producer,m:method, %l:lambda, %body:any,s:class) : void
   ->  if need_debug?(m) debug_intro(PRODUCER,%l,m),
       if PRODUCER.debug? printf("// procedure body, with s = ~S~I",s,breakline()),
       if (s != void) 
@@ -854,18 +913,11 @@ claire/ABODY:any :: unknown
                      g_expression((if (s = void) unknown else build_Variable("Result", s)), any),
                      breakline()),
      if (s != void) printf("return ~A", %res) ]
-          
-
 
 // prints a function name without the # syntactic marker for imported
 [c_princ(self:function) : void  -> import_princ(string!(self)) ]
 [import_princ(s:string) : void 
    -> for i in (1 .. length(s))
         (if (i > 1 | s[i] != '#') c_princ(s[i])) ]
-
-
-// v3.2.06 - some properties may be extended
-//(put(open,Generate/set_outfile,4),
-// put(open,Generate/inline_exp,4))
 
 // end of file

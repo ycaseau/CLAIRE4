@@ -8,6 +8,31 @@
 // this file contains bugs related with class and method definition
 // ---------------------------------------------------------------
 
+// testing two parent classes and super
+Aclass <: object(a:integer)
+
+
+Bclass <: Aclass(b:integer)
+
+fou2 :: property(open = 3)
+
+// two methods foo1 and foo2
+[fou1(x:Aclass) : integer -> 1]
+[fou1(x:Bclass) : integer -> 2]
+
+[fou2(x:Aclass) : integer -> 1]
+[fou2(x:Bclass) : integer -> 2]
+
+// testing super
+[fooTest()
+  -> let b := Bclass(),
+         u1 := fou1@Aclass(b),
+         u2 := fou2@Aclass(b) in
+      (check("super1",u1 = 1),
+       check("super2",u2 = 1))]
+
+(fooTest())
+
 // "bug" found by F. Laburthe -----------------------------------
 
 // test the definition of a class
@@ -47,7 +72,7 @@ AnOut :: myclass(uu = 1)
               // (list{m1(y) | y in a.li} as list<C1>),
       2) ]
 
-//(m2())
+// m2()
 
 // testing mutivalued slots
 multiC <: thing                         // forward

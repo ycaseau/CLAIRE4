@@ -54,7 +54,8 @@ Compile/c_gc?(self:Compile/to_C) : boolean
 // its use is linked to stupid_t(x)
 self_print(self:Compile/C_cast) : void
  -> printf("<~S:~S>", self.arg, self.set_arg)
-Compile/c_gc?(self:Compile/C_cast) : boolean -> Compile/c_gc?(self.arg)
+// Compile/c_gc?(self:Compile/C_cast) : boolean -> Compile/c_gc?(self.arg)
+
 c_type(self:C_cast) : type -> self.set_arg    // v3.0 : better safe
 c_code(self:Compile/C_cast,s:class) : any
  -> (if (s inherit? object)
@@ -194,6 +195,7 @@ Compile/sort=(c:class,c2:class) : any
 [Compile/psort(x:any) : class
  -> let c := class!(x) in
       (if (c inherit? object) c
+       else if (c inherit? port) c  // v4.12 (avoid stupid)
        else sort!(c)) ]
 
 // gives the "optimizer sort", which is one of
@@ -471,7 +473,7 @@ get_indexed(c:class) : list -> c.slots
  -> let f := self.formula,
         x := f.body,
         lbv := bound_variables(x),
-        pv0 := (if (self.selector % {iterate, Iterate}) f.vars[2].pname
+        pv0 := (if (self.selector % {iterate, Iterate, IterateFast}) f.vars[2].pname
                 else class.name) in
        (x := Language/instruction_copy(x),
         //[5] c_inline(~S) on ~S: ~S is bound : ~S // self,l,lbv,x,
@@ -528,7 +530,8 @@ get_indexed(c:class) : list -> c.slots
        any self) ]
 
 // needed
-[eval(x:any,y:class) : any -> eval(x) ]
+[eval(x:any,y:class) : any 
+   -> eval(x) ]
 
 // returns the list of bound variables in a piece of code
 [bound_variables(self:any) : list

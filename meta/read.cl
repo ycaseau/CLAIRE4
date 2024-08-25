@@ -239,7 +239,9 @@ nextexp(r:meta_reader,str:boolean) : any
               (if (y % string)
                   (if extended_comment?(r,y as string)
 				              extended_comment!(r,y as string)
-				           else if str y              // comment is returned
+                   else if conditional_comment?(r,y as string)
+                      conditional_comment!(r,y as string)
+                   else if str y              // comment is returned
                    else nexte(r))             // read a comment => ignored
                else (while (firstc(r) = #/[ | firstc(r) = #/. | firstc(r) = #/<)
 	              (if (firstc(r) = #/<)
@@ -399,20 +401,50 @@ extended_comment!(r:meta_reader,s:string) : any
           k := substring(s,"//",true),
           m := length(s),
           cx := firstc(r) in         // int code for the last char
-       (print_in_string(),
-	    while useless_c(integer!(s[m])) m :- 1,
-		if (s[m] = ',') (cx := #/, , m :- 1),
-		if (k = 0) k := m + 1,
-      if (i = 3 & s[i] = '?')
+       (// printf(" we have an extended comment [~A,~A]\n",s,cx),
+        print_in_string(),
+	      while useless_c(integer!(s[m])) m :- 1,
+	    	if (s[m] = ',') (cx := #/, , m :- 1),
+	    	if (k = 0) k := m + 1,
+        if (i = 3 & s[2] = '?')
            printf("assert(~I)", for j in ((i + 2) .. m) princ(s[j]))
-      else printf("trace(~I,\"~I\\n\"~I)",
+        else printf("trace(~I,\"~I\\n\"~I)",
                for j in (2 .. (i - 1)) princ(s[j]),
                for j in ((i + 2) .. (k - 1)) princ(s[j]),
                (if (k + 3 <= m) (princ(","),
-	        for j in ((k + 3) .. m) princ(s[j])))),
+	             for j in ((k + 3) .. m) princ(s[j])))),
 		let s2 := read(end_of_string()) in
          (n_line() :+ 1,            // the waiting '\n' is lost
           flush(reader.fromp,cx),          // push back the int
           s2)))
 
+// v4.12 checks if s is a conditional comment //(s) expression
+// note : checks the balanced parenthesis
+conditional_comment?(r:meta_reader,s:string) : boolean
+  -> (if (s[1] = EOS | s[1] != '(') false
+      else let n := length(s), ct := 1 in
+           (for i in (2 .. n) 
+              (if (s[i] = '(') ct := ct + 1
+               else if (s[i] = ')') ct := ct - 1,
+               if (ct = 0) break(true))))
 
+// v 4.12 produce the equivalent conditional comment
+// produces (if (s) expression else assert)  // assert as a marker :)
+conditional_comment!(r:meta_reader,s:string) : any
+  -> (let n := length(s), ct := 1, k := 0, 
+          cx := firstc(r) in
+       (// printf(" we have a conditional comment [~A,~A]\n",s,cx),
+        for i in (2 .. n) 
+          (if (s[i] = '(') ct := ct + 1
+           else if (s[i] = ')') ct := ct - 1,
+           if (ct = 0) (k := i, break(true))),
+        print_in_string(),
+        while useless_c(integer!(s[n])) n :- 1,
+        if (s[n] = ',') (cx := #/, , n :- 1),
+        printf("(if (~I) ~I else assert)",
+               for j in (2 .. (k - 1)) princ(s[j]),
+               for j in ((k + 1) .. n) princ(s[j])),
+        let s2 := read(end_of_string()) in
+           (n_line() :+ 1,            // the waiting '\n' is lost
+            flush(reader.fromp,cx),   // push back the int
+            s2)))

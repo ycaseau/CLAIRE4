@@ -1130,7 +1130,9 @@ func BootMethod() {
 	C__7_plus = MakeOperation("/+", 0, C_claire, 10)
 	C__dash = MakeOperation("-", 0, C_claire, 20)
 	C__star = MakeOperation("*", 0, C_claire, 10)
-	C__Z = MakeOperation("%", 0, C_claire, 50)
+	C__Z = MakeOperation("€", 0, C_claire, 50)
+	// v4.12 : create an alias
+	C_claire.register(makeSymbol("%"), C__Z.Id())        // link symbol to object
 	C__exp = MakeOperation("^", 0, C_claire, 5)
 	C_min = MakeOperation("min", 0, C_claire, 20)
 	C_max = MakeOperation("max", 0, C_claire, 20)
@@ -1233,7 +1235,7 @@ func BootMethod() {
 	C_self_print.AddMethod(Signature(C_string.Id(), C_void.Id()), 0, MakeFunction1(E_self_print_string, "self_print_string"))
 	C__7_plus.AddMethod(Signature(C_string.Id(), C_string.Id(), C_string.Id()), 0, MakeFunction2(E_append_string, "append_string"))
 	C_integer_I.AddMethod(Signature(C_string.Id(), C_integer.Id()), 0, MakeFunction1(E_integer_I_string, "integer_I_string"))
-	C_slice.AddMethod(Signature(C_string.Id(), C_integer.Id(), C_integer.Id(), C_string.Id()), 0, MakeFunction3(E_slice_string, "slice_string"))
+	C_slice.AddMethod(Signature(C_string.Id(), C_integer.Id(), C_integer.Id(), C_string.Id()), 0, MakeFunction3(E_slice_string, "substring_string"))
 	C_substring.AddMethod(Signature(C_string.Id(), C_integer.Id(), C_integer.Id(), C_string.Id()), 0, MakeFunction3(E_substring_string, "substring_string"))
 	C_substring.AddMethod(Signature(C_string.Id(), C_string.Id(), C_boolean.Id(), C_integer.Id()), 0, MakeFunction3(E_included_string, "included_string"))
 	C_get.AddMethod(Signature(C_string.Id(), C_char.Id(), C_integer.Id()), 0, MakeFunction2(E_get_string, "get_string"))
@@ -1248,7 +1250,7 @@ func BootMethod() {
 	C_c_princ.AddMethod(Signature(C_string.Id(), C_void.Id()), 0, MakeFunction1(E_c_princ_string, "c_princ_string"))
 	C_symbol_I.AddMethod(Signature(C_string.Id(), C_module.Id(), C_symbol.Id()), 0, MakeFunction2(E_symbol_I_string, "symbol_I_string"))
 	C_put.AddMethod(Signature(C_symbol.Id(), C_any.Id(), C_any.Id()), 0, MakeFunction2(E_put_symbol, "put_symbol"))
-	C_get.AddMethod(Signature(C_symbol.Id(), C_any.Id()), 0, MakeFunction1(E_get_symbol, "get_symbol"))
+	//C_get.AddMethod(Signature(C_symbol.Id(), C_any.Id()), 0, MakeFunction1(E_get_symbol, "get_symbol"))
 	C__7_plus.AddMethod(Signature(C_symbol.Id(), C_any.Id(), C_symbol.Id()), 0, MakeFunction2(E_append_symbol, "append_symbol"))
 	C_princ.AddMethod(Signature(C_symbol.Id(), C_void.Id()), 0, MakeFunction1(E_princ_symbol, "princ_symbol"))
 	// in CLAIRE4 : these 4 methods replace 4 slots access (from CLAIRE3.5) 

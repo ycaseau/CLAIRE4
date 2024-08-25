@@ -1,5 +1,5 @@
 /***** CLAIRE Compilation of module Core.cl 
-         [version 4.1 / safety 5] Sunday 10-22-2023 07:00:35 *****/
+         [version 4.1.2 / safety 5] Sunday 08-11-2024 08:17:29 *****/
 
 package Core
 import (_ "fmt"
@@ -254,6 +254,19 @@ var C__backslash *ClaireOperation /*obj*/
 var C_glb *ClaireOperation /*obj*/
 var C_Core__inf_equalt *ClaireOperation /*obj*/
 var C_Core__Zt *ClaireOperation /*obj*/
+var C_get_value *ClaireProperty // claire/"get_value"
+var C_Core_enumerate *ClaireProperty // Core/"enumerate"
+var C_Uall *ClaireProperty // claire/"Uall"
+var C_unique_ask *ClaireProperty // claire/"unique?"
+var C_the *ClaireProperty // claire/"the"
+var C_Core_abstract_type *ClaireProperty // Core/"abstract_type"
+var C_Core_insert_definition *ClaireProperty // Core/"insert_definition"
+var C_mClaire_cpretty *ClaireProperty // mClaire/"cpretty"
+var C_mClaire_cprevious *ClaireProperty // mClaire/"cprevious"
+var C_mClaire_width *ClaireProperty // mClaire/"width"
+var C_mClaire_pprint *ClaireProperty // mClaire/"pprint"
+var C_mClaire_pbreak *ClaireProperty // mClaire/"pbreak"
+var C_mClaire_set_base *ClaireProperty // mClaire/"set_base"
 var C_mClaire_set_index *ClaireProperty // mClaire/"set_index"
 var C_mClaire_update *ClaireProperty // mClaire/"update"
 var C_make_set *ClaireProperty // claire/"make_set"
@@ -338,29 +351,29 @@ var C_Core_build_powerset *ClaireProperty // Core/"build_powerset"
 var C_difference *ClaireProperty // claire/"difference"
 var C_Core_of_extract *ClaireProperty // Core/"of_extract"
 var C_member *ClaireProperty // claire/"member"
-var C_get_value *ClaireProperty // claire/"get_value"
-var C_Core_enumerate *ClaireProperty // Core/"enumerate"
-var C_Uall *ClaireProperty // claire/"Uall"
-var C_unique_ask *ClaireProperty // claire/"unique?"
-var C_the *ClaireProperty // claire/"the"
-var C_Core_abstract_type *ClaireProperty // Core/"abstract_type"
-var C_Core_insert_definition *ClaireProperty // Core/"insert_definition"
-var C_mClaire_cpretty *ClaireProperty // mClaire/"cpretty"
-var C_mClaire_cprevious *ClaireProperty // mClaire/"cprevious"
-var C_mClaire_width *ClaireProperty // mClaire/"width"
-var C_mClaire_pprint *ClaireProperty // mClaire/"pprint"
-var C_mClaire_pbreak *ClaireProperty // mClaire/"pbreak"
-var C_mClaire_set_base *ClaireProperty // mClaire/"set_base"
 var It *ClaireModule
 
 // definition of the meta-model for module Core 
 func MetaLoad() { 
   
   It = MakeModule("Core",C_mClaire)
-  It.Comment = MakeString("Compiled on Sunday 10-22-2023 07:00:35(v4.1), lines:2426, warnings:7,safety:5")
+  It.Comment = MakeString("Compiled on Sunday 08-11-2024 08:17:29(v4.1.2), lines:2428, warnings:7,safety:5")
   ClEnv.Module_I = It
   
   // definition of the properties
+  C_get_value = MakeProperty("get_value",1,C_claire)
+  C_Core_enumerate = MakeProperty("enumerate",1,It)
+  C_Uall = MakeProperty("Uall",1,C_claire)
+  C_unique_ask = MakeProperty("unique?",1,C_claire)
+  C_the = MakeProperty("the",1,C_claire)
+  C_Core_abstract_type = MakeProperty("abstract_type",1,It)
+  C_Core_insert_definition = MakeProperty("insert_definition",1,It)
+  C_mClaire_cpretty = MakeProperty("cpretty",1,C_mClaire)
+  C_mClaire_cprevious = MakeProperty("cprevious",1,C_mClaire)
+  C_mClaire_width = MakeProperty("width",1,C_mClaire)
+  C_mClaire_pprint = MakeProperty("pprint",1,C_mClaire)
+  C_mClaire_pbreak = MakeProperty("pbreak",1,C_mClaire)
+  C_mClaire_set_base = MakeProperty("set_base",1,C_mClaire)
   C_mClaire_set_index = MakeProperty("set_index",1,C_mClaire)
   C_mClaire_update = MakeProperty("update",1,C_mClaire)
   C_make_set = MakeProperty("make_set",1,C_claire)
@@ -445,19 +458,6 @@ func MetaLoad() {
   C_difference = MakeProperty("difference",1,C_claire)
   C_Core_of_extract = MakeProperty("of_extract",1,It)
   C_member = MakeProperty("member",1,C_claire)
-  C_get_value = MakeProperty("get_value",1,C_claire)
-  C_Core_enumerate = MakeProperty("enumerate",1,It)
-  C_Uall = MakeProperty("Uall",1,C_claire)
-  C_unique_ask = MakeProperty("unique?",1,C_claire)
-  C_the = MakeProperty("the",1,C_claire)
-  C_Core_abstract_type = MakeProperty("abstract_type",1,It)
-  C_Core_insert_definition = MakeProperty("insert_definition",1,It)
-  C_mClaire_cpretty = MakeProperty("cpretty",1,C_mClaire)
-  C_mClaire_cprevious = MakeProperty("cprevious",1,C_mClaire)
-  C_mClaire_width = MakeProperty("width",1,C_mClaire)
-  C_mClaire_pprint = MakeProperty("pprint",1,C_mClaire)
-  C_mClaire_pbreak = MakeProperty("pbreak",1,C_mClaire)
-  C_mClaire_set_base = MakeProperty("set_base",1,C_mClaire)
   
   // instructions from module sources
   { 
@@ -707,47 +707,47 @@ func MetaLoad() {
     C_integer.Id(),
     C_any.Id()),1,MakeFunction3(E_SUPER,"SUPER")),MakeString("method.cl:470"))
   
-  _ = F_attach_method(C__at.AddMethod(Signature(C_property.Id(),C_class.Id(),C_object.Id()),0,MakeFunction2(E__at_property1,"_at_property1")),MakeString("method.cl:479"))
+  _ = F_attach_method(C__at.AddMethod(Signature(C_property.Id(),C_class.Id(),C_object.Id()),0,MakeFunction2(E__at_property1,"_at_property1")),MakeString("method.cl:480"))
   
-  _ = F_attach_method(C__at.AddMethod(Signature(C_property.Id(),C_list.Id(),C_object.Id()),0,MakeFunction2(E__at_property2,"_at_property2")),MakeString("method.cl:485"))
+  _ = F_attach_method(C__at.AddMethod(Signature(C_property.Id(),C_list.Id(),C_object.Id()),0,MakeFunction2(E__at_property2,"_at_property2")),MakeString("method.cl:486"))
   
   _ = F_attach_method(C_Core_matching_ask.AddMethod(Signature(C_list.Id(),
     C_integer.Id(),
     C_integer.Id(),
-    C_boolean.Id()),0,MakeFunction3(E_matching_ask_list,"matching_ask_list")),MakeString("method.cl:507"))
+    C_boolean.Id()),0,MakeFunction3(E_matching_ask_list,"matching_ask_list")),MakeString("method.cl:508"))
   
   _ = F_attach_method(C_Core_vmatch_ask.AddMethod(Signature(C_any.Id(),
     C_any.Id(),
     C_integer.Id(),
-    C_boolean.Id()),0,MakeFunction3(E_vmatch_ask_any,"vmatch_ask_any")),MakeString("method.cl:530"))
+    C_boolean.Id()),0,MakeFunction3(E_vmatch_ask_any,"vmatch_ask_any")),MakeString("method.cl:531"))
   
-  _ = F_attach_method(C_Core_tmatch_ask.AddMethod(Signature(C_list.Id(),C_list.Id(),C_boolean.Id()),0,MakeFunction2(E_tmatch_ask_list,"tmatch_ask_list")),MakeString("method.cl:539"))
+  _ = F_attach_method(C_Core_tmatch_ask.AddMethod(Signature(C_list.Id(),C_list.Id(),C_boolean.Id()),0,MakeFunction2(E_tmatch_ask_list,"tmatch_ask_list")),MakeString("method.cl:540"))
   
   _ = F_attach_method(C_Core_tmatch_ask.AddMethod(Signature(C_any.Id(),
     C_any.Id(),
     C_list.Id(),
-    C_boolean.Id()),0,MakeFunction3(E_tmatch_ask_any,"tmatch_ask_any")),MakeString("method.cl:553"))
+    C_boolean.Id()),0,MakeFunction3(E_tmatch_ask_any,"tmatch_ask_any")),MakeString("method.cl:554"))
   
   _ = F_attach_method(C_Core_find_which.AddMethod(Signature(C_property.Id(),
     C_integer.Id(),
     C_class.Id(),
-    C_object.Id()),0,MakeFunction3(E_find_which_property,"find_which_property")),MakeString("method.cl:559"))
+    C_object.Id()),0,MakeFunction3(E_find_which_property,"find_which_property")),MakeString("method.cl:560"))
   
   _ = F_attach_method(C_Core_find_which.AddMethod(Signature(C_list.Id(),
     C_class.Id(),
     C_integer.Id(),
     C_integer.Id(),
-    C_object.Id()),0,MakeFunction4(E_find_which_list,"find_which_list")),MakeString("method.cl:562"))
+    C_object.Id()),0,MakeFunction4(E_find_which_list,"find_which_list")),MakeString("method.cl:564"))
   
   _ = F_attach_method(C_Core_find_which.AddMethod(Signature(C_class.Id(),
     C_list.Id(),
     C_integer.Id(),
     C_integer.Id(),
-    C_object.Id()),0,MakeFunction4(E_find_which_class,"find_which_class")),MakeString("method.cl:567"))
+    C_object.Id()),0,MakeFunction4(E_find_which_class,"find_which_class")),MakeString("method.cl:569"))
   
-  ClEnv.Version = 1
+  ClEnv.Version = 1.2
   PRINC("-- CLAIRE run-time library v 4.")
-  F_princ_float(1)
+  F_princ_float(1.2)
   PRINC(" [os: ")
   PRINC("macos")
   PRINC(", compiler:")
@@ -1048,7 +1048,7 @@ func MetaLoad() {
       
       _CL_obj = C_claire_date
       _CL_obj.Range = ToType(C_string.Id())
-      _CL_obj.Value = MakeString("Sunday 10-22-2023").Id()
+      _CL_obj.Value = MakeString("Sunday 08-11-2024").Id()
       expr = F_close_global_variable(_CL_obj)
       } 
     ErrorCheck(expr)} 

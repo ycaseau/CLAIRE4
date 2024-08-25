@@ -45,6 +45,7 @@
     about(),
     printf("\noptions -s <int> : set memory allocation size  \n"),
     printf("        -f <filename>  : load <filename>             \n"),
+    printf("        -e \"<call>\" : evaluate expression such as <p(listargs)>            \n"),
     printf("        -n : do not load the init file               \n"),
     printf("        -m <module> : load <module>                  \n"),
     printf("        -mx <module> : load <module> and launch main()  \n"),
@@ -84,6 +85,11 @@
      {"-s"}  (if (length(l) >= 2)  l :<< 2 else error("option: -s <s1> <s2>")),
      {"-f"}  (if (length(l) >= 2)  (load(l[2]), l :<< 2)
               else error("option: -f <filename>")),
+     {"-e"}  (if (length(l) >= 2)  
+                   let c := read(l[2]) in 
+                     (l :<< 2, 
+                      case c (Call eval(c), any error("-e arg ~S is not a call",c)))
+                else error("option: -e <call>")),
      {"-m"}  (if (length(l) >= 2)
                (if %init? (load("init"), %init? := false),
                 let m := string2module(l[2]) in
@@ -146,7 +152,7 @@
          compile_dir(m),
          compile(m),
          if (%exe) 
-            (//[0] ==== create the systel file for module ~S // %out,
+            (//[0] ==== create the system file for module ~S // %out,
              claire/system_file(m,%out,%main),   // v3.2.12: level = 0 => do nothing ....
              compile_exe(%out)),
          exit(0))

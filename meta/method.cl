@@ -418,8 +418,8 @@ uniform(p:property) : boolean
                 (if tmatch?(l2, x.domain)
                     (l[i] := x, l1 := l, break(true))
                  else (l1 := unsafe(nth+(l, i, x)) as list, break(true)))
-             else if (not(tmatch?(l2, x.domain)) & x.domain join l2)
-                unsafe(trace(2, ("~S and ~S are conflicting"), l[1], x))), // keep the trace
+             else if (not(tmatch?(l2, x.domain)) & x.domain join l2 & x.selector.open <= 1)
+                unsafe(trace(2, ("Note: ~S and ~S are conflicting\n"), l[1], x))), // keep the trace
         if (length(l1) != 0) l1
         else add!(l, x)) ]
 
@@ -461,13 +461,14 @@ uniform(p:property) : boolean
 // n is the number of args that have been pushed in the stack
 [stack_apply(p:property,n:integer) : any
   -> let i := index() - n in
-       (eval_message(p, find_which(p,i,owner(get_stack(i))),i,false)) ]
+       eval_message(p, find_which(p,i,owner(get_stack(i))),i,false) ]
 
 
 // version where the class of first argument is forced (super)       
 [super_apply(p:property,c:class,n:integer) : any
-  -> let i := index() - n in
-       (eval_message(p, find_which(p,i,c),i,false)) ]
+  -> let top := index(), i := top - n in
+       eval_message(p, find_which(c, p.Core/definition,i,top),i,false) ]
+
 
 // find the correct restrictions to be applied on a given set
 // This is also optimized because it is very useful (it returns false if none is found)
@@ -552,16 +553,17 @@ tmatch?(l:list,l2:list) : boolean
                      any less?(t,t2))),      // extensibility with less?
        any less?(t,t2))]
 
-// find the restriction
+// find the restriction (n is the position of the arglist start)
 [find_which(p:property,n:integer,c:class) : object
  -> (if p.dictionary hashget(c, p) // v3.2.58  was ... (length(p.dictionary) != 0) hashget(c, p)
      else for r:restriction in p.definition
             (if matching?(r.domain, n, index!()) break(r))) as object]
 
+// used by inspect.cl
 [find_which(l:list,c:class,n:integer,m:integer) : object
- -> (for r:restriction in l (if matching?(r.domain, n, m) break(r))) as object]
+  -> (for r:restriction in l (if matching?(r.domain, n, m) break(r))) as object]
 
-// special version for super
+// special version for super, where we give (n,m) -> position of arglist in the stack
 [find_which(c:class,l:list,n:integer,m:integer) : object
  -> (for r:restriction in l
        (if (c <=t r.domain[1] & matching?(r.domain, n, m)) break(r))) as object]
