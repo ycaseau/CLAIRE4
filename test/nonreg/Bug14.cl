@@ -27,8 +27,8 @@ P0 :: PISTE(missile1 = M0)
 
 // bug du 16/2/99
 
-// la variable lastl n'est pas prot�g�e contre le gc.
-// La cellule est recup�r�e par l'appel gc()
+// la variable lastl n'est pas protégée contre le gc.
+// La cellule est recupérée par l'appel gc()
 // et on a n'importe quoi quand on cherche a imprimer en fin de procedure.
 [bug3(n:integer)
  -> let lastl:list<tuple(integer,integer)> := list<tuple(integer,integer)>(),

@@ -83,8 +83,8 @@ Tab[x:INT,y:INT] : integer := 0
 ; gestion de la table de hash pour les array[integer].
 ; si tu traces le system.graph de ancetre[], on decouvre que entre le
 ; noeud 34  et 17, il y a un probleme dans le graphe de relation...
-; ainsi ancetre n'est pu du tout aliment� comme il faut et il est
-; impossible de d�piler la solution : depile-solution()
+; ainsi ancetre n'est pu du tout alimenté comme il faut et il est
+; impossible de dépiler la solution : depile-solution()
 
 ; Le probleme consiste a savoir si il est possible
 ; de reduire tous les nombres a la valeur 1 en leur
@@ -114,7 +114,7 @@ rule3()	-> (if (( val mod 2 ) = 0) val := val / 2
 ; valeur[i] = 2 already explored
 valeur[n:integer] : integer := 0
 
-; indice du noeud le plus faible non explor�
+; indice du noeud le plus faible non exploré
 lower:integer := 1    
 
 // DEBUG si pas hash table ca marche.
