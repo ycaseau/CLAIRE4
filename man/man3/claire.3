@@ -1,0 +1,1405 @@
+.TH CLAIRE 3
+.SH NAME
+claire \- a high-level functional and object-oriented language with rule
+processing capabilities
+.SH DESCRIPTION
+Methods in CLAIRE.
+.PP
+.B ^ (Kernel)
+
+x:integer ^ y:integer \[->] integer
+.br
+x:float ^ y:float \[->] float
+.br
+x:list ^ y:integer \[->] list
+.br
+x:set ^ y:set \[->] set
+
+(x ^ y) returns x ^ y when x and y are numbers. If x is an integer, then y must
+be a positive integer, otherwise an error is raised.
+
+(l ^ y) skips the y first members of the list l. If the integer y is bigger
+than the length of the list l, the result is the empty list, otherwise it is
+the sublist starting at the y+1 position in l (up to the end).
+
+(s1 ^ s2) returns the \fIintersection\fR of the two sets s1 and s2 that is the
+set of entities that belong to both s1 and s2. Other internal restrictions of
+the property ^ exist, where ^ denotes the intersection (it is used for the type
+lattice)
+.PP
+.B ^2 (Core)
+
+^2(x:integer) \[->] integer
+
+^2(x) returns 2 to the power of x
+.PP
+.B % (Kernel)
+
+x:any % y:class \[->] boolean
+.br
+x:any % y:collection \[->] boolean
+.br
+
+(x % y) returns (x \[mo] y) for any entity x and any abstract set y. An
+abstract set is an object that represents a set, which is a type or a list.
+Note that membership to a static type is actually "diet".
+.PP
+.B * (Kernel)
+
+x:integer * y:integer \[->] integer
+.br
+x:float * y:float \[->] float
+
+(x * y) returns x \[mu] y when x and y are numbers. If x is an integer, then y
+must also be an integer, otherwise an error is raised (explicit conversion is
+supported with float!).
+
+The operation * defines a commutative monoid, with associated divisibility
+operator divide? and associated division /.
+.PP
+.B / (Kernel)
+
+x:integer / y:integer \[->] integer
+.br
+x:float / y:float \[->] float
+
+(x / y) returns x \[di] y when x and y are numbers. If x is an integer, then y
+must also be an integer, otherwise an error is raised (explicit conversion is
+supported with float!).
+.PP
+.B + (Kernel)
+
+x:integer + y:integer \[->] integer
+.br
+x:float + y:float \[->] float
+
+(x + y) returns x + y when x and y are numbers. If x is an integer, then y must
+be an integer, otherwise an error is raised (explicit conversion is supported
+with float!).
+
+The operation + defines a group structure, with associated inverse -.
+.PP
+.B - (Kernel)
+
+x:integer - y:integer \[->] integer
+.br
+x:float - y:float \[->] float
+.br
+-(x:integer) \[->] integer
+.br
+-(x:float) \[->] float
+
+(x - y) returns x \[mi] y when x and y are numbers. -(x) returns the opposite of x.
+.PP
+.B /+ (Kernel)
+
+x:list /+ y:list \[->] list
+.br
+x:string /+ y:string \[->] string
+.br
+x:symbol /+ y:(string U symbol) \[->] symbol
+
+(x /+ y) returns the \fIconcatenation\fR of x and y ( represents the \fIappend\fR
+operation). Concatenation is an associative operation that applies to strings,
+lists and symbols. It is not represented with + because it is not commutative.
+When two symbols are concatenated, the resulting symbol belongs to the
+namespace (module) of the first symbol, thus the second symbol is simply used as
+a string. By extension, a symbol can be concatenated directly with a string.
+.PP
+.B .., -- (Kernel)
+
+\&.. x:integer .. y:integer \[->]  Type
+.br
+-- x:integer .. y:integer \[->] Interval
+
+(x .. y) returns the interval {z | x \[<=] z \[<=] y}. Intervals are only
+supported for integers, in CLAIRE v3.0. Notice that (3 .. 1) returns the empty
+set, which is a type. The new method (x -- y) is an explicit interval
+constructor (it produces an error if the first argument is larger than the
+second).The result is an object from the class \fIInterval\fR, which is a type.
+.PP
+.B =, != (Kernel)
+
+x:any = y:any \[->] boolean
+.br
+x:any != y:any \[->] boolean
+
+(x = y) returns true if x is equal to y and nil otherwise. Equality is defined
+in Section 2: equality is defined as identity for all entities except strings,
+lists and sets. For lists, sets and strings, equality is defined recursively as
+follows: x and y are equal if they are of same size \fIn\fR and if x[i] is
+equal to y[i] for all \fIi\fR in (1 .. \fIn\fR).
+
+(x != y) is simply the negation of (x = y).
+.PP
+.B =type? (Core)
+
+=type?(x:any, y:any) \[->] boolean
+
+returns true if x and y denote the same type. For example =type?(boolean,
+{true, false}) returns true because final(boolean) was declared after the two
+instances true and false were created, so the system knows that no other
+instances of boolean may ever be created in the future. This equality is
+stronger than set equality in the sense that the system answers true if it
+knows that the set equality will hold ever after.
+.PP
+.B <=, >=, <, > (Kernel)
+
+x:integer <= y:integer \[->] boolean
+.br
+x:float <= y:float \[->] boolean
+.br
+x:char <= y:char \[->] boolean
+.br
+x:string <= y:string \[->] boolean
+.br
+x:type <= y:type \[->] boolean
+.br
+x:X < y:X \[->] boolean for X = integer, float, char and string
+.br
+x:X > y:X \[->] boolean for X = integer, float, char and string
+.br
+x:X >= y:X \[->] boolean for X = integer, float, char and string
+
+The basic order property is <=. It is defined on integers and floats with the
+obvious meaning. On characters, it is the ASCII order, and on strings it is the
+lexicographic order induced by the ASCII order on characters. The order on
+types is the inclusion: ((x <= y) if all members of type x are necessarily
+members of type y).
+
+(x < y), (x > y) and (x >= y) are only defined for numbers, char and strings
+with the usual meaning.
+.PP
+.B <<, >> (Kernel)
+
+l:list << n:integer \[->] list
+.br
+x:integer << n:integer \[->] integer
+.br
+x:integer >> n:integer \[->] integer
+.br
+l:string << n:integer \[->] string
+
+(l << n) left-shifts the list l by n units, which means that the n first
+members of the list are removed. This is a method with a side-effect since the
+returned value is the original list, which has been modified. (x <<n) and (x >>
+n) are the result of shifting the integer x seen as a bitvector respectively to
+the left and to the right by n positions.
+
+(s << n) removes the n first characters of a string s. This is an efficient but
+destructive operation (no allocation, but the initial string is lost).
+.PP
+.B @ (Core)
+
+p:property @ t:type \[->] entity
+.br
+p:property @ l:list[type] \[->] entity
+.br
+t:type @ p:parameter \[->] type
+
+(p @ t) returns the restriction of p that applies to arguments of type t. When
+no restrictions applies, the value nil is returned. If more than one
+restriction applies, the value unknown is returned. Notice that the form p@t
+(without blank spaces) is used to print the restriction and also in the control
+structure <property>@<class>(...).
+
+(p @ list(t1,..tn)) is similar and returns the restriction of p that applies to
+arguments in t1 X... X tn.
+
+(t @ p) returns the type that is inferred for x.p when x is an object of type t
+and p a parameter (read-only property).
+.PP
+.B abs (Core)
+
+abs(x:integer) \[->] integer
+.br
+abs (x:float) \[->] float
+
+abs(x) returns the absolute value (-(x) is x is negative, x otherwise).
+.PP
+.B abstract (Core)
+
+abstract(c:class)  \[->] void
+.br
+abstract(p:property) \[->] void
+
+abstract(c) forbids the class c to have any instance. abstract(p) defines p as
+an extensible property. This is used by the compiler to preserve the ability to
+add new restrictions to p in the future that would change its semantics on
+existing classes. By default, a property is extensible until it is compiled. A
+corollary is that function calls that use extensible properties are compiled
+using late binding.
+.PP
+.B add (Kernel)
+
+add(s:set,x:any) \[->] set
+.br
+add(l:list,x:any) \[->] list
+.br
+add(p:relation,x:object,y:any) \[->] any
+
+\fIadd(s,x)\fR adds x to the set s. The returned value is the set s ∪ {x}. This
+method may modify the set s but not necessarily. When x is a list, add(l,x)
+inserts x at the end of l. The returned value is also the list obtained by
+appending (x) to l, and l may be modified as a result but not necessarily. The
+pseudo-destructive behavior of \fIadd\fR is similar to that of \fIadd\fR*,
+which is described below.
+
+\fIadd(p,x,y)\fR is equivalent to \fIp(x) :add y\fR (This form is interesting
+when one wants to write such an expression for a variable p)
+.PP
+.B add* (Kernel)
+
+add*(l1:list, l2:list) \[->] list
+
+\fIadd*(l1,l2)\fR returns the concatenated list l1 . l2, but it is destructive:
+it uses l1 as the data structure on which to perform the concatenation. Hence,
+the original l1 is no longer available after the method add* has been called.
+.PP
+.B and (Kernel)
+
+and(x :integer,y :integer) \[->] integer
+
+\fIand(x,y)\fR returns the bitwise intersection of two integers (seen as
+bitvectors).
+.PP
+.B apply (Core)
+
+apply(p:property, l:list) \[->] any
+.br
+apply(f:external_function, ls:list[class], lx:list) \[->] any
+.br
+apply(la:lambda, lx:list) \[->] any
+.br
+apply(m:method, lx:list) \[->] any
+
+\fIapply(p,l)\fR is equivalent to a function call where the selector is p and
+the argument list is l. For instance, apply(+,list(1,2)) = (1 + 2) =
+call(+,1,2).
+
+\fIapply(f,ls,l)\fR applies the function f to the argument list l, where ls is
+the list of sort of the arguments and the result (i.e. length(ls) = length(l) +
+1). For instance, if f is the external function that defines + @ integer,
+apply(f,list(integer,integer,integer),list(1,2)) = 1 + 2.
+
+\fIapply(la,lx)\fR applies the lambda expression to the argument list.
+\fIapply(m,lx)\fR applies the method to the argument list.
+.PP
+.B array! (Kernel)
+
+array!(x:list,t:type) \[->] type[t[]]
+
+creates a copy of the list x that is represented as an array. The member type
+must be given as a parameter t and an error will occur if a member of the list
+does not belong to t.
+.PP
+.B begin (Kernel)
+
+begin(m:module) \[->] void
+
+sets the current namespace to m (a module).
+.PP
+.B but (Core)
+
+but(s:any,x:any) \[->] any
+
+Returns the set of members of s that are different from x.
+.PP
+.B car, cdr (Kernel)
+
+car(l:list) \[->] type[member(l)]
+.br
+cdr(l:list) \[->] type[l]
+
+These two classical LISP methods return the head of the list, e.g. l[1] (for
+car) and its tail, e.g. the list l starting at its second element (for cdr).
+.PP
+.B call (Kernel)
+
+call(p:property, l:listargs) \[->] any
+.br
+call(x:lambda, l:listargs) \[->] any
+
+\fIcall\fR(X,x1,x2 ,...,xn) is equivalent to apply(X,list(x1,x2 ,...,xn)).
+.PP
+.B cast! (Kernel)
+
+cast!(s:bag,t:type) \[->] bag
+
+\fIcast\fR(s,t) sets the member type of the bag s to t. This is a system
+method, that should not be used lightly since it does not perform any check and
+may yield nasty errors. The proper way to cast a bag is to use "as": (s as t).
+.PP
+.B char! (Kernel)
+
+char!(n:integer) \[->] char
+
+\fIchar\fR!(n) returns the character which ASCII code is n.
+.PP
+.B class! (Core)
+
+class!(x:any) \[->] class
+
+\fIclass\fR!(x) returns the intersection of all classes y such that x <= y
+(Such an intersection always exists since classes are organized in a lattice).
+Hence, if c is a class class!(c)=c.
+.PP
+.B close (Core)
+
+close(m:module) \[->] module
+.br
+close(c:class) \[->] class
+.br
+close(e:exception) \[->] any
+.br
+close(v:global_variable) \[->] global_variable
+
+The method close is called each time an object is created. It is executed and
+returns the created object. It can sometimes be very helpful to define new
+restrictions, they will be automatically called when an instance is created.
+Exceptions are a special case: raising an exception is done internally by
+creating an instance of exception. The method close is responsible for looking
+for the innermost handler, etc.
+.PP
+.B cons (Kernel)
+
+cons(x:any, l:list) \[->] list
+
+This traditional method appends x at the beginning of l and returns the
+constructed list.
+.PP
+.B contradiction!() (Kernel)
+
+contradiction!() \[->] void
+
+This method creates a contradiction, which is an instance of the class
+\fIcontradiction\fR. It is equivalent to \fIcontradiction\fR() but is more
+efficient and should be preferred.
+.PP
+.B copy (Kernel)
+
+copy(x:object) \[->] object
+.br
+copy(s:bag) \[->] bag
+.br
+copy(a:array) \[->] array
+.br
+copy(s:string) \[->] string
+
+\fIcopy\fR(x) returns a duplicate of the object x. It is not recursive : the
+slots of the copied object are shared with that of the original one. Similarly,
+the copy of a bag (a set or a list) returns a fresh set or list with the same
+elements and the copy of a string is ... a copy of the string.
+.PP
+.B cos (Kernel)
+
+cos(x:float) \[->] float
+
+\fIcos(x)\fR returns the cosine of x (x is expressed in radians).
+.PP
+.B date! (Kernel)
+
+date!(i:integer) \[->] string
+
+\fIdate!\fR(i) returns the date, using the integer parameter i to indicate
+whether the full date is needed or only the day or the time. For instance
+
+.RS 4
+date!(0) = "Thu Mar         9 08:04:22 2000"
+.br
+date!(1) = "Thu Mar         9 2000"
+.br
+date!(2) = "08:04:22"
+.RE
+.PP
+.B delete (Kernel)
+
+delete(p:relation, x:object, y:any) \[->] any
+.br
+delete(s:bag, x:any) \[->] bag
+
+\fIdelete\fR(s,x) returns s if x is not in s and the list (resp. set) s without
+the first (resp. only) occurrence of x otherwise. \fIdelete(p,x,y)\fR is
+equivalent to \fIp(x) :delete y\fR. This is a destructive method in the sense
+that it modifies its input argument. The proper way to use delete, therefore,
+is either destructive (\fIl :delete x\fR) or non-destructive
+(\fIdelete(copy(l),x)\fR).
+.PP
+.B difference (Kernel)
+
+difference(s:set, t:set) \[->] set
+
+\fIdifference\fR(s,t) returns the difference set s - t, that is the set of all
+elements of s which are not elements of t.
+.PP
+.B end_of_string (Kernel)
+
+end_of_string() \[->] string
+
+\fIend_of_string\fR() returns the string containing everything that has been
+printed since the last call to print_in_string().
+.PP
+.B erase (Kernel)
+
+erase(a:table) \[->] any
+.br
+erase(r:property,x:any) \[->] any
+
+\fIerase\fR(a) removes all value pairs contained in the table. This means that,
+on one hand, the value a[x] becomes unknown for each object x, and also that
+any references to an object from the table’s domain or an associated value is
+lost, which may be useful to allow for complete garbage collection.
+
+\fIerase\fR(p,x) removes the value associated to x with the property p. The
+default value, or the unknown value, is placed in the slot x.p, and the inverse
+if updated (if any).
+.PP
+.B exception! (Kernel)
+
+exception!() \[->] exception
+
+\fIexception!\fR() returns the last exception that was raised.
+.PP
+.B exit (Kernel)
+
+exit(n:integer) \[->] void
+
+\fIexit\fR(n) stops CLAIRE running and returns to the hosting system the value
+n. What can happen next is platform-dependent. For instance, exit(0) exits
+CLAIRE with a clean stop, while exit(-1) returns an error so the go debugging
+platform gives may be used (and give some context about the call stack).
+.PP
+.B factor? (Kernel)
+
+factor?(x:integer, y:integer) \[->] boolean
+
+\fIfactor\fR?(x,y) returns true if x is a multiple of y.
+.PP
+.B fcall (Core)
+
+fcall(f:external_function, s1:class, x:any, s:class) \[->] any
+.br
+fcall(f:external_function, s1:class, x:any, s2:class, y:any, s:class) \[->] any
+.br
+fcall(f:external_function, s1:class, x:any, s2:class, y:any, s3:class,z
+:class,s :class) \[->] any
+
+\fIfcall\fR provide an easy interface with external (C++) functions.
+\fIfcall\fR(f,s1,x,s) applies an external function to an argument of sort s1.
+The sort of the returned value must be passed as an argument (cf. Appendix C). .
+\fIfcall\fR(f,s1,x,s2,y,s) is the equivalent method in the two-arguments case.
+.PP
+.B final (Core)
+
+final (c:class) \[->] void
+.br
+final (p:property) \[->] void
+
+final(c) forbids the user to create any subclass of the class c. If c is a
+constant class, this is taken as a "diet" compiling directive.
+
+final(p) change the extensibility status of the property p (represented with
+the slot open) so that the property p becomes closed, which means that a new
+restriction may no longer be added if it causes an inheritance conflict.
+.PP
+.B finite? (Core)
+
+finite?(t:type) \[->] boolean
+
+finite?(t) returns true if the type t represents a finite set. Set iteration
+(with the for loop) can only be done over finite sets
+.PP
+.B float! (Kernel)
+
+float!(x:integer) \[->] float
+.br
+float!(x:string) \[->] float
+
+transforms an integer or a string into a float.
+.PP
+.B flush (Kernel)
+
+flush(p:port) \[->] void
+
+Communications with ports are buffered, so it can happen that some messages
+wait in a queue for others to come, before being actually sent to their
+destination port. \fIflush(p)\fR for input and output ports and empties the
+buffer associated with p, by physically sending the print messages to their
+destination.
+.PP
+.B fopen, fclose (Kernel)
+
+fopen(s1:string,s2:string) \[->] port
+.br
+fclose(p:port) \[->] any
+
+\fIfopen\fR returns a port that is handle on the file or external device
+associated with it. The first string argument is the name of the file, the
+second is a combination of several control characters, among which 'r' allows
+reading the file, 'w' (over)writing the file and 'a' appending what will be
+write at the end of the file. Other possibilities may be offered, depending on
+the underlying possibilities. Such other possibilities are platform-dependent.
+.PP
+.B format (Kernel)
+
+format(string,list) \[->] any
+
+This method does the same thing as printf, except that there are always two
+arguments, thus the arguments must be replaced by an explicit list.
+.PP
+.B gensym (Kernel)
+
+gensym() \[->] symbol
+.br
+gensym(s:string) \[->] symbol
+
+\fIgensym()\fR generates randomly a new symbol. \fIgensym(s)\fR generates
+randomly a new symbol that begin with s.
+.PP
+.B get (Kernel)
+
+get(p:property + slot, x:object) \[->] any
+.br
+get(a:table, x:any) \[->] integer
+.br
+get(s:string, c:char) \[->] integer
+.br
+get(l:list, x:any) \[->] integer
+.br
+get(m:module) \[->] integer
+
+\fIget(p,x)\fR is equivalent to \fIp(x)\fR, but without any verification on
+\fIunknown\fR. So does \fIget(a,x)\fR for a table.\fIget(s,x)\fR returns
+i such that s[i]=x (if no such i exists, 0 is returned). So does \fIget(l,x)\fR
+for a list.\fIget(m)\fR is equivalent for a module m to \fI(load(m),
+open(m))\fR
+.PP
+.B get_module (Core, Optimize)
+
+get_module(s:symbol) \[->] module
+.br
+get_module(x:thing) \[->] module
+
+\fIget_module\fR returns the module where the identifier s was created.
+.PP
+.B get_value (Kernel)
+
+get_value(s:string) \[->] any
+.br
+get_value(m:module, s:string) \[->] any
+
+returns the object whose name corresponds to the string; if a module argument
+is passed, the associated symbol is sought in the module’s namespace, otherwise
+the module claire is used by default. To find the value associated to a string
+within the current module, simply use get_value(module!(),s).
+.PP
+.B getc (Kernel)
+
+getc(p:port) \[->] char
+
+\fIgetc(p)\fR returns the next character read on port p.
+.PP
+.B
+
+.PP
+.B getenv (Kernel)
+
+getenv(s:string) \[->] string
+
+\fIgetenv(s)\fR returns the value of the environment variable s if it exists
+(an error occurs otherwise since an attempt is made to create a string from the
+NULL value that is returned by the environment).
+.PP
+.B hash (Kernel)
+
+hash(l:list,x:any) \[->] integer
+.br
+hash(n:integer,x:any) \[->] integer
+
+\fIhash(l,x)\fR returns an integer between 1 and length(l) that is obtained
+through generic hashing. To obtain the best dispersion, one may use a list of
+size 2ⁱ-3. This function can be used to implement hash tables in CLAIRE; it
+used to be the basis of the table implementation before version 4.
+.PP
+.B Id (Kernel)
+
+Id(x:any) \[->] type[x]
+
+\fIId(x)\fR returns x. Id has a special behavior when compiled which makes it
+useful. The argument is evaluated before being compiled. The intended use is
+with global variables: the compiler uses the actual value of the variable
+instead of a reference to the global variable. This is very convenient to
+introduce parameters that are defined outside the module that is being
+compiled.
+
+This is also used to tell the compiler that an iteration should make explicit
+use of all iterations rules that may apply to some subclasses of the set
+expression that is being iterated.
+.PP
+.B inherit? (Core)
+
+inherit?(c1:class, c2:class) \[->] boolean
+
+\fIinherit\fR?(c1,c2) returns (c2 % ancestors(c1))
+.PP
+.B instanced (Core)
+
+instanced(c:class) \[->] void
+
+instanced(c) tells CLAIRE to maintain the list of instances (e.g, c.instances).
+This is not necessary if c inherits from things, but otherwise, CLAIRE will
+assume by default that the extension is not kept. This choice has a strong
+impact:
+
+.RS 4
+\[bu] if the extension is kept, the class may be used as a set but objects will
+not be garbage collected (explicit kill is necessary)
+.br
+\[bu] otherwise, the class cannot be enumerated (like in "for c in class
+show(c)") but garbage collection is implicit (memory is reclaimed as soon as
+the object is no longer used).
+.RE
+.PP
+.B integer! (Kernel)
+
+integer!(s:string) \[->] integer
+.br
+integer!(f:float) \[->] integer
+.br
+integer!(c:char) \[->] integer
+.br
+integer!(l:set[(0 .. 29)]) \[->] integer
+.br
+integer!(s:symbol) \[->] integer
+
+\fIinteger!(s)\fR returns the integer denoted by the string s if s is a string
+formed by a sign and a succession of digits, \fIinteger!(f)\fR returns the
+lower integer approximation of f, integer!(c) returns the ASCII code of c and
+integer!(l) returns the integer represented by the bitvector l, i.e. the sum of
+all 2ⁱ for i in l. Last, integer(s) returns a unique index associated to a
+symbol s.
+.PP
+.B invert (Core)
+
+invert(r:relation,x:any) \[->] any
+
+\fIinvert(r,x)\fR return r-1(x) assuming that r has an inverse.
+.PP
+.B kill, kill! (Kernel)
+
+kill(x:object) \[->] any
+.br
+kill(x:class) \[->] any
+.br
+kill!(x:any) \[->] any
+
+kill is used to remove an object from the database of the language. \fIkill\fR
+does it properly, removing the object from all the relation network but without
+deallocating. \fIkill!\fR is more brutal and deallocates without any checking.
+.PP
+.B known? (Kernel)
+
+known?(p:relation, x:object) \[->] boolean
+.br
+known?(x:any) \[->] boolean
+
+\fIknown?(p,x)\fR is equivalent to \fIget(p,x) != unknown\fR. The general
+method known? simply returns true whenever the object exists in the database.
+.PP
+.B last (Kernel)
+
+last(l:list) \[->] type[member(l)]
+
+\fIlast(l)\fR returns \fIl[length(l)]\fR
+.PP
+.PP
+.B length (Kernel)
+
+length(l:bag) \[->] integer
+.br
+length(a:array) \[->] integer
+.br
+length(l:string) \[->] integer
+
+returns the length of an array, a bag or a string. The length of a list is not
+its \fIsize\fR! The following is true: length(set!(l)) = size(l) =
+size(set!(l)).
+.PP
+.B list! (Kernel)
+
+list!(a:array) \[->] type[member_type(a)[]]
+.br
+list!(s:set) \[->] type[list[member(s)]]
+
+For any array or set x, \fIlist!(s)\fR transforms x into a list. If x is a set,
+the order of the elements in the list can be anything.
+.PP
+.B load, sload, oload, eload (Reader)
+
+load(s:string) \[->] any
+.br
+sload(s:string) \[->] any
+.br
+oload(s:string) \[->] any
+.br
+eload(s:string) \[->] any
+.br
+load(m:module) \[->] any
+.br
+sload(m:module) \[->] any
+.br
+oload(m:module) \[->] any
+
+These methods load a file (or the files associated to a module). The difference
+between them is that \fIload(s)\fR reads and evaluates all the instructions
+found in the file named s, whereas \fIsload(s)\fR reads, prints, evaluates and
+prints the results of the evaluation of all the instructions found in the file
+named s. \fIoload(s)\fR is similar to load(s) but also optimizes the methods
+that are newly defined by substituting an optimized version of the lambda
+abstraction. \fIeload(s)\fR is similar to \fIload(s)\fR but assumes that the
+file only contains expressions (such as f(1,2)). This is convenient for loading
+data input files using a functional format.
+.PP
+.B log (Kernel)
+
+log(x:float) \[->] float
+
+computes log(x) – base \fIe\fR.
+.PP
+.B make_array (Kernel)
+
+make_array(n:integer,t:type,x:any) \[->] type[t[]]
+
+returns an array of length n filled with x. The parameter t is the member_type
+of the array, thus x must belong to t, as well as any future value that will be
+put in the array. Note that x is shared for all members of the array, which
+cause a problem if updates can be performed.
+.PP
+.B make_list (Kernel)
+
+make_list(n:integer,x:any) \[->] type[list[x]]
+
+returns a list of length n filled with x (e.g., make_list(3,0) =
+list<any>(0,0,0)). This is a typed list with member type any, thus it can be
+updated.
+.PP
+.B make_string (Kernel)
+
+make_string(i:integer, c:char) \[->] string
+.br
+make_string(s:symbol) \[->] string
+.br
+make_string(l:list) \[->] string
+
+make_string(i,c) returns a string of length i filled with the character c.
+
+make_string(s) returns a string denoting the same identifier. If s is given in
+the qualified form (module/identifer), than the result will contain the name of
+the module ("module/identifier").
+
+make_string(l) creates a string from the list of its characters.
+.PP
+.B member (Core)
+
+member(x:type) \[->] type
+
+member(x) returns the type of all instances of type x, assuming that x is a
+CLAIRE type which contains objects y such that other objects z can belong to.
+If this is the case, member(x) is a valid type for all such z, otherwise the
+returned value is the empty set. For instance, if x is list[integer], all
+instances of x are lists that contain integers, and all members of these lists
+are integers. Therefore, member(list[integer]) is integer.
+.PP
+.B member_type (Kernel)
+
+member_type(x:array) \[->] type
+
+\fImember_type(x)\fR returns the type of all members of the array x. Therefore,
+member(a) = member_type(a) for an array a.
+.PP
+.B methods (Reader)
+
+methods(d:class,r:class) \[->] set[method]
+
+\fImethods(d,r)\fR returns the set of methods with a range included in r and a
+domain which is a tuple which first component is included in d.
+.PP
+.B min / max (Core)
+
+min(m:method[domain:tuple(X,X), range:boolean],
+.br
+l:set[X] U list[X]) \[->] type[X]
+.br
+min(x:integer,y:integer) \[->] integer
+.br
+max(x:integer,y:integer) \[->] integer
+
+given an order function (m(x,y) returns true if x <= y) and a bag, this
+function returns the minimum of the bag, according to this order. min/max on
+integer returns the smallest/largest of two integers.
+.PP
+.B mod (Kernel)
+
+mod(x:integer, y:integer) \[->] integer
+
+\fImod(x,y)\fR is the rest of the Euclidean division of x by y.
+.PP
+.B module! (Core, Optimize)
+
+module!() \[->] module
+.br
+module!(r:restriction) \[->] module
+
+\fImodule!\fR(r) returns the module where the method r was created.
+
+\fImodule\fR!() (= system.module! ) returns the current module, that is the
+module into which the reader is currently reading.
+.PP
+.B new  (Core)
+
+new(c:class) \[->] any
+.br
+new(c:class, s:symbol) \[->] thing
+
+\fInew\fR is the generic instantiation method. \fInew(c)\fR creates an object
+of class c (It is equivalent to c()). \fInew(c,s)\fR creates an object of class
+c with name s.
+.PP
+.B  not (Kernel)
+
+not(x:any) \[->] boolean
+
+\fInot(x)\fR returns false for all x except false, the empty set and the empty
+list.
+
+.B nth, nth=, nth+, nth- (Kernel)
+
+nth(a:table, x:any) \[->] any
+.br
+nth(x:integer, i:integer) \[->] boolean
+.br
+nth(l:bag, i:integer) \[->] any
+.br
+nth(a:array, i:integer) \[->] any
+.br
+nth(s:string, i:integer) \[->] char
+.br
+nth=(a:table, x:any, y:any) \[->] any
+.br
+nth=(a:array, x:any, y:any) \[->] any
+.br
+nth=(l:list, i:integer, x:any) \[->] any
+.br
+nth=(s:string, i:integer, x:char) \[->] char
+.br
+nth+(l:list, i:integer, x:any) \[->] bag
+.br
+nth-(l:list, i:integer) \[->] bag
+.br
+nth_put(l:string, i:integer, x:char) \[->] string
+.br
+nth_get(l:string, i:integer) \[->] string
+
+\fInth\fR is used for accessing elements of structured data: nth(l,i) is the
+ith element of the bag l, nth(s,i) is the ith character of the string s. For
+tables, nth(a,x) is equivalent to a[x], even when x is not an integer. Finally,
+nth also deals with the bitvector representation of integers: nth(x,i) returns
+true if the ith digit of x in base 2 is 1.
+
+\fInth=\fR is used for changing an element at a certain place to a certain
+value. In all the restrictions \fInth=(s,i,x)\fR means: change the ith value of
+s to x.
+
+There exists two other ways of modifying the values in such data structures:
+\fInth+\fR and \fInth-\fR. \fInth+\fR uses the same syntax as \fInth=\fR :
+\fInth+(l,i,x)\fR returns a list (that may be l) where x has been inserted in
+the ith position. By extension, \fIi\fR may be \fIlength(l) + 1\fR, in which
+case \fIx\fR is inserted at the end of \fIl\fR.
+
+\fInth-\fR is used for removing an element. \fInth-(s,i)\fR returns a value
+that differs from s only in that the ith place has been erased.
+
+Strings in CLAIRE can be used as buffers (arrays of characters) using the
+methods \fInth_get\fR and \fInth_put\fR that do not perform bound checking. The
+string does not need to be terminated by a null character and any position may
+be accessed. This use of strings may provoke severe errors since there are no
+bound checks, thus it should be used scarcely and with a lot of care.
+.PP
+.B occurrence (Language)
+
+occurrence(exp:any, x:variable) \[->] integer
+
+returns the number of times when the variable x appears in exp
+.PP
+.B or (Kernel)
+
+or(x:integer,y:integer) \[->] integer
+
+\fIor(x,y)\fR returns the bitwise union of two integers (seen as bitvectors).
+.PP
+.B owner (Kernel)
+
+owner(x:any) \[->] class
+
+\fIowner(x)\fR returns the class from which the object is an instance. It x is
+an object, then \fIowner(x) = isa(x) =\fR the unique class \fIc\fR such that
+\fIx % instances(c)\fR.
+.PP
+.PP
+.B port! (Kernel)
+
+port!() \[->] port
+.br
+port!(s:string) \[->] port
+
+creates a port that is bound to a string. The first method creates an empty
+string port that is used for writing. The value of the string associated with
+the port may be retrieved with the method string!(p:port). The second method
+transforms an existing string into a port that can be read. This is useful to
+read an expression stored in a string, although the simpler method
+read(s:string) is most often enough for the task.
+.PP
+.B pretty_print (Language)
+
+pretty_print(x:any) \[->] void
+
+performs the pretty_printing of x. For example, you can pretty print CLAIRE
+code: if <inst> is a CLAIRE instruction \fIpretty_print\fR(`<inst>) will print
+it nicely indented (the backquote here is to prevent the instruction from begin
+evaluated).
+.PP
+.B  princ, print (Kernel)
+
+princ(x:integer) \[->] void
+.br
+princ(x:float) \[->] void
+.br
+princ(x:string) \[->] void
+.br
+princ(x:char) \[->] void
+.br
+princ(x:symbol) \[->] void
+.br
+princ(x:bag) \[->] void
+.br
+princ(x:string, i:integer) \[->] void
+.br
+princ(x:float, i:integer) \[->] void
+.br
+print(x:any) \[->] void
+
+\fIprint(x)\fR prints the entity x (x can be anything). princ(x:integer or
+float) is equivalent to print(x). If x is a string /char / symbol/ bag,
+print(x) prints x without the “ / ‘ / ‘/ separator. \fIPrinc(s:string,i)\fR
+prints the i first characters, while \fIprinc(x:float,i:integer)\fR prints the
+float x with i figures after the decimal point.
+.PP
+.B print_in_string (Kernel)
+
+print_in_string()       \[->]   void
+
+\fIprint-in-string()\fR opens a new output port that will be stored as a
+string. The user is given access to the string at the end of the transcription,
+when the call to \fIend_of_string()\fR returns this string.
+.PP
+.B put (Kernel)
+
+put(p:property, x:object, y:any) \[->] any
+.br
+put(a:table, x:object, y:any) \[->] any
+.br
+put(s:slot, x:object, y:any) \[->] any
+.br
+put(s:symbol,x:any) \[->] any
+
+\fIput(p,x,y)\fR is equivalent to \fIp(x) := y\fR but does not trigger the
+rules associated to r or the inverse of r. Besides, this operation is performed
+without any type-checking. The method \fIput\fR is often used in conjunction
+with \fIpropagate\fR. \fIput(s,x)\fR binds the symbol s to the object x.
+.PP
+.B put_store (Kernel)
+
+put_store(r1: relation, x:any, v:any,b:boolean) \[->] void
+
+put_store(r,x,v,b) is equivalent to put(r,x,v) but also stores this update in
+the current world if b is true. The difference with the use of the statement
+store(p) is that put_store allows the user to control precisely which update
+should be backtracked. Put_store(r,x,y,b) does nothing if r(x) = y.
+.PP
+.B putc (Kernel)
+
+putc(c:char, p:port) \[->] void
+
+\fIputc(c,p)\fR sends c to the output port p.
+.PP
+.B random, random! (Kernel)
+
+random(n:integer) \[->] integer
+.br
+random (n:integer,m:integer) \[->] integer
+.br
+random (b:boolean) \[->] boolean
+.br
+random (l:bag) \[->] any
+.br
+random!(n:integer) \[->] void
+
+\fIrandom(n)\fR returns an integer in (0 .. n-1), supposedly with uniform
+probability. \fIrandom(n,m)\fR returns an integer between \fIn\fR and \fIm\fR.
+\fIrandom(b:Boolean)\fR returns a random boolean (true or false) is b is true,
+and false otherwise. \fIrandom(l:bag)\fR returns a random member of the bag
+\fIl\fR. \fIrandom!(n)\fR resets the seed for the random number generation
+process.
+.PP
+.B range (Kernel), (Language)
+
+range(r:restriction) \[->] any
+.br
+range(r:relation) \[->] any
+.br
+range(v:global_variable) \[->] any
+.br
+range(v:Variable) \[->] any
+
+For a relation or a restriction r, \fIrange(r)\fR returns the allowed type for
+the values taken by r over its domain. For a variable v, \fIrange(v)\fR is the
+allowed type for the value of v.
+.PP
+.B read (Kernel), (Reader)
+
+read(p:property, x:object) \[->] any
+.br
+read(p:port) \[->] any
+.br
+read(s:string) \[->] any
+
+\fIread(p,x)\fR is strictly equivalent to p(x): it reads the value and raises
+an exception if it is unknown. \fIread(p)\fR and \fIread(s)\fR both read an
+expression from the input port \fIp\fR or the string \fIs\fR.
+.PP
+.B release (Core)
+
+release() \[->] string
+
+returns a release number of your CLAIRE system
+(<release>.<version>.<revision>).
+.PP
+.B restrictions (Kernel)
+
+restrictions(p:property) \[->] list[restriction]
+
+returns the list of all restrictions of the property. A property is something a
+priori defined for all entities. A restriction is an actual definition of this
+property for a given class (or type).
+.PP
+.B safe (Optimize)
+
+safe(x:any) \[->] any
+
+safe(x) is semantically equivalent to x and is ignored by the interpreter (x =
+safe(x)). On the other hand, this tells the compiler that the expression x must
+be compiled with the safe setting of the optimizing options. This is useful
+when a complete program requires high optimization settings for performance
+reasons but you still want to ensure that (say) overflow errors will be
+detected. A typical use would be
+
+.RS 4
+try safe( x * y) catch error MAXINT
+.RE
+
+to implement a bounded multiplication that can be placed in an optimized
+module.
+.PP
+.B self_print (Kernel)
+
+self_print(x:any) \[->] any
+
+this is the standard method for printing unnamed objects (objects that are not
+in thing). It is called by default by printf on objects.
+.PP
+.B set! (Core)
+
+set!(s:collection) \[->] set
+.br
+set!(x:integer) \[->] set[(0 .. 29)]
+
+set!(s) returns an enumeration of the collection s. The result is, by
+definition, a set that contains exactly the members of s. An error occur if s
+is not finite, which can be tested with finite?(x).
+
+set!(x) returns a set that contains all integers i such that (x / 2i) mod 2 =
+1. This method considers x as the bitvector representation of a subset of
+(0 .. 29). The inverse is integer!.
+.PP
+.B shell (Kernel)
+
+shell(s:string) \[->] any
+
+Passes the command s to the operating system (the shell).
+.PP
+.B show (Reader)
+
+show(x:any) \[->] any
+
+The method \fIshow\fR prints all the information it can possibly find about the
+object it has been called on: the value of all its slots are displayed. This
+method is called by the debugger.
+.PP
+.B shrink (Kernel)
+
+shrink(x:list,n:integer) \[->] list
+.br
+shrink(x:string,n:integer) \[->] string
+
+The method \fIshrink\fR truncates the list or the string so that its length
+becomes n. This is a true side-effect and the value returned is always the same
+as the input. As a consequence, shrink(l,0) returns an empty list that is
+different from the canonical empty list nil.
+.PP
+.B sin (Kernel)
+
+sin(x:float) \[->] float
+
+\fIsin(x)\fR returns the sine of x (x is expressed in radians).
+.PP
+.B size (Core)
+
+size(l:bag) \[->] integer
+.br
+size(x:any) \[->] integer
+
+\fIsize(l)\fR gives the number of elements in l. If x is an abstract set (a
+type, a class, ...) then size(x) denotes the number of elements of type x. If
+the set is infinite, an exception will be raised. Note that the size of a list
+is not its length because of possible duplicates.
+.PP
+.B slots (Kernel)
+
+slots(c:class) \[->] any
+
+\fIslots(c)\fR returns the list of all slots that c may have
+.PP
+.B sort (Core)
+
+sort(m:method, l:list) \[->] type[l]
+
+The method sort has two arguments: an order method m such that m(x,y) = true if
+x <= y and a list of objects to be sorted in ascending order (according to m).
+The method returns the sorted list. The method is usually designated using @,
+as in sort(< @ integer, list(1,2,8,3,4,3)).
+
+In CLAIRE 3, the compiler is able to “macroexpand” the definition of sort
+(using a \fIquicksort\fR algorithm) when the method is a constant and when the
+call to sort is used to define a single-instruction method that sorts a given
+list (with a void range). If we define:
+
+.RS 4
+SortByf(l:list<myObject>) : void -> sort(myOrder @ myObject, l)
+.RE
+
+The compiler will produce a very efficient implementation for this method
+through code generation, which is not a trivial feature since quicksort is
+doubly recursive. Notice that this optimization will only take place if:
+
+.RS 4
+\[bu] the sort(...) message is the unique instruction of the method, which must
+return nothing
+.br
+\[bu] the sorting method is an expression of the kind (p @ class)
+.br
+\[bu] the list argument is the unique argument of the method
+.RE
+.PP
+.B sqr (Kernel)
+
+sqr(x:integer) \[->] integer
+.br
+sqr(x:float) \[->] float
+
+returns the square of x, that is x * x.
+.PP
+.B sqrt (Kernel)
+
+sqrt(x:float) \[->] float
+
+returns the square root of x. Returns an irrelevant value when x is strictly
+negative.
+.PP
+.B statistics (Kernel)
+
+statistics() \[->] void
+
+\fIstatistics()\fR prints the memory situation of the CLAIRE system : the size
+of the evaluation stack as well as the string buffer (parameters that may be
+changed with the -s option), and the memory allocation returned by Go : the
+total allocated memory, the memory that is being used and the number of Go
+calls to garbage collection.
+.PP
+.B store (Kernel)
+
+store(r1: relation, r2:relation ...) \[->] void
+.br
+store(v: global_variable) \[->] void
+.br
+store(a:array,n:integer,v:any,b:boolean) \[->] void
+.br
+store(l:list,n:integer,v:any,b:boolean) \[->] void
+
+\fIstore(r1,r2,...)\fR declares the relations (properties or tables) as
+defeasible (using the world mechanism). If x is an array or a list,
+\fIstore(x,n,v,b)\fR is equivalent to x[n] := v but also stores this update in
+the current world if b is true. As a syntactical convenience, the argument b
+may be omitted if it is true. Note that there is a similar method for
+properties called \fIput_store. store(v)\fR can be used to declare a
+global_variable v as defeasible (notice that only one argument is allowed).
+.PP
+.B string! (Kernel)
+
+string!(s:symbol) \[->] string
+.br
+string!(n:integer) \[->] string
+.br
+string!(x :float) \[->] string
+
+\fIstring\fR! converts a symbol, an integer or a float into a string. For
+example \fIstring\fR!(toto) returns "toto" and \fIstring\fR!(12) returns "12".
+Unlike \fImake_string\fR, it returns the unqualified form
+(\fIstring\fR!(Francois/agenda) = "agenda", whereas
+\fImake_string\fR(Francois/agenda) = "Francois/agenda").
+.PP
+.B substitution (Language)
+
+substitution(exp:any, v:Variable, f:any) \[->] any
+
+\fIsubstitution\fR(exp,v,f) returns exp where any occurrence of the free
+variable v is substituted by f. Hence, if \fIoccurrences\fR(exp,v) = 0 then
+\fIsubstitution\fR(exp,v,f) returns exp for any f.
+.PP
+.B substring (Kernel)
+
+substring(s:string, i:integer, j:integer) \[->] string
+.br
+substring(s1:string, s2:string, b:boolean) \[->] integer
+
+\fIsubstring\fR(s,i,j) returns the substring of s starting at the ith character
+and ending at the jth. For example, \fIsubstring\fR("CLAIRE",3,4) returns "AI".
+If i is negative, the empty string is returned and if j is out of bounds (j >
+\fIlength\fR(s)), then the system takes j=\fIlength\fR(s).
+\fIsubstring\fR(s1,s2,b) returns i if s2 is a subsequence of s1, starting at
+s1's ith character. The boolean b is there to allow case-sensitiveness or not
+(identify 'a' and 'A' or not). When s2 cannot be identified with any
+subsequence of s1, the returned value is 0.
+.PP
+.B symbol! (Kernel)
+
+symbol!(s:string) \[->] symbol
+.br
+symbol!(s:string, m:module) \[->] symbol
+
+\fIsymbol\fR!(s) returns the symbol associated to s in the \fIclaire\fR module.
+For example, \fIsymbo\fRl!("toto") returns claire/«toto». \fIsymbol\fR!(s,m)
+returns the symbol associated to s in the
+module m.
+.PP
+.B time_get, time_set, time_show, time_read  (Kernel)
+
+time_get() \[->] integer
+.br
+time_read() \[->] integer
+.br
+time_set() \[->] void
+.br
+time_show() \[->] void
+
+\fItime_set\fR() starts a clock, \fItime_get\fR() stops it and returns an
+integer proportional to the elapsed time. Several such counters can be embedded
+since they are stored in a stack. \fItime_show\fR() pretty prints the result
+from \fItime_get\fR(). \fItime_read\fR() returns the elapsed time in
+micro-seconds, it can be used to read the value of the time counter without
+stopping it.
+.PP
+.B type! (Language)
+
+type!(x:any) \[->] any
+
+returns the smallest type greater than x (with respect to the inclusion order
+on the type lattice), that is the intersection of all types greater or equal to
+x.
+.PP
+.B U (Core)
+
+U(s1:set, s2:set) \[->] set
+.br
+U(s:set, x:any) \[->] any
+.br
+U(x:any, y:any) \[->] any
+
+U(s1,s2) returns the union of the two sets. Otherwise, U returns a type which
+is the union of its two arguments. This constructor helps building types from
+elementary types.
+.PP
+.B uniform? (Core)
+
+uniform?(p:property) \[->] boolean
+
+Tells if a property is uniform, that is contains only methods as restrictions,
+with the same types for arguments and ranges. Note that interface properties
+should be uniform, as well as all properties that are used dynamically in a
+"diet" program.
+.PP
+.B use_as_output (Kernel)
+
+use_as_output(p:port) \[->] port
+
+\fIuses_as_output\fR(p) changes the value of the current output (the port where
+all print instructions will be sent) to p. It returns the previous port that
+was used as output which can thus be saved and possibly restored later.
+.PP
+.B world?, commit, choice, backtrack (Kernel)
+
+world?() \[->] integer
+.br
+choice() \[->] void
+.br
+backtrack() \[->] void
+.br
+backtrack(n:integer) \[->] void
+.br
+commit() \[->] void
+.br
+backtrack0() \[->] void
+.br
+commit(n:integer) \[->] void
+
+These methods concern the version mechanism and should be used for hypothetical
+reasoning: each world corresponds to a state of the database. The slots s that
+are kept in the database are those for which store(s) has been declared. These
+worlds are organized into a stack, each world indexed by an integer (starting
+form 0). \fIworld\fR?() returns the index of the current world; \fIchoice\fR()
+creates a new world and steps into it; \fIbacktrack\fR() pops the current world
+and returns to the previous one; \fIbacktrack\fR(n) returns to the world
+numbered with n, and pops all the intermediary worlds. The last three methods
+have a different behavior since they are used to return to a previous world
+\fIwithout\fR forgetting what was asserted in the current world. The method
+\fIcommit\fR() returns to the previous world but carries the updates that were
+made within the current world; these updates now belong to the previous world
+and another call to \fIbacktrack\fR() would undo them. On the other hand,
+\fIbacktrack0\fR() also return to the previous world, but the updates from the
+current world are permanently confirmed, as if they would belong to the world
+with index 0, which cannot be undone. Last, \fIcommit\fR(n) returns to the
+world numbered with n through successive applications of \fIcommit\fR().
+.PP
+.B write (core)
+
+write(p:property, x:object, y:any) \[->] any
+
+This method is used to store a value in a slot of an object.\fIwrite\fR(p,x,y)
+is equivalent to p(x) := y.
+.SH AUTHORS
+Written by Yves Caseau and François Laburthe.
+.SH COPYRIGHT
+Copyright \(co 1994-2023, Yves Caseau. All rights reserved.
+.SH SEE ALSO
+CLAIRE(7)
+.PP
+Full documentation <https://sites.google.com/view/claire4/home>

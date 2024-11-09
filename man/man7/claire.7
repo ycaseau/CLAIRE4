@@ -1,0 +1,191 @@
+.TH CLAIRE 7
+.SH NAME
+claire \- a high-level functional and object-oriented language with rule
+processing capabilities
+.SH DESCRIPTION
+Visible slots in CLAIRE.
+.PP
+.B active? (Compile)
+
+compiler.active? \[->] boolean
+
+This boolean is set to true when the compiler is active (i.e., compiling CLAIRE
+code into C++ code). This is useful to introduce variants between the compiled
+and interpreted code (such as different sizes). Note that there is another
+flag, loading?, to see if a file is loaded by the compiler.
+.PP
+.B arg1 / arg2 (Kernel)
+
+arg1(x:Interval) \[->] any
+.br
+arg2(x:Interval) \[->] any
+
+These slots contain respectively the minimal and maximal element of a CLAIRE
+interval.
+.PP
+.B descendents (Core)
+
+descendents(x:class) \[->] set[class]
+
+For a class c, c.\fIdescendents\fR is the set all classes that are under c in
+the hierarchy (transitive closure of the subclass relation).
+.PP
+.B domain (Core)
+
+domain(r:restriction) \[->] list
+.br
+domain(r:relation) \[->] any
+
+A restriction is either a slot or a method. If r is a slot, domain(r) is the
+class on which r is defined. If r is a method, r.\fIdomain\fR is the list
+formed by the types of the parameters required by the method. For a relation r,
+r.\fIdomain\fR is the type on which r is defined.
+.PP
+.B formula (Core)
+
+formula(m:method) \[->] lambda
+.br
+formula(d:demon) \[->] lambda
+
+\fIformula\fR gives the formula associated with the method/demon.
+.PP
+.B funcall (Core)
+
+funcall(m:method, x:any) \[->] any
+.br
+funcall(m:method, x:any, y:any) \[->] any
+.br
+funcall(m:method, x:any, y:any, z:any) \[->] any
+.br
+funcall(f:function, x:any, cx:class, crange:class) \[->] any
+.br
+funcall(f:function, x:any, cx:class, y:any, cy:class, crange:class) \[->] any
+.br
+funcall(f:function, x:any, y:any, cy:class, z:any, cz:class, crange:class)
+\[->] any
+
+\fIfuncall\fR provide an easy interface with external (C++) functions.
+\fIfuncall\fR(f,s1,x,s) applies an external function to an argument of sort s1.
+The sort of the returned value must be passed as an argument (cf. Appendix C).
+\fIfuncall\fR(f,s1,x,s2,y,s) is the equivalent method in the two-arguments
+case, and \fIfuncall\fR(f,s1,x,s2,y,s3,y, s) is the equivalent method in the
+three-arguments case. Notice that the LAST argument is the sort of the result,
+and that giving an erroneous sort argument will likely produce a fatal error.
+
+\fIfuncall\fR also applies a method or a lambda to one or two arguments.
+
+Last, \fIfuncall\fR may be applied directly to a \fBfunction\fR, that is a
+primitive entity that represents a C++ function. This method is provided for
+expert users, since it is a system method that requires the type of each
+arguments (cx,cy, ...) and the type of the return value (crange), which must be
+provided as classes. Failure to provide the proper sort (i.e., this type
+information that is usually found in the \fIsrange\fR slot of the method) will
+provoke a system failure.
+.PP
+.B imports (Kernel)
+
+imports(m:module) \[->] map_set
+
+imports(m) is a map that helps to add specific library for each file of the
+module.
+.PP
+.B instances (Kernel)
+
+instances(c:class) \[->] type[set[c]]
+
+returns the set of all instances of c, created up to now (if c has not been
+declared ephemeral).
+.PP
+.B inverse (Kernel)
+
+inverse(r:relation) \[->] relation
+
+r.\fIinverse\fR contains the inverse relation of r. If the range of r inherits
+from bag then r is considered multi-valued by default (cf. Section 4.5). If r
+and its inverse are mono-valued then if r(x) = y then inverse(r)(y) = x. If
+they are multi-valued, then inverse(r)(y) returns the set (resp. list) of all x
+such that (y % r(x)).
+.PP
+.B isa (Core)
+
+isa(x:object) \[->] class
+
+returns the class of which x is an instance.
+.PP
+.B loading? (Compile)
+
+compiler.loading? \[->] boolean
+
+This boolean is set to true when the compiler is loading a file before
+compiling it. This is useful to introduce variants between the compiled and
+interpreted code (see also the \fIactive\fR? flag)
+.PP
+.B made_of (Kernel)
+
+made_of(m:module) \[->] list[string]
+
+m.\fImade_of\fR contains the list of files that contain the code of the module.
+.PP
+.B open (Core)
+
+open(c:class) \[->] integer
+.br
+open(r:relation) \[->] integer
+
+x.\fIopen\fR is a slot that tells the extensibility level of the class or
+relation x.
+
+For a class, there are 6 values: -1 (system.close) means that the class cannot
+be extended neither with instances nor subclasses; 0 (abstract) means that the
+class cannot have any instances; 1 (final) means that no new subclasses could
+be created; 2 (default) is the default status, 3 (system.open) means that the
+class is explicitly casted as extensible; 4 (ephemeral) says that the class is
+a subset of ephemeral_object (the list of instances is not maintained). Section
+2.2 shows how to define the open status of a class using the proper
+declarations.
+
+For a relation: open = 1 means that some of the restrictions have been
+compiled, hence no conflicting new restriction definition is allowed (cf.
+section 4.1 : extensibility status = closed); open = 2 means undefined; open =
+3 means that the extensibility status is "open", that new restriction may be
+defined or re-defined at any time.
+.PP
+.B parts, part_of (Kernel)
+
+parts(m:module) \[->] list
+.br
+part_of(m:module) \[->] module
+
+m.part_of contains the module to which m belongs. parts is the inverse of
+part_of : parts(m) is the set of submodules of m (in the module hierarchy).
+.PP
+.B vars (Kernel)
+
+system.vars \[->] list[string]
+
+system.\fIvars\fR contains the list of arguments passed on the shell command
+line (list of strings).
+.PP
+.B verbose (Kernel)
+
+system.verbose \[->] integer
+
+\fIverbose\fR(system) (also \fIverbose\fR() ) is the verbosity level that can
+be changed. Note that trace(i:integer) sets this slot to i.
+.PP
+.B version (Kernel)
+
+system.version \[->] float
+.br
+compiler.version \[->] float
+
+the version if a float number (<version>.<revision>) that is part of the
+release number.
+.SH AUTHORS
+Written by Yves Caseau and François Laburthe.
+.SH COPYRIGHT
+Copyright \(co 1994-2023, Yves Caseau. All rights reserved.
+.SH SEE ALSO
+CLAIRE(3)
+.PP
+Full documentation <https://sites.google.com/view/claire4/home>
