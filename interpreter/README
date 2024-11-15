@@ -7,11 +7,11 @@ Why download the CLAIRE 4 Interpreter ?
 Although CLAIRE is a compiled language, it is quite useful to use it in its simpler form of an interpreted language:
 
 great for fast prototyping  (REPL), as any interpreted language such as Python, LISP or Clojure.
-REPL stands for Read-Eval-Print-Loop, together with the introspective capabilities of interpreted language,  it supports using the langguage for querying and debugging the system that you build.
+REPL stands for Read-Eval-Print-Loop, together with the introspective capabilities of interpreted language,  it supports using the language for querying and debugging the system that you build.
 
 As a stand alone file, the CLAIRE4 interpreter is very easy to install  and it does not hit the wall of administrative rights for compiling or installing.
 
-CLAIRE is a very powerful expressive language, with first-class citizen support for sets, hypothetical reasonning or high order relations, in addition to being an object-oriented functional programming language.
+CLAIRE is a very powerful expressive language, with first-class citizen support for sets, hypothetical reasoning or high order relations, in addition to being an object-oriented functional programming language.
 
 Why download the CLAIRE 4 Interpreter ?
 =======================================
@@ -19,8 +19,8 @@ Why download the CLAIRE 4 Interpreter ?
 Although CLAIRE is a compiled language, it is quite useful to use it in its simpler form of an interpreted language:
 
 great for fast prototyping  (REPL), as any interpreted language such as Python, LISP or Clojure.
-REPL stands for Read-Eval-Print-Loop, together with the introspective capabilities of interpreted language,  it supports using the langguage for querying and debugging the system that you build.
+REPL stands for Read-Eval-Print-Loop, together with the introspective capabilities of interpreted language,  it supports using the language for querying and debugging the system that you build.
 
 As a stand alone file, the CLAIRE4 interpreter is very easy to install  and it does not hit the wall of administrative rights for compiling or installing.
 
-CLAIRE is a very powerful expressive language, with first-class citizen support for sets, hypothetical reasonning or high order relations, in addition to being an object-oriented functional programming language.
+CLAIRE is a very powerful expressive language, with first-class citizen support for sets, hypothetical reasoning or high order relations, in addition to being an object-oriented functional programming language.

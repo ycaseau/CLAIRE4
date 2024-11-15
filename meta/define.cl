@@ -6,7 +6,7 @@
 //+-------------------------------------------------------------+
 
 // --------------------------------------------------------------
-// this file contains all definition & instanciation instructions
+// this file contains all definition & instantiation instructions
 //---------------------------------------------------------------
 
 // **************************************************************************
@@ -613,7 +613,7 @@ self_eval(self:Defrule) : any
          demon(mClaire/pname = n,
                formula = lambda!(lvar,%body))) ]
 
-// cute litle guy : create the read instruction both for a table and a property
+// cute little guy : create the read instruction both for a table and a property
 [readCall(R:relation,x:any) : Call
   -> if (R % table) Call(get, list(R, x))                // v3.3.0
      else Call+(selector = R, args = list(x)) ]             
@@ -766,5 +766,5 @@ makeCallMatch(x:restriction,lt:list) : boolean
  method.open := final(), 
  slot.open := final(), 
  boolean.open := -1,
- for x in Instruction.descendants (x.open := default()))  // instuctions are ephemeral
+ for x in Instruction.descendants (x.open := default()))  // instructions are ephemeral
 

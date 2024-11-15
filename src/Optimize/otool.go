@@ -24,7 +24,7 @@ _ = Reader.It
 //| cf. copyright info in file object.cl: about()               |
 //+-------------------------------------------------------------+
 //-------------------------------------------------------------------
-// this file contains the auxiliairy methods for the source optimizer
+// this file contains the auxiliary methods for the source optimizer
 //-----------------------------------------------------------------
 // ******************************************************************
 // *  Table of contents                                             *
@@ -202,7 +202,7 @@ return Result}
 func E_glb_Pattern (x EID,y EID) EID { 
 return EID{F_glb_Pattern(To_ClairePattern(OBJ(x)),ToTypeExpression(OBJ(y)) ).Id(),0}} 
 
-// v4.1.0: need the symetrical formula
+// v4.1.0: need the symmetrical formula
 /* The go function for: glb(x:type_expression,y:Pattern) [status=0] */
 func F_glb_type_expression (x *ClaireTypeExpression,y *ClairePattern) *ClaireTypeExpression { 
 var Result *ClaireTypeExpression
@@ -697,7 +697,7 @@ return Result}
 func E_sort_Variable (x EID) EID { 
 return EID{F_sort_Variable(To_Variable(OBJ(x)) ).Id(),0}} 
 
-// this is a very stupid type inference that mimicks the go compiler - defined in pretty.cl with CLAIRE4
+// this is a very stupid type inference that mimics the go compiler - defined in pretty.cl with CLAIRE4
 // it returns a class
 /* The go function for: Compile/stupid_t(self:any) [status=1] */
 func F_Compile_stupid_t_any1 (self *ClaireAny) EID { 
@@ -894,7 +894,7 @@ if ((F_Optimize_ptype_type(_Zt).Included(ToType(C_list.Id())) == CTRUE) ||
   } else {
   if (C_compiler.Optimize_ask == CTRUE) { 
     F_Compile_notice_void()
-    Core.F_tformat_string(MakeString("explicit enmeration of ~S\n"),3,MakeConstantList(self))
+    Core.F_tformat_string(MakeString("explicit enumeration of ~S\n"),3,MakeConstantList(self))
     } 
   Result = F_Optimize_c_code_method_method1(ToMethod(Core.F__at_property1(Core.C_Core_enumerate,C_any).Id()),MakeConstantList(self),MakeConstantList(_Zt.Id()))
   } 

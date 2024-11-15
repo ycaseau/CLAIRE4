@@ -19,7 +19,7 @@ files:
 - function:     the functions from the
 - type:         the reflective definition of the type system
 
-Here are the table of contents for each files + a short descriptopn
+Here are the table of contents for each files + a short description
 
 // *********************************************************************
 // *  Cntents of method.cl                                             *
@@ -65,7 +65,7 @@ It is defined by the following four files:
 - pretty:   this file contains the top of the "instruction" class hierarchy.
 - call:     this file contains functional calls (ex-messages)
 - control:  this file contains all major control structures
-- define:   this file contains all definition & instanciation instructions
+- define:   this file contains all definition & instantiation instructions
 
 // *********************************************************************
 // * Contents of pretty.cl:                                            *

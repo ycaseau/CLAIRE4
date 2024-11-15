@@ -1630,7 +1630,7 @@ return Result}
 func E_c_type_If (self EID) EID { 
 return F_c_type_If(Language.To_If(OBJ(self)) )} 
 
-// debug boolean variable to flag the use of extented X U {unknown} + test : if known?(x)
+// debug boolean variable to flag the use of extended X U {unknown} + test : if known?(x)
 /* The go function for: c_code(self:If,s:class) [status=1] */
 func F_c_code_If (self *Language.If,s *ClaireClass) EID { 
 var Result EID
@@ -1865,7 +1865,7 @@ return F_c_type_Case(Language.To_Case(OBJ(self)) )}
 
 // safety
 // utility : create a branch with substituted variable
-// notice the use of occurence: create a let only if necessary :)
+// notice the use of occurrence: create a let only if necessary :)
 // ugly fix : use -1 in inded to indicate no type inference complain ....
 /* The go function for: case_branch(x:any,%var:any,%type:type) [status=0] */
 func F_Optimize_case_branch_any (x *ClaireAny,_Zvar *ClaireAny,_Ztype *ClaireType) *ClaireAny { 

@@ -129,7 +129,7 @@ func InitClEnv() {
 	ClEnv.buffer = make([]byte, ClEnv.maxBuffer) // a local buffer for string creation
 	ClEnv.bLength = 0
 	ClEnv.gensym = 0
-	// stack intialisation
+	// stack initialisation
 	ClEnv.maxStack = 100000 * CLAIRESIZE
 	ClEnv.EvalStack = make([]EID, ClEnv.maxStack)
 	ClEnv.indexStack = make([]int, ClEnv.maxStack)
@@ -176,7 +176,7 @@ func MemoryFlags() {
 
 
 
-// stack managemement methods --------------------------------------------------
+// stack management methods --------------------------------------------------
 
 //  CLAIRE 4 uses a dual stack:
 //     evalStack (EID) is the stack onto which we store EID values (args for calls)
@@ -332,7 +332,7 @@ func (c *ClaireEnvironment) pushChar(r rune) {
 	} else if r < 128 { // simple case
 		c.buffer[n] = (byte)(r)
 		c.bLength = n + 1
-		// fmt.Printf("PushChar(%c) at postion %d -> length=%d\n", r, n, n+1)
+		// fmt.Printf("PushChar(%c) at position %d -> length=%d\n", r, n, n+1)
 	} else {
 		size := utf8.EncodeRune(c.buffer[n:n+3], r)
 		c.bLength = n + size
@@ -358,7 +358,7 @@ func (c *ClaireEnvironment) bufferCopy() string {
 }
 
 // new in CLAIRE 4 (since playing with '0' is no longer OK)
-// returns a pointer to the buffer seens as a string => read Only
+// returns a pointer to the buffer seen as a string => read Only
 // NOTICE THE CRAZY SEMANTIC OF SLICE (0:n picks n chars ... up to n-1)
 func (c *ClaireEnvironment) bufferPeek() string {
 	return string(c.buffer[0:c.bLength])
@@ -386,7 +386,7 @@ func E_time_set_void(void EID) EID {
 	return EVOID
 }
 
-// shows the elaped time and pop the counters
+// shows the elapsed time and pop the counters
 func F_time_get_void() int {
 	now := makeTimestamp()
 	if ClEnv.tIndex == 0 {
@@ -509,18 +509,18 @@ func (e *ClaireException) Close() EID {
 	ClEnv.LastDebug = ClEnv.Debug_I
 	ClEnv.LastIndex = ClEnv.Index
 	if ClEnv.Verbose > 4 {fmt.Printf("======== >  Close_exception %s \n", e.Prt())}
-	if ClEnv.Verbose > 5 { panic("stop and see why")}  // debug line: convenient to see where the error occured
+	if ClEnv.Verbose > 5 { panic("stop and see why")}  // debug line: convenient to see where the error occurred
 	return EID{e.Id(), 1}
 }
 
-// this is a callable method from the interpeter
+// this is a callable method from the interpreter
 func E_close_exception (e EID) EID {return ToException(OBJ(e)).Close() }
 
 
 // check if an error occurred
 func ErrorCheck(x EID) {
 	if ErrorIn(x) {
-		fmt.Printf("----- an error has occured in compiled code ------\n")
+		fmt.Printf("----- an error has occurred in compiled code ------\n")
 		e := OBJ(x)
 		for _, m := range C_self_print.Restrictions.ValuesO() {
 			if e.Isa.IsIn(ToClass(ToMethod(m).Srange.At(0))) == CTRUE {
@@ -889,7 +889,7 @@ func E_world_pop(c EID) EID {
 
 // commit: all updates are accepted and the backtrack values are moves the previous world
 // this is a base manipulation : the previous base is the current top, and what was on top of previous base is now below
-// Notice that if the world is not empty, the "base line" that is used for based chaining is overwriten with a copy of upper line
+// Notice that if the world is not empty, the "base line" that is used for based chaining is overwritten with a copy of upper line
 // this maintains the structure: stack of value lines on top of the "base lines" (chaining)
 func F_world_remove() {
 	// fmt.Printf("------- world remove @ %d -------------------------\n",ClRes.cWorld)
@@ -1114,7 +1114,7 @@ func (d *ClaireMapSet) AddFast(x *ClaireAny, y *ClaireAny) {
 	d.Value[x.Key()] = y
 }
 
-// these are temporaty functions : get & put on anything => the last one should
+// these are temporary functions : get & put on anything => the last one should
 func F_dict_get_any(d *ClaireAny, x *ClaireAny) *ClaireAny {
 	// fmt.Printf(">>>>>  Dict_get with x=%s \n", x.Prt())
 	return ToMapSet(d).Get(x)

@@ -191,7 +191,7 @@ func E_apply_method (m EID,l EID) EID {
 
 // defined in Reader but tested in Core
 // push and pop debug info on the stack
-// this method also does the tracing and the steppping
+// this method also does the tracing and the stepping
 /* The go function for: push_debug(prop:property,arity:integer,start:integer) [status=1] */
 func F_push_debug_property (prop *ClaireProperty,arity int,start int) EID { 
   var Result EID
@@ -644,7 +644,7 @@ func E_add_value_property3 (self EID,x EID,y EID) EID {
 // graph_get(a:table,x:any) : any -> reads in a.graph
 // graph_put(a:table,x:any,y:any) : void -> write in a.graph    
 // access
-// in Claire4 there is always a default hence the unknown check has disapeared
+// in Claire4 there is always a default hence the unknown check has disappeared
 /* The go function for: nth(a:table,x:any) [status=1] */
 func F_nth_table1 (a *ClaireTable,x *ClaireAny) EID { 
   var Result EID
@@ -1185,7 +1185,7 @@ func F_make_table_type (_Zdomain *ClaireType,_Zrange *ClaireType,_Zdefault *Clai
 func E_make_table_type (_Zdomain EID,_Zrange EID,_Zdefault EID) EID { 
   return F_make_table_type(ToType(OBJ(_Zdomain)),ToType(OBJ(_Zrange)),ANY(_Zdefault) )} 
 
-// Our first table: a debuging tool which stores a list of stopping values
+// Our first table: a debugging tool which stores a list of stopping values
 // *********************************************************************
 //   Part 3: Demons & relations for the logic modules                  *
 // *********************************************************************
@@ -1698,7 +1698,7 @@ func F_self_print_system_error_Core (self *ClaireSystemError) EID {
   { var n int = self.Index
     PRINC("**** An internal error [")
     F_princ_integer(n)
-    PRINC("] has occured:\n")
+    PRINC("] has occurred:\n")
     { var arg_1 *ClaireString
       if (n == 1) { 
         arg_1 = MakeString("Slot Access : ~S(~S) is unknown")
@@ -1798,7 +1798,7 @@ func E_self_print_system_error_Core (self EID) EID {
 // contradictions are nice exceptions
 /* The go function for: self_print(x:contradiction) [status=0] */
 func (x *Contradiction) SelfPrint ()  { 
-  PRINC("A contradiction has occured.")
+  PRINC("A contradiction has occurred.")
   } 
 
 // The EID go function for: self_print @ contradiction (throw: false) 
@@ -2077,7 +2077,7 @@ func EVAL_global_variable (x *ClaireAny) EID {
    return ToGlobalVariable(x).SelfEval()} 
 
 // -> moved from pretty.cl
-// we create a spcial contraidiction that we shall reuse
+// we create a special contradiction that we shall reuse
 // how to use it
 /* The go function for: contradiction!(_CL_obj:void) [status=1] */
 func F_contradiction_I_void () EID { 

@@ -858,7 +858,7 @@ func E_debug_void (_CL_obj EID) EID {
   F_debug_void( )
   return EVOID} 
 
-// this method is called when an error has occured. The value of index
+// this method is called when an error has occurred. The value of index
 // is recalled with last_index, so that the actual content of the stack is
 // preserved.
 /* The go function for: call_debug(_CL_obj:void) [status=0] */
@@ -915,7 +915,7 @@ func F_call_debug_void () *ClaireAny {
 func E_call_debug_void (_CL_obj EID) EID { 
   return F_call_debug_void( ).ToEID()} 
 
-// this method is called when an error has occured. The value of index
+// this method is called when an error has occurred. The value of index
 // is recalled with last_index, so that the actual content of the stack is
 // preserved.
 /* The go function for: breakpoint(_CL_obj:void) [status=1] */
@@ -1116,7 +1116,7 @@ func F_where_integer (x int) EID {
 func E_where_integer (x EID) EID { 
   return F_where_integer(INT(x) )} 
 
-// note for interpretted methods .. they should be pushing their restriction
+// note for interpreted methods .. they should be pushing their restriction
 // on the stack vs. properties
 /* The go function for: print_debug_info(iClaire/index:integer,stack_level:integer,cur_index:integer) [status=1] */
 func F_print_debug_info_integer (index int,stack_level int,cur_index int) EID { 
@@ -1542,7 +1542,7 @@ func (m *Measure) SelfPrint () EID {
 func E_self_print_measure_Reader (m EID) EID { 
   return ToMeasure(OBJ(m)).SelfPrint( )} 
 
-// two simple methods to store and retreive measures
+// two simple methods to store and retrieve measures
 //   logMeasure(s:string)  : creates a file
 //   load(s:string)        : loads the files, that containts addLog(i,s,ss,n) line
 /* The go function for: logMeasure(s:string) [status=1] */

@@ -372,7 +372,7 @@ fastcall(r:relation,x:any,y:any) : void
 // *********************************************************************
 join :: operation()
 
-// the dictionarty slot
+// the dictionary slot
 
 // insertion in the definition tree
 insert_definition(p:property,r:restriction) : void
@@ -423,13 +423,13 @@ uniform(p:property) : boolean
         if (length(l1) != 0) l1
         else add!(l, x)) ]
 
-// definition of dictionary: standart hash-table
+// definition of dictionary: standard hash-table
 [hashinsert(m:restriction) : any
  -> // if (verbose() = 4) //[0] hashinsert(~S) // m,
     let c := (domain!(m) as class) in
        for c2 in c.descendants hashinsert(c2, (m as method)) ]
 
-// insert into the hash table - since the order is not garanteed when we build the dictionary, we
+// insert into the hash table - since the order is not guaranteed when we build the dictionary, we
 // need to check that m is more suited than anything that could be there
 [hashinsert(c:class,m:method) : any
  -> if (c.dictionary = unknown) c.dictionary := map!(property,method),   
@@ -443,7 +443,7 @@ uniform(p:property) : boolean
  -> dict_get(c.dictionary,p) as object]        // UGLY CAST to remove
 
 // look if two signature have a non-empty intersection
-// note that the first case with classes is necessary for bootstraping
+// note that the first case with classes is necessary for bootstrapping
 [join(x:list,y:list) : boolean
  -> let n := length(x) in
        (n = length(y) &
@@ -548,7 +548,7 @@ tmatch?(l:list,l2:list) : boolean
                     (Reference ((t.index = t2.index) & (t.args = t2.args)),
                      type let tref := member(@(t2, t2.args, l[t2.index + 1])) in // member(X) because X is a container type (the value belongs to X)
                          (//[5] tmatch?: is ~S less than ~S ? reference gives ~S // t,t2,tref,
-                          t <=t tref))),     // t is less than member(X), the "type contraint" extracted from the reference
+                          t <=t tref))),     // t is less than member(X), the "type constraint" extracted from the reference
        type (case t (type (t <=t t2),
                      any less?(t,t2))),      // extensibility with less?
        any less?(t,t2))]

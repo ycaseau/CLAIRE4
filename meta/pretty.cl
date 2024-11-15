@@ -330,7 +330,7 @@ printbox(self:list,start:integer,finish:integer,s:string) : any
         if (not(pretty.mClaire/pprint) | (not(short_enough(start + 10))
              & pretty.mClaire/pbreak))
            printl(self, s)
-        else if not(pretty.mClaire/pbreak) printl(self, s)        // call reccursively in no-break mode
+        else if not(pretty.mClaire/pbreak) printl(self, s)        // call recursively in no-break mode
         else while (i <= n)                                        // do our step by step
                (while (Core/buffer_length() < start) printf(" "),  // move to a new line
                 let idx := Core/buffer_length() in
@@ -429,7 +429,7 @@ pretty_print(self:any) : void
 // *  Part 5: simple type inference  (class based)                     *
 // *********************************************************************
 
-// this is a simple, self-contained, type inference method that mimicks what GO is bound to know
+// this is a simple, self-contained, type inference method that mimics what GO is bound to know
 // it is used to check the type safety of the gerenated code in the Generate module and it is used
 // in call.cl to produce OFTO (on-the-fly optimization) => see readcall
 // s_type =  static type, or stupid_type  (we should remove stupid_t)

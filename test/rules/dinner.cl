@@ -33,9 +33,9 @@ store(table1, canBeNext?, seated?, currentPlace)
 known!(table1,hobbies)
 // final(Guest)    
 
-Nfiring:integer := 0                     // couter
+Nfiring:integer := 0                     // counter
 
-// this is a rule to place the special gest G2
+// this is a rule to place the special guest G2
 placeSecond() :: rule(
    F.currentPlace := p & p = 2 
    => for G2 in {x in Guest | not(x.seated?)}
@@ -273,7 +273,7 @@ if (n > 4) (
 
 // sur P II bi-pro 450 MHz, 128 Mo RAM  -  claire v2.3.13
 // compile :
-//   pour N = 16, 32, 64 ou 128 : CPU = 0  =>  non mesurable
+//   pour N = 16, 32, 64 ou 128 : CPU = 0  =>  non measurable
 // interprete :
 //   N = 16  : #firings = 57,   CPU = 16ms,  ips = 3562 (n.s.)
 //   N = 32  : #firings = 250,  CPU = 31ms,  ips = 8065

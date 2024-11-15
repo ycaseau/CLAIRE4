@@ -33,7 +33,7 @@ func import_g0209() {
 //    (2) we always use modules  (hence we have a package)
 //    (3) only two modes -cm : compile a module and produces an executable
 //                       -cx : create a system file (called from a make)
-//                       -cc : (slave of -cf) -> generage go files
+//                       -cc : (slave of -cf) -> generate go files
 // ----------------------------------------------------------------------
 // -------------------------------------------------------------------
 // Contents

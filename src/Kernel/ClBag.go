@@ -24,7 +24,7 @@ import (
 // |  Part 4: Arays (fixed size lists)                                         |
 // +---------------------------------------------------------------------------+
 
-/// bag is the common root - we could reintroduce common methods ... but the data stuctures are
+/// bag is the common root - we could reintroduce common methods ... but the data structures are
 // completely different in go
 // NOTE: the fact that nil is allowed and transformed into void is strange and may be deprecated
 // we could fix this by ensuring that *.of is never nil  (CEMPTY is defined late in the boot)
@@ -157,7 +157,7 @@ func CreateList(t *ClaireType, n int) *ClaireList {
 	return l
 }
 
-// ==== full constructor withough type checks   =====
+// ==== full constructor without type checks   =====
 func MakeList(t *ClaireType, args ...*ClaireAny) *ClaireList {
 	n := len(args)
 	l := t.EmptyList()
@@ -395,7 +395,7 @@ func (l *ClaireList) Copy() *ClaireList {
 // EID function
 func E_copy_list(l EID) EID { return EID{ToList(OBJ(l)).Copy().Id(), 0} }
 
-// acess to l[i] --------------------------------------------------------------
+// access to l[i] --------------------------------------------------------------
 // needed by the compiler : reads an object value at position i, independently of the type representation
 func (l *ClaireList) At(i int) *ClaireAny {
 	if l.Srange == C_integer {
@@ -433,7 +433,7 @@ func E_nth_list(x EID, i EID) EID { return ToList(OBJ(x)).Nth(INT(i)) }
 	
 
 // write onto l[i] --------------------------------------------------------------
-// needed by the compiler : reawrites ds an object value at position i, independently of the type representation
+// needed by the compiler : rewrites ds an object value at position i, independently of the type representation
 func (l *ClaireList) PutAt(i int, y *ClaireAny) {
 	if l.Srange == C_integer {
 		l.ValuesI()[i] = ToInteger(y).Value
@@ -550,7 +550,7 @@ func (l *ClaireList) Empty() *ClaireList {
 // EID function
 func E_empty_list(l EID) EID { return EID{ToList(OBJ(l)).Empty().Id(), 0} }
 
-// delete the first occurence of an object in a list ------------------
+// delete the first occurrence of an object in a list ------------------
 //
 func (l *ClaireList) Delete(x *ClaireAny) *ClaireList {
 	// find a position
@@ -1060,7 +1060,7 @@ func (l *ClaireList) Cast_I(x *ClaireType) *ClaireList {
 
 // history note: we tried map[string]*any but is was slower (see the go bench results)
 // We implement sets with the CLAIRE3.5 pattern, using ordered lists
-// the key is the value for ints & floats, the adress for identified object and the class for others
+// the key is the value for ints & floats, the address for identified object and the class for others
 
 
 // create a set - generic
@@ -1211,7 +1211,7 @@ func (s *ClaireSet) AddSetInteger(val int) *ClaireSet {
 	// fmt.Printf(">>> add %d to set %s with size %d\n",val,s.Debug(),n)
 	var i int = 0
 	var j int = n - 1 
-	for ((i + 1) < j)  {    // dichotomic seach - 30 years old fragment :)
+	for ((i + 1) < j)  {    // dichotomic search - 30 years old fragment :)
 		k := ((i + j) >> 1);       	// k is neither l or j
 	    v := ls[k]                  // cashing ls[k] helps
 		if v == val {return s
@@ -1239,7 +1239,7 @@ func (s *ClaireSet) AddSetFloat(val float64) *ClaireSet {
 	n := ToSetFloat(s.Id()).Count
 	var i int = 0
 	var j int = n - 1 
-	for ((i + 1) < j)  {    // dichotomic seach - 30 years old fragment :)
+	for ((i + 1) < j)  {    // dichotomic search - 30 years old fragment :)
 		k := ((i + j) >> 1);       	// k is neither l or j
 	    v := ls[k]                  // cashing ls[k] helps
 		if v == val {return s
@@ -1262,7 +1262,7 @@ func (s *ClaireSet) AddSetFloat(val float64) *ClaireSet {
 }
 
 // Object version  : more sophisticated
-// SKEY(x) = adress(x) if x is identified, adress(x.isa) otherwise
+// SKEY(x) = address(x) if x is identified, address(x.isa) otherwise
 // we look for the iso-KEY zone, make sure that x is not there using Equal
 // then do an insertion at the end of the zone
 func (s *ClaireSet) AddSetObject(val *ClaireAny) *ClaireSet {
@@ -1272,7 +1272,7 @@ func (s *ClaireSet) AddSetObject(val *ClaireAny) *ClaireSet {
 	if ClEnv.Verbose == 13 { fmt.Printf("==> addSetObject %p into set:%d, key=%d\n",val,n,kval)}
 	var i int = 0
 	var j int = n - 1 
-	for ((i + 1) < j)  {    // dichotomic seach - 30 years old fragment :)
+	for ((i + 1) < j)  {    // dichotomic search - 30 years old fragment :)
 		k := ((i + j) >> 1);       	// k is neither l or j
 	    v := SKEY(ls[k])                  // cashing ls[k] helps
 		if v == kval {               // we have found the key
@@ -1319,7 +1319,7 @@ func (s *ClaireSet) AddInsertObject(val *ClaireAny, i int, n int) *ClaireSet {
 }
 
 // the sort KEY
-// Note : this could be made faster for string at the expense of other objects but hashing(adress) strings is tricky
+// Note : this could be made faster for string at the expense of other objects but hashing(address) strings is tricky
 func SKEY(x *ClaireAny) uint64 {
 	if x.Isa.Ident_ask == CTRUE {return x.ui64()
 	} else {return x.Isa.ui64()}
@@ -1362,7 +1362,7 @@ func (l *ClaireSet) getInteger(x int) int {
 	if s.Count == 0 { return -1} 
 	var i int = 0
 	var j int = s.Count - 1
-	for ((i + 1) < j)  {    			// dichotomic seach - 30 years old fragment :)
+	for ((i + 1) < j)  {    			// dichotomic search - 30 years old fragment :)
 		k := ((i + j) >> 1)       		// k is neither l or j
 		if s.Values[k] == x {return k
 		} else if s.Values[k] < x {i = k
@@ -1522,7 +1522,7 @@ func (s *ClaireSet) Delete(x *ClaireAny) *ClaireSet {
 
 func E_delete_set(l EID, val EID) EID { return EID{ToSet(OBJ(l)).Delete(ANY(val)).Id(), 0} }
 
-// deletition is the inverse property of addition / we need to split into three 
+// deletion is the inverse property of addition / we need to split into three 
 func (s *ClaireSet) deleteAt(i int)  {
      if s.Srange == C_integer {s.deleteAtInteger(i)
 	 } else if s.Srange == C_float {s.deleteAtFloat(i)
@@ -1778,7 +1778,7 @@ func E_make_array_integer(n EID, t EID, x EID) EID {
 	return EID{F_make_array_integer(INT(n), ToType(OBJ(t)), ANY(x)).Id(), 0}
 }
 
-// convert a list to an arry and reciprocately
+// convert a list to an array and reciprocately
 func F_list_I_array(l *ClaireList) *ClaireList {
 	l2 := l.Copy()
 	l2.Isa = C_array
@@ -1795,7 +1795,7 @@ func (l *ClaireList) Array_I() *ClaireList {
 
 func E_array_I_list(l EID) EID { return EID{ToList(OBJ(l)).Array_I().Id(), 0} }
 
-// ==== full constructor withough type checks : used by compiler   =====
+// ==== full constructor without type checks : used by compiler   =====
 func MakeArray(t *ClaireType, args ...*ClaireAny) *ClaireList {
 	n := len(args)
 	l := makeEmptyArray(n, t)

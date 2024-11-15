@@ -136,7 +136,7 @@ TOTO <: object(l1:list<list<integer>>, l2:list<TOTO>)
 
 (essai(), essai2())
 
-// some set exmples
+// some set examples
 [testSet() 
  -> check("intersection", {1,2,4,7} ^ {8,4,0,2} = {4,2}),
     check("union", {"a","b"} U {"c","d"} = {"a","b","c","d"} ),

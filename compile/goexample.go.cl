@@ -94,10 +94,10 @@ type Claire<X> struct {
 new!(c)    -> ToC(new(ClaireC).Is(M.C_c))
 
 
-total instanciation is done with Make
+total instantiation is done with Make
 func (c *ClaireClass) Make (x ClaireAny ...)
 this is used with the anyObject! pattern (optimizer) => used for exceptions, should be used for instruction as well ?
-Also : total instanciation can use go-genrerated-constructors
+Also : total instantiation can use go-genrerated-constructors
    Point(x := 1, y := 2)  -> MakePoint(1,2)
 
 // *******************************************************************
@@ -282,8 +282,8 @@ a claire 4 table has two slots
 // *******************************************************************
 
 // indentation : 
-//    we call statement(s) at the proper current indentation level => it produices n lines with the indentation
-//    and stop after a break line, at the proper identation level
+//    we call statement(s) at the proper current indentation level => it produces n lines with the indentation
+//    and stop after a break line, at the proper indentation level
 
 // blocks are opened and closed with new block (create a {, +Indent, nl}) and close block (}, -Indent, nl)
 
@@ -350,7 +350,7 @@ passed in the loop parameter (a cls))
 
 iteration : the optimizer does the hard work!
 iteration for lists have two forms:
-   - native (we know the type of x in go : int, float or object for lists + alsways for sets)
+   - native (we know the type of x in go : int, float or object for lists + always for sets)
          for x in S e   => for _,x := range(S.value) e
    - generic (we do not know w)
          for x in S e =>   for i,_ := range(S.value) {x := S.}
@@ -401,7 +401,7 @@ profiler : PRcount objects are defined in CLAIRE (inspect.cl)
 start a method :
  var PR_x *ClairePRcount  PRget_property(~I).Start()
 end a method
-  PRend(PR_x)        (dans gogen.cl => return_result(...) anotates the return )
+  PRend(PR_x)        (dans gogen.cl => return_result(...) annotates the return )
 
 
 

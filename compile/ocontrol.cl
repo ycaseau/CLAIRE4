@@ -259,7 +259,7 @@ c_type(self:Error) : type -> {}
         let result := (c_type(get(arg, self)) U c_type(get(other, self))) in
           (if extended?(%r) put(range, self.test.args[1], %r), result)) ]
 
-// debug boolean variable to flag the use of extented X U {unknown} + test : if known?(x)
+// debug boolean variable to flag the use of extended X U {unknown} + test : if known?(x)
 claire/PENIBLE:boolean :: false
 
 [c_code(self:If,s:class) : any
@@ -300,7 +300,7 @@ claire/PENIBLE:boolean :: false
         else any) ]                 // safety
 
 // utility : create a branch with substituted variable
-// notice the use of occurence: create a let only if necessary :)
+// notice the use of occurrence: create a let only if necessary :)
 // ugly fix : use -1 in inded to indicate no type inference complain ....
 [case_branch(x:any,%var:any,%type:type) : any
   -> case %var (Variable let vsub :=  Compile/Variable!(gensym(), -1, %type) in

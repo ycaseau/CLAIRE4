@@ -91,7 +91,7 @@ apply(m:method,l:list) : any
 Core/spy :: property()
 
 // push and pop debug info on the stack
-// this method also does the tracing and the steppping
+// this method also does the tracing and the stepping
 push_debug(prop:property,arity:integer,start:integer) : void
  -> (let i := index!(),
          n := system.trace! in
@@ -198,7 +198,7 @@ put(self:property,x:object,y:any) : any
 // graph_put(a:table,x:any,y:any) : void -> write in a.graph    
 
 // access
-// in Claire4 there is always a default hence the unknown check has disapeared
+// in Claire4 there is always a default hence the unknown check has disappeared
 nth(a:table,x:any) : type[(if unique?(a) the(a).range else any)]
  -> let p := a.params in
        (if not(x %t a.domain)
@@ -345,7 +345,7 @@ claire/make_table(%domain:type, %range:type, %default:any) : table
         t)
 
 
-// Our first table: a debuging tool which stores a list of stopping values
+// Our first table: a debugging tool which stores a list of stopping values
 StopProperty[p:property] : list := unknown
 
 // *********************************************************************
@@ -470,7 +470,7 @@ self_print(self:return_error) : void
 // interpretation of all the error codes
 self_print(self:system_error) : void
  -> (let n := self.index in
-       (printf("**** An internal error [~A] has occured:\n", n),
+       (printf("**** An internal error [~A] has occurred:\n", n),
         format((if (n = 1) "Slot Access : ~S(~S) is unknown"
                 else if (n = 2) "dynamic allocation, too large for available memory (~S)"
                 else if (n = 3) "object allocation, too large for available memory (~S)"
@@ -489,8 +489,8 @@ self_print(self:system_error) : void
                 else if (n = 19) "Integer overflow"
                 else if (n = 20) "Integer arithmetic: division/modulo of ~A by 0"
                 else if (n = 21) "Integer to character: ~S is a wrong value"
-                else if (n = 22) "Cannote create a string with negative length ~S"
-                else if (n = 23) "Not enough memory to instal claire"
+                else if (n = 22) "Cannot create a string with negative length ~S"
+                else if (n = 23) "Not enough memory to install claire"
                 else if (n = 24) "read unknown value with ~S"
                 else if (n = 26) "Wrong usage of time counter [~A]"
                 else if (n = 27) "internal garbage protection stack overflow"
@@ -519,7 +519,7 @@ self_print(self:system_error) : void
 // contradictions are nice exceptions
 contradiction <: exception()
 self_print(x:contradiction) : void
- -> printf("A contradiction has occured.")
+ -> printf("A contradiction has occurred.")
 
 // the format method is used to print error messages (similar to a printf)
 // Note: it would be nice to remove the duplication between format and self_eval@Print
@@ -580,7 +580,7 @@ self_eval(self:global_variable) : any -> self.value  // -> moved from pretty.cl
 
 <=2 :: operation()
 
-// we create a spcial contraidiction that we shall reuse
+// we create a special contradiction that we shall reuse
 contradiction_occurs :: global_variable(range = contradiction,
                                         value = new!(contradiction))
 

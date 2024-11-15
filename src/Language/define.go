@@ -20,7 +20,7 @@ func import_g0216() {
 //| cf. copyright info in file object.cl: about()               |
 //+-------------------------------------------------------------+
 // --------------------------------------------------------------
-// this file contains all definition & instanciation instructions
+// this file contains all definition & instantiation instructions
 //---------------------------------------------------------------
 // **************************************************************************
 // * Contents:                                                              *
@@ -3263,7 +3263,7 @@ return F_make_demon_relation(ToRelation(OBJ(R)),
   ANY(cond),
   ANY(conc) )} 
 
-// cute litle guy : create the read instruction both for a table and a property
+// cute little guy : create the read instruction both for a table and a property
 /* The go function for: readCall(R:relation,x:any) [status=0] */
 func F_readCall_relation (R *ClaireRelation,x *ClaireAny) *Call { 
 var Result *Call
@@ -4094,4 +4094,4 @@ return EID{F_Language_makeCallMatch_restriction(ToRestriction(OBJ(x)),ToList(OBJ
 
 // close some classes : final => no subclasses,  default() => ephemeral
 // CLAIRE 4 : make sure that open statement for class are all here
-// instuctions are ephemeral
+// instructions are ephemeral

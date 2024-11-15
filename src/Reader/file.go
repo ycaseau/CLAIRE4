@@ -54,7 +54,7 @@ func EVAL_delimiter (x *ClaireAny) EID {
 // PORTABILITY WARNING: the following assumes newline is ^J (ASCII 10 dec)
 // PORTABILITY WARNING: what about ^M (ASCII 13 dec)
 //
-// a small usefull function
+// a small useful function
 // note that these char cannot be written using #/_, it would be nicer with native chars
 // CLAIRE4: added 160 which is an ' ' after a '|' produced by the Mac
 /* The go function for: useless_c(r:integer) [status=0] */

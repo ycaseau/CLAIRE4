@@ -233,10 +233,10 @@ debug(system) : void
         (write(Kernel/debug!, system, -1), printf("debugger removed\n"))
      else (write(Kernel/debug!, system, 0),
            put(ctrace, system, stdout),
-           put(jito?,system,false),               // v4.0.6 : debug prevents jito (tracability)
+           put(jito?,system,false),               // v4.0.6 : debug prevents jito (traceability)
            printf("debugger installed\n")))
 
-// this method is called when an error has occured. The value of index
+// this method is called when an error has occurred. The value of index
 // is recalled with last_index, so that the actual content of the stack is
 // preserved.
 call_debug(system) : any
@@ -257,7 +257,7 @@ call_debug(system) : any
         *curd* := system.Kernel/debug!,
         *maxd* := system.Kernel/debug!))
 
-// this method is called when an error has occured. The value of index
+// this method is called when an error has occurred. The value of index
 // is recalled with last_index, so that the actual content of the stack is
 // preserved.
 breakpoint() : void
@@ -311,7 +311,7 @@ where :: property()
           x := x - 1,
           j := (mClaire/get_stack(j) as integer)) ]
 
-// note for interpretted methods .. they should be pushing their restriction
+// note for interpreted methods .. they should be pushing their restriction
 // on the stack vs. properties
 print_debug_info(index:integer,stack_level:integer,cur_index:integer) : void
  -> (let num_args := ((mClaire/get_stack(index + 2) as integer) - 1),
@@ -408,7 +408,7 @@ claire/measure <: object(
 [self_print(m:measure) : void -> printf("~F2[~F0]",mean(m),m.num_value)]
 
 
-// two simple methods to store and retreive measures
+// two simple methods to store and retrieve measures
 //   logMeasure(s:string)  : creates a file
 //   load(s:string)        : loads the files, that containts addLog(i,s,ss,n) line
 [claire/logMeasure(s:string) : void

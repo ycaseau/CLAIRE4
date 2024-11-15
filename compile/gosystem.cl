@@ -103,7 +103,7 @@ go_producer <: code_producer(
     kernel_methods:list,               // dictionary for go "sugar" (nice methods in Kernel versus functions)
     source:string,                 // where to place the go code
     debug?:boolean = false,        // if debug, add /* explanation */ into code
-    varsym:integer = 0,            // desambiguate variables by adding a number
+    varsym:integer = 0,            // disambiguate variables by adding a number
     output:string)                 // where to place the executable
 
 // this is a special case : the function may return an error but the optimized form does not
@@ -114,7 +114,7 @@ ident(self:symbol) : void -> ident(PRODUCER,self)
 ident(self:thing) : void -> ident(PRODUCER,self.name)
 ident(self:class) : void -> ident(PRODUCER,self.name)
 
-// we simply use some smart identation. True pretty_printing will be left to bc
+// we simply use some smart indentation. True pretty_printing will be left to bc
 [indent_c() : any
  -> let x := OPT.level in while (x > 0) (princ("  "), x :- 1) ]
 
@@ -603,7 +603,7 @@ parents(self:list) : list
 [modfile_name(p:go_producer,m:module) : string
   -> string!(m.name) /+ "-meta"]
 
-// compiles one instrtuction from the CLAIRE file
+// compiles one instruction from the CLAIRE file
 // comments are printed (thanks to OPT.outfile) others are stacked in OPT.instructions  
 [gen_instruction(p:go_producer,%instruction:any,prev_comment:string) : string  
   -> (if (%instruction % string)            // we have found a comment

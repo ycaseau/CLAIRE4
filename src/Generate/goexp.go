@@ -732,7 +732,7 @@ func F_Generate_g_expression_string (self *ClaireString,s *ClaireClass) EID {
 func E_Generate_g_expression_string (self EID,s EID) EID { 
   return F_Generate_g_expression_string(ToString(OBJ(self)),ToClass(OBJ(s)) )} 
 
-// symboles are primitive objects, same as function
+// symbols are primitive objects, same as function
 /* The go function for: g_expression(self:symbol,s:class) [status=1] */
 func F_Generate_g_expression_symbol (self *ClaireSymbol,s *ClaireClass) EID { 
   var Result EID
@@ -1085,7 +1085,7 @@ func E_Generate_g_expression_Call_method (self EID,s EID) EID {
 
 // ---------------------------------------- dynamic call -------------------------------------------------------------------
 // new in 3.0 : really low level method are virtual and only rely on inline compiling
-// note the *_prefix(s) ... *_postfix(s) that add a conversion from * to exprected type s
+// note the *_prefix(s) ... *_postfix(s) that add a conversion from * to expected type s
 // WARNING : we can use assignment (x = y) only when s = void (we do not care for the result)
 /* The go function for: inline_exp(c:go_producer,self:Call,s:class) [status=1] */
 func F_Generate_inline_exp_go_producer1 (c *GenerateGoProducer,self *Language.Call,s *ClaireClass) EID { 
@@ -2725,7 +2725,7 @@ func E_Generate_g_expression_Or (self EID,s EID) EID {
 // g_expression(self:Generate/to_C,s:class) : void
 // -> g_expression(self.arg, s)
 // C_cast(x) produces a cast for go  
-// v4.12 : we need exlicit Go cast for super compiling 
+// v4.12 : we need explicit Go cast for super compiling 
 /* The go function for: g_expression(self:Compile/C_cast,s:class) [status=1] */
 func F_Generate_g_expression_C_cast (self *Optimize.Compile_CCast,s *ClaireClass) EID { 
   var Result EID
@@ -3254,7 +3254,7 @@ func F_Generate_b_expression_code_producer5 (p *GenerateCodeProducer,self *Langu
 func E_Generate_b_expression_code_producer5 (p EID,self EID,pos_ask EID) EID { 
   return F_Generate_b_expression_code_producer5(ToGenerateCodeProducer(OBJ(p)),Language.To_Or(OBJ(self)),ToBoolean(OBJ(pos_ask)) )} 
 
-// membership optization [generic, through belong_exp]
+// membership optimization [generic, through belong_exp]
 /* The go function for: b_expression(c:code_producer,self:Call,pos?:boolean) [status=1] */
 func F_Generate_b_expression_code_producer6 (c *GenerateCodeProducer,self *Language.Call,pos_ask *ClaireBoolean) EID { 
   var Result EID

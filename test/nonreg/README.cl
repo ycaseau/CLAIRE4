@@ -2,7 +2,7 @@ This directory contains the non-regression tests that have been collected over 3
 
 bstub.cl:  this file contains simple methods to automate tests
 
-bug0.cl:   this file contains bugs that used to crash nastyly but now should trigger a panic error
+bug0.cl:   this file contains bugs that used to crash nastily but now should trigger a panic error
 (bug0 is not automated)
 
 bug1.cl:    this file contains simple parsing bugs + list/set image/select use cases

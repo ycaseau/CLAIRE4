@@ -22,7 +22,7 @@
 
 // when local CLAIRE expressions are not JS expression, we need to unfold the global expression into a big Let
 // HOWEVER, if only works for list of arguments whose evaluation order is not specified ! (because we move some of the evaluations earlier)
-// this reintrant compiling (calling g_statement on a expanded Let) works because Let checks if g_expression can be used
+// this reentrant compiling (calling g_statement on a expanded Let) works because Let checks if g_expression can be used
 // the same pattern is used for call_slot/call_table
 
 
@@ -147,7 +147,7 @@ js_unfold_use(ldef:list,x:any,s:class,v:string,err:boolean,loop:any) : void
                    printf("_ = ~A~I", v2,breakline())),
                if  try? g_try(x,v2,ev,v,false)                           // if the value may be an error => start if chain
                else if not(f) statement(x, ev, v2,loop),
-               statement(self.arg, e, v, loop),                          // calling statement is crictical for reintrant pattern :)
+               statement(self.arg, e, v, loop),                          // calling statement is critical for reentrant pattern :)
                if try? close_try(1),
                close_block("Let"))) ]                           // then we must close the chain
 
@@ -208,7 +208,7 @@ js_unfold_use(ldef:list,x:any,s:class,v:string,err:boolean,loop:any) : void
 
 
 // A if is easy to compile. We check if the logical compiler can be used
-// we now assume that the test retuns a boolean !
+// we now assume that the test returns a boolean !
 // note that in GO the "} else " pattern is tricky
  [g_statement(self:If,s:class,v:string,err:boolean,loop:any) : void
  ->  let try? := g_throw(self.test) in
@@ -386,7 +386,7 @@ js_unfold_use(ldef:list,x:any,s:class,v:string,err:boolean,loop:any) : void
                 printf("for _,~I = range(~I.~I)~I", c_princ(v4), c_princ(v3), 
                          valuesSlot(smember),
                          new_block("loop2"))
-            else let v5 := c_string(PRODUCER,self.var) /+ "_len" in       // length of bag, used forregular pattern for complex list expr
+            else let v5 := c_string(PRODUCER,self.var) /+ "_len" in       // length of bag, used for regular pattern for complex list expr
               (printf("~I := ~I.Length()~I", c_princ(v5),c_princ(v3),breakline()),
                printf("for i_it := 0; i_it < ~I; i_it++ ~I~I",  c_princ(v5), 
                      new_block(),
@@ -495,7 +495,7 @@ js_unfold_use(ldef:list,x:any,s:class,v:string,err:boolean,loop:any) : void
  -> error("unresolved call: ~S not supported in Diet Claire", self) ]
 
 
-// A call method is now simpler with unfolding ! very similar structucture
+// A call method is now simpler with unfolding ! very similar structure
 [g_statement(self:Call_method,s:class,v:string,err:boolean,loop:any) : void
  -> let l := args(self), ld := unfold_args(l) in
       (if (ld = nil)                // we are here if the call is simple but an error is possible
@@ -570,7 +570,7 @@ js_unfold_use(ldef:list,x:any,s:class,v:string,err:boolean,loop:any) : void
 // -> g_statement(self.arg, s, v, err, loop) ]
 
 // same for a cast
-// v3.2.06: the case where self.arg is of type any is painful => it is forbiden in osystem.cl
+// v3.2.06: the case where self.arg is of type any is painful => it is forbidden in osystem.cl
 [g_statement(self:Generate/C_cast,s:class,v:string,err:boolean,loop:any) : void
  -> g_statement(self.arg, s, v, err, loop) ]
 
@@ -657,7 +657,7 @@ js_unfold_use(ldef:list,x:any,s:class,v:string,err:boolean,loop:any) : void
  
 
 // this produce the code for an update assuming that self is error-free and functional
-// this methiod handles
+// this method handles
 //    if_write demons (that perform the update)  p_write(x:any,y:any)
 //    defeasible updates   o.StoreX(n,v,CTRUE)
 // if we cannot find n (type too generic) => revert to a generic Update method
@@ -702,7 +702,7 @@ js_unfold_use(ldef:list,x:any,s:class,v:string,err:boolean,loop:any) : void
                g_expression(arg(x),any),
                g_expression(v, any),
                breakline()))
-        // this assumes that x is an adressable expression: Call_slot, sorted Call_array, sorted Call_table
+        // this assumes that x is an addressable expression: Call_slot, sorted Call_array, sorted Call_table
         else (if (x % Call_array) 
                  (s2 := sort!(member(c_type(p))),
                   if (s2 = object) s2 := any)
@@ -710,7 +710,7 @@ js_unfold_use(ldef:list,x:any,s:class,v:string,err:boolean,loop:any) : void
               printf("~I = ~I~I", g_expression(x, s2), g_expression(v, s2),breakline()))) ]
           
     
-// in the expansion of Defarray, we generate x.graph := make_list(29,unknonw) that we need to trap
+// in the expansion of Defarray, we generate x.graph := make_list(29,unknown) that we need to trap
 [need_shortcut(v:any) : boolean
   -> case v
          (// to_CL need_shortcut(v.arg),

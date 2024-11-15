@@ -77,7 +77,7 @@
        Super g_func(self.args),
        Call_method (g_func(self.args) & (self.arg = m_unsafe | forall(x in self.args | not(g_throw(x))))),   // new in v4
        // Call_method (g_func(self.args) & (self.arg != *close_exception*) & not(g_throw(self))),   // new in v4
-       Call_slot g_func(get(arg, self)),       // TODO  : refuse when selt.test !
+       Call_slot g_func(get(arg, self)),       // TODO  : refuse when self.test !
        Call_table g_func(get(arg, self)),
        Call_array g_func(get(arg, self)),
        // note that Assign, Gassign and Update are statements in go
@@ -158,7 +158,7 @@ g_expression(self:string,s:class) : void
   -> (if (s = EID) to_eid(PRODUCER,self,string)
       else printf("~IMakeString(~S)~I", object_prefix(string,s),self,object_post(string,s)))
 
-// symboles are primitive objects, same as function
+// symbols are primitive objects, same as function
 g_expression(self:symbol,s:class) : void 
   -> (if (s = EID) to_eid(PRODUCER,self,object)
       else printf("~IMakeSymbol(~S,~I)~I", object_prefix(object,s),
@@ -272,7 +272,7 @@ g_expression(self:Call_method,s:class) : void -> inline_exp(PRODUCER,self,s)
 
 
 // new in 3.0 : really low level method are virtual and only rely on inline compiling
-// note the *_prefix(s) ... *_postfix(s) that add a conversion from * to exprected type s
+// note the *_prefix(s) ... *_postfix(s) that add a conversion from * to expected type s
 // WARNING : we can use assignment (x = y) only when s = void (we do not care for the result)
 [inline_exp(c:go_producer,self:Call,s:class) : void
  -> let  p := self.selector, a1 := car(self.args), n := length(self.args) in
@@ -621,7 +621,7 @@ g_expression(self:Call_method,s:class) : void -> inline_exp(PRODUCER,self,s)
 // -> g_expression(self.arg, s)
 
 // C_cast(x) produces a cast for go  
-// v4.12 : we need exlicit Go cast for super compiling 
+// v4.12 : we need explicit Go cast for super compiling 
 [g_expression(self:C_cast,s:class) : void
  ->  if (self % Super_cast)          // v4.12 special case for super
          (princ("/*Super_cast*/"),
@@ -749,7 +749,7 @@ sign_or(self:boolean) : void -> (if self princ("||") else princ("&&"))
         OPT.level := %l) ]
 
 
-// membership optization [generic, through belong_exp]
+// membership optimization [generic, through belong_exp]
 [b_expression(c:code_producer,self:Call,pos?:boolean) : void
  -> let p := self.selector in
        (if (p = %) printf("(~I ~I ~I)", belong_exp(c,self.args[1], self.args[2],boolean),

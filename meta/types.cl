@@ -106,11 +106,11 @@ claire/-- :: operation(precedence = precedence(..))
 
 // union of two types ---------------------------------------------
 
-// Disjonctive Union Axiom (DU): Each union (A U B) is stricly disjunctive:
+// Disjunctive Union Axiom (DU): Each union (A U B) is strictly disjunctive:
 //       (1) A ^B = 0
 //       (2) x < A U B <=> x < A or x < B
 // Producing disjunction union is a form of normalization (the previous notion
-// of diustributivity was a lousy bug)
+// of distributivity was a lousy bug)
 // DU Axiom is necessary to make <= and ^ easier to define
 // This is achieved in the U method
 self_print(self:Union) : void -> printf("(~S U ~S)", self.t1, self.t2)
@@ -529,7 +529,7 @@ the(x:type) : any -> list!(set!(x))[1]
 
 claire/make_set(x:integer) : set -> {i in (0 .. 29) | x[i]}
 
-// asbtract coercion of a set into an interval
+// abstract coercion of a set into an interval
 [abstract_type(xt1:set) : type
  -> let m1 := 1,
         m2 := 0 in

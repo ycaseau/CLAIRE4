@@ -2053,7 +2053,7 @@ func E_Call_I_property (p EID,l EID) EID {
 
 // if the expression is a call -------------------------------------------
 // x is the first token that we have read x(...)
-// there are many special case (x is not a propery) then the regular case
+// there are many special case (x is not a property) then the regular case
 // t is a type when x was read as (p@t)
 /* The go function for: readcall(r:meta_reader,x:any,t:any) [status=1] */
 func (r *MetaReader) Readcall (x *ClaireAny,t *ClaireAny) EID { 

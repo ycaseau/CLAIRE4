@@ -207,7 +207,7 @@ begin(Generate)
         OPT.level := %l) ]
 
 
-// membership optization [generic, through belong_exp]
+// membership optimization [generic, through belong_exp]
 [b_expression(c:code_producer,self:Call,pos?:boolean) : void
  -> let p := self.selector in
        (if (p = %) printf("(~I ~I ~I)", belong_exp(p,self.args[1], self.args[2],boolean), sign_equal(pos?),
@@ -278,7 +278,7 @@ begin(Generate)
 [print_true(p:go_producer) : void
    -> princ("CTRUE")]
 
-// compiles one instrtuction from the CLAIRE file
+// compiles one instruction from the CLAIRE file
 // comments are printed (thanks to OPT.outfile) others are stacked in OPT.instructions  
 [gen_instruction(p:go_producer,%instruction:any,prev_comment:string) : string  
   -> (if (%instruction % string)            // we have found a comment
@@ -497,7 +497,7 @@ mCopy :: module(part_of = claire,
 // *    Part 3: Bugs for CLAIRE                                              *
 // ***************************************************************************
 
-// bu0 is a file of bugs that used to crash nastyly but now should trigger a panic error
+// bu0 is a file of bugs that used to crash nastily but now should trigger a panic error
 bu0 :: module( uses = list(Reader), source = *bsrc*,
                made_of = list("bug0"))
 

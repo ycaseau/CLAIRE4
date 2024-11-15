@@ -383,11 +383,11 @@ func E_belong_to (x EID,y EID) EID {
 // in CLAIRE4, types are defined in the Kernel go module
 // type_operator <: type()
 // union of two types ---------------------------------------------
-// Disjonctive Union Axiom (DU): Each union (A U B) is stricly disjunctive:
+// Disjunctive Union Axiom (DU): Each union (A U B) is strictly disjunctive:
 //       (1) A ^B = 0
 //       (2) x < A U B <=> x < A or x < B
 // Producing disjunction union is a form of normalization (the previous notion
-// of diustributivity was a lousy bug)
+// of distributivity was a lousy bug)
 // DU Axiom is necessary to make <= and ^ easier to define
 // This is achieved in the U method
 /* The go function for: self_print(self:Union) [status=1] */
@@ -2303,7 +2303,7 @@ func F_make_set_integer (x int) *ClaireSet {
 func E_make_set_integer (x EID) EID { 
   return EID{F_make_set_integer(INT(x) ).Id(),0}} 
 
-// asbtract coercion of a set into an interval
+// abstract coercion of a set into an interval
 /* The go function for: abstract_type(xt1:set) [status=0] */
 func F_abstract_type_set (xt1 *ClaireSet) *ClaireType { 
   var Result *ClaireType

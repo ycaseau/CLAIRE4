@@ -6,7 +6,7 @@
 //+-------------------------------------------------------------+
 
 //-------------------------------------------------------------------
-// this file contains the auxiliairy methods for the source optimizer
+// this file contains the auxiliary methods for the source optimizer
 //-----------------------------------------------------------------
 
 // ******************************************************************
@@ -81,7 +81,7 @@ glb(x:Pattern,y:type_expression) : type_expression
                       else {}),
              any {}))
 
-// v4.1.0: need the symetrical formula
+// v4.1.0: need the symmetrical formula
 glb(x:type_expression,y:Pattern) : type_expression
   -> (case x (Pattern (if (x.selector = y.selector) Pattern(selector = x.selector,
                                                             arg = glb(x.arg,y.arg))
@@ -209,7 +209,7 @@ sort(x:Variable) : class
            Compile/psort(r.Kernel/t2.Kernel/t2)
         else Compile/psort(r)))
 
-// this is a very stupid type inference that mimicks the go compiler - defined in pretty.cl with CLAIRE4
+// this is a very stupid type inference that mimics the go compiler - defined in pretty.cl with CLAIRE4
 // it returns a class
 [Compile/stupid_t(self:any) : class 
     -> static_type(self)]
@@ -257,7 +257,7 @@ pmember(x:type) : type
  -> if (ptype(%t) <= list | ptype(%t) <= set | ptype(%t) <= tuple)
        c_strict_code(self, class!(ptype(%t)))              // v3.2.01
     else (if compiler.optimize? 
-             (notice(), trace(3,"explicit enmeration of ~S\n", self)),  // v3.3
+             (notice(), trace(3,"explicit enumeration of ~S\n", self)),  // v3.3
           c_code_method(Core/enumerate @ any, list(self), list(%t))) ]
 
 

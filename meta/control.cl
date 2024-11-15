@@ -426,7 +426,7 @@ self_print(self:Handle) : void
 //       catch x (if (exception!() % return_error) close(exception!())
 //                else eval(self.other)))     // <yc> 6/98
 // CLAIRE 4 VERSION, because catch x => x is a constant class
-// notice that return_error should be called return_exception since they travel through intepreted
+// notice that return_error should be called return_exception since they travel through interpreted
 // not a problem at compile time since return_exceptions are handled with break(x)
 self_eval(self:Handle) : any
  ->  (try eval(self.arg)
@@ -471,7 +471,7 @@ self_print(self:Construct) : void
 
 // constructors: how to create a list, a set, a tuple or an array
 // note that the constructor is typed
-// CLAIRE4: must build the list with the proper type from the begining, so that Srange is correct
+// CLAIRE4: must build the list with the proper type from the beginning, so that Srange is correct
 self_eval(self:List) : list
   -> let type? := known?(of,self), n := length(self.args) in
         (if type? 
@@ -578,7 +578,7 @@ self_eval(self:Error) : error
 iClaire/trace_on :: property()      // defined in inspect.cl
 Trace <: Construct()
 
-// CLAIRE4: self_eval is defined once for all, hence exteneded
+// CLAIRE4: self_eval is defined once for all, hence extended
 self_eval(self:Trace) : any
  -> (if (length(self.args) = 0) (if (system.trace! = 0) "inactive" else "active")
      else let a := self.args,

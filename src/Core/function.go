@@ -31,7 +31,7 @@ import (_ "fmt"
 // *   Part 1: Basics of pretty printing                               *
 // *********************************************************************
 // we use a nice object
-// support reccursive print-in-string 
+// support recursive print-in-string 
 // print :: property() - defined in Kernel
 // buffered print
 // new in v3.3.26: unbounded recursion is supported :-)
@@ -573,7 +573,7 @@ func E_check_in_any (self EID,y EID) EID {
   return F_check_in_any(ANY(self),ToType(OBJ(y)) )} 
 
 // used to cast dynamically a non-mutable bag to a typed mutable bag
-// claire 4 : aplied to list and sets (bags)
+// claire 4 : applied to list and sets (bags)
 /* The go function for: check_in(self:bag,c:class,y:type) [status=1] */
 func F_check_in_bag (self *ClaireBag,c *ClaireClass,y *ClaireType) EID { 
   var Result EID
@@ -745,7 +745,7 @@ func F_instanced_class (c *ClaireClass) EID {
 func E_instanced_class (c EID) EID { 
   return F_instanced_class(ToClass(OBJ(c)) )} 
 
-// declares a class as an abtract class (without instances)
+// declares a class as an abstract class (without instances)
 /* The go function for: abstract(c:class) [status=1] */
 func F_abstract_class (c *ClaireClass) EID { 
   var Result EID
@@ -780,7 +780,7 @@ func F_final_class (c *ClaireClass) EID {
   var Result EID
   { var n int = c.Open
     if (n == ClEnv.Default) { 
-      Result = ToException(C_general_error.Make(MakeString("[125] ephemetral classes cannot be final").Id(),CNIL.Id())).Close()
+      Result = ToException(C_general_error.Make(MakeString("[125] ephemeral classes cannot be final").Id(),CNIL.Id())).Close()
       }  else if (c.Subclass.Size() != 0) { 
       Result = ToException(C_general_error.Make(MakeString("[125] a class with subclasses cannot be final").Id(),CNIL.Id())).Close()
       } else {

@@ -74,7 +74,7 @@ AnOut :: myclass(uu = 1)
 
 // m2()
 
-// testing mutivalued slots
+// testing multivalued slots
 multiC <: thing                         // forward
 multiC <: thing(ages:set<integer>,
                 friends:set<multiC>,

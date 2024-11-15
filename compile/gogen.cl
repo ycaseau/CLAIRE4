@@ -107,7 +107,7 @@ c_string(c:go_producer, self:symbol) : string
        (if (n = 0) c_princ(string!(s))
         else c_princ@symbol(c.good_names[n])) ]
 
-// new in claire4: printd the go identifier asociated with symbol s
+// new in claire4: printd the go identifier associated with symbol s
 // cap_ident(c,x) uses capitalization : used for Class and Method, required by Go for identifiers to be visible
 // notice that we print explicitly s.module! (namespace) if not claire, to avoid c name conflicts
 [cap_ident(s:symbol) : void 
@@ -252,7 +252,7 @@ c_string(c:go_producer, self:symbol) : string
 // tells if we can compile the CLAIRE method as a go method or if we shoud use a function
 // we use the go method if the class is defined in the same 
 // remember that Go does not support polymorphism on parameters : we can use a method only if there is one match 
-// based on first argument - howver this restriction is package based (to be checked)
+// based on first argument - however this restriction is package based (to be checked)
 // we first check that the first char of the name is a proper letter
 // also methods defined with #'#foo are forced to use foo :)
 [goMethod?(m:any) : boolean
@@ -365,7 +365,7 @@ c_string(c:go_producer, self:symbol) : string
       printf("E_~I", c_princ(f)) ]
 
 
-// special function for self_eval of type  => added as an extra paramer of type eFunc
+// special function for self_eval of type  => added as an extra parameter of type eFunc
 // cf. goexp: AddMethod -> AddEvalMethod     
 [goEvalFunction(m:method) : void
   -> let c := domain!(m) in
@@ -393,7 +393,7 @@ c_string(c:go_producer, self:symbol) : string
                 let m := p @ retreive_list(lf) in
                   (case m (method m,
                            any error("there is no method ~S @ ~S",p,lf))),
-              any error("we have a problem to retreive ~S (not a property) at ~S",p,lf)) ]
+              any error("we have a problem to retrieve ~S (not a property) at ~S",p,lf)) ]
 
 // constrained eval in disguise : returns a type or a list of types from CLAIRE expressions
 [retreive_list(x:any) : any 
@@ -404,7 +404,7 @@ c_string(c:go_producer, self:symbol) : string
         // Generate/to_CL retreive_list(x.arg),
         // Generate/to_protect retreive_list(x.arg),
         global_variable (if (x.range = {}) retreive_list(x.value)
-                         else error("we cannot retreive a type from a variable ~S",x)),
+                         else error("we cannot retrieve a type from a variable ~S",x)),
         List list{ retreive_list(y) | y in x.args},
         Tuple tuple!(list{ retreive_list(y) | y in x.args}),
         Call_method (if (x.arg.selector = nth &  length(x.args) = 2)

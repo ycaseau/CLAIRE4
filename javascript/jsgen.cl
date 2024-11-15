@@ -136,7 +136,7 @@ c_string(c:js_producer, self:symbol) : string
               exists(r2 in p.restrictions | 
                    module!(r2) = module!(r) & r2 != r & domain!(r2) = domain!(r)))  ]
 
-// this is simpler than go -> we want a method unically defined by its domain! and the arity
+// this is simpler than go -> we want a method uniquely defined by its domain! and the arity
 [jsMethod?(m:method) : boolean
  ->  let firstc := string!(m.selector.name)[1],
          n := length(domain(m)), c := domain!(m) in 
@@ -218,7 +218,7 @@ c_string(c:js_producer, self:symbol) : string
 // *       Part 5: Utilities :                                       *
 // *******************************************************************
 
-// this is an attempt to get rid of useless parenthesis without creating ambuiguous situations
+// this is an attempt to get rid of useless parenthesis without creating ambiguous situations
 // bounded_expression(x,loop) adds wrapping ( ) if needed     ==     bounded expression :)
 // NOTE : should be a code producer method
 // we could even make this more elegant if we implement

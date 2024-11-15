@@ -114,7 +114,7 @@ try e1 catch (set e2)  ->
 // reopen on December 31st, 2023 !
 step1: finish & load the module
 
-// Jannuary 1-3
+// January 1-3
 - code is finished and loaded :)
 - I need to find out how method works in Javascript -> create a small file test.js
   that file will become ClaireKernel.js
@@ -137,7 +137,7 @@ Key: we call ClaireKernel = kernel module
 Hence everything that is not in the current module should have a kernel.
 
 // Jan 27-28th : finish ClaireKernel.js
-(a) Class : instanciation and subclass/superclass closure 
+(a) Class : instantiation and subclass/superclass closure 
     - size_class
 (b) belong -> use javascript primitive type recognition
 
@@ -196,7 +196,7 @@ DECISION: use a generic make_function(p:go_producer,self:lambda,%nom:string,m:me
  => [procedure_body(p:go_producer, self:any,s:class) : void
 
 (jsgen.cl)
-ignore the following : small and speficic ....
+ignore the following : small and specific ....
 js_class, js_ident, js_var ...
 (158) [jsFunction(p:js_producer,m:method) : string
 (176) [jsVariables(p:js_producer,self:list) : any
@@ -229,11 +229,11 @@ expression!(p:go_producer,x:any,s:class) : void
 
 (jsstat.cl)
 (176) [call_j_statement(self:any,v:string,loop:any) : void
-reintrant but very specific to JS
+reentrant but very specific to JS
 
 TODO from previous notes
 ------------------------
-    (3e) add traces as a PRODUCER slot witg a ctrace method to update it that is not compiled.
+    (3e) add traces as a PRODUCER slot with a ctrace method to update it that is not compiled.
          This is clearly useful to debug the c2j compiler but it could be useful with go as well.
          we could even have a Kernel traceStart(p,args) method in the future
          => stupide on a l option pour cela ... vérifier si elle est là ?
@@ -427,7 +427,7 @@ Go code:
 
 Previous JS code (2.10)
 // this is the basic file cross_compiler, which translates from claire to javascript
-// [note: should be generic] : this method should be attacted to code_producer in the go version as well
+// [note: should be generic] : this method should be attached to code_producer in the go version as well
 // for Javascript, like Java, this pass does not produce code but fills the stacks
 [js_file(p:js_producer, f1:string) : void
  -> let p1 := fopen(f1 /+ ".cl", "r"), 
@@ -525,7 +525,7 @@ JS code:
         OPT.level := %l) ]
 
 
-// membership optization [generic, through belong_exp]
+// membership optimization [generic, through belong_exp]
 [bool_exp(p:go_producer,self:Call,pos?:boolean) : void
  -> let p := self.selector in
        (if (p = %) printf("(~I ~I ~I)", belong_exp(p,self.args[1], self.args[2]), sign_equal(pos?),

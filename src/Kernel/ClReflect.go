@@ -80,7 +80,7 @@ func BootCore() {
 	C_void.evaluate = EVAL_object // propagate default through inheritance
 	C_class.Instances.AddFast(C_void.Id())
 	C_void.Descendants = ToType(C_class.Id()).EmptySetObject()    // empty descendant set
-	// create other constant onbjects
+	// create other constant objects
 	CNULL = new(ClaireAny).Is(C_void)                        // create the unknown object
 	C_void.IfWrite = CNULL
 	C_void.Dictionary = ToMapSet(CNULL)
@@ -161,7 +161,7 @@ func Bootstrap() {
 
 	// lists, sets, maps
 	C_bag = MakeClass("bag", C_type, C_claire)
-	C_bag.Open = -1                      // closed to subclassing or instanciation
+	C_bag.Open = -1                      // closed to subclassing or instantiation
 	makeClass2("list", C_list, C_bag, C_claire)
 	C_listargs = MakeClass("listargs", C_list, C_claire)
 	// a tuple is physically a list, but different semantics {example: set!(tuple(X,Y))}
@@ -283,7 +283,7 @@ func MakeProperty(name string, op int, m *ClaireModule) *ClaireProperty {
 	o.Open = op
 	o.Comment = MakeString(name)
 	o.Restrictions = MakeList(ToType(C_restriction.Id()))
-	if (o.Definition == nil) {panic("Instanciate failed on " + name)}
+	if (o.Definition == nil) {panic("Instantiate failed on " + name)}
 	if ClEnv.Verbose > 10 {
 		fmt.Printf("MakeProprerty(%s) -> %s - definition.Of:%s\n", name, o.Prt(), o.Definition.Of().Prt())
 	}
@@ -687,7 +687,7 @@ func (c *ClaireClass) instantiate(o *ClaireObject) {
 	}
 }
 
-// instanciation of a class - compiler pattern for anyObject! - exact number of args + right types
+// instantiation of a class - compiler pattern for anyObject! - exact number of args + right types
 func (c *ClaireClass) Make(args ...*ClaireAny) *ClaireAny {
 	o := c.New()
 	n := len(args)

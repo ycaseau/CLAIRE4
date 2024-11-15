@@ -96,7 +96,7 @@ func E_iClaire_ident_class (self EID) EID {
   F_iClaire_ident_class(ToClass(OBJ(self)) )
   return EVOID} 
 
-// we simply use some smart identation. True pretty_printing will be left to bc
+// we simply use some smart indentation. True pretty_printing will be left to bc
 /* The go function for: indent_c(_CL_obj:void) [status=0] */
 func F_Generate_indent_c_void () *ClaireAny { 
   var Result *ClaireAny
@@ -1934,7 +1934,7 @@ func (p *GenerateGoProducer) ModfileName (m *ClaireModule) *ClaireString {
 func E_Generate_modfile_name_go_producer2 (p EID,m EID) EID { 
   return EID{ToGenerateGoProducer(OBJ(p)).ModfileName(ToModule(OBJ(m)) ).Id(),0}} 
 
-// compiles one instrtuction from the CLAIRE file
+// compiles one instruction from the CLAIRE file
 // comments are printed (thanks to OPT.outfile) others are stacked in OPT.instructions  
 /* The go function for: gen_instruction(p:go_producer,%instruction:any,prev_comment:string) [status=1] */
 func (p *GenerateGoProducer) GenInstruction (_Zinstruction *ClaireAny,prev_comment *ClaireString) EID { 

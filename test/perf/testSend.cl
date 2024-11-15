@@ -1,6 +1,6 @@
 // ================== Step 6: exploration with exception handling ==========================================
 // SEND+MORE = MONEY in a naive manner
-// this code uses try/catch to be ready for constraint propagagation that will add cuts
+// this code uses try/catch to be ready for constraint propagation that will add cuts
 // this naive version has no cuts !
 [Bucket <: thing(value:integer = -1, minValue:integer = 0)]
 S :: Bucket(minValue = 1)

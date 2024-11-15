@@ -1,4 +1,4 @@
-// =======================  step4: dictionnaries ===========================================
+// =======================  step4: dictionaries ===========================================
 // this test file uses the "relation dict" that is a standard CLAIRE 4 feature
 // later we shall add the new Dict objects
 stlist :: list<string>("ab","fg","sh","ai","po","gu","ms","fx","wz","ks")
@@ -27,7 +27,7 @@ Dict[s:string] : integer := 0
                 Dict[l[i]] := i + k) ]
 
 // test speed with 100 update of dict of size 10000 : failure
-// there is a bug in the hashing dispertion => conflict rate is obscene => quadratic behavior
+// there is a bug in the hashing dispersion => conflict rate is obscene => quadratic behavior
 // TO BE FIXED BEFORE PUBLISHING
 // Claire4 : tdt(10K) : 900ms :)
 [tdt(n:integer)

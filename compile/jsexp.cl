@@ -47,7 +47,7 @@
        And j_func(self.args),
        Or j_func(self.args),
        Call_method j_func(self.args),   
-       Call_slot j_func(get(arg, self)),       // TODO  : refuse when selt.test !
+       Call_slot j_func(get(arg, self)),       // TODO  : refuse when self.test !
        Call_table j_func(get(arg, self)),
        Call_array j_func(get(arg, self)),
        // note that Assign, Gassign and Update are statements in go
@@ -72,7 +72,7 @@
 //    - packages (when m.made_of != nil)  -> defined in their first members (iClaire in Language)
 //    - node modules (abstractions) => need to be attached to packages
 [j_expression(self:module) : void 
-  ->  error("explict mention of module ~S is not Diet CLAIRE",self)]
+  ->  error("explicit mention of module ~S is not Diet CLAIRE",self)]
 
 // A class is similar to a thing
 [j_expression(self:class) : void 

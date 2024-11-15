@@ -6,7 +6,7 @@
 //+-------------------------------------------------------------+
 
 //-------------------------------------------------------------------
-// This file contains the gloabal parameter objects and the key methods
+// This file contains the global parameter objects and the key methods
 // This are the key methods
 //
 //  c_type(x)  is the CLAIRE type of x
@@ -117,7 +117,7 @@ claire/claire_modules:list :: list{get_value(x) | x in list("Kernel","Core","Lan
 // safety:
 //       0  -> super-safe (keep assertion)
 //       1  -> safe (regular)
-//       2  -> we trus typing
+//       2  -> we trust typing
 //       3  -> no overflow checking (integer & arrays)
 claire/compiler :: meta_compiler(
    external = "go", // Id(compiler.external),
@@ -164,7 +164,7 @@ Compile/warn :: property()
 Compile/nativeVar? :: property()
 
 // Casting is specific in Go (replace to_C)
-// C_cast is a type anotation that is ignored by the go code generation
+// C_cast is a type annotation that is ignored by the go code generation
 // Super_cast is the same, but passed to Go in the code generation (v4.12)
 Compile/C_cast <: Optimized_instruction(arg:any,set_arg:class)   // was to_C()
 Compile/Super_cast <: C_cast()                // used for Super
@@ -348,13 +348,13 @@ Compile/NoErrorOptimize :: list<any>(nth @ list, nth= @ list, nth @ tuple, nth @
      // optimize -> do not check for arithmetic overflow
      * @ list(integer,integer))
 
-// these two variabler are used for cross-compiling, when the status changes from the existing(compiled) version to the
+// these two variables are used for cross-compiling, when the status changes from the existing(compiled) version to the
 // new one being compiled
 Compile/ForceThrow :: list<method>()
 Compile/ForceNotThrow :: list<method>()  
 
 
-// NEW in claire 4, because error handling is mananaged by the compiler
+// NEW in claire 4, because error handling is managed by the compiler
 // tells if an expression can throw an exception, based on can_throw?(p or m)
 
 // two constants because of arithmetics

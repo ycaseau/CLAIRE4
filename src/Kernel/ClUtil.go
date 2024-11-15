@@ -115,7 +115,7 @@ func (t *ClaireType) Contains(x *ClaireAny) *ClaireBoolean {
 }
 
 // equivalent of %type that was defined in types.cl in CLAIRE 3.5 
-// special memberhip for t:set when y is a type (deep equality)
+// special membership for t:set when y is a type (deep equality)
 func (t *ClaireType) containsType (x *ClaireAny) *ClaireBoolean {
 	if x.Isa.IsIn(C_type) == CTRUE && t.Isa == C_set {
 		for k := 0; k < ToSet(t.Id()).Count; k++ {
@@ -794,7 +794,7 @@ func (p *ClaireAny) Look() string {
 		return s + "}"
 	}}
 
-//   reads a string on the keyboad - used to manage breakpoints in inspect.cl [read module]
+//   reads a string on the keyboard - used to manage breakpoints in inspect.cl [read module]
 func F_CommandLoopVoid() *ClaireString {
 	i := 0
 	c := make([]byte, 1)
@@ -818,7 +818,7 @@ func E_CommandLoopVoid(s EID) EID {
 // |  Part 3: Integer                                                          |
 // +---------------------------------------------------------------------------+
 
-// usefull to check overflow
+// useful to check overflow
 const (
 	CLMAXFLOAT = 2.30583e+18
 	CLMINFLOAT = -2.30583e+18

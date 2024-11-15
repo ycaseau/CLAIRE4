@@ -34,12 +34,12 @@ func import_g0134() {
 // (3) err tells if an error is possible, which forces to create a chain an not a block (see Do for example)
 //     Note : if err = true, s is expected to be EID to (a) force a chain (b) place the error value in v
 // (4) loop is either false (not within a loop) or a tuple(v,s) inside the compiling of While/For
-//     This tuple describes the vreturn Variable in case a break(v) is encoutered
+//     This tuple describes the vreturn Variable in case a break(v) is encountered
 // there are two possible outputs: blocks (lines of code without {}, used to be call inner_statement)
 // and chains  (we use chains to denote long nested ifs that manage error handling)
 // indentation : 
-//    we call statement(s) at the proper current indentation level => it produices n lines with the indentation
-//    and stop after a break line, at the proper identation level
+//    we call statement(s) at the proper current indentation level => it produces n lines with the indentation
+//    and stop after a break line, at the proper indentation level
 //**********************************************************************
 //*  Table of contents:                                                *
 //*          Part 1: Unfolding of complex expressions                  *
@@ -53,7 +53,7 @@ func import_g0134() {
 //*************************************************************************
 // when local CLAIRE expressions are not go expression, we need to unfold the global expression into a big Let
 // HOWEVER, if only works for list of arguments whose evaluation order is not specified ! (because we move some of the evaluations earlier)
-// this reintrant compiling (calling g_statement on a expanded Let) works because Let checks if g_expression can be used
+// this reentrant compiling (calling g_statement on a expanded Let) works because Let checks if g_expression can be used
 // the same pattern is used for call_slot/call_table
 // this function is used to unfold complex expressions that should be compiled as
 // expressions and not statements. It takes a list of arguments l and returns the
@@ -308,7 +308,7 @@ func E_Generate_unfold_use_list (ldef EID,x EID,s EID,v EID,err EID,loop EID) EI
 // in a loop we generate a break to exit to loop
 // v is the variable that must receive self
 // note : g_try produces a pattern   <e = code>, if Err(e) {res =e} else { ...
-// that must be closed } with a close_try => and nothing after the close_try (nothing must if an error occured)
+// that must be closed } with a close_try => and nothing after the close_try (nothing must if an error occurred)
 /* The go function for: g_try(self:any,v:string,e:class,vglobal:string,loop:any) [status=1] */
 func F_Generate_g_try_any (self *ClaireAny,v *ClaireString,e *ClaireClass,vglobal *ClaireString,loop *ClaireAny) EID { 
   var Result EID
@@ -667,7 +667,7 @@ func F_Generate_eid_provide_ask_any (x *ClaireAny) *ClaireBoolean {
 func E_Generate_eid_provide_ask_any (x EID) EID { 
   return EID{F_Generate_eid_provide_ask_any(ANY(x) ).Id(),0}} 
 
-// eid_unfold could use a more general "EID compling mode" (with a list of EID variables passed as context)
+// eid_unfold could use a more general "EID compiling mode" (with a list of EID variables passed as context)
 // this is a quickfix => we build the EID Let on our own (code borrowed from g_stat@Let)
 /* The go function for: unfold_eid(ldef:list,self:any,s:class,v:any,err:boolean,loop:any) [status=1] */
 func F_Generate_unfold_eid_list (ldef *ClaireList,self *ClaireAny,s *ClaireClass,v *ClaireAny,err *ClaireBoolean,loop *ClaireAny) EID { 
@@ -1719,7 +1719,7 @@ func E_Generate_g_statement_Construct (self EID,s EID,v EID,err EID,loop EID) EI
     ANY(loop) )} 
 
 // A if is easy to compile. We check if the logical compiler can be used
-// we now assume that the test retuns a boolean !
+// we now assume that the test returns a boolean !
 // note that in GO the "} else " pattern is tricky
 /* The go function for: g_statement(self:If,s:class,v:string,err:boolean,loop:any) [status=1] */
 func F_Generate_g_statement_If (self *Language.If,s *ClaireClass,v *ClaireString,err *ClaireBoolean,loop *ClaireAny) EID { 
@@ -3152,7 +3152,7 @@ func F_Generate_inline_stat_Call (self *Language.Call,s *ClaireClass,v *ClaireSt
     Result = F_Generate_breakline_void().ToEID()
     }
     } else {
-    Result = ToException(Core.C_general_error.Make(MakeString("desing error : inline_stat for ~S").Id(),MakeConstantList(self.Id()).Id())).Close()
+    Result = ToException(Core.C_general_error.Make(MakeString("design error : inline_stat for ~S").Id(),MakeConstantList(self.Id()).Id())).Close()
     } 
   return Result} 
 
@@ -3160,7 +3160,7 @@ func F_Generate_inline_stat_Call (self *Language.Call,s *ClaireClass,v *ClaireSt
 func E_Generate_inline_stat_Call (self EID,s EID,v EID) EID { 
   return F_Generate_inline_stat_Call(Language.To_Call(OBJ(self)),ToClass(OBJ(s)),ToString(OBJ(v)) )} 
 
-// A call method is now simpler with unfolding ! very similar structucture
+// A call method is now simpler with unfolding ! very similar structure
 /* The go function for: g_statement(self:Call_method,s:class,v:string,err:boolean,loop:any) [status=1] */
 func F_Generate_g_statement_Call_method (self *Language.CallMethod,s *ClaireClass,v *ClaireString,err *ClaireBoolean,loop *ClaireAny) EID { 
   var Result EID
@@ -3580,7 +3580,7 @@ func E_Generate_g_statement_Handle (self EID,s EID,v EID,err EID,loop EID) EID {
 // [g_statement(self:Generate/to_C,s:class,v:string,err:boolean,loop:any) : void
 // -> g_statement(self.arg, s, v, err, loop) ]
 // same for a cast
-// v3.2.06: the case where self.arg is of type any is painful => it is forbiden in osystem.cl
+// v3.2.06: the case where self.arg is of type any is painful => it is forbidden in osystem.cl
 /* The go function for: g_statement(self:Compile/C_cast,s:class,v:string,err:boolean,loop:any) [status=1] */
 func F_Generate_g_statement_C_cast (self *Optimize.Compile_CCast,s *ClaireClass,v *ClaireString,err *ClaireBoolean,loop *ClaireAny) EID { 
   var Result EID
@@ -4046,7 +4046,7 @@ func E_Generate_g_statement_Update (self EID,s EID,v EID,err EID,loop EID) EID {
     ANY(loop) )} 
 
 // this produce the code for an update assuming that self is error-free and functional
-// this methiod handles
+// this method handles
 //    if_write demons (that perform the update)  p_write(x:any,y:any)
 //    defeasible updates   o.StoreX(n,v,CTRUE)
 // if we cannot find n (type too generic) => revert to a generic Update method
@@ -4310,7 +4310,7 @@ func F_Generate_update_statement_Update (self *Language.Update,s *ClaireClass) E
 func E_Generate_update_statement_Update (self EID,s EID) EID { 
   return F_Generate_update_statement_Update(Language.To_Update(OBJ(self)),ToClass(OBJ(s)) )} 
 
-// in the expansion of Defarray, we generate x.graph := make_list(29,unknonw) that we need to trap
+// in the expansion of Defarray, we generate x.graph := make_list(29,unknown) that we need to trap
 /* The go function for: need_shortcut(v:any) [status=0] */
 func F_Generate_need_shortcut_any (v *ClaireAny) *ClaireBoolean { 
   var Result *ClaireBoolean

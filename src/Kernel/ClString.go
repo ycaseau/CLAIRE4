@@ -111,7 +111,7 @@ func E_princ_char(c EID) EID {
 	return EVOID
 }
 
-// special consversion (language dependent)
+// special conversion (language dependent)
 func F_c_princ_char(r rune) {
 	switch r {
 	case '.':
@@ -357,7 +357,7 @@ func E_included_string(s1 EID, s2 EID, p EID) EID {
 }
 
 // get the CHAR at the i-th place in s - this is slow in golang (by construction)
-// conversion to list<char> should be prefered
+// conversion to list<char> should be preferred
 // this function may raise an error ... TODO: consider the use of character CEOF (:))
 func F_nth_string(s *ClaireString, n int) EID {
 	i := 1
@@ -924,7 +924,7 @@ func E_use_as_output(p EID) EID { return EID{ToPort(OBJ(p)).UseAsOutput().Id(), 
 
 // close a file  : to write later
 func (p *ClairePort) Fclose() {
-	// if this port was actually in used by ClEnv, we revert to standartd
+	// if this port was actually in used by ClEnv, we revert to standard
 	if ClEnv.Cout == p {ClEnv.Cout = claireStdout}
 	if ClEnv.Cin == p {ClEnv.Cin = claireStdin}        // new in CLAIRE 4
 	p.Close()

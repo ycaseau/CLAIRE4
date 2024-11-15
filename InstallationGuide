@@ -60,7 +60,7 @@
      If an init.cl file is present, it will be loaded first
      modules are defined in the init file (think of it as a configuration file)
    
-   - claire3 -cm <module> will combile a module into an executable
+   - claire3 -cm <module> will compile a module into an executable
    
    
    (4) Playing with the demo performance tests 

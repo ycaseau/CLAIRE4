@@ -1339,7 +1339,7 @@ func E_self_print_pair (x EID) EID {
 // *********************************************************************
 // *  Part 5: simple type inference  (class based)                     *
 // *********************************************************************
-// this is a simple, self-contained, type inference method that mimicks what GO is bound to know
+// this is a simple, self-contained, type inference method that mimics what GO is bound to know
 // it is used to check the type safety of the gerenated code in the Generate module and it is used
 // in call.cl to produce OFTO (on-the-fly optimization) => see readcall
 // s_type =  static type, or stupid_type  (we should remove stupid_t)

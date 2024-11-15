@@ -24,7 +24,7 @@ func import_g0000() {
 //| cf. copyright info in file object.cl: about()               |
 //+-------------------------------------------------------------+
 //-------------------------------------------------------------------
-// This file contains the gloabal parameter objects and the key methods
+// This file contains the global parameter objects and the key methods
 // This are the key methods
 //
 //  c_type(x)  is the CLAIRE type of x
@@ -78,7 +78,7 @@ func E_home_void (_CL_obj EID) EID {
 // safety:
 //       0  -> super-safe (keep assertion)
 //       1  -> safe (regular)
-//       2  -> we trus typing
+//       2  -> we trust typing
 //       3  -> no overflow checking (integer & arrays)
 // re-definable items for bootstrap modifications
 // Compile/make_float_function :: property(Core/open = 3)
@@ -91,7 +91,7 @@ func E_home_void (_CL_obj EID) EID {
 // fast instantiation if all any slots are known
 // how to compile a type expression
 // Casting is specific in Go (replace to_C)
-// C_cast is a type anotation that is ignored by the go code generation
+// C_cast is a type annotation that is ignored by the go code generation
 // Super_cast is the same, but passed to Go in the code generation (v4.12)
 // was to_C()
 // used for Super
@@ -686,9 +686,9 @@ func E_Optimize_selector_psort_Call (self EID) EID {
 // *    Part 3: g_throw and status(m:method)                        *
 // ******************************************************************
 // NEW in claire4 : optimization when compiler.safety is high may prevent throwing exceptions
-// these two variabler are used for cross-compiling, when the status changes from the existing(compiled) version to the
+// these two variables are used for cross-compiling, when the status changes from the existing(compiled) version to the
 // new one being compiled
-// NEW in claire 4, because error handling is mananaged by the compiler
+// NEW in claire 4, because error handling is managed by the compiler
 // tells if an expression can throw an exception, based on can_throw?(p or m)
 // two constants because of arithmetics
 // debug loop

@@ -14,14 +14,14 @@
 // (3) err tells if an error is possible, which forces to create a chain an not a block (see Do for example)
 //     Note : if err = true, s is expected to be EID to (a) force a chain (b) place the error value in v
 // (4) loop is either false (not within a loop) or a tuple(v,s) inside the compiling of While/For
-//     This tuple describes the vreturn Variable in case a break(v) is encoutered
+//     This tuple describes the vreturn Variable in case a break(v) is encountered
 
 // there are two possible outputs: blocks (lines of code without {}, used to be call inner_statement)
 // and chains  (we use chains to denote long nested ifs that manage error handling)
 
 // indentation : 
 //    we call statement(s) at the proper current indentation level => it produices n lines with the indentation
-//    and stop after a break line, at the proper identation level
+//    and stop after a break line, at the proper indentation level
 
 
 //**********************************************************************
@@ -39,7 +39,7 @@
 
 // when local CLAIRE expressions are not go expression, we need to unfold the global expression into a big Let
 // HOWEVER, if only works for list of arguments whose evaluation order is not specified ! (because we move some of the evaluations earlier)
-// this reintrant compiling (calling g_statement on a expanded Let) works because Let checks if g_expression can be used
+// this reentrant compiling (calling g_statement on a expanded Let) works because Let checks if g_expression can be used
 // the same pattern is used for call_slot/call_table
 
 // this function is used to unfold complex expressions that should be compiled as
@@ -92,7 +92,7 @@ unfold_use(ldef:list,x:any,s:class,v:string,err:boolean,loop:any) : void
 // in a loop we generate a break to exit to loop
 // v is the variable that must receive self
 // note : g_try produces a pattern   <e = code>, if Err(e) {res =e} else { ...
-// that must be closed } with a close_try => and nothing after the close_try (nothing must if an error occured)
+// that must be closed } with a close_try => and nothing after the close_try (nothing must if an error occurred)
 [g_try(self:any,v:string,e:class,vglobal:string,loop:any) : void
   -> let v2 := (if (e = EID) v else genvar("try_")) in 
         (if (e != EID) var_declaration(v2,EID,1),
@@ -170,7 +170,7 @@ eid_provide?(x:any) : boolean
               any false))
 
 
-// eid_unfold could use a more general "EID compling mode" (with a list of EID variables passed as context)
+// eid_unfold could use a more general "EID compiling mode" (with a list of EID variables passed as context)
 // this is a quickfix => we build the EID Let on our own (code borrowed from g_stat@Let)
 unfold_eid(ldef:list,self:any,s:class, v:any,err:boolean,loop:any) : void
   -> let n := length(ldef), lvar := list<Variable>(), count_try := 0 in
@@ -308,7 +308,7 @@ unfold_eid(ldef:list,self:any,s:class, v:any,err:boolean,loop:any) : void
                    printf("_ = ~A~I", v2,breakline())),
                if  try? g_try(x,v2,ev,v,false)                           // if the value may be an error => start if chain
                else if not(f) statement(x, ev, v2,loop),
-               statement(self.arg, e, v, loop),                          // calling statement is crictical for reintrant pattern :)
+               statement(self.arg, e, v, loop),                          // calling statement is critical for reentrant pattern :)
                if try? close_try(1),
                close_block("Let"))) ]                           // then we must close the chain
 
@@ -369,7 +369,7 @@ unfold_eid(ldef:list,self:any,s:class, v:any,err:boolean,loop:any) : void
 
 
 // A if is easy to compile. We check if the logical compiler can be used
-// we now assume that the test retuns a boolean !
+// we now assume that the test returns a boolean !
 // note that in GO the "} else " pattern is tricky
  [g_statement(self:If,s:class,v:string,err:boolean,loop:any) : void
  ->  let try? := g_throw(self.test) in
@@ -547,7 +547,7 @@ unfold_eid(ldef:list,self:any,s:class, v:any,err:boolean,loop:any) : void
                 printf("for _,~I = range(~I.~I)~I", c_princ(v4), c_princ(v3), 
                          valuesSlot(smember),
                          new_block("loop2"))
-            else let v5 := c_string(PRODUCER,self.var) /+ "_len" in       // length of bag, used forregular pattern for complex list expr
+            else let v5 := c_string(PRODUCER,self.var) /+ "_len" in       // length of bag, used for regular pattern for complex list expr
               (printf("~I := ~I.Length()~I", c_princ(v5),c_princ(v3),breakline()),
                printf("for i_it := 0; i_it < ~I; i_it++ ~I~I",  c_princ(v5), 
                      new_block(),
@@ -662,7 +662,7 @@ unfold_eid(ldef:list,self:any,s:class, v:any,err:boolean,loop:any) : void
 
 // this is our special inling that requires an assignment (not allowed as an expression in go)
 [inline_stat(self:Call,s:class,v:string)
-  -> if (self.selector = object!)           // object!(...) is our instanciation macro
+  -> if (self.selector = object!)           // object!(...) is our instantiation macro
           let a1 := self.args[1], a2 := self.args[2] in     // a class
              (if (a2 = property & (value(a1) % property))
                  printf("~I = ~I~I",symbol_ident(a1),
@@ -679,10 +679,10 @@ unfold_eid(ldef:list,self:any,s:class, v:any,err:boolean,loop:any) : void
               if (s != void)
                   printf("~I~I = ~I~I", breakline(),c_princ(v),symbol_ident(a1),breakline()))
       else if (s = EID) printf("~I = ~I~I", c_princ(v),g_expression(self,s),breakline())
-      else error("desing error : inline_stat for ~S", self) ]
+      else error("design error : inline_stat for ~S", self) ]
     
 
-// A call method is now simpler with unfolding ! very similar structucture
+// A call method is now simpler with unfolding ! very similar structure
 [g_statement(self:Call_method,s:class,v:string,err:boolean,loop:any) : void
  -> let l := args(self), ld := unfold_args(l) in
       (if (ld = nil)                // we are here if the call is simple but an error is possible
@@ -757,7 +757,7 @@ unfold_eid(ldef:list,self:any,s:class, v:any,err:boolean,loop:any) : void
 // -> g_statement(self.arg, s, v, err, loop) ]
 
 // same for a cast
-// v3.2.06: the case where self.arg is of type any is painful => it is forbiden in osystem.cl
+// v3.2.06: the case where self.arg is of type any is painful => it is forbidden in osystem.cl
 [g_statement(self:Generate/C_cast,s:class,v:string,err:boolean,loop:any) : void
  -> g_statement(self.arg, s, v, err, loop) ]
 
@@ -844,7 +844,7 @@ unfold_eid(ldef:list,self:any,s:class, v:any,err:boolean,loop:any) : void
  
 
 // this produce the code for an update assuming that self is error-free and functional
-// this methiod handles
+// this method handles
 //    if_write demons (that perform the update)  p_write(x:any,y:any)
 //    defeasible updates   o.StoreX(n,v,CTRUE)
 // if we cannot find n (type too generic) => revert to a generic Update method
@@ -889,7 +889,7 @@ unfold_eid(ldef:list,self:any,s:class, v:any,err:boolean,loop:any) : void
                g_expression(arg(x),any),
                g_expression(v, any),
                breakline()))
-        // this assumes that x is an adressable expression: Call_slot, sorted Call_array, sorted Call_table
+        // this assumes that x is an addressable expression: Call_slot, sorted Call_array, sorted Call_table
         else (if (x % Call_array) 
                  (s2 := sort!(member(c_type(p))),
                   if (s2 = object) s2 := any)
@@ -897,7 +897,7 @@ unfold_eid(ldef:list,self:any,s:class, v:any,err:boolean,loop:any) : void
               printf("~I = ~I~I", g_expression(x, s2), g_expression(v, s2),breakline()))) ]
           
     
-// in the expansion of Defarray, we generate x.graph := make_list(29,unknonw) that we need to trap
+// in the expansion of Defarray, we generate x.graph := make_list(29,unknown) that we need to trap
 [need_shortcut(v:any) : boolean
   -> case v
          (// to_CL need_shortcut(v.arg),

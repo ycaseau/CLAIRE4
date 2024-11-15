@@ -158,7 +158,7 @@ c_string(c:js_producer, self:symbol) : string
 // *       Part 5: Utilities :                                       *
 // *******************************************************************
 
-// this is an attempt to get rid of useless parenthesis without creating ambuiguous situations
+// this is an attempt to get rid of useless parenthesis without creating ambiguous situations
 // bounded_expression(x,loop) adds wrapping ( ) if needed     ==     bounded expression :)
 // NOTE : should be a code producer method
 // we could even make this more elegant if we implement

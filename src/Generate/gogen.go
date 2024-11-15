@@ -170,7 +170,7 @@ func E_iClaire_ident_go_producer2 (c EID,s EID) EID {
   F_iClaire_ident_go_producer2(ToGenerateGoProducer(OBJ(c)),ToSymbol(OBJ(s)) )
   return EVOID} 
 
-// new in claire4: printd the go identifier asociated with symbol s
+// new in claire4: printd the go identifier associated with symbol s
 // cap_ident(c,x) uses capitalization : used for Class and Method, required by Go for identifiers to be visible
 // notice that we print explicitly s.module! (namespace) if not claire, to avoid c name conflicts
 /* The go function for: cap_ident(s:symbol) [status=0] */
@@ -539,7 +539,7 @@ func E_imported_function_ask_any (f EID) EID {
 // tells if we can compile the CLAIRE method as a go method or if we shoud use a function
 // we use the go method if the class is defined in the same 
 // remember that Go does not support polymorphism on parameters : we can use a method only if there is one match 
-// based on first argument - howver this restriction is package based (to be checked)
+// based on first argument - however this restriction is package based (to be checked)
 // we first check that the first char of the name is a proper letter
 // also methods defined with #'#foo are forced to use foo :)
 /* The go function for: goMethod?(m:any) [status=0] */
@@ -1026,7 +1026,7 @@ func F_Generate_goEIDFunctionName_method (m *ClaireMethod) EID {
 func E_Generate_goEIDFunctionName_method (m EID) EID { 
   return F_Generate_goEIDFunctionName_method(ToMethod(OBJ(m)) )} 
 
-// special function for self_eval of type  => added as an extra paramer of type eFunc
+// special function for self_eval of type  => added as an extra parameter of type eFunc
 // cf. goexp: AddMethod -> AddEvalMethod     
 /* The go function for: goEvalFunction(m:method) [status=0] */
 func F_Generate_goEvalFunction_method (m *ClaireMethod)  { 
@@ -1101,7 +1101,7 @@ func F_Generate_retreive_method_any (p *ClaireAny,lf *ClaireAny) EID {
         } 
       } 
     } else {
-    Result = ToException(Core.C_general_error.Make(MakeString("we have a problem to retreive ~S (not a property) at ~S").Id(),MakeConstantList(p,lf).Id())).Close()
+    Result = ToException(Core.C_general_error.Make(MakeString("we have a problem to retrieve ~S (not a property) at ~S").Id(),MakeConstantList(p,lf).Id())).Close()
     } 
   return Result} 
 
@@ -1130,7 +1130,7 @@ func F_Generate_retreive_list_any (x *ClaireAny) EID {
       if (Equal(g0060.Range.Id(),CEMPTY.Id()) == CTRUE) { 
         Result = F_Generate_retreive_list_any(g0060.Value)
         } else {
-        Result = ToException(Core.C_general_error.Make(MakeString("we cannot retreive a type from a variable ~S").Id(),MakeConstantList(g0060.Id()).Id())).Close()
+        Result = ToException(Core.C_general_error.Make(MakeString("we cannot retrieve a type from a variable ~S").Id(),MakeConstantList(g0060.Id()).Id())).Close()
         } 
       } 
     }  else if (x.Isa.IsIn(Language.C_List) == CTRUE) { 

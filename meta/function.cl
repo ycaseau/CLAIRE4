@@ -48,7 +48,7 @@ pretty_printer <: thing(cpretty:port,       	// a string port
                         width:integer = 75,	    // size of window
                         pprint:boolean = false, // active
 		                    pbreak:boolean = false,
-                        cpstack:list)           // support reccursive print-in-string 
+                        cpstack:list)           // support recursive print-in-string 
 
 pretty :: pretty_printer(cpretty = port!(), cpstack = nil)
 
@@ -213,7 +213,7 @@ check_in(self:any,y:type) : any
      else error("[124] the value ~S does not belong to the range ~S", self, y))
 
 // used to cast dynamically a non-mutable bag to a typed mutable bag
-// claire 4 : aplied to list and sets (bags)
+// claire 4 : applied to list and sets (bags)
 check_in(self:bag,c:class,y:type) : list
  -> let OK := (case self (list forall(z in self | z % y),
                            any forall(z in (self as set) | z % y))) in  
@@ -241,7 +241,7 @@ claire/unsafe(x:any) : any -> x
 
 
 // declares a class as ephemeral: the member set is not maintained
-// v3.2.14 recusively applies to subclasses
+// v3.2.14 recursively applies to subclasses
 ephemeral(self:class) : any
   -> (for c in self.descendants
        (if c.instances error("[187] cannot declare ~S as ephemeral because of ~S has instances",self,c)
@@ -254,7 +254,7 @@ instanced(c:class) : any
         else error("[125] abstract classes cannot be instanced"))
 
 
-// declares a class as an abtract class (without instances)
+// declares a class as an abstract class (without instances)
 abstract(c:class) : any
  -> let n := c.open in
        (if (n = close()) error("[125] closed classes cannot be abstract")
@@ -266,7 +266,7 @@ abstract(c:class) : any
 // declares a class with no subclasses (apply to things)
 final(c:class) : any
  -> let n := c.open in
-       (if (n = default()) error("[125] ephemetral classes cannot be final")
+       (if (n = default()) error("[125] ephemeral classes cannot be final")
         else if (size(c.subclass) != 0)
           error("[125] a class with subclasses cannot be final")
         else (write(open, c, final())),

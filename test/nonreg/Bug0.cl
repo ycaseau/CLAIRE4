@@ -7,7 +7,7 @@
 // ---------------------------------------------------------------
 // this file contains code that will crash claire ... but with a nice error message
 // ---------------------------------------------------------------
-// by consruction each use case should be commented out when not tested
+// by construction each use case should be commented out when not tested
 
 
 // first case: create an object class with too many names

@@ -105,7 +105,7 @@ c_code(self:Definition,s:class) : any
 
 // tells if a "total instantiation" is appropriate (for exceptions)
 // we actually check that the srange is OID or integer for all slots
-// CLAIRE4: chek that the order is respected !
+// CLAIRE4: check that the order is respected !
 [total?(self:class,l:list) : any
  ->  let lp := get_indexed(self),
          n := length(lp) in
@@ -138,7 +138,7 @@ c_code(self:Definition,s:class) : any
                                      else c_code(y, any)))))) |
                       x:Call in %l} in
        (// if ins? r :add Call(selector = add, args = list(instances, c, self)),
-        // in CLAIRE4 the insertion into c.instances is done by the instanciation method
+        // in CLAIRE4 the insertion into c.instances is done by the instantiation method
         for s:slot in get_indexed(c)
           let p := s.selector,
               v := get(default, s) in

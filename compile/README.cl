@@ -6,11 +6,11 @@
 
 
 This is the CLAIRE 4 compiler, made of Optimize and Generate
-Optimize is the "target-code-independant" part of the compiler : from CLAIRE instruction to optimized-claire-instruction.
+Optimize is the "target-code-independent" part of the compiler : from CLAIRE instruction to optimized-claire-instruction.
 Generate is the target code compiler, geared towards go - THIS IS THE NEW PART IN CLAIRE 4 
 
 We try to keep the code generation generic so that a Java or Swift code producer could be derived in the future 
-However, the GC management stuff will disapear forever
+However, the GC management stuff will disappear forever
 
 /****************/
 /**  Optimize  **/
@@ -29,8 +29,8 @@ CLAIRE instruction-to-instruction optimization is defined by a handful of method
 The sort is a class sub-hierarchy which has an homogeneous way to be translated into the
 target language. Here th sorts are integer, char, x <= imported, object, entity
 
-osystem.cl      This file contains the gloabal parameter objects and the key methods: c_type, c_code, c_gc?, c_sort, c_status
-otool.cl        This file contains the auxiliairy methods for the source optimizer
+osystem.cl      This file contains the global parameter objects and the key methods: c_type, c_code, c_gc?, c_sort, c_status
+otool.cl        This file contains the auxiliary methods for the source optimizer
 ocall.cl        this is the heart of the CLAIRE optimizer : message to function calls
 ocontrol.cl     contains the optimizer for the control structures - most of them are replaced with simpler structures
                 that may be translated directly into the target language
@@ -100,7 +100,7 @@ gostat.cl
 // (3) err tells if an error is possible, which forces to create a chain an not a block (see Do for example)
 //     Note : if err = true, s is expected to be EID to (a) force a chain (b) place the error value in v
 // (4) loop is either false (not within a loop) or a tuple(v,s) inside the compiling of While/For
-//     This tuple describes the vreturn Variable in case a break(v) is encoutered
+//     This tuple describes the vreturn Variable in case a break(v) is encountered
 
 //**********************************************************************
 //*  Table of contents of gostat.cl:                                   *

@@ -28,7 +28,7 @@ js_producer <: code_producer(
     kernel_methods:list,               // dictionary for go "sugar" (nice methods in Kernel versus functions)
     source:string,                 // where to place the go code
     debug?:boolean = false,        // if debug, add /* explanation */ into code
-    varsym:integer = 0,            // desambiguate variables by adding a number
+    varsym:integer = 0,            // disambiguate variables by adding a number
     methods:list,                  // stack of tuples(method, lambda, name)
     traces:list)                   // list of properties (for debugging)
 
@@ -90,7 +90,7 @@ claire/LASTU:any :: unknown
       PRODUCER.debug? := false,
       compile(PRODUCER,m)]              //  shortcut that already exists
 
-// resuse the v4.12 generic compiler
+// reuse the v4.12 generic compiler
 [compile(p:js_producer, m:module) : void
  ->  compile@code_producer(p,m),
      trace(1, "~S: ~A lines of code compiled. ~A warnings, ~A notes.\n",

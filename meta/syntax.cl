@@ -348,7 +348,7 @@ Call!(p:property,l:list) : Call -> DBregister(Call(p,l))
 
 // if the expression is a call -------------------------------------------
 // x is the first token that we have read x(...)
-// there are many special case (x is not a propery) then the regular case
+// there are many special case (x is not a property) then the regular case
 // t is a type when x was read as (p@t)
 readcall(r:meta_reader, x:any, t:any) : any
  -> (let l := nextseq(cnext(r), #/)) in              // read the arg list

@@ -13,7 +13,7 @@
 //    (2) we always use modules  (hence we have a package)
 //    (3) only two modes -cm : compile a module and produces an executable
 //                       -cx : create a system file (called from a make)
-//                       -cc : (slave of -cf) -> generage go files
+//                       -cc : (slave of -cf) -> generate go files
 // ----------------------------------------------------------------------
 
 
@@ -71,7 +71,7 @@
 // -s is ignored because it is trapped earlier (see the file generator)
 [complex_main() : void
   -> let %cm := "", %sf := "", %out := "",        // names of files/modules
-         dblevel := 1, vlevel := 1,               // defaults that can be overiden
+         dblevel := 1, vlevel := 1,               // defaults that can be overridden
          %init? := true, %exe := false,           // do we want to load init.cl ? an executable ?
          %safety := unknown,                      // safety level for compiler
          %main := false,                           // do we cant to call main() ?

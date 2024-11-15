@@ -60,8 +60,8 @@ makeGrid() : Grid
          g)
 
 
-// This progral uses two propagation rules
-// the first one propagates a choice by forbiding the digit in the line, column, square
+// This program uses two propagation rules
+// the first one propagates a choice by forbidding the digit in the line, column, square
 r1() :: rule(
      c.digit := v => (//[1] propagation of ~S <- ~A // c,v,
                       store(c.line.counts,v,0),         // disable counts[v] since v was found !

@@ -125,7 +125,7 @@ ambiguous :: keyword()
 // ******************************************************************
 
 // this is the optimizer for messages
-// It follows the stucture of the evaluator (self_eval)
+// It follows the structure of the evaluator (self_eval)
 // optimize is the distributed compiling method equivalent to the
 // evaluation "behave" method
 [c_type(self:Call) : type
@@ -583,7 +583,7 @@ Compile/functional! :: property(open = 3)
                   break(true)
                else n :+ 1))) ]
 
-// checks if a special optization restriction can be used (with patterns)
+// checks if a special optimization restriction can be used (with patterns)
 [inline_optimize?(self:Call) : any
  -> let l := self.args,
         m := restriction!(self.selector, list{ set(x) | x in l}, true) in

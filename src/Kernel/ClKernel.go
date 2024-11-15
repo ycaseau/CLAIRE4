@@ -34,7 +34,7 @@ import (
 // |  Part 1: Description of EID (Entity IDs)                                  |
 // |  Part 2: description of Claire Objects & Imported (Struct)                |
 // |  Part 3: Global variables (named objects)                                 |
-// |  Part 4: Dummy Classes for instanciation / get/ set                       |
+// |  Part 4: Dummy Classes for instantiation / get/ set                       |
 // |  Part 5: unsafe utilities (optimized code for speed)                      |
 /// +--------------------------------------------------------------------------+
 
@@ -419,7 +419,7 @@ func To_Variable(x *ClaireAny) *ClaireVariable {
 type ClaireSymbol struct {
 	ClaireSystemObject
 	module_I   *ClaireModule // module m that owns the symbol m/name
-	key        string        // name that defines the symbol in the m namepace
+	key        string        // name that defines the symbol in the m namespace
 	value      *ClaireAny    // private -> accessed through Value()
 	definition *ClaireModule // private : where the symbol was defined
 }
@@ -695,7 +695,7 @@ type ClaireListObject struct {
 	Values []*ClaireAny
 }
 
-// how to access directy the values field
+// how to access directly the values field
 func (x *ClaireList) ValuesO() []*ClaireAny { return ((*ClaireListObject)(unsafe.Pointer(x))).Values }
 func (x *ClaireList) ValuesI() []int        { return ((*ClaireListInteger)(unsafe.Pointer(x))).Values }
 func (x *ClaireList) ValuesF() []float64    { return ((*ClaireListFloat)(unsafe.Pointer(x))).Values }
@@ -723,7 +723,7 @@ func (x *ClaireAny) toFloat() *ClaireListFloat { return (*ClaireListFloat)(unsaf
 type ClaireListargs ClaireList
 
 // key decision : Arrays are just fixed size lists => implemented with a *ClaireList whose isa is C_array.
-// only the instanciation changes. In the future, add a new type <type>[n] to capture the length
+// only the instantiation changes. In the future, add a new type <type>[n] to capture the length
 func ToArray(x *ClaireAny) *ClaireList { return (*ClaireList)(unsafe.Pointer(x)) }
 
 // key decision : ClaireTuple is ClaireList (from go point of view)
@@ -761,7 +761,7 @@ type ClaireSetFloat struct {
 }
 func ToSetFloat(x *ClaireAny) *ClaireSetFloat { return (*ClaireSetFloat)(unsafe.Pointer(x)) }
 
-// how to access directy the values field
+// how to access directly the values field
 func (x *ClaireSet) ValuesO() []*ClaireAny { return ((*ClaireSetObject)(unsafe.Pointer(x))).Values }
 func (x *ClaireSet) ValuesI() []int        { return ((*ClaireSetInteger)(unsafe.Pointer(x))).Values }
 func (x *ClaireSet) ValuesF() []float64    { return ((*ClaireSetFloat)(unsafe.Pointer(x))).Values }
@@ -846,7 +846,7 @@ type ClaireInterval struct {
 
 func To_Interval(x *ClaireAny) *ClaireInterval { return (*ClaireInterval)(unsafe.Pointer(x)) }
 
-// a paramerized subclass
+// a parameterized subclass
 type ClaireParam struct {
 	ClaireTypeOperator
 	Arg    *ClaireClass
@@ -1171,7 +1171,7 @@ var C_mod *ClaireOperation
 var C_cons *ClaireOperation
 
 // +---------------------------------------------------------------------------+
-// |  Part 4: Dummy Classes for instanciation / get/ set                       |
+// |  Part 4: Dummy Classes for instantiation / get/ set                       |
 // +---------------------------------------------------------------------------+
 
 // THIS IS CRITICAL : WE CANNOT FOOL GOLAND COMPILER WITH POINTERS WHEN DOING A SET
@@ -1182,7 +1182,7 @@ var C_cons *ClaireOperation
 // consequence: Claire Object slots are either *Clany or direct 64bits values (float or int)
 
 // this is a dummy hierarchy to support object up to size 50 
-// it is broken into 5 slots incremeants to allocate the right size (modulo 5)
+// it is broken into 5 slots increments to allocate the right size (modulo 5)
 type ClaireDummy1 struct {
 	ClaireAny
 	a2 *ClaireAny
@@ -1316,7 +1316,7 @@ func (x *ClaireObject) Get(n int, s *ClaireClass) *ClaireAny {
 }
 
 // specific function when the srange is an object - this needs to be extended to 30
-// since it looks that direct acess is dangerous we have this crazy code for interpreter
+// since it looks that direct access is dangerous we have this crazy code for interpreter
 func (x *ClaireObject) GetObj(i int) *ClaireAny {
 	if i == 1 {
 		return ((*ClaireDummy1)(unsafe.Pointer(x))).Isa.Id()
@@ -1422,7 +1422,7 @@ func (x *ClaireObject) GetObj(i int) *ClaireAny {
 	} // need a Cerror !
 }
 
-// symetric: generic set
+// symmetric: generic set
 func (x *ClaireObject) Set(n int, s *ClaireClass, y *ClaireAny) {
 	if s == C_integer {
 		s.SetInt(n, ToInteger(y).Value)

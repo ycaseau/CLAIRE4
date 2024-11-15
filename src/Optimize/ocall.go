@@ -429,7 +429,7 @@ return F_Optimize_use_range_method(ToMethod(OBJ(self)),ToList(OBJ(_Zl)) )}
 // *    Part 2: Generic c_type & c_code                             *
 // ******************************************************************
 // this is the optimizer for messages
-// It follows the stucture of the evaluator (self_eval)
+// It follows the structure of the evaluator (self_eval)
 // optimize is the distributed compiling method equivalent to the
 // evaluation "behave" method
 /* The go function for: c_type(self:Call) [status=1] */
@@ -3865,7 +3865,7 @@ return Result}
 func E_Optimize_c_inline_ask_method (self EID,l EID) EID { 
 return F_Optimize_c_inline_ask_method(ToMethod(OBJ(self)),ToList(OBJ(l)) )} 
 
-// checks if a special optization restriction can be used (with patterns)
+// checks if a special optimization restriction can be used (with patterns)
 /* The go function for: inline_optimize?(self:Call) [status=1] */
 func F_Optimize_inline_optimize_ask_Call (self *Language.Call) EID { 
 var Result EID

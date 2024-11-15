@@ -880,7 +880,7 @@ return F_c_code_Definition(Language.To_Definition(OBJ(self)),ToClass(OBJ(s)) )}
 
 // tells if a "total instantiation" is appropriate (for exceptions)
 // we actually check that the srange is OID or integer for all slots
-// CLAIRE4: chek that the order is respected !
+// CLAIRE4: check that the order is respected !
 /* The go function for: total?(self:class,l:list) [status=1] */
 func F_Optimize_total_ask_class (self *ClaireClass,l *ClaireList) EID { 
 var Result EID

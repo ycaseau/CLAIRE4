@@ -30,7 +30,7 @@ js_producer <: code_producer(
     kernel_methods:list,               // dictionary for go "sugar" (nice methods in Kernel versus functions)
     source:string,                 // where to place the go code
     debug?:boolean = false,        // if debug, add /* explanation */ into code
-    varsym:integer = 0)            // desambiguate variables by adding a number
+    varsym:integer = 0)            // disambiguate variables by adding a number
 
 
 // we can reuse the indent / *_block methods from Go !
@@ -210,7 +210,7 @@ js_producer <: code_producer(
 // *********************************************************************
 
 // this is the basic file cross_compiler, which translates from claire to javascript
-// [note: should be generic] : this method should be attacted to code_producer
+// [note: should be generic] : this method should be attached to code_producer
 [js_file(p:js_producer, f1:string,f2:string) : void
  -> let p1 := fopen(f1 /+ ".cl", "r"), b := reader.Reader/toplevel,
         p0 := reader.Reader/fromp in         // b, p0: reading context when we start

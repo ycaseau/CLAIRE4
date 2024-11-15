@@ -26,7 +26,7 @@ import (_ "fmt"
 // *      Part 4: Matching Methods                                     *
 // *********************************************************************
 // catch what was missed in Kernel
-// complete instanciation
+// complete instantiation
 /* The go function for: close(r:slot) [status=0] */
 func F_close_slot (r *ClaireSlot) *ClaireSlot { 
   F_insert_definition_property(r.Selector,ToRestriction(r.Id()))
@@ -1033,7 +1033,7 @@ func E_fastcall_relation2 (r EID,x EID,y EID) EID {
 // *********************************************************************
 // *   Part 3: Management of definition(p)                             *
 // *********************************************************************
-// the dictionarty slot
+// the dictionary slot
 // insertion in the definition tree
 /* The go function for: insert_definition(p:property,r:restriction) [status=0] */
 func F_insert_definition_property (p *ClaireProperty,r *ClaireRestriction)  { 
@@ -1232,7 +1232,7 @@ func F_initialize_restriction2 (x *ClaireRestriction,l *ClaireList) *ClaireList 
 func E_initialize_restriction2 (x EID,l EID) EID { 
   return EID{F_initialize_restriction2(ToRestriction(OBJ(x)),ToList(OBJ(l)) ).Id(),0}} 
 
-// definition of dictionary: standart hash-table
+// definition of dictionary: standard hash-table
 /* The go function for: hashinsert(m:restriction) [status=0] */
 func F_hashinsert_restriction (m *ClaireRestriction) *ClaireAny { 
   var Result *ClaireAny
@@ -1257,7 +1257,7 @@ func F_hashinsert_restriction (m *ClaireRestriction) *ClaireAny {
 func E_hashinsert_restriction (m EID) EID { 
   return F_hashinsert_restriction(ToRestriction(OBJ(m)) ).ToEID()} 
 
-// insert into the hash table - since the order is not garanteed when we build the dictionary, we
+// insert into the hash table - since the order is not guaranteed when we build the dictionary, we
 // need to check that m is more suited than anything that could be there
 /* The go function for: hashinsert(c:class,m:method) [status=0] */
 func F_hashinsert_class (c *ClaireClass,m *ClaireMethod) *ClaireAny { 
@@ -1289,7 +1289,7 @@ func E_hashget_class (c EID,p EID) EID {
 
 // UGLY CAST to remove
 // look if two signature have a non-empty intersection
-// note that the first case with classes is necessary for bootstraping
+// note that the first case with classes is necessary for bootstrapping
 /* The go function for: join(x:list,y:list) [status=0] */
 func F_join_list (x *ClaireList,y *ClaireList) *ClaireBoolean { 
   var Result *ClaireBoolean

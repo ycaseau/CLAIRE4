@@ -118,7 +118,7 @@ stereo <: object(	sources:set[musical_source],
 
 
 
-// intantiation rule example -----------------------------------------
+// instantiation rule example -----------------------------------------
 
 instantiation :: property(domain = amplifier, range = string)
 [close(x:amplifier) : amplifier -> instantiation(x,date!(1)), x ]
@@ -181,7 +181,7 @@ discount[s:set[component]] : integer := 0
 		(if (p2 > 0) p :min (p2 + best_price(difference(s,s2)))),
 	 p) ]
 
-(check("find best discout",best_price({amp1,s1,CD1,t1}) = 1200 + 300 + 70),
+(check("find best discount",best_price({amp1,s1,CD1,t1}) = 1200 + 300 + 70),
  check("discount2", best_price({amp1,s2,CD1,t1}) = 600 + 400 + 70))
 
 // Rules

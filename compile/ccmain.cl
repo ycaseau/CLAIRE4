@@ -55,7 +55,7 @@
     printf("        -D : debug mode                              \n"),
     printf("        -safe : safe mode                            \n"),
     printf("        -O : optimizing mode                         \n"),
-    printf("        -os <int> : sets the optimizer savety level          \n"),
+    printf("        -os <int> : sets the optimizer safety level          \n"),
     printf("        -l <lib> : adds <lib> to the list of needed libs     \n"),
     printf("        -cm <module>: compiles a module -> executable        \n"),
     printf("        -cc <module>: compiles a module -> target files      \n"),
@@ -218,7 +218,7 @@
 		    	      printf("~A~A~A",s_sep,s,s_end)),
        for m2 in compiler.libraries printf("~A~A~A",s_sep,m2,s_end)) ]
 
-// prints the necesssary files for the two compilation modes
+// prints the necessary files for the two compilation modes
 // if link? is true we need a comma-separated list
 // if m is a module, we compile fi*.cpp + m.cpp -> m.lib
 // if m=f is a file, we compile f-s.cpp (system), f.cpp (functions) -> exe
@@ -255,7 +255,7 @@
 
     
     
-;----------------------- NT makefile (MS Visual C++ or Warcom) ----------------------
+;----------------------- NT makefile (MS Visual C++ or Watcom) ----------------------
 
 // creates the nt makefile for a module or a string
 // m is a module or nothing

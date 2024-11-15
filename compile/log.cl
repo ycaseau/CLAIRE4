@@ -1,5 +1,5 @@
 // *******************************************************************************************
-// *     log file : simplified on Jyly 29th 2024 (see previous versions for full history)    *
+// *     log file : simplified on July 29th 2024 (see previous versions for full history)    *
 // *******************************************************************************************
 
 // THIS LOG FILE sits in the claire/dropbox/compile directory : how we create CLAIRE 2 (our first interpreter)
@@ -94,7 +94,7 @@ create v4.09 then move to v4.10 when tested
 September 2nd
 - add m.resources: list of string that represent useful files (great to copy/upload module)
   it works AS LONG AS THE SLOT is put in the right position
-  it was also the opportuniuty to put import where it should be 
+  it was also the opportunity to put import where it should be 
 - now supports creating the executable on another directory
    claire4 -od <dir> -cm <module>
   this allowed to clean the test generation to avoid the mess in go directory
@@ -114,7 +114,7 @@ TODO on PC
 
 // October 22nd, 2023: This is the day when CLAIRE 4.10 is published on GitHub  !!!!!!!!!!!!!!!!
 
-- fixed the exception!() bug by adding a symetrical method for glb@Pattern
+- fixed the exception!() bug by adding a symmetrical method for glb@Pattern
 - fixed the SHOW := true bug by prefixing wrong in pretty.cl with Core/
 - updated to gitHub
 
@@ -248,13 +248,13 @@ test Equal('a','a'), Equal('a','b'),
 - add something for methods with no errors but poor range ...
      simplest is when we test can_throw / check that c_type <= range.  
 - Introduce CheckRange(type,Result,"cause")
-- add the "close world assumption" for a Call in g_throw => restiction! is not empty
+- add the "close world assumption" for a Call in g_throw => restriction! is not empty
 -  the c_substitution does not work with jito on !!!!! find out why 
       try g_test(for i in (1 .. (2 + 3)) print(i))
 - fix the compilation of self_print @ string (self_print is open) => in gexp
   optimize print(integer) ?
 - why do we set compiler.inline? to false, it should be true !
-- when we detect a discrepency between actual throw and can_throw => 
+- when we detect a discrepancy between actual throw and can_throw => 
     a. we should get rid of "good/bad lists" (unless we keep it as a debug back door)
     b. we should generate the code that is expected by the status
     c. a proper warning should be issued

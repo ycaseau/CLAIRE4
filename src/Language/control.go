@@ -2335,7 +2335,7 @@ func E_self_print_Handle_Language (self EID) EID {
 //       catch x (if (exception!() % return_error) close(exception!())
 //                else eval(self.other)))     // <yc> 6/98
 // CLAIRE 4 VERSION, because catch x => x is a constant class
-// notice that return_error should be called return_exception since they travel through intepreted
+// notice that return_error should be called return_exception since they travel through interpreted
 // not a problem at compile time since return_exceptions are handled with break(x)
 /* The go function for: self_eval(self:Handle) [status=1] */
 func (self *ClaireHandle) SelfEval () EID { 
@@ -2464,7 +2464,7 @@ func E_self_print_Construct_Language (self EID) EID {
 
 // constructors: how to create a list, a set, a tuple or an array
 // note that the constructor is typed
-// CLAIRE4: must build the list with the proper type from the begining, so that Srange is correct
+// CLAIRE4: must build the list with the proper type from the beginning, so that Srange is correct
 /* The go function for: self_eval(self:List) [status=1] */
 func (self *List) SelfEval () EID { 
   var Result EID
@@ -3127,7 +3127,7 @@ func EVAL_Printf (x *ClaireAny) EID {
 // trace is refined in inspect.cl
 // If trace_output() is known, use it, else use current output.
 // defined in inspect.cl
-// CLAIRE4: self_eval is defined once for all, hence exteneded
+// CLAIRE4: self_eval is defined once for all, hence extended
 /* The go function for: self_eval(self:Trace) [status=1] */
 func (self *Trace) SelfEval () EID { 
   var Result EID

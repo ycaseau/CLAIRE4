@@ -25,7 +25,7 @@
 // when local CLAIRE expressions are not JS expression, we need to unfold the global expression 
 // into a big Let (unfolding is a common pattern for C++, Java, Go ...)
 // HOWEVER, if only works for list of arguments whose evaluation order is not specified ! (because we move some of the evaluations earlier)
-// this reintrant compiling (calling g_statement on a expanded Let) works because Let checks if g_expression can be used
+// this reentrant compiling (calling g_statement on a expanded Let) works because Let checks if g_expression can be used
 
 // this function is used to unfold complex expressions that should be compiled as
 // expressions and not statements. this is almost the same as Go but we call j_func, and we know that
@@ -170,7 +170,7 @@ j_unfold_use(ldef:list,x:any,v:string,loop:any) : void
    -> (if (kind = set) "new Set()" else "[]") ]
 
 // A if is easy to compile. We check if the logical compiler can be used
-// we now assume that the test retuns a boolean !
+// we now assume that the test returns a boolean !
  [j_statement(self:If,v:string,loop:any) : void
    ->  if j_func(self.test)                                       // easy case 
           (printf("if ~I ", b_expression(PRODUCER,self.test, true)), new_block("If"))
@@ -357,7 +357,7 @@ j_unfold_use(ldef:list,x:any,v:string,loop:any) : void
       j_unfold_use(ld, Call(selector = self.selector,
                             args = list{j_unfold_arg(l,ld,z) | z in l}), v, loop) ]
 
-// A call method is now simpler with unfolding ! very similar structucture
+// A call method is now simpler with unfolding ! very similar structure
 [j_statement(self:Call_method,v:string,loop:any) : void
  -> if (self.arg.selector = mClaire/update)
         update_inverse(PRODUCER,self.args[1],self.args[2],self.args[5])
@@ -403,7 +403,7 @@ j_unfold_use(ldef:list,x:any,v:string,loop:any) : void
                     breakline())) ]
 
 // same for a cast
-// v3.2.06: the case where self.arg is of type any is painful => it is forbiden in osystem.cl
+// v3.2.06: the case where self.arg is of type any is painful => it is forbidden in osystem.cl
 [j_statement(self:Generate/C_cast,v:string,loop:any) : void
  -> call_j_statement(self.arg, v, loop) ]
 
@@ -484,7 +484,7 @@ j_unfold_use(ldef:list,x:any,v:string,loop:any) : void
                j_expression(arg(x)),
                j_expression(v),
                breakline()))
-        // this assumes that x is an adressable expression: Call_slot, sorted Call_array, sorted Call_table
+        // this assumes that x is an addressable expression: Call_slot, sorted Call_array, sorted Call_table
         else  printf("~I = ~I~I", j_expression(x), j_expression(v),breakline()))]
           
     
