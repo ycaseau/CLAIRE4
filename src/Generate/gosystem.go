@@ -1,5 +1,5 @@
 /***** CLAIRE Compilation of file /Users/ycaseau/Dropbox/src/clairev4.12/src/compile/gosystem.cl 
-         [version 4.1.4 / safety 5] Friday 01-03-2025 14:26:15 *****/
+         [version 4.1.4 / safety 5] Friday 01-03-2025 14:52:13 *****/
 
 package Generate
 import (_ "fmt"

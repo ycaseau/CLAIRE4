@@ -1,5 +1,5 @@
 /***** CLAIRE Compilation of file /Users/ycaseau/Dropbox/src/clairev4.12/src/compile/ocall.cl 
-         [version 4.1.4 / safety 5] Friday 01-03-2025 14:26:15 *****/
+         [version 4.1.4 / safety 5] Friday 01-03-2025 14:52:13 *****/
 
 package Optimize
 import (_ "fmt"
@@ -633,8 +633,8 @@ var Result EID
           } else {
           d = ANY(try_4)
           if ((b == CTRUE) && 
-              (((s.Id() == Core.C_write.Id()) || 
-                  (s.Id() == C_put.Id())) && 
+              (((s.Id() == C_put.Id()) || 
+                  (s.Id() == Core.C_write.Id())) && 
                 (l.Length() == 3))) { 
             Result = F_Optimize_c_code_write_Call(self)
             }  else if ((b == CTRUE) && 
@@ -769,7 +769,7 @@ var Result EID
               { 
                 var v_and7 *ClaireBoolean
                 
-                v_and7 = MakeBoolean((s.Id() == Core.C__I_equal.Id()) || (s.Id() == C__equal.Id()))
+                v_and7 = MakeBoolean((s.Id() == C__equal.Id()) || (s.Id() == Core.C__I_equal.Id()))
                 if (v_and7 == CFALSE) {try_16 = EID{CFALSE.Id(),0}
                 } else { 
                   var try_17 EID
@@ -802,7 +802,7 @@ var Result EID
                 { 
                   var v_and8 *ClaireBoolean
                   
-                  v_and8 = MakeBoolean((s.Id() == Core.C__I_equal.Id()) || (s.Id() == C__equal.Id()))
+                  v_and8 = MakeBoolean((s.Id() == C__equal.Id()) || (s.Id() == Core.C__I_equal.Id()))
                   if (v_and8 == CFALSE) {try_20 = EID{CFALSE.Id(),0}
                   } else { 
                     var try_21 EID
