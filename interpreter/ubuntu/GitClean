@@ -1,0 +1,16 @@
+rm InstallationGuide
+rm README
+rm init.cl
+rm meta/*.cl
+rm compile/*.cl
+rm docs/*
+rm src/claire4.go
+rm src/Kernel/*.go
+rm src/Core/*.go
+rm src/Reader/*.go
+rm src/Language/*.go
+rm src/Optimize/*.go
+rm src/Generate/*.go
+rm test/nonreg/*.cl
+rm test/perf/*.cl
+rm test/rules/*.cl

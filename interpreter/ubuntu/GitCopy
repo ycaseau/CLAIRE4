@@ -1,0 +1,8 @@
+echo "installing go files from root\src to go directory"
+cp src/claire4.go go/src
+cp -r src/Kernel go/src
+cp -r src/Core go/src
+cp -r src/Language go/src
+cp -r src/Reader go/src
+cp -r src/Optimize go/src
+cp -r src/Generate go/src
