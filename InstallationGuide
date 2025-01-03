@@ -1,0 +1,81 @@
+
+
+   +-----------------------------------------------------------------------------------------------------------------+
+   |     CLAIRE 4.1                                                                                                  |
+   |     Installation Guide                                                                                          |
+   |     last update : Jan 1st 2025                                                                                  |
+   +-----------------------------------------------------------------------------------------------------------------+
+   
+   (1) Download from GitHub
+   ========================
+   
+   let call *root* the directory where you have extracted the gitHub files.
+   you should get the following structure:
+   - meta : the source code for the CLAIRE interpreter
+   - compile : the source code for the CLAIRE compiler
+   - src: the tree where all the go code may be found - 
+          it contains a subdirectory for each CLAIRE module
+            - Kernel : this is the heart of the CLAIRE go implementation (also called "micro CLAIRE")
+            - Core, Language, Reader : the go code that was produced by compiling the files in meta
+            - Optimize, Reader: the go code that was produced by compiling the files in compile
+           It also contains the "system file" claire4.go
+   - test : a directory with tests & examples
+            - perf: the performance benchmark files
+            - nonreg: non-regression test files
+            
+            
+   The github also contains:
+   -------------------------
+   - README, installationGuide
+   - the CLAIRE documentation (a PDF file)
+   - init.cl : a CLAIRE init file that you may use to run the tests
+   
+   
+   (2) Setting your own go compiling environment
+   =============================================
+   
+   - select where you want to install the go files : the root directory *go* where you will do the go compiling
+      Here I will show how to do it on a "go" subdirectory of *root* (i.e. *go* = *root*/go)
+      However, this is your choice, but the GOPATH environment variable must be set :
+
+   - set the env variable accordingly depending on your OS
+        e.g. export GOPATH=*go*  on MacOS, set GOPATH=*go* on Windows, etc
+
+   - On recent go versions, you need to set the GO111MODULE variable 
+       export GO111MODULE=off
+       read for more details  https://maelvls.dev/go111module-everywhere/
+
+   - copy the go directories from *root* to *go*/src
+        - the claire4.go file
+        - all the subdirectories and their contents: Kernel, Core, Language, Reader, Optimize, Generate
+
+    - build the claire4 executable:
+        go build src/claire4.go
+   
+   
+   (3) Get started with CLAIRE
+   ===========================
+   
+   - claire4 will launch the interpreter.
+     If an init.cl file is present, it will be loaded first
+     modules are defined in the init file (think of it as a configuration file)
+   
+   - claire3 -cm <module> will compile a module into an executable
+   
+   
+   (4) Playing with the demo performance tests 
+   ===========================================
+   
+   test/perf contains a set of files : mFib, mList, MSet, MDict, mObj and mSend
+   
+   
+   (5) Getting more confidence
+   ===========================
+   
+   You may recompile CLAIRE easily
+   - claire4 -cc <M> will compile a module M and place the generated go code under src/<M>
+   - claire4 -sf <M> -o <name>  creates a "system file" that will include M and all its dependencies
+   - go build src/<name>  will create an executable : this is how claire4 was built :)
+   
+   
+   
