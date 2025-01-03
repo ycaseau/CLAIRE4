@@ -362,7 +362,7 @@ claire/BadMethods:list<method> :: unknown
  ->  for x in needed_modules(m)
        printf("\t~I\"~A\"\n", 
           (if (x = Kernel) princ(". ")),  // Kernel is always included in namespace
-          string!(x.name)) ]
+          capitalize(string!(x.name))) ]  // v4.1.14 for Linux
      
 
 // go requires an import list without redundancy + we only import

@@ -1,5 +1,5 @@
 /***** CLAIRE Compilation of module Optimize.cl 
-         [version 4.1.4 / safety 5] Friday 01-03-2025 14:52:13 *****/
+         [version 4.1.4 / safety 5] Friday 01-03-2025 16:21:04 *****/
 
 package Optimize
 import (_ "fmt"
@@ -375,7 +375,7 @@ var C_Compile *ClaireModule
 func MetaLoad() { 
   
   It = MakeModule("Optimize",C_Compile)
-  It.Comment = MakeString("Compiled on Friday 01-03-2025 14:52:13(v4.1.4), lines:3080, warnings:2,safety:5")
+  It.Comment = MakeString("Compiled on Friday 01-03-2025 16:21:04(v4.1.4), lines:3080, warnings:2,safety:5")
   ClEnv.Module_I = It
   
   // definition of the properties
@@ -661,7 +661,7 @@ func MetaLoad() {
   C_compiler.External = MakeString("go")
   C_compiler.Env = MakeString("MacOS")
   C_compiler.Version = MakeFloat(1.4).Id()
-  C_compiler.Source = MakeString("/Users/ycaseau/claire/v4.0/go/src")
+  C_compiler.Source = MakeString("/Users/ycaseau/claire/v4.1/go/src")
   C_compiler.Libraries = MakeList(ToType(C_string.Id()),MakeString("Kernel").Id())
   
   

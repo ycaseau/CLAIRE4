@@ -200,7 +200,7 @@
       // printf("\t\"fmt\"\n"),                // not necessary if no printf statement is in the code
       if OPT.profile? printf("\t\"os\"\n\t\"runtime/pprof\"\n"),
       import_declaration(m),
-      printf("\t\"~A\"\n",string!(m.name)),
+      printf("\t\"~A\"/**/\n",capitalize(string!(m.name))), // v4.1.14 evolution for Linux
       printf(")\n")]
     
 
@@ -228,7 +228,7 @@
               breakline())),
     printf("~I// module load ~I", breakline(), breakline()),
     for x in list{m in l_necessary | m.made_of & m.status != 5}
-       printf("~I.MetaLoad()~I",ident(x.name),breakline()),
+       printf("~I.MetaLoad()~I",cap_short(x.name),breakline()),
     for x in list{m in l_necessary | m.status = 5}
       ( printf("~I.it->evaluate = ~I~I",ident(x.name),
                g_expression(make_function("load_" /+ string!(x.name)), function),

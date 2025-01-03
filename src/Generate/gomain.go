@@ -1,5 +1,5 @@
 /***** CLAIRE Compilation of file /Users/ycaseau/Dropbox/src/clairev4.12/src/compile/gomain.cl 
-         [version 4.1.4 / safety 5] Friday 01-03-2025 14:52:13 *****/
+         [version 4.1.4 / safety 5] Friday 01-03-2025 16:31:19 *****/
 
 package Generate
 import (_ "fmt"
@@ -614,8 +614,8 @@ func F_Generate_system_imports_module (m *ClaireModule) EID {
   Result = F_Generate_import_declaration_module(m)
   if !ErrorIn(Result) {
   PRINC("\t\"")
-  F_princ_string(m.Name.String_I())
-  PRINC("\"\n")
+  F_princ_string(F_Generate_capitalize_string(m.Name.String_I()))
+  PRINC("\"/**/\n")
   PRINC(")\n")
   Result = EVOID
   }
@@ -752,7 +752,7 @@ func F_Generate_load_function_module (m *ClaireModule,l_necessary *ClaireList) E
       x = x_support.At(i_it)
       if ((ToModule(x).MadeOf.Length() != 0) && 
           !ANY(Core.F_CALL(C_mClaire_status,ARGS(x.ToEID()))).IsInt(5)) { 
-        Core.F_CALL(Language.C_iClaire_ident,ARGS(Core.F_CALL(C_name,ARGS(x.ToEID()))))
+        F_Generate_cap_short_symbol(ToSymbol(OBJ(Core.F_CALL(C_name,ARGS(x.ToEID())))))
         PRINC(".MetaLoad()")
         F_Generate_breakline_void()
         } 

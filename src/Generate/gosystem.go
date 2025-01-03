@@ -1,5 +1,5 @@
 /***** CLAIRE Compilation of file /Users/ycaseau/Dropbox/src/clairev4.12/src/compile/gosystem.cl 
-         [version 4.1.4 / safety 5] Friday 01-03-2025 14:52:13 *****/
+         [version 4.1.4 / safety 5] Friday 01-03-2025 16:31:19 *****/
 
 package Generate
 import (_ "fmt"
@@ -879,13 +879,21 @@ func F_Generate_import_declaration_module (m *ClaireModule) EID {
         PRINC(". ")
         } 
       PRINC("\"")
-      { var arg_2 *ClaireAny
+      { var arg_2 *ClaireString
         var try_3 EID
-        try_3 = Core.F_CALL(C_string_I,ARGS(Core.F_CALL(C_name,ARGS(x.ToEID()))))
+        { var arg_4 *ClaireAny
+          var try_5 EID
+          try_5 = Core.F_CALL(C_string_I,ARGS(Core.F_CALL(C_name,ARGS(x.ToEID()))))
+          if ErrorIn(try_5) {try_3 = try_5
+          } else {
+          arg_4 = ANY(try_5)
+          try_3 = EID{F_Generate_capitalize_string(ToString(arg_4)).Id(),0}
+          }
+          } 
         if ErrorIn(try_3) {loop_1 = try_3
         } else {
-        arg_2 = ANY(try_3)
-        F_princ_string(ToString(arg_2))
+        arg_2 = ToString(OBJ(try_3))
+        F_princ_string(arg_2)
         loop_1 = EVOID
         }
         } 
@@ -903,6 +911,7 @@ func F_Generate_import_declaration_module (m *ClaireModule) EID {
 func E_Generate_import_declaration_module (m EID) EID { 
   return F_Generate_import_declaration_module(ToModule(OBJ(m)) )} 
 
+// v4.1.14 for Linux
 // go requires an import list without redundancy + we only import
 /* The go function for: needed_modules(m:module) [status=0] */
 func F_Generate_needed_modules_module (m *ClaireModule) *ClaireList { 

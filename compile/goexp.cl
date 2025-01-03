@@ -116,7 +116,7 @@
                     let m := get_made(self) in
                        (if (m != Kernel & m != PRODUCER.current) (ident(m.name),princ(".")),
                         go_var(self.name))
-                   else (ident(self.name), princ(".It"))),
+                   else (cap_short(self.name), princ(".It"))),    // v4.1.14 Linux fix : m.name is capitalized
                   object_post(owner(self),s)) ]
 
 // A class is similar to a thing

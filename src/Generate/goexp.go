@@ -1,5 +1,5 @@
 /***** CLAIRE Compilation of file /Users/ycaseau/Dropbox/src/clairev4.12/src/compile/goexp.cl 
-         [version 4.1.4 / safety 5] Friday 01-03-2025 14:52:13 *****/
+         [version 4.1.4 / safety 5] Friday 01-03-2025 16:31:19 *****/
 
 package Generate
 import (_ "fmt"
@@ -593,7 +593,7 @@ func F_Generate_g_expression_module (self *ClaireModule,s *ClaireClass) EID {
         F_Generate_go_var_symbol(self.Name)
         } 
       } else {
-      F_iClaire_ident_symbol(self.Name)
+      F_Generate_cap_short_symbol(self.Name)
       PRINC(".It")
       } 
     F_Generate_object_post_class(self.Id().Isa,s)
