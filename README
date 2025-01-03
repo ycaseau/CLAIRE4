@@ -1,17 +1,11 @@
-NEW in v4.0.8 
-=============
+NEW in v4.1.14 
+==============
 
-Why download the CLAIRE 4 Interpreter ?
-=======================================
+v4.1.14 benefits from a lots of typo fixes (thanks musvaage) and a few bug fixes.
+The major improvement is that CLAIRE 4 is now tested on macOS, windows AND Linux (Ubuntu)
 
-Although CLAIRE is a compiled language, it is quite useful to use it in its simpler form of an interpreted language:
+Visit the web site https://sites.google.com/view/claire4/home to find more about CLAIRE's versions
 
-great for fast prototyping  (REPL), as any interpreted language such as Python, LISP or Clojure.
-REPL stands for Read-Eval-Print-Loop, together with the introspective capabilities of interpreted language,  it supports using the langguage for querying and debugging the system that you build.
-
-As a stand alone file, the CLAIRE4 interpreter is very easy to install  and it does not hit the wall of administrative rights for compiling or installing.
-
-CLAIRE is a very powerful expressive language, with first-class citizen support for sets, hypothetical reasonning or high order relations, in addition to being an object-oriented functional programming language.
 
 Why download the CLAIRE 4 Interpreter ?
 =======================================
