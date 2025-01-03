@@ -1,5 +1,5 @@
 /***** CLAIRE Compilation of file /Users/ycaseau/Dropbox/src/clairev4.12/src/compile/gosystem.cl 
-         [version 4.1.4 / safety 5] Wednesday 01-01-2025 17:30:06 *****/
+         [version 4.1.4 / safety 5] Friday 01-03-2025 11:43:04 *****/
 
 package Generate
 import (_ "fmt"
@@ -729,7 +729,7 @@ func (p *GenerateGoProducer) Compile (m *ClaireModule) EID {
   C_BadMethods.Value = ToType(C_method.Id()).EmptyList().Id()
   Optimize.C_compiler.NDynamic = 0
   Optimize.C_compiler.NMetheids = 0
-  p.Source = Reader.F__7_string(Optimize.C_compiler.Source,m.Name.String_I())
+  p.Source = Reader.F__7_string(Optimize.C_compiler.Source,F_Generate_capitalize_string(m.Name.String_I()))
   Result = Core.F_SUPER(C_compile, C_Generate_code_producer, ARGS(EID{p.Id(),0},EID{m.Id(),0}))
   if !ErrorIn(Result) {
   { var arg_1 *ClaireList

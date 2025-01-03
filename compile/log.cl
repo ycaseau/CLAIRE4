@@ -235,6 +235,28 @@ we find the subdirecties that will be pushed to GitHub:
 
 As before, the work is done in the go directory
 
+January 3rd: publish 4.1.4 on GitHub x PC x Ubuntu
+
+
+A year of reading about energy/economy/climate scenarios, as well as doing my own simulations with the CCEM world modem, has led me the following four insights:
+
+(1) Borrowing from Hannah Richie’s great book, what most 21st century simulations show is “not the end of the world”.
+ The state of the world today is more what could be called “slow transformation as usual” (versus "Business as usual" or versus Paris Agreement targets): 
+ the energy transition has already begun, focusing on clean energy adoption, efficiency improvements, and air quality advancements, but progress is too slow.
+ 
+(2) Decarbonation of energy will happen, but there seems to be a critical time gap between the peak of fossil fuel reliance and the widespread availability 
+of clean energy at sufficient levels. Such a gap will lead to economic strain caused by energy shortages while the quantity of fossil fuels 
+connsumed will cause global temperatures to rise by 2.5°C to 3.0°C by 2100. 
+
+(3) This leads to the idea that it may not be the end of the world, but the end of our 20th century world is definitely coming 
+  (as is beautifully explained by Langdon Morris book "Hello Future!"). Sustained global warming with severe impacts necessitates adaptation,
+   while the era of cheap energy has ended, leading to energy shortages, market distortions, and regional disparities intensified by conflicts. 
+
+(4)  For Europe, and this aligns perfectly with Mario Draghi’s report, we need to act quickly on an aggressive decarbonation strategy, 
+     not to save the planet, but to save our economic competitiveness. 
+    
+You can read abpout those on my last 2024 blog post: https://informationsystemsbiology.blogspot.com/2024/12/energy-matters-modeling-manifesto.html
+
 
 
 

@@ -1,5 +1,5 @@
 /***** CLAIRE Compilation of module Generate.cl 
-         [version 4.1.4 / safety 5] Wednesday 01-01-2025 17:30:06 *****/
+         [version 4.1.4 / safety 5] Friday 01-03-2025 11:43:04 *****/
 
 package Generate
 import (_ "fmt"
@@ -112,31 +112,6 @@ var C_ABODY *Core.GlobalVariable
 var C_Generate_GO_PRODUCER *GenerateGoProducer /*obj*/
 var C_Generate__starlength_string_star *Core.GlobalVariable
 var C_Generate__starset_I_list_star *Core.GlobalVariable
-var C_Generate_output *ClaireProperty // Generate/"output"
-var C_Generate_arg_match *ClaireProperty // Generate/"arg_match"
-var C_dMethod_ask *ClaireProperty // claire/"dMethod?"
-var C_Generate_at *ClaireProperty // Generate/"at"
-var C_Generate_getFunctionName *ClaireProperty // Generate/"getFunctionName"
-var C_Generate_preCore_ask *ClaireProperty // Generate/"preCore?"
-var C_Generate_goEIDFunction *ClaireProperty // Generate/"goEIDFunction"
-var C_Generate_goEvalFunction *ClaireProperty // Generate/"goEvalFunction"
-var C_Generate_retreive_method *ClaireProperty // Generate/"retreive_method"
-var C_Generate_retreive_list *ClaireProperty // Generate/"retreive_list"
-var C_Generate_to_cl *ClaireProperty // Generate/"to_cl"
-var C_Generate_from_eid *ClaireProperty // Generate/"from_eid"
-var C_Generate_integer_prefix *ClaireProperty // Generate/"integer_prefix"
-var C_Generate_float_prefix *ClaireProperty // Generate/"float_prefix"
-var C_Generate_char_prefix *ClaireProperty // Generate/"char_prefix"
-var C_Generate_string_prefix *ClaireProperty // Generate/"string_prefix"
-var C_Generate_string_post *ClaireProperty // Generate/"string_post"
-var C_Generate_native_post *ClaireProperty // Generate/"native_post"
-var C_Generate_object_prefix *ClaireProperty // Generate/"object_prefix"
-var C_Generate_object_post *ClaireProperty // Generate/"object_post"
-var C_Generate_equal_exp *ClaireProperty // Generate/"equal_exp"
-var C_Generate_sign_equal *ClaireProperty // Generate/"sign_equal"
-var C_Generate_char_exp_ask *ClaireProperty // Generate/"char_exp?"
-var C_Generate_c_member *ClaireProperty // Generate/"c_member"
-var C_Generate_bag_expression *ClaireProperty // Generate/"bag_expression"
 var C_Generate_args_list *ClaireProperty // Generate/"args_list"
 var C_Generate_constant_ask *ClaireProperty // Generate/"constant?"
 var C_Generate_go_range *ClaireProperty // Generate/"go_range"
@@ -284,41 +259,41 @@ var C_Generate_compile_method *ClaireProperty // Generate/"compile_method"
 var C_Generate_expression_I *ClaireProperty // Generate/"expression!"
 var C_Generate_b_expression *ClaireProperty // Generate/"b_expression"
 var C_Generate_modfile_name *ClaireProperty // Generate/"modfile_name"
+var C_Generate_output *ClaireProperty // Generate/"output"
+var C_Generate_arg_match *ClaireProperty // Generate/"arg_match"
+var C_dMethod_ask *ClaireProperty // claire/"dMethod?"
+var C_Generate_at *ClaireProperty // Generate/"at"
+var C_Generate_getFunctionName *ClaireProperty // Generate/"getFunctionName"
+var C_Generate_preCore_ask *ClaireProperty // Generate/"preCore?"
+var C_Generate_goEIDFunction *ClaireProperty // Generate/"goEIDFunction"
+var C_Generate_goEvalFunction *ClaireProperty // Generate/"goEvalFunction"
+var C_Generate_retreive_method *ClaireProperty // Generate/"retreive_method"
+var C_Generate_retreive_list *ClaireProperty // Generate/"retreive_list"
+var C_Generate_to_cl *ClaireProperty // Generate/"to_cl"
+var C_Generate_from_eid *ClaireProperty // Generate/"from_eid"
+var C_Generate_integer_prefix *ClaireProperty // Generate/"integer_prefix"
+var C_Generate_float_prefix *ClaireProperty // Generate/"float_prefix"
+var C_Generate_char_prefix *ClaireProperty // Generate/"char_prefix"
+var C_Generate_string_prefix *ClaireProperty // Generate/"string_prefix"
+var C_Generate_string_post *ClaireProperty // Generate/"string_post"
+var C_Generate_native_post *ClaireProperty // Generate/"native_post"
+var C_Generate_object_prefix *ClaireProperty // Generate/"object_prefix"
+var C_Generate_object_post *ClaireProperty // Generate/"object_post"
+var C_Generate_equal_exp *ClaireProperty // Generate/"equal_exp"
+var C_Generate_sign_equal *ClaireProperty // Generate/"sign_equal"
+var C_Generate_char_exp_ask *ClaireProperty // Generate/"char_exp?"
+var C_Generate_c_member *ClaireProperty // Generate/"c_member"
+var C_Generate_bag_expression *ClaireProperty // Generate/"bag_expression"
 var It *ClaireModule
 
 // definition of the meta-model for module Generate 
 func MetaLoad() { 
   
   It = MakeModule("Generate",Optimize.C_Compile)
-  It.Comment = MakeString("Compiled on Wednesday 01-01-2025 17:30:06(v4.1.4), lines:3636, warnings:1,safety:5")
+  It.Comment = MakeString("Compiled on Friday 01-03-2025 11:43:04(v4.1.4), lines:3637, warnings:1,safety:5")
   ClEnv.Module_I = It
   
   // definition of the properties
-  C_Generate_output = MakeProperty("output",2,It)
-  C_Generate_arg_match = MakeProperty("arg_match",1,It)
-  C_dMethod_ask = MakeProperty("dMethod?",1,C_claire)
-  C_Generate_at = MakeProperty("at",1,It)
-  C_Generate_getFunctionName = MakeProperty("getFunctionName",1,It)
-  C_Generate_preCore_ask = MakeProperty("preCore?",1,It)
-  C_Generate_goEIDFunction = MakeProperty("goEIDFunction",1,It)
-  C_Generate_goEvalFunction = MakeProperty("goEvalFunction",1,It)
-  C_Generate_retreive_method = MakeProperty("retreive_method",1,It)
-  C_Generate_retreive_list = MakeProperty("retreive_list",1,It)
-  C_Generate_to_cl = MakeProperty("to_cl",1,It)
-  C_Generate_from_eid = MakeProperty("from_eid",1,It)
-  C_Generate_integer_prefix = MakeProperty("integer_prefix",1,It)
-  C_Generate_float_prefix = MakeProperty("float_prefix",1,It)
-  C_Generate_char_prefix = MakeProperty("char_prefix",1,It)
-  C_Generate_string_prefix = MakeProperty("string_prefix",1,It)
-  C_Generate_string_post = MakeProperty("string_post",1,It)
-  C_Generate_native_post = MakeProperty("native_post",1,It)
-  C_Generate_object_prefix = MakeProperty("object_prefix",1,It)
-  C_Generate_object_post = MakeProperty("object_post",1,It)
-  C_Generate_equal_exp = MakeProperty("equal_exp",1,It)
-  C_Generate_sign_equal = MakeProperty("sign_equal",1,It)
-  C_Generate_char_exp_ask = MakeProperty("char_exp?",1,It)
-  C_Generate_c_member = MakeProperty("c_member",1,It)
-  C_Generate_bag_expression = MakeProperty("bag_expression",1,It)
   C_Generate_args_list = MakeProperty("args_list",1,It)
   C_Generate_constant_ask = MakeProperty("constant?",1,It)
   C_Generate_go_range = MakeProperty("go_range",1,It)
@@ -466,6 +441,31 @@ func MetaLoad() {
   C_Generate_expression_I = MakeProperty("expression!",1,It)
   C_Generate_b_expression = MakeProperty("b_expression",3,It)
   C_Generate_modfile_name = MakeProperty("modfile_name",3,It)
+  C_Generate_output = MakeProperty("output",2,It)
+  C_Generate_arg_match = MakeProperty("arg_match",1,It)
+  C_dMethod_ask = MakeProperty("dMethod?",1,C_claire)
+  C_Generate_at = MakeProperty("at",1,It)
+  C_Generate_getFunctionName = MakeProperty("getFunctionName",1,It)
+  C_Generate_preCore_ask = MakeProperty("preCore?",1,It)
+  C_Generate_goEIDFunction = MakeProperty("goEIDFunction",1,It)
+  C_Generate_goEvalFunction = MakeProperty("goEvalFunction",1,It)
+  C_Generate_retreive_method = MakeProperty("retreive_method",1,It)
+  C_Generate_retreive_list = MakeProperty("retreive_list",1,It)
+  C_Generate_to_cl = MakeProperty("to_cl",1,It)
+  C_Generate_from_eid = MakeProperty("from_eid",1,It)
+  C_Generate_integer_prefix = MakeProperty("integer_prefix",1,It)
+  C_Generate_float_prefix = MakeProperty("float_prefix",1,It)
+  C_Generate_char_prefix = MakeProperty("char_prefix",1,It)
+  C_Generate_string_prefix = MakeProperty("string_prefix",1,It)
+  C_Generate_string_post = MakeProperty("string_post",1,It)
+  C_Generate_native_post = MakeProperty("native_post",1,It)
+  C_Generate_object_prefix = MakeProperty("object_prefix",1,It)
+  C_Generate_object_post = MakeProperty("object_post",1,It)
+  C_Generate_equal_exp = MakeProperty("equal_exp",1,It)
+  C_Generate_sign_equal = MakeProperty("sign_equal",1,It)
+  C_Generate_char_exp_ask = MakeProperty("char_exp?",1,It)
+  C_Generate_c_member = MakeProperty("c_member",1,It)
+  C_Generate_bag_expression = MakeProperty("bag_expression",1,It)
   
   // instructions from module sources
   { 
@@ -1128,150 +1128,150 @@ func MetaLoad() {
   
   _ = Core.F_attach_method(C_compile.AddMethod(Signature(C_module.Id(),C_void.Id()),1,MakeFunction1(E_compile_module,"compile_module")),MakeString("gosystem.cl:315"))
   
-  _ = Core.F_attach_method(C_compile.AddMethod(Signature(C_Generate_go_producer.Id(),C_module.Id(),C_void.Id()),1,MakeFunction2(E_compile_go_producer,"compile_go_producer")),MakeString("gosystem.cl:327"))
+  _ = Core.F_attach_method(C_compile.AddMethod(Signature(C_Generate_go_producer.Id(),C_module.Id(),C_void.Id()),1,MakeFunction2(E_compile_go_producer,"compile_go_producer")),MakeString("gosystem.cl:328"))
   
-  _ = Core.F_attach_method(C_Generate_gen_mod_file.AddMethod(Signature(C_Generate_go_producer.Id(),C_module.Id(),C_void.Id()),1,MakeFunction2(E_Generate_gen_mod_file_go_producer,"Generate_gen_mod_file_go_producer")),MakeString("gosystem.cl:335"))
+  _ = Core.F_attach_method(C_Generate_gen_mod_file.AddMethod(Signature(C_Generate_go_producer.Id(),C_module.Id(),C_void.Id()),1,MakeFunction2(E_Generate_gen_mod_file_go_producer,"Generate_gen_mod_file_go_producer")),MakeString("gosystem.cl:336"))
   
-  _ = Core.F_attach_method(C_Generate_gen_functions.AddMethod(Signature(C_Generate_go_producer.Id(),C_module.Id(),C_void.Id()),0,MakeFunction2(E_Generate_gen_functions_go_producer,"Generate_gen_functions_go_producer")),MakeString("gosystem.cl:339"))
+  _ = Core.F_attach_method(C_Generate_gen_functions.AddMethod(Signature(C_Generate_go_producer.Id(),C_module.Id(),C_void.Id()),0,MakeFunction2(E_Generate_gen_functions_go_producer,"Generate_gen_functions_go_producer")),MakeString("gosystem.cl:340"))
   
   _ = Core.F_attach_method(C_Generate_start_file.AddMethod(Signature(C_Generate_go_producer.Id(),
     C_string.Id(),
     C_module.Id(),
     C_boolean.Id(),
-    C_any.Id()),1,MakeFunction4(E_Generate_start_file_go_producer,"Generate_start_file_go_producer")),MakeString("gosystem.cl:358"))
+    C_any.Id()),1,MakeFunction4(E_Generate_start_file_go_producer,"Generate_start_file_go_producer")),MakeString("gosystem.cl:359"))
   
-  _ = Core.F_attach_method(C_Generate_import_declaration.AddMethod(Signature(C_module.Id(),C_void.Id()),1,MakeFunction1(E_Generate_import_declaration_module,"Generate_import_declaration_module")),MakeString("gosystem.cl:365"))
+  _ = Core.F_attach_method(C_Generate_import_declaration.AddMethod(Signature(C_module.Id(),C_void.Id()),1,MakeFunction1(E_Generate_import_declaration_module,"Generate_import_declaration_module")),MakeString("gosystem.cl:366"))
   
-  _ = Core.F_attach_method(C_Generate_needed_modules.AddMethod(Signature(C_module.Id(),C_list.Id()),0,MakeFunction1(E_Generate_needed_modules_module,"Generate_needed_modules_module")),MakeString("gosystem.cl:373"))
+  _ = Core.F_attach_method(C_Generate_needed_modules.AddMethod(Signature(C_module.Id(),C_list.Id()),0,MakeFunction1(E_Generate_needed_modules_module,"Generate_needed_modules_module")),MakeString("gosystem.cl:374"))
   
-  _ = Core.F_attach_method(C_Generate_dumb_import.AddMethod(Signature(C_module.Id(),C_void.Id()),0,MakeFunction1(E_Generate_dumb_import_module,"Generate_dumb_import_module")),MakeString("gosystem.cl:386"))
+  _ = Core.F_attach_method(C_Generate_dumb_import.AddMethod(Signature(C_module.Id(),C_void.Id()),0,MakeFunction1(E_Generate_dumb_import_module,"Generate_dumb_import_module")),MakeString("gosystem.cl:387"))
   
-  _ = Core.F_attach_method(C_Generate_representative.AddMethod(Signature(C_module.Id(),C_any.Id()),1,MakeFunction1(E_Generate_representative_module,"Generate_representative_module")),MakeString("gosystem.cl:392"))
+  _ = Core.F_attach_method(C_Generate_representative.AddMethod(Signature(C_module.Id(),C_any.Id()),1,MakeFunction1(E_Generate_representative_module,"Generate_representative_module")),MakeString("gosystem.cl:393"))
   
-  _ = Core.F_attach_method(C_Generate_clean_duplicates.AddMethod(Signature(C_list.Id(),C_list.Id()),0,MakeFunction1(E_Generate_clean_duplicates_list,"Generate_clean_duplicates_list")),MakeString("gosystem.cl:401"))
+  _ = Core.F_attach_method(C_Generate_clean_duplicates.AddMethod(Signature(C_list.Id(),C_list.Id()),0,MakeFunction1(E_Generate_clean_duplicates_list,"Generate_clean_duplicates_list")),MakeString("gosystem.cl:402"))
   
-  _ = Core.F_attach_method(C_Generate_gen_classes.AddMethod(Signature(C_Generate_go_producer.Id(),C_module.Id(),C_void.Id()),1,MakeFunction2(E_Generate_gen_classes_go_producer,"Generate_gen_classes_go_producer")),MakeString("gosystem.cl:415"))
+  _ = Core.F_attach_method(C_Generate_gen_classes.AddMethod(Signature(C_Generate_go_producer.Id(),C_module.Id(),C_void.Id()),1,MakeFunction2(E_Generate_gen_classes_go_producer,"Generate_gen_classes_go_producer")),MakeString("gosystem.cl:416"))
   
-  _ = Core.F_attach_method(C_Generate_rootSlot.AddMethod(Signature(C_slot.Id(),C_slot.Id()),0,MakeFunction1(E_Generate_rootSlot_slot,"Generate_rootSlot_slot")),MakeString("gosystem.cl:425"))
+  _ = Core.F_attach_method(C_Generate_rootSlot.AddMethod(Signature(C_slot.Id(),C_slot.Id()),0,MakeFunction1(E_Generate_rootSlot_slot,"Generate_rootSlot_slot")),MakeString("gosystem.cl:426"))
   
-  _ = Core.F_attach_method(C_Generate_gen_class_def.AddMethod(Signature(C_Generate_go_producer.Id(),C_class.Id(),C_void.Id()),1,MakeFunction2(E_Generate_gen_class_def_go_producer,"Generate_gen_class_def_go_producer")),MakeString("gosystem.cl:438"))
+  _ = Core.F_attach_method(C_Generate_gen_class_def.AddMethod(Signature(C_Generate_go_producer.Id(),C_class.Id(),C_void.Id()),1,MakeFunction2(E_Generate_gen_class_def_go_producer,"Generate_gen_class_def_go_producer")),MakeString("gosystem.cl:439"))
   
-  _ = Core.F_attach_method(C_Generate_gen_cast_function.AddMethod(Signature(C_Generate_go_producer.Id(),C_class.Id(),C_void.Id()),0,MakeFunction2(E_Generate_gen_cast_function_go_producer,"Generate_gen_cast_function_go_producer")),MakeString("gosystem.cl:447"))
+  _ = Core.F_attach_method(C_Generate_gen_cast_function.AddMethod(Signature(C_Generate_go_producer.Id(),C_class.Id(),C_void.Id()),0,MakeFunction2(E_Generate_gen_cast_function_go_producer,"Generate_gen_cast_function_go_producer")),MakeString("gosystem.cl:448"))
   
-  _ = Core.F_attach_method(C_Generate_construct_class_ask.AddMethod(Signature(C_class.Id(),C_boolean.Id()),0,MakeFunction1(E_Generate_construct_class_ask_class,"Generate_construct_class?_class")),MakeString("gosystem.cl:452"))
+  _ = Core.F_attach_method(C_Generate_construct_class_ask.AddMethod(Signature(C_class.Id(),C_boolean.Id()),0,MakeFunction1(E_Generate_construct_class_ask_class,"Generate_construct_class?_class")),MakeString("gosystem.cl:453"))
   
-  _ = Core.F_attach_method(C_Generate_gen_construct.AddMethod(Signature(C_Generate_go_producer.Id(),C_class.Id(),C_void.Id()),1,MakeFunction2(E_Generate_gen_construct_go_producer,"Generate_gen_construct_go_producer")),MakeString("gosystem.cl:474"))
+  _ = Core.F_attach_method(C_Generate_gen_construct.AddMethod(Signature(C_Generate_go_producer.Id(),C_class.Id(),C_void.Id()),1,MakeFunction2(E_Generate_gen_construct_go_producer,"Generate_gen_construct_go_producer")),MakeString("gosystem.cl:475"))
   
-  _ = Core.F_attach_method(C_Generate_gen_objects.AddMethod(Signature(C_Generate_go_producer.Id(),C_module.Id(),C_void.Id()),1,MakeFunction2(E_Generate_gen_objects_go_producer,"Generate_gen_objects_go_producer")),MakeString("gosystem.cl:504"))
+  _ = Core.F_attach_method(C_Generate_gen_objects.AddMethod(Signature(C_Generate_go_producer.Id(),C_module.Id(),C_void.Id()),1,MakeFunction2(E_Generate_gen_objects_go_producer,"Generate_gen_objects_go_producer")),MakeString("gosystem.cl:505"))
   
-  _ = Core.F_attach_method(C_Generate_getRange.AddMethod(Signature(Core.C_global_variable.Id(),C_class.Id()),0,MakeFunction1(E_Generate_getRange_global_variable,"Generate_getRange_global_variable")),MakeString("gosystem.cl:508"))
+  _ = Core.F_attach_method(C_Generate_getRange.AddMethod(Signature(Core.C_global_variable.Id(),C_class.Id()),0,MakeFunction1(E_Generate_getRange_global_variable,"Generate_getRange_global_variable")),MakeString("gosystem.cl:509"))
   
-  _ = Core.F_attach_method(C_Generate_gen_meta_load.AddMethod(Signature(C_Generate_go_producer.Id(),C_module.Id(),C_void.Id()),1,MakeFunction2(E_Generate_gen_meta_load_go_producer,"Generate_gen_meta_load_go_producer")),MakeString("gosystem.cl:542"))
+  _ = Core.F_attach_method(C_Generate_gen_meta_load.AddMethod(Signature(C_Generate_go_producer.Id(),C_module.Id(),C_void.Id()),1,MakeFunction2(E_Generate_gen_meta_load_go_producer,"Generate_gen_meta_load_go_producer")),MakeString("gosystem.cl:543"))
   
   _ = Core.F_attach_method(C_Generate_gen_module.AddMethod(Signature(C_Generate_go_producer.Id(),
     C_module.Id(),
     C_module.Id(),
-    C_void.Id()),1,MakeFunction3(E_Generate_gen_module_go_producer,"Generate_gen_module_go_producer")),MakeString("gosystem.cl:562"))
+    C_void.Id()),1,MakeFunction3(E_Generate_gen_module_go_producer,"Generate_gen_module_go_producer")),MakeString("gosystem.cl:563"))
   
-  _ = Core.F_attach_method(C_Generate_get_made.AddMethod(Signature(C_module.Id(),C_module.Id()),0,MakeFunction1(E_Generate_get_made_module,"Generate_get_made_module")),MakeString("gosystem.cl:567"))
+  _ = Core.F_attach_method(C_Generate_get_made.AddMethod(Signature(C_module.Id(),C_module.Id()),0,MakeFunction1(E_Generate_get_made_module,"Generate_get_made_module")),MakeString("gosystem.cl:568"))
   
-  _ = Core.F_attach_method(C_Generate_declare.AddMethod(Signature(C_Generate_go_producer.Id(),C_property.Id(),C_void.Id()),1,MakeFunction2(E_Generate_declare_go_producer,"Generate_declare_go_producer")),MakeString("gosystem.cl:577"))
+  _ = Core.F_attach_method(C_Generate_declare.AddMethod(Signature(C_Generate_go_producer.Id(),C_property.Id(),C_void.Id()),1,MakeFunction2(E_Generate_declare_go_producer,"Generate_declare_go_producer")),MakeString("gosystem.cl:578"))
   
-  _ = Core.F_attach_method(C_Generate_parents.AddMethod(Signature(C_module.Id(),C_list.Id(),C_list.Id()),0,MakeFunction2(E_Generate_parents_module,"Generate_parents_module")),MakeString("gosystem.cl:584"))
+  _ = Core.F_attach_method(C_Generate_parents.AddMethod(Signature(C_module.Id(),C_list.Id(),C_list.Id()),0,MakeFunction2(E_Generate_parents_module,"Generate_parents_module")),MakeString("gosystem.cl:585"))
   
-  _ = Core.F_attach_method(C_Generate_parents.AddMethod(Signature(C_list.Id(),C_list.Id()),0,MakeFunction1(E_Generate_parents_list,"Generate_parents_list")),MakeString("gosystem.cl:589"))
+  _ = Core.F_attach_method(C_Generate_parents.AddMethod(Signature(C_list.Id(),C_list.Id()),0,MakeFunction1(E_Generate_parents_list,"Generate_parents_list")),MakeString("gosystem.cl:590"))
   
-  _ = Core.F_attach_method(C_get.AddMethod(Signature(C_module.Id(),C_void.Id()),1,MakeFunction1(E_get_module2,"get_module2")),MakeString("gosystem.cl:593"))
+  _ = Core.F_attach_method(C_get.AddMethod(Signature(C_module.Id(),C_void.Id()),1,MakeFunction1(E_get_module2,"get_module2")),MakeString("gosystem.cl:594"))
   
-  _ = Core.F_attach_method(C_Generate_outfile_ask.AddMethod(Signature(C_Generate_go_producer.Id(),C_boolean.Id()),0,MakeFunction1(E_Generate_outfile_ask_go_producer,"Generate_outfile?_go_producer")),MakeString("gosystem.cl:601"))
+  _ = Core.F_attach_method(C_Generate_outfile_ask.AddMethod(Signature(C_Generate_go_producer.Id(),C_boolean.Id()),0,MakeFunction1(E_Generate_outfile_ask_go_producer,"Generate_outfile?_go_producer")),MakeString("gosystem.cl:602"))
   
-  _ = Core.F_attach_method(C_Generate_modfile_name.AddMethod(Signature(C_Generate_go_producer.Id(),C_module.Id(),C_string.Id()),0,MakeFunction2(E_Generate_modfile_name_go_producer2,"Generate_modfile_name_go_producer2")),MakeString("gosystem.cl:605"))
+  _ = Core.F_attach_method(C_Generate_modfile_name.AddMethod(Signature(C_Generate_go_producer.Id(),C_module.Id(),C_string.Id()),0,MakeFunction2(E_Generate_modfile_name_go_producer2,"Generate_modfile_name_go_producer2")),MakeString("gosystem.cl:606"))
   
   _ = Core.F_attach_method(C_Generate_gen_instruction.AddMethod(Signature(C_Generate_go_producer.Id(),
     C_any.Id(),
     C_string.Id(),
-    C_string.Id()),1,MakeFunction3(E_Generate_gen_instruction_go_producer,"Generate_gen_instruction_go_producer")),MakeString("gosystem.cl:615"))
+    C_string.Id()),1,MakeFunction3(E_Generate_gen_instruction_go_producer,"Generate_gen_instruction_go_producer")),MakeString("gosystem.cl:616"))
   
-  _ = Core.F_attach_method(C_Generate_fileName.AddMethod(Signature(C_string.Id(),C_string.Id()),0,MakeFunction1(E_Generate_fileName_string,"Generate_fileName_string")),MakeString("gosystem.cl:620"))
+  _ = Core.F_attach_method(C_Generate_fileName.AddMethod(Signature(C_string.Id(),C_string.Id()),0,MakeFunction1(E_Generate_fileName_string,"Generate_fileName_string")),MakeString("gosystem.cl:621"))
   
   _ = Core.F_attach_method(Optimize.C_Compile_make_c_function.AddMethod(Signature(C_lambda.Id(),
     C_string.Id(),
     C_any.Id(),
-    C_void.Id()),1,MakeFunction3(E_Compile_make_c_function_lambda,"Compile_make_c_function_lambda")),MakeString("gosystem.cl:630"))
+    C_void.Id()),1,MakeFunction3(E_Compile_make_c_function_lambda,"Compile_make_c_function_lambda")),MakeString("gosystem.cl:631"))
   
   _ = Core.F_attach_method(C_Generate_make_lambda_function.AddMethod(Signature(C_Generate_go_producer.Id(),
     C_lambda.Id(),
     C_string.Id(),
-    C_void.Id()),1,MakeFunction3(E_Generate_make_lambda_function_go_producer,"Generate_make_lambda_function_go_producer")),MakeString("gosystem.cl:648"))
+    C_void.Id()),1,MakeFunction3(E_Generate_make_lambda_function_go_producer,"Generate_make_lambda_function_go_producer")),MakeString("gosystem.cl:649"))
   
   _ = Core.F_attach_method(C_Generate_generate_function_start.AddMethod(Signature(C_Generate_go_producer.Id(),
     C_lambda.Id(),
     C_class.Id(),
     C_any.Id(),
     C_string.Id(),
-    C_void.Id()),1,MakeFunction5(E_Generate_generate_function_start_go_producer,"Generate_generate_function_start_go_producer")),MakeString("gosystem.cl:668"))
+    C_void.Id()),1,MakeFunction5(E_Generate_generate_function_start_go_producer,"Generate_generate_function_start_go_producer")),MakeString("gosystem.cl:669"))
   
   _ = Core.F_attach_method(C_Generate_gen_function.AddMethod(Signature(C_Generate_go_producer.Id(),
     C_lambda.Id(),
     C_string.Id(),
     C_method.Id(),
-    C_void.Id()),1,MakeFunction4(E_Generate_gen_function_go_producer,"Generate_gen_function_go_producer")),MakeString("gosystem.cl:708"))
+    C_void.Id()),1,MakeFunction4(E_Generate_gen_function_go_producer,"Generate_gen_function_go_producer")),MakeString("gosystem.cl:709"))
   
-  _ = Core.F_attach_method(C_Generate_simple_body_ask.AddMethod(Signature(C_any.Id(),C_boolean.Id()),1,MakeFunction1(E_Generate_simple_body_ask_any,"Generate_simple_body?_any")),MakeString("gosystem.cl:716"))
+  _ = Core.F_attach_method(C_Generate_simple_body_ask.AddMethod(Signature(C_any.Id(),C_boolean.Id()),1,MakeFunction1(E_Generate_simple_body_ask_any,"Generate_simple_body?_any")),MakeString("gosystem.cl:717"))
   
   _ = Core.F_attach_method(C_Generate_function_body.AddMethod(Signature(C_Generate_go_producer.Id(),
     C_any.Id(),
     C_class.Id(),
-    C_void.Id()),1,MakeFunction3(E_Generate_function_body_go_producer1,"Generate_function_body_go_producer1")),MakeString("gosystem.cl:731"))
+    C_void.Id()),1,MakeFunction3(E_Generate_function_body_go_producer1,"Generate_function_body_go_producer1")),MakeString("gosystem.cl:732"))
   
   _ = Core.F_attach_method(C_Generate_function_body.AddMethod(Signature(C_Generate_go_producer.Id(),
     Language.C_If.Id(),
     C_class.Id(),
-    C_void.Id()),1,MakeFunction3(E_Generate_function_body_go_producer2,"Generate_function_body_go_producer2")),MakeString("gosystem.cl:746"))
+    C_void.Id()),1,MakeFunction3(E_Generate_function_body_go_producer2,"Generate_function_body_go_producer2")),MakeString("gosystem.cl:747"))
   
   _ = Core.F_attach_method(C_Generate_function_body.AddMethod(Signature(C_Generate_go_producer.Id(),
     Language.C_Do.Id(),
     C_class.Id(),
-    C_void.Id()),1,MakeFunction3(E_Generate_function_body_go_producer3,"Generate_function_body_go_producer3")),MakeString("gosystem.cl:755"))
+    C_void.Id()),1,MakeFunction3(E_Generate_function_body_go_producer3,"Generate_function_body_go_producer3")),MakeString("gosystem.cl:756"))
   
   _ = Core.F_attach_method(C_Generate_procedure_body.AddMethod(Signature(C_Generate_go_producer.Id(),
     C_method.Id(),
     C_lambda.Id(),
     C_any.Id(),
     C_class.Id(),
-    C_void.Id()),1,MakeFunction5(E_Generate_procedure_body_go_producer,"Generate_procedure_body_go_producer")),MakeString("gosystem.cl:765"))
+    C_void.Id()),1,MakeFunction5(E_Generate_procedure_body_go_producer,"Generate_procedure_body_go_producer")),MakeString("gosystem.cl:766"))
   
   _ = Core.F_attach_method(C_Generate_eid_body.AddMethod(Signature(C_any.Id(),
     C_boolean.Id(),
     C_class.Id(),
-    C_void.Id()),1,MakeFunction3(E_Generate_eid_body_any,"Generate_eid_body_any")),MakeString("gosystem.cl:771"))
+    C_void.Id()),1,MakeFunction3(E_Generate_eid_body_any,"Generate_eid_body_any")),MakeString("gosystem.cl:772"))
   
   _ = Core.F_attach_method(C_Generate_eid_body.AddMethod(Signature(C_method.Id(),
     C_any.Id(),
     C_boolean.Id(),
     C_class.Id(),
-    C_void.Id()),1,MakeFunction4(E_Generate_eid_body_method,"Generate_eid_body_method")),MakeString("gosystem.cl:782"))
+    C_void.Id()),1,MakeFunction4(E_Generate_eid_body_method,"Generate_eid_body_method")),MakeString("gosystem.cl:783"))
   
   _ = Core.F_attach_method(C_Generate_generate_eid_function.AddMethod(Signature(C_lambda.Id(),
     C_method.Id(),
     C_boolean.Id(),
-    C_void.Id()),1,MakeFunction3(E_Generate_generate_eid_function_lambda,"Generate_generate_eid_function_lambda")),MakeString("gosystem.cl:793"))
+    C_void.Id()),1,MakeFunction3(E_Generate_generate_eid_function_lambda,"Generate_generate_eid_function_lambda")),MakeString("gosystem.cl:794"))
   
-  _ = Core.F_attach_method(C_Generate_generate_eid_dual.AddMethod(Signature(C_lambda.Id(),C_string.Id(),C_void.Id()),1,MakeFunction2(E_Generate_generate_eid_dual_lambda,"Generate_generate_eid_dual_lambda")),MakeString("gosystem.cl:806"))
+  _ = Core.F_attach_method(C_Generate_generate_eid_dual.AddMethod(Signature(C_lambda.Id(),C_string.Id(),C_void.Id()),1,MakeFunction2(E_Generate_generate_eid_dual_lambda,"Generate_generate_eid_dual_lambda")),MakeString("gosystem.cl:807"))
   
   _ = Core.F_attach_method(C_Generate_print_EID_call.AddMethod(Signature(C_method.Id(),
     C_list.Id(),
     Core.F_param_I_class(C_list,ToType(C_class.Id())).Id(),
     C_boolean.Id(),
-    C_void.Id()),1,MakeFunction4(E_Generate_print_EID_call_method,"Generate_print_EID_call_method")),MakeString("gosystem.cl:829"))
+    C_void.Id()),1,MakeFunction4(E_Generate_print_EID_call_method,"Generate_print_EID_call_method")),MakeString("gosystem.cl:830"))
   
   _ = Core.F_attach_method(C_Generate_external_EID_arg.AddMethod(Signature(C_Variable.Id(),
     C_class.Id(),
     C_integer.Id(),
     C_boolean.Id(),
-    C_void.Id()),1,MakeFunction4(E_Generate_external_EID_arg_Variable,"Generate_external_EID_arg_Variable")),MakeString("gosystem.cl:838"))
+    C_void.Id()),1,MakeFunction4(E_Generate_external_EID_arg_Variable,"Generate_external_EID_arg_Variable")),MakeString("gosystem.cl:839"))
   
-  _ = Core.F_attach_method(C_Generate_goEIDVariables.AddMethod(Signature(C_Generate_go_producer.Id(),C_list.Id(),C_any.Id()),0,MakeFunction2(E_Generate_goEIDVariables_go_producer,"Generate_goEIDVariables_go_producer")),MakeString("gosystem.cl:845"))
+  _ = Core.F_attach_method(C_Generate_goEIDVariables.AddMethod(Signature(C_Generate_go_producer.Id(),C_list.Id(),C_any.Id()),0,MakeFunction2(E_Generate_goEIDVariables_go_producer,"Generate_goEIDVariables_go_producer")),MakeString("gosystem.cl:846"))
   
   { 
     var expr EID
@@ -1285,26 +1285,26 @@ func MetaLoad() {
       } 
     ErrorCheck(expr)} 
   
-  _ = Core.F_attach_method(C_Generate_check_range.AddMethod(Signature(C_method.Id(),C_any.Id(),C_any.Id()),1,MakeFunction2(E_Generate_check_range_method,"Generate_check_range_method")),MakeString("gosystem.cl:862"))
+  _ = Core.F_attach_method(C_Generate_check_range.AddMethod(Signature(C_method.Id(),C_any.Id(),C_any.Id()),1,MakeFunction2(E_Generate_check_range_method,"Generate_check_range_method")),MakeString("gosystem.cl:863"))
   
-  _ = Core.F_attach_method(C_Generate_generate_eval_function.AddMethod(Signature(C_lambda.Id(),C_method.Id(),C_void.Id()),1,MakeFunction2(E_Generate_generate_eval_function_lambda,"Generate_generate_eval_function_lambda")),MakeString("gosystem.cl:874"))
+  _ = Core.F_attach_method(C_Generate_generate_eval_function.AddMethod(Signature(C_lambda.Id(),C_method.Id(),C_void.Id()),1,MakeFunction2(E_Generate_generate_eval_function_lambda,"Generate_generate_eval_function_lambda")),MakeString("gosystem.cl:875"))
   
-  _ = Core.F_attach_method(C_Generate_need_debug_ask.AddMethod(Signature(C_any.Id(),C_boolean.Id()),0,MakeFunction1(E_Generate_need_debug_ask_any,"Generate_need_debug?_any")),MakeString("gosystem.cl:886"))
+  _ = Core.F_attach_method(C_Generate_need_debug_ask.AddMethod(Signature(C_any.Id(),C_boolean.Id()),0,MakeFunction1(E_Generate_need_debug_ask_any,"Generate_need_debug?_any")),MakeString("gosystem.cl:887"))
   
   _ = Core.F_attach_method(C_Generate_debug_intro.AddMethod(Signature(C_Generate_go_producer.Id(),
     C_lambda.Id(),
     C_method.Id(),
-    C_void.Id()),1,MakeFunction3(E_Generate_debug_intro_go_producer,"Generate_debug_intro_go_producer")),MakeString("gosystem.cl:902"))
+    C_void.Id()),1,MakeFunction3(E_Generate_debug_intro_go_producer,"Generate_debug_intro_go_producer")),MakeString("gosystem.cl:903"))
   
   _ = Core.F_attach_method(C_Generate_return_result.AddMethod(Signature(C_Generate_go_producer.Id(),
     C_class.Id(),
     C_method.Id(),
     C_string.Id(),
-    C_void.Id()),1,MakeFunction4(E_Generate_return_result_go_producer,"Generate_return_result_go_producer")),MakeString("gosystem.cl:915"))
+    C_void.Id()),1,MakeFunction4(E_Generate_return_result_go_producer,"Generate_return_result_go_producer")),MakeString("gosystem.cl:916"))
   
-  _ = Core.F_attach_method(C_c_princ.AddMethod(Signature(C_function.Id(),C_void.Id()),0,MakeFunction1(E_c_princ_function,"c_princ_function")),MakeString("gosystem.cl:918"))
+  _ = Core.F_attach_method(C_c_princ.AddMethod(Signature(C_function.Id(),C_void.Id()),0,MakeFunction1(E_c_princ_function,"c_princ_function")),MakeString("gosystem.cl:919"))
   
-  _ = Core.F_attach_method(C_Generate_import_princ.AddMethod(Signature(C_string.Id(),C_void.Id()),0,MakeFunction1(E_Generate_import_princ_string,"Generate_import_princ_string")),MakeString("gosystem.cl:921"))
+  _ = Core.F_attach_method(C_Generate_import_princ.AddMethod(Signature(C_string.Id(),C_void.Id()),0,MakeFunction1(E_Generate_import_princ_string,"Generate_import_princ_string")),MakeString("gosystem.cl:922"))
   
   _ = Core.F_attach_method(C_Generate_new_block.AddMethod(Signature(C_string.Id(),C_void.Id()),0,MakeFunction1(E_Generate_new_block_string,"Generate_new_block_string")),MakeString("gogen.cl:25"))
   

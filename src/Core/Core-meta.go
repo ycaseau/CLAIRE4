@@ -1,5 +1,5 @@
 /***** CLAIRE Compilation of module Core.cl 
-         [version 4.1.4 / safety 5] Wednesday 01-01-2025 17:30:04 *****/
+         [version 4.1.4 / safety 5] Friday 01-03-2025 11:43:02 *****/
 
 package Core
 import (_ "fmt"
@@ -357,7 +357,7 @@ var It *ClaireModule
 func MetaLoad() { 
   
   It = MakeModule("Core",C_mClaire)
-  It.Comment = MakeString("Compiled on Wednesday 01-01-2025 17:30:04(v4.1.4), lines:2428, warnings:7,safety:5")
+  It.Comment = MakeString("Compiled on Friday 01-03-2025 11:43:02(v4.1.4), lines:2428, warnings:7,safety:5")
   ClEnv.Module_I = It
   
   // definition of the properties
@@ -1048,7 +1048,7 @@ func MetaLoad() {
       
       _CL_obj = C_claire_date
       _CL_obj.Range = ToType(C_string.Id())
-      _CL_obj.Value = MakeString("Wednesday 01-01-2025").Id()
+      _CL_obj.Value = MakeString("Friday 01-03-2025").Id()
       expr = F_close_global_variable(_CL_obj)
       } 
     ErrorCheck(expr)} 

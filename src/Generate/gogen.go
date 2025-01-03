@@ -1,5 +1,5 @@
 /***** CLAIRE Compilation of file /Users/ycaseau/Dropbox/src/clairev4.12/src/compile/gogen.cl 
-         [version 4.1.4 / safety 5] Wednesday 01-01-2025 17:30:06 *****/
+         [version 4.1.4 / safety 5] Friday 01-03-2025 11:43:04 *****/
 
 package Generate
 import (_ "fmt"

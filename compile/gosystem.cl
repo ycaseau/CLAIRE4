@@ -319,7 +319,8 @@ claire/BadMethods:list<method> :: unknown
  ->  BadMethods := list<method>(),       // specific to cross-compiling
      compiler.n_dynamic := 0,            // number of dyn calls
     compiler.n_metheids := 0,           // methods that may return an error (useful for Go)
-    p.source := compiler.source / string!(m.name),               // produce code in the <src>/<module> directory
+    p.source := compiler.source / capitalize(string!(m.name)),      // v4.1.14 : Module name is capitalized
+    // p.source := compiler.source / string!(m.name),               // produce code in the <src>/<module> directory
     compile@code_producer(p,m),
     trace(1, "~S: ~A lines of code compiled. ~A warnings, ~A notes. ~A dynamic calls, ~A% exception-ready methods\n",
             m, compiler.n_loc, compiler.n_warnings, compiler.n_notes, compiler.n_dynamic, 

@@ -1,5 +1,5 @@
 /***** CLAIRE Compilation of file /Users/ycaseau/Dropbox/src/clairev4.12/src/compile/gomain.cl 
-         [version 4.1.4 / safety 5] Wednesday 01-01-2025 17:30:06 *****/
+         [version 4.1.4 / safety 5] Friday 01-03-2025 11:43:04 *****/
 
 package Generate
 import (_ "fmt"
@@ -22,7 +22,7 @@ func import_g0209() {
 //+-------------------------------------------------------------+
 //| CLAIRE                                                      |
 //| gomain.cl                                                   |
-//| Copyright (C) 1994 - 2023 Yves Caseau. All Rights Reserved  |
+//| Copyright (C) 1994 - 2025 Yves Caseau. All Rights Reserved  |
 //| cf. copyright info in file object.cl: about()               |
 //+-------------------------------------------------------------+
 // ----------------------------------------------------------------------
