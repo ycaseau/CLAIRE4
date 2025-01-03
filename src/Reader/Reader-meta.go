@@ -1,5 +1,5 @@
 /***** CLAIRE Compilation of module Reader.cl 
-         [version 4.1.4 / safety 5] Friday 01-03-2025 11:43:03 *****/
+         [version 4.1.4 / safety 5] Friday 01-03-2025 14:26:13 *****/
 
 package Reader
 import (_ "fmt"
@@ -169,6 +169,7 @@ var C_up *ClaireProperty /*obj*/
 var C_dn *ClaireProperty /*obj*/
 var C_where *ClaireProperty /*obj*/
 var C_measure *ClaireClass /*obj*/
+var C_Reader_nextstruct *ClaireProperty // Reader/"nextstruct"
 var C_Reader_readlet *ClaireProperty // Reader/"readlet"
 var C_Reader_readlet_star *ClaireProperty // Reader/"readlet*"
 var C_Reader_readwhen *ClaireProperty // Reader/"readwhen"
@@ -277,17 +278,17 @@ var C_Reader_operand_I *ClaireProperty // Reader/"operand!"
 var C_Reader_precedence_I *ClaireProperty // Reader/"precedence!"
 var C_Reader_conditional_comment_ask *ClaireProperty // Reader/"conditional_comment?"
 var C_Reader_conditional_comment_I *ClaireProperty // Reader/"conditional_comment!"
-var C_Reader_nextstruct *ClaireProperty // Reader/"nextstruct"
 var It *ClaireModule
 
 // definition of the meta-model for module Reader 
 func MetaLoad() { 
   
   It = MakeModule("Reader",Language.C_iClaire)
-  It.Comment = MakeString("Compiled on Friday 01-03-2025 11:43:03(v4.1.4), lines:1794, warnings:3,safety:5")
+  It.Comment = MakeString("Compiled on Friday 01-03-2025 14:26:13(v4.1.4), lines:1794, warnings:3,safety:5")
   ClEnv.Module_I = It
   
   // definition of the properties
+  C_Reader_nextstruct = MakeProperty("nextstruct",1,It)
   C_Reader_readlet = MakeProperty("readlet",1,It)
   C_Reader_readlet_star = MakeProperty("readlet*",1,It)
   C_Reader_readwhen = MakeProperty("readwhen",1,It)
@@ -396,7 +397,6 @@ func MetaLoad() {
   C_Reader_precedence_I = MakeProperty("precedence!",1,It)
   C_Reader_conditional_comment_ask = MakeProperty("conditional_comment?",1,It)
   C_Reader_conditional_comment_I = MakeProperty("conditional_comment!",1,It)
-  C_Reader_nextstruct = MakeProperty("nextstruct",1,It)
   
   // instructions from module sources
   C_delimiter = NewClass("delimiter",Core.C_global_variable,C_claire)
@@ -566,14 +566,14 @@ func MetaLoad() {
   Core.F_close_slot(C_meta_reader.AddSlot(C_Reader_comma,ToType(C_any.Id()),CNULL))
   Core.F_close_slot(C_meta_reader.AddSlot(C_Reader_curly,ToType(C_any.Id()),CNULL))
   Core.F_close_slot(C_meta_reader.AddSlot(C_Reader_last_arrow,ToType(C_boolean.Id()),CFALSE.Id()))
-  Core.F_close_slot(C_meta_reader.AddSlot(C_Reader_s_properties,Core.F_nth_class1(C_set,ToType(C_property.Id())),MakeSet(ToType(C_property.Id()),C_known_I.Id(),
-    C_final.Id(),
+  Core.F_close_slot(C_meta_reader.AddSlot(C_Reader_s_properties,Core.F_nth_class1(C_set,ToType(C_property.Id())),MakeSet(ToType(C_property.Id()),C_final.Id(),
     C_abstract.Id(),
     C_ephemeral.Id(),
     C_store.Id(),
     C_begin.Id(),
     C_end.Id(),
-    Core.C_reify.Id()).Id()))
+    Core.C_reify.Id(),
+    C_known_I.Id()).Id()))
   
   _ = Core.F_attach_method(C_Reader_next.AddMethod(Signature(C_meta_reader.Id(),C_void.Id()),0,MakeFunction1(E_next_meta_reader,"next_meta_reader")),MakeString("read.cl:102"))
   

@@ -1,5 +1,5 @@
 /***** CLAIRE Compilation of module Core.cl 
-         [version 4.1.4 / safety 5] Friday 01-03-2025 11:43:02 *****/
+         [version 4.1.4 / safety 5] Friday 01-03-2025 14:26:13 *****/
 
 package Core
 import (_ "fmt"
@@ -357,7 +357,7 @@ var It *ClaireModule
 func MetaLoad() { 
   
   It = MakeModule("Core",C_mClaire)
-  It.Comment = MakeString("Compiled on Friday 01-03-2025 11:43:02(v4.1.4), lines:2428, warnings:7,safety:5")
+  It.Comment = MakeString("Compiled on Friday 01-03-2025 14:26:13(v4.1.4), lines:2428, warnings:7,safety:5")
   ClEnv.Module_I = It
   
   // definition of the properties

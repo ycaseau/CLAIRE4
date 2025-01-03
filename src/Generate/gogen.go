@@ -1,5 +1,5 @@
 /***** CLAIRE Compilation of file /Users/ycaseau/Dropbox/src/clairev4.12/src/compile/gogen.cl 
-         [version 4.1.4 / safety 5] Friday 01-03-2025 11:43:04 *****/
+         [version 4.1.4 / safety 5] Friday 01-03-2025 14:26:15 *****/
 
 package Generate
 import (_ "fmt"
@@ -483,7 +483,7 @@ func E_Generate_valuesSlot_class (s EID) EID {
 /* The go function for: namespace!(c:go_producer,m:module) [status=0] */
 func (c *GenerateGoProducer) Namespace_I (m *ClaireModule)  { 
   PRINC("package ")
-  F_iClaire_ident_symbol(m.Name)
+  F_princ_string(F_Generate_capitalize_string(m.Name.String_I()))
   PRINC("\n")
   } 
 

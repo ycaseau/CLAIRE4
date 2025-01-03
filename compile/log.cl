@@ -237,6 +237,9 @@ As before, the work is done in the go directory
 
 January 3rd: publish 4.1.4 on GitHub x PC x Ubuntu
 
+-> note: the package associated to m is capitalize(m.name) or cap_short(m.name) 
+   todo: clean up and use the same
+
 
 A year of reading about energy/economy/climate scenarios, as well as doing my own simulations with the CCEM world modem, has led me the following four insights:
 

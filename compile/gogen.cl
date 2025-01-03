@@ -231,7 +231,7 @@ c_string(c:go_producer, self:symbol) : string
 
 // generate a namespace definition (Go package)
 [namespace!(c:go_producer,m:module) : void
- -> printf("package ~I\n",ident(m.name)) ]
+ -> printf("package ~A\n",capitalize(string!(m.name))) ]
 
 // note : we have removed module!(c:go_producer,m:module) => nothing to add to the previous line
 
