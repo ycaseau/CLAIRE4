@@ -15,19 +15,16 @@ CLAIRE4:   https://sites.google.com/view/claire4/home
 
 
 CLAIRE is 28 years old, but CLAIRE 4.0 started in September 2020.
-The current version is in alpha-status. Beta status is expected this summer of 2022
+The current version is in beta-status. 
 
-CLAIRE4 now has its own Web site: https://sites.google.com/view/claire4/home
 
 2. Organization
 ===============
-
 
 The root of this repository contains
 - this README
 - an InstallationGuide
 - an init.cl file that you may customize to run some of the test files
-
 
 This repository has the following directories
 
@@ -52,11 +49,9 @@ This repository has the following directories
 3. Terms of use
 ===============
 
-
 CLAIRE has been built by a team as an open-source project: you are free to use and redistribute the code that is found in the GitHub directory
 DISCLAIMER: THE CLAIRE SOFTWARE IS PROVIDED AS IS AND WITHOUT ANY WARRANTY, INCLUDING, WITHOUT LIMITATION,
 THE IMPLIED WARRANTIES OF MERCHANTABILTY AND FITNESS FOR A PARTICULAR PURPOSE.
-
 
 
 4. Why Claire ?
@@ -117,7 +112,7 @@ As most compiled language, runing a CLAIRE program consumes less energy and prod
 
 
 5. NEW in v4.1.14 
------------------
+==================
 
 v4.1.14 benefits from a lots of typo fixes (thanks musvaage) and a few bug fixes.
 The major improvement is that CLAIRE 4 is now tested on macOS, windows AND Linux (Ubuntu)
@@ -126,7 +121,7 @@ Visit the web site https://sites.google.com/view/claire4/home to find more about
 
 
 6. Why download the CLAIRE 4 Interpreter ?
-------------------------------------------
+==========================================
 
 Although CLAIRE is a compiled language, it is quite useful to use it in its simpler form of an interpreted language:
 
