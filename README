@@ -1,27 +1,25 @@
 +-----------------------------------------------------------------------------------------------------+
 |   CLAIRE4                                                                                           |
 |   README                                                                                            |
-|   version 4.1.14 - 1/3/2025                                                                         |
+|   version 4.1.6 - 8/8/2025                                                                         |
 +-----------------------------------------------------------------------------------------------------+
 
 
 1. Content
 ==========
 
-
 This repository contains the code for CLAIRE4, the new release of the CLAIRE programming language based on Go.
 CLAIRE :   https://en.wikipedia.org/wiki/Claire_(programming_language)
 CLAIRE4:   https://sites.google.com/view/claire4/home
 
 
-CLAIRE is 28 years old, but CLAIRE 4.0 started in September 2020.
-The current version is in alpha-status. Beta status is expected this summer of 2022
+CLAIRE is 31 years old, but CLAIRE 4.0 started in September 2020.
+The current version is in Beta status.
 
 CLAIRE4 now has its own Web site: https://sites.google.com/view/claire4/home
 
 2. Organization
 ===============
-
 
 The root of this repository contains
 - this README
@@ -32,7 +30,7 @@ The root of this repository contains
 This repository has the following directories
 
 - meta:     the reflexive definition of the interpreter (CLAIRE in CLAIRE)
-- compile:  the relexive definition of the compiler (CLAIRE files)
+- compile:  the reflexive definition of the compiler (CLAIRE files)
 - javascript : the CLAIRE-to-Javascript diet compiler (prototype)
 - src:      Go code for building CLAIRE
 
@@ -51,7 +49,6 @@ This repository has the following directories
 
 3. Terms of use
 ===============
-
 
 CLAIRE has been built by a team as an open-source project: you are free to use and redistribute the code that is found in the GitHub directory
 DISCLAIMER: THE CLAIRE SOFTWARE IS PROVIDED AS IS AND WITHOUT ANY WARRANTY, INCLUDING, WITHOUT LIMITATION,
@@ -116,10 +113,10 @@ As most compiled language, runing a CLAIRE program consumes less energy and prod
 - Fast buffered character I/O
 
 
-5. NEW in v4.1.14 
+5. NEW in v4.1.6 
 -----------------
 
-v4.1.14 benefits from a lots of typo fixes (thanks musvaage) and a few bug fixes.
+v4.1.6 benefits from a few bug fixes.
 The major improvement is that CLAIRE 4 is now tested on macOS, windows AND Linux (Ubuntu)
 
 Visit the web site https://sites.google.com/view/claire4/home to find more about CLAIRE's versions
@@ -131,8 +128,8 @@ Visit the web site https://sites.google.com/view/claire4/home to find more about
 Although CLAIRE is a compiled language, it is quite useful to use it in its simpler form of an interpreted language:
 
 great for fast prototyping  (REPL), as any interpreted language such as Python, LISP or Clojure.
-REPL stands for Read-Eval-Print-Loop, together with the introspective capabilities of interpreted language,  it supports using the langguage for querying and debugging the system that you build.
+REPL stands for Read-Eval-Print-Loop, together with the introspective capabilities of interpreted language,  it supports using the language for querying and debugging the system that you build.
 
 As a stand alone file, the CLAIRE4 interpreter is very easy to install  and it does not hit the wall of administrative rights for compiling or installing.
 
-CLAIRE is a very powerful expressive language, with first-class citizen support for sets, hypothetical reasonning or high order relations, in addition to being an object-oriented functional programming language.
+CLAIRE is a very powerful expressive language, with first-class citizen support for sets, hypothetical reasoning or high order relations, in addition to being an object-oriented functional programming language.
