@@ -131,8 +131,8 @@
    if (%out = "") (if (%cm != "") %out := %cm else if (%sf != "") %out := %sf),
    if %init? load("init"), 
    system.verbose := vlevel,
-   if known?(%safety) compiler.safety := %safety,     // if changed through -O*
-   if (%sf != "")                                // we want a system file
+   if known?(%safety) compiler.safety := %safety,     // if changed through -O* (on purpose -> force safety level)
+   if (%sf != "")                                     // we want a system file
       (load(get_value("Compile")),
        compiler.active? := true,
        claire/system_file(string2module(%sf),%out,%main),

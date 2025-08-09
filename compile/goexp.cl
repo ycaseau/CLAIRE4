@@ -377,6 +377,8 @@ g_expression(self:Call_method,s:class) : void -> inline_exp(PRODUCER,self,s)
  -> let m := self.arg, p := m.selector, a1 := car(self.args), dm := domain!(m) in
        (if (p = - & ( dm = integer | dm = float) & (s = integer | s = float))
            printf("~I(-~I)~I", cast_prefix(dm,s),bounded_expression(c,a1,s), cast_post(dm,s))
+        else if (m = *exp2_integer* & s = integer)
+           printf("(1 << ~I)",g_expression(a1,integer))
         else if (p = owner & eid_provide?(a1))
            printf("~IOWNER(~I)~I", object_prefix(class,s),g_expression(a1,EID),object_post(class,s))
         else if (p = owner & Compile/designated?(a1))
@@ -458,7 +460,8 @@ g_expression(self:Call_method,s:class) : void -> inline_exp(PRODUCER,self,s)
         else if (p = Core/<=t | m = *included*)                                     // v4. <= is inline coded for types
            printf("~I~I.Included(~I)~I", object_prefix(boolean,s),g_expression(a1, type), 
                     g_expression(a2, type),object_post(boolean,s))
-        else if (((((m = *nth_list* | m = *nth_tuple*) & compiler.safety >= 3) |
+        else if (((((m = *nth_list* | m = *nth_tuple*) & 
+                 (compiler.safety >= 5 | (compiler.safety >= 3 & not(g_throw(a2))))) | // v4.1.6 : check error-free unless safety is 5
                  m = *nth_1_list* | m = *nth_1_tuple* | m = *nth_1_array* ) & 
                  g_member(a1) != any) |                // will not apply if support is unknown
                  (m.selector = mClaire/nth_object))    // special case where we know the support (s1) of list a1

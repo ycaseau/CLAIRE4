@@ -1,5 +1,5 @@
 /***** CLAIRE Compilation of file /Users/ycaseau/Dropbox/src/clairev4.12/src/compile/gomain.cl 
-         [version 4.1.4 / safety 5] Friday 01-03-2025 16:31:19 *****/
+         [version 4.1.6 / safety 5] Saturday 08-09-2025 06:42:35 *****/
 
 package Generate
 import (_ "fmt"
@@ -11,7 +11,7 @@ import (_ "fmt"
 )
 
 //-------- dumb function to prevent import errors --------
-func import_g0209() { 
+func import_g0212() { 
   _ = Core.It
   _ = Language.It
   _ = Reader.It
@@ -61,8 +61,8 @@ func F_Generate_string2module_string (s *ClaireString) EID {
   var Result EID
   { var m *ClaireAny = F_value_string(s)
     if (m.Isa.IsIn(C_module) == CTRUE) { 
-      { var g0210 *ClaireModule = ToModule(m)
-        Result = EID{g0210.Id(),0}
+      { var g0213 *ClaireModule = ToModule(m)
+        Result = EID{g0213.Id(),0}
         } 
       } else {
       Result = ToException(Core.C_general_error.Make(MakeString("~A is not a module").Id(),MakeConstantList((s).Id()).Id())).Close()
@@ -175,8 +175,8 @@ func F_Generate_complex_main_void () EID {
                                 c = ANY(try_2)
                                 l = l.Skip(2)
                                 if (c.Isa.IsIn(Language.C_Call) == CTRUE) { 
-                                  { var g0214 *Language.Call = Language.To_Call(c)
-                                    loop_1 = EVAL(g0214.Id())
+                                  { var g0217 *Language.Call = Language.To_Call(c)
+                                    loop_1 = EVAL(g0217.Id())
                                     } 
                                   } else {
                                   loop_1 = ToException(Core.C_general_error.Make(MakeString("-e arg ~S is not a call").Id(),MakeConstantList(c).Id())).Close()

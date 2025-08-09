@@ -1,5 +1,5 @@
 /***** CLAIRE Compilation of file /Users/ycaseau/Dropbox/src/clairev4.12/src/compile/gosystem.cl 
-         [version 4.1.4 / safety 5] Friday 01-03-2025 16:31:19 *****/
+         [version 4.1.6 / safety 5] Saturday 08-09-2025 06:42:35 *****/
 
 package Generate
 import (_ "fmt"
@@ -1389,24 +1389,29 @@ func (p *GenerateGoProducer) GenObjects (m *ClaireModule) EID {
   { 
     var x *ClaireAny
     _ = x
+    Result= EID{CFALSE.Id(),0}
     var x_support *ClaireList
     x_support = Optimize.C_OPT.Objects
     x_len := x_support.Length()
     for i_it := 0; i_it < x_len; i_it++ { 
       x = x_support.At(i_it)
+      var loop_1 EID
+      _ = loop_1
+      { 
       F_Generate_breakline_void()
       if (x.Isa.IsIn(Core.C_global_variable) == CTRUE) { 
         { var g0012 *Core.GlobalVariable = Core.ToGlobalVariable(x)
           PRINC("var ")
           F_Generate_go_var_symbol(g0012.Name)
           PRINC(" ")
-          { var arg_1 *ClaireClass
+          { var arg_2 *ClaireClass
             if (Optimize.F_Compile_nativeVar_ask_global_variable(g0012) == CTRUE) { 
-              arg_1 = F_Generate_getRange_global_variable(g0012)
+              arg_2 = F_Generate_getRange_global_variable(g0012)
               } else {
-              arg_1 = Core.C_global_variable
+              arg_2 = Core.C_global_variable
               } 
-            F_Generate_interface_I_class(arg_1)
+            F_Generate_interface_I_class(arg_2)
+            loop_1 = EVOID
             } 
           } 
         } else {
@@ -1414,10 +1419,23 @@ func (p *GenerateGoProducer) GenObjects (m *ClaireModule) EID {
         F_Generate_go_var_symbol(ToSymbol(OBJ(Core.F_CALL(C_name,ARGS(x.ToEID())))))
         PRINC(" ")
         F_Generate_interface_I_class(Optimize.F_Compile_psort_any(x.Isa.Id()))
-        PRINC(" /*obj*/")
+        PRINC(" /*")
+        loop_1 = Core.F_print_any(Optimize.F_Compile_psort_any(x.Isa.Id()).Id())
+        if ErrorIn(loop_1) {Result = loop_1
+        break
+        } else {
+        PRINC("*/")
+        loop_1 = EVOID
+        }
         } 
+      if ErrorIn(loop_1) {Result = loop_1
+      break
+      } else {
+      }
+      }
       } 
     } 
+  if !ErrorIn(Result) {
   { 
     var x *ClaireProperty
     _ = x
@@ -1428,8 +1446,8 @@ func (p *GenerateGoProducer) GenObjects (m *ClaireModule) EID {
     for i_it := 0; i_it < x_support.Count; i_it++ { 
       x_iter = x_support.At(i_it)
       x = ToProperty(x_iter)
-      var loop_2 EID
-      _ = loop_2
+      var loop_3 EID
+      _ = loop_3
       if (Optimize.C_OPT.Objects.Memq(x.Id()) != CTRUE) { 
         { var p2test *ClaireAny
           { var p2_some *ClaireAny = CNULL
@@ -1454,13 +1472,13 @@ func (p *GenerateGoProducer) GenObjects (m *ClaireModule) EID {
             } 
           if (p2test != CNULL) { 
             { var p2 *ClaireProperty = ToProperty(p2test)
-              loop_2 = ToException(Core.C_general_error.Make(MakeString("[217] ~S and ~S cannot be defined in the same module").Id(),MakeConstantList(p2.Id(),x.Id()).Id())).Close()
+              loop_3 = ToException(Core.C_general_error.Make(MakeString("[217] ~S and ~S cannot be defined in the same module").Id(),MakeConstantList(p2.Id(),x.Id()).Id())).Close()
               } 
             } else {
-            loop_2 = EID{CNULL,0}
+            loop_3 = EID{CNULL,0}
             } 
           } 
-        if ErrorIn(loop_2) {Result = loop_2
+        if ErrorIn(loop_3) {Result = loop_3
         break
         } else {
         F_Generate_breakline_void()
@@ -1469,19 +1487,19 @@ func (p *GenerateGoProducer) GenObjects (m *ClaireModule) EID {
         PRINC(" ")
         F_Generate_interface_I_class(Optimize.F_Compile_psort_any(x.Id().Isa.Id()))
         PRINC(" // ")
-        loop_2 = Core.F_print_any(x.Name.Id())
-        if ErrorIn(loop_2) {Result = loop_2
+        loop_3 = Core.F_print_any(x.Name.Id())
+        if ErrorIn(loop_3) {Result = loop_3
         break
         } else {
         }
-        if ErrorIn(loop_2) {Result = loop_2
+        if ErrorIn(loop_3) {Result = loop_3
         break
         } else {
         }}
         } else {
-        loop_2 = EID{CFALSE.Id(),0}
+        loop_3 = EID{CFALSE.Id(),0}
         } 
-      if ErrorIn(loop_2) {Result = loop_2
+      if ErrorIn(loop_3) {Result = loop_3
       break
       } else {
       }
@@ -1506,7 +1524,7 @@ func (p *GenerateGoProducer) GenObjects (m *ClaireModule) EID {
       } 
     } 
   Result = F_Generate_breakline_void().ToEID()
-  }
+  }}
   return Result} 
 
 // The EID go function for: gen_objects @ go_producer (throw: true) 

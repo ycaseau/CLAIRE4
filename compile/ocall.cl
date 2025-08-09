@@ -372,7 +372,8 @@ c_code_add_bag(self:Call) : any
         z := restriction!(%p, %ltype, true) in
      (//[5] ~S: ~S -> ~S // self, %ltype, z,
       if (not(%t2 <= member(%t1)) & self.selector = add)
-         (warn(),trace(1,"the bag addition ~S is poorly typed (~S) [251] \n",self,member(%t1))),  // v3.3
+         (warn(),trace(1,"the bag addition ~S is poorly typed (~S not in ~S) [251] \n",self,%t2,member(%t1))),  // v3.3
+      if (%t2 = void) Cerror("[206] use of void ~S in ~S", self.args[2], self),
       case z
        (method c_code_method(z, self.args, %ltype),
         any c_warn(self, %ltype)))

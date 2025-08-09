@@ -1,5 +1,5 @@
 /***** CLAIRE Compilation of file /Users/ycaseau/Dropbox/src/clairev4.12/src/compile/gogen.cl 
-         [version 4.1.4 / safety 5] Friday 01-03-2025 16:31:19 *****/
+         [version 4.1.6 / safety 5] Saturday 08-09-2025 06:42:35 *****/
 
 package Generate
 import (_ "fmt"
@@ -2122,17 +2122,57 @@ func E_Generate_bag_expression_go_producer (c EID,cl EID,l EID,t EID) EID {
 // *       Part 5: Utilities :                                       *
 // *******************************************************************
 // a constant can be evaluated with no cost in an IfThenElse(test,a,b)
+// not a integer or a float (nor a variable)
 /* The go function for: constant?(self:any) [status=0] */
 func F_Generate_constant_ask_any (self *ClaireAny) *ClaireBoolean { 
-  return  MakeBoolean((self.Isa.IsIn(C_thing) == CTRUE) || 
-  (C_boolean.Id() == self.Isa.Id()) || 
-  (self.Isa.IsIn(C_Variable) == CTRUE) || 
-  (C_string.Id() == self.Isa.Id()) || 
-  (self == CNULL) || 
-  (Equal(self,CNIL.Id()) == CTRUE) || 
-  (Equal(self,CEMPTY.Id()) == CTRUE) || 
-  (self.Isa.IsIn(Core.C_global_variable) == CTRUE))
-  } 
+  var Result *ClaireBoolean
+  { 
+    var v_or1 *ClaireBoolean
+    
+    v_or1 = self.Isa.IsIn(C_thing)
+    if (v_or1 == CTRUE) {Result = CTRUE
+    } else { 
+      v_or1 = Equal(C_boolean.Id(),self.Isa.Id())
+      if (v_or1 == CTRUE) {Result = CTRUE
+      } else { 
+        v_or1 = Equal(C_string.Id(),self.Isa.Id())
+        if (v_or1 == CTRUE) {Result = CTRUE
+        } else { 
+          v_or1 = Equal(self,CNULL)
+          if (v_or1 == CTRUE) {Result = CTRUE
+          } else { 
+            v_or1 = Equal(self,CNIL.Id())
+            if (v_or1 == CTRUE) {Result = CTRUE
+            } else { 
+              v_or1 = Equal(self,CEMPTY.Id())
+              if (v_or1 == CTRUE) {Result = CTRUE
+              } else { 
+                if (self.Isa.IsIn(Core.C_global_variable) == CTRUE) { 
+                  { var g0072 *Core.GlobalVariable = Core.ToGlobalVariable(self)
+                    { var r *ClaireType = g0072.Range
+                      v_or1 = MakeBoolean((r.Id() != C_integer.Id()) && (r.Id() != C_float.Id()))
+                      } 
+                    } 
+                  }  else if (self.Isa.IsIn(C_Variable) == CTRUE) { 
+                  { var g0073 *ClaireVariable = To_Variable(self)
+                    { var r *ClaireType = g0073.Range
+                      v_or1 = MakeBoolean((r.Id() != C_integer.Id()) && (r.Id() != C_float.Id()))
+                      } 
+                    } 
+                  } else {
+                  v_or1 = CFALSE
+                  } 
+                if (v_or1 == CTRUE) {Result = CTRUE
+                } else { 
+                  Result = CFALSE} 
+                } 
+              } 
+            } 
+          } 
+        } 
+      } 
+    } 
+  return Result} 
 
 // The EID go function for: constant? @ any (throw: false) 
 func E_Generate_constant_ask_any (self EID) EID { 
@@ -2386,7 +2426,7 @@ func E_Generate_g_clean_any (x EID) EID {
 /* The go function for: simple_func?(x:any) [status=1] */
 func F_Generate_simple_func_ask_any (x *ClaireAny) EID { 
   var Result EID
-  var g0072I *ClaireBoolean
+  var g0075I *ClaireBoolean
   var try_1 EID
   { 
     var v_and1 *ClaireBoolean
@@ -2419,8 +2459,8 @@ func F_Generate_simple_func_ask_any (x *ClaireAny) EID {
     } 
   if ErrorIn(try_1) {Result = try_1
   } else {
-  g0072I = ToBoolean(OBJ(try_1))
-  if (g0072I == CTRUE) { 
+  g0075I = ToBoolean(OBJ(try_1))
+  if (g0075I == CTRUE) { 
     Result = EID{CTRUE.Id(),0}
     } else {
     Result = EID{CFALSE.Id(),0}

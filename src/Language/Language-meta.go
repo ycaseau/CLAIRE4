@@ -1,5 +1,5 @@
 /***** CLAIRE Compilation of module Language.cl 
-         [version 4.1.4 / safety 5] Friday 01-03-2025 16:21:02 *****/
+         [version 4.1.6 / safety 5] Friday 08-08-2025 07:31:27 *****/
 
 package Language
 import (_ "fmt"
@@ -1348,7 +1348,7 @@ var C_iClaire *ClaireModule
 func MetaLoad() { 
   
   It = MakeModule("Language",C_iClaire)
-  It.Comment = MakeString("Compiled on Friday 01-03-2025 16:21:02(v4.1.4), lines:2275, warnings:1,safety:5")
+  It.Comment = MakeString("Compiled on Friday 08-08-2025 07:31:27(v4.1.6), lines:2276, warnings:2,safety:5")
   ClEnv.Module_I = It
   
   // definition of the properties
@@ -1963,22 +1963,22 @@ func MetaLoad() {
   
   _ = Core.F_attach_method(Core.C_self_eval.AddEvalMethod(Signature(C_Error.Id(),C_error.Id()),1,MakeFunction1(E_self_eval_Error,"self_eval_Error"),EVAL_Error),MakeString("control.cl:540"))
   
-  _ = Core.F_attach_method(Core.C_self_eval.AddEvalMethod(Signature(C_Printf.Id(),C_any.Id()),1,MakeFunction1(E_self_eval_Printf,"self_eval_Printf"),EVAL_Printf),MakeString("control.cl:574"))
+  _ = Core.F_attach_method(Core.C_self_eval.AddEvalMethod(Signature(C_Printf.Id(),C_any.Id()),1,MakeFunction1(E_self_eval_Printf,"self_eval_Printf"),EVAL_Printf),MakeString("control.cl:575"))
   
   C_iClaire_trace_on = MakeProperty("trace_on",1,C_iClaire)
   
   
   C_Trace = NewClass("Trace",C_Construct,C_claire)
   
-  _ = Core.F_attach_method(Core.C_self_eval.AddEvalMethod(Signature(C_Trace.Id(),C_any.Id()),1,MakeFunction1(E_self_eval_Trace,"self_eval_Trace"),EVAL_Trace),MakeString("control.cl:598"))
+  _ = Core.F_attach_method(Core.C_self_eval.AddEvalMethod(Signature(C_Trace.Id(),C_any.Id()),1,MakeFunction1(E_self_eval_Trace,"self_eval_Trace"),EVAL_Trace),MakeString("control.cl:599"))
   
   C_Assert = NewClass("Assert",C_Construct,C_claire)
   Core.F_close_slot(C_Assert.AddSlot(C_mClaire_index,ToType(C_integer.Id()),MakeInteger(0).Id()))
   Core.F_close_slot(C_Assert.AddSlot(C_external,ToType(C_string.Id()),CNULL))
   
-  _ = Core.F_attach_method(Core.C_self_eval.AddEvalMethod(Signature(C_Assert.Id(),C_any.Id()),1,MakeFunction1(E_self_eval_Assert,"self_eval_Assert"),EVAL_Assert),MakeString("control.cl:612"))
+  _ = Core.F_attach_method(Core.C_self_eval.AddEvalMethod(Signature(C_Assert.Id(),C_any.Id()),1,MakeFunction1(E_self_eval_Assert,"self_eval_Assert"),EVAL_Assert),MakeString("control.cl:613"))
   
-  _ = Core.F_attach_method(Core.C_self_eval.AddEvalMethod(Signature(C_Branch.Id(),C_any.Id()),1,MakeFunction1(E_self_eval_Branch,"self_eval_Branch"),EVAL_Branch),MakeString("control.cl:618"))
+  _ = Core.F_attach_method(Core.C_self_eval.AddEvalMethod(Signature(C_Branch.Id(),C_any.Id()),1,MakeFunction1(E_self_eval_Branch,"self_eval_Branch"),EVAL_Branch),MakeString("control.cl:619"))
   
   C_extract_item = MakeProperty("extract_item",1,C_claire)
   

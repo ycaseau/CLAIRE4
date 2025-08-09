@@ -1,4 +1,4 @@
-// --- System configuration file for "claire4" , ["Friday 01-03-2025"] ---
+// --- System configuration file for "claire4" , ["Saturday 08-09-2025"] ---
 
 package main
 import (
@@ -7,7 +7,7 @@ import (
 	"Language"
 	"Reader"
 	"Optimize"
-	"Generate"
+	"Generate"/**/
 )
 
 //load function : create and load modules

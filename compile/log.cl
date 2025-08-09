@@ -240,35 +240,39 @@ January 3rd: publish 4.1.4 on GitHub x PC x Ubuntu
 -> note: the package associated to m is capitalize(m.name) or cap_short(m.name) 
    todo: clean up and use the same
 
+-> KEY: running the test and the compiled test on Ubuntu has required changes in gogen, gomain and goexp to ensure that
+   module names are capitalized when used as a directory or a package.
 
-A year of reading about energy/economy/climate scenarios, as well as doing my own simulations with the CCEM world modem, has led me the following four insights:
+// February 1st, 2025 - start CLAIR 4.1.5
+1st goal : compile k1 (toy problem) to get beautiful and fast Go code
+    g26(1000000)  -> 3267ms interpreted, 480ms compiled
 
-(1) Borrowing from Hannah Richie’s great book, what most 21st century simulations show is “not the end of the world”.
- The state of the world today is more what could be called “slow transformation as usual” (versus "Business as usual" or versus Paris Agreement targets): 
- the energy transition has already begun, focusing on clean energy adoption, efficiency improvements, and air quality advancements, but progress is too slow.
- 
-(2) Decarbonation of energy will happen, but there seems to be a critical time gap between the peak of fossil fuel reliance and the widespread availability 
-of clean energy at sufficient levels. Such a gap will lead to economic strain caused by energy shortages while the quantity of fossil fuels 
-connsumed will cause global temperatures to rise by 2.5°C to 3.0°C by 2100. 
+step1: osystem.cl : added *exp2_integer* :: (^2 @ integer) to optimize the code
+         -> g_throw = false if compiler.overflow? = false
+       gexp.cl :    open compile to (1 << n)
 
-(3) This leads to the idea that it may not be the end of the world, but the end of our 20th century world is definitely coming 
-  (as is beautifully explained by Langdon Morris book "Hello Future!"). Sustained global warming with severe impacts necessitates adaptation,
-   while the era of cheap energy has ended, leading to energy shortages, market distortions, and regional disparities intensified by conflicts. 
+step2: do not used IfThenElse for integer or float (will force an allocation)
+result: k1 is compiled properly -> 200ms
 
-(4)  For Europe, and this aligns perfectly with Mario Draghi’s report, we need to act quickly on an aggressive decarbonation strategy, 
-     not to save the planet, but to save our economic competitiveness. 
-    
-You can read abpout those on my last 2024 blog post: https://informationsystemsbiology.blogspot.com/2024/12/energy-matters-modeling-manifesto.html
-
+we stil have to look at 
+g_test(quote(let l := list<integer>(1,2) in list<integer>{l[j] | j in {j in (1 .. 10) | j > 4}}))
+   (1) because the interval is created !
+   (2) because l[i] := x is not compiled properly in that case
 
 
+// August 6th, 2025 - start CLAIRE 4.1.6
+
+ocall.cl :  raises an error if void value is used for an addition (list ...)
+ocall.cl :  makes sure nth_list optimization is not used with error-prone argument
+osystem.cl:  can_throw(m) is true if compiler.safety <= 3 (by definition: an error may occur)
+clreflect.cl  removed a fmt.Printf that was not needed when a type error occurs in an addition (WriteEID)
+control.cl:   fixed a bug with printf() that was making an unprotected call to s[n+3]
+ocontrol.cl:  compilation of Printf("..~S%") requires to princ "%"
 
 
 
 
-
-
-// ============================ OLD BACKLOG =====================================
+// ============================ BACKLOG for future versions =====================================
 
 // New : add a reboot function in CLAIRE (useful to play with server)
 // reboot() : recreate all objects (rebuild a clean state)

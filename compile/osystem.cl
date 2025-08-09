@@ -340,7 +340,7 @@ claire/safe(x:any) : type[x] -> x
 
 // NEW in claire4 : optimization when compiler.safety is high may prevent throwing exceptions
 Compile/NoErrorOptimize :: list<any>(nth @ list, nth= @ list, nth @ tuple, nth @ string,
-     less?, glb,
+     less?, glb, Compile/object!,
      // traces (tformat) are assumed to be correct in cross_compiling
      Core/tformat @ string,
      // <= @ type_expression is safe when closed
@@ -362,6 +362,7 @@ Compile/ForceNotThrow :: list<method>()
 *div_integer* :: (/ @ integer)
 *div_float* :: (/ @ float)
 *mod_integer* :: (mod @ integer)
+*exp2_integer* :: (^2 @ integer)
 
 // debug loop
 claire/DSHOW:boolean := false
@@ -383,7 +384,7 @@ claire/DSHOW:boolean := false
        // V4.0.7 introduced special case for arithmetic overflow
        Call_method ( if (self.arg = m_unsafe | notOpt(self) = false | self.arg.selector = externC) false
                      else if g_throw(self.args) true
-                     else if (self.arg = *times_integer*)  compiler.overflow?
+                     else if (self.arg = *times_integer* | self.arg = *exp2_integer*)  compiler.overflow?
                      else if (self.arg = *div_integer*) 
                         (compiler.safety < 2 & not(self.args[2] % integer & self.args[2] != 0))
                     else if (self.arg = *mod_integer*) 
@@ -429,9 +430,10 @@ claire/DSHOW:boolean := false
 
 
 // can_throw is based on restrictions analysis ... unless it is open => could always return an error
+// v4.1.16: unless we have a compiler.safety that is high enough, we assume that the property can throw an error
 [can_throw?(p:property) : boolean
   -> (p.open = 3 |  (not( p % Compile/NoErrorOptimize) & 
-          exists(m in p.restrictions | (case m (method can_throw?(m), any false))))) ]
+          (compiler.safety <= 3 | exists(m in p.restrictions | (case m (method can_throw?(m), any false)))))) ]
 
 // access to status ... -1 means that it was never computed 
 // Force*Throw is used to adjust for cross-compiling with a status change

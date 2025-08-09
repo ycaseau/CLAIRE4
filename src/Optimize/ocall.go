@@ -1,5 +1,5 @@
 /***** CLAIRE Compilation of file /Users/ycaseau/Dropbox/src/clairev4.12/src/compile/ocall.cl 
-         [version 4.1.4 / safety 5] Friday 01-03-2025 16:21:04 *****/
+         [version 4.1.6 / safety 5] Saturday 08-09-2025 06:51:14 *****/
 
 package Optimize
 import (_ "fmt"
@@ -2195,8 +2195,14 @@ var Result EID
           if ((_Zt2.Included(Core.F_member_type(_Zt1)) != CTRUE) && 
               (self.Selector.Id() == C_add.Id())) { 
             F_Compile_warn_void()
-            Core.F_tformat_string(MakeString("the bag addition ~S is poorly typed (~S) [251] \n"),1,MakeConstantList(self.Id(),Core.F_member_type(_Zt1).Id()))
+            Core.F_tformat_string(MakeString("the bag addition ~S is poorly typed (~S not in ~S) [251] \n"),1,MakeConstantList(self.Id(),_Zt2.Id(),Core.F_member_type(_Zt1).Id()))
             } 
+          if (_Zt2.Id() == C_void.Id()) { 
+            Result = F_Compile_Cerror_string(MakeString("[206] use of void ~S in ~S"),ToList(MakeConstantList(self.Args.At(1),self.Id()).Id()))
+            } else {
+            Result = EID{CFALSE.Id(),0}
+            } 
+          if !ErrorIn(Result) {
           if (C_method.Id() == z.Isa.Id()) { 
             { var g0212 *ClaireMethod = ToMethod(z)
               Result = F_Optimize_c_code_method_method1(g0212,self.Args,_Zltype)
@@ -2204,6 +2210,7 @@ var Result EID
             } else {
             Result = F_Optimize_c_warn_Call(self,_Zltype.Id())
             } 
+          }
           } 
         } 
       } 

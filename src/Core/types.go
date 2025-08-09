@@ -1,5 +1,5 @@
 /***** CLAIRE Compilation of file /Users/ycaseau/Dropbox/src/clairev4.12/src/meta/types.cl 
-         [version 4.1.4 / safety 5] Friday 01-03-2025 16:21:02 *****/
+         [version 4.1.6 / safety 5] Friday 08-08-2025 07:31:27 *****/
 
 package Core
 import (_ "fmt"
@@ -2237,43 +2237,18 @@ func F_integer_I_set (s *ClaireSet) EID {
       var y int
       _ = y
       var y_iter *ClaireAny
-      Result= EID{CFALSE.Id(),0}
       var y_support *ClaireSet
       y_support = s
       for i_it := 0; i_it < y_support.Count; i_it++ { 
         y_iter = y_support.At(i_it)
         y = ToInteger(y_iter).Value
-        var loop_1 EID
-        _ = loop_1
         if ((y >= 0) && 
             (y <= 29)) { 
-          var try_2 EID
-          { var arg_3 int
-            var try_4 EID
-            try_4 = F__exp2_integer(y)
-            if ErrorIn(try_4) {try_2 = try_4
-            } else {
-            arg_3 = INT(try_4)
-            try_2 = EID{C__INT,IVAL((n+arg_3))}
-            }
-            } 
-          if ErrorIn(try_2) {loop_1 = try_2
-          } else {
-          n = INT(try_2)
-          loop_1 = EID{C__INT,IVAL(n)}
-          }
-          } else {
-          loop_1 = EID{CFALSE.Id(),0}
+          n = (n+(1 << y))
           } 
-        if ErrorIn(loop_1) {Result = loop_1
-        break
-        } else {
-        }
         } 
       } 
-    if !ErrorIn(Result) {
     Result = EID{C__INT,IVAL(n)}
-    }
     } 
   return Result} 
 

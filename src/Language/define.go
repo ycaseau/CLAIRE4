@@ -1,5 +1,5 @@
 /***** CLAIRE Compilation of file /Users/ycaseau/Dropbox/src/clairev4.12/src/meta/define.cl 
-         [version 4.1.4 / safety 5] Friday 01-03-2025 16:21:02 *****/
+         [version 4.1.6 / safety 5] Friday 08-08-2025 07:31:27 *****/
 
 package Language
 import (_ "fmt"
@@ -2022,35 +2022,15 @@ var Result EID
   { 
     var x *ClaireAny
     _ = x
-    Result= EID{CFALSE.Id(),0}
     var x_support *ClaireList
     x_support = ToList(l.Id())
     x_len := x_support.Length()
     for i_it := 0; i_it < x_len; i_it++ { 
       x = x_support.At(i_it)
-      var loop_1 EID
-      _ = loop_1
-      var try_2 EID
-      { var arg_3 int
-        var try_4 EID
-        try_4 = F__exp2_integer(ToInteger(x).Value)
-        if ErrorIn(try_4) {try_2 = try_4
-        } else {
-        arg_3 = INT(try_4)
-        try_2 = EID{C__INT,IVAL((d+arg_3))}
-        }
-        } 
-      if ErrorIn(try_2) {Result = try_2
-      break
-      } else {
-      d = INT(try_2)
-      loop_1 = EID{C__INT,IVAL(d)}
-      }
+      d = (d+(1 << ToInteger(x).Value))
       } 
     } 
-  if !ErrorIn(Result) {
   Result = EID{C__INT,IVAL(d)}
-  }
   } 
 return Result} 
 

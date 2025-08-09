@@ -8,9 +8,10 @@
 *bsrc* :: "/Users/ycaseau/claire/v4.1/test/nonreg"
 *tsrc* :: "/Users/ycaseau/claire/v4.1/test/perf"
 *rsrc* :: "/Users/ycaseau/claire/v4.1/test/rules"
+*toysrc* :: "/Users/ycaseau/claire/v4.1/test/toys"
 
 // these are the global variables expected by the compiler
-RELEASE:float :: 1.4    // version of January 2025 
+RELEASE:float :: 1.6    // version of August 2025
 
 // note : we should check that these optimizations are still valid
 
@@ -20,11 +21,10 @@ begin(Language)
 
 // (#if (version() = 1.0) claire/IterateFast :: property())
 
-
 end(Language)
 
 begin(Optimize)
-
+// Compile/*exp2_integer* :: (^2 @ integer)
 
 end(Optimize)
 
@@ -90,6 +90,13 @@ mCopy :: module(part_of = claire,
               source = *tsrc*,
               uses = list(Reader,mClaire),
               made_of = list("testCopy"))
+
+// toy problems are interesting compiler challenges
+
+k1 :: module(part_of = claire,
+              source = *toysrc*,
+              uses = list(Reader),
+              made_of = list("knapsack"))
 
 // ***************************************************************************
 // *    Part 3: Bugs for CLAIRE                                              *

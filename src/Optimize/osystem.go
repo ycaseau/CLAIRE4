@@ -1,5 +1,5 @@
 /***** CLAIRE Compilation of file /Users/ycaseau/Dropbox/src/clairev4.12/src/compile/osystem.cl 
-         [version 4.1.4 / safety 5] Friday 01-03-2025 16:21:04 *****/
+         [version 4.1.6 / safety 5] Saturday 08-09-2025 06:51:14 *****/
 
 package Optimize
 import (_ "fmt"
@@ -905,7 +905,8 @@ func F_Optimize_g_throw1_any (self *ClaireAny) EID {
         g0085I = ToBoolean(OBJ(try_17))
         if (g0085I == CTRUE) { 
           Result = EID{CTRUE.Id(),0}
-          }  else if (g0065.Arg.Id() == C_Optimize__startimes_integer_star.Value) { 
+          }  else if ((g0065.Arg.Id() == C_Optimize__startimes_integer_star.Value) || 
+            (g0065.Arg.Id() == C_Compile__starexp2_integer_star.Value)) { 
           Result = EID{C_compiler.Overflow_ask.Id(),0}
           }  else if (g0065.Arg.Id() == C_Optimize__stardiv_integer_star.Value) { 
           Result = EID{MakeBoolean((C_compiler.Safety < 2) && ((C_integer.Id() != g0065.Args.At(1).Isa.Id()) || 
@@ -1282,6 +1283,7 @@ func E_Optimize_notOpt_Call_method (self EID) EID {
 
 //regular case !
 // can_throw is based on restrictions analysis ... unless it is open => could always return an error
+// v4.1.16: unless we have a compiler.safety that is high enough, we assume that the property can throw an error
 /* The go function for: Compile/can_throw?(p:property) [status=1] */
 func F_Compile_can_throw_ask_property (p *ClaireProperty) EID { 
   var Result EID
@@ -1299,46 +1301,62 @@ func F_Compile_can_throw_ask_property (p *ClaireProperty) EID {
         if (v_and3 == CFALSE) {try_1 = EID{CFALSE.Id(),0}
         } else { 
           var try_2 EID
-          { var arg_3 *ClaireAny
-            var try_4 EID
-            { 
-              var m *ClaireRestriction
-              _ = m
-              var m_iter *ClaireAny
-              try_4= EID{CFALSE.Id(),0}
-              for _,m_iter = range(p.Restrictions.ValuesO()){ 
-                m = ToRestriction(m_iter)
-                var loop_5 EID
-                _ = loop_5
-                var g0088I *ClaireBoolean
-                var try_6 EID
-                if (C_method.Id() == m.Isa.Id()) { 
-                  { var g0086 *ClaireMethod = ToMethod(m.Id())
-                    try_6 = F_Compile_can_throw_ask_method(g0086)
+          { 
+            var v_or5 *ClaireBoolean
+            
+            v_or5 = Core.F__inf_equal_integer(C_compiler.Safety,3)
+            if (v_or5 == CTRUE) {try_2 = EID{CTRUE.Id(),0}
+            } else { 
+              var try_3 EID
+              { var arg_4 *ClaireAny
+                var try_5 EID
+                { 
+                  var m *ClaireRestriction
+                  _ = m
+                  var m_iter *ClaireAny
+                  try_5= EID{CFALSE.Id(),0}
+                  for _,m_iter = range(p.Restrictions.ValuesO()){ 
+                    m = ToRestriction(m_iter)
+                    var loop_6 EID
+                    _ = loop_6
+                    var g0088I *ClaireBoolean
+                    var try_7 EID
+                    if (C_method.Id() == m.Isa.Id()) { 
+                      { var g0086 *ClaireMethod = ToMethod(m.Id())
+                        try_7 = F_Compile_can_throw_ask_method(g0086)
+                        } 
+                      } else {
+                      try_7 = EID{CFALSE.Id(),0}
+                      } 
+                    if ErrorIn(try_7) {loop_6 = try_7
+                    } else {
+                    g0088I = ToBoolean(OBJ(try_7))
+                    if (g0088I == CTRUE) { 
+                      try_5 = EID{CTRUE.Id(),0}
+                      break
+                      } else {
+                      loop_6 = EID{CFALSE.Id(),0}
+                      } 
+                    }
+                    if ErrorIn(loop_6) {try_5 = loop_6
+                    break
+                    } else {
+                    }
                     } 
-                  } else {
-                  try_6 = EID{CFALSE.Id(),0}
                   } 
-                if ErrorIn(try_6) {loop_5 = try_6
+                if ErrorIn(try_5) {try_3 = try_5
                 } else {
-                g0088I = ToBoolean(OBJ(try_6))
-                if (g0088I == CTRUE) { 
-                  try_4 = EID{CTRUE.Id(),0}
-                  break
-                  } else {
-                  loop_5 = EID{CFALSE.Id(),0}
-                  } 
-                }
-                if ErrorIn(loop_5) {try_4 = loop_5
-                break
-                } else {
+                arg_4 = ANY(try_5)
+                try_3 = EID{F_boolean_I_any(arg_4).Id(),0}
                 }
                 } 
+              if ErrorIn(try_3) {try_2 = try_3
+              } else {
+              v_or5 = ToBoolean(OBJ(try_3))
+              if (v_or5 == CTRUE) {try_2 = EID{CTRUE.Id(),0}
+              } else { 
+                try_2 = EID{CFALSE.Id(),0}} 
               } 
-            if ErrorIn(try_4) {try_2 = try_4
-            } else {
-            arg_3 = ANY(try_4)
-            try_2 = EID{F_boolean_I_any(arg_3).Id(),0}
             }
             } 
           if ErrorIn(try_2) {try_1 = try_2

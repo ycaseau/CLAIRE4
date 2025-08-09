@@ -1,5 +1,5 @@
 /***** CLAIRE Compilation of file /Users/ycaseau/Dropbox/src/clairev4.12/src/meta/control.cl 
-         [version 4.1.4 / safety 5] Friday 01-03-2025 16:21:02 *****/
+         [version 4.1.6 / safety 5] Friday 08-08-2025 07:31:27 *****/
 
 package Language
 import (_ "fmt"
@@ -3024,22 +3024,26 @@ func (self *Printf) SelfEval () EID {
                           v_and12 = p_Z.Not
                           if (v_and12 == CFALSE) {try_16 = EID{CFALSE.Id(),0}
                           } else { 
-                            var try_17 EID
-                            { var arg_18 *ClaireAny
-                              var try_19 EID
-                              try_19 = Core.F_CALL(C_nth,ARGS(s.ToEID(),EID{C__INT,IVAL((n+3))}))
-                              if ErrorIn(try_19) {try_17 = try_19
-                              } else {
-                              arg_18 = ANY(try_19)
-                              try_17 = EID{Equal(MakeChar('%').Id(),arg_18).Id(),0}
-                              }
-                              } 
-                            if ErrorIn(try_17) {try_16 = try_17
-                            } else {
-                            v_and12 = ToBoolean(OBJ(try_17))
+                            v_and12 = Core.F__sup_integer(INT(Core.F_CALL(C_length,ARGS(s.ToEID()))),(n+2))
                             if (v_and12 == CFALSE) {try_16 = EID{CFALSE.Id(),0}
                             } else { 
-                              try_16 = EID{CTRUE.Id(),0}} 
+                              var try_17 EID
+                              { var arg_18 *ClaireAny
+                                var try_19 EID
+                                try_19 = Core.F_CALL(C_nth,ARGS(s.ToEID(),EID{C__INT,IVAL((n+3))}))
+                                if ErrorIn(try_19) {try_17 = try_19
+                                } else {
+                                arg_18 = ANY(try_19)
+                                try_17 = EID{Equal(MakeChar('%').Id(),arg_18).Id(),0}
+                                }
+                                } 
+                              if ErrorIn(try_17) {try_16 = try_17
+                              } else {
+                              v_and12 = ToBoolean(OBJ(try_17))
+                              if (v_and12 == CFALSE) {try_16 = EID{CFALSE.Id(),0}
+                              } else { 
+                                try_16 = EID{CTRUE.Id(),0}} 
+                              } 
                             } 
                           }
                           } 

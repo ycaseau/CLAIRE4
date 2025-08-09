@@ -1,5 +1,5 @@
 /***** CLAIRE Compilation of file /Users/ycaseau/Dropbox/src/clairev4.12/src/compile/odefine.cl 
-         [version 4.1.4 / safety 5] Friday 01-03-2025 16:21:04 *****/
+         [version 4.1.6 / safety 5] Saturday 08-09-2025 06:51:14 *****/
 
 package Optimize
 import (_ "fmt"

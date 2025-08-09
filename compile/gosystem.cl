@@ -483,8 +483,8 @@ claire/BadMethods:list<method> :: unknown
        case x
         (global_variable printf("var ~I ~I", go_var(x.name),
                                  interface!((if nativeVar?(x) getRange(x) else global_variable))),
-         any (printf("var ~I ~I /*obj*/", go_var(x.name),
-                    interface!(Compile/psort(owner(x))))))),
+         any (printf("var ~I ~I /*~S*/", go_var(x.name),
+                    interface!(Compile/psort(owner(x))), Compile/psort(owner(x)))))),
     for x in {p in OPT.properties | not(p % OPT.objects) }  
        (when p2 := some(p2 in (OPT.properties but x) |            // v0.01
                         string!(p2.name) = string!(x.name)) in

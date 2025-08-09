@@ -562,7 +562,8 @@ self_eval(self:Error) : error
                             j := integer!(nth_get(s,n + 2,n + 2)) - 48 in
                           (if ('%' = s[n + 2]) (p% := true, j := 1, fv :* 100.0)
                            else if (j < 0 | j > 9) error("[189] F requires a single digit integer in ~S",self),
-                           if (not(p%) & '%' = s[n + 3]) (p% := true, fv :* 100.0, n :+ 1),
+                           if (not(p%) & length(s) > n + 2 & '%' = s[n + 3]) 
+                              (p% := true, fv :* 100.0, n :+ 1),
                            mClaire/printFDigit(fv,j),
                            if p% princ("%"),
                            n :+ 1)

@@ -1,5 +1,5 @@
 /***** CLAIRE Compilation of file /Users/ycaseau/Dropbox/src/clairev4.12/src/compile/ocontrol.cl 
-         [version 4.1.4 / safety 5] Friday 01-03-2025 16:21:04 *****/
+         [version 4.1.6 / safety 5] Saturday 08-09-2025 06:51:14 *****/
 
 package Optimize
 import (_ "fmt"
@@ -1216,6 +1216,7 @@ return  ToType(C_any.Id())
 func E_c_type_Printf (self EID) EID { 
 return EID{F_c_type_Printf(Language.To_Printf(OBJ(self)) ).Id(),0}} 
 
+// macro-expansion of the Printf instruction, similar to its definition in file control.cl  
 /* The go function for: c_code(self:Printf) [status=1] */
 func F_c_code_Printf (self *Language.Printf) EID { 
 var Result EID
@@ -1307,29 +1308,52 @@ var Result EID
                           n = (n+1)
                           } 
                         n = (n+1)
-                        { var _CL_obj *Language.Call = Language.To_Call(new(Language.Call).Is(Language.C_Call))
-                          _CL_obj.Selector = Core.C_mClaire_printFDigit
-                          { 
-                            var va_arg1 *Language.Call
-                            var va_arg2 *ClaireList
-                            va_arg1 = _CL_obj
+                        if (p_Z == CTRUE) { 
+                          { var _CL_obj *Language.Do = Language.To_Do(new(Language.Do).Is(Language.C_Do))
                             { 
-                              var v_bag_arg *ClaireAny
-                              va_arg2= ToType(CEMPTY.Id()).EmptyList()
-                              if (p_Z == CTRUE) { 
+                              var va_arg1 *Language.Do
+                              var va_arg2 *ClaireList
+                              va_arg1 = _CL_obj
+                              { 
+                                var v_bag_arg *ClaireAny
+                                va_arg2= ToType(CEMPTY.Id()).EmptyList()
                                 { var _CL_obj *Language.Call = Language.To_Call(new(Language.Call).Is(Language.C_Call))
-                                  _CL_obj.Selector = ToProperty(C__star.Id())
-                                  _CL_obj.Args = MakeConstantList(l.At(i-1),MakeFloat(100).Id())
+                                  _CL_obj.Selector = Core.C_mClaire_printFDigit
+                                  { 
+                                    var va_arg1 *Language.Call
+                                    var va_arg2 *ClaireList
+                                    va_arg1 = _CL_obj
+                                    { 
+                                      var v_bag_arg *ClaireAny
+                                      va_arg2= ToType(CEMPTY.Id()).EmptyList()
+                                      { var _CL_obj *Language.Call = Language.To_Call(new(Language.Call).Is(Language.C_Call))
+                                        _CL_obj.Selector = ToProperty(C__star.Id())
+                                        _CL_obj.Args = MakeConstantList(l.At(i-1),MakeFloat(100).Id())
+                                        v_bag_arg = _CL_obj.Id()
+                                        } 
+                                      va_arg2.AddFast(v_bag_arg)
+                                      va_arg2.AddFast(MakeInteger(j).Id())} 
+                                    va_arg1.Args = va_arg2
+                                    } 
                                   v_bag_arg = _CL_obj.Id()
                                   } 
-                                } else {
-                                v_bag_arg = l.At(i-1)
-                                } 
-                              va_arg2.AddFast(v_bag_arg)
-                              va_arg2.AddFast(MakeInteger(j).Id())} 
-                            va_arg1.Args = va_arg2
+                                va_arg2.AddFast(v_bag_arg)
+                                { var _CL_obj *Language.Call = Language.To_Call(new(Language.Call).Is(Language.C_Call))
+                                  _CL_obj.Selector = C_princ
+                                  _CL_obj.Args = MakeConstantList(MakeString("%").Id())
+                                  v_bag_arg = _CL_obj.Id()
+                                  } 
+                                va_arg2.AddFast(v_bag_arg)} 
+                              va_arg1.Args = va_arg2
+                              } 
+                            try_5 = EID{_CL_obj.Id(),0}
                             } 
-                          try_5 = EID{_CL_obj.Id(),0}
+                          } else {
+                          { var _CL_obj *Language.Call = Language.To_Call(new(Language.Call).Is(Language.C_Call))
+                            _CL_obj.Selector = Core.C_mClaire_printFDigit
+                            _CL_obj.Args = MakeConstantList(l.At(i-1),MakeInteger(j).Id())
+                            try_5 = EID{_CL_obj.Id(),0}
+                            } 
                           } 
                         }
                         }

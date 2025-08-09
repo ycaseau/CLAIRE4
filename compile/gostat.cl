@@ -662,7 +662,7 @@ unfold_eid(ldef:list,self:any,s:class, v:any,err:boolean,loop:any) : void
 
 // this is our special inling that requires an assignment (not allowed as an expression in go)
 [inline_stat(self:Call,s:class,v:string)
-  -> if (self.selector = object!)           // object!(...) is our instantiation macro
+  -> if (self.selector = object! & s != EID)           // object!(...) is our instantiation macro
           let a1 := self.args[1], a2 := self.args[2] in     // a class
              (if (a2 = property & (value(a1) % property))
                  printf("~I = ~I~I",symbol_ident(a1),

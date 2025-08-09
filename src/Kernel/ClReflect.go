@@ -21,7 +21,8 @@ package Kernel
 import (
 	"fmt"
 	"os"
-//	"time"                // uncomment if perf measures are used
+
+	//	"time"                // uncomment if perf measures are used
 	"unsafe"
 )
 
@@ -43,19 +44,19 @@ func BootCore() {
 	if ClEnv.Verbose > 10 {
 		print("--- Start Bootcore ------------- \n")
 	}
-	C_class = new(ClaireClass)   // C_class is needed for makeClass1
-	C_object = new(ClaireClass)   // C_object is needed for Srange (list or set)
+	C_class = new(ClaireClass)  // C_class is needed for makeClass1
+	C_object = new(ClaireClass) // C_object is needed for Srange (list or set)
 	C_list = new(ClaireClass)   // C_list is needed for MakeClass1
-	C_set = new(ClaireClass)   // C_set is needed for MakeClass1
+	C_set = new(ClaireClass)    // C_set is needed for MakeClass1
 	C_class.Isa = C_class
 	// create the boot classes
 	C_void = makeClass1(new(ClaireClass))
-	C_object = makeClass1(C_object)  // needed for c.Instances
-	C_symbol = makeClass1(new(ClaireClass))  // needed for names
-	C_claire = makeModule1() // needed to create
-	C_slot = makeClass1(new(ClaireClass))    // need for slots list
-	C_list = makeClass1(C_list)    // needed to create proper core lists
-	C_set = makeClass1(C_set)     // descendant is a set
+	C_object = makeClass1(C_object)         // needed for c.Instances
+	C_symbol = makeClass1(new(ClaireClass)) // needed for names
+	C_claire = makeModule1()                // needed to create
+	C_slot = makeClass1(new(ClaireClass))   // need for slots list
+	C_list = makeClass1(C_list)             // needed to create proper core lists
+	C_set = makeClass1(C_set)               // descendant is a set
 	// two special values : NIL and EMPTY
 	CEMPTY = makeNilSet()
 	CNIL = makeBootList()
@@ -79,9 +80,9 @@ func BootCore() {
 	C_void.Instances.Isa = C_list
 	C_void.evaluate = EVAL_object // propagate default through inheritance
 	C_class.Instances.AddFast(C_void.Id())
-	C_void.Descendants = ToType(C_class.Id()).EmptySetObject()    // empty descendant set
+	C_void.Descendants = ToType(C_class.Id()).EmptySetObject() // empty descendant set
 	// create other constant objects
-	CNULL = new(ClaireAny).Is(C_void)                        // create the unknown object
+	CNULL = new(ClaireAny).Is(C_void) // create the unknown object
 	C_void.IfWrite = CNULL
 	C_void.Dictionary = ToMapSet(CNULL)
 	EVOID = EID{CNULL.Id(), 0}
@@ -102,8 +103,8 @@ func Bootstrap() {
 	BootCore()
 	// now we can start building the class hierarchy from the top ------------
 	C_any = MakeClass("any", C_void, C_claire)
-	C_any.Open = 2                        // by default, in CLAIRE 4, we do not keep extensions
-	CNULL.Isa = C_any				      // unknown is allowed as an any value
+	C_any.Open = 2    // by default, in CLAIRE 4, we do not keep extensions
+	CNULL.Isa = C_any // unknown is allowed as an any value
 	makeClass2("object", C_object, C_any, C_claire)
 	C_exception = MakeClass("exception", C_object, C_claire)
 	C_error = MakeClass("error", C_exception, C_claire)
@@ -115,21 +116,21 @@ func Bootstrap() {
 	// second step
 	makeClass2("class", C_class, C_type, C_claire)
 	C_thing = MakeClass("thing", C_object, C_claire)
-	C_thing.Open = 3                   // we keep the extension for all named classes
+	C_thing.Open = 3 // we keep the extension for all named classes
 	C_primitive = MakeClass("primitive", C_any, C_claire)
-	C_primitive.Open = -1              // closed
+	C_primitive.Open = -1 // closed
 	C_string = MakeClass("string", C_primitive, C_claire)
 	C_integer = MakeClass("integer", C_primitive, C_claire)
 	C_integer.evaluate = EVAL_integer
 	C_float = MakeClass("float", C_primitive, C_claire)
 	C_float.evaluate = EVAL_float
 	C_system_object = MakeClass("system_object", C_object, C_claire)
-    C_unbound_symbol = MakeClass("unbound_symbol", C_system_object, C_claire)
-	
-    C_environment = MakeClass("environment", C_system_object, C_claire)
+	C_unbound_symbol = MakeClass("unbound_symbol", C_system_object, C_claire)
+
+	C_environment = MakeClass("environment", C_system_object, C_claire)
 	C_Instruction = MakeClass("Instruction", C_system_object, C_claire)
 	C_Variable = MakeClass("Variable", C_Instruction, C_claire)
-	
+
 	// ClEnv.Isa = C_environment
 	// C_claire.register(makeSymbol("system"), ClEnv.Id()) // link symbol to object
 	makeClass2("symbol", C_symbol, C_system_object, C_claire)
@@ -143,11 +144,11 @@ func Bootstrap() {
 	C_operation = MakeClass("operation", C_property, C_claire)
 	C_table = MakeClass("table", C_relation, C_claire)
 	C_restriction = MakeClass("restriction", C_object, C_claire)
-	C_restriction.Open = 3           // keep instances
+	C_restriction.Open = 3 // keep instances
 	C_method = MakeClass("method", C_restriction, C_claire)
 	makeClass2("slot", C_slot, C_restriction, C_claire)
 	C_void.Slots = ToType(C_slot.Id()).EmptyList()
-	
+
 	// special instances
 	ToBoolean(CTRUE.IsNamed(C_boolean, MakeSymbol("true", C_claire)).Id())
 	ToBoolean(CFALSE.IsNamed(C_boolean, MakeSymbol("false", C_claire)).Id())
@@ -161,7 +162,7 @@ func Bootstrap() {
 
 	// lists, sets, maps
 	C_bag = MakeClass("bag", C_type, C_claire)
-	C_bag.Open = -1                      // closed to subclassing or instanciation
+	C_bag.Open = -1 // closed to subclassing or instanciation
 	makeClass2("list", C_list, C_bag, C_claire)
 	C_listargs = MakeClass("listargs", C_list, C_claire)
 	// a tuple is physically a list, but different semantics {example: set!(tuple(X,Y))}
@@ -197,7 +198,6 @@ func Bootstrap() {
 	C_lambda = MakeClass("lambda", C_object, C_claire)
 	C_pair = MakeClass("pair", C_object, C_claire)
 
-
 	// fixes a few pieces that are missing
 	for _, c := range C_class.Instances.ValuesO() {
 		ToClass(c).Comment = MakeString(ToClass(c).Name.key) // because C_string does not exist first
@@ -224,12 +224,12 @@ func Bootstrap() {
 	// reflective descriptions of slots and methods
 	BootSlot()
 	BootMethod()
-	unknownName = makeSymbol("unknown")            // we need to mark this symbol for lookup
-	C_claire.register(unknownName, CNULL)          // it contains CNULL but the "value is known"
-	PRIVATE = makeSymbol("private")                // private is a special symbol ...
-	C_claire.register(PRIVATE,PRIVATE.Id())        // self-referenced
+	unknownName = makeSymbol("unknown")      // we need to mark this symbol for lookup
+	C_claire.register(unknownName, CNULL)    // it contains CNULL but the "value is known"
+	PRIVATE = makeSymbol("private")          // private is a special symbol ...
+	C_claire.register(PRIVATE, PRIVATE.Id()) // self-referenced
 	// fmt.Println("=== end of bootstrap ====")
-		
+
 }
 
 // +---------------------------------------------------------------------------+
@@ -243,14 +243,14 @@ func makeProperty(name string) *ClaireProperty {
 
 // two short cuts to create Kernel and microClaire (mClaire) properties
 func makeKernelProperty(name string) *ClaireProperty {
-	return makeNewProperty(MakeSymbol(name,C_Kernel))
+	return makeNewProperty(MakeSymbol(name, C_Kernel))
 }
 
 func makeMicroProperty(name string) *ClaireProperty {
-	return makeNewProperty(MakeSymbol(name,C_mClaire))
+	return makeNewProperty(MakeSymbol(name, C_mClaire))
 }
 
-// internal function used by Kernel (without instantiate => sets all default values)	
+// internal function used by Kernel (without instantiate => sets all default values)
 func makeNewProperty(name *ClaireSymbol) *ClaireProperty {
 	var o *ClaireProperty = new(ClaireProperty)
 	o.Isa = C_property
@@ -276,14 +276,16 @@ func makeNewProperty(name *ClaireSymbol) *ClaireProperty {
 	return o
 }
 
-// version that is is used by the compiler ... 
+// version that is is used by the compiler ...
 // default values are put by instantiate (in IsNamed)
 func MakeProperty(name string, op int, m *ClaireModule) *ClaireProperty {
 	var o *ClaireProperty = ToProperty(new(ClaireProperty).IsNamed(C_property, MakeSymbol(name, m)))
 	o.Open = op
 	o.Comment = MakeString(name)
 	o.Restrictions = MakeList(ToType(C_restriction.Id()))
-	if (o.Definition == nil) {panic("Instantiate failed on " + name)}
+	if o.Definition == nil {
+		panic("Instantiate failed on " + name)
+	}
 	if ClEnv.Verbose > 10 {
 		fmt.Printf("MakeProprerty(%s) -> %s - definition.Of:%s\n", name, o.Prt(), o.Definition.Of().Prt())
 	}
@@ -356,7 +358,9 @@ func (p *ClaireProperty) DefMethod(l *ClaireLambda, ld []*ClaireAny) {
 
 // add a method with a f(x) golang function - special form for compiler
 func (p *ClaireProperty) AddMethod(ld []*ClaireAny, status int, f *ClaireFunction) *ClaireMethod {
-	if ClEnv.Verbose == 10 {fmt.Printf("--- start creating a method for %s\n", p.Name.key)}
+	if ClEnv.Verbose == 10 {
+		fmt.Printf("--- start creating a method for %s\n", p.Name.key)
+	}
 	m := p.makeMethod(ld)
 	m.Functional = f
 	m.Status = status
@@ -401,22 +405,26 @@ func (c *ClaireClass) AddSlot(p *ClaireProperty, r *ClaireType, def *ClaireAny) 
 	// puts s in the list of slots at the right positions and sets the index
 	ls := c.Slots.ValuesO()
 	ix := len(ls)
-	for ix > 0 && ToSlot(ls[ix - 1]).Selector != p {ix--}     // look for slots from
-	if ix > 0  {   // slot co-variant override
+	for ix > 0 && ToSlot(ls[ix-1]).Selector != p {
+		ix--
+	} // look for slots from
+	if ix > 0 { // slot co-variant override
 		// fmt.Printf("------ slot override for p=%s ---------\n",p.Prt())
 		s.Index = ix
-		s.Srange = ToSlot(ls[ix - 1]).Srange                  // srange cannot change ! 
-		ls[ix - 1] = s.Id()
+		s.Srange = ToSlot(ls[ix-1]).Srange // srange cannot change !
+		ls[ix-1] = s.Id()
 	} else {
 		// new in v4.10: check that the class does not have more than 50 slots
-		if len(ls) >= 49 {panic("too many slots (more than 50) in class " + c.Name.key + "(fatal error)")}
+		if len(ls) >= 49 {
+			panic("too many slots (more than 50) in class " + c.Name.key + "(fatal error)")
+		}
 		s.Index = len(ls) + 1
 		s.Srange = c1
-	    // CLAIRE 4 : propagate slots down - used only during the bootstrap
-	    s2 := c.Descendants
-		for k := 0; k < s2.Count; k++  {
-			   ToClass(s2.At(k)).Slots.AddFast(s.ToAny())
-			   }
+		// CLAIRE 4 : propagate slots down - used only during the bootstrap
+		s2 := c.Descendants
+		for k := 0; k < s2.Count; k++ {
+			ToClass(s2.At(k)).Slots.AddFast(s.ToAny())
+		}
 	}
 	s.Domain = MakeList(ToType(C_type.Id()), c.ToAny())
 	s.Selector = p
@@ -456,7 +464,9 @@ func makeModule2(m *ClaireModule, sup *ClaireModule) {
 	//m.register(m.Name, m.Id())
 	C_claire.register(m.Name, m.Id())
 	m.PartOf = sup
-	if m != C_claire {sup.Parts.AddFast(m.Id())}
+	if m != C_claire {
+		sup.Parts.AddFast(m.Id())
+	}
 	m.Parts = ToType(C_module.Id()).EmptyList()
 	m.Status = 0
 	m.Comment = ToString(CNULL)
@@ -465,7 +475,7 @@ func makeModule2(m *ClaireModule, sup *ClaireModule) {
 	m.Resources = ToType(C_string.Id()).EmptyList()
 	m.Uses = ToType(C_module.Id()).EmptyList()
 	m.Source = ToString(CNULL)
-	m.Evaluate = ToFunction(CNULL)        // unused ? 
+	m.Evaluate = ToFunction(CNULL) // unused ?
 	m.External = ToString(CNULL)
 }
 
@@ -474,8 +484,11 @@ func makeModule2(m *ClaireModule, sup *ClaireModule) {
 func MakeModule(s string, sup *ClaireModule) *ClaireModule {
 	m2 := C_claire.table[s]
 	if m2 != nil {
-		if m2.value.Isa == C_module { return ToModule(m2.value)
-		} else {panic("unsupported conflict on module names with: " + s)}
+		if m2.value.Isa == C_module {
+			return ToModule(m2.value)
+		} else {
+			panic("unsupported conflict on module names with: " + s)
+		}
 	} else {
 		m := makeModule1()
 		m.Name = C_claire.createSymbol(s)
@@ -504,7 +517,7 @@ func makeClass1(c *ClaireClass) *ClaireClass {
 	// these are incomplete list creation patterns (to be fixed in step2)
 	c.Subclass = ToType(C_class.Id()).EmptySetObject()
 	c.Instances = ToType(c.Id()).emptyListObject()
-	               // makeNilList()   // ToList(makeListObject(ToType(C_class.Id()), []*ClaireAny{}).Id())
+	// makeNilList()   // ToList(makeListObject(ToType(C_class.Id()), []*ClaireAny{}).Id())
 	c.Slots = makeBootList()
 	return c
 }
@@ -513,16 +526,17 @@ func makeClass1(c *ClaireClass) *ClaireClass {
 func makeClass2(name string, c1 *ClaireClass, c2 *ClaireClass, m *ClaireModule) {
 	//fmt.Printf("---- MakeClass2(%s)\n", name)
 	c1.Name = MakeSymbol(name, m)
-	instantiateClass(name,c1,c2)  /// now we define c1 as a subclass of c2
+	instantiateClass(name, c1, c2) /// now we define c1 as a subclass of c2
 }
 
 // Debug : print a set of classes (temporary : could be removed)
 func SCS(s *ClaireSet) string {
 	var res string = "{"
-	for k := 0; k < s.Count; k++ {res = res + ToClass(s.At(k)).Name.key + " "}
+	for k := 0; k < s.Count; k++ {
+		res = res + ToClass(s.At(k)).Name.key + " "
+	}
 	return res + "}"
 }
-
 
 // this is the bulk of class instantiation
 func instantiateClass(name string, c1 *ClaireClass, c2 *ClaireClass) {
@@ -537,7 +551,7 @@ func instantiateClass(name string, c1 *ClaireClass, c2 *ClaireClass) {
 	// fmt.Printf("makeclass(%s): ancestors: %d\n", name, c1.Ancestors.Length())
 	for _, y := range c1.Ancestors.ValuesO() {
 		ToClass(y).Descendants.AddFast(c1.Id())
-    }
+	}
 	C_class.Instances.AddFast(c1.ToAny())
 	// if (c2->open == ClEnv->ephemeral) c->open = ClEnv->ephemeral;
 	if c2.Slots.Length() > 0 {
@@ -579,12 +593,14 @@ func MakeClass(name string, c *ClaireClass, m *ClaireModule) *ClaireClass {
 func NewClass(name string, c *ClaireClass, m *ClaireModule) *ClaireClass {
 	s := m.createSymbol(name)
 	if s.value != nil && s.value.Isa == C_class {
-		 return ToClass(s.value)
-	} else { o := makeClass1(new(ClaireClass))
-		     o.Name = s
-			 instantiateClass(name,o,c)
-			 m.register(s, o.Id())
-			 return o }
+		return ToClass(s.value)
+	} else {
+		o := makeClass1(new(ClaireClass))
+		o.Name = s
+		instantiateClass(name, o, c)
+		m.register(s, o.Id())
+		return o
+	}
 }
 
 // this is how it is called in define.cl - c is the super class
@@ -596,8 +612,11 @@ func (s *ClaireSymbol) Class_I(c *ClaireClass) EID {
 	// x := F_new_thing_class(C_class,s)  will not work because of the extra slot (evaluate)
 	var o *ClaireClass
 	if s.value != nil {
-		if s.value.Isa != C_class {return Cerror(18,s.Id(),s.value.Isa.Id())
-		} else {o = ToClass(s.value)}
+		if s.value.Isa != C_class {
+			return Cerror(18, s.Id(), s.value.Isa.Id())
+		} else {
+			o = ToClass(s.value)
+		}
 	} else {
 		o = new(ClaireClass)
 		o.Isa = C_class
@@ -608,19 +627,18 @@ func (s *ClaireSymbol) Class_I(c *ClaireClass) EID {
 	o.Subclass = ToType(C_class.Id()).EmptySet()
 	o.Instances = ToType(o.Id()).EmptyList() //  makeNilList()
 	instantiateClass(s.key, o, c)
-	return EID{o.Id(),0}
+	return EID{o.Id(), 0}
 }
 
 func E_class_I_symbol(s EID, c EID) EID {
-	return ToSymbol(OBJ(s)).Class_I(ToClass(OBJ(s))) 
+	return ToSymbol(OBJ(s)).Class_I(ToClass(OBJ(s)))
 }
-
 
 // make an object - used by compiler => range is *ClaireAny
 func (c *ClaireClass) New() *ClaireAny {
 	o := c.makeObject()
 	o.Isa = c
-	if c.Open == 3  {
+	if c.Open == 3 {
 		c.Instances.AddFast(&o.ClaireAny)
 	}
 	return o.ToAny()
@@ -630,7 +648,7 @@ func (c *ClaireClass) New() *ClaireAny {
 func (o *ClaireAny) Is(c *ClaireClass) *ClaireAny {
 	o.Isa = c
 	c.instantiate(ToObject(o))
-	if c.Open == 3  {
+	if c.Open == 3 {
 		c.Instances.AddFast(o)
 	}
 	return o
@@ -659,7 +677,9 @@ func (o *ClaireThing) IsNamed(c *ClaireClass, s *ClaireSymbol) *ClaireAny {
 func (c *ClaireClass) instantiate(o *ClaireObject) {
 	if ClEnv.Verbose == -1 {
 		fmt.Printf("instantiate %s with %d slots\n", c.Name.key, c.Slots.Length())
-		if c.Slots.Length() > 0 {fmt.Printf("slots = %s\n",c.Slots.Prt())}
+		if c.Slots.Length() > 0 {
+			fmt.Printf("slots = %s\n", c.Slots.Prt())
+		}
 	}
 	for i, s := range c.Slots.ValuesO() {
 		if i > 0 {
@@ -679,7 +699,8 @@ func (c *ClaireClass) instantiate(o *ClaireObject) {
 			} else if ToSlot(s).Default.Isa == C_set { // same for sets
 				o.SetObj(i+1, ToSet(ToSlot(s).Default).Copy().Id())
 				if ClEnv.Verbose == -1 {
-					fmt.Printf(">> we have a set at position %d: %s\n",i+1,o.GetObj(i+1).Prt())}
+					fmt.Printf(">> we have a set at position %d: %s\n", i+1, o.GetObj(i+1).Prt())
+				}
 			} else {
 				o.SetObj(i+1, ToSlot(s).Default)
 			}
@@ -711,10 +732,9 @@ func (c *ClaireClass) MakeInts(args ...int) *ClaireAny {
 	n := len(args)
 	for i := 0; i < n; i++ { // n args : n+1 slot (Isa not included)
 		ToObject(o).SetInt(i+2, args[i])
-		} 
+	}
 	return o
 }
-
 
 // the functions that are imported in Core: (1) mClaire/new!(self:class)
 func F_new_object_class(c *ClaireClass) *ClaireObject {
@@ -736,14 +756,18 @@ func F_new_thing_class(c *ClaireClass, s *ClaireSymbol) EID {
 	if s.value != nil && s.value != CNULL {
 		// fmt.Printf("thing %s already exists\n",s.key)
 		// fmt.Printf("value is  %s already exists\n",s.value.Prt())
-		if s.value.Isa != c {return Cerror(18,s.Id(),s.value.Isa.Id())
-		} else {return EID{s.value,0}}
+		if s.value.Isa != c {
+			return Cerror(18, s.Id(), s.value.Isa.Id())
+		} else {
+			return EID{s.value, 0}
+		}
 	} else {
 		o := ToThing(c.New())
 		c.instantiate(ToObject(o.Id()))
 		o.Name = s
 		s.module_I.register(s, o.Id())
-		return EID{o.Id(),0}}
+		return EID{o.Id(), 0}
+	}
 }
 
 func E_new_thing_class(e EID, s EID) EID {
@@ -751,14 +775,18 @@ func E_new_thing_class(e EID, s EID) EID {
 }
 
 // returns the sort associated to class : any (represents EID), object, char, integer or float
-// for the time being, we allow string & functions as sorts (they are not objects) 
+// for the time being, we allow string & functions as sorts (they are not objects)
 func (c *ClaireClass) Sort_I() *ClaireClass {
-	if c == C_integer || c == C_float || c == C_char || c == C_string || c == C_function { return c
-    } else if c == C_any || c == C_primitive || c == C_void  { return C_any
-	} else {return C_object}
+	if c == C_integer || c == C_float || c == C_char || c == C_string || c == C_function {
+		return c
+	} else if c == C_any || c == C_primitive || c == C_void {
+		return C_any
+	} else {
+		return C_object
 	}
+}
 
-func E_sort_I_class (c EID) EID {return EID{ToClass(OBJ(c)).Sort_I().Id(),0}}
+func E_sort_I_class(c EID) EID { return EID{ToClass(OBJ(c)).Sort_I().Id(), 0} }
 
 // create a dumb function
 func F_make_function_string(name *ClaireString) *ClaireFunction {
@@ -816,7 +844,7 @@ func BootSlot() {
 	C_descendants = makeProperty("descendants")
 	C_open = makeProperty("open")
 	C_instances = makeProperty("instances")
-	C_params = makeProperty("params")	
+	C_params = makeProperty("params")
 	C_mClaire_graph = makeMicroProperty("graph")
 	C_if_write = makeProperty("if_write")
 	C_ident_ask = makeProperty("ident?")
@@ -865,7 +893,7 @@ func BootSlot() {
 	C_cin = makeProperty("cin")
 	C_base = makeProperty("base")
 	C_debug_I = makeProperty("debug!")
-//	C_step_I = makeProperty("step!")
+	//	C_step_I = makeProperty("step!")
 	C_last_debug = makeProperty("last_debug")
 	C_last_index = makeProperty("last_index")
 	C_spy_I = makeProperty("spy!")
@@ -876,7 +904,7 @@ func BootSlot() {
 	C_final = makeProperty("final")
 	C_abstract = makeProperty("abstract")
 	C_ephemeral = makeProperty("ephemeral")
-	C_jito_ask = makeProperty("jito?")	
+	C_jito_ask = makeProperty("jito?")
 	C_n_line = makeProperty("n_line")
 	C_imports = makeProperty("imports")
 	C_first = makeProperty("first")
@@ -916,8 +944,8 @@ func BootSlot() {
 	C_table.AddSlot(C_params, ToType(C_any.Id()), CNULL)
 	C_table.AddSlot(C_default, ToType(C_any.Id()), CNULL)
 	C_property.AddSlot(C_trace_I, ToType(C_integer.Id()), AnyInteger(0))
-	C_property.AddSlot(C_restrictions, ToType(C_list.Id()), MakeList(ToType(C_restriction.Id())).Id()) // TODO : create types directly ??
-	C_property.AddSlot(C_mClaire_definition, ToType(C_list.Id()), MakeList(ToType(C_restriction.Id())).Id())   // same : try to create a _expression
+	C_property.AddSlot(C_restrictions, ToType(C_list.Id()), MakeList(ToType(C_restriction.Id())).Id())       // TODO : create types directly ??
+	C_property.AddSlot(C_mClaire_definition, ToType(C_list.Id()), MakeList(ToType(C_restriction.Id())).Id()) // same : try to create a _expression
 	C_property.AddSlot(C_dictionary, ToType(C_boolean.Id()), CFALSE.ToAny())
 	C_property.AddSlot(C_reified, ToType(C_boolean.Id()), CFALSE.ToAny())
 	C_operation.AddSlot(C_precedence, ToType(C_integer.Id()), AnyInteger(0))
@@ -941,7 +969,7 @@ func BootSlot() {
 	C_unbound_symbol.AddSlot(C_name, ToType(C_symbol.Id()), CNULL)
 	C_pair.AddSlot(C_first, ToType(C_any.Id()), CNULL)
 	C_pair.AddSlot(C_second, ToType(C_any.Id()), CNULL)
-	
+
 	// modules
 	C_module.AddSlot(C_comment, ToType(C_string.Id()), CNULL)
 	C_module.AddSlot(C_parts, ToType(C_list.Id()), ToType(C_module.Id()).EmptyList().Id())
@@ -953,7 +981,7 @@ func BootSlot() {
 	C_module.AddSlot(C_external, ToType(C_string.Id()), CNULL)
 	C_module.AddSlot(C_imports, ToType(C_map_set.Id()), CNULL)
 	// this does not work ...
-	C_module.AddSlot(C_resources, ToType(C_list.Id()), ToType(C_string.Id()).EmptyList().Id()) 
+	C_module.AddSlot(C_resources, ToType(C_list.Id()), ToType(C_string.Id()).EmptyList().Id())
 	// Types
 	C_Union.AddSlot(C_mClaire_t1, ToType(C_type.Id()), CNULL)
 	C_Union.AddSlot(C_mClaire_t2, ToType(C_type.Id()), CNULL)
@@ -999,7 +1027,7 @@ func BootSlot() {
 	// variables
 	C_Variable.AddSlot(C_mClaire_pname, ToType(C_symbol.Id()), CNULL)
 	C_Variable.AddSlot(C_range, ToType(C_type.Id()), CNULL)
-	C_Variable.AddSlot(C_mClaire_index, ToType(C_integer.Id()), AnyInteger(-1))       //  -1 is the new default = no Index
+	C_Variable.AddSlot(C_mClaire_index, ToType(C_integer.Id()), AnyInteger(-1)) //  -1 is the new default = no Index
 	C_Variable.Params = MakeList(ToType(C_any.Id()), C_mClaire_pname.Id(), C_range.Id())
 }
 
@@ -1110,16 +1138,16 @@ func BootMethod() {
 	C_arity = makeKernelProperty("arity")
 	C_set_arity = makeKernelProperty("set_arity")
 	C_slice = makeProperty("slice")
-	C_statistics = makeProperty("statistics")	
+	C_statistics = makeProperty("statistics")
 	C_hash = makeProperty("hash")
 	C_file_separator = makeProperty("file_separator")
 	// C_getenv = makeProperty("getenv")
 
 	// operation
-	C_add = MakeOperation("add",0, C_claire, 10)
-	C_add_I = MakeOperation("add!",0, C_claire, 10)
-	C_add_star = MakeOperation("add*",0, C_claire, 10)
-	C_delete = MakeOperation("delete",0, C_claire, 10)
+	C_add = MakeOperation("add", 0, C_claire, 10)
+	C_add_I = MakeOperation("add!", 0, C_claire, 10)
+	C_add_star = MakeOperation("add*", 0, C_claire, 10)
+	C_delete = MakeOperation("delete", 0, C_claire, 10)
 	C__equal = MakeOperation("=", 0, C_claire, 60)
 	C__inf = MakeOperation("<", 0, C_claire, 60)
 	C__inf_equal = MakeOperation("<=", 0, C_claire, 60)
@@ -1132,7 +1160,7 @@ func BootMethod() {
 	C__star = MakeOperation("*", 0, C_claire, 10)
 	C__Z = MakeOperation("€", 0, C_claire, 50)
 	// v4.12 : create an alias
-	C_claire.register(makeSymbol("%"), C__Z.Id())        // link symbol to object
+	C_claire.register(makeSymbol("%"), C__Z.Id()) // link symbol to object
 	C__exp = MakeOperation("^", 0, C_claire, 5)
 	C_min = MakeOperation("min", 0, C_claire, 20)
 	C_max = MakeOperation("max", 0, C_claire, 20)
@@ -1147,12 +1175,12 @@ func BootMethod() {
 	C_stack_apply.AddMethod(Signature(C_integer.Id(), C_void.Id()), 0, MakeFunction1(E_stack_add, "stack_add"))
 	C_stack_apply.AddMethod(Signature(C_function.Id(), C_integer.Id(), C_integer.Id(), C_any.Id()), 1, MakeFunction3(E_stack_apply_function, "stack_apply_function"))
 	C__equal.AddMethod(Signature(C_any.Id(), C_any.Id(), C_boolean.Id()), 0, MakeFunction2(E_equal_any, "equal_any"))
-    C_string_I.AddMethod(Signature(C_function.Id(), C_string.Id()), 0, MakeFunction1(E_string_I_function, "string_I_function"))
-    C_arity.AddMethod(Signature(C_function.Id(), C_integer.Id()), 0, MakeFunction1(E_arity_function, "arity_function"))
-	C_set_arity.AddMethod(Signature(C_function.Id(), C_integer.Id(),C_void.Id()), 0, MakeFunction2(E_set_arity_function, "set_arity_function"))
-	C_funcall.AddMethod(Signature(C_function.Id(), C_any.Id(),C_any.Id()), 1, MakeFunction2(E_funcall1, "funcall1"))
-	C_funcall.AddMethod(Signature(C_function.Id(), C_any.Id(),C_any.Id(),C_any.Id()), 2, MakeFunction3(E_funcall2, "funcall2"))
-	C_funcall.AddMethod(Signature(C_function.Id(), C_any.Id(),C_any.Id(),C_any.Id(),C_any.Id()), 3, MakeFunction4(E_funcall3, "funcall3"))
+	C_string_I.AddMethod(Signature(C_function.Id(), C_string.Id()), 0, MakeFunction1(E_string_I_function, "string_I_function"))
+	C_arity.AddMethod(Signature(C_function.Id(), C_integer.Id()), 0, MakeFunction1(E_arity_function, "arity_function"))
+	C_set_arity.AddMethod(Signature(C_function.Id(), C_integer.Id(), C_void.Id()), 0, MakeFunction2(E_set_arity_function, "set_arity_function"))
+	C_funcall.AddMethod(Signature(C_function.Id(), C_any.Id(), C_any.Id()), 1, MakeFunction2(E_funcall1, "funcall1"))
+	C_funcall.AddMethod(Signature(C_function.Id(), C_any.Id(), C_any.Id(), C_any.Id()), 2, MakeFunction3(E_funcall2, "funcall2"))
+	C_funcall.AddMethod(Signature(C_function.Id(), C_any.Id(), C_any.Id(), C_any.Id(), C_any.Id()), 3, MakeFunction4(E_funcall3, "funcall3"))
 
 	// ClReflect
 	C_class_I.AddMethod(Signature(C_symbol.Id(), C_class.Id(), C_class.Id()), 1, MakeFunction2(E_class_I_symbol, "class_I_symbol"))
@@ -1160,10 +1188,10 @@ func BootMethod() {
 	C_mClaire_new_I.AddMethod(Signature(C_class.Id(), C_symbol.Id(), C_thing.Id()), 1, MakeFunction2(E_new_thing_class, "new_thing_class"))
 	C_sort_I.AddMethod(Signature(C_class.Id(), C_class.Id()), 0, MakeFunction1(E_sort_I_class, "sort_I_class"))
 	C_make_function.AddMethod(Signature(C_string.Id(), C_function.Id()), 0, MakeFunction1(E_make_function_string, "make_function_string"))
-	C_add_slot.AddMethod(Signature(C_class.Id(), C_property.Id(),C_type.Id(),C_any.Id(),C_slot.Id()), 0, MakeFunction4(E_add_slot_class, "add_slot_class"))
-	C_add_method.AddMethod(Signature(C_property.Id(),C_list.Id(),C_type.Id(),C_integer.Id(),C_any.Id(),C_method.Id()), 0, MakeFunction5(E_add_method_property, "add_method_property"))
+	C_add_slot.AddMethod(Signature(C_class.Id(), C_property.Id(), C_type.Id(), C_any.Id(), C_slot.Id()), 0, MakeFunction4(E_add_slot_class, "add_slot_class"))
+	C_add_method.AddMethod(Signature(C_property.Id(), C_list.Id(), C_type.Id(), C_integer.Id(), C_any.Id(), C_method.Id()), 0, MakeFunction5(E_add_method_property, "add_method_property"))
 	C_copy.AddMethod(Signature(C_object.Id(), C_object.Id()), 0, MakeFunction1(E_copy_object, "copy_object"))
-    C_write_fast.AddMethod(Signature(C_property.Id(), C_object.Id(), C_any.Id(), C_any.Id()), 1, MakeFunction3(E_write_fast_property, "write_fast_property"))
+	C_write_fast.AddMethod(Signature(C_property.Id(), C_object.Id(), C_any.Id(), C_any.Id()), 1, MakeFunction3(E_write_fast_property, "write_fast_property"))
 	C_read.AddMethod(Signature(C_property.Id(), C_object.Id(), C_any.Id()), 1, MakeFunction2(E_read_property, "read_property"))
 	C_slot_get.AddMethod(Signature(C_object.Id(), C_integer.Id(), C_class.Id(), C_any.Id()), 0, MakeFunction3(E_slot_get_object, "slot_get_object"))
 
@@ -1176,7 +1204,7 @@ func BootMethod() {
 	// CLAIRE4 : duplication since tuple methods are the same as lists, but cannot be inherited from bags
 	C_nth_get.AddMethod(Signature(C_tuple.Id(), C_integer.Id(), C_any.Id()), 0, MakeFunction2(E_nth_get_list, "nth_get_list"))
 	C_nth_put.AddMethod(Signature(C_list.Id(), C_integer.Id(), C_any.Id(), C_any.Id()), 0, MakeFunction3(E_nth_put_list, "nth_put_list"))
-	C_nth_put.AddMethod(Signature(C_array.Id(), C_integer.Id(),C_any.Id(), C_any.Id()), 0, MakeFunction3(E_nth_put_list, "nth_put_list"))
+	C_nth_put.AddMethod(Signature(C_array.Id(), C_integer.Id(), C_any.Id(), C_any.Id()), 0, MakeFunction3(E_nth_put_list, "nth_put_list"))
 	C_empty.AddMethod(Signature(C_list.Id(), C_list.Id()), 0, MakeFunction1(E_empty_list, "empty_list"))
 	C_delete.AddMethod(Signature(C_list.Id(), C_any.Id(), C_list.Id()), 0, MakeFunction2(E_delete_list, "delete_list"))
 	C_length.AddMethod(Signature(C_list.Id(), C_integer.Id()), 0, MakeFunction1(E_length_list, "length_list"))
@@ -1188,18 +1216,18 @@ func BootMethod() {
 	C_add.AddMethod(Signature(C_set.Id(), C_any.Id(), C_set.Id()), 0, MakeFunction2(E_add_set, "add_set"))
 	C_cons.AddMethod(Signature(C_any.Id(), C_list.Id(), C_list.Id()), 0, MakeFunction2(E_cons_any, "cons_any"))
 	C_cdr.AddMethod(Signature(C_list.Id(), C_list.Id()), 1, MakeFunction1(E_cdr_list, "cdr_list"))
-	C_make_list.AddMethod(Signature(C_integer.Id(), C_any.Id(),C_list.Id()), 0, MakeFunction2(E_make_list_integer, "make_list_integer"))
+	C_make_list.AddMethod(Signature(C_integer.Id(), C_any.Id(), C_list.Id()), 0, MakeFunction2(E_make_list_integer, "make_list_integer"))
 	C_get.AddMethod(Signature(C_list.Id(), C_any.Id(), C_integer.Id()), 0, MakeFunction2(E_index_list, "#index_list"))
 	C_add_star.AddMethod(Signature(C_list.Id(), C_list.Id(), C_list.Id()), 1, MakeFunction2(E_add_star_list, "add_star_list"))
 	C_add_I.AddMethod(Signature(C_list.Id(), C_any.Id(), C_list.Id()), 0, MakeFunction2(E_add_I_list, "add_I_list"))
 	C__7_plus.AddMethod(Signature(C_list.Id(), C_list.Id(), C_list.Id()), 0, MakeFunction2(E_append_list, "append_list"))
 	C_nth.AddMethod(Signature(C_list.Id(), C_integer.Id(), C_any.Id()), 1, MakeFunction2(E_nth_list, "nth_list"))
 	C_nth.AddMethod(Signature(C_tuple.Id(), C_integer.Id(), C_any.Id()), 1, MakeFunction2(E_nth_list, "nth_list"))
-	C_nth.AddMethod(Signature(C_array.Id(), C_integer.Id(), C_any.Id()), 1, MakeFunction2(E_nth_list, "nth_list"))   // v4.0.5
+	C_nth.AddMethod(Signature(C_array.Id(), C_integer.Id(), C_any.Id()), 1, MakeFunction2(E_nth_list, "nth_list")) // v4.0.5
 	C_nth_plus.AddMethod(Signature(C_list.Id(), C_integer.Id(), C_any.Id(), C_list.Id()), 1, MakeFunction3(E_nth_plus_list, "nth_plus_list"))
 	C_nth_dash.AddMethod(Signature(C_list.Id(), C_integer.Id(), C_list.Id()), 1, MakeFunction2(E_nth_dash_list, "nth_dash_list"))
-	C_nth_equal.AddMethod(Signature(C_list.Id(), C_integer.Id(), C_any.Id(),C_any.Id()), 1, MakeFunction3(E_nth_equal_list, "nth_equal_list"))
-	C_nth_equal.AddMethod(Signature(C_array.Id(), C_integer.Id(), C_any.Id(),C_any.Id()), 1, MakeFunction3(E_nth_equal_list, "nth_equal_list"))  // v4.0.5
+	C_nth_equal.AddMethod(Signature(C_list.Id(), C_integer.Id(), C_any.Id(), C_any.Id()), 1, MakeFunction3(E_nth_equal_list, "nth_equal_list"))
+	C_nth_equal.AddMethod(Signature(C_array.Id(), C_integer.Id(), C_any.Id(), C_any.Id()), 1, MakeFunction3(E_nth_equal_list, "nth_equal_list")) // v4.0.5
 	C_skip.AddMethod(Signature(C_list.Id(), C_integer.Id(), C_list.Id()), 0, MakeFunction2(E_skip_list, "skip_list"))
 	C_shrink.AddMethod(Signature(C_list.Id(), C_integer.Id(), C_list.Id()), 0, MakeFunction2(E_shrink_list, "shrink_list"))
 	C_slice.AddMethod(Signature(C_list.Id(), C_integer.Id(), C_integer.Id(), C_list.Id()), 0, MakeFunction3(E_slice_list, "slice_list"))
@@ -1253,12 +1281,12 @@ func BootMethod() {
 	//C_get.AddMethod(Signature(C_symbol.Id(), C_any.Id()), 0, MakeFunction1(E_get_symbol, "get_symbol"))
 	C__7_plus.AddMethod(Signature(C_symbol.Id(), C_any.Id(), C_symbol.Id()), 0, MakeFunction2(E_append_symbol, "append_symbol"))
 	C_princ.AddMethod(Signature(C_symbol.Id(), C_void.Id()), 0, MakeFunction1(E_princ_symbol, "princ_symbol"))
-	// in CLAIRE4 : these 4 methods replace 4 slots access (from CLAIRE3.5) 
+	// in CLAIRE4 : these 4 methods replace 4 slots access (from CLAIRE3.5)
 	C_string_I.AddMethod(Signature(C_symbol.Id(), C_string.Id()), 0, MakeFunction1(E_string_I_symbol, "string_I_symbol"))
 	C_module_I.AddMethod(Signature(C_symbol.Id(), C_module.Id()), 0, MakeFunction1(E_module_I_symbol, "module_I_symbol"))
 	C_defined.AddMethod(Signature(C_symbol.Id(), C_module.Id()), 0, MakeFunction1(E_defined_symbol, "defined_symbol"))
 	C_value.AddMethod(Signature(C_symbol.Id(), C_any.Id()), 0, MakeFunction1(E_value_symbol, "value_symbol"))
-    //
+	//
 	C_gensym.AddMethod(Signature(C_string.Id(), C_symbol.Id()), 0, MakeFunction1(E_gensym_string, "gensym_string"))
 	C_c_princ.AddMethod(Signature(C_symbol.Id(), C_void.Id()), 0, MakeFunction1(E_c_princ_symbol, "c_princ_symbol"))
 	C_begin.AddMethod(Signature(C_module.Id(), C_void.Id()), 0, MakeFunction1(E_begin_module, "begin_module"))
@@ -1276,11 +1304,10 @@ func BootMethod() {
 	C_length.AddMethod(Signature(C_port.Id(), C_integer.Id()), 0, MakeFunction1(E_length_port, "length_port"))
 	C_set_length.AddMethod(Signature(C_port.Id(), C_integer.Id(), C_void.Id()), 0, MakeFunction2(E_set_length_port, "set_length_port"))
 	C_getc.AddMethod(Signature(C_port.Id(), C_char.Id()), 0, MakeFunction1(E_getc_port, "Getc"))
-	C_putc.AddMethod(Signature(C_char.Id(), C_port.Id(),C_void.Id()), 0, MakeFunction2(E_putc_char, "Putc"))
+	C_putc.AddMethod(Signature(C_char.Id(), C_port.Id(), C_void.Id()), 0, MakeFunction2(E_putc_char, "Putc"))
 	C_fopen.AddMethod(Signature(C_string.Id(), C_string.Id(), C_port.Id()), 1, MakeFunction2(E_fopen_string, "fopen_string"))
 	C_flush.AddMethod(Signature(C_port.Id(), C_void.Id()), 0, MakeFunction1(E_flush_port, "flush_port"))
-	C_flush.AddMethod(Signature(C_port.Id(), C_integer.Id(),C_void.Id()), 0, MakeFunction2(E_pushback_port, "pushback_port"))
-
+	C_flush.AddMethod(Signature(C_port.Id(), C_integer.Id(), C_void.Id()), 0, MakeFunction2(E_pushback_port, "pushback_port"))
 
 	// ClEnv
 	//C_time_set.AddMethod(Signature(C_void.Id(), C_void.Id()), 0, MakeFunction1(E_time_set_void, "time_set_void"))
@@ -1316,10 +1343,10 @@ func BootMethod() {
 	C_read_ident.AddMethod(Signature(C_port.Id(), C_any.Id()), 1, MakeFunction1(E_read_ident_port, "read_ident_port"))
 	C_read_number.AddMethod(Signature(C_port.Id(), C_any.Id()), 0, MakeFunction1(E_read_number_port, "read_number_port"))
 	C_read_thing.AddMethod(Signature(C_port.Id(), C_module.Id(), C_char.Id(), C_module.Id(), C_any.Id()), 1, MakeFunction4(E_read_thing_port, "read_thing_port"))
-    C_set_I.AddMethod(Signature(C_map_set.Id(), C_set.Id()), 0, MakeFunction1(E_set_I_map_set, "set_I_map_set"))
+	C_set_I.AddMethod(Signature(C_map_set.Id(), C_set.Id()), 0, MakeFunction1(E_set_I_map_set, "set_I_map_set"))
 	C_domain.AddMethod(Signature(C_map_set.Id(), C_type.Id()), 0, MakeFunction1(E_domain_map_set, "domain_map_set"))
 	C_range.AddMethod(Signature(C_map_set.Id(), C_type.Id()), 0, MakeFunction1(E_range_map_set, "range_map_set"))
-	
+
 	// ClUtil
 	C_class_I.AddMethod(Signature(C_type_expression.Id(), C_class.Id()), 0, MakeFunction1(E_class_I_type, "class_I_type"))
 	C_boolean_I.AddMethod(Signature(C_any.Id(), C_boolean.Id()), 0, MakeFunction1(E_boolean_I_any, "boolean_I_any"))
@@ -1375,15 +1402,16 @@ func (p *ClaireObject) SlotGet(n int, s *ClaireClass) *ClaireAny {
 
 // this method is accessible from CLAIRE
 func E_slot_get_object(x EID, n EID, s EID) EID {
-	return ToObject(OBJ(x)).SlotGet(INT(n),ToClass(OBJ(s))).ToEID()
+	return ToObject(OBJ(x)).SlotGet(INT(n), ToClass(OBJ(s))).ToEID()
 }
 
 // --------------- read: property method --------------------------------------------------------
-// reflective slot access 
+// reflective slot access
 // we use to the EID version since this is not really used much
-// func (p *ClaireProperty) Read(x *ClaireObject) *ClaireAny {
-//	return ANY(p.ReadEID(x.ToEID()))
-func (p *ClaireProperty) Read(x *ClaireObject) EID {    // must return EID since errors may occur
+//
+//	func (p *ClaireProperty) Read(x *ClaireObject) *ClaireAny {
+//		return ANY(p.ReadEID(x.ToEID()))
+func (p *ClaireProperty) Read(x *ClaireObject) EID { // must return EID since errors may occur
 	return p.ReadEID(x.ToEID())
 }
 
@@ -1391,49 +1419,61 @@ func (p *ClaireProperty) Read(x *ClaireObject) EID {    // must return EID since
 func (p *ClaireProperty) ReadEID(x EID) EID {
 	// fmt.Printf("read property p : %s\n",p.Prt)
 	r := p.findRestriction(OWNER(x))
-	if r == nil || r.Isa != C_slot { return Cerror(6, ANY(x), p.Id())
-    } else { 
+	if r == nil || r.Isa != C_slot {
+		return Cerror(6, ANY(x), p.Id())
+	} else {
 		s := ToSlot(r.Id()).Srange
 		i := ToSlot(r.Id()).Index
 		z := ToObject(OBJ(x))
-		if s == C_integer { return EID{C__INT,IVAL(z.GetInt(i))}
-		} else if s == C_float { return EID{C__FLOAT,FVAL(z.GetFloat(i))}
-		} else { 
-			    y := z.GetObj(i) 
-				if y == CNULL && ToSlot(r.Id()).Range.Contains(y) == CFALSE {
-					return Cerror(1,p.Id(),ANY(x))
-				} else {return y.ToEID()}
-				}}
+		if s == C_integer {
+			return EID{C__INT, IVAL(z.GetInt(i))}
+		} else if s == C_float {
+			return EID{C__FLOAT, FVAL(z.GetFloat(i))}
+		} else {
+			y := z.GetObj(i)
+			if y == CNULL && ToSlot(r.Id()).Range.Contains(y) == CFALSE {
+				return Cerror(1, p.Id(), ANY(x))
+			} else {
+				return y.ToEID()
+			}
+		}
+	}
 }
 
 // this method is accessible from CLAIRE
-func E_read_property(p EID,y EID) EID {
+func E_read_property(p EID, y EID) EID {
 	return ToProperty(OBJ(p)).ReadEID(y)
 }
 
-
 // --------------- write : property method -------------------------------------------------------
 
-// reflective slot access 
+// reflective slot access
 // we use to the EID version since this is not really used much
 func (p *ClaireProperty) WriteFast(x *ClaireObject, y *ClaireAny) *ClaireAny {
-	return ANY(p.WriteEID(x,y.ToEID()))
+	return ANY(p.WriteEID(x, y.ToEID()))
 }
 
 // optimized version that writes and returns an EID (no allocation)
 func (p *ClaireProperty) WriteEID(x *ClaireObject, y EID) EID {
 	r := p.findRestriction(x.Isa)
-	if r == nil || r.Isa != C_slot { return Cerror(6, x.Id(), p.Id())
-    } else { 
+	if r == nil || r.Isa != C_slot {
+		return Cerror(6, x.Id(), p.Id())
+	} else {
 		s := ToSlot(r.Id()).Srange
 		i := ToSlot(r.Id()).Index
 		if ToSlot(r.Id()).Range.CONTAINS(y) == CTRUE {
-			if s == C_integer { x.SetInt(i,INT(y))
-			} else if s == C_float { x.SetFloat(i,FLOAT(y))
-			} else { x.SetObj(i,ANY(y)) }                       // convert to ANY (can be an int)
+			if s == C_integer {
+				x.SetInt(i, INT(y))
+			} else if s == C_float {
+				x.SetFloat(i, FLOAT(y))
+			} else {
+				x.SetObj(i, ANY(y))
+			} // convert to ANY (can be an int)
 			return y
-        } else {fmt.Printf("WriteEID fails because %s does not belong to %s\n",ToSlot(r.Id()).Range.Prt(),PEID(y))
-			    return Cerror(17,ANY(y),ToSlot(r.Id()).Range.Id())} }
+		} else { // fmt.Printf("WriteEID fails because %s does not belong to %s\n",ToSlot(r.Id()).Range.Prt(),PEID(y))
+			return Cerror(17, ANY(y), ToSlot(r.Id()).Range.Id())
+		}
+	}
 }
 
 // this method is accessible from CLAIRE interpreter

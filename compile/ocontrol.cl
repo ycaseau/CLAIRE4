@@ -185,7 +185,8 @@ c_type(self:Branch) : type -> boolean
                                               false))))),
                   other = Do(list(Call(backtrack, list(system)), false))),any) ]
 
-[c_code(self:Macro,s:class) : any -> c_code(call(macroexpand,self),s)]
+[c_code(self:Macro,s:class) : any 
+  -> c_code(call(macroexpand,self),s)]
 
 [c_type(self:Macro) : type 
   -> c_type(call(macroexpand,self))]
@@ -194,6 +195,7 @@ c_type(self:Branch) : type -> boolean
 c_type(self:Printf) : type 
   -> any
 
+// macro-expansion of the Printf instruction, similar to its definition in file control.cl  
 [c_code(self:Printf) : any
  ->  let l := self.args in
        (if not(l[1] % string)
@@ -216,9 +218,12 @@ c_type(self:Printf) : type
                                 j := integer!(nth_get(s,n + 2,n + 2)) - 48 in   // an <int> after ~F
                           (if ('%' = s[n + 2]) (p% := true, j := 1)             // ~F% format
                            else if (j < 0 | j > 9) error("[189] F requires a single digit integer in ~S",self),
-                           if (not(p%) & '%' = s[n + 3]) (p% := true, n :+ 1),  // ~Fi% format
+                           if (not(p%) & '%' = s[n + 3]) 
+                              (p% := true, n :+ 1),  // ~Fi% format
                            n :+ 1,
-                           Call(mClaire/printFDigit,list((if p% Call(*,list(l[i],100.0)) else l[i]),j)))
+                           if p% Do(list(Call(mClaire/printFDigit,list(Call(*,list(l[i],100.0)),j)),
+                                         Call(princ, list("%"))))
+                           else Call(mClaire/printFDigit,list(l[i],j)))
                         else if ('I' = m) l[i]),
                      s := substring(s, n + 2, 1000),
                      n := get(s, '~')),

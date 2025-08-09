@@ -616,9 +616,12 @@ c_string(c:go_producer, self:symbol) : string
 // *******************************************************************
 
 // a constant can be evaluated with no cost in an IfThenElse(test,a,b)
+// not a integer or a float (nor a variable)
 [constant?(self: any) : boolean
-  -> self % thing | self % boolean | self % Variable | self % string | self = unknown |
-      self = nil | self = {} | self % global_variable ]
+  -> (self % thing | self % boolean | self % string | self = unknown | self = nil | self = {}) | 
+     (case self (global_variable let r := self.range in (r != integer & r != float), 
+                  Variable let r := self.range in (r != integer & r != float),
+                  any false)) ]
 
 // short cut for variable
 [go_range(v:Variable) : class
