@@ -55,7 +55,7 @@ type ClaireEnvironment struct {
 	Exception_I        *ClaireException // last
 	Module_I           *ClaireModule    // current module
 	Name               *ClaireString    // name of the environment ()
-	Osname             *ClaireString    // the name of the env "macos","win","linux",...
+	Osname             *ClaireString    // the name of the env "darwin","windows","linux",...
 	Version            float64     // version number ! (4.0 implicit)
 	Ctrace             *ClairePort //  current trace port
 	Cout               *ClairePort //  current out port
@@ -302,7 +302,7 @@ func E_abort_system(s EID) EID {
 
 // returns the appropriate file separator
 func (c *ClaireEnvironment) FileSeparator() *ClaireString {
-	if c.Osname.Value == "win" {return MakeString("\\")
+	if c.Osname.Value == "windows" {return MakeString("\\")
     } else {return MakeString("/")} 
 }
 
@@ -433,7 +433,7 @@ func F_claire_shell(s *ClaireString) {
 	fmt.Printf("execute: %s\n",s.Value)
 	var cmd *exec.Cmd
 	// var stdout bytes.Buffer        -> left if one day we want the result
-	if ClEnv.Osname.Value == "win" {cmd = exec.Command("cmd","/C",s.Value)
+	if ClEnv.Osname.Value == "windows" {cmd = exec.Command("cmd","/C",s.Value)
 	} else { cmd = exec.Command("bash","-c",s.Value)}
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stdout
