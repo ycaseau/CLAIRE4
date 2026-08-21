@@ -1,7 +1,7 @@
 (printf("Hello CLAIRE4, this is our init.cl file\n"))
 
 // PC version
-(osname() := "win", *fs* := "\\")
+(osname() := "windows", *fs* := "\\")
 *where* :: "E:\\claire\\v4.1\\go"                      // where the init file is
 *output* :: "E:\\claire\\v4.1\\go\\src"
 *meta* :: "E:\\claire\\v4.1\\meta"                                        // source files from GitHub

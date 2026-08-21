@@ -3,6 +3,7 @@
 
 package Core
 import (_ "fmt"
+	"runtime"
 	"unsafe"
 	. "Kernel"
 )
@@ -749,7 +750,7 @@ func MetaLoad() {
   PRINC("-- CLAIRE run-time library v 4.")
   F_princ_float(1.6)
   PRINC(" [os: ")
-  PRINC("macos")
+  PRINC(runtime.GOOS)
   PRINC(", compiler:")
   PRINC("go")
   PRINC(" ] --\n")
