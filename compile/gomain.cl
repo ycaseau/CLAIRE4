@@ -279,16 +279,27 @@
 
 
 // create a directory for the module (if it does not exist)
+// v4.1.6: use PRODUCER.source (= compiler.source / <Module>), which is the very
+// directory the code generator writes into. The previous version appended a
+// hard-coded "/go/src" to CLAIRE_HOME, which broke as soon as CLAIRE_HOME
+// already ended with "go/src" (the documented setting), producing for instance
+// "<CLAIRE_HOME>/go/src/Choco" instead of "<CLAIRE_HOME>/Choco".
 [compile_dir(m:module): void
- -> let s := "mkdir -p " /+ home() / "go" / "src" / capitalize(string!(m.name)) in 
-     (if (home() = "")  error("the environment variable CLAIRE_HOME is undefined\n"),
-      shell(s))]
+ -> let dir := compiler.source,
+        pdir := dir / capitalize(string!(m.name)) in
+     (if (dir = "")
+         error("[213] the output directory is not defined: please set compiler.source\n"),
+      shell("mkdir -p " /+ dir /+ " " /+ pdir))]
 
-// create the go
+// create the executable
+// v4.1.6: build the generated package (PRODUCER.source) from the workspace
+// directory (compiler.source, where go.mod / go.work live) instead of
+// appending "/go/src" to CLAIRE_HOME.
 [compile_exe(%out:string): void
- -> let  outdir := (if known?(output,PRODUCER) (" -o " /+ PRODUCER.output /+ " ") 
+ -> let  outdir := (if known?(output,PRODUCER) ("-o " /+ PRODUCER.output /+ " ") 
                     else ""),
-         s := "go build " /+ outdir /+ home() / "go" / "src"  / %out /+ ".go" in 
+         pkg := "./" /+ capitalize(%out),
+         s := "cd " /+ compiler.source /+ " && go build " /+ outdir /+ pkg in 
      (shell(s))]
 
 

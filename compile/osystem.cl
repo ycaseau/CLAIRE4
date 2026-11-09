@@ -41,6 +41,10 @@ Compile/pname :: Kernel/pname
 // where to find the CLAIRE libraries
 claire/home() : string -> getenv("CLAIRE_HOME")     // TO CHANGE -> simply read claire_home
 
+// v4.1.6: directory where the generated Go code is written.
+// $CLAIRE_SOURCE > $CLAIRE_HOME > "." (see src/Optimize/osystem.go)
+claire/default_source() : string -> externC("F_default_source_void()")
+
 // CLAIRE4 uses EID where CLAIRE used C++ OID (integer representation)
 claire/EID <: object()                               // used as a marker for form EID
 
@@ -119,11 +123,20 @@ claire/claire_modules:list :: list{get_value(x) | x in list("Kernel","Core","Lan
 //       1  -> safe (regular)
 //       2  -> we trust typing
 //       3  -> no overflow checking (integer & arrays)
+// v4.1.6: compiler.source is the directory where the generated Go code is
+// written. It used to be home() / "go/src", which assumed that CLAIRE_HOME
+// pointed to the *parent* of "go/src". Since the documented setting is
+// CLAIRE_HOME = <root>/go/src, this produced "<root>/go/src/go/src" and made
+// module compilation fail (e.g. "cannot open .../go/src/Choco/chocutils.go").
+// It is now taken from the environment, via default_source():
+//   1. $CLAIRE_SOURCE   (explicit override)
+//   2. $CLAIRE_HOME     (documented setting)
+//   3. "."              (current directory, for self-contained modules)
 claire/compiler :: meta_compiler(
    external = "go", // Id(compiler.external),
    env = "MacOS",   // Id(compiler.env),
    version = Id(version()),
-   source = Id(home() / "go/src"),
+   source = Id(default_source()),
    libraries = list<string>("Kernel"))
 
 // re-definable items for bootstrap modifications

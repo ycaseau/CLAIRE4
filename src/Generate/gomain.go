@@ -8,6 +8,7 @@ import (_ "fmt"
 	"Language"
 	"Reader"
 	"Optimize"
+	"os"
 )
 
 //-------- dumb function to prevent import errors --------
@@ -905,14 +906,28 @@ func E_Generate_main_function_module (m EID,l_used EID,_Zmain EID) EID {
 /* The go function for: compile_dir(m:module) [status=0] */
 func F_Generate_compile_dir_module (m *ClaireModule) EID { 
   var Result EID
-  { var s *ClaireString = Reader.F__7_string(Reader.F__7_string(Reader.F__7_string(F_append_string(MakeString("mkdir -p "),Optimize.F_home_void()),MakeString("go")),MakeString("src")),F_Generate_capitalize_string(m.Name.String_I()))
-    if (Optimize.F_home_void().Value == MakeString("").Value) { 
-      Result = ToException(Core.C_general_error.Make(MakeString("the environment variable CLAIRE_HOME is undefined\n").Id(),CNIL.Id())).Close()
+  // v4.1.6: use PRODUCER.source (= compiler.source / <Module>), which is the very
+  // directory the code generator writes into. The previous version appended a
+  // hard-coded "/go/src" to CLAIRE_HOME, which broke as soon as CLAIRE_HOME
+  // already ended with "go/src" (the documented setting).
+  { var dir *ClaireString = Optimize.C_compiler.Source
+    if (dir.Value == MakeString("").Value) { 
+      Result = ToException(Core.C_general_error.Make(MakeString("[213] the output directory is not defined: please set compiler.source\n").Id(),CNIL.Id())).Close()
       } else {
       Result = EID{CFALSE.Id(),0}
       } 
     if !ErrorIn(Result) {
-    F_claire_shell(s)
+    // create both the workspace (compiler.source) and the module package
+    // directory (compiler.source / <Module>), which is where the generator writes
+    { var pdir *ClaireString = F_append_string(F_append_string(dir,MakeString("/")),F_Generate_capitalize_string(m.Name.String_I()))
+      F_claire_shell(F_append_string(F_append_string(F_append_string(F_append_string(F_append_string(MakeString("mkdir -p "),dir),MakeString(" ")),dir),MakeString("/")),F_Generate_capitalize_string(m.Name.String_I())))
+      _ = pdir
+      } 
+    // v4.1.6: prepare the Go workspace so that the generated imports
+    // (". \"Kernel\"", "\"Core\"", ...) resolve. We write one go.mod per base
+    // module and a go.work that lists them all. Files are only created when
+    // missing, so a user go.mod / go.work is never overwritten.
+    F_Generate_prepare_workspace_module(m,dir)
     Result = EVOID
     }
     } 
@@ -922,17 +937,61 @@ func F_Generate_compile_dir_module (m *ClaireModule) EID {
 func E_Generate_compile_dir_module (m EID) EID { 
   return F_Generate_compile_dir_module(ToModule(OBJ(m)) )} 
 
+// prepare_workspace(m:module,dir:string) : void  -- v4.1.6 (handwritten)
+//
+// The generated Go code imports the base packages by their bare name
+// (". \"Kernel\"", "\"Core\"", "\"Language\"", ...). For `go build` to resolve
+// them without GOPATH we create a small Go workspace in <dir>:
+//
+//   <dir>/go.work                 -- use (./Kernel ./Core ... ./<Module>)
+//   <dir>/<Base>/go.mod           -- module <Base>       (one per base module)
+//   <dir>/<Module>/go.mod         -- module <Module>     (the module being built)
+//
+// Existing files are left untouched (a user may provide its own go.mod).
+// <dir>/<Base> is only declared when the directory exists: the base modules are
+// expected to live next to the generated code (compiler.source = CLAIRE_HOME).
+func F_Generate_prepare_workspace_module (m *ClaireModule,dir *ClaireString) {
+  var bases []string = []string{"Kernel","Core","Language","Reader","Optimize","Generate"}
+  var modname string = F_Generate_capitalize_string(m.Name.String_I()).Value
+  var list []string = make([]string,0,8)
+  for _,b := range bases {
+    p := dir.Value + "/" + b
+    if st,err := os.Stat(p) ; err == nil && st.IsDir() {
+      write_if_missing(p+"/go.mod","module "+b+"\n\ngo 1.25\n")
+      list = append(list,b)
+    }
+  }
+  p := dir.Value + "/" + modname
+  write_if_missing(p+"/go.mod","module "+modname+"\n\ngo 1.25\n")
+  list = append(list,modname)
+  var buf string = "go 1.25\n\nuse (\n"
+  for _,x := range list { buf = buf + "\t./" + x + "\n" }
+  buf = buf + ")\n"
+  write_if_missing(dir.Value+"/go.work",buf)
+}
+
+// small helper: write a file only if it does not exist yet (v4.1.6)
+func write_if_missing(path string, content string) {
+  if _,err := os.Stat(path) ; err == nil { return }
+  _ = os.WriteFile(path,[]byte(content),0644)
+}
+
 // create the go
 /* The go function for: compile_exe(%out:string) [status=0] */
 func F_Generate_compile_exe_string (_Zout *ClaireString)  { 
+  // v4.1.6: build the generated package (PRODUCER.source) from the workspace
+  // directory (compiler.source, where go.mod / go.work live) instead of
+  // appending "/go/src" to CLAIRE_HOME.
   { var outdir *ClaireString
     if ((ToGenerateGoProducer(Optimize.C_PRODUCER.Value).Output).Id() != CNULL) { 
-      outdir = F_append_string(F_append_string(MakeString(" -o "),ToGenerateGoProducer(Optimize.C_PRODUCER.Value).Output),MakeString(" "))
+      outdir = F_append_string(F_append_string(MakeString("-o "),ToGenerateGoProducer(Optimize.C_PRODUCER.Value).Output),MakeString(" "))
       } else {
       outdir = MakeString("")
       } 
-    { var s *ClaireString = F_append_string(Reader.F__7_string(Reader.F__7_string(Reader.F__7_string(F_append_string(F_append_string(MakeString("go build "),outdir),Optimize.F_home_void()),MakeString("go")),MakeString("src")),_Zout),MakeString(".go"))
-      F_claire_shell(s)
+    { var pkg *ClaireString = F_append_string(MakeString("./"),F_Generate_capitalize_string(_Zout))
+      { var s *ClaireString = F_append_string(F_append_string(F_append_string(F_append_string(MakeString("cd "),Optimize.C_compiler.Source),MakeString(" && go build ")),outdir),pkg)
+        F_claire_shell(s)
+        } 
       } 
     } 
   } 

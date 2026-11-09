@@ -7,6 +7,7 @@ import (_ "fmt"
 	"Core"
 	"Language"
 	"Reader"
+	"os"
 )
 
 //-------- dumb function to prevent import errors --------
@@ -55,6 +56,30 @@ func F_home_void () *ClaireString {
 // The EID go function for: home @ void (throw: false) 
 func E_home_void (_CL_obj EID) EID { 
   return EID{F_home_void( ).Id(),0}} 
+
+// default source directory for the generated Go code (v4.1.6)
+// This replaces the hard-coded "/Users/ycaseau/..." path that used to live in
+// the bootstrap of compiler.source: the directory is now derived from the
+// environment, in this order:
+//   1. $CLAIRE_SOURCE   (explicit override)
+//   2. $CLAIRE_HOME     (documented setting; points to <root>/go/src)
+//   3. "."             (current directory: useful when running claire4 -cm in
+//                        a module that carries its own go.mod / go.work)
+// NOTE: this is handwritten code (osystem.cl is generated from compile/osystem.cl,
+// so keep both in sync if you ever regenerate the file).
+func F_default_source_void () *ClaireString {
+  if s := os.Getenv("CLAIRE_SOURCE"); s != "" {
+    return MakeString(s)
+  }
+  if s := os.Getenv("CLAIRE_HOME"); s != "" {
+    return MakeString(s)
+  }
+  return MakeString(".")
+}
+
+// The EID go function for: default_source @ void (throw: false)
+func E_default_source_void (_CL_obj EID) EID {
+  return EID{F_default_source_void( ).Id(),0}} 
 
 // TO CHANGE -> simply read claire_home
 // CLAIRE4 uses EID where CLAIRE used C++ OID (integer representation)
