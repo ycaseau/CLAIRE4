@@ -208,7 +208,7 @@
   ->  printf("import (\n"),
       // printf("\t\"fmt\"\n"),                // not necessary if no printf statement is in the code
       if OPT.profile? printf("\t\"os\"\n\t\"runtime/pprof\"\n"),
-      import_declaration(m),
+      import_declaration(m,false),   // system file: plain needed_modules
       printf("\t\"~A\"/**/\n",capitalize(string!(m.name))), // v4.1.14 evolution for Linux
       printf(")\n")]
     
@@ -323,8 +323,11 @@
 // appending "/go/src" to CLAIRE_HOME.
 [compile_exe(%out:string): void
  -> let  outdir := (if known?(output,PRODUCER) ("-o " /+ PRODUCER.output /+ " ") 
-                    else ""),
-         pkg := "./" /+ capitalize(%out),
+                    else ("-o " /+ (pwd() / "bin" /+ string!(PRODUCER.current.name)) /+ " ")),
+         // v4.1.6: build the system file (<out>.go, package main). "./<Module>" is
+         // the generated API package and has no main: "go build" used to fail
+         // with "no main packages to build".
+         pkg := "./" /+ %out /+ ".go",
          s := "cd " /+ compiler.source /+ " && go build " /+ outdir /+ pkg in 
      (shell(s))]
 

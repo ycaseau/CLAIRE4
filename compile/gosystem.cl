@@ -352,40 +352,48 @@ claire/BadMethods:list<method> :: unknown
      if module? 
         (if exists(c in OPT.objects | c % class)
             printf("\t\"unsafe\"\n")),            // import go.unsafe (support pointer cast)
-     import_declaration(m),
+     import_declaration(m,true),
      printf(")\n"),                                  // end of import 
-     dumb_import(m),
+     dumb_import(m,true),
      use_as_output(stdout) ]
 
 // import declarations
-[import_declaration(m:module) : void
- ->  for x in needed_modules(m)
+// v4.1.6: %package is true for the header of the generated Go package
+// (<Module>/*.go) and false for the system file (<out>.go). Only the package
+// header needs the extra compiler modules (see module_imports).
+[import_declaration(m:module,%package:boolean) : void
+ ->  for x in (if %package module_imports(m) else needed_modules(m))
        printf("\t~I\"~A\"\n", 
           (if (x = Kernel) princ(". ")),  // Kernel is always included in namespace
           capitalize(string!(x.name))) ]  // v4.1.14 for Linux
      
 
 // go requires an import list without redundancy + we only import
-// v4.1.6: the generated code of a module may refer to Optimize even when the
-// module does not depend on it through its "uses" list: second-order types
-// (x @ y, x % y) are compiled to Optimize/F_nth_property or
-// Optimize/F_known_I_listargs. Without the import, "go build" fails with
-// "undefined: Optimize". We therefore always import the compiler modules that
-// the generated code may reference; dumb_import() emits the matching
-// "_ = X.It" so that an unused import is not an error.
-// NOTE: keep in sync with F_Generate_needed_modules_module (src/Generate/gosystem.go).
 [needed_modules(m:module) : list
   -> let l := list{ m2 in (Reader/add_modules(list(m)) but m) |
-                   (m2.made_of | m2 = Kernel) },
-         extra := (if compiler.active?
-                     list{ m2 in list(Optimize, Generate) |
-                           (m2 != m & not(m2 % l) & m2.made_of) }
-                   else list<module>()) in
-       (/+ @ list)(l, extra) ]
+                   (m2.made_of | m2 = Kernel) } in
+       // clean_duplicates(l)
+       l ]
+
+// modules imported in the header of the *generated package* (<Module>/*.go)
+// v4.1.6: the generated code may refer to Optimize even when the module does not
+// depend on it through its "uses" list: second-order types (x @ y, x % y) are
+// compiled to Optimize/F_nth_property or Optimize/F_known_I_listargs. Without
+// the import, "go build" fails with "undefined: Optimize". dumb_import() emits
+// the matching "_ = X.It", so an unused import is not an error.
+// The system file (<out>.go) does not contain such calls: it keeps
+// needed_modules(), otherwise Go rejects the unused imports.
+// NOTE: keep in sync with F_Generate_module_imports_module (src/Generate/gosystem.go).
+[module_imports(m:module) : list
+  -> let l := copy(needed_modules(m)) in
+       (if compiler.active?
+           for m2 in list(Optimize, Generate)
+             (if (m2 != m & not(m2 % l) & m2.made_of) l :add m2),
+        l) ]
 
 // create a dumb function that prevents the go compiler to complain
-[dumb_import(m:module)
-  -> let l := needed_modules(m) in
+[dumb_import(m:module,%package:boolean)
+  -> let l := (if %package module_imports(m) else needed_modules(m)) in
       (if (length(l) > 1)
         (printf("\n//-------- dumb function to prevent import errors --------\n"),
          printf("func import_~A() ~I",gensym(),new_block()),
