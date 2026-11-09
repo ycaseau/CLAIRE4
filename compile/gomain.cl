@@ -295,6 +295,17 @@
 // *******************************************************************
 
 
+// prepare_workspace(m:module,dir:string) : void -- v4.1.6 (Go only)
+// Writes <dir>/go.work and <dir>/<Module>/go.mod so that the generated code
+// resolves its short imports (". \"Kernel\"", "\"Core\"", ...). The base packages
+// are looked for in the output directory, $CLAIRE_HOME[/share/claire4], the
+// directory of the claire4 binary, ../src and ../share/claire4 next to it, and
+// ~/.claire4/share/claire4.
+// A go.work that we generated previously is rewritten when the module list
+// changes (typically because the base packages were not found the first time);
+// a go.work written by the user is left untouched.
+// The Go implementation is F_Generate_prepare_workspace_module (src/Generate/gomain.go).
+
 // create a directory for the module (if it does not exist)
 // v4.1.6: use PRODUCER.source (= compiler.source / <Module>), which is the very
 // directory the code generator writes into. The previous version appended a
