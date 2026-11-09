@@ -1385,10 +1385,10 @@ func F_static_type_any (self *ClaireAny) EID {
           s = ToObject(OBJ(try_1))
           if (C_slot.Id() == s.Isa.Id()) { 
             { var g0039 *ClaireSlot = ToSlot(s.Id())
-              Result = EID{g0039.Range.Id(),0}
+              Result = EID{g0039.Range.Class_I().Id(),0}
               } 
             } else {
-            Result = EID{p.Range.Id(),0}
+            Result = EID{p.Range.Class_I().Id(),0}
             } 
           }
           } 
