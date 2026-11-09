@@ -1245,6 +1245,33 @@ func F_Generate_install_void () {
     fmt.Printf("   new %s\n", initPath)
   }
 
+  // copy the base packages (Kernel, Core, ...) so that "claire4 -cm" can
+  // compile a module anywhere, without a CLAIRE4 source tree nearby.
+  arch, _ := os.Executable()
+  if real, err := filepath.EvalSymlinks(arch); err == nil { arch = real }
+  bases := []string{"Kernel","Core","Language","Reader","Optimize","Generate"}
+  srcRoots := []string{filepath.Dir(arch), filepath.Join(filepath.Dir(arch), "..", "src")}
+  srcRoot := ""
+  for _, r := range srcRoots {
+    if st, err := os.Stat(filepath.Join(r, "Kernel", "ClKernel.go")); err == nil && !st.IsDir() {
+      srcRoot = r
+      break
+    }
+  }
+  shareDir := filepath.Join(home, "share", "claire4")
+  if srcRoot == "" {
+    fmt.Printf("---- base packages not found next to %s: 'claire4 -cm' will\n", arch)
+    fmt.Printf("     need CLAIRE_HOME to point to a CLAIRE4 source tree\n")
+  } else {
+    for _, b := range bases {
+      if err := copyTree(filepath.Join(srcRoot, b), filepath.Join(shareDir, b)); err != nil {
+        fmt.Printf("---- cannot copy %s: %v\n", b, err)
+        break
+      }
+    }
+    fmt.Printf("   ok  %s (base packages)\n", shareDir)
+  }
+
   // install the binary in a directory reachable from the PATH
   exe, err := os.Executable()
   if err != nil {
@@ -1405,6 +1432,7 @@ func copyTree(src string, dst string) error {
 // *       Part 4: Profiler code                                     *
 // *******************************************************************
 // ---------------------------------------------------------------
+
 
 
 

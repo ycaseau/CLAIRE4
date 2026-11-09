@@ -317,6 +317,9 @@
 
 // one-time setup, the equivalent of CLAIRE3's "configure && make install":
 //   - create $CLAIRE_HOME (or ~/.claire4) with lib/ and init.cl
+//   - copy the base packages (Kernel, Core, Language, Reader, Optimize,
+//     Generate) into <home>/share/claire4, so that "claire4 -cm" can compile a
+//     module from anywhere, without a CLAIRE4 source tree nearby
 //   - copy the claire4 binary into a directory of the PATH, following the
 //     usual conventions: $CLAIRE_BIN, $GOBIN or $(go env GOPATH)/bin,
 //     ~/.local/bin, then <home>/bin. /usr/local/bin is only used when
