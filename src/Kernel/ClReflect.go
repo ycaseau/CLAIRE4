@@ -1448,9 +1448,19 @@ func E_read_property(p EID, y EID) EID {
 // --------------- write : property method -------------------------------------------------------
 
 // reflective slot access
-// we use to the EID version since this is not really used much
-func (p *ClaireProperty) WriteFast(x *ClaireObject, y *ClaireAny) *ClaireAny {
-	return ANY(p.WriteEID(x, y.ToEID()))
+// v4.1.6: WriteFast used to return *ClaireAny (ANY(WriteEID(...))), but the
+// generated code always stores the result in an EID, as in
+//
+//     Result = C_mySlot.WriteFast(ToObject(x.Id()), value)
+//
+// which made the Go compiler fail with
+// "cannot use ... (value of type *Kernel.ClaireAny) as Kernel.EID value".
+// This is the pattern produced for an assignment whose value is used, e.g.
+//     let e := ValueRemovals(...) in (e.valueStack := make_list(...), ...)
+// We now return the EID directly: same semantics, no allocation, and the
+// call sites type-check. WriteEID remains the canonical implementation.
+func (p *ClaireProperty) WriteFast(x *ClaireObject, y *ClaireAny) EID {
+	return p.WriteEID(x, y.ToEID())
 }
 
 // optimized version that writes and returns an EID (no allocation)
