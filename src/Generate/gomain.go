@@ -77,6 +77,17 @@ func F_Generate_string2module_string (s *ClaireString) EID {
     } 
   return Result} 
 
+// dirname() : string -- name of the current directory (v4.1.6)
+// Used when -cm / -cc / -cx is given without a module name.
+func F_Generate_dirname_void () *ClaireString {
+  d, err := os.Getwd()
+  if err != nil { return MakeString("") }
+  return MakeString(filepath.Base(d))
+}
+
+func E_Generate_dirname_void (_CL_obj EID) EID {
+  return EID{F_Generate_dirname_void().Id(),0}}
+
 // The EID go function for: string2module @ string (throw: true) 
 func E_Generate_string2module_string (s EID) EID { 
   return F_Generate_string2module_string(ToString(OBJ(s)) )} 
@@ -104,7 +115,7 @@ func F_Generate_printHelp_void ()  {
   PRINC("        -safe : safe mode                            \n")
   PRINC("        -O : optimizing mode                         \n")
   PRINC("        -O2 : super optimizing mode  (no bound checks)      \n")
-  PRINC("        -cm <module>: compiles a module -> executable        \n")
+  PRINC("        -cm [<module>]: compiles a module -> executable (default: current directory) \n")
   PRINC("        -cc <module>: compiles a module -> target go files      \n")
   PRINC("        -cx <module> : compiles a module & launch main() \n")
   PRINC("         -sf <module> : generates system file associated to a module \n")
@@ -368,13 +379,19 @@ func F_Generate_complex_main_void () EID {
                               loop_1 = ToException(Core.C_general_error.Make(MakeString("option: -cc <module>").Id(),CNIL.Id())).Close()
                               } 
                             }  else if (ToString(l.ValuesO()[0]).Value == MakeString("-cm").Value) { 
+                            // v4.1.6: the module name is optional. Without it we compile the
+                            // module declared in ./init.cl that matches the directory name, so
+                            // that "cd MyModule && claire4 -cm" works.
                             if (l.Length() >= 2) { 
                               _Zexe = CTRUE
                               _Zcm = ToString(l.ValuesO()[1])
                               l = l.Skip(2)
                               loop_1 = EID{l.Id(),0}
                               } else {
-                              loop_1 = ToException(Core.C_general_error.Make(MakeString("option: -cm <module>").Id(),CNIL.Id())).Close()
+                              _Zexe = CTRUE
+                              _Zcm = F_Generate_dirname_void()
+                              l = l.Skip(1)
+                              loop_1 = EID{l.Id(),0}
                               } 
                             }  else if (ToString(l.ValuesO()[0]).Value == MakeString("-cx").Value) { 
                             if (l.Length() >= 2) { 
@@ -996,11 +1013,26 @@ func F_Generate_prepare_workspace_module (m *ClaireModule,dir *ClaireString) {
   //   1. next to the generated code (a full CLAIRE4 tree: src/<Base>)
   //   2. $CLAIRE_HOME/<Base>
   //   3. <home>/lib/claire4/<Base>  (installed by "claire4 -install")
-  baseRoots := []string{dir.Value, os.Getenv("CLAIRE_HOME"),
-                        filepath.Join(claireHome(), "share", "claire4")}
-  if exe, err := os.Executable(); err == nil {
-    baseRoots = append(baseRoots, filepath.Join(filepath.Dir(exe), "..", "share", "claire4"))
+  // v4.1.6: the base packages are looked for, in this order:
+  //   - the output directory (a full CLAIRE4 tree)
+  //   - $CLAIRE_HOME, then $CLAIRE_HOME/share/claire4
+  //   - <dir of the claire4 binary>/../src  (when claire4 was built in src/)
+  //   - <dir of the claire4 binary>/../share/claire4 (after "claire4 -install")
+  //   - ~/.claire4/share/claire4
+  // so that "claire4 -cm MyModule" works without setting CLAIRE_HOME.
+  baseRoots := []string{dir.Value, os.Getenv("CLAIRE_HOME")}
+  if h := os.Getenv("CLAIRE_HOME"); h != "" {
+    baseRoots = append(baseRoots, filepath.Join(h, "share", "claire4"))
   }
+  if exe, err := os.Executable(); err == nil {
+    if real, err2 := filepath.EvalSymlinks(exe); err2 == nil { exe = real }
+    d := filepath.Dir(exe)
+    baseRoots = append(baseRoots,
+      d,                                 // claire4 built inside src/ (go build -o claire4)
+      filepath.Join(d, "..", "src"),     // claire4 installed in <root>/bin
+      filepath.Join(d, "..", "share", "claire4"))
+  }
+  baseRoots = append(baseRoots, filepath.Join(claireHome(), "share", "claire4"))
   for _,b := range bases {
     found := ""
     for _,r := range baseRoots {
@@ -1376,4 +1408,6 @@ func copyTree(src string, dst string) error {
 
 
 
-
+
+
+

@@ -30,6 +30,11 @@
 [external!(m:module) : string
  -> if known?(external,m) m.external else string!(m.name) ]
 
+// dirname() : string -- name of the current directory (v4.1.6)
+// Used when -cm / -cc / -cx is given without a module name.
+// The Go implementation is F_Generate_dirname_void (src/Generate/gomain.go).
+[claire/dirname() : string -> function!(dirname_void)]
+
 [string2module(s:string) : module
   -> let m := get_value(s) in
        case m (module m,
@@ -58,7 +63,7 @@
     printf("        -safe : safe mode                            \n"),
     printf("        -O : optimizing mode                         \n"),
     printf("        -O2 : super optimizing mode  (no bound checks)      \n"),
-    printf("        -cm <module>: compiles a module -> executable        \n"),
+    printf("        -cm [<module>]: compiles a module -> executable (default: current directory) \n"),
     printf("        -cc <module>: compiles a module -> target go files      \n"),
     printf("        -cx <module> : compiles a module & launch main() \n"),
     printf("         -sf <module> : generates system file associated to a module \n"),
@@ -120,8 +125,11 @@
      {"-O2"} (compiler.optimize? := true, %safety := 3, dblevel := 2, l :<< 1),
      {"-cc"} (if (length(l) >= 2)  (%cm := l[2], l :<< 2)
                else error("option: -cc <module>")),
+     // v4.1.6: the module name is optional. Without it we compile the module
+     // declared in ./init.cl that matches the directory name, so that
+     // "cd MyModule && claire4 -cm" works.
      {"-cm"}  (if (length(l) >= 2)   (%exe := true, %cm := l[2], l :<< 2)
-               else error("option: -cm <module>")),
+               else (%exe := true, %cm := dirname(), l :<< 1)),
      {"-cx"}  (if (length(l) >= 2)   (%exe := true, %cm := l[2], %main := true, l :<< 2)
                else error("option: -cm <module>")),
      {"-sf"} (if (length(l) >= 2)   (%sf := l[2], l :<< 2)
