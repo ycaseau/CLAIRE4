@@ -111,7 +111,7 @@ func F_Generate_printHelp_void ()  {
   PRINC("         -sx <module> : generates system file that includes main() \n")
   PRINC("        -publish <dir>[@<version>] : publish the compiled module for use_module() \n")
   PRINC("        -force : overwrite an existing published directory \n")
-  PRINC("        -install : create $CLAIRE_HOME (lib/, init.cl) -- one-time setup \n")
+  PRINC("        -install : set up CLAIRE_HOME and put claire4 in your PATH \n")
   F_CL_exit(0)
   } 
 
@@ -1160,6 +1160,8 @@ func F_Generate_install_void () {
     }
     fmt.Printf("   ok  %s\n", d)
   }
+
+  // init.cl (never overwritten)
   initPath := filepath.Join(home, "init.cl")
   if _, err := os.Stat(initPath); err == nil {
     fmt.Printf("   keep existing %s\n", initPath)
@@ -1176,9 +1178,125 @@ func F_Generate_install_void () {
     }
     fmt.Printf("   new %s\n", initPath)
   }
+
+  // install the binary in a directory reachable from the PATH
+  exe, err := os.Executable()
+  if err != nil {
+    fmt.Printf("---- cannot locate the claire4 executable: %v\n", err)
+    return
+  }
+  if exe, err = filepath.EvalSymlinks(exe); err != nil {
+    exe = ""
+  }
+  dest, why := installBinDir(home)
+  if dest == "" && exe != "" {
+    // no directory from the PATH is usable: fall back on <home>/bin
+    dest = filepath.Join(home, "bin")
+    why = "not in the PATH -- add it"
+  }
+  if dest != "" && exe != "" {
+    target := filepath.Join(dest, filepath.Base(exe))
+    if samePath(exe, target) {
+      fmt.Printf("   ok  binary already there: %s\n", target)
+    } else if err := copyExec(exe, target); err != nil {
+      fmt.Printf("---- cannot install the binary in %s: %v\n", dest, err)
+      fmt.Printf("     (try: sudo cp %s %s)\n", exe, target)
+    } else {
+      fmt.Printf("   new %s%s\n", target, why)
+    }
+  }
+
   fmt.Printf("\nAdd this to your shell profile:\n")
   fmt.Printf("   export CLAIRE_HOME=%s\n", home)
-  fmt.Printf("   export PATH=$PATH:<where claire4 lives>\n")
+  if dest != "" && !inPath(dest) {
+    fmt.Printf("   export PATH=$PATH:%s\n", dest)
+  }
+  fmt.Printf("\nDone. Try:  claire4 -h\n")
+}
+
+// installBinDir picks the directory where the claire4 binary should be copied,
+// following the usual conventions, in this order (v4.1.6):
+//
+//   1. $CLAIRE_BIN                                    -- explicit override
+//   2. $GOBIN or $(go env GOPATH)/bin, if in PATH     -- Go convention
+//   3. ~/.local/bin, if in PATH                       -- XDG, per-user
+//   4. /usr/local/bin, only if CLAIRE_BIN_SYSTEM=1    -- FHS, opt-in
+//   5. ""                                             -- caller uses <home>/bin
+//
+// /usr/local/bin is never selected automatically: writing outside the user's
+// home during a simple "claire4 -install" would be surprising, and it may
+// require administrator rights on a shared machine. Set CLAIRE_BIN_SYSTEM=1
+// to opt in explicitly.
+//
+// The returned string explains the choice (shown next to the copied file).
+func installBinDir(home string) (string, string) {
+  if d := os.Getenv("CLAIRE_BIN"); d != "" {
+    if canWriteDir(d) { return d, "  (from $CLAIRE_BIN)" }
+  }
+  if d := os.Getenv("GOBIN"); d != "" && inPath(d) && canWriteDir(d) {
+    return d, "  (from $GOBIN)"
+  }
+  if gp := os.Getenv("GOPATH"); gp != "" {
+    for _, d := range filepath.SplitList(gp) {
+      b := filepath.Join(d, "bin")
+      if inPath(b) && canWriteDir(b) { return b, "  (Go path, in $PATH)" }
+    }
+  }
+  h, _ := os.UserHomeDir()
+  if h != "" {
+    d := filepath.Join(h, ".local", "bin")
+    if inPath(d) && canWriteDir(d) { return d, "  (~/.local/bin, in $PATH)" }
+  }
+  if os.Getenv("CLAIRE_BIN_SYSTEM") == "1" && canWriteDir("/usr/local/bin") {
+    return "/usr/local/bin", "  (/usr/local/bin, from $CLAIRE_BIN_SYSTEM)"
+  }
+  if h != "" {
+    d := filepath.Join(h, ".local", "bin")
+    if canWriteDir(d) { return d, "  (~/.local/bin, add it to your $PATH)" }
+  }
+  return "", ""
+}
+
+// inPath tells whether dir belongs to $PATH.
+func inPath(dir string) bool {
+  want := filepath.Clean(dir)
+  for _, p := range filepath.SplitList(os.Getenv("PATH")) {
+    if filepath.Clean(p) == want { return true }
+  }
+  return false
+}
+
+// canWriteDir tells whether we may create files in dir (creating it if needed).
+func canWriteDir(dir string) bool {
+  if err := os.MkdirAll(dir, 0755); err != nil { return false }
+  f, err := os.CreateTemp(dir, ".claire4-probe-*")
+  if err != nil { return false }
+  name := f.Name()
+  f.Close()
+  os.Remove(name)
+  return true
+}
+
+// samePath compares two paths, resolving symlinks when possible.
+func samePath(a string, b string) bool {
+  ra, erra := filepath.EvalSymlinks(a)
+  rb, errb := filepath.EvalSymlinks(b)
+  if erra == nil && errb == nil { return ra == rb }
+  return filepath.Clean(a) == filepath.Clean(b)
+}
+
+// copyExec copies a binary, keeping the executable bit.
+func copyExec(src string, dst string) error {
+  in, err := os.Open(src)
+  if err != nil { return err }
+  defer in.Close()
+  if err := os.MkdirAll(filepath.Dir(dst), 0755); err != nil { return err }
+  tmp := dst + ".tmp"
+  out, err := os.OpenFile(tmp, os.O_CREATE|os.O_TRUNC|os.O_WRONLY, 0755)
+  if err != nil { return err }
+  if _, err := io.Copy(out, in); err != nil { out.Close(); os.Remove(tmp); return err }
+  if err := out.Close(); err != nil { os.Remove(tmp); return err }
+  return os.Rename(tmp, dst)
 }
 
 // copyFile copies a single file, creating the destination directory if needed.
@@ -1221,5 +1339,6 @@ func copyTree(src string, dst string) error {
 // *       Part 4: Profiler code                                     *
 // *******************************************************************
 // ---------------------------------------------------------------
+
 
 

@@ -65,7 +65,7 @@
     printf("         -sx <module> : generates system file that includes main() \n"),
     printf("        -publish <dir>[@<version>] : publish the compiled module for use_module() \n"),
     printf("        -force : overwrite an existing published directory \n"),
-    printf("        -install : create $CLAIRE_HOME (lib/, init.cl) -- one-time setup \n"),
+    printf("        -install : set up CLAIRE_HOME and put claire4 in your PATH \n"),
     exit(0) ]
 
 
@@ -307,7 +307,13 @@
 // The version is given as -publish <dir>@<version>; default is v0.0.0.
 [claire/publish(m:module,%dir:string,%force:boolean) : void -> function!(publish_module)]
 
-// one-time setup: create $CLAIRE_HOME (or ~/.claire4) with lib/ and init.cl
+// one-time setup, the equivalent of CLAIRE3's "configure && make install":
+//   - create $CLAIRE_HOME (or ~/.claire4) with lib/ and init.cl
+//   - copy the claire4 binary into a directory of the PATH, following the
+//     usual conventions: $CLAIRE_BIN, $GOBIN or $(go env GOPATH)/bin,
+//     ~/.local/bin, then <home>/bin. /usr/local/bin is only used when
+//     CLAIRE_BIN_SYSTEM=1, so that "claire4 -install" never writes outside
+//     the user's home by surprise.
 // The Go implementation is F_Generate_install_void (src/Generate/gomain.go).
 [claire/install() : void -> function!(install_void)]
 
