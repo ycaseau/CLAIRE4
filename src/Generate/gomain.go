@@ -2,13 +2,19 @@
          [version 4.1.6 / safety 5] Saturday 08-09-2025 06:42:35 *****/
 
 package Generate
-import (_ "fmt"
+import (
+	"fmt"
+	"io"
+	"os"
+	"path/filepath"
+	"runtime"
+	"strings"
+	"time"
 	. "Kernel"
 	"Core"
 	"Language"
 	"Reader"
 	"Optimize"
-	"os"
 )
 
 //-------- dumb function to prevent import errors --------
@@ -103,6 +109,8 @@ func F_Generate_printHelp_void ()  {
   PRINC("        -cx <module> : compiles a module & launch main() \n")
   PRINC("         -sf <module> : generates system file associated to a module \n")
   PRINC("         -sx <module> : generates system file that includes main() \n")
+  PRINC("        -publish <dir>[@<version>] : publish the compiled module for use_module() \n")
+  PRINC("        -force : overwrite an existing published directory \n")
   F_CL_exit(0)
   } 
 
@@ -125,6 +133,8 @@ func F_Generate_complex_main_void () EID {
             { var _Zinit_ask *ClaireBoolean = CTRUE
               { var _Zexe *ClaireBoolean = CFALSE
                 { var _Zsafety *ClaireAny = CNULL
+                  { var _Zpublish *ClaireString = MakeString("")
+                    { var _Zforce *ClaireBoolean = CFALSE
                   { var _Zmain *ClaireBoolean = CFALSE
                     { var l *ClaireList = ClEnv.Params.Copy()
                       { 
@@ -392,6 +402,18 @@ func F_Generate_complex_main_void () EID {
                               } else {
                               loop_1 = ToException(Core.C_general_error.Make(MakeString("option: -sx <filename>").Id(),CNIL.Id())).Close()
                               } 
+                            }  else if (ToString(l.ValuesO()[0]).Value == MakeString("-publish").Value) { 
+                            if (l.Length() >= 2) { 
+                              _Zpublish = ToString(l.ValuesO()[1])
+                              l = l.Skip(2)
+                              loop_1 = EID{l.Id(),0}
+                              } else {
+                              loop_1 = ToException(Core.C_general_error.Make(MakeString("option: -publish <directory>").Id(),CNIL.Id())).Close()
+                              } 
+                            }  else if (ToString(l.ValuesO()[0]).Value == MakeString("-force").Value) { 
+                            _Zforce = CTRUE
+                            l = l.Skip(1)
+                            loop_1 = EID{l.Id(),0}
                             }  else if (ToString(l.ValuesO()[0]).Value == MakeString("-n").Value) { 
                             _Zinit_ask = CFALSE
                             l = l.Skip(1)
@@ -509,6 +531,13 @@ func F_Generate_complex_main_void () EID {
                               } else {
                               Result = EID{CFALSE.Id(),0}
                               } 
+                            // v4.1.6: -publish <dir> copies the module into a
+                            // self-contained directory that use_module() can load.
+                            if (!ErrorIn(Result) && !(_Zpublish.Value == MakeString("").Value)) { 
+                              Result = F_Generate_publish_module(m,_Zpublish,_Zforce)
+                              } else {
+                              Result = EID{CFALSE.Id(),0}
+                              } 
                             if !ErrorIn(Result) {
                             F_CL_exit(0)
                             Result = EVOID
@@ -543,6 +572,8 @@ func F_Generate_complex_main_void () EID {
         } 
       } 
     } 
+      } 
+      } 
   return Result} 
 
 // The EID go function for: complex_main @ void (throw: true) 
@@ -999,9 +1030,138 @@ func F_Generate_compile_exe_string (_Zout *ClaireString)  {
 // The EID go function for: compile_exe @ string (throw: false) 
 func E_Generate_compile_exe_string (_Zout EID) EID { 
   F_Generate_compile_exe_string(ToString(OBJ(_Zout)) )
-  return EVOID} 
+  return EVOID}  
+// *******************************************************************
+// *  Part 3b : publish a module  (action C of TODO-CLAIRE4)  v4.1.6  *
+// *******************************************************************
+// publish(m:module,%dir:string) : void
+//
+// Copies a compiled module into a self-contained, versioned directory that
+// use_module() (Reader/file.cl) knows how to load:
+//
+//   <dir>/<name>/<version>/
+//        init.cl        -- module declaration, copied from m.source/..
+//        source/        -- the CLAIRE sources (for interpretation / recompilation)
+//        build/         -- the generated Go package (<Module>/*.go) + go.mod
+//        META.json      -- version, date, platform, base path, file list
+//
+// %dir defaults to the first entry of $CLAIRE_LIBS, then $CLAIRE_HOME/lib.
+// An existing target directory is an error unless force, so that publishing
+// twice by accident never corrupts a working install.
+func F_Generate_publish_module (m *ClaireModule,_Zdir *ClaireString,_Zforce *ClaireBoolean) EID {
+  name := m.Name.String_I().Value
+  dest := _Zdir.Value
+  // 1. version. CLAIRE4 has no "version" slot on module (a free slot is
+  // rejected: "[106] the object does not understand foo"), so the version is
+  // given explicitly on the command line as -publish <dir>@<version>.
+  // Without it we fall back on "v0.0.0".
+  ver := "v0.0.0"
+  if k := strings.LastIndex(_Zdir.Value, "@"); k >= 0 {
+    ver = _Zdir.Value[k+1:]
+    dest = _Zdir.Value[:k]
+  }
+  // 2. destination
+  if dest == "" {
+    if libs := os.Getenv("CLAIRE_LIBS"); libs != "" {
+      dest = strings.Split(libs, string(os.PathListSeparator))[0]
+    } else if hom := os.Getenv("CLAIRE_HOME"); hom != "" {
+      dest = hom + "/lib"
+    } else {
+      dest = "./lib"
+    }
+  }
+  target := dest + "/" + name + "/" + ver
+  if _, err := os.Stat(target); err == nil && _Zforce != CTRUE {
+    return ToException(Core.C_general_error.Make(
+      F_append_string(MakeString("[214] the directory already exists (use -force to overwrite): "), MakeString(target)).Id(),
+      CNIL.Id())).Close()
+  }
+  fmt.Printf("==== Publish %s %s -> %s ====\n", name, ver, target)
+  // 3. copy init.cl
+  srcDir := m.Source.Value
+  initSrc := Reader.F__7_string(MakeString(srcDir), MakeString("../init.cl"))
+  if F_isfile_ask_string(initSrc) != CTRUE {
+    initSrc = Reader.F__7_string(MakeString(srcDir), MakeString("init.cl"))
+  }
+  if err := copyFile(initSrc.Value, target+"/init.cl"); err != nil {
+    return ToException(Core.C_general_error.Make(
+      F_append_string(MakeString("[214] cannot copy init.cl: "), MakeString(err.Error())).Id(),
+      CNIL.Id())).Close()
+  }
+  // 4. copy the sources (m.source + the files listed in made_of)
+  if err := copyTree(srcDir, target+"/"+filepath.Base(srcDir)); err != nil {
+    return ToException(Core.C_general_error.Make(
+      F_append_string(MakeString("[214] cannot copy sources: "), MakeString(err.Error())).Id(),
+      CNIL.Id())).Close()
+  }
+  // 5. copy the generated package
+  pkgDir := F_Generate_capitalize_string(m.Name.String_I()).Value
+  if err := copyTree(Optimize.C_compiler.Source.Value+"/"+pkgDir, target+"/build/"+pkgDir); err != nil {
+    return ToException(Core.C_general_error.Make(
+      F_append_string(MakeString("[214] cannot copy the generated code: "), MakeString(err.Error())).Id(),
+      CNIL.Id())).Close()
+  }
+  // 6. manifest
+  meta := "{\n" +
+    "  \"name\": \"" + name + "\",\n" +
+    "  \"version\": \"" + ver + "\",\n" +
+    "  \"date\": \"" + time.Now().Format(time.RFC3339) + "\",\n" +
+    "  \"os\": \"" + runtime.GOOS + "\",\n" +
+    "  \"arch\": \"" + runtime.GOARCH + "\",\n" +
+    "  \"claire_version\": \"" + Optimize.C_compiler.Version.Prt() + "\",\n" +
+    "  \"source\": \"" + filepath.Base(srcDir) + "\",\n" +
+    "  \"package\": \"" + pkgDir + "\"\n" +
+    "}\n"
+  if err := os.WriteFile(target+"/META.json", []byte(meta), 0644); err != nil {
+    return ToException(Core.C_general_error.Make(
+      F_append_string(MakeString("[214] cannot write META.json: "), MakeString(err.Error())).Id(),
+      CNIL.Id())).Close()
+  }
+  fmt.Printf("==== published: use_module(\"%s/%s\") ====\n", name, ver)
+  return EVOID
+}
+
+func E_Generate_publish_module (m EID, dir EID, force EID) EID {
+  return F_Generate_publish_module(ToModule(OBJ(m)), ToString(OBJ(dir)), ToBoolean(OBJ(force)))}
+
+// copyFile copies a single file, creating the destination directory if needed.
+func copyFile(src string, dst string) error {
+  in, err := os.Open(src)
+  if err != nil { return err }
+  defer in.Close()
+  if err := os.MkdirAll(filepath.Dir(dst), 0755); err != nil { return err }
+  out, err := os.Create(dst)
+  if err != nil { return err }
+  defer out.Close()
+  _, err = io.Copy(out, in)
+  return err
+}
+
+// copyTree copies a directory recursively (used by publish).
+func copyTree(src string, dst string) error {
+  st, err := os.Stat(src)
+  if err != nil { return err }
+  if !st.IsDir() { return copyFile(src, dst) }
+  if err := os.MkdirAll(dst, 0755); err != nil { return err }
+  des, err := os.ReadDir(src)
+  if err != nil { return err }
+  for _, d := range des {
+    if strings.HasPrefix(d.Name(), ".") { continue }   // .DS_Store, .git ...
+    s := filepath.Join(src, d.Name())
+    t := filepath.Join(dst, d.Name())
+    if d.IsDir() {
+      if err := copyTree(s, t); err != nil { return err }
+    } else if err := copyFile(s, t); err != nil {
+      return err
+    }
+  }
+  return nil
+}
+
+ // *******************************************************************
 
 // *******************************************************************
 // *       Part 4: Profiler code                                     *
 // *******************************************************************
-// ---------------------------------------------------------------
+// ---------------------------------------------------------------
+

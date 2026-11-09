@@ -63,6 +63,8 @@
     printf("        -cx <module> : compiles a module & launch main() \n"),
     printf("         -sf <module> : generates system file associated to a module \n"),
     printf("         -sx <module> : generates system file that includes main() \n"),
+    printf("        -publish <dir>[@<version>] : publish the compiled module for use_module() \n"),
+    printf("        -force : overwrite an existing published directory \n"),
     exit(0) ]
 
 
@@ -75,6 +77,7 @@
          %init? := true, %exe := false,           // do we want to load init.cl ? an executable ?
          %safety := unknown,                      // safety level for compiler
          %main := false,                           // do we cant to call main() ?
+         %publish := "", %force := false,          // v4.1.6: -publish <dir>[@<version>] / -force
          l := (copy(params()) as list<string>) in  // args list
  (try
   (while (l)
@@ -124,6 +127,9 @@
                else error("option: -sf <filename>")),
      {"-sx"} (if (length(l) >= 2)   (%sf := l[2], %main := true, l :<< 2)
                else error("option: -sx <filename>")),
+     {"-publish"} (if (length(l) >= 2)   (%publish := l[2], l :<< 2)
+                     else error("option: -publish <directory>")),
+     {"-force"} (%force := true, l :<< 1),
      {"-n"} (%init? := false, l :<< 1),
      any (if (l[1][1] = '-') (printf("~S is an unvalid option\n",l[1]),
                               printHelp()),
@@ -155,6 +161,7 @@
             (//[0] ==== create the system file for module ~S // %out,
              claire/system_file(m,%out,%main),   // v3.2.12: level = 0 => do nothing ....
              compile_exe(%out)),
+         if (%publish != "") publish(m,%publish,%force),   // v4.1.6
          exit(0))
     else Reader/top_level(reader)
     )                                                                
@@ -290,6 +297,13 @@
      (if (dir = "")
          error("[213] the output directory is not defined: please set compiler.source\n"),
       shell("mkdir -p " /+ dir /+ " " /+ pdir))]
+
+// publish a module into a self-contained, versioned directory that
+// use_module() (meta/file.cl) knows how to load  -- v4.1.6 (action C)
+//   <dir>/<name>/<version>/{init.cl, source/, build/<Module>/, META.json}
+// The Go implementation is F_Generate_publish_module (src/Generate/gomain.go).
+// The version is given as -publish <dir>@<version>; default is v0.0.0.
+[claire/publish(m:module,%dir:string,%force:boolean) : void -> function!(publish_module)]
 
 // create the executable
 // v4.1.6: build the generated package (PRODUCER.source) from the workspace
