@@ -245,7 +245,7 @@ immédiatement consommable par `use_module`.
 - **Risque** : faible
 - **Validation** : `go build ./...` propre ; `claire4 -install` puis `claire4` démarre.
 
-### [ ] E — EOF : sortir proprement du REPL *(nécessaire pour la CI)*
+### [x] E — EOF : sortir proprement du REPL — FAIT (commit `cf6370f`)
 
 - **Fichiers** : `meta/inspect.cl`, `src/Reader/inspect.go`
 - **Quoi** : quand `nextunit(reader)` renvoie `Reader/eof`, sortir de la boucle
