@@ -204,7 +204,23 @@ par `go mod vendor` — c'est le rôle du `-publish` (point C).
 - [ ] écrire un `claire.lock` (ou l'équivalent `go.mod`) à partir de `used_modules`
 - [ ] utiliser `used_modules` dans `-publish` (point C)
 
-### [ ] C — `-publish` / `-export`
+### [x] C — `-publish` — FAIT
+
+**Commit** : `dda877b`
+
+    claire4 -cm <module> -publish <dir>[@<version>] [-force]
+
+Produit `$CLAIRE_LIBS/<name>/<version>/{init.cl, source/, build/<Module>/, META.json}`,
+immédiatement consommable par `use_module`.
+
+**Vérifié** : `-cm mymod -publish ./libs@v1.0.0` puis
+`CLAIRE_LIBS=./libs claire4 -f use.cl` → `Hello from mymod!`.
+
+**Non fait** :
+- [ ] `-export` (publication dans un répertoire `CLAIRE_LIBS` choisi par index)
+- [ ] figer les dépendances (`go mod vendor` / `claire.lock`) pour un module publié sans ses base modules
+
+### [ ] C-bis — `-publish` / `-export` (notes d'origine)
 
 - **Fichiers** : `compile/gomain.cl`, `src/Generate/gomain.go`
 - **Quoi** : produire un dossier autosuffisant et versionné
