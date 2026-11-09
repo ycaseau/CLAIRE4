@@ -323,6 +323,14 @@
 // A go.work that we generated previously is rewritten when the module list
 // changes (typically because the base packages were not found the first time);
 // a go.work written by the user is left untouched.
+//
+// This is the Go pendant of the C++ model of CLAIRE3:
+//   - the interpreter loads the .cl sources of a module resolved by
+//     use_module(), so that the compiler knows its types and restrictions
+//     (the equivalent of the .h files);
+//   - the compiled code of that module is taken from <published>/build/<M>,
+//     produced by -publish (the equivalent of the .so).
+// Both are needed: the sources for typing, the compiled package for linking.
 // The Go implementation is F_Generate_prepare_workspace_module (src/Generate/gomain.go).
 
 // create a directory for the module (if it does not exist)

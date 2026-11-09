@@ -1142,6 +1142,27 @@ func F_Generate_prepare_workspace_module (m *ClaireModule,dir *ClaireString) {
       list = append(list, found)
     }
   }
+  // Dependencies resolved by use_module(): their compiled Go package lives in
+  // <published dir>/build/<Module> (the equivalent of the C++ .so produced by
+  // -publish). We add it to the workspace so that "go build" can link it.
+  // Modules that are simply loaded (interpreted) but not compiled into the
+  // workspace are ignored here: if the Go build complains, the user must
+  // compile the dependency first with "claire4 -cm -publish".
+  if Reader.C_used_modules != nil && Reader.C_used_modules.Value != nil {
+    deps := ToList(Reader.C_used_modules.Value)
+    for i := 0; i < deps.Length(); i++ {
+      pr := ToPair(deps.At(i))
+      if pr == nil || pr.Isa != C_pair { continue }
+      depName := ToModule(pr.First).Name.String_I().Value
+      depDir  := ToString(pr.Second).Value
+      bp := filepath.Join(depDir, "build", F_Generate_capitalize_string(MakeString(depName)).Value)
+      if st, err := os.Stat(bp); err == nil && st.IsDir() {
+        if _, err := os.Stat(filepath.Join(bp, "go.mod")); err == nil {
+          list = append(list, bp)
+        }
+      }
+    }
+  }
   p := filepath.Join(dir.Value, modname)
   write_if_ours(filepath.Join(p,"go.mod"), "module "+modname+"\n\ngo 1.25\n")
   list = append(list, p)
@@ -1580,6 +1601,7 @@ func copyTree(src string, dst string) error {
 // *       Part 4: Profiler code                                     *
 // *******************************************************************
 // ---------------------------------------------------------------
+
 
 
 
