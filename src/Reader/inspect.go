@@ -73,13 +73,21 @@ func (r *MetaReader) TopLevel () EID {
           ClEnv.CountCall = 1
           } 
         var try_3 EID
-        { var arg_4 *ClaireAny
+        { var item *ClaireAny
           var try_5 EID
           try_5 = C_reader.Nextunit()
           if ErrorIn(try_5) {try_3 = try_5
           } else {
-          arg_4 = ANY(try_5)
-          try_3 = Language.F_iClaire_lexical_index_any2(arg_4,CNIL,0,CTRUE)
+          item = ANY(try_5)
+          // v4.1.6: stop the loop on end of input (piped file, ^D).
+          // nextunit answers the symbol Reader/eof, which used to be fed to
+          // eval() forever, drowning the output in "Reader/eof" lines.
+          if (item == C_Reader_eof.Id()) { 
+            res = C_q.Id()
+            try_3 = EID{res.Id(),0}
+            } else {
+            try_3 = Language.F_iClaire_lexical_index_any2(item,CNIL,0,CTRUE)
+            }
           }
           } 
         if ErrorIn(try_3) {loop_1 = try_3
@@ -109,22 +117,27 @@ func (r *MetaReader) TopLevel () EID {
             loop_1 = EVOID
             } 
           if !ErrorIn(loop_1) {
-          var try_8 EID
-          try_8 = EVAL(res)
-          if ErrorIn(try_8) {loop_1 = try_8
-          } else {
-          res = ANY(try_8)
-          loop_1 = res.ToEID()
-          if (res != C_q.Id()) { 
-            loop_1 = Core.F_CALL(C_print,ARGS(res.ToEID()))
-            if !ErrorIn(loop_1) {
-            PRINC("\n")
-            loop_1 = EVOID
-            }
-            } else {
+          // v4.1.6: do not evaluate anything once we have reached the end of input
+          if (res == C_q.Id()) { 
             loop_1 = EID{CFALSE.Id(),0}
-            } 
-          }}
+            } else {
+            var try_8 EID
+            try_8 = EVAL(res)
+            if ErrorIn(try_8) {loop_1 = try_8
+            } else {
+            res = ANY(try_8)
+            loop_1 = res.ToEID()
+            if (res != C_q.Id()) { 
+              loop_1 = Core.F_CALL(C_print,ARGS(res.ToEID()))
+              if !ErrorIn(loop_1) {
+              PRINC("\n")
+              loop_1 = EVOID
+              }
+              } else {
+              loop_1 = EID{CFALSE.Id(),0}
+              } 
+            }}
+          }
           } 
         }
         if ErrorIn(loop_1){ 
