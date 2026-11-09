@@ -72,7 +72,10 @@ func F_default_source_void () *ClaireString {
     return MakeString(s)
   }
   if s := os.Getenv("CLAIRE_HOME"); s != "" {
-    return MakeString(s)
+    // CLAIRE_HOME is the home of the *interpreter* (base modules, lib/).
+    // Generated module code must not be written there: default to "." so that
+    // "cd MyModule && claire4 -cm MyModule" stays self-contained.
+    _ = s
   }
   return MakeString(".")
 }
@@ -1692,3 +1695,4 @@ return Result}
 // The EID go function for: known! @ listargs (throw: false) 
 func E_known_I_listargs (l EID) EID { 
 return F_known_I_listargs(ToList(OBJ(l)) ).ToEID()} 
+

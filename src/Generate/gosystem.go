@@ -844,10 +844,10 @@ func (p *GenerateGoProducer) StartFile (s *ClaireString,m *ClaireModule,module_a
       PRINC("\t\"unsafe\"\n")
       } 
     } 
-  Result = F_Generate_import_declaration_module(m)
+  Result = F_Generate_import_declaration_module2(m,module_ask)
   if !ErrorIn(Result) {
   PRINC(")\n")
-  F_Generate_dumb_import_module(m)
+  F_Generate_dumb_import_module2(m,module_ask)
   Result = ToPort(Reader.C_stdout.Value).UseAsOutput().ToEID()
   }}
   return Result} 
@@ -867,7 +867,7 @@ func F_Generate_import_declaration_module (m *ClaireModule) EID {
     _ = x
     Result= EID{CFALSE.Id(),0}
     var x_support *ClaireList
-    x_support = F_Generate_needed_modules_module(m)
+    x_support = F_Generate_module_imports_module(m)
     x_len := x_support.Length()
     for i_it := 0; i_it < x_len; i_it++ { 
       x = x_support.At(i_it)
@@ -907,6 +907,53 @@ func F_Generate_import_declaration_module (m *ClaireModule) EID {
     } 
   return Result} 
 
+// import_declaration(m:module,%package:boolean) -- v4.1.6
+// %package is true for the header of the generated Go package (<Module>/*.go),
+// false for the system file (<out>.go). Only the package header needs the
+// extra compiler modules (see module_imports).
+func F_Generate_import_declaration_module2 (m *ClaireModule,_Zpackage *ClaireBoolean) EID {
+  if _Zpackage == CTRUE { return F_Generate_import_declaration_module(m) }
+  // system file: plain needed_modules
+  var Result EID
+  l := F_Generate_needed_modules_module(m)
+  for i := 0; i < l.Length(); i++ {
+    x := l.At(i)
+    PRINC("\t")
+    if x == C_Kernel.Id() { PRINC(". ") }
+    PRINC("\"")
+    F_princ_string(F_Generate_capitalize_string(ToModule(x).Name.String_I()))
+    PRINC("\"\n")
+  }
+  Result = EVOID
+  return Result
+}
+
+// dumb_import(m:module,%package:boolean) -- v4.1.6, see import_declaration/2
+func F_Generate_dumb_import_module2 (m *ClaireModule,_Zpackage *ClaireBoolean) {
+  if _Zpackage == CTRUE {
+    F_Generate_dumb_import_module(m)
+    return
+  }
+  l := F_Generate_needed_modules_module(m)
+  if l.Length() > 1 {
+    PRINC("\n//-------- dumb function to prevent import errors --------\n")
+    PRINC("func import_")
+    Core.F_gensym_void().Princ()
+    PRINC("() ")
+    F_Generate_new_block_void()
+    for i := 0; i < l.Length(); i++ {
+      x := l.At(i)
+      if x != C_Kernel.Id() {
+        PRINC("_ = ")
+        F_Generate_cap_short_symbol(ToModule(x).Name)
+        PRINC(".It\n")
+      }
+    }
+    F_Generate_close_block_void()
+    F_Generate_breakline_void()
+  }
+}
+
 // The EID go function for: import_declaration @ module (throw: true) 
 func E_Generate_import_declaration_module (m EID) EID { 
   return F_Generate_import_declaration_module(ToModule(OBJ(m)) )} 
@@ -934,25 +981,35 @@ func F_Generate_needed_modules_module (m *ClaireModule) *ClaireList {
             } 
           } 
         } 
-      // v4.1.6: the generated code of a module may refer to Optimize, even when
-      // the module does not depend on it through its "uses" list: second-order
-      // types (x @ y, x % y) are compiled to Optimize/F_nth_property or
-      // Optimize/F_known_I_listargs. Without the import, "go build" fails with
-      // "undefined: Optimize". We therefore always import the compiler modules
-      // that the generated code may reference; dumb_import() emits the matching
-      // "_ = X.It" so that an unused import is not an error.
-      if Optimize.C_compiler.Active_ask == CTRUE {
-        for _,extra := range []*ClaireModule{Optimize.It, It} {
-          if extra != nil && extra != m && !(m2_out.Contain_ask(extra.Id()) == CTRUE) {
-            if extra.MadeOf.Length() != 0 { m2_out.AddFast(extra.Id()) }
-          }
-        }
-      }
       l = m2_out
       } 
     Result = l
     } 
   return Result} 
+
+// module_imports(m:module) : list -- v4.1.6
+//
+// Modules to import in the header of the *generated package* of m (the files
+// under <Module>/*.go). On top of needed_modules, the generated code may refer
+// to Optimize even when the module does not depend on it through its "uses"
+// list: second-order types (x @ y, x % y) are compiled to
+// Optimize/F_nth_property or Optimize/F_known_I_listargs. Without the import,
+// "go build" fails with "undefined: Optimize". dumb_import() emits the matching
+// "_ = X.It", so an unused import is not an error.
+//
+// The system file (<out>.go) uses needed_modules() only: it does not contain
+// such calls and would reject the unused imports.
+func F_Generate_module_imports_module (m *ClaireModule) *ClaireList {
+  l := F_Generate_needed_modules_module(m)
+  if Optimize.C_compiler.Active_ask == CTRUE {
+    for _, extra := range []*ClaireModule{Optimize.It, It} {
+      if extra != nil && extra != m && !(l.Contain_ask(extra.Id()) == CTRUE) {
+        if extra.MadeOf.Length() != 0 { l.AddFast(extra.Id()) }
+      }
+    }
+  }
+  return l
+}
 
 // The EID go function for: needed_modules @ module (throw: false) 
 func E_Generate_needed_modules_module (m EID) EID { 
@@ -961,7 +1018,7 @@ func E_Generate_needed_modules_module (m EID) EID {
 // create a dumb function that prevents the go compiler to complain
 /* The go function for: dumb_import(m:module) [status=0] */
 func F_Generate_dumb_import_module (m *ClaireModule)  { 
-  { var l *ClaireList = F_Generate_needed_modules_module(m)
+  { var l *ClaireList = F_Generate_module_imports_module(m)
     if (l.Length() > 1) { 
       PRINC("\n//-------- dumb function to prevent import errors --------\n")
       PRINC("func import_")
@@ -3356,4 +3413,5 @@ func E_Generate_import_princ_string (s EID) EID {
   F_Generate_import_princ_string(ToString(OBJ(s)) )
   return EVOID} 
 
-// end of file
+// end of file
+
