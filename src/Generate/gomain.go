@@ -111,6 +111,7 @@ func F_Generate_printHelp_void ()  {
   PRINC("         -sx <module> : generates system file that includes main() \n")
   PRINC("        -publish <dir>[@<version>] : publish the compiled module for use_module() \n")
   PRINC("        -force : overwrite an existing published directory \n")
+  PRINC("        -install : create $CLAIRE_HOME (lib/, init.cl) -- one-time setup \n")
   F_CL_exit(0)
   } 
 
@@ -414,6 +415,11 @@ func F_Generate_complex_main_void () EID {
                             _Zforce = CTRUE
                             l = l.Skip(1)
                             loop_1 = EID{l.Id(),0}
+                            }  else if (ToString(l.ValuesO()[0]).Value == MakeString("-install").Value) { 
+                            // v4.1.6: create ~/.claire4 (or $CLAIRE_HOME) with lib/ and a default init.cl
+                            F_Generate_install_void()
+                            F_CL_exit(0)
+                            loop_1 = EVOID
                             }  else if (ToString(l.ValuesO()[0]).Value == MakeString("-n").Value) { 
                             _Zinit_ask = CFALSE
                             l = l.Skip(1)
@@ -1124,6 +1130,57 @@ func F_Generate_publish_module (m *ClaireModule,_Zdir *ClaireString,_Zforce *Cla
 func E_Generate_publish_module (m EID, dir EID, force EID) EID {
   return F_Generate_publish_module(ToModule(OBJ(m)), ToString(OBJ(dir)), ToBoolean(OBJ(force)))}
 
+// install() : void  -- v4.1.6 (action D)
+//
+// One-time setup, the equivalent of "configure && make install" for the C++
+// CLAIRE3. It creates the CLAIRE home ($CLAIRE_HOME if set, else ~/.claire4)
+// with the layout expected by compiler.source and use_module():
+//
+//     <home>/            -- compiler.source: where "claire4 -cm" writes code
+//     <home>/lib/        -- -publish / use_module
+//     <home>/init.cl     -- the init file loaded at start-up
+//
+// The interpreter itself is a single Go binary: there is nothing else to
+// install (Kernel, Core, Language, Reader, Optimize and Generate are compiled
+// into it).
+func F_Generate_install_void () {
+  home := os.Getenv("CLAIRE_HOME")
+  if home == "" {
+    if h, err := os.UserHomeDir(); err == nil {
+      home = filepath.Join(h, ".claire4")
+    } else {
+      home = ".claire4"
+    }
+  }
+  fmt.Printf("==== CLAIRE4 install: %s ====\n", home)
+  for _, d := range []string{home, filepath.Join(home, "lib")} {
+    if err := os.MkdirAll(d, 0755); err != nil {
+      fmt.Printf("---- cannot create %s: %v\n", d, err)
+      return
+    }
+    fmt.Printf("   ok  %s\n", d)
+  }
+  initPath := filepath.Join(home, "init.cl")
+  if _, err := os.Stat(initPath); err == nil {
+    fmt.Printf("   keep existing %s\n", initPath)
+  } else {
+    content := "// CLAIRE4 init file -- created by claire4 -install\n" +
+      "// " + time.Now().Format(time.RFC3339) + "\n" +
+      "//\n" +
+      "// Modules published with 'claire4 -cm <m> -publish <dir>' or listed in\n" +
+      "// $CLAIRE_LIBS can be loaded with:  (use_module(\"mymod/v1.0.0\"))\n" +
+      "\n(printf(\"Hello CLAIRE4\\n\"))\n"
+    if err := os.WriteFile(initPath, []byte(content), 0644); err != nil {
+      fmt.Printf("---- cannot write %s: %v\n", initPath, err)
+      return
+    }
+    fmt.Printf("   new %s\n", initPath)
+  }
+  fmt.Printf("\nAdd this to your shell profile:\n")
+  fmt.Printf("   export CLAIRE_HOME=%s\n", home)
+  fmt.Printf("   export PATH=$PATH:<where claire4 lives>\n")
+}
+
 // copyFile copies a single file, creating the destination directory if needed.
 func copyFile(src string, dst string) error {
   in, err := os.Open(src)
@@ -1164,4 +1221,5 @@ func copyTree(src string, dst string) error {
 // *       Part 4: Profiler code                                     *
 // *******************************************************************
 // ---------------------------------------------------------------
+
 

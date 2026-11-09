@@ -65,6 +65,7 @@
     printf("         -sx <module> : generates system file that includes main() \n"),
     printf("        -publish <dir>[@<version>] : publish the compiled module for use_module() \n"),
     printf("        -force : overwrite an existing published directory \n"),
+    printf("        -install : create $CLAIRE_HOME (lib/, init.cl) -- one-time setup \n"),
     exit(0) ]
 
 
@@ -130,6 +131,7 @@
      {"-publish"} (if (length(l) >= 2)   (%publish := l[2], l :<< 2)
                      else error("option: -publish <directory>")),
      {"-force"} (%force := true, l :<< 1),
+     {"-install"} (install(), exit(0)),   // v4.1.6
      {"-n"} (%init? := false, l :<< 1),
      any (if (l[1][1] = '-') (printf("~S is an unvalid option\n",l[1]),
                               printHelp()),
@@ -304,6 +306,10 @@
 // The Go implementation is F_Generate_publish_module (src/Generate/gomain.go).
 // The version is given as -publish <dir>@<version>; default is v0.0.0.
 [claire/publish(m:module,%dir:string,%force:boolean) : void -> function!(publish_module)]
+
+// one-time setup: create $CLAIRE_HOME (or ~/.claire4) with lib/ and init.cl
+// The Go implementation is F_Generate_install_void (src/Generate/gomain.go).
+[claire/install() : void -> function!(install_void)]
 
 // create the executable
 // v4.1.6: build the generated package (PRODUCER.source) from the workspace
