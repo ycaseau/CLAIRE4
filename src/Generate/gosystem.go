@@ -203,6 +203,18 @@ func (p *GenerateCodeProducer) Compile (m *ClaireModule) EID {
       }
       } 
     if !ErrorIn(Result) {
+    // v4.1.6: the generated Go code needs Kernel and Core. Without them every
+    // base symbol is undefined and Go reports ~20 errors that say nothing about
+    // the real problem (a missing "uses" in init.cl).
+    // Kernel is always available (it is implicit), Core is not: we only check
+    // Core, which is what the generated code needs (Kernel comes with it).
+    if !(m.Uses.Contain_ask(Core.It.Id()) == CTRUE) { 
+      return ToException(Core.C_general_error.Make(
+        F_append_string(F_append_string(F_append_string(
+          MakeString("the module "),MakeString(m.Name.String_I().Value)),
+          MakeString(" must declare Core in its uses list")),
+          MakeString(": uses = list(Core, Reader)")).Id(),CNIL.Id())).Close()
+    }
     ToGenerateGoProducer(p.Id()).Current = m
     Result = ToGenerateGoProducer(p.Id()).GenFiles(m)
     if !ErrorIn(Result) {
@@ -3423,5 +3435,7 @@ func E_Generate_import_princ_string (s EID) EID {
   return EVOID} 
 
 // end of file
+
+
 
 

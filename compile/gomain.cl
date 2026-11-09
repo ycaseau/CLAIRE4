@@ -35,6 +35,13 @@
 // The Go implementation is F_Generate_dirname_void (src/Generate/gomain.go).
 [claire/dirname() : string -> function!(dirname_void)]
 
+// module_has_main(m:module) : boolean -- v4.1.6
+// True when m defines main() (no argument, or an explicit void/environment),
+// in which case "-cm" produces an executable that calls it and exits.
+// The Go implementation is F_Generate_module_has_main_module
+// (src/Generate/gomain.go).
+[claire/module_has_main(m:module) : boolean -> function!(module_has_main_module)]
+
 [string2module(s:string) : module
   -> let m := get_value(s) in
        case m (module m,
@@ -172,6 +179,9 @@
 	       load(m),                        // load the module
          if (dblevel < 1) (compiler.safety :min 1, compiler.debug? :add m),
          compile_dir(m),
+         // v4.1.6: a module that declares main() is built as an executable that
+         // runs it and exits (no REPL), like -cx.
+         if module_has_main(m) %main := true,
          compile(m),
          if (%exe) 
             (//[0] ==== create the system file for module ~S // %out,
@@ -223,6 +233,9 @@
       // printf("\t\"fmt\"\n"),                // not necessary if no printf statement is in the code
       if OPT.profile? printf("\t\"os\"\n\t\"runtime/pprof\"\n"),
       import_declaration(m,false),   // system file: plain needed_modules
+      // Generate is never imported here: the simple REPL does not use it and Go
+      // rejects unused imports. Reader is added by needed_modules when the
+      // module declares it.
       printf("\t\"~A\"/**/\n",capitalize(string!(m.name))), // v4.1.14 evolution for Linux
       printf(")\n")]
     
@@ -269,7 +282,7 @@
     printf("func E_reboot(s EID) EID ~I",new_block()),
     printf("Bootstrap()~I",breakline()),
     printf("Load()~I",breakline()),
-    printf("Reader.C_reader.Fromp = ClEnv.Cin;~I",breakline()),
+    if not(%main) printf("Reader.C_reader.Fromp = ClEnv.Cin;~I",breakline()),
     if (get_value("Generate") % l_used)
         printf("ClEnv.Module_I = C_claire~I",breakline()),
     printf("return EVOID~I~I~I",breakline(),close_block(),breakline()),
@@ -289,7 +302,7 @@
     // printf("fmt.Printf(\"=== CLAIRE4 interpreter version 1.0    ===\\n\")~I",breakline()),
     printf("E_reboot(EVOID)~I",breakline()),
     printf("ToMethod(C_reboot.Restrictions.ValuesO()[0]).Functional = MakeFunction1(E_reboot,\"reboot\")~I",breakline()),
-    printf("Reader.C_reader.Fromp = ClEnv.Cin~I",breakline()),
+    if not(%main) printf("Reader.C_reader.Fromp = ClEnv.Cin~I",breakline()),
     if %main printf("Core.F_CALL(Core.C_main,ARGS(EID{ClEnv.Id(),0}))")
     else if (get_value("Generate") % l_used) printf("Generate.F_Generate_complex_main_void()")
     else printf("Reader.F_Reader_simple_main_void()"),

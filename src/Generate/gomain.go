@@ -88,6 +88,28 @@ func F_Generate_dirname_void () *ClaireString {
 func E_Generate_dirname_void (_CL_obj EID) EID {
   return EID{F_Generate_dirname_void().Id(),0}}
 
+// module_has_main(m:module) : boolean -- v4.1.6
+//
+// True when m defines a method main() with no argument (i.e. the body is
+// annotated or takes only the implicit environment). In that case "claire4 -cm"
+// behaves like "-cx": the generated binary calls main() and exits instead of
+// opening the REPL.
+func F_Generate_module_has_main_module (m *ClaireModule) *ClaireBoolean {
+  if Core.C_main == nil || Core.C_main.Restrictions == nil { return CFALSE }
+  rs := Core.C_main.Restrictions
+  for i := 0; i < rs.Length(); i++ {
+    r := ToRestriction(rs.At(i))
+    if r.Module_I != m { continue }
+    if r.Domain.Length() == 0 { return CTRUE }        // main()
+    // main(x:void) is the same thing once the environment is dropped
+    if r.Domain.Length() == 1 && (r.Domain.At(0) == C_void.Id() || r.Domain.At(0) == C_environment.Id()) { return CTRUE }
+  }
+  return CFALSE
+}
+
+func E_Generate_module_has_main_module (m EID) EID {
+  return EID{F_Generate_module_has_main_module(ToModule(OBJ(m))).Id(),0}}
+
 // The EID go function for: string2module @ string (throw: true) 
 func E_Generate_string2module_string (s EID) EID { 
   return F_Generate_string2module_string(ToString(OBJ(s)) )} 
@@ -551,6 +573,11 @@ func F_Generate_complex_main_void () EID {
                               Optimize.C_compiler.Debug_ask = Optimize.C_compiler.Debug_ask.AddFast(m.Id())
                               } 
                             F_Generate_compile_dir_module(m)
+                            // v4.1.6: a module that declares main() is built as an
+                            // executable that runs it and exits (no REPL), like -cx.
+                            if (F_Generate_module_has_main_module(m) == CTRUE) { 
+                              _Zmain = CTRUE
+                              } 
                             Result = Core.F_CALL(C_compile,ARGS(EID{m.Id(),0}))
                             if !ErrorIn(Result) {
                             if (_Zexe == CTRUE) { 
@@ -649,7 +676,7 @@ func F_system_file_module (m *ClaireModule,_Zout *ClaireString,_Zmain *ClaireBoo
         }}
         if !ErrorIn(Result) {
         PRINC("package main\n")
-        Result = F_Generate_system_imports_module(m)
+        Result = F_Generate_system_imports_module2(m,_Zmain)
         if !ErrorIn(Result) {
         Result = F_Generate_load_function_module(m,l_necessary)
         if !ErrorIn(Result) {
@@ -677,6 +704,18 @@ func F_Generate_system_imports_module (m *ClaireModule) EID {
     } 
   Result = F_Generate_import_declaration_module2(m,CFALSE)
   if !ErrorIn(Result) {
+  // v4.1.6: main_function() always emits "Reader.C_reader" and calls either
+  // Reader.F_Reader_simple_main_void() or Generate.F_Generate_complex_main_void().
+  // The import must follow, otherwise Go fails with "undefined: Reader".
+  // needed_modules() only includes dependencies of the module, so we add Reader
+  // (and Generate when the compiler is loaded) explicitly, avoiding duplicates.
+  if !(F_Generate_needed_modules_module(m).Contain_ask(Reader.It.Id()) == CTRUE) { 
+    PRINC("\t\"Reader\"\n")
+    } 
+  if ((Optimize.C_compiler.Active_ask == CTRUE) && 
+      !(F_Generate_needed_modules_module(m).Contain_ask(It.Id()) == CTRUE)) { 
+    PRINC("\t\"Generate\"\n")
+    } 
   PRINC("\t\"")
   F_princ_string(F_Generate_capitalize_string(m.Name.String_I()))
   PRINC("\"/**/\n")
@@ -684,6 +723,48 @@ func F_Generate_system_imports_module (m *ClaireModule) EID {
   Result = EVOID
   }
   return Result} 
+
+// system_imports(m:module,%main:boolean) -- v4.1.6
+// %main tells whether the generated binary calls main() (no REPL). In that case
+// Reader and Generate are not needed: main_function() does not emit any
+// reference to them.
+func F_Generate_system_imports_module2 (m *ClaireModule,_Zmain *ClaireBoolean) EID {
+  var Result EID
+  PRINC("import (\n")
+  if Optimize.C_OPT.Profile_ask == CTRUE {
+    PRINC("\t\"os\"\n\t\"runtime/pprof\"\n")
+  }
+  // In %main mode the generated binary has no REPL: Reader and Generate are
+  // not referenced, and importing them would be an "imported and not used"
+  // error. We therefore build the list ourselves instead of calling
+  // import_declaration(), which follows the module's "uses".
+  // Reader stays: Load() calls Reader.It = InitModule(...) and Reader.MetaLoad()
+  // for any module that declares it in "uses". Only Generate is dropped, since
+  // nothing in the generated code refers to it when there is no REPL.
+  List := F_Generate_needed_modules_module(m)
+  for i := 0; i < List.Length(); i++ {
+    x := List.At(i)
+    if _Zmain == CTRUE && x == It.Id() { continue }
+    PRINC("\t")
+    if x == C_Kernel.Id() { PRINC(". ") }
+    PRINC("\"")
+    F_princ_string(F_Generate_capitalize_string(ToModule(x).Name.String_I()))
+    PRINC("\"\n")
+  }
+  // Reader is needed by the REPL (main_function). Generate is not: the simple
+  // REPL (Reader.F_Reader_simple_main_void) does not use it, and importing it
+  // would be an unused import. A module that really needs the full compiler
+  // declares Generate in its "uses" list.
+  if _Zmain != CTRUE && !(List.Contain_ask(Reader.It.Id()) == CTRUE) {
+    PRINC("\t\"Reader\"\n")
+  }
+  PRINC("\t\"")
+  F_princ_string(F_Generate_capitalize_string(m.Name.String_I()))
+  PRINC("\"/**/\n")
+  PRINC(")\n")
+  Result = EVOID
+  return Result
+}
 
 // The EID go function for: system_imports @ module (throw: true) 
 func E_Generate_system_imports_module (m EID) EID { 
@@ -910,7 +991,9 @@ func F_Generate_main_function_module (m *ClaireModule,l_used *ClaireList,_Zmain 
   F_Generate_breakline_void()
   PRINC("Load()")
   F_Generate_breakline_void()
-  PRINC("Reader.C_reader.Fromp = ClEnv.Cin;")
+  if (_Zmain != CTRUE) { 
+    PRINC("Reader.C_reader.Fromp = ClEnv.Cin;")
+    } 
   F_Generate_breakline_void()
   if (ToBoolean(l_used.Contain_ask(F_value_string(MakeString("Generate"))).Id()) == CTRUE) { 
     PRINC("ClEnv.Module_I = C_claire")
@@ -944,7 +1027,9 @@ func F_Generate_main_function_module (m *ClaireModule,l_used *ClaireList,_Zmain 
   F_Generate_breakline_void()
   PRINC("ToMethod(C_reboot.Restrictions.ValuesO()[0]).Functional = MakeFunction1(E_reboot,\"reboot\")")
   F_Generate_breakline_void()
-  PRINC("Reader.C_reader.Fromp = ClEnv.Cin")
+  if (_Zmain != CTRUE) { 
+    PRINC("Reader.C_reader.Fromp = ClEnv.Cin")
+    } 
   F_Generate_breakline_void()
   if (_Zmain == CTRUE) { 
     PRINC("Core.F_CALL(Core.C_main,ARGS(EID{ClEnv.Id(),0}))")
@@ -1491,6 +1576,7 @@ func copyTree(src string, dst string) error {
 // *       Part 4: Profiler code                                     *
 // *******************************************************************
 // ---------------------------------------------------------------
+
 
 
 
