@@ -128,7 +128,9 @@
      // v4.1.6: the module name is optional. Without it we compile the module
      // declared in ./init.cl that matches the directory name, so that
      // "cd MyModule && claire4 -cm" works.
-     {"-cm"}  (if (length(l) >= 2)   (%exe := true, %cm := l[2], l :<< 2)
+     // the argument is optional, but must not swallow the next option:
+     // "claire4 -cm -publish dir" compiles the module of the directory.
+     {"-cm"}  (if (length(l) >= 2 & l[2][1] != '-')   (%exe := true, %cm := l[2], l :<< 2)
                else (%exe := true, %cm := dirname(), l :<< 1)),
      {"-cx"}  (if (length(l) >= 2)   (%exe := true, %cm := l[2], %main := true, l :<< 2)
                else error("option: -cm <module>")),

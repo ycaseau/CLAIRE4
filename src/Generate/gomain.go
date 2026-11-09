@@ -382,7 +382,10 @@ func F_Generate_complex_main_void () EID {
                             // v4.1.6: the module name is optional. Without it we compile the
                             // module declared in ./init.cl that matches the directory name, so
                             // that "cd MyModule && claire4 -cm" works.
-                            if (l.Length() >= 2) { 
+                            // the argument is optional, but must not swallow the next
+                            // option: "claire4 -cm -publish dir" uses the directory name.
+                            if ((l.Length() >= 2) && 
+                                (ToString(l.ValuesO()[1]).At(1) != '-')) { 
                               _Zexe = CTRUE
                               _Zcm = ToString(l.ValuesO()[1])
                               l = l.Skip(2)
@@ -1453,6 +1456,7 @@ func copyTree(src string, dst string) error {
 // *       Part 4: Profiler code                                     *
 // *******************************************************************
 // ---------------------------------------------------------------
+
 
 
 
