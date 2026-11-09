@@ -105,16 +105,66 @@ Tout le build tient en 3 lignes de shell dans `compile/gomain.cl:282-292` :
 
 ## Actions (ordonnées)
 
-### [ ] A — Corriger les chemins de compilation *(priorité : débloque choco)*
+### [~] A — Corriger les chemins de compilation *(priorité : débloque choco)*
 
-- **Fichiers** : `compile/gomain.cl`, `src/Generate/gomain.go`
-- **Quoi** :
-  - ne plus concaténer `/go/src` en dur dans `compile_dir` / `compile_exe`
-  - dériver le répertoire du module depuis `compiler.source` (ou une variable de config)
-  - échouer avec un message clair si le répertoire de sortie n'existe pas
-- **Risque** : faible
-- **Validation** : `claire4 -cm choco` produit `build/choco/chocutils.go`, puis erreur suivante
+**Décision retenue : modèle "style Cargo" via `go.work`** (testé et validé).
+
+#### Pourquoi cette option
+
+| | Workspace Go (Cargo-like) | GOPATH local `./build/` | Préfixe `claire4/Kernel` |
+|---|---|---|---|
+| Imports générés | **inchangés** | inchangés | à réécrire (29 fichiers + générateur) |
+| ISO écosystème Go 2020+ | oui | non (déprécié) | oui |
+| Dépendances externes Go | oui | non | oui |
+| Verrouillage versions | oui (`go.sum`) | non | oui |
+| Risque régression | **faible** | faible | élevé |
+
+Test de validation effectué (`/tmp/gowork`) : trois modules (`Kernel`, `Core`, `Choco`)
+reliés par `go.work` + `replace`, imports **sans préfixe** (`. "Kernel"`, `"Core"`),
+`go build` OK depuis le sous-répertoire du module.
+
+#### Correspondance Cargo ↔ Go
+
+| Cargo | Go |
+|---|---|
+| `Cargo.toml` (par crate) | `go.mod` (par module) |
+| `Cargo.lock` | `go.sum` + `go.work.sum` |
+| `[workspace] members` | `go.work` + `use (...)` |
+| `path = "../core"` | `replace Kernel => ../core` |
+| `target/` | `$GOCACHE` |
+| `cargo build -p choco` | `go build ./choco` |
+| *(pas d'équivalent)* | `go.sum` verrouillage transitif |
+
+#### Cible
+
+```
+<module>/
+├── go.mod                # module Choco (écrit/mis à jour par claire4)
+├── init.cl
+├── source/*.cl
+└── build/
+    ├── go.work           # use (./Choco + modules de base)
+    └── Choco/*.go        # PRODUCER.source
+```
+
+#### Travaux
+
+- [ ] A1 — `compile_dir` : créer `PRODUCER.source` (au lieu de `home()/go/src/<M>`)
+- [ ] A2 — `compile_exe` : `cd <module>/build && go build -o <out> ./<M>`
+- [ ] A3 — générer/mettre à jour `build/go.work` + `go.mod` avec `replace` vers les modules de base
+- [ ] A4 — `compiler.source` déduit de l'environnement (plus de `/Users/ycaseau/...` figé)
+- [ ] A5 — message d'erreur clair si le répertoire de sortie n'est pas inscriptible
+
+- **Fichiers** : `compile/gomain.cl`, `src/Generate/gomain.go`, `src/Optimize/Optimize-meta.go`
+- **Risque** : faible (imports générés inchangés)
+- **Validation** : `claire4 -cm choco` produit `build/Choco/chocutils.go`, puis erreur suivante
   (attendu : `final(...)` côté choco, puis d'éventuelles erreurs de portage).
+
+#### Limite connue (à traiter en C)
+
+`replace` et `go.work` référencent des **chemins locaux**. Pour qu'un module publié
+soit consommable ailleurs, il faudra soit publier les modules de base, soit figer
+par `go mod vendor` — c'est le rôle du `-publish` (point C).
 
 ### [ ] B — `use_module("m/version")`
 
