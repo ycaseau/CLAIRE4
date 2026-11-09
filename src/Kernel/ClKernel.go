@@ -932,6 +932,15 @@ type ClairePair struct {
 
 func ToPair(x *ClaireAny) *ClairePair { return (*ClairePair)(unsafe.Pointer(x)) }
 
+// MakePair builds a (x:y) pair -- v4.1.6, used by use_module (Reader/file.go)
+func MakePair(x *ClaireAny, y *ClaireAny) *ClairePair {
+	o := new(ClairePair)
+	o.Isa = C_pair
+	o.First = x
+	o.Second = y
+	return o
+}
+
 // +---------------------------------------------------------------------------+
 // |  Part 3: Global variables (named objects)                                 |
 // +---------------------------------------------------------------------------+

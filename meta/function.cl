@@ -405,6 +405,13 @@ nth_put(s:string,n:integer,c:char,max:integer) : void
 
 // shell(self:string) : void -> function!(claire_shell)
 claire/getenv(self:string) : string -> function!(getenv_string)
+// v4.1.6: filesystem primitives needed by use_module (see meta/file.cl)
+// the Go implementation lives in Kernel/ClString.go
+claire/isfile?(s:string) : boolean -> function!(isfile_string)
+claire/isdir?(s:string) : boolean -> function!(isdir_string)
+claire/pwd() : string -> function!(pwd_void)
+claire/setcwd(s:string) : string -> function!(setcwd_string)
+claire/entries(s:string) : list[string] -> function!(entries_string)
 claire/get_value(self:string) : any -> function!(value_string)           // value @ string no longer supported in CLAIRE 4
 claire/get_value(self:module,s:string) : any -> function!(value_module)  //  v3.2.14
 

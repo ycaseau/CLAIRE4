@@ -21,6 +21,7 @@ import (
 	"bufio"
 	"fmt"
 	"os"
+	"sort"
 	"strconv"
 	"strings"
 	"unicode/utf8"
@@ -786,6 +787,86 @@ func F_getenv_string (s *ClaireString) *ClaireString {
 
 func E_getenv_string (s EID) EID {
 	return EID{F_getenv_string(ToString(OBJ(s))).Id(),0}}
+
+// ---------------- filesystem primitives (v4.1.6) -------------------------
+// These are used by use_module() (meta/file.cl) to locate the modules
+// published in $CLAIRE_LIBS. They live in the Kernel, which is handwritten Go.
+
+// isfile?(s:string) : boolean
+func F_isfile_ask_string (s *ClaireString) *ClaireBoolean {
+	st, err := os.Stat(s.Value)
+	if err != nil {
+		return CFALSE
+	}
+	return MakeBoolean(!st.IsDir())
+}
+
+func E_isfile_ask_string (s EID) EID {
+	return EID{F_isfile_ask_string(ToString(OBJ(s))).Id(), 0}}
+
+// isdir?(s:string) : boolean
+func F_isdir_ask_string (s *ClaireString) *ClaireBoolean {
+	st, err := os.Stat(s.Value)
+	if err != nil {
+		return CFALSE
+	}
+	return MakeBoolean(st.IsDir())
+}
+
+func E_isdir_ask_string (s EID) EID {
+	return EID{F_isdir_ask_string(ToString(OBJ(s))).Id(), 0}}
+
+// pwd() : string  -- current working directory
+func F_pwd_void () *ClaireString {
+	d, err := os.Getwd()
+	if err != nil {
+		return MakeString("")
+	}
+	return MakeString(d)
+}
+
+func E_pwd_void (_CL_obj EID) EID {
+	return EID{F_pwd_void().Id(), 0}}
+
+// setcwd(s:string) : string  -- change the working directory, returns the previous one.
+// This is used by use_module() to load the init.cl of a module from its directory.
+func F_setcwd_string (s *ClaireString) EID {
+	old, err := os.Getwd()
+	if err != nil {
+		return Cerror(36, s.Id(), MakeInteger(0).Id())
+	}
+	if err := os.Chdir(s.Value); err != nil {
+		return Cerror(36, s.Id(), MakeInteger(0).Id())
+	}
+	return EID{MakeString(old).Id(), 0}
+}
+
+func E_setcwd_string (s EID) EID {
+	return F_setcwd_string(ToString(OBJ(s)))}
+
+// entries(s:string) : list[string]  -- names of the entries of a directory
+// (used by use_module to pick the greatest version). Sorted, so that the
+// result does not depend on the file system order. Returns an empty list if
+// the directory cannot be read.
+func F_entries_string (s *ClaireString) *ClaireList {
+	lst := makeListObject(ToType(C_string.Id()), nil)
+	des, err := os.ReadDir(s.Value)
+	if err != nil {
+		return ToList(lst.Id())
+	}
+	names := make([]string, 0, len(des))
+	for _, d := range des {
+		names = append(names, d.Name())
+	}
+	sort.Strings(names)
+	for _, n := range names {
+		lst.AddFast(MakeString(n).Id())
+	}
+	return ToList(lst.Id())
+}
+
+func E_entries_string (s EID) EID {
+	return EID{F_entries_string(ToString(OBJ(s))).Id(), 0}}
 
 
 

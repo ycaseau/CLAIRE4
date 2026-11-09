@@ -276,6 +276,9 @@ func copySliceFloat(l []float64) []float64 {
 }
 
 // create a list from z slice
+// MakeListObject is the exported form used by other packages (v4.1.6)
+func MakeListObject(t *ClaireType, l []*ClaireAny) *ClaireListObject { return makeListObject(t, l) }
+
 func makeListObject(t *ClaireType, l []*ClaireAny) *ClaireListObject {
 	o := new(ClaireListObject)
 	o.Isa = C_list

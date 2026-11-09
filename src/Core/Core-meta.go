@@ -255,6 +255,11 @@ var C_glb *ClaireOperation /*obj*/
 var C_Core__inf_equalt *ClaireOperation /*obj*/
 var C_Core__Zt *ClaireOperation /*obj*/
 var C_getenv *ClaireProperty // claire/"getenv"
+var C_isfile_ask *ClaireProperty // claire/"isfile?"
+var C_isdir_ask *ClaireProperty // claire/"isdir?"
+var C_pwd *ClaireProperty // claire/"pwd"
+var C_setcwd *ClaireProperty // claire/"setcwd"
+var C_entries *ClaireProperty // claire/"entries"
 var C_last *ClaireProperty // claire/"last"
 var C_rmlast *ClaireProperty // claire/"rmlast"
 var C_car *ClaireProperty // claire/"car"
@@ -362,6 +367,11 @@ func MetaLoad() {
   
   // definition of the properties
   C_getenv = MakeProperty("getenv",2,C_claire)
+  C_isfile_ask = MakeProperty("isfile?",2,C_claire)
+  C_isdir_ask = MakeProperty("isdir?",2,C_claire)
+  C_pwd = MakeProperty("pwd",2,C_claire)
+  C_setcwd = MakeProperty("setcwd",2,C_claire)
+  C_entries = MakeProperty("entries",2,C_claire)
   C_last = MakeProperty("last",1,C_claire)
   C_rmlast = MakeProperty("rmlast",1,C_claire)
   C_car = MakeProperty("car",1,C_claire)
@@ -1266,6 +1276,11 @@ func MetaLoad() {
     C_void.Id()),1,MakeFunction4(E_nth_put_string,"nth_put_string")),MakeString("function.cl:404"))
   
   _ = F_attach_method(C_getenv.AddMethod(Signature(C_string.Id(),C_string.Id()),0,MakeFunction1(E_getenv_string,"#getenv_string")),MakeString("function.cl:407"))
+  _ = F_attach_method(C_isfile_ask.AddMethod(Signature(C_string.Id(),C_boolean.Id()),0,MakeFunction1(E_isfile_ask_string,"#isfile_ask_string")),MakeString("function.cl:410"))
+  _ = F_attach_method(C_isdir_ask.AddMethod(Signature(C_string.Id(),C_boolean.Id()),0,MakeFunction1(E_isdir_ask_string,"#isdir_ask_string")),MakeString("function.cl:411"))
+  _ = F_attach_method(C_pwd.AddMethod(Signature(C_void.Id(),C_string.Id()),0,MakeFunction1(E_pwd_void,"#pwd_void")),MakeString("function.cl:412"))
+  _ = F_attach_method(C_setcwd.AddMethod(Signature(C_string.Id(),C_string.Id()),0,MakeFunction1(E_setcwd_string,"#setcwd_string")),MakeString("function.cl:413"))
+  _ = F_attach_method(C_entries.AddMethod(Signature(C_string.Id(),C_list.Id()),0,MakeFunction1(E_entries_string,"#entries_string")),MakeString("function.cl:414"))
   
   _ = F_attach_method(C_get_value.AddMethod(Signature(C_string.Id(),C_any.Id()),0,MakeFunction1(E_value_string,"#value_string")),MakeString("function.cl:408"))
   
