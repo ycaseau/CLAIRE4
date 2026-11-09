@@ -120,7 +120,7 @@ func F_Generate_printHelp_void ()  {
   PRINC("        -cx <module> : compiles a module & launch main() \n")
   PRINC("         -sf <module> : generates system file associated to a module \n")
   PRINC("         -sx <module> : generates system file that includes main() \n")
-  PRINC("        -publish <dir>[@<version>] : publish the compiled module for use_module() \n")
+  PRINC("        -publish [<dir>][@<version>] : publish the module for use_module() (version from VERSION) \n")
   PRINC("        -force : overwrite an existing published directory \n")
   PRINC("        -install : set up CLAIRE_HOME and put claire4 in your PATH \n")
   F_CL_exit(0)
@@ -424,12 +424,18 @@ func F_Generate_complex_main_void () EID {
                               loop_1 = ToException(Core.C_general_error.Make(MakeString("option: -sx <filename>").Id(),CNIL.Id())).Close()
                               } 
                             }  else if (ToString(l.ValuesO()[0]).Value == MakeString("-publish").Value) { 
-                            if (l.Length() >= 2) { 
+                            // v4.1.6: the destination is optional. Without it, publish()
+                            // uses $CLAIRE_LIBS (first entry), then $CLAIRE_HOME/lib.
+                            // The destination may carry a version: -publish dir@v1.2.3
+                            if ((l.Length() >= 2) && 
+                                (ToString(l.ValuesO()[1]).At(1) != '-')) { 
                               _Zpublish = ToString(l.ValuesO()[1])
                               l = l.Skip(2)
                               loop_1 = EID{l.Id(),0}
                               } else {
-                              loop_1 = ToException(Core.C_general_error.Make(MakeString("option: -publish <directory>").Id(),CNIL.Id())).Close()
+                              _Zpublish = MakeString("@")
+                              l = l.Skip(1)
+                              loop_1 = EID{l.Id(),0}
                               } 
                             }  else if (ToString(l.ValuesO()[0]).Value == MakeString("-force").Value) { 
                             _Zforce = CTRUE
@@ -1147,17 +1153,22 @@ func E_Generate_compile_exe_string (_Zout EID) EID {
 func F_Generate_publish_module (m *ClaireModule,_Zdir *ClaireString,_Zforce *ClaireBoolean) EID {
   name := m.Name.String_I().Value
   dest := _Zdir.Value
-  // 1. version. CLAIRE4 has no "version" slot on module (a free slot is
-  // rejected: "[106] the object does not understand foo"), so the version is
-  // given explicitly on the command line as -publish <dir>@<version>.
-  // Without it we fall back on "v0.0.0".
-  ver := "v0.0.0"
+  // 1. version, by decreasing priority:
+  //    a. -publish <dir>@<version>   (explicit, useful in CI)
+  //    b. the file VERSION next to init.cl (see readVersionFile)
+  //    c. "v0.0.0"
+  // CLAIRE4 has no "version" slot on module (a free slot is rejected:
+  // "[106] the object does not understand foo"), hence the file convention.
+  ver := ""
   if k := strings.LastIndex(_Zdir.Value, "@"); k >= 0 {
-    ver = _Zdir.Value[k+1:]
+    if v := _Zdir.Value[k+1:]; v != "" { ver = v }
     dest = _Zdir.Value[:k]
   }
+  if ver == "" { ver = readVersionFile(m) }
+  if ver == "" { ver = "v0.0.0" }
   // 2. destination
   if dest == "" {
+    // note: dest was set from _Zdir, which is "@" when -publish had no argument
     if libs := os.Getenv("CLAIRE_LIBS"); libs != "" {
       dest = strings.Split(libs, string(os.PathListSeparator))[0]
     } else if hom := os.Getenv("CLAIRE_HOME"); hom != "" {
@@ -1416,6 +1427,30 @@ func copyExec(src string, dst string) error {
   return os.Rename(tmp, dst)
 }
 
+// readVersionFile looks for a VERSION file belonging to the module m and
+// returns its first non-empty line, or "". It is looked for next to init.cl:
+//   <module source>/../VERSION, then <module source>/VERSION, then ./VERSION
+// Trailing and leading spaces are trimmed, and a leading "v" is kept as is.
+func readVersionFile(m *ClaireModule) string {
+  var cands []string
+  if src := m.Source.Value; src != "" {
+    cands = append(cands,
+      filepath.Join(src, "..", "VERSION"),
+      filepath.Join(src, "VERSION"))
+  }
+  cands = append(cands, "VERSION")
+  for _, p := range cands {
+    b, err := os.ReadFile(p)
+    if err != nil { continue }
+    for _, l := range strings.Split(string(b), "\n") {
+      if t := strings.TrimSpace(l); t != "" && !strings.HasPrefix(t, "#") {
+        return t
+      }
+    }
+  }
+  return ""
+}
+
 // copyFile copies a single file, creating the destination directory if needed.
 func copyFile(src string, dst string) error {
   in, err := os.Open(src)
@@ -1456,6 +1491,7 @@ func copyTree(src string, dst string) error {
 // *       Part 4: Profiler code                                     *
 // *******************************************************************
 // ---------------------------------------------------------------
+
 
 
 

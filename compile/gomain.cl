@@ -68,7 +68,7 @@
     printf("        -cx <module> : compiles a module & launch main() \n"),
     printf("         -sf <module> : generates system file associated to a module \n"),
     printf("         -sx <module> : generates system file that includes main() \n"),
-    printf("        -publish <dir>[@<version>] : publish the compiled module for use_module() \n"),
+    printf("        -publish [<dir>][@<version>] : publish the module for use_module() (version from VERSION) \n"),
     printf("        -force : overwrite an existing published directory \n"),
     printf("        -install : set up CLAIRE_HOME and put claire4 in your PATH \n"),
     exit(0) ]
@@ -138,8 +138,12 @@
                else error("option: -sf <filename>")),
      {"-sx"} (if (length(l) >= 2)   (%sf := l[2], %main := true, l :<< 2)
                else error("option: -sx <filename>")),
-     {"-publish"} (if (length(l) >= 2)   (%publish := l[2], l :<< 2)
-                     else error("option: -publish <directory>")),
+     // v4.1.6: the destination is optional (default: first entry of
+     // $CLAIRE_LIBS, then $CLAIRE_HOME/lib) and may carry a version:
+     // -publish <dir>@<version>. Without @<version>, the version comes from
+     // the file VERSION next to init.cl, then "v0.0.0".
+     {"-publish"} (if (length(l) >= 2 & l[2][1] != '-')   (%publish := l[2], l :<< 2)
+                     else (%publish := "@", l :<< 1)),
      {"-force"} (%force := true, l :<< 1),
      {"-install"} (install(), exit(0)),   // v4.1.6
      {"-n"} (%init? := false, l :<< 1),
@@ -325,7 +329,8 @@
 // use_module() (meta/file.cl) knows how to load  -- v4.1.6 (action C)
 //   <dir>/<name>/<version>/{init.cl, source/, build/<Module>/, META.json}
 // The Go implementation is F_Generate_publish_module (src/Generate/gomain.go).
-// The version is given as -publish <dir>@<version>; default is v0.0.0.
+// The version is, by decreasing priority:
+//   -publish <dir>@<version>, then the file VERSION next to init.cl, then v0.0.0.
 [claire/publish(m:module,%dir:string,%force:boolean) : void -> function!(publish_module)]
 
 // one-time setup, the equivalent of CLAIRE3's "configure && make install":
