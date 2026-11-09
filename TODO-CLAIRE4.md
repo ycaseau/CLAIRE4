@@ -235,7 +235,7 @@ immédiatement consommable par `use_module`.
 - **Risque** : moyen
 - **Validation** : publier choco, puis le consommer depuis un autre répertoire via `use_module`.
 
-### [ ] D — `go.mod` racine + `claire4 -install`
+### [x] D — Go workspaces + `claire4 -install` — FAIT (commit `700ef6a`)
 
 - **Fichiers** : nouveau `src/go.mod`, `compile/gomain.cl`
 - **Quoi** :
