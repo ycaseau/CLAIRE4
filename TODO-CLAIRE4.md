@@ -183,17 +183,26 @@ paquets de base (`Kernel`, `Core`, `Language`, `Reader`, `Optimize`,
 soit consommable ailleurs, il faudra soit publier les modules de base, soit figer
 par `go mod vendor` — c'est le rôle du `-publish` (point C).
 
-### [ ] B — `use_module("m/version")`
+### [x] B — `use_module("m/version")` — FAIT
 
-- **Fichiers** : `meta/file.cl`, `src/Reader/file.go` (+ éventuellement `init.cl` de démonstration)
-- **Comportement** :
+**Commits** : `864dd6e` (primitives) + `7aae723` (use_module)
+
+- **Fichiers** : `meta/file.cl` ↔ `src/Reader/file.go` + `src/Reader/Reader-meta.go`,
+  `meta/function.cl` ↔ `src/Core/Core-meta.go`, `src/Kernel/ClString.go` (primitives)
+- **Comportement implémenté** :
   1. résolution : `$CLAIRE_LIBS` puis `$CLAIRE_HOME/lib` puis répertoire courant
-  2. lecture du `init.cl` du module
-  3. chargement de la partie interprétée (meta-descriptions) pour que le compilateur connaisse les types
-  4. si `build/` existe : réutilisation au lieu de recompiler
-  5. enregistrement dans `claire.lock`
-- **Risque** : moyen
-- **Validation** : un `init.cl` contenant uniquement `use_module("choco/v1.3.26")` charge choco.
+  2. sans version explicite : plus grande version disponible (ordre lexicographique)
+  3. `chdir` dans le répertoire du module, `load("init")`, puis `load(m)`
+  4. enregistrement dans `used_modules` (liste de paires module → répertoire)
+  5. warning listant tous les répertoires fouillés si le module est absent
+- **Primitives ajoutées** (Kernel) : `isfile?`, `isdir?`, `entries`, `pwd`, `setcwd`
+- **Validation** : `CLAIRE_LIBS=./libs` + `use_module("mymod")` résout `v2.1.0`,
+  `mymod/hello()` s'exécute, `print_used_modules()` affiche la résolution.
+
+**Reste à faire pour B+** :
+- [ ] charger `build/` (code Go compilé) quand il existe, au lieu des sources
+- [ ] écrire un `claire.lock` (ou l'équivalent `go.mod`) à partir de `used_modules`
+- [ ] utiliser `used_modules` dans `-publish` (point C)
 
 ### [ ] C — `-publish` / `-export`
 
