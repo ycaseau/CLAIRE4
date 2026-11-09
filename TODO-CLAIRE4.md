@@ -199,6 +199,16 @@ par `go mod vendor` — c'est le rôle du `-publish` (point C).
 - **Validation** : `CLAIRE_LIBS=./libs` + `use_module("mymod")` résout `v2.1.0`,
   `mymod/hello()` s'exécute, `print_used_modules()` affiche la résolution.
 
+**Version d'un module (v4.1.6)** : trois niveaux, par priorité —
+`-publish <dir>@<version>`, puis le fichier `VERSION` à côté de `init.cl`,
+puis `v0.0.0`. (CLAIRE4 n'a pas de slot `version` sur `module`.)
+
+**Évolution proposée (à discuter avec Yves)** :
+- [ ] ajouter un slot `version` à `module` (Kernel + `meta/object.cl` +
+      `Core-meta.go`) : c'est la bonne abstraction, et cela permettrait à
+      `use_module` de raisonner en compatibilité sémantique (`v1.x` → `v1.4.2`)
+      au lieu de la comparaison lexicographique actuelle.
+
 **Reste à faire pour B+** :
 - [ ] charger `build/` (code Go compilé) quand il existe, au lieu des sources
 - [ ] écrire un `claire.lock` (ou l'équivalent `go.mod`) à partir de `used_modules`
