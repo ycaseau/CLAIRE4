@@ -149,11 +149,28 @@ reliés par `go.work` + `replace`, imports **sans préfixe** (`. "Kernel"`, `"Co
 
 #### Travaux
 
-- [ ] A1 — `compile_dir` : créer `PRODUCER.source` (au lieu de `home()/go/src/<M>`)
-- [ ] A2 — `compile_exe` : `cd <module>/build && go build -o <out> ./<M>`
-- [ ] A3 — générer/mettre à jour `build/go.work` + `go.mod` avec `replace` vers les modules de base
-- [ ] A4 — `compiler.source` déduit de l'environnement (plus de `/Users/ycaseau/...` figé)
-- [ ] A5 — message d'erreur clair si le répertoire de sortie n'est pas inscriptible
+- [x] A1 — `compile_dir` crée `compiler.source` **et** `compiler.source/<Module>` — commit `8ef32ff`
+- [x] A2 — `compile_exe` : `cd <compiler.source> && go build -o <out> ./<Module>` — commit `8ef32ff`
+- [x] A3 — `prepare_workspace()` écrit `go.work` + un `go.mod` par module de base — commit `8ef32ff`
+- [x] A4 — `compiler.source` = `$CLAIRE_SOURCE` > `$CLAIRE_HOME` > `.` — commit `8ef32ff`
+- [x] A5 — erreur `[213]` si `compiler.source` est vide — commit `8ef32ff`
+
+**Résultat sur choco** : les 15 fichiers sont générés dans
+`$CLAIRE_SOURCE/Choco`, `go.work` est écrit, `go build` résout tous les
+paquets de base (`Kernel`, `Core`, `Language`, `Reader`, `Optimize`,
+`Generate`).
+
+#### Reste à traiter (nouveau, hors A)
+
+- [ ] **F — `WriteFast` assigné à un `EID`** : `go build` de choco échoue sur
+  des `X.WriteFast(...)` là où du code `EID` est attendu
+  (`Choco/chocapi.go:357`, `prop.go:2481`, …).
+  `ClaireProperty.WriteFast` renvoie `*ClaireAny` alors que le contexte attend
+  un `EID`. À trancher : soit le générateur doit émettre `WriteEID`
+  (comme pour `write_fast`, cf. `compile/gostat.cl:834`), soit
+  `WriteFast` doit renvoyer un `EID`.
+- [ ] **E — EOF** : `claire4 … </dev/null` boucle indéfiniment dans le REPL
+  (gêne les tests automatisés ; masquait aussi l'erreur `WriteFast`).
 
 - **Fichiers** : `compile/gomain.cl`, `src/Generate/gomain.go`, `src/Optimize/Optimize-meta.go`
 - **Risque** : faible (imports générés inchangés)
