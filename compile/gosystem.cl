@@ -168,6 +168,10 @@ breakline() : any -> (princ("\n"), indent_c())
      OPT.objects := list<object>(),
      OPT.functions := list<any>(),
      OPT.need_to_close := set<any>(),
+     // v4.1.6: a module needs a source directory. Without it the generator looped
+     // forever on the file names and died with "runtime: out of memory".
+     if (m.source = unknown | m.source = "")
+        Cerror("[212] the module ~S has no source directory: add source = \"source\" to its module declaration in init.cl",m),
      begin(m),
      for x in m.made_of
        (//[1] ++++ Compiling the file ~A.cl [v. 4.~A - safety:~A] // x, compiler.version, compiler.safety,

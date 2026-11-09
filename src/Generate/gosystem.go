@@ -237,6 +237,15 @@ func (p *GenerateGoProducer) GenFiles (m *ClaireModule) EID {
   Optimize.C_OPT.Objects = ToType(C_object.Id()).EmptyList()
   Optimize.C_OPT.Functions = ToType(C_any.Id()).EmptyList()
   Optimize.C_OPT.NeedToClose = ToType(C_any.Id()).EmptySet()
+  // v4.1.6: a module needs a source directory. Without it the generator looped
+  // forever on the file names and died with "runtime: out of memory". Fail
+  // early with a message that tells what to add to init.cl.
+  if m.Source == nil || m.Source.Id() == CNULL || m.Source.Value == "" { 
+    return ToException(Core.C_general_error.Make(
+      F_append_string(F_append_string(
+        MakeString("[212] the module "),MakeString(m.Name.String_I().Value)),
+        MakeString(" has no source directory: add source = \"source\" to its module declaration in init.cl")).Id(),CNIL.Id())).Close()
+  }
   m.Begin()
   { 
     var x *ClaireAny
@@ -3414,4 +3423,5 @@ func E_Generate_import_princ_string (s EID) EID {
   return EVOID} 
 
 // end of file
-
+
+
