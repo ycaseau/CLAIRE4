@@ -442,7 +442,7 @@ pretty_print(self:any) : void
        Or boolean,
        environment environment,
        Call+ let p := self.selector, s := (p @ static_type(self.args[1])) in
-                (case s (slot s.range, any p.range)),
+                (case s (slot class!(s.range), any class!(p.range))),   // v4.1.6: class! is needed when range is a parameterized type (ex: list<IntVar>)
        Call_slot let s := self.selector, p := s.selector in
                    (for s2 in p.mClaire/definition
                       (case s2 (slot (if (domain!(s) <= domain!(s2)) s := s2))),      // v3.2.30 C++ is really stupid :-)
