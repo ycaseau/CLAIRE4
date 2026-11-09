@@ -1256,10 +1256,14 @@ func F_Generate_publish_module (m *ClaireModule,_Zdir *ClaireString,_Zforce *Cla
     // note: dest was set from _Zdir, which is "@" when -publish had no argument
     if libs := os.Getenv("CLAIRE_LIBS"); libs != "" {
       dest = strings.Split(libs, string(os.PathListSeparator))[0]
-    } else if hom := os.Getenv("CLAIRE_HOME"); hom != "" {
-      dest = hom + "/lib"
     } else {
-      dest = "./lib"
+      // $CLAIRE_HOME/lib, or ~/.claire4/lib: the same place use_module() looks
+      // for modules when no environment variable is set.
+      hom := os.Getenv("CLAIRE_HOME")
+      if hom == "" {
+        if h, err := os.UserHomeDir(); err == nil { hom = h + "/.claire4" }
+      }
+      dest = hom + "/lib"
     }
   }
   target := dest + "/" + name + "/" + ver
@@ -1576,6 +1580,7 @@ func copyTree(src string, dst string) error {
 // *       Part 4: Profiler code                                     *
 // *******************************************************************
 // ---------------------------------------------------------------
+
 
 
 

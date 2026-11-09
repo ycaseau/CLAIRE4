@@ -451,7 +451,11 @@ claire/used_modules:list[tuple(module,string)] := list<tuple(module,string)>()
          libs := getenv("CLAIRE_LIBS"),
          hom := getenv("CLAIRE_HOME") in
        (if (libs != "") (for x in explode(libs, ":") (if (x != "") l :add x)),
-        if (hom != "") l :add (hom / "lib"),
+        // $CLAIRE_HOME/lib, or ~/.claire4/lib when CLAIRE_HOME is not set: that
+        // is where "claire4 -install" prepares the directory and where -publish
+        // writes by default, so use_module must look there.
+        if (hom = "") hom := (getenv("HOME") / ".claire4"),
+        l :add (hom / "lib"),
         l :add pwd(),
         l) ]
 

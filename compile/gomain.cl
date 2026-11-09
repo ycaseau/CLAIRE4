@@ -342,6 +342,8 @@
 // use_module() (meta/file.cl) knows how to load  -- v4.1.6 (action C)
 //   <dir>/<name>/<version>/{init.cl, source/, build/<Module>/, META.json}
 // The Go implementation is F_Generate_publish_module (src/Generate/gomain.go).
+// Destination: <dir>, or the first entry of $CLAIRE_LIBS, or $CLAIRE_HOME/lib,
+// or ~/.claire4/lib (the place use_module looks for modules).
 // The version is, by decreasing priority:
 //   -publish <dir>@<version>, then the file VERSION next to init.cl, then v0.0.0.
 [claire/publish(m:module,%dir:string,%force:boolean) : void -> function!(publish_module)]

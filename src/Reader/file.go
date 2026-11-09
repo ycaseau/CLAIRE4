@@ -1378,7 +1378,14 @@ func F_module_libs_void () *ClaireList {
       if x != "" { res.AddFast(MakeString(x).Id()) }
     }
   }
-  if hom := os.Getenv("CLAIRE_HOME"); hom != "" {
+  // $CLAIRE_HOME/lib, or ~/.claire4/lib when CLAIRE_HOME is not set: that is
+  // where "claire4 -install" prepares the directory and where -publish writes
+  // by default, so use_module must look there.
+  hom := os.Getenv("CLAIRE_HOME")
+  if hom == "" {
+    if h, err := os.UserHomeDir(); err == nil { hom = h + "/.claire4" }
+  }
+  if hom != "" {
     res.AddFast(F__7_string(MakeString(hom), MakeString("lib")).Id())
   }
   if cwd, err := os.Getwd(); err == nil {
