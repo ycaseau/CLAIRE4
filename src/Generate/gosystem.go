@@ -934,6 +934,20 @@ func F_Generate_needed_modules_module (m *ClaireModule) *ClaireList {
             } 
           } 
         } 
+      // v4.1.6: the generated code of a module may refer to Optimize, even when
+      // the module does not depend on it through its "uses" list: second-order
+      // types (x @ y, x % y) are compiled to Optimize/F_nth_property or
+      // Optimize/F_known_I_listargs. Without the import, "go build" fails with
+      // "undefined: Optimize". We therefore always import the compiler modules
+      // that the generated code may reference; dumb_import() emits the matching
+      // "_ = X.It" so that an unused import is not an error.
+      if Optimize.C_compiler.Active_ask == CTRUE {
+        for _,extra := range []*ClaireModule{Optimize.It, It} {
+          if extra != nil && extra != m && !(m2_out.Contain_ask(extra.Id()) == CTRUE) {
+            if extra.MadeOf.Length() != 0 { m2_out.AddFast(extra.Id()) }
+          }
+        }
+      }
       l = m2_out
       } 
     Result = l

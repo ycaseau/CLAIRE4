@@ -366,11 +366,22 @@ claire/BadMethods:list<method> :: unknown
      
 
 // go requires an import list without redundancy + we only import
+// v4.1.6: the generated code of a module may refer to Optimize even when the
+// module does not depend on it through its "uses" list: second-order types
+// (x @ y, x % y) are compiled to Optimize/F_nth_property or
+// Optimize/F_known_I_listargs. Without the import, "go build" fails with
+// "undefined: Optimize". We therefore always import the compiler modules that
+// the generated code may reference; dumb_import() emits the matching
+// "_ = X.It" so that an unused import is not an error.
+// NOTE: keep in sync with F_Generate_needed_modules_module (src/Generate/gosystem.go).
 [needed_modules(m:module) : list
   -> let l := list{ m2 in (Reader/add_modules(list(m)) but m) |
-                   (m2.made_of | m2 = Kernel) } in
-       // clean_duplicates(l)
-       l ]
+                   (m2.made_of | m2 = Kernel) },
+         extra := (if compiler.active?
+                     list{ m2 in list(Optimize, Generate) |
+                           (m2 != m & not(m2 % l) & m2.made_of) }
+                   else list<module>()) in
+       (/+ @ list)(l, extra) ]
 
 // create a dumb function that prevents the go compiler to complain
 [dumb_import(m:module)
