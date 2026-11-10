@@ -1,8 +1,64 @@
 # Branch `feat/modules-and-build` — what it changes
 
 > Fork `xpech/CLAIRE4`, based on `ycaseau/CLAIRE4@main` (`25b1496`).
-> 42 commits. Two large areas: **the module build pipeline** and **code
+> 44 commits. Two large areas: **the module build pipeline** and **code
 > generation fixes found while porting choco**.
+
+## Why
+
+We use CLAIRE in production on a large application, built on top of CLAIRE3
+and xlClaire. Two things made the move to CLAIRE4 hard, and this branch
+addresses the first one.
+
+**1. Setting up and compiling a module is too rigid.**
+
+With CLAIRE3/xlClaire, getting a working environment and building a module was
+a few well-known steps: `configure && make` once, then `claire4 -cm MyModule`
+anywhere. With CLAIRE4 the same operations required `GOPATH`,
+`GO111MODULE=off`, a copy of the whole tree under `$GOPATH/src`, a
+`CLAIRE_HOME` whose layout had to match an internal convention, and a
+`compiler.source` that was a path frozen at the time the interpreter itself
+was built. A module could not live in its own repository, and the first thing
+we hit when compiling choco was a path error
+(`cannot open .../go/src/Choco/chocutils.go`) that said nothing about what was
+actually wrong.
+
+**2. There is no way to share code between modules.**
+
+A project of any size is a set of modules with versions and dependencies. In
+CLAIRE3/xlClaire this was solved by `use_module("name/version")`, which looks
+for a published module in `$CLAIRE_LIBS`, and by `-publish`, which exports a
+module as a self-contained, versioned directory (sources, headers, compiled
+library). Neither existed in CLAIRE4: modules were edited by hand in one
+`init.cl`, and the only way to consume a compiled module was to rebuild it.
+
+### What this branch aims at
+
+The same three things as xlClaire, expressed in the Go world:
+
+| Goal | xlClaire | This branch |
+|---|---|---|
+| **Simple install** | `configure && make` | `go build` in `src/`, then `claire4 -install` (home, base packages, binary in `$PATH`) — no environment variable needed |
+| **Simple compile** | `claire4 -cm MyModule` in the module directory | `cd MyModule && claire4 -cm` — the module name is optional, the output and the Go workspace are generated locally |
+| **Share code** | `use_module` + `-publish` + `CLAIRE_LIBS` | same vocabulary: `use_module("name/version")`, `-publish <dir>@<version>`, `VERSION` file, `$CLAIRE_LIBS` / `~/.claire4/lib` |
+
+The mapping to the C++ model is deliberate: the sources of a dependency are
+loaded by the interpreter (that is what gives the compiler the types and
+restrictions, like the `.h` files), while its compiled Go package is linked
+into the binary (the equivalent of the `.so`). Both halves are needed, and
+this branch wires both.
+
+### Non-goals
+
+This is not a redesign of the language, nor of the compiler's output. The
+generated code keeps the same shape; only the paths, the workspace and the
+module-resolution rules change. The code-generation fixes in part 3 are
+consequences of putting the pipeline to work on a real module (choco), not
+a refactoring.
+
+---
+
+## How the commits are organised
 
 Each commit patches the generated Go file **and** its `.cl` source, so that
 recompiling the compiler (`claire4 -cc Generate`) does not reintroduce the bug.
