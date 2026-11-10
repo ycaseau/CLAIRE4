@@ -2341,7 +2341,15 @@ func (p *GenerateGoProducer) GenFunction (self *ClaireLambda,_Znom *ClaireString
               var va_arg1 *ClaireMethod
               var va_arg2 int
               va_arg1 = m
-              if (throw_ask == CTRUE) { 
+              // v4.1.6: a method is exception-ready (status 1, i.e. generated as
+              // EID) when its body may raise an error *or* when it needs a
+              // RangeCheck (typeOK false with safety < 2): RangeCheck itself
+              // may raise [17]. Marking it 0 made the callers generate a native
+              // function that consumed the EID as a value:
+              //   F_getPb_void() + 1   (EID + int)
+              if ((throw_ask == CTRUE) || 
+                  ((F_boolean_I_any(typeOK) != CTRUE) && 
+                    (Optimize.C_compiler.Safety < 2))) { 
                 va_arg2 = 1
                 } else {
                 va_arg2 = 0
@@ -3438,4 +3446,7 @@ func E_Generate_import_princ_string (s EID) EID {
 
 
 
-
+
+
+
+
