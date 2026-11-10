@@ -360,3 +360,158 @@ immédiatement consommable par `use_module`.
 1. **A** (débloque choco, valide la chaîne complète), puis
 2. **B** (le plus structurant : vrai système de dépendances), puis
 3. **C**, **D**, **E**.
+
+---
+---
+
+# Améliorations issues d'xlClaire (branche "améliorations" de CLAIRE3)
+
+Trois chantiers issus de la branche d'améliorations d'xlClaire, à traiter après
+le pipeline de modules.
+
+---
+
+## [ ] G — Options de ligne de commande déclarées par les modules
+
+**Origine** : `xlclaire meta/cmdline.cl` (`option_respond`, `option_usage`,
+`option_parsed`).
+
+**Principe** : un module déclare comment répondre à ses propres options et
+comment les documenter ; le parseur de la ligne de commande les prend en
+compte automatiquement, et `-h` construit l'aide à partir de ces déclarations.
+
+```claire
+[option_respond(opt:{"--greet"}, l:list) : void ->
+    let name := l[1] in
+       (l :<< 1,                          // l'handler consomme ses arguments
+        printf("Bonjour ~A\n", name))]
+
+[option_usage(opt:{"--greet"}) : tuple(string, string, string) ->
+    tuple("Dire bonjour",
+          "--greet <nom:string>",
+          "Affiche un message d'accueil.")]
+
+[option_parsed() : void -> ... ]      // appelé une fois, après l'analyse
+```
+
+`option_respond` reçoit la liste des arguments restants où l'option a déjà été
+retirée ; c'est l'handler qui retire ceux qu'il consomme (`l :<< n`).
+
+**Implémentation** : le `while (l)` de `complex_main` (`compile/gomain.cl`,
+`src/Generate/gomain.go`) teste les options built-in dans un `case`. Il suffit
+d'insérer **avant** le `case` un appel aux restrictions de `option_respond`
+(`ClaireProperty.Restrictions`), et après la boucle un appel à `option_parsed`.
+
+**Décisions prises** :
+- les options d'un module **s'ajoutent** aux options built-in ; en cas de
+  collision, **le module gagne** (comme xlClaire), avec un trace(0) signalant
+  l'écrasement ;
+- `option_usage` construit `-h` : l'aide existante (`printHelp`) devient un jeu
+  de restrictions `option_usage` dans Core/Reader/Generate, et `-h` les
+  assemble en colonnes ;
+- `option_parsed()` est appelé une seule fois, après la boucle, avant `%init?` ;
+- l'API est exposée en `claire/` (pas dans un module dédié) pour que tout
+  module puisse la redéfinir sans dépendance supplémentaire.
+
+**Effort estimé** : 2-3 jours. **Risque** : faible (point d'extension, pas de
+changement de sémantique).
+
+**Validation** : un module `Repro` déclarant `--greet` compile, `claire4 -cm
+Repro --greet Xavier` affiche le message, et `-h` liste l'option.
+
+---
+
+## [ ] H — Ports filtrables (`device` / `filter`)
+
+**Origine** : `xlclaire meta/port.cl`, la partie « ports avec filtres ».
+
+**État de CLAIRE4** : inexistant. `ClairePort`
+(`src/Kernel/ClKernel.go:243`) est une struct **fermée** :
+
+```go
+type ClairePort struct {
+    ClairePrimitive
+    file   *os.File      // une seule sorte de source
+    buffer []byte
+    nChar, total, size, nEof int
+    status int           // 0,1 fichier | 2,3 string | 4 stream
+    firstc rune
+}
+```
+
+et `Getc`/`Putc` dispatchent sur `p.status` dans un `switch`. Il n'y a ni
+`device`, ni `filter`, ni `target`, ni `read_port` polymorphe.
+
+**Ce qu'xlClaire avait** : deux niveaux, avec une interface à 6 méthodes
+(`read_port`, `write_port`, `unget_port`, `eof_port?`, `flush_port`,
+`close_port`). Un `filter` qui ne surcharge rien **relaie** vers
+`self.target` ; un `device` répond lui-même ou signale l'absence
+d'implémentation. D'où trois familles composables : sources (fichier, stdin,
+socket), filtres (gzip, chiffrement, TLS), et le port manipulé par le code.
+
+**Décision prise : ne pas réimplémenter `read_port`, utiliser `io.Reader` /
+`io.Writer` de Go.** C'est le même principe (composition de flux) avec
+l'écosystème standard au lieu d'une couche à maintenir.
+
+```go
+type ClairePort struct {
+    ClairePrimitive
+    reader io.Reader   // au lieu de *os.File
+    writer io.Writer
+    // le buffer existant reste, il lit via reader
+}
+
+// tous les filtres deviennent gratuits :
+MakePort(bufio.NewReader(os.Stdin))
+MakePort(readline.NewSource())                   // historique + complétion
+MakePort(bufio.NewReader(gzip.NewReader(f, rc))) // decompression
+MakePort(tlsConn)                                // TLS
+```
+
+**Étapes** :
+- [ ] H1 — `ClairePort` passe à `io.Reader`/`io.Writer` (aucun changement
+      visible ; validé par les tests existants et la compilation de choco).
+- [ ] H2 — readline comme `io.Reader` (adaptateur au-dessus de `chzyer/readline`
+      ou `peterh/liner`, **pur Go**, sans cgo), derrière un build tag :
+      `go build -tags noreadline` doit continuer à produire un binaire sans
+      dépendance externe.
+- [ ] H3 — complétion sur les symboles du module courant (facultatif).
+
+**Décisions prises** :
+- **pas de cgo** : un binaire unique, sans dépendance système, est un acquis
+  du projet (`go.work`, `claire4 -install`) ; lier `libedit` le casserait ;
+- readline accessible par build tag pour que Yves puisse refuser la dépendance
+  sans perdre le reste ;
+- le mode non interactif (pipe, `< /dev/null`, CI) **ne doit jamais** activer
+  readline : détection `term.IsTerminal(os.Stdin.Fd())` ;
+- les ports mémoire (`status 2/3`) et fichier (`status 0/1`) gardent leur
+  comportement actuel en H1 ; on n'introduit pas `device`/`filter` comme
+  classes CLAIRE, la composition se fait en Go.
+
+**Avant `io.Reader` seul, note** : `ClairePort` a aussi un `unget` implicite
+(`firstc rune`, `F_pushback_port`). Il faut vérifier que le passage à
+`io.Reader` conserve cette possibilité (un `bufio.Reader.UnreadRune` ou un
+buffer interne le permet).
+
+**Effort estimé** : H1 = 2-3 jours, H2 = 2-3 jours, H3 = +3 jours.
+**Risque** : moyen pour H1 (cœur du Kernel I/O), faible ensuite.
+
+**Validation** :
+- H1 : `claire4`, `claire4 -cm choco`, les tests `test/regress` inchangés ;
+- H2 : historique et complétion dans le REPL, et `go build -tags noreadline`
+  produit toujours un binaire fonctionnel.
+
+---
+
+## [ ] I — Récapitulatif : ce qui manque à CLAIRE4 venu d'xlClaire
+
+| Fonction xlClaire | État dans CLAIRE4 | Chantier |
+|---|---|---|
+| `use_module` + `CLAIRE_LIBS` | ✅ fait (B) | — |
+| `-publish` / `-export` | ✅ `-publish` fait (C) ; `-export` non | C-bis |
+| Options par module | ❌ | **G** |
+| Ports filtrables | ❌ | **H** |
+| readline / editline | ❌ | **H2** |
+| Complétion | ❌ | **H3** |
+| `save_context` / `restore_context` | ❌ (le REPL garde l'ancien modèle) | non planifié |
+| Documentation auto (`codedoc`) | ❌ | non planifié |
