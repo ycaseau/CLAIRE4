@@ -1,0 +1,6 @@
+# artefacts produced by "claire4 -cm" inside the regression cases
+/bin/
+/go.work
+/go.sum
+*.go
+!/source/*.go

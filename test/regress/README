@@ -12,6 +12,9 @@ The module name is declared in init.cl and must be given on the command line
     claire4 -cm GanyArithmetic
     ./bin/ganyarithmetic
 
+(The generated files -- <Module>/, <Module>.go, go.work, bin/ -- are ignored
+by test/regress/.gitignore.)
+
 
 Cases
 -----
