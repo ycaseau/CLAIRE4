@@ -44,6 +44,21 @@ do-division/         OPEN. Dividing the result of a function that may throw
 
         [known bug] the build fails; it is the purpose of the test.
 
+        Root cause, in compile/osystem.cl (g_throw1, branch Call_method):
+            if (self.arg = m_unsafe | notOpt(self) = false | ...) false
+            else if g_throw(self.args) true
+        notOpt(/ by a non-zero literal) is false, so the first branch answers
+        "no throw" without ever looking at the operands. getF() may raise: the
+        division is safe, its operand is not.
+
+        Fixing this by testing the arguments first repairs do-division but
+        breaks choco at source/var.cl:164:
+            [141] list<any>(dom, EID, "try_28", true, false) is a wrong arg
+                  list for Generate/g_statement
+        i.e. g_statement/g_try do not yet support an expression that becomes
+        throwing where it was not. Both sides must be fixed together -- see
+        TODO-CLAIRE4.md, "Analyse complete du dernier bug".
+
 
 How they were found
 -------------------
