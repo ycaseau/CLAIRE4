@@ -515,3 +515,155 @@ buffer interne le permet).
 | Complétion | ❌ | **H3** |
 | `save_context` / `restore_context` | ❌ (le REPL garde l'ancien modèle) | non planifié |
 | Documentation auto (`codedoc`) | ❌ | non planifié |
+
+---
+---
+
+# Nouveau cap : services REST de calcul (novembre 2026)
+
+**Changement de stratégie** : l'UX et le middleware passent à Node/React.
+CLAIRE4 ne fait plus que du **calcul**, exposé en REST, et sert de canal
+typé entre process.
+
+```
+  Node / React  ──JSON──▶  dispatcher  ──exec + stdin──▶  claire4 (1 process / calcul)
+                                  ◀──stdout──┘                    │
+                                                                  └─ noyau, libs Go
+```
+
+**Décisions structurantes**
+
+| Décision | Raison |
+|---|---|
+| **Pas de serveur HTTP dans CLAIRE** | le dispatcher (nginx/Node/Go) possède le port |
+| **Un process par calcul** | le noyau n'est pas réentrant (pile d'évaluation globale) |
+| **Modèle CGI** | `stdin` + variables d'environnement en entrée, `stdout` en sortie, comme `Http`/`Harbor` en xlClaire |
+| **`ffor` / `fork` abandonnés** | `fork()` n'existe pas utilisable en Go ; déjà absent de CLAIRE4 |
+| **JSON pour l'extérieur, `serialize` pour le canal CLAIRE↔CLAIRE** | le format binaire préserve classes et graphes partagés |
+
+**Périmètre de la toolkit ClaireToolKit qui reste**
+
+| Gardé | Abandonné |
+|---|---|
+| `Json`, `Regex`, `Md5`, `Sys` | `Wcl`, `WclSite`, `Pier`, `Harbor` (réécrits autrement) |
+| l'esprit de `Http` (parsing CGI) et `Harbor` (`api(...)`) | `Zlib`, `Openssl` (Go les fournit) |
+| *(à décider)* `Redis` + un client TCP | `Db`, `Dbo`, `Mysql`, `Xmlo`, `Sax`, `Dom`, `Dom3`, `Soap`, `Xmlrpc`, `Mail`, `Postal`, `WebLocale`, `LibLocale`, `Pdf`, `Gd`, `Gantt`, `Casper`, `Iconv` |
+| `serialize`/`unserialize` (réécrit en Go) | la persistance compatible xlClaire (aucune donnée persistée) |
+
+**Ce que `Pier` et `Harbor` apportaient et qu'on garde**
+
+- `Pier` : passerelle JSON ↔ objets CLAIRE typés (`from_json(s, class)`).
+  La partie `Dbo` (chargement d'objets depuis la base) disparaît avec la base.
+- `Harbor` : lancer un serveur avec `-listen-port 8080` et déclarer les routes
+  par des méthodes `api(...)`. Le dispatch par type set constant
+  (`http_method:{"post"}, path:{"compute"}`) est conservé ; l'écoute du port
+  passe au dispatcher.
+
+---
+
+## [ ] Performance : cibles à 10 Mo par requête
+
+Les requêtes de calcul transportent des JSON de **plus de 10 Mo**. Mesures
+faites sur le binaire actuel (`claire4 -cm`) :
+
+| Test | Temps |
+|---|---|
+| démarrage + 10 Ko de sortie | 0,38 s |
+| démarrage + 1 Mo de sortie | **1,5 s** (6,7 s CPU cumulé, GC actif) |
+| projection 10 Mo | **~15 s** ❌ |
+
+### Causes identifiées
+
+**1. `Putc` sur stdout n'est pas bufferisé** — `src/Kernel/ClString.go:1135`
+
+```go
+} else if p.file == os.Stdout {
+    p.file.Write([]byte(string(c)))   // un write() système par caractère
+}
+```
+
+10 Mo de sortie = 10 millions d'appels système.
+
+**2. `Getc` sur stdin décode une rune à la fois** — `ClString.go:1016`
+
+```go
+char, _, err := ToGoPort(p.Id()).reader.ReadRune()
+```
+
+Décodage UTF-8 complet + construction d'un `EID` par caractère.
+
+**3. `BUFSIZE = 200`** — `ClString.go:889`
+
+```go
+var BUFSIZE int = 200   // test impact on speed (200 is the good value)
+```
+
+50 000 remplissages de buffer pour 10 Mo.
+
+### Décision : passer du streaming au **batch**
+
+```
+AVANT (streaming)                 APRÈS (batch)
+─────────────────                 ────────────
+getc(stdin) × 10 M                read_all(stdin)   1 lecture
+  ↓                                 ↓
+parse par caractère               parse par index sur string
+  ↓                                 ↓
+Putc(cout) × 10 M                 construire la réponse, 1 écriture
+```
+
+`substring(s,i,j)` est une simple slice en Go : un parser qui avance par index
+sur une string est 10 à 100× plus rapide qu'un parser à base de `getc`. Et un
+`CLAIRE_CONTENT_LENGTH` connu (CGI) rend le streaming inutile.
+
+**Gain attendu** : de ~15 s à **~0,3 s** pour 10 Mo.
+
+### Travaux
+
+- [ ] **R1** — bufferiser `Putc` y compris pour `stdout` ; flusher
+      explicitement après le prompt du REPL et avant `exit`. *(0,5 j)*
+- [ ] **R2** — `read_all(port)` : lecture par blocs (`io.ReadAll`), exposée en
+      CLAIRE ; remplacer la boucle `getc` des parsers. *(0,5 j)*
+- [ ] **R3** — les parsers JSON / HTTP avancent par index sur une string, jamais
+      par `getc`. *(inclus dans J/T)*
+- [ ] **R4** — benchmark de référence : générer un JSON de 10 Mo, mesurer temps
+      et **pic mémoire** (un objet CLAIRE a un en-tête ; 10 Mo de JSON peuvent
+      produire 100+ Mo d'objets). Borner avec `GOMEMLIMIT` si nécessaire. *(0,5 j)*
+
+### Corrections annexes du Kernel (prérequises au mode process-par-calcul)
+
+- [ ] `exit()` doit **flusher** `cout` avant `os.Exit`
+      (`F_CL_exit`, `src/Kernel/ClEnv.go:451`) — aujourd'hui il ne flushe pas,
+      donc la fin de la réponse peut être perdue.
+- [ ] `exit()` ajoute un `"
+"` parasite (`fmt.Printf("\n")`) : le conditionner
+      au mode interactif, sinon il corrompt un corps JSON.
+
+---
+
+## Chantiers du nouveau périmètre
+
+| # | Chantier | Contenu | Effort | Priorité |
+|---|---|---|---|---|
+| **R** | Perf + E/S | R1-R4 ci-dessus | 1,5 j | **1** |
+| **J** | `Json` en Go | `encoding/json`, `from_json(s, class)` typé | 1,5 j | **1** |
+| **T** | `Http` CGI | parsing requête (méthode, chemin, headers, query, body), écriture de la réponse ; port de l'esprit de `Http/source/{form,http_filter}.cl` | 2-3 j | **1** |
+| **S** | Contrat stdin/stdout | enveloppe JSON + un exemple complet + doc | 1 j | **1** |
+| **U** | `Harbor` | dispatch `api(req, method, path…)`, auth bearer | 1-2 j | 2 |
+| **O** | `Regex`, `Md5`, `Sys` | `regexp`, `crypto/md5`, log/env | 1 j | 2 |
+| **P** | `serialize` (canal CLAIRE) | format Go versionné, graphes partagés, cycles | 2-3 j | 2 |
+| **M/N** | TCP + `Redis` | client socket puis RESP | 2-4 j | 3 |
+
+**Priorité 1 = ~5-6 jours** pour un service de calcul opérationnel à 10 Mo.
+
+### Questions ouvertes
+
+- [ ] **Protocole CGI** : fastcgi (nginx), CGI classique, ou HTTP brut sur
+      `stdin` (sans variables d'environnement) ? Le plus simple à tester est le
+      HTTP brut ; le plus standard est CGI.
+- [ ] **Enveloppe d'échange** : `{"method":…,"path":…,"body":…}` sur stdin et
+      `{"status":…,"body":…}` sur stdout (permet au dispatcher de router), ou
+      corps nu dans les deux sens ?
+- [ ] **`Redis`** : nécessaire, ou le cache reste côté Node ?
+- [ ] **`serialize`** : seulement CLAIRE → CLAIRE, ou aussi pour des données
+      échangées avec Node (dans ce cas JSON suffit) ?
