@@ -105,7 +105,7 @@ Tout le build tient en 3 lignes de shell dans `compile/gomain.cl:282-292` :
 
 ## Actions (ordonnées)
 
-### [~] A — Corriger les chemins de compilation *(priorité : débloque choco)*
+### [x] A — Corriger les chemins de compilation — FAIT *(débloque choco)*
 
 **Décision retenue : modèle "style Cargo" via `go.work`** (testé et validé).
 
