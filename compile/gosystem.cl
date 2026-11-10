@@ -168,6 +168,10 @@ breakline() : any -> (princ("\n"), indent_c())
      OPT.objects := list<object>(),
      OPT.functions := list<any>(),
      OPT.need_to_close := set<any>(),
+     // v4.1.6: a module needs a source directory. Without it the generator looped
+     // forever on the file names and died with "runtime: out of memory".
+     if (m.source = unknown | m.source = "")
+        Cerror("[212] the module ~S has no source directory: add source = \"source\" to its module declaration in init.cl",m),
      begin(m),
      for x in m.made_of
        (//[1] ++++ Compiling the file ~A.cl [v. 4.~A - safety:~A] // x, compiler.version, compiler.safety,
@@ -352,14 +356,17 @@ claire/BadMethods:list<method> :: unknown
      if module? 
         (if exists(c in OPT.objects | c % class)
             printf("\t\"unsafe\"\n")),            // import go.unsafe (support pointer cast)
-     import_declaration(m),
+     import_declaration(m,true),
      printf(")\n"),                                  // end of import 
-     dumb_import(m),
+     dumb_import(m,true),
      use_as_output(stdout) ]
 
 // import declarations
-[import_declaration(m:module) : void
- ->  for x in needed_modules(m)
+// v4.1.6: %package is true for the header of the generated Go package
+// (<Module>/*.go) and false for the system file (<out>.go). Only the package
+// header needs the extra compiler modules (see module_imports).
+[import_declaration(m:module,%package:boolean) : void
+ ->  for x in (if %package module_imports(m) else needed_modules(m))
        printf("\t~I\"~A\"\n", 
           (if (x = Kernel) princ(". ")),  // Kernel is always included in namespace
           capitalize(string!(x.name))) ]  // v4.1.14 for Linux
@@ -372,9 +379,25 @@ claire/BadMethods:list<method> :: unknown
        // clean_duplicates(l)
        l ]
 
+// modules imported in the header of the *generated package* (<Module>/*.go)
+// v4.1.6: the generated code may refer to Optimize even when the module does not
+// depend on it through its "uses" list: second-order types (x @ y, x % y) are
+// compiled to Optimize/F_nth_property or Optimize/F_known_I_listargs. Without
+// the import, "go build" fails with "undefined: Optimize". dumb_import() emits
+// the matching "_ = X.It", so an unused import is not an error.
+// The system file (<out>.go) does not contain such calls: it keeps
+// needed_modules(), otherwise Go rejects the unused imports.
+// NOTE: keep in sync with F_Generate_module_imports_module (src/Generate/gosystem.go).
+[module_imports(m:module) : list
+  -> let l := copy(needed_modules(m)) in
+       (if compiler.active?
+           for m2 in list(Optimize, Generate)
+             (if (m2 != m & not(m2 % l) & m2.made_of) l :add m2),
+        l) ]
+
 // create a dumb function that prevents the go compiler to complain
-[dumb_import(m:module)
-  -> let l := needed_modules(m) in
+[dumb_import(m:module,%package:boolean)
+  -> let l := (if %package module_imports(m) else needed_modules(m)) in
       (if (length(l) > 1)
         (printf("\n//-------- dumb function to prevent import errors --------\n"),
          printf("func import_~A() ~I",gensym(),new_block()),
@@ -678,7 +701,13 @@ parents(self:list) : list
       (//[2] [~A] ~S: => simple=~S, throw=~S // n_line(), m, simple_body?(%body),throw?,
        compiler.n_methods :+ 1,
        p.varsym := 0,                                            // resets the ID for distinct vars
-       if (m.status = -1) (m.status := (if throw? 1 else 0))     // nice case we have not seen m yet.
+       // v4.1.6: a method is exception-ready (EID) when its body may raise an error
+       // OR when it needs a RangeCheck (typeOK false with safety < 2): RangeCheck
+       // itself raises [17]. Marking it 0 made the callers generate a native
+       // function that consumed the EID as a value:
+       //     F_getPb_void() + 1   (mismatched types Kernel.EID and untyped int)
+       if (m.status = -1) 
+          (m.status := (if (throw? | (not(typeOK) & compiler.safety < 2)) 1 else 0))
        else if (throw? != can_throw?(m))                         // avoids generating go code that will break
           (warn(),
            //[1] [CROSS] ~S body produces an error (g_throw = true) while status is 0 // m,

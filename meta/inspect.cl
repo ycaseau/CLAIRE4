@@ -57,14 +57,19 @@ TopDebug:integer := 0
            princ("> "),
            try (reader.toplevel := true,
                 if (system.mClaire/count_call > 0) system.mClaire/count_call := 1,
-                res := lexical_index(nextunit(reader),nil,0,true),
-                if (TopLevelMode = 1) system.index := 20,
-                if (TopLevelMode = 3 & res != q) inspect_loop(res,InspectStack)
-                else (if (TopLevelMode = 1) printf("eval[~S]> ",TopCount :+ 1)
-                      else princ("> "),
-                      res := eval(res),
-                      if (res != q)
-                         (print(res),princ("\n"))))
+                // v4.1.6: stop the loop on end of input (piped file, ^D).
+                // nextunit answers the symbol Reader/eof, which used to be fed to
+                // eval() forever, drowning the output in "Reader/eof" lines.
+                let item := nextunit(reader) in
+                   (if (item = eof) (res := q)                  // end of input
+                    else (res := lexical_index(item,nil,0,true),
+                          if (TopLevelMode = 1) system.index := 20,
+                          if (TopLevelMode = 3 & res != q) inspect_loop(res,InspectStack)
+                          else (if (TopLevelMode = 1) printf("eval[~S]> ",TopCount :+ 1)
+                                else princ("> "),
+                                res := eval(res),
+                                if (res != q)
+                                   (print(res),princ("\n")))))
            catch any
              (if (let e := exception!() in (e.isa = system_error & e.index = -1)) // abort
                  (TopLevelMode := 1, res := q)

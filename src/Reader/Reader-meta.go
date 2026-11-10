@@ -102,6 +102,7 @@ func MakeMeasure(m_index int,sum_value float64,sum_square float64,num_value floa
 
 var C_delimiter *ClaireClass /*obj*/
 var C_arrow *Core.GlobalVariable
+var C_used_modules *Core.GlobalVariable
 var C_triangle *Core.GlobalVariable
 var C_reserved_keyword *ClaireClass /*obj*/
 var C_else *ReservedKeyword /*obj*/
@@ -192,6 +193,10 @@ var C_Reader_bind_I *ClaireProperty // Reader/"bind!"
 var C_Reader_unbind_I *ClaireProperty // Reader/"unbind!"
 var C_Reader_load_file *ClaireProperty // Reader/"load_file"
 var C_load *ClaireProperty // claire/"load"
+var C_use_module *ClaireProperty // claire/"use_module"
+var C_find_module_dir *ClaireProperty // claire/"find_module_dir"
+var C_module_libs *ClaireProperty // claire/"module_libs"
+var C_print_used_modules *ClaireProperty // claire/"print_used_modules"
 var C_sload *ClaireProperty // claire/"sload"
 var C_Reader_add_modules *ClaireProperty // Reader/"add_modules"
 var C_eload *ClaireProperty // claire/"eload"
@@ -404,7 +409,30 @@ func MetaLoad() {
   { 
     var expr EID
     { var _CL_obj *Core.GlobalVariable
-      C_arrow = Core.ToGlobalVariable(new(Core.GlobalVariable).IsNamed(Core.C_global_variable,MakeSymbol("arrow",C_claire)))
+      C_use_module = MakeProperty("use_module",1,C_claire)
+  C_find_module_dir = MakeProperty("find_module_dir",1,C_claire)
+  C_module_libs = MakeProperty("module_libs",1,C_claire)
+  C_print_used_modules = MakeProperty("print_used_modules",1,C_claire)
+  
+  { 
+    var expr EID
+    { var _CL_obj *Core.GlobalVariable
+      C_used_modules = Core.ToGlobalVariable(new(Core.GlobalVariable).IsNamed(Core.C_global_variable,MakeSymbol("used_modules",C_claire)))
+      
+      _CL_obj = C_used_modules
+      _CL_obj.Range = ToType(C_list.Id())
+      { 
+        var va_arg1 *Core.GlobalVariable
+        var va_arg2 *ClaireAny
+        va_arg1 = _CL_obj
+        va_arg2 = MakeList(ToType(C_pair.Id())).Id()
+        va_arg1.Value = va_arg2
+        } 
+      expr = Core.F_close_global_variable(_CL_obj)
+      } 
+    ErrorCheck(expr)} 
+  
+  C_arrow = Core.ToGlobalVariable(new(Core.GlobalVariable).IsNamed(Core.C_global_variable,MakeSymbol("arrow",C_claire)))
       
       _CL_obj = C_arrow
       _CL_obj.Range = ToType(C_any.Id())
@@ -906,6 +934,10 @@ func MetaLoad() {
   _ = Core.F_attach_method(C_Reader_load_file.AddMethod(Signature(C_string.Id(),C_boolean.Id(),C_any.Id()),1,MakeFunction2(E_load_file_string,"load_file_string")),MakeString("file.cl:199"))
   
   _ = Core.F_attach_method(C_load.AddMethod(Signature(C_string.Id(),C_any.Id()),1,MakeFunction1(E_load_string,"load_string")),MakeString("file.cl:203"))
+  _ = Core.F_attach_method(C_use_module.AddMethod(Signature(C_string.Id(),C_void.Id()),0,MakeFunction1(E_use_module_string,"use_module_string")),MakeString("file.cl:430"))
+  _ = Core.F_attach_method(C_find_module_dir.AddMethod(Signature(C_string.Id(),C_string.Id()),0,MakeFunction1(E_find_module_dir_string,"find_module_dir_string")),MakeString("file.cl:470"))
+  _ = Core.F_attach_method(C_module_libs.AddMethod(Signature(C_void.Id(),C_list.Id()),0,MakeFunction1(E_module_libs_void,"module_libs_void")),MakeString("file.cl:455"))
+  _ = Core.F_attach_method(C_print_used_modules.AddMethod(Signature(C_void.Id(),C_void.Id()),0,MakeFunction1(E_print_used_modules_void,"print_used_modules_void")),MakeString("file.cl:505"))
   
   _ = Core.F_attach_method(C_sload.AddMethod(Signature(C_string.Id(),C_any.Id()),1,MakeFunction1(E_sload_string,"sload_string")),MakeString("file.cl:204"))
   

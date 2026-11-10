@@ -368,11 +368,23 @@ func F_Generate_g_try_any (self *ClaireAny,v *ClaireString,e *ClaireClass,vgloba
         PRINC("if ErrorIn(")
         F_c_princ_string(v2)
         PRINC(") {")
+        // v4.1.6: v may be the same variable as vglobal (e.g. arg_2) while the
+        // value has a native sort (int, float, ...). We must then convert the
+        // EID with from_eid, otherwise the generated code assigns an EID to a
+        // native type and does not build:
+        //   cannot use try_6 (Kernel.EID) as int value in assignment
         if (v.Value != vglobal.Value) { 
           F_c_princ_string(vglobal)
           PRINC(" = ")
           F_c_princ_string(v2)
           F_Generate_breakline_void()
+          } else if (e.Id() != Optimize.C_EID.Id() && e.Id() != C_void.Id()) {
+          F_c_princ_string(vglobal)
+          PRINC(" = ")
+          Result = ToGenerateGoProducer(Optimize.C_PRODUCER.Value).FromEid(v2,e)
+          if !ErrorIn(Result) {
+          Result = F_Generate_breakline_void().ToEID()
+          }
           } 
         if (C_tuple.Id() == loop.Isa.Id()) { 
           var g0143I *ClaireBoolean
@@ -799,9 +811,13 @@ func F_Generate_eid_expression_any (x *ClaireAny,s *ClaireClass,lvar *ClaireList
     }  else if (x.Isa.IsIn(Language.C_Call_method) == CTRUE) { 
     { var g0160 *Language.CallMethod = Language.To_CallMethod(x)
       if (g0160.Arg.Selector.Id() == C_funcall.Id()) { 
+        // v4.1.6: the method is emitted as an EID expression (see the
+        // g_eid_expression call below), so use the EID variant FASTCALLnE.
+        // Emitting FASTCALLn used to produce code that did not build:
+        //   cannot use arg_3 (Kernel.EID) as *Kernel.ClaireMethod
         PRINC("FASTCALL")
         F_princ_integer((g0160.Args.Length()-1))
-        PRINC("(")
+        PRINC("E(")
         Result = F_Generate_eid_expression_any(g0160.Args.At(0),C_method,lvar)
         if !ErrorIn(Result) {
         PRINC(",")

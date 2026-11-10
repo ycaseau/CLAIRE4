@@ -1,0 +1,31 @@
+go 1.25
+
+// Go workspace for the CLAIRE4 source tree (v4.1.6)
+//
+// The generated Go code imports the base packages by their bare name:
+//
+//     import ( . "Kernel" ; "Core" ; "Language" ; "Reader" ; "Optimize" )
+//
+// Go resolves such short names through a workspace: each directory listed in
+// `use` is a module (see the go.mod file it contains), and the whole set is
+// built as one unit. This replaces the old requirement of GOPATH +
+// GO111MODULE=off: from this directory you can simply run
+//
+//     go build -o claire4 claire4.go
+//     go build ./...
+//
+// The same layout is produced for user modules by `claire4 -cm <module>`
+// (see F_Generate_prepare_workspace_module in src/Generate/gomain.go), so the
+// two cases behave identically.
+
+use (
+	.
+	./Kernel
+	./Core
+	./Language
+	./Reader
+	./Optimize
+	./Generate
+)
+
+// The root directory is also a module, so that "go build ./..." works from here.

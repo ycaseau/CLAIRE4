@@ -932,6 +932,15 @@ type ClairePair struct {
 
 func ToPair(x *ClaireAny) *ClairePair { return (*ClairePair)(unsafe.Pointer(x)) }
 
+// MakePair builds a (x:y) pair -- v4.1.6, used by use_module (Reader/file.go)
+func MakePair(x *ClaireAny, y *ClaireAny) *ClairePair {
+	o := new(ClairePair)
+	o.Isa = C_pair
+	o.First = x
+	o.Second = y
+	return o
+}
+
 // +---------------------------------------------------------------------------+
 // |  Part 3: Global variables (named objects)                                 |
 // +---------------------------------------------------------------------------+
@@ -1836,6 +1845,29 @@ func FASTCALL2(m *ClaireMethod, x EID, y EID) EID {
 
 func FASTCALL3(m *ClaireMethod, x EID, y EID, z EID) EID {
 	return toFunction3(m.Functional).call(x, y, z)
+}
+
+// v4.1.6: EID variants of the FASTCALL macros.
+// The compiler sometimes passes the method as an EID, because the expression
+// goes through eid_expression (e.g. funcall(tt.test, x, y) where the slot is
+// accessed through .KNOWN(...)):
+//
+//     arg_3 = tt.Test.KNOWN(...)      // EID
+//     try_2 = FASTCALL2(arg_3, ...)   // was: cannot use EID as *ClaireMethod
+//
+// We keep the typed entry points above for hand-written code and add these
+// thin wrappers for the generated code. ANY() is a no-op cast (an EID holds a
+// pointer), so there is no run-time cost.
+func FASTCALL1E(m EID, x EID) EID {
+	return toFunction1(ToMethod(ANY(m)).Functional).call(x)
+}
+
+func FASTCALL2E(m EID, x EID, y EID) EID {
+	return toFunction2(ToMethod(ANY(m)).Functional).call(x, y)
+}
+
+func FASTCALL3E(m EID, x EID, y EID, z EID) EID {
+	return toFunction3(ToMethod(ANY(m)).Functional).call(x, y, z)
 }
 
 

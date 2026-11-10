@@ -1,0 +1,33 @@
+# CLAIRE4 -- build artefacts and local files
+#
+# The repository used to have no .gitignore, so compiled binaries, macOS
+# metadata and local experiments showed up as untracked changes in forks.
+
+# compiled interpreter(s)
+/claire4
+/claire4.exe
+/src/claire4
+/src/claire4.exe
+
+# Go build output
+*.o
+*.so
+*.a
+*.prof
+
+# output of "claire4 -cm <module>" / -publish
+/build/
+/src/go.work.sum
+
+# macOS
+.DS_Store
+._*
+
+# editors
+.vscode/
+.idea/
+*.swp
+*~
+
+# local test area (not part of CLAIRE4)
+/testxp/

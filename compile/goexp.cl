@@ -194,7 +194,12 @@ g_expression(self:symbol,s:class) : void
 // global_variables are CLAIRE objects
 // v4.0.4 : handle optimized variables (nativeVarG)
 [g_expression(self:global_variable,s:class) : void 
-  ->  if (s = EID) to_eid(PRODUCER,self,object) 
+  ->  // v4.1.6: the sort of the value follows the declared range of the global,
+      // not a hard-coded "object". For a global declared ":any", to_eid(object)
+      // emitted "EID{Value,0}" (pointer in PTR, 0 in VAL), so that any numeric
+      // use read 0: GANY:any := 41 ; GANY + 1 gave 1 instead of 42.
+      // to_eid(any) emits "Value.ToEID()", which is correct.
+      if (s = EID) to_eid(PRODUCER,self,(if nativeVar?(self) getRange(self) else any))
       else if (self.range = {} & (self.value % integer | self.value % float | self.value = nil))
           g_expression(self.value,s)            // global constant inlining
       else let s2 := (if nativeVar?(self) getRange(self) else any) in

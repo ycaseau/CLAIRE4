@@ -198,7 +198,11 @@ unfold_eid(ldef:list,self:any,s:class, v:any,err:boolean,loop:any) : void
                    else g_expression(x,s)),
          Call printf("ClEnv.Push(~I)",eid_expression(x.args[1],EID,lvar)),
          Call_method (if (x.arg.selector = funcall)
-                        printf("FASTCALL~A(~I,~I~I~I)", (length(x.args) - 1),   // 1,2 or 3
+                        // v4.1.6: the method is emitted as an EID expression (see the
+                        // eid_expression call below), so use the EID variant FASTCALLnE.
+                        // Emitting FASTCALLn produced code that did not build:
+                        //   cannot use arg_3 (Kernel.EID) as *Kernel.ClaireMethod
+                        printf("FASTCALL~AE(~I,~I~I~I)", (length(x.args) - 1),   // 1,2 or 3
                          eid_expression(x.args[1],method,lvar), 
                          eid_expression(x.args[2],EID,lvar),
                          (if (length(x.args) >= 3) (princ(","), eid_expression(x.args[3],EID,lvar))),

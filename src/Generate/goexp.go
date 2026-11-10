@@ -834,7 +834,20 @@ func E_Generate_g_expression_Variable (self EID,s EID) EID {
 func F_Generate_g_expression_global_variable (self *Core.GlobalVariable,s *ClaireClass) EID { 
   var Result EID
   if (s.Id() == Optimize.C_EID.Id()) { 
-    Result = ToGenerateGoProducer(Optimize.C_PRODUCER.Value).ToEid(self.Id(),C_object)
+    // v4.1.6: the sort of the value must follow the declared range of the global,
+    // not a hard-coded "object". For a global declared ":any" the generated code
+    // was "EID{Value,0}", whose EID carries the pointer in PTR and 0 in VAL, so
+    // any numeric use read 0:
+    //     GANY:any := 41   [f() : integer -> GANY + 1]   => 1 instead of 42
+    // to_eid(any) emits "Value.ToEID()", which is correct.
+    { var s3 *ClaireClass
+      if (Optimize.F_Compile_nativeVar_ask_global_variable(self) == CTRUE) { 
+        s3 = F_Generate_getRange_global_variable(self)
+        } else {
+        s3 = C_any
+        } 
+      Result = ToGenerateGoProducer(Optimize.C_PRODUCER.Value).ToEid(self.Id(),s3)
+      }
     }  else if ((Equal(self.Range.Id(),CEMPTY.Id()) == CTRUE) && 
       ((C_integer.Id() == self.Value.Isa.Id()) || 
           ((C_float.Id() == self.Value.Isa.Id()) || 

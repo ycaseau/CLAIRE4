@@ -662,7 +662,7 @@ func MetaLoad() {
   C_compiler.External = MakeString("go")
   C_compiler.Env = MakeString("MacOS")
   C_compiler.Version = MakeFloat(1.6).Id()
-  C_compiler.Source = MakeString("/Users/ycaseau/claire/v4.1/go/src")
+  C_compiler.Source = F_default_source_void()   // v4.1.6: derived from $CLAIRE_SOURCE / $CLAIRE_HOME, was hard-coded
   C_compiler.Libraries = MakeList(ToType(C_string.Id()),MakeString("Kernel").Id())
   
   

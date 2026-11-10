@@ -30,6 +30,18 @@
 [external!(m:module) : string
  -> if known?(external,m) m.external else string!(m.name) ]
 
+// dirname() : string -- name of the current directory (v4.1.6)
+// Used when -cm / -cc / -cx is given without a module name.
+// The Go implementation is F_Generate_dirname_void (src/Generate/gomain.go).
+[claire/dirname() : string -> function!(dirname_void)]
+
+// module_has_main(m:module) : boolean -- v4.1.6
+// True when m defines main() (no argument, or an explicit void/environment),
+// in which case "-cm" produces an executable that calls it and exits.
+// The Go implementation is F_Generate_module_has_main_module
+// (src/Generate/gomain.go).
+[claire/module_has_main(m:module) : boolean -> function!(module_has_main_module)]
+
 [string2module(s:string) : module
   -> let m := get_value(s) in
        case m (module m,
@@ -58,11 +70,14 @@
     printf("        -safe : safe mode                            \n"),
     printf("        -O : optimizing mode                         \n"),
     printf("        -O2 : super optimizing mode  (no bound checks)      \n"),
-    printf("        -cm <module>: compiles a module -> executable        \n"),
+    printf("        -cm [<module>]: compiles a module -> executable (default: current directory) \n"),
     printf("        -cc <module>: compiles a module -> target go files      \n"),
     printf("        -cx <module> : compiles a module & launch main() \n"),
     printf("         -sf <module> : generates system file associated to a module \n"),
     printf("         -sx <module> : generates system file that includes main() \n"),
+    printf("        -publish [<dir>][@<version>] : publish the module for use_module() (version from VERSION) \n"),
+    printf("        -force : overwrite an existing published directory \n"),
+    printf("        -install : set up CLAIRE_HOME and put claire4 in your PATH \n"),
     exit(0) ]
 
 
@@ -75,6 +90,7 @@
          %init? := true, %exe := false,           // do we want to load init.cl ? an executable ?
          %safety := unknown,                      // safety level for compiler
          %main := false,                           // do we cant to call main() ?
+         %publish := "", %force := false,          // v4.1.6: -publish <dir>[@<version>] / -force
          l := (copy(params()) as list<string>) in  // args list
  (try
   (while (l)
@@ -116,14 +132,27 @@
      {"-O2"} (compiler.optimize? := true, %safety := 3, dblevel := 2, l :<< 1),
      {"-cc"} (if (length(l) >= 2)  (%cm := l[2], l :<< 2)
                else error("option: -cc <module>")),
-     {"-cm"}  (if (length(l) >= 2)   (%exe := true, %cm := l[2], l :<< 2)
-               else error("option: -cm <module>")),
+     // v4.1.6: the module name is optional. Without it we compile the module
+     // declared in ./init.cl that matches the directory name, so that
+     // "cd MyModule && claire4 -cm" works.
+     // the argument is optional, but must not swallow the next option:
+     // "claire4 -cm -publish dir" compiles the module of the directory.
+     {"-cm"}  (if (length(l) >= 2 & l[2][1] != '-')   (%exe := true, %cm := l[2], l :<< 2)
+               else (%exe := true, %cm := dirname(), l :<< 1)),
      {"-cx"}  (if (length(l) >= 2)   (%exe := true, %cm := l[2], %main := true, l :<< 2)
                else error("option: -cm <module>")),
      {"-sf"} (if (length(l) >= 2)   (%sf := l[2], l :<< 2)
                else error("option: -sf <filename>")),
      {"-sx"} (if (length(l) >= 2)   (%sf := l[2], %main := true, l :<< 2)
                else error("option: -sx <filename>")),
+     // v4.1.6: the destination is optional (default: first entry of
+     // $CLAIRE_LIBS, then $CLAIRE_HOME/lib) and may carry a version:
+     // -publish <dir>@<version>. Without @<version>, the version comes from
+     // the file VERSION next to init.cl, then "v0.0.0".
+     {"-publish"} (if (length(l) >= 2 & l[2][1] != '-')   (%publish := l[2], l :<< 2)
+                     else (%publish := "@", l :<< 1)),
+     {"-force"} (%force := true, l :<< 1),
+     {"-install"} (install(), exit(0)),   // v4.1.6
      {"-n"} (%init? := false, l :<< 1),
      any (if (l[1][1] = '-') (printf("~S is an unvalid option\n",l[1]),
                               printHelp()),
@@ -150,11 +179,15 @@
 	       load(m),                        // load the module
          if (dblevel < 1) (compiler.safety :min 1, compiler.debug? :add m),
          compile_dir(m),
+         // v4.1.6: a module that declares main() is built as an executable that
+         // runs it and exits (no REPL), like -cx.
+         if module_has_main(m) %main := true,
          compile(m),
          if (%exe) 
             (//[0] ==== create the system file for module ~S // %out,
              claire/system_file(m,%out,%main),   // v3.2.12: level = 0 => do nothing ....
              compile_exe(%out)),
+         if (%publish != "") publish(m,%publish,%force),   // v4.1.6
          exit(0))
     else Reader/top_level(reader)
     )                                                                
@@ -199,7 +232,10 @@
   ->  printf("import (\n"),
       // printf("\t\"fmt\"\n"),                // not necessary if no printf statement is in the code
       if OPT.profile? printf("\t\"os\"\n\t\"runtime/pprof\"\n"),
-      import_declaration(m),
+      import_declaration(m,false),   // system file: plain needed_modules
+      // Generate is never imported here: the simple REPL does not use it and Go
+      // rejects unused imports. Reader is added by needed_modules when the
+      // module declares it.
       printf("\t\"~A\"/**/\n",capitalize(string!(m.name))), // v4.1.14 evolution for Linux
       printf(")\n")]
     
@@ -246,7 +282,7 @@
     printf("func E_reboot(s EID) EID ~I",new_block()),
     printf("Bootstrap()~I",breakline()),
     printf("Load()~I",breakline()),
-    printf("Reader.C_reader.Fromp = ClEnv.Cin;~I",breakline()),
+    if not(%main) printf("Reader.C_reader.Fromp = ClEnv.Cin;~I",breakline()),
     if (get_value("Generate") % l_used)
         printf("ClEnv.Module_I = C_claire~I",breakline()),
     printf("return EVOID~I~I~I",breakline(),close_block(),breakline()),
@@ -266,7 +302,7 @@
     // printf("fmt.Printf(\"=== CLAIRE4 interpreter version 1.0    ===\\n\")~I",breakline()),
     printf("E_reboot(EVOID)~I",breakline()),
     printf("ToMethod(C_reboot.Restrictions.ValuesO()[0]).Functional = MakeFunction1(E_reboot,\"reboot\")~I",breakline()),
-    printf("Reader.C_reader.Fromp = ClEnv.Cin~I",breakline()),
+    if not(%main) printf("Reader.C_reader.Fromp = ClEnv.Cin~I",breakline()),
     if %main printf("Core.F_CALL(Core.C_main,ARGS(EID{ClEnv.Id(),0}))")
     else if (get_value("Generate") % l_used) printf("Generate.F_Generate_complex_main_void()")
     else printf("Reader.F_Reader_simple_main_void()"),
@@ -278,17 +314,73 @@
 // *******************************************************************
 
 
-// create a directory for the module (if it does not exist)
-[compile_dir(m:module): void
- -> let s := "mkdir -p " /+ home() / "go" / "src" / capitalize(string!(m.name)) in 
-     (if (home() = "")  error("the environment variable CLAIRE_HOME is undefined\n"),
-      shell(s))]
+// prepare_workspace(m:module,dir:string) : void -- v4.1.6 (Go only)
+// Writes <dir>/go.work and <dir>/<Module>/go.mod so that the generated code
+// resolves its short imports (". \"Kernel\"", "\"Core\"", ...). The base packages
+// are looked for in the output directory, $CLAIRE_HOME[/share/claire4], the
+// directory of the claire4 binary, ../src and ../share/claire4 next to it, and
+// ~/.claire4/share/claire4.
+// A go.work that we generated previously is rewritten when the module list
+// changes (typically because the base packages were not found the first time);
+// a go.work written by the user is left untouched.
+//
+// This is the Go pendant of the C++ model of CLAIRE3:
+//   - the interpreter loads the .cl sources of a module resolved by
+//     use_module(), so that the compiler knows its types and restrictions
+//     (the equivalent of the .h files);
+//   - the compiled code of that module is taken from <published>/build/<M>,
+//     produced by -publish (the equivalent of the .so).
+// Both are needed: the sources for typing, the compiled package for linking.
+// The Go implementation is F_Generate_prepare_workspace_module (src/Generate/gomain.go).
 
-// create the go
+// create a directory for the module (if it does not exist)
+// v4.1.6: use PRODUCER.source (= compiler.source / <Module>), which is the very
+// directory the code generator writes into. The previous version appended a
+// hard-coded "/go/src" to CLAIRE_HOME, which broke as soon as CLAIRE_HOME
+// already ended with "go/src" (the documented setting), producing for instance
+// "<CLAIRE_HOME>/go/src/Choco" instead of "<CLAIRE_HOME>/Choco".
+[compile_dir(m:module): void
+ -> let dir := compiler.source,
+        pdir := dir / capitalize(string!(m.name)) in
+     (if (dir = "")
+         error("[213] the output directory is not defined: please set compiler.source\n"),
+      shell("mkdir -p " /+ dir /+ " " /+ pdir))]
+
+// publish a module into a self-contained, versioned directory that
+// use_module() (meta/file.cl) knows how to load  -- v4.1.6 (action C)
+//   <dir>/<name>/<version>/{init.cl, source/, build/<Module>/, META.json}
+// The Go implementation is F_Generate_publish_module (src/Generate/gomain.go).
+// Destination: <dir>, or the first entry of $CLAIRE_LIBS, or $CLAIRE_HOME/lib,
+// or ~/.claire4/lib (the place use_module looks for modules).
+// The version is, by decreasing priority:
+//   -publish <dir>@<version>, then the file VERSION next to init.cl, then v0.0.0.
+[claire/publish(m:module,%dir:string,%force:boolean) : void -> function!(publish_module)]
+
+// one-time setup, the equivalent of CLAIRE3's "configure && make install":
+//   - create $CLAIRE_HOME (or ~/.claire4) with lib/ and init.cl
+//   - copy the base packages (Kernel, Core, Language, Reader, Optimize,
+//     Generate) into <home>/share/claire4, so that "claire4 -cm" can compile a
+//     module from anywhere, without a CLAIRE4 source tree nearby
+//   - copy the claire4 binary into a directory of the PATH, following the
+//     usual conventions: $CLAIRE_BIN, $GOBIN or $(go env GOPATH)/bin,
+//     ~/.local/bin, then <home>/bin. /usr/local/bin is only used when
+//     CLAIRE_BIN_SYSTEM=1, so that "claire4 -install" never writes outside
+//     the user's home by surprise.
+// The Go implementation is F_Generate_install_void (src/Generate/gomain.go).
+[claire/install() : void -> function!(install_void)]
+
+// create the executable
+// v4.1.6: build the generated package (PRODUCER.source) from the workspace
+// directory (compiler.source, where go.mod / go.work live) instead of
+// appending "/go/src" to CLAIRE_HOME.
 [compile_exe(%out:string): void
- -> let  outdir := (if known?(output,PRODUCER) (" -o " /+ PRODUCER.output /+ " ") 
-                    else ""),
-         s := "go build " /+ outdir /+ home() / "go" / "src"  / %out /+ ".go" in 
+ -> let  outdir := (if known?(output,PRODUCER) ("-o " /+ PRODUCER.output /+ " ") 
+                    else ("-o " /+ (pwd() / "bin" /+ string!(PRODUCER.current.name)) /+ " ")),
+         // v4.1.6: build the system file (<out>.go, package main). "./<Module>" is
+         // the generated API package and has no main: "go build" used to fail
+         // with "no main packages to build".
+         pkg := "./" /+ %out /+ ".go",
+         s := "cd " /+ compiler.source /+ " && go build " /+ outdir /+ pkg in 
      (shell(s))]
 
 
