@@ -179,8 +179,68 @@ Corrigés (commits `b0c1597`, `5cce29b`, `22459c4`, `cf7b45d`, `7b994db`, `8f524
 
 **Reste** : `Choco/search.go:1173`
 `cannot use try_6 (Kernel.EID) as int value in assignment`
-— cas minimal dans `test/regress/do-division` : `getF() / 2` où `getF()` peut
-lever ; la fonction est générée native alors qu'elle devrait être EID.
+
+### Analyse complète du dernier bug (11/11/2026)
+
+**Symptôme.** Une méthode qui appelle une fonction pouvant lever est générée
+comme fonction *native* ; le `g_try` qu'elle contient affecte alors un `EID`
+à une variable `int` :
+
+```go
+func F_Repro_probe_void () int {          // native
+  var Result int
+  ...
+  if ErrorIn(try_2) { Result = try_2 }    // EID dans int  ❌
+```
+
+**Cas minimal** : `test/regress/do-division`
+
+```claire
+[getF() : integer -> (AFIELD as Stored).latest]   // peut lever [15]
+[probe() : integer -> getF() / 2]                 // générée native à tort
+```
+
+**Cause exacte** — `compile/osystem.cl` (et `src/Optimize/osystem.go`),
+branche `Call_method` de `g_throw1` :
+
+```claire
+Call_method ( if (self.arg = m_unsafe | notOpt(self) = false | self.arg.selector = externC) false
+              else if g_throw(self.args) true
+              ... )
+```
+
+`notOpt(probe.body)` vaut `false` (division par un littéral non nul sûr),
+donc la première branche répond **`false`** *sans jamais regarder les
+arguments*. Or `getF()` peut lever : la division est sûre, pas son opérande.
+
+**Pourquoi ce n'est pas corrigé tout de suite.** Tester les arguments en
+premier (`g_throw(self.args)` avant le test `notOpt`) corrige
+`do-division`, mais fait échouer choco à `var.cl:164` :
+
+```
+****[141] list<any>(dom, EID, "try_28", true, false) is a wrong arg list for Generate/g_statement
+```
+
+Le chemin `g_try` / `g_statement` (Itération + `when` + `case`, avec
+`g_try_void`) ne supporte pas qu'une expression devienne « throwing »
+là où elle ne l'était pas. Le correctif doit donc traiter les deux ensemble :
+
+1. `g_throw(Call_method)` : regarder les arguments **avant** les cas
+   d'optimisation ;
+2. `g_statement` / `g_try` : supporter ce cas (actuellement
+   `g_statement(dom, EID, "try_28", …)` reçoit une `Iteration` là où il
+   attend une instruction feuille).
+
+**Pièges rencontrés** (à ne pas refaire) :
+
+- `notOpt(Call_method)` et `can_throw?` **mémorisent** le statut
+  (`m.status := 0` optimiste dans `can_throw!`) : une analyse ratée fige le
+  mauvais statut pour tous les appelants suivants ;
+- `(x as C)` doit être considéré comme pouvant lever (`[15]`) quand
+  `safety < 4` : `g_throw(Cast)` ne regardait que l'argument. Correctif
+  isolé prêt (voir ci-dessous) mais **insuffisant seul** ;
+- l'équilibrage des accolades de `do_statement`/`g_try` est fragile : j'ai
+  cassé deux fois la génération en le touchant.
 
 Les cas minimaux sont dans `test/regress/` (voir le README de ce dossier) :
 
