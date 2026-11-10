@@ -701,7 +701,13 @@ parents(self:list) : list
       (//[2] [~A] ~S: => simple=~S, throw=~S // n_line(), m, simple_body?(%body),throw?,
        compiler.n_methods :+ 1,
        p.varsym := 0,                                            // resets the ID for distinct vars
-       if (m.status = -1) (m.status := (if throw? 1 else 0))     // nice case we have not seen m yet.
+       // v4.1.6: a method is exception-ready (EID) when its body may raise an error
+       // OR when it needs a RangeCheck (typeOK false with safety < 2): RangeCheck
+       // itself raises [17]. Marking it 0 made the callers generate a native
+       // function that consumed the EID as a value:
+       //     F_getPb_void() + 1   (mismatched types Kernel.EID and untyped int)
+       if (m.status = -1) 
+          (m.status := (if (throw? | (not(typeOK) & compiler.safety < 2)) 1 else 0))
        else if (throw? != can_throw?(m))                         // avoids generating go code that will break
           (warn(),
            //[1] [CROSS] ~S body produces an error (g_throw = true) while status is 0 // m,
