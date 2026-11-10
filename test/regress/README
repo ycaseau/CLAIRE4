@@ -1,0 +1,57 @@
+Regression cases for the CLAIRE4 Go compiler
+============================================
+
+Each case is a self-contained module that used to make "claire4 -cm" fail,
+or generate wrong code. They are small on purpose: they were extracted from
+the port of choco, where the same bugs were hidden inside 9 500 lines.
+
+The module name is declared in init.cl and must be given on the command line
+(the directory names contain '-' and cannot be used as module names):
+
+    cd gany-arithmetic
+    claire4 -cm GanyArithmetic
+    ./bin/ganyarithmetic
+
+
+Cases
+-----
+
+gany-arithmetic/     reading a global declared ":any" gave a malformed EID,
+                     so "GANY + 1" returned 1 instead of 42.
+                     CLAIRE3 returns 42.   Fixed (commit 8f52490).
+
+        [known bug] the generated binary prints 42 for all three probes.
+
+rangecheck-status/   a method whose body is typed but not exact ends with
+                     RangeCheck, which can raise [17]. Such a method must be
+                     marked exception-ready, otherwise its callers generate a
+                     native function that consumes an EID:
+                         F_getPb_void() + 1   (mismatched types EID and int)
+                     Fixed (commit 7b994db).
+
+        [known bug] getPb = 41, useIt = 42.
+
+do-division/         OPEN. Dividing the result of a function that may throw
+                     still fails to build:
+                         cannot use try_2 (Kernel.EID) as int value
+                     "probe" is generated as a native function although it
+                     calls getF(), which may raise. This is the last error
+                     left when compiling choco (Choco/search.go:1173,
+                     getBestVal(MidValHeuristic) -> x.inf + (x.sup - x.inf)/2).
+
+        [known bug] the build fails; it is the purpose of the test.
+
+
+How they were found
+-------------------
+
+All three were first diagnosed on choco:
+
+    gany-arithmetic     CURRENT_PB:any := unknown  (source/model.cl)
+    rangecheck-status   [choco/getActiveProblem() : Problem -> CURRENT_PB]
+                        used as getActiveProblem().propagationEngine
+    do-division         [getBestVal(vh:MidValHeuristic, x:IntVar) : integer
+                          -> x.inf + (x.sup - x.inf) / 2]      (source/search.cl)
+
+Comparing with CLAIRE3 (cclaire from xlclaire-v3.7.8) is what proved that the
+":any" case was a CLAIRE4 regression and not a quirk of the program.

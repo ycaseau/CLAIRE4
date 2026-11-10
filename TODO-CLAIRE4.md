@@ -162,7 +162,37 @@ paquets de base (`Kernel`, `Core`, `Language`, `Reader`, `Optimize`,
 
 #### Reste à traiter (nouveau, hors A)
 
-- [ ] **F — `WriteFast` assigné à un `EID`** : `go build` de choco échoue sur
+#### État de choco (10/11/2026)
+
+`claire4 -cm` compile **les 15 fichiers de choco** (9 489 lignes), génère le
+fichier système, et `go build` ne rapporte plus qu'**une** erreur.
+
+Corrigés (commits `b0c1597`, `5cce29b`, `22459c4`, `cf7b45d`, `7b994db`, `8f52490`) :
+
+| Erreur Go | Cause |
+|---|---|
+| `cannot use ...WriteFast(...) as Kernel.EID` | `WriteFast` renvoyait `*ClaireAny` |
+| `undefined: Optimize` | `needed_modules` ne suivait que `uses` |
+| `cannot use arg_N (EID) as *ClaireMethod` | `FASTCALLn` attendait une méthode |
+| `...getActiveProblem_void().Id undefined` | méthode avec `RangeCheck` non marquée exception-ready |
+| résultat faux (`GANY + 1` = 1 au lieu de 42) | lecture d'une globale `:any` produisait `EID{ptr,0}` |
+
+**Reste** : `Choco/search.go:1173`
+`cannot use try_6 (Kernel.EID) as int value in assignment`
+— cas minimal dans `test/regress/do-division` : `getF() / 2` où `getF()` peut
+lever ; la fonction est générée native alors qu'elle devrait être EID.
+
+Les cas minimaux sont dans `test/regress/` (voir le README de ce dossier) :
+
+| Cas | État |
+|---|---|
+| `gany-arithmetic` | ✅ corrigé (validé contre CLAIRE3 : 42/42/42) |
+| `rangecheck-status` | ✅ corrigé (41 / 42) |
+| `do-division` | ⬜ ouvert |
+
+---
+
+#### Historique : [ ] **F — `WriteFast` assigné à un `EID`**
   des `X.WriteFast(...)` là où du code `EID` est attendu
   (`Choco/chocapi.go:357`, `prop.go:2481`, …).
   `ClaireProperty.WriteFast` renvoie `*ClaireAny` alors que le contexte attend
